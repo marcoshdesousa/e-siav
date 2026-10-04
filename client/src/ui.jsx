@@ -4,7 +4,9 @@ import { ArrowLeft, Camera, Compass, Medal, Share2, X } from 'lucide-react';
 import { AppIcon, ICONS } from './icons.jsx';
 
 // ---------- Marca ----------
-export const LogoIcon = ({ size = 40 }) => <img src="/logo.svg" width={size} height={size} alt="" className="logo-icon" />;
+export const LogoIcon = ({ size = 40 }) => (
+  <img src={size > 96 ? '/logo.png' : '/icons/icon-192.png'} width={size} height={size} alt="App do DBV" className="logo-icon" />
+);
 
 export function LogoHorizontal({ light = false, size = 36 }) {
   return (

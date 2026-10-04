@@ -1,11 +1,13 @@
 :root {
-  --blue: #0B3D91;
-  --blue-2: #1450B8;
-  --blue-dark: #072A66;
-  --blue-soft: #E8EFFB;
-  --red: #D62828;
+  /* Cores da logo: azul-marinho da bússola, vermelho e amarelo das bordas. */
+  --blue: #0E2A6B;
+  --blue-2: #1C3F8C;
+  --blue-dark: #081C4A;
+  --blue-soft: #E9EEF8;
+  --red: #D3111A;
+  --red-2: #E8331B;
   --red-soft: #FDECEC;
-  --yellow: #FFC72C;
+  --yellow: #FFC61A;
   --yellow-soft: #FFF6DA;
   --green: #1F7A4D;
   --green-soft: #E5F4EC;
@@ -46,7 +48,7 @@ img { max-width: 100%; }
 .mt { margin-top: 1rem; }
 
 /* ---------- Marca ---------- */
-.logo-icon { border-radius: 24%; display: block; }
+.logo-icon { display: block; object-fit: contain; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .18)); }
 .logo-h { display: inline-flex; align-items: center; gap: .55rem; }
 .logo-text { display: flex; flex-direction: column; line-height: .95; font-family: var(--font-title); color: var(--blue); }
 .logo-text small { font-size: .72rem; font-weight: 600; }
@@ -59,7 +61,9 @@ img { max-width: 100%; }
   position: sticky; top: 0; z-index: 20; background: var(--blue); color: #fff;
   padding: calc(.55rem + env(safe-area-inset-top)) 1rem .55rem; display: flex; align-items: center; gap: .75rem;
   box-shadow: 0 2px 12px rgba(7, 42, 102, .25);
+  border-bottom: 3px solid var(--yellow);
 }
+.topbar::after { content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 3px; background: var(--red); }
 .topbar .who { margin-left: auto; text-align: right; font-size: .8rem; line-height: 1.2; max-width: 50%; }
 .topbar .who b { display: block; font-size: .9rem; }
 .topbar .icon-btn { color: #fff; }
@@ -295,21 +299,6 @@ input[type='checkbox'], input[type='radio'] { width: auto; accent-color: var(--b
 .empty.error { color: var(--red); }
 .spinner { width: 34px; height: 34px; margin: 2.5rem auto; border: 4px solid var(--blue-soft); border-top-color: var(--blue); border-radius: 50%; animation: spin .8s linear infinite; }
 
-/* ---------- Login ---------- */
-.login-page { min-height: 100vh; min-height: 100dvh; background: linear-gradient(165deg, var(--blue) 0%, var(--blue-2) 55%, #2F6BD3 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem 1rem; position: relative; overflow: hidden; }
-.login-page::before { content: ''; position: absolute; width: 420px; height: 420px; border-radius: 50%; background: rgba(255, 199, 44, .14); top: -160px; right: -140px; }
-.login-page::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 26px; background: linear-gradient(180deg, var(--yellow) 0 50%, var(--red) 50% 100%); }
-.login-brand { text-align: center; color: #fff; margin-bottom: 1.2rem; position: relative; z-index: 1; }
-.login-brand h1 { font-size: 2rem; margin-top: .6rem; letter-spacing: .02em; }
-.login-brand p { opacity: .85; }
-.login-card { width: 100%; max-width: 400px; background: #fff; border-radius: 24px; padding: 1.3rem; box-shadow: 0 20px 50px rgba(0, 0, 0, .25); position: relative; z-index: 1; }
-.login-switch { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; background: var(--blue-soft); border-radius: 16px; padding: .3rem; margin-bottom: 1rem; }
-.login-switch button { border: 0; padding: .7rem .4rem; border-radius: 13px; background: transparent; font-family: var(--font-title); font-weight: 700; color: var(--blue); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: .1rem; font-size: .9rem; }
-.login-switch button small { font-family: var(--font); font-weight: 600; font-size: .7rem; opacity: .75; }
-.login-switch button.active { background: var(--blue); color: #fff; box-shadow: 0 4px 12px rgba(11, 61, 145, .3); }
-.demo { margin-top: 1rem; font-size: .78rem; color: var(--muted); background: var(--bg); border-radius: 12px; padding: .6rem .8rem; }
-.demo code { background: #fff; padding: 0 .3rem; border-radius: 5px; color: var(--blue); font-weight: 700; cursor: pointer; }
-
 .more-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .7rem; }
 .more-tile { background: #fff; border-radius: 18px; padding: 1rem; display: flex; flex-direction: column; gap: .4rem; box-shadow: var(--shadow); color: var(--ink); font-weight: 800; border: 1px solid #EDF1F8; }
 .more-tile span:first-child { font-size: 1.7rem; }
@@ -356,56 +345,66 @@ table.simple th, table.simple td { text-align: left; padding: .5rem; border-bott
 .more-tile .tile-ico { margin-bottom: .2rem; }
 .nav-ico { display: flex; }
 
-/* ---------- Página inicial ---------- */
-.lp { min-height: 100vh; background: #fff; }
-.lp-nav { display: flex; justify-content: space-between; align-items: center; padding: calc(.8rem + env(safe-area-inset-top)) 1.2rem .8rem; max-width: 1080px; margin: 0 auto; }
-.lp-hero {
-  background: linear-gradient(150deg, var(--blue) 0%, var(--blue-2) 60%, #2F6BD3 100%); color: #fff; position: relative; overflow: hidden;
-  display: grid; grid-template-columns: 1fr; gap: 2rem; padding: 2.6rem 1.4rem 3.4rem; align-items: center;
+/* ---------- Entrada (estilo Instagram) ---------- */
+.ig { min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; background: #fff; }
+.ig-main { flex: 1; display: flex; justify-content: center; align-items: center; gap: 2.2rem; padding: 2rem 1rem 1rem; }
+.ig-col { width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: .7rem; }
+.ig-card { background: #fff; display: flex; flex-direction: column; align-items: stretch; }
+.ig-login { align-items: center; padding: .5rem .4rem 1rem; }
+.ig-login[data-shake] { animation: shake .4s; }
+.ig-brand { font-family: var(--font-title); font-weight: 800; font-size: 1.9rem; color: var(--blue); margin-top: .6rem; letter-spacing: .01em; }
+.ig-tagline { color: var(--muted); text-align: center; margin: .2rem 0 1.1rem; font-size: .95rem; }
+.ig-switch { position: relative; display: grid; grid-template-columns: 1fr 1fr; width: 100%; background: var(--blue-soft); border-radius: 12px; padding: 4px; margin-bottom: .9rem; }
+.ig-switch button { position: relative; z-index: 1; border: 0; background: none; padding: .6rem; font-family: var(--font-title); font-weight: 600; font-size: .9rem; color: var(--blue); display: flex; align-items: center; justify-content: center; gap: .4rem; cursor: pointer; transition: color .2s; }
+.ig-switch button[aria-selected='true'] { color: #fff; }
+.ig-switch-pill { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px); border-radius: 9px; background: var(--blue); box-shadow: 0 3px 10px rgba(14, 42, 107, .3); transition: transform .25s cubic-bezier(.3, .7, .4, 1); }
+.ig-switch[data-mode='clube'] .ig-switch-pill { transform: translateX(100%); }
+.ig-field { position: relative; width: 100%; margin-bottom: .45rem; display: block; }
+.ig-field input { height: 46px; padding: 1.15rem .75rem .3rem; background: #FAFBFD; border: 1px solid #D5DCE8; border-radius: 10px; font-size: .95rem; }
+.ig-field input:focus { border-color: var(--blue); background: #fff; box-shadow: none; }
+.ig-field span { position: absolute; left: .78rem; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: .9rem; pointer-events: none; transition: all .15s ease; }
+.ig-field input:focus + span, .ig-field.filled span { top: .62rem; transform: none; font-size: .68rem; }
+.ig-field .ig-show { position: absolute; right: .6rem; top: 50%; transform: translateY(-50%); border: 0; background: none; font-weight: 800; font-size: .82rem; color: var(--ink); cursor: pointer; }
+.ig-field:has(.ig-show) input { padding-right: 5rem; }
+.ig-submit { width: 100%; margin-top: .45rem; height: 44px; border: 0; border-radius: 10px; background: linear-gradient(135deg, var(--red) 0%, var(--red-2) 100%); color: #fff; font-family: var(--font-title); font-weight: 700; font-size: .98rem; cursor: pointer; display: grid; place-items: center; transition: opacity .2s, transform .05s; box-shadow: 0 6px 16px rgba(211, 17, 26, .25); }
+.ig-submit:disabled { opacity: .45; cursor: default; box-shadow: none; }
+.ig-submit:not(:disabled):active { transform: translateY(1px); }
+.ig-error { color: var(--red); font-size: .88rem; text-align: center; margin-top: .8rem; }
+.ig-or { display: flex; align-items: center; gap: 1rem; width: 100%; color: var(--muted); font-size: .8rem; font-weight: 800; margin: 1.1rem 0 .7rem; }
+.ig-or span { flex: 1; height: 1px; background: var(--line); }
+.ig-link { border: 0; background: none; color: var(--blue); font-weight: 800; cursor: pointer; font-size: .92rem; }
+.ig-demo { width: 100%; display: flex; flex-direction: column; gap: .4rem; margin-top: .7rem; animation: pop .2s; }
+.ig-demo button { display: flex; justify-content: space-between; align-items: center; gap: .5rem; padding: .6rem .8rem; border-radius: 10px; border: 1px solid var(--line); background: #FAFBFD; cursor: pointer; font: inherit; font-size: .85rem; }
+.ig-demo button span { color: var(--muted); }
+.ig-demo button:hover { border-color: var(--blue); }
+.ig-signup { padding: 1.1rem; text-align: center; font-size: .92rem; display: block; color: var(--ink); border-top: 1px solid var(--line); }
+.ig-signup b { color: var(--blue); }
+.ig-get { text-align: center; margin-top: .3rem; }
+.ig-get p { font-size: .92rem; margin-bottom: .7rem; }
+.ig-stores { display: grid; grid-template-columns: repeat(3, 1fr); gap: .45rem; }
+.ig-stores button { background: #000; color: #fff; border: 0; border-radius: 9px; padding: .45rem .5rem; display: flex; align-items: center; justify-content: center; gap: .4rem; cursor: pointer; font-family: var(--font-title); font-weight: 600; font-size: .82rem; transition: transform .1s; }
+.ig-stores button:hover { transform: translateY(-1px); }
+.ig-stores button span { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.05; }
+.ig-stores button small { font-size: .58rem; font-weight: 500; opacity: .8; }
+.ig-steps { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .8rem; counter-reset: s; }
+.ig-steps li { display: flex; gap: .8rem; align-items: center; }
+.ig-step-ico { width: 42px; height: 42px; border-radius: 12px; background: var(--blue-soft); color: var(--blue); display: grid; place-items: center; flex: none; }
+.ig-footer { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; padding: 1.4rem 1rem calc(1.4rem + env(safe-area-inset-bottom)); color: var(--muted); font-size: .78rem; }
+.ig-phone { display: none; }
+@media (min-width: 880px) {
+  .ig { background: #F4F6FA; }
+  .ig-main { padding-top: 3rem; }
+  .ig-card { border: 1px solid #DCE2EC; border-radius: 14px; }
+  .ig-login { padding: 2.2rem 2.4rem 1.6rem; }
+  .ig-signup { border-top: 1px solid #DCE2EC; }
+  .ig-phone {
+    display: block; position: relative; width: 300px; height: 610px; border-radius: 44px; padding: 14px; background: #0A1533;
+    box-shadow: 0 30px 70px rgba(14, 42, 107, .35), inset 0 0 0 2px #2A3A66; transform: rotate(-3deg);
+  }
+  .ig-phone::before { content: ''; position: absolute; top: 22px; left: 50%; transform: translateX(-50%); width: 90px; height: 22px; border-radius: 12px; background: #0A1533; z-index: 3; }
+  .ig-phone-screen { position: relative; width: 100%; height: 100%; border-radius: 32px; overflow: hidden; background: #fff; }
+  .ig-phone-screen img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; opacity: 0; transition: opacity 1s ease; }
+  .ig-phone-screen img.on { opacity: 1; }
 }
-.lp-hero::before { content: ''; position: absolute; width: 460px; height: 460px; border-radius: 50%; background: rgba(255, 199, 44, .14); top: -200px; right: -160px; }
-.lp-hero::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 14px; background: linear-gradient(180deg, var(--yellow) 0 50%, var(--red) 50% 100%); }
-.lp-hero-text { position: relative; z-index: 1; max-width: 560px; }
-.lp-kicker { display: inline-block; background: rgba(255, 255, 255, .14); border-radius: 999px; padding: .3rem .8rem; font-weight: 800; font-size: .78rem; letter-spacing: .02em; }
-.lp-hero h1 { font-size: clamp(1.9rem, 6vw, 3rem); margin: .8rem 0 .6rem; line-height: 1.1; }
-.lp-hero p { font-size: 1.05rem; opacity: .92; }
-.lp-cta { margin-top: 1.4rem; }
-.lp-btn { padding: .95rem 1.5rem; font-size: 1.02rem; border-radius: 16px; }
-.lp-note { font-size: .82rem !important; opacity: .75 !important; margin-top: .9rem !important; }
-.lp-phone { position: relative; z-index: 1; justify-self: center; width: 230px; height: 420px; border-radius: 36px; background: #0A1B3D; padding: 12px; box-shadow: 0 30px 60px rgba(0, 0, 0, .35); transform: rotate(4deg); }
-.lp-phone-screen { background: var(--bg); border-radius: 26px; height: 100%; padding: 14px 12px; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
-.lp-phone-top { display: flex; align-items: center; gap: 8px; }
-.lp-phone-top span { height: 10px; flex: 1; border-radius: 6px; background: #D5DEEE; }
-.lp-phone-card { display: flex; align-items: center; gap: 8px; background: #fff; border-radius: 14px; padding: 12px 10px; color: var(--blue); box-shadow: var(--shadow); }
-.lp-phone-card span { height: 9px; flex: 1; border-radius: 6px; background: #E1E8F4; }
-.lp-phone-card b { font-family: var(--font-title); }
-.lp-phone-card.gold { background: linear-gradient(135deg, #FFF6DA, #FFE08A); color: #8A6400; }
-.lp-phone-bars { margin-top: auto; display: flex; justify-content: space-around; background: #fff; border-radius: 14px; padding: 12px; }
-.lp-phone-bars i { width: 22px; height: 22px; border-radius: 7px; background: #D5DEEE; }
-.lp-phone-bars i:first-child { background: var(--blue); }
-.lp-section { max-width: 1080px; margin: 0 auto; padding: 2.2rem 1.2rem 0; }
-.lp-section h2 { font-size: 1.3rem; margin-bottom: 1rem; }
-.lp-features { display: grid; grid-template-columns: 1fr; gap: .9rem; }
-.lp-feature { background: var(--bg); border-radius: 20px; padding: 1.2rem; }
-.lp-feature h3 { margin: .7rem 0 .3rem; font-size: 1.05rem; }
-.lp-feature p { color: var(--muted); margin: 0; }
-.lp-feature-ico { width: 48px; height: 48px; border-radius: 15px; background: var(--blue); color: #fff; display: grid; place-items: center; }
-.lp-feature:nth-child(2) .lp-feature-ico { background: var(--yellow); color: var(--blue-dark); }
-.lp-feature:nth-child(3) .lp-feature-ico { background: var(--red); }
-.lp-clubs { display: grid; grid-template-columns: 1fr; gap: .7rem; }
-.lp-club { display: flex; align-items: center; gap: .8rem; padding: .9rem 1rem; border-radius: 18px; border: 1px solid var(--line); color: var(--ink); }
-.lp-club span { display: block; color: var(--muted); font-size: .85rem; }
-.lp-club svg { color: var(--blue); }
-.lp-install { display: flex; gap: 1rem; align-items: flex-start; background: var(--blue-soft); color: var(--blue); border-radius: 20px; padding: 1.1rem 1.2rem; }
-.lp-install p { color: var(--ink); margin: .2rem 0 0; font-size: .9rem; }
-.lp-footer { max-width: 1080px; margin: 2.4rem auto 0; padding: 1.4rem 1.2rem calc(1.4rem + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); display: flex; justify-content: space-between; color: var(--muted); font-weight: 700; }
-@media (min-width: 760px) {
-  .lp-hero { grid-template-columns: 1.2fr .8fr; padding: 4rem max(1.4rem, calc(50% - 520px)) 4.6rem; }
-  .lp-features { grid-template-columns: repeat(4, 1fr); }
-  .lp-clubs { grid-template-columns: repeat(2, 1fr); }
-}
-.lp-install svg { flex: none; }
-@media (max-width: 759px) {
-  .lp-phone { width: 190px; height: 330px; border-radius: 30px; }
-  .lp-hero { padding-bottom: 2.8rem; }
-}
+@keyframes shake { 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
+.ig-steps li { text-align: left; }
