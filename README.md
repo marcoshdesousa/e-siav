@@ -83,7 +83,7 @@ O repositório já tem o `render.yaml` (Blueprint) pronto.
 
 1. Entre em [render.com](https://render.com) com a sua conta do GitHub.
 2. Clique em **New → Blueprint** e escolha o repositório `e-siav` (branch `claude/exciting-ramanujan-oanie1`, ou a branch principal se você renomear).
-3. Clique em **Apply**. O Render instala, gera o build e publica numa URL `https://app-do-dbv.onrender.com` (ou parecida).
+3. Clique em **Apply**. O Render instala, gera o build e publica em `https://appdodbv.onrender.com` (se o nome estiver livre; senão o Render acrescenta um sufixo e você pode renomear o serviço em Settings).
 4. Abra a URL e entre com as contas de demonstração acima.
 
 Observações do plano grátis:

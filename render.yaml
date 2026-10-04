@@ -7,7 +7,7 @@
 # descomente DATA_DIR e o bloco "disk" (disco persistente).
 services:
   - type: web
-    name: app-do-dbv
+    name: appdodbv
     runtime: node
     plan: free
     buildCommand: npm ci --include=dev && npm run build
