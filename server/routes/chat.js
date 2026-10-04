@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { all, get, run, tx, nowIso } from '../db.js';
 import { requireAuth } from '../auth.js';
-import { mediaUpload, fileUrl } from '../uploads.js';
+import { privateMediaUpload, privateUrl } from '../uploads.js';
 import { pushTo } from '../realtime.js';
 import { fail, int, str } from '../util.js';
 
@@ -22,7 +22,7 @@ function participants(c) {
   return [{ type: 'member', id: c.member_a }, { type: 'member', id: c.member_b }];
 }
 
-function canAccess(a, c) {
+export function canAccess(a, c) {
   if (!c) return false;
   if (a.type === 'club') return c.type === 'diretoria' && c.club_id === a.id;
   if (c.type === 'unidade') return c.unit_id === a.unit_id;
@@ -158,7 +158,7 @@ r.get('/chat/conversations/:id/messages', chatUser, (req, res) => {
   res.json({ messages: rows, others_read_id: othersRead(req.actor, c) });
 });
 
-r.post('/chat/conversations/:id/messages', chatUser, mediaUpload.single('media'), (req, res) => {
+r.post('/chat/conversations/:id/messages', chatUser, privateMediaUpload.single('media'), (req, res) => {
   const a = req.actor;
   const c = loadConv(req);
   for (const p of participants(c)) {
@@ -172,7 +172,7 @@ r.post('/chat/conversations/:id/messages', chatUser, mediaUpload.single('media')
   if (kind === 'texto' && !body) fail(400, 'Mensagem vazia');
   const now = nowIso();
   const msg = tx(() => {
-    const id = Number(run('INSERT INTO messages (conversation_id, sender_type, sender_id, kind, body, media, created_at) VALUES (?,?,?,?,?,?,?)', c.id, a.type, a.id, kind, body || null, fileUrl(file), now).lastInsertRowid);
+    const id = Number(run('INSERT INTO messages (conversation_id, sender_type, sender_id, kind, body, media, created_at) VALUES (?,?,?,?,?,?,?)', c.id, a.type, a.id, kind, body || null, privateUrl('chat', file), now).lastInsertRowid);
     run('UPDATE conversations SET last_message_at = ? WHERE id = ?', now, c.id);
     run(`INSERT INTO conversation_reads (conversation_id, reader_type, reader_id, last_read_id) VALUES (?,?,?,?)
          ON CONFLICT (conversation_id, reader_type, reader_id) DO UPDATE SET last_read_id = excluded.last_read_id`, c.id, a.type, a.id, id);

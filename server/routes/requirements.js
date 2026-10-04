@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { all, get, run, tx, nowIso } from '../db.js';
 import { requireAuth } from '../auth.js';
-import { imageUpload, fileUrl } from '../uploads.js';
+import { privateImageUpload, privateUrl } from '../uploads.js';
 import { MODELOS_ENVIO, MAX_FOTOS_ENVIO } from '../config.js';
 import { fail, int, str, parseJson } from '../util.js';
 
@@ -48,7 +48,7 @@ r.get('/requirements/mine', requireAuth('club', 'unit', 'member'), (req, res) =>
   res.json(out);
 });
 
-r.post('/requirements/:id/submit', requireAuth('club', 'unit', 'member'), imageUpload.array('photos', MAX_FOTOS_ENVIO), (req, res) => {
+r.post('/requirements/:id/submit', requireAuth('club', 'unit', 'member'), privateImageUpload.array('photos', MAX_FOTOS_ENVIO), (req, res) => {
   const a = req.actor;
   const q = get('SELECT * FROM requirements WHERE id = ?', int(req.params.id));
   if (!q || !applies(a, q)) fail(404, 'Requisito não encontrado');
@@ -56,7 +56,7 @@ r.post('/requirements/:id/submit', requireAuth('club', 'unit', 'member'), imageU
   if (existing && existing.status !== 'recusado') fail(409, 'Este requisito já foi enviado');
 
   const text = str(req.body.text, 5000);
-  const photos = (req.files || []).map(fileUrl);
+  const photos = (req.files || []).map((f) => privateUrl('envio', f));
   if (needsText(q.model) && text.length < 3) fail(400, 'Escreva o relatório');
   if (needsPhoto(q.model) && !photos.length) fail(400, 'Envie pelo menos uma foto');
 

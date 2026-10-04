@@ -40,7 +40,7 @@ async function login(mode, username, password = 'dbv123') {
     const r = await fetch(BASE + url, opts);
     return { status: r.status, body: await r.json().catch(() => null) };
   };
-  return { actor, get: (u) => call('GET', u), post: (u, b = {}) => call('POST', u, b), put: (u, b = {}) => call('PUT', u, b), del: (u) => call('DELETE', u) };
+  return { actor, cookie, get: (u) => call('GET', u), post: (u, b = {}) => call('POST', u, b), put: (u, b = {}) => call('PUT', u, b), del: (u) => call('DELETE', u) };
 }
 
 const form = (obj) => {
@@ -221,4 +221,50 @@ test('ranking: empate desempata por quem enviou primeiro', async () => {
     assert.ok(a.points > b.points || (a.points === b.points && (!b.last_at || !a.last_at || a.last_at <= b.last_at)), `ordem ${a.name} / ${b.name}`);
   }
   assert.ok(rows.every((r) => r.name !== 'Marcos Almeida'), 'liderança fora do ranking');
+});
+
+const PNG = () => new Blob([Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64')], { type: 'image/png' });
+const fetchFile = (url, who) => fetch(`http://localhost:${PORT}${url}`, { headers: who ? { cookie: who.cookie } : {} }).then((r) => r.status);
+
+test('foto do chat só abre para quem participa da conversa (ou recebeu a denúncia)', async () => {
+  const lucas = await login('membros', 'lucas');
+  const pedro = await login('membros', 'pedro');
+  const ana = await login('membros', 'ana');
+  const { body: conv } = await lucas.post('/chat/direct', { member_id: pedro.actor.id });
+  const fd = new FormData();
+  fd.append('media', PNG(), 'f.png');
+  const { body: msg } = await lucas.post(`/chat/conversations/${conv.id}/messages`, fd);
+  assert.equal(msg.kind, 'foto');
+  assert.match(msg.media, /^\/api\/files\/chat\//);
+  assert.equal(await fetchFile(msg.media, null), 401, 'sem login');
+  assert.equal(await fetchFile(msg.media, pedro), 200, 'participante');
+  assert.equal(await fetchFile(msg.media, ana), 404, 'outro membro');
+  const admin = await login('membros', 'admin', 'admin123');
+  assert.equal(await fetchFile(msg.media, admin), 404, 'admin não lê conversas privadas');
+  await pedro.post('/chat/reports', { conversation_id: conv.id, message_id: msg.id, reason: 'Foto imprópria' });
+  assert.equal(await fetchFile(msg.media, admin), 200, 'admin vê a mídia denunciada');
+  assert.equal(await fetchFile('/api/files/chat/../../dbv.sqlite', pedro), 404);
+});
+
+test('foto de comprovação só abre para quem enviou e quem avalia', async () => {
+  const admin = await login('membros', 'admin', 'admin123');
+  const q = await admin.post('/requirements', { audience: 'member', title: 'Foto privada', model: 'foto', points: 10, late_points: 0, deadline: new Date(Date.now() + 864e5).toISOString() });
+  const beatriz = await login('membros', 'beatriz');
+  const fd = new FormData();
+  fd.append('photos', PNG(), 'f.png');
+  await beatriz.post(`/requirements/${q.body.id}/submit`, fd);
+  const sub = (await admin.get('/reviews')).body.find((s) => s.requirement_id === q.body.id);
+  const url = sub.photos[0];
+  assert.match(url, /^\/api\/files\/envio\//);
+  assert.equal(await fetchFile(url, admin), 200);
+  assert.equal(await fetchFile(url, beatriz), 200);
+  assert.equal(await fetchFile(url, await login('membros', 'davi')), 404);
+  assert.equal(await fetchFile(url, await login('clube', 'aguias', 'aguias123')), 404);
+});
+
+test('login bloqueia depois de muitas senhas erradas', async () => {
+  const attempt = (password) => fetch(BASE + '/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'membros', username: 'isabela', password }) }).then((r) => r.status);
+  for (let i = 0; i < 8; i++) assert.equal(await attempt('errada'), 401);
+  assert.equal(await attempt('errada'), 429);
+  assert.equal(await attempt('dbv123'), 429, 'nem a senha certa entra durante o bloqueio');
 });

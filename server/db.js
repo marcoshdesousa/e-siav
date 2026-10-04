@@ -4,7 +4,10 @@ import path from 'node:path';
 
 export const DATA_DIR = process.env.DATA_DIR || path.resolve('data');
 export const UPLOAD_DIR = path.join(DATA_DIR, 'uploads');
+// Arquivos privados (fotos/áudios do chat e fotos de comprovação): só com login.
+export const PRIVATE_DIR = path.join(DATA_DIR, 'private');
 fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+fs.mkdirSync(PRIVATE_DIR, { recursive: true });
 
 const DB_PATH = process.env.DB_PATH || path.join(DATA_DIR, 'dbv.sqlite');
 

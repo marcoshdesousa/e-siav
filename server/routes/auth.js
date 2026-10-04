@@ -6,13 +6,43 @@ import { fail } from '../util.js';
 
 const r = Router();
 
+// Limite de tentativas erradas de senha: 8 por usuário e 30 por IP (um clube
+// inteiro pode entrar pela mesma rede da igreja) a cada 15 minutos.
+const LIMITE = { user: 8, ip: 30 };
+const JANELA_MS = 15 * 60 * 1000;
+const falhas = new Map();
+
+function bloqueado(key) {
+  const f = falhas.get(key);
+  if (!f) return false;
+  if (Date.now() - f.inicio > JANELA_MS) {
+    falhas.delete(key);
+    return false;
+  }
+  return f.n >= LIMITE[key.split(':')[0]];
+}
+function registrarFalha(key) {
+  const f = falhas.get(key);
+  if (!f || Date.now() - f.inicio > JANELA_MS) falhas.set(key, { n: 1, inicio: Date.now() });
+  else f.n++;
+}
+setInterval(() => {
+  for (const [k, f] of falhas) if (Date.now() - f.inicio > JANELA_MS) falhas.delete(k);
+}, JANELA_MS).unref();
+
 // Login Clube: conta do clube e contas de unidade.
 // Login Membros: desbravadores, liderança e Administrador Geral.
 r.post('/auth/login', (req, res) => {
   const { mode, username, password } = req.body || {};
   const allowed = mode === 'clube' ? ['club', 'unit'] : ['member', 'admin'];
+  const keys = ['ip:' + req.ip, 'user:' + String(username || '').trim().toLowerCase()];
+  if (keys.some(bloqueado)) fail(429, 'Muitas tentativas erradas. Aguarde 15 minutos e tente de novo.');
   const login = checkLogin(username, password, allowed);
-  if (!login) fail(401, 'Usuário ou senha incorretos');
+  if (!login) {
+    keys.forEach(registrarFalha);
+    fail(401, 'Usuário ou senha incorretos');
+  }
+  falhas.delete(keys[1]);
   const actor = loadActor(login.account_type, login.account_id);
   if (!actor) fail(401, 'Conta não encontrada');
   if (actor.type === 'member' && !actor.kind) fail(403, 'Conta de membro com idade abaixo do mínimo');

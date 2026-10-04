@@ -17,6 +17,7 @@ import contentRoutes from './routes/content.js';
 import rankingRoutes from './routes/rankings.js';
 import chatRoutes from './routes/chat.js';
 import meRoutes from './routes/me.js';
+import fileRoutes from './routes/files.js';
 import { seed } from './seed.js';
 
 if (!get('SELECT 1 FROM admins LIMIT 1')) {
@@ -26,13 +27,15 @@ if (!get('SELECT 1 FROM admins LIMIT 1')) {
 
 const app = express();
 app.disable('x-powered-by');
+// Atrás de proxy reverso (Nginx, Render, etc.), defina TRUST_PROXY=1 para o IP real do usuário.
+if (process.env.TRUST_PROXY) app.set('trust proxy', Number(process.env.TRUST_PROXY) || process.env.TRUST_PROXY);
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(attachActor);
 
 const api = express.Router();
-for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, chatRoutes, meRoutes]) api.use(r);
+for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, chatRoutes, meRoutes, fileRoutes]) api.use(r);
 api.use((_req, _res, next) => next(new HttpError(404, 'Rota não encontrada')));
 app.use('/api', api);
 

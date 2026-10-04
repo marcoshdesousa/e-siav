@@ -55,6 +55,8 @@ As regras são garantidas no servidor (cada rota filtra pelo dono da conta logad
 - A unidade só envia requisitos.
 - A busca por nome no chat só encontra membros do próprio clube; de outros clubes, só pelo código.
 - O perfil público do membro mostra a idade, nunca a data de nascimento.
+- Fotos e áudios do chat e fotos de comprovação dos requisitos ficam fora da pasta pública e só abrem com login, para quem participa da conversa ou para quem enviou/avalia o requisito. Diretoria e Administrador Geral só veem a mídia de uma conversa privada quando ela foi denunciada a eles.
+- O login bloqueia por 15 minutos depois de 8 senhas erradas para o mesmo usuário (ou 30 no mesmo IP).
 
 ## Estrutura
 
@@ -80,6 +82,7 @@ Itens pagos já têm preço, botão **Comprar**, pedido de compra e liberação 
 - Use HTTPS (necessário para gravar áudio e instalar o app no celular).
 - Defina `JWT_SECRET` e mantenha a pasta `data/` (banco e uploads) em disco persistente; `DATA_DIR` muda o local.
 - `PORT` define a porta (padrão 3000).
+- Atrás de proxy reverso (Nginx, Render etc.), defina `TRUST_PROXY=1` para o limite de tentativas de login usar o IP real.
 
 ## Logo
 
