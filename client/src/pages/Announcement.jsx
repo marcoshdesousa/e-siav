@@ -31,7 +31,7 @@ export function AnnouncementView({ a, onClose }) {
             {a.event && <p className="muted ico"><CalendarDays size={15} /> {fmtDate(a.event.date)}{a.event.location ? <> · <MapPin size={15} /> {a.event.location}</> : null}</p>}
             {a.body && <p>{a.body}</p>}
             {a.event && <Attachments list={a.event.attachments} />}
-            {a.link && <a className="btn btn-primary btn-block" href={a.link} target="_blank" rel="noreferrer">Abrir link <ExternalLink size={16} /></a>}
+            {a.link && <a className="btn btn-primary btn-block" href={a.link} target="_blank" rel="noopener noreferrer">Abrir link <ExternalLink size={16} /></a>}
           </div>
         )}
       </div>

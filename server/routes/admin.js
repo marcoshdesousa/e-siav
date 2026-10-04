@@ -174,7 +174,7 @@ r.delete('/admin/awards/:id', (req, res) => {
 
 // ---------- Eventos ----------
 r.get('/admin/events', (_req, res) => {
-  const events = all(`SELECT e.*, d.name AS district_name FROM events e LEFT JOIN districts d ON d.id = e.district_id ORDER BY e.date DESC`);
+  const events = all(`SELECT e.*, d.name AS district_name FROM events e LEFT JOIN districts d ON d.id = e.district_id WHERE e.club_id IS NULL ORDER BY e.date DESC`);
   for (const e of events) {
     e.attachments = parseJson(e.attachments, []);
     e.participants = all('SELECT target_type, target_id FROM event_participants WHERE event_id = ?', e.id);
@@ -182,14 +182,14 @@ r.get('/admin/events', (_req, res) => {
   }
   res.json(events);
 });
-function eventFields(body) {
+export function eventFields(body) {
   const name = str(body.name, 120);
   if (!name) fail(400, 'Informe o nome do evento');
   if (!validDate(body.date)) fail(400, 'Informe a data do evento');
   return [name, str(body.description, 1000), body.date, str(body.location, 120), int(body.district_id), body.promote === undefined ? 1 : ['1', 'true', 1, true, 'on'].includes(body.promote) ? 1 : 0];
 }
 /** Anexos do evento (fotos e PDF): mantém os que vieram em "keep" e soma os novos. */
-function attachmentsOf(req, current = []) {
+export function attachmentsOf(req, current = []) {
   const keepUrls = parseJson(req.body.keep, null);
   const kept = Array.isArray(keepUrls) ? current.filter((a) => keepUrls.includes(a.url)) : current;
   const added = (req.files || []).map((f) => ({

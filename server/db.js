@@ -89,8 +89,8 @@ CREATE TABLE IF NOT EXISTS requirements (
   deadline TEXT NOT NULL,
   created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
   CHECK (late_points <= points),
-  -- Requisito de clube vale só para as unidades daquele clube.
-  CHECK (creator_type = 'admin' OR (audience = 'unit' AND club_id IS NOT NULL AND scope = 'clube')),
+  -- Requisito de clube vale só para as unidades e os desbravadores daquele clube.
+  CHECK (creator_type = 'admin' OR (audience IN ('unit','member') AND club_id IS NOT NULL AND scope = 'clube')),
   CHECK (creator_type = 'club' OR (club_id IS NULL AND scope IN ('geral','distrito'))),
   CHECK (scope <> 'distrito' OR district_id IS NOT NULL)
 );
@@ -314,11 +314,14 @@ WHEN (SELECT audience FROM requirements WHERE id = NEW.requirement_id) IS NOT NE
 BEGIN SELECT RAISE(ABORT, 'Este requisito não é para este tipo de conta'); END;
 
 -- Requisito criado por um clube só aceita envios das unidades daquele clube.
-CREATE TRIGGER IF NOT EXISTS trg_submission_club_req
+CREATE TRIGGER IF NOT EXISTS trg_submission_club_req2
 BEFORE INSERT ON submissions
 WHEN (SELECT creator_type FROM requirements WHERE id = NEW.requirement_id) = 'club'
   AND (SELECT club_id FROM requirements WHERE id = NEW.requirement_id)
-      IS NOT (SELECT club_id FROM units WHERE id = NEW.submitter_id)
+      IS NOT (CASE NEW.submitter_type
+                WHEN 'unit' THEN (SELECT club_id FROM units WHERE id = NEW.submitter_id)
+                WHEN 'member' THEN (SELECT club_id FROM members WHERE id = NEW.submitter_id)
+              END)
 BEGIN SELECT RAISE(ABORT, 'Requisito de outro clube'); END;
 
 -- Medalhas nunca são entregues por gatilho automático: só por um administrador.
@@ -379,6 +382,37 @@ function migrate() {
       COMMIT; PRAGMA foreign_keys = ON;`);
   }
 
+  // Requisitos do clube também para os desbravadores do clube: amplia a regra antiga
+  // (recria a tabela preservando tudo; os ids continuam os mesmos).
+  const reqSql = db.prepare("SELECT sql FROM sqlite_master WHERE name = 'requirements'").get()?.sql || '';
+  if (reqSql.includes("audience = 'unit' AND club_id IS NOT NULL")) {
+    const newSql = reqSql
+      .replace('CREATE TABLE requirements', 'CREATE TABLE requirements_new')
+      .replace('CREATE TABLE IF NOT EXISTS requirements', 'CREATE TABLE requirements_new')
+      .replace("audience = 'unit' AND club_id IS NOT NULL", "audience IN ('unit','member') AND club_id IS NOT NULL");
+    const columns = cols('requirements').join(', ');
+    db.exec('PRAGMA foreign_keys = OFF');
+    db.exec('BEGIN');
+    try {
+      db.exec(newSql);
+      db.exec(`INSERT INTO requirements_new (${columns}) SELECT ${columns} FROM requirements`);
+      db.exec('DROP TABLE requirements');
+      db.exec('PRAGMA legacy_alter_table = ON');
+      db.exec('ALTER TABLE requirements_new RENAME TO requirements');
+      db.exec('PRAGMA legacy_alter_table = OFF');
+      db.exec('COMMIT');
+    } catch (e) {
+      db.exec('ROLLBACK');
+      throw e;
+    } finally {
+      db.exec('PRAGMA foreign_keys = ON');
+    }
+  }
+  db.exec('DROP TRIGGER IF EXISTS trg_submission_club_req');
+
+  // Eventos e anúncios do clube (só para os membros dele) e público-alvo dos anúncios
+  add('events', 'club_id', 'INTEGER REFERENCES clubs(id) ON DELETE CASCADE');
+
   // Eventos com anexos (PDF ou fotos)
   add('events', 'attachments', "TEXT NOT NULL DEFAULT '[]'");
 
@@ -427,6 +461,9 @@ function migrate() {
     active INTEGER NOT NULL DEFAULT 1 CHECK (active IN (0,1)),
     created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
   )`);
+  add('announcements', 'club_id', 'INTEGER REFERENCES clubs(id) ON DELETE CASCADE'); // criado pela diretoria do clube
+  add('announcements', 'target_type', "TEXT NOT NULL DEFAULT 'all'"); // all | district | club
+  add('announcements', 'target_id', 'INTEGER');
 }
 
 /** Apaga tudo e recria o esquema (usado por "npm run seed"). */

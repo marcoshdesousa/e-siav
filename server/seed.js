@@ -191,6 +191,7 @@ export function seed() {
       memSocorros: req({ audience: 'member', scope: 'distrito', title: 'Primeiros socorros na prática', description: 'Responda ao quiz e envie uma foto montando um kit de primeiros socorros.', model: 'quiz_foto', points: 50, late: 25, deadline: iso(12), quiz: quizSocorros }),
       aguiasBandeirim: req({ club: 'aguias', audience: 'unit', title: 'Bandeirim da unidade', description: 'Enviem uma foto do bandeirim da unidade finalizado.', model: 'foto', points: 40, late: 20, deadline: iso(5) }),
       aguiasCantinho: req({ club: 'aguias', audience: 'unit', title: 'Relatório da reunião de unidade', description: 'Contem o que foi feito na última reunião da unidade.', model: 'texto', points: 30, late: 10, deadline: iso(-1) }),
+      aguiasLeitura: req({ club: 'aguias', audience: 'member', title: 'Leitura do mês: Provérbios', description: 'Leia o livro de Provérbios e conte o versículo de que mais gostou.', model: 'texto', points: 20, late: 10, deadline: iso(18) }),
       leoesCantinho: req({ club: 'leoes', audience: 'unit', title: 'Cantinho da unidade', description: 'Escrevam sobre o cantinho da unidade e enviem uma foto.', model: 'texto_foto', points: 50, late: 25, deadline: iso(8) }),
     };
 
@@ -215,6 +216,10 @@ export function seed() {
     sub(R.aguiasCantinho, 'unit', units.gavioes, { text: 'Estudamos a classe Amigo e planejamos o bandeirim.', status: 'aprovado', points: 10, late: true, at: 0 });
     sub(R.aguiasBandeirim, 'unit', units.gavioes, { photos: [], status: 'enviado', at: -1 });
     sub(R.leoesCantinho, 'unit', units.tigres, { text: 'Montamos o cantinho com as especialidades da unidade.', photos: [], status: 'aprovado', points: 50, at: -2 });
+    // Desbravadores (requisito do clube Águias)
+    sub(R.aguiasLeitura, 'member', members.lucas, { text: 'Provérbios 3:5 — confie no Senhor de todo o coração.', status: 'aprovado', points: 20, at: -2 });
+    sub(R.aguiasLeitura, 'member', members.beatriz, { text: 'Provérbios 17:17 — o amigo ama em todos os momentos.', status: 'aprovado', points: 20, at: -1 });
+    sub(R.aguiasLeitura, 'member', members.gabriel, { text: 'Provérbios 22:6.', status: 'enviado', at: 0 });
     // Membros (desbravadores)
     sub(R.memLei, 'member', members.pedro, { answers: [0, 1, 0, 0], correct: 4, total: 4, points: 40, at: -9 });
     sub(R.memLei, 'member', members.sofia, { answers: [0, 1, 0, 0], correct: 4, total: 4, points: 40, at: -8 });

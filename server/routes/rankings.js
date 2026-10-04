@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { get } from '../db.js';
 import { requireAuth } from '../auth.js';
-import { membersRanking, clubsRanking, unitsRanking, clubUnitsRanking, positionOf } from '../rankings.js';
+import { membersRanking, clubsRanking, unitsRanking, clubUnitsRanking, clubMembersRanking, positionOf } from '../rankings.js';
 import { fail, int } from '../util.js';
 
 const r = Router();
@@ -22,6 +22,13 @@ r.get('/rankings/club/:clubId/units', (req, res) => {
   res.json({ club, rows: clubUnitsRanking(clubId) });
 });
 
+// Ranking de desbravadores do clube (requisitos criados pelo clube).
+r.get('/rankings/club/:clubId/members', (req, res) => {
+  const clubId = int(req.params.clubId);
+  if (req.actor.type !== 'admin' && req.actor.club_id !== clubId) fail(403, 'Ranking de outro clube');
+  res.json(clubMembersRanking(clubId));
+});
+
 const pick = (row) => (row ? { position: row.position, points: row.points } : null);
 
 // Resumo: a posição do membro, da sua unidade e do seu clube de uma vez.
@@ -33,6 +40,7 @@ r.get('/rankings/summary', (req, res) => {
   const unitRow = unitId ? get('SELECT id, name, is_leadership FROM units WHERE id = ?', unitId) : null;
   res.json({
     member: a.type === 'member' && a.kind === 'desbravador' ? pick(positionOf(membersRanking(), a.id)) : null,
+    member_club: a.type === 'member' && a.kind === 'desbravador' ? pick(positionOf(clubMembersRanking(clubId), a.id)) : null,
     unit: unitRow && !unitRow.is_leadership
       ? { name: unitRow.name, id: unitRow.id, club: pick(positionOf(clubUnitsRanking(clubId), unitId)), general: pick(positionOf(unitsRanking(), unitId)) }
       : null,

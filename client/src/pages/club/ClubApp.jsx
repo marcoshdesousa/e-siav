@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import {
-  Award, BadgeCheck, Check, ChevronRight, ClipboardCheck, Compass, Flag, Inbox, Map, MapPin, Menu, MessageCircle, ShieldAlert, Sparkles, Tent, Trophy, Users,
+  Award, BadgeCheck, CalendarDays, Check, Megaphone, Plus, ChevronRight, ClipboardCheck, Compass, Flag, Inbox, Map, MapPin, Menu, MessageCircle, ShieldAlert, Sparkles, Tent, Trophy, Users,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -17,6 +17,8 @@ import RankingHub, { RankingTable } from '../Ranking.jsx';
 import ClubsBrowser from '../Clubs.jsx';
 import { ChatConversation, ChatHome, ReportsPanel } from '../Chat.jsx';
 import CatalogPicker, { CatalogBadge } from '../Catalog.jsx';
+import EventsAdmin from '../admin/Events.jsx';
+import AnnouncementsAdmin from '../admin/Announcements.jsx';
 
 const base = '/clube';
 
@@ -139,8 +141,13 @@ function AchievementsModal({ member, onClose, onDone }) {
   const [newName, setNewName] = useState('');
   const [busy, run] = useAsync();
   const chosen = sel ?? new Set((detail.data?.achievements || []).map((a) => a.content_id));
+  const [excellence, setExcellence] = useState(null);
+  const exc = excellence ?? !!detail.data?.excellence;
   const save = async () => {
-    await run(() => api.put(`/club/members/${member.id}/achievements`, { content_ids: [...chosen] }), 'Classes e especialidades salvas!');
+    await run(async () => {
+      await api.put(`/club/members/${member.id}/achievements`, { content_ids: [...chosen] });
+      if (excellence !== null) await api.put(`/club/members/${member.id}`, { excellence: excellence ? 1 : 0 });
+    }, 'Salvo! Já aparece no perfil.');
     onDone();
   };
   const addMissing = async () => {
@@ -154,6 +161,7 @@ function AchievementsModal({ member, onClose, onDone }) {
   return (
     <Modal title={`Classes e especialidades · ${member.name.split(' ')[0]}`} onClose={onClose}
       footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} onClick={save}>Salvar ({chosen.size})</Button></>}>
+      <label className="check exc-check"><input type="checkbox" checked={exc} onChange={(e) => setExcellence(e.target.checked)} /> <Sparkles size={16} color="#B07D00" /> Tem a Insígnia de Excelência</label>
       <Tabs tabs={[['especialidade', 'Especialidades'], ['classe', 'Classes']]} value={type} onChange={setType} />
       <Loading data={cat.data && detail.data} loading={cat.loading || detail.loading} error={cat.error || detail.error}>
         {() => (
@@ -179,6 +187,9 @@ function AchievementsModal({ member, onClose, onDone }) {
 /** Aprovações: classes e especialidades que os membros informaram ter. */
 function ApprovalsPage() {
   const [status, setStatus] = useState('pendente');
+  const members = useLoad(() => api.get('/club/members'));
+  const [picking, setPicking] = useState(false);
+  const [addFor, setAddFor] = useState(null);
   const state = useLoad(() => api.get('/club/achievement-requests?status=' + status), [status]);
   const [sel, setSel] = useState(new Set());
   const [busy, run] = useAsync();
@@ -190,7 +201,22 @@ function ApprovalsPage() {
   const toggle = (id) => { const s = new Set(sel); s.has(id) ? s.delete(id) : s.add(id); setSel(s); };
   return (
     <>
-      <PageHeader title="Aprovações" subtitle="Classes e especialidades que os membros dizem ter" />
+      <PageHeader title="Aprovações" subtitle="Classes e especialidades que os membros dizem ter"
+        action={<Button small onClick={() => setPicking(true)}><Plus size={15} /> Adicionar</Button>} />
+      {picking && (
+        <Modal title="Adicionar para qual membro?" onClose={() => setPicking(false)}>
+          <p className="muted small" style={{ marginBottom: '.6rem' }}>Registre especialidades, classes e a Insígnia de Excelência mesmo que o membro não tenha pedido.</p>
+          <div className="list">
+            {(members.data || []).map((m) => (
+              <button key={m.id} type="button" className="list-item" style={{ font: 'inherit', textAlign: 'left', cursor: 'pointer' }} onClick={() => { setPicking(false); setAddFor(m); }}>
+                <Avatar src={m.photo} name={m.name} size={38} />
+                <div className="grow"><div className="title">{m.name}</div><div className="sub">{m.unit_name || 'Sem unidade'} · {m.cargo}</div></div>
+              </button>
+            ))}
+          </div>
+        </Modal>
+      )}
+      {addFor && <AchievementsModal member={addFor} onClose={() => setAddFor(null)} onDone={() => { setAddFor(null); state.reload(); }} />}
       <div className="seg" style={{ marginBottom: '1rem' }}>
         {[['pendente', 'Para aprovar'], ['aprovado', 'Aprovadas'], ['recusado', 'Recusadas']].map(([k, l]) => (
           <button key={k} type="button" className={status === k ? 'active' : ''} onClick={() => { setStatus(k); setSel(new Set()); }}>{l}</button>
@@ -355,9 +381,9 @@ function RequirementsPage() {
   return (
     <>
       <PageHeader title="Requisitos" />
-      <Tabs tabs={[['cumprir', 'Do clube'], ['unidades', 'Para unidades'], ['avaliar', 'Avaliar']]} value={tab} onChange={setTab} />
-      {tab === 'cumprir' && <><p className="muted small">Requisitos gerais de clube criados pelo Administrador Geral.</p><RequirementsTodo /></>}
-      {tab === 'unidades' && <><p className="muted small">Crie requisitos com prazo e pontuação para as unidades do seu clube.</p><CreatedRequirements /></>}
+      <Tabs tabs={[['cumprir', 'Requisitos do App'], ['criados', 'Criados pelo clube'], ['avaliar', 'Avaliar']]} value={tab} onChange={setTab} />
+      {tab === 'cumprir' && <><p className="muted small">Requisitos que o App do DBV manda para o seu clube cumprir.</p><RequirementsTodo /></>}
+      {tab === 'criados' && <><p className="muted small">Crie requisitos com prazo e pontos para as unidades ou para os desbravadores do seu clube. Eles contam no ranking do clube.</p><CreatedRequirements /></>}
       {tab === 'avaliar' && <ReviewsPanel />}
     </>
   );
@@ -376,6 +402,8 @@ export default function ClubApp() {
   const more = [
     { to: `${base}/aprovacoes`, icon: BadgeCheck, label: 'Aprovações', hint: 'Classes e especialidades' },
     { to: `${base}/unidades`, icon: Flag, label: 'Unidades', hint: 'Criar e editar' },
+    { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos', hint: 'Do seu clube' },
+    { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: 'Para os seus membros' },
     { to: `${base}/ranking`, icon: Trophy, label: 'Ranking', hint: 'Unidades e clubes' },
     { to: `${base}/denuncias`, icon: ShieldAlert, label: 'Denúncias', hint: 'Do chat' },
     { to: `${base}/clubes`, icon: Map, label: 'Clubes', hint: 'Por distrito' },
@@ -392,6 +420,8 @@ export default function ClubApp() {
               <Route path="membros" element={<MembersPage />} />
               <Route path="unidades" element={<UnitsPage />} />
               <Route path="aprovacoes" element={<ApprovalsPage />} />
+              <Route path="eventos" element={<EventsAdmin />} />
+              <Route path="anuncios" element={<AnnouncementsAdmin />} />
               <Route path="requisitos" element={<RequirementsPage />} />
               <Route path="ranking" element={<RankingHub base={base} />} />
               <Route path="chat" element={<ChatHome base={base} />} />

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FileUp, ImageUp, Pencil, Trash2, Upload } from 'lucide-react';
+import { FileUp, ImageUp, Pencil, Plus, Trash2, Upload } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { Badge, Button, Card, Confirm, Field, Loading, Modal, PageHeader, Section, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
 import { CatalogBadge, groupCatalog } from '../Catalog.jsx';
@@ -41,6 +41,36 @@ function EditItem({ item, areas, onClose, onDone }) {
   );
 }
 
+function AddItem({ type, areas, onClose, onDone }) {
+  const [f, setF] = useState({ name: '', category: areas[0] || '', code: '', age: '', leader: false });
+  const [busy, run] = useAsync();
+  const save = async () => {
+    await run(() => api.post('/admin/catalog', { ...f, type }), type === 'classe' ? 'Classe adicionada!' : 'Especialidade adicionada!');
+    onDone();
+  };
+  return (
+    <Modal title={type === 'classe' ? 'Nova classe' : 'Nova especialidade'} onClose={onClose} footer={<Button busy={busy} disabled={f.name.trim().length < 2} onClick={save}>Adicionar</Button>}>
+      <div className="form">
+        <Field label="Nome"><input autoFocus value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
+        {type === 'especialidade' ? (
+          <div className="grid2">
+            <Field label="Área">
+              <select value={f.category} onChange={(e) => setF({ ...f, category: e.target.value })}>{areas.map((a) => <option key={a}>{a}</option>)}</select>
+            </Field>
+            <Field label="Código"><input value={f.code} onChange={(e) => setF({ ...f, code: e.target.value })} placeholder="Opcional" /></Field>
+          </div>
+        ) : (
+          <div className="grid2">
+            <label className="check"><input type="checkbox" checked={f.leader} onChange={(e) => setF({ ...f, leader: e.target.checked })} /> Classe de liderança</label>
+            {!f.leader && <Field label="Idade"><input type="number" min="10" max="15" value={f.age} onChange={(e) => setF({ ...f, age: e.target.value })} /></Field>}
+          </div>
+        )}
+        <p className="muted small">Depois é só enviar a foto (aqui ou pelo envio em lote). Nada no catálogo é vendido.</p>
+      </div>
+    </Modal>
+  );
+}
+
 /**
  * Catálogo oficial de classes e especialidades: aqui só se mantém a lista e as fotos
  * (nada é vendido nem tem requisito online). Quem registra no perfil é a diretoria do clube.
@@ -52,6 +82,7 @@ export default function CatalogAdmin() {
   const [text, setText] = useState('');
   const [editing, setEditing] = useState(null);
   const [result, setResult] = useState(null);
+  const [adding, setAdding] = useState(false);
   const [busy, run] = useAsync();
 
   const doImport = async () => {
@@ -78,7 +109,10 @@ export default function CatalogAdmin() {
             <input type="file" accept="image/*" multiple hidden onChange={(e) => { uploadImages(e.target.files); e.target.value = ''; }} />
           </label>
           <p className="muted small">Cada foto é ligada pelo <b>nome do arquivo</b>: “Nós e Amarras.png”, “nos-e-amarras.jpg” ou pelo código (“AR-012.png”). Pode mandar a pasta inteira.</p>
-          {type === 'especialidade' && <Button variant="secondary" onClick={() => setImporting(true)}><FileUp size={16} /> Importar lista do manual</Button>}
+          <div className="grid2">
+            <Button variant="secondary" onClick={() => setAdding(true)}><Plus size={16} /> Adicionar {type === 'classe' ? 'classe' : 'especialidade'}</Button>
+            {type === 'especialidade' && <Button variant="secondary" onClick={() => setImporting(true)}><FileUp size={16} /> Importar lista</Button>}
+          </div>
           {busy && <p className="small muted">Enviando…</p>}
           {result && (
             <div className="small">
@@ -111,6 +145,7 @@ export default function CatalogAdmin() {
                   </div>
                 </Section>
               ))}
+              {adding && <AddItem type={type} areas={d.areas} onClose={() => setAdding(false)} onDone={() => { setAdding(false); state.reload(); }} />}
               {editing && <EditItem item={editing} areas={d.areas} onClose={() => setEditing(null)} onDone={() => { setEditing(null); state.reload(); }} />}
             </>
           );

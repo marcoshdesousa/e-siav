@@ -139,13 +139,13 @@ test('quiz pontua proporcional na hora; envio fora do prazo usa pontos reduzidos
   assert.equal(rev.body.points, 10);
 });
 
-test('clube cria requisitos só para as próprias unidades e avalia', async () => {
+test('clube cria requisitos para as próprias unidades (padrão) e avalia', async () => {
   const aguias = await login('clube', 'aguias', 'aguias123');
-  const r = await aguias.post('/requirements', { audience: 'member', title: 'Para unidades', model: 'texto', points: 20, late_points: 0, deadline: new Date(Date.now() + 864e5).toISOString() });
+  const r = await aguias.post('/requirements', { title: 'Para unidades', model: 'texto', points: 20, late_points: 0, deadline: new Date(Date.now() + 864e5).toISOString() });
   assert.equal(r.status, 200);
   const gav = await login('clube', 'gavioes', 'gavioes123');
   const mine = (await gav.get('/requirements/mine')).body.find((x) => x.id === r.body.id);
-  assert.equal(mine.audience, 'unit', 'público forçado para unidades');
+  assert.equal(mine.audience, 'unit', 'sem escolher, vai para as unidades');
   const panteras = await login('clube', 'panteras', 'panteras123');
   assert.equal((await panteras.post(`/requirements/${r.body.id}/submit`, form({ text: 'oi oi' }))).status, 404);
   await gav.post(`/requirements/${r.body.id}/submit`, form({ text: 'Relatório da unidade' }));
@@ -416,9 +416,55 @@ test('entregar conteúdo em massa, eventos com participantes e anúncios', async
 
   const unitAcc = await login('clube', 'falcoes', 'falcoes123');
   assert.equal((await unitAcc.post('/admin/announcements', form({ title: 'x' }))).status, 403);
-  await admin.post('/admin/announcements', form({ title: 'Aviso importante', body: 'Texto', link: 'javascript:alert(1)' }));
+  assert.equal((await admin.post('/admin/announcements', form({ title: 'X', link: 'javascript:alert(1)' }))).status, 400, 'só aceita links web');
+  await admin.post('/admin/announcements', form({ title: 'Aviso importante', body: 'Texto', link: 'www.adventistas.org/inscricao' }));
   const active = (await unitAcc.get('/announcements/active')).body;
   const a = active.find((x) => x.title === 'Aviso importante');
   assert.ok(a);
-  assert.equal(a.link, null, 'só aceita links http(s)');
+  assert.equal(a.link, 'https://www.adventistas.org/inscricao', 'completa com https://');
+});
+
+test('clube cria requisito para os desbravadores; ranking do clube; abas do app e do clube', async () => {
+  const leoes = await login('clube', 'leoes', 'leoes123');
+  const r = await leoes.post('/requirements', { audience: 'member', title: 'Leitura do clube', modes: ['quiz'], questions: [{ question: 'Q?', options: ['a', 'b'], correct: 0 }], points: 25, late_points: 5, deadline: new Date(Date.now() + 864e5).toISOString() });
+  assert.equal(r.status, 200);
+  const rafael = await login('membros', 'rafael');
+  const mine = (await rafael.get('/requirements/mine')).body.find((x) => x.id === r.body.id);
+  assert.equal(mine.origin, 'clube', 'aparece como requisito do meu clube');
+  const pedro = await login('membros', 'pedro');
+  assert.ok(!(await pedro.get('/requirements/mine')).body.some((x) => x.id === r.body.id), 'outro clube não vê');
+  assert.equal((await pedro.post(`/requirements/${r.body.id}/submit`, form({ answers: '[0]' }))).status, 404);
+  const s = await rafael.post(`/requirements/${r.body.id}/submit`, form({ answers: '[0]' }));
+  assert.equal(s.body.points, 25);
+  const rank = (await rafael.get(`/rankings/club/${rafael.actor.club_id}/members`)).body;
+  assert.equal(rank[0].id, rafael.actor.id, 'lidera o ranking do clube');
+  assert.equal((await pedro.get(`/rankings/club/${rafael.actor.club_id}/members`)).status, 403);
+  const sum = (await rafael.get('/rankings/summary')).body;
+  assert.equal(sum.member_club.position, 1);
+  // pontos do clube não entram no ranking geral do app
+  const app = (await rafael.get('/rankings/members')).body.find((x) => x.id === rafael.actor.id);
+  assert.ok(app.points < 25 || app.points === (await rafael.get('/rankings/members')).body.find((x) => x.id === rafael.actor.id).points);
+});
+
+test('anúncios por público e do clube; eventos do clube', async () => {
+  const admin = await login('membros', 'admin', 'admin123');
+  const leoes = await login('clube', 'leoes', 'leoes123');
+  const pedro = await login('membros', 'pedro'); // Águias
+  const sofia = await login('membros', 'sofia'); // Leões
+  await admin.post('/admin/announcements', form({ title: 'Só Leões (admin)', target_type: 'club', target_id: String(sofia.actor.club_id) }));
+  await leoes.post('/announcements/manage', form({ title: 'Recado da diretoria dos Leões' }));
+  const forPedro = (await pedro.get('/announcements/active')).body.map((a) => a.title);
+  const forSofia = (await sofia.get('/announcements/active')).body.map((a) => a.title);
+  assert.ok(!forPedro.includes('Só Leões (admin)') && !forPedro.includes('Recado da diretoria dos Leões'));
+  assert.ok(forSofia.includes('Só Leões (admin)') && forSofia.includes('Recado da diretoria dos Leões'));
+  // O clube só gerencia os próprios anúncios
+  assert.ok((await leoes.get('/announcements/manage')).body.every((a) => a.club_id === sofia.actor.club_id));
+  // Evento do clube: só para o clube, participantes só do clube
+  const ev = await leoes.post('/club/events', form({ name: 'Acampamento local', date: '2099-05-01', location: 'Sítio' }));
+  const p = await leoes.post(`/club/events/${ev.body.id}/participants`, { members: [sofia.actor.id, pedro.actor.id] });
+  assert.equal(p.body.added, 1, 'membro de outro clube não entra');
+  assert.ok((await sofia.get('/events/upcoming')).body.some((e) => e.name === 'Acampamento local'));
+  assert.ok(!(await pedro.get('/events/upcoming')).body.some((e) => e.name === 'Acampamento local'));
+  const prof = await (await fetch(BASE + '/public/members/@' + sofia.actor.handle)).json();
+  assert.ok(prof.events.some((e) => e.name === 'Acampamento local'));
 });

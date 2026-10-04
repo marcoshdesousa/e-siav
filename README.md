@@ -42,7 +42,8 @@ Testes da API (permissões, privacidade, pontuação, ranking e chat): `npm test
 - **Portal da Unidade**: requisitos do clube e gerais de unidade, ranking e perfil.
 - **Portal do Membro**: Perfil, Requisitos (só desbravadores), Especialidades, Classes, Cursos, Ranking, Clubes e Chat.
 - **Requisitos**: modelos Texto, Foto, Quiz, Relatório + foto, Quiz + foto; pontos no prazo e fora do prazo; quiz com nota proporcional calculada na hora; demais modelos avaliados por quem criou; estados pendente, enviado, aprovado, recusado e fora do prazo.
-- **Quatro rankings** atualizados a cada envio pontuado (membros, unidades do clube, geral de unidades, clubes), com pódio, filtro por distrito e desempate por quem enviou primeiro. Não há ranking de liderança.
+- **Rankings** atualizados a cada envio pontuado, com pódio e desempate por quem enviou primeiro: membros (Meu clube · Distrito · Todos), unidades do clube, unidades gerais (Distrito · Todos) e clubes (Distrito · Todos). Não há ranking de liderança.
+- **Requisitos do clube**: a diretoria cria requisitos para as próprias unidades e para os próprios desbravadores; contam no ranking do clube. Desbravador e unidade veem as abas "Requisitos do App" e "Requisitos do meu clube".
 - **Perfis públicos** com link para compartilhar: `/p/clube/:id`, `/p/unidade/:id`, `/p/membro/:código`. Clubes e unidades mostram só a quantidade de membros.
 - **Chat estilo WhatsApp**: Unidade (grupo), Diretoria (membro ↔ clube) e Direta (pelo @ ou pelo nome). Texto, áudio gravado na hora e fotos; tempo real via WebSocket; horário, ✓✓ de lida, aviso de nova mensagem; apagar mensagem para mim ou para todos; limpar conversa (só para você); arquivar e apagar conversas diretas; Denunciar e Bloquear em toda conversa (denúncias vão para a diretoria e para o Administrador Geral, com cópia da mensagem mesmo se ela for apagada depois).
 - **@ do membro**: escolhido no primeiro acesso; é por ele que os outros encontram a pessoa no chat, aparece no perfil e forma o link `/p/membro/@arroba`.
@@ -52,7 +53,8 @@ Testes da API (permissões, privacidade, pontuação, ranking e chat): `npm test
 - **Conteúdo do admin**: só cursos (grátis ou pagos) e medalhas/troféus (sempre grátis).
 - **Entregar conteúdo**: medalhas, troféus e cursos entregues de uma vez, com filtros por distrito, clube, unidade e tipo de membro, busca e "selecionar todos".
 - **Eventos** (sempre grátis) com anexos (fotos e PDF), participantes marcados em massa e aviso na abertura do app até a data do evento.
-- **Anúncios**: aparecem grandes no meio da tela ao abrir o app; tocar mostra os detalhes.
+- **Anúncios**: aparecem grandes no meio da tela ao abrir o app; tocar mostra os detalhes e o link. O Administrador Geral escolhe o público (todo o App, um distrito ou um clube); a diretoria de um clube publica só para os próprios membros. Tamanho ideal da imagem: 1080 × 1350 px (4:5).
+- **Eventos do clube**: a diretoria cria eventos só do clube (ex.: acampamento local) e marca os participantes.
 - **Modo claro e escuro** automáticos, seguindo o celular.
 
 ## Regras de permissão e privacidade

@@ -6,6 +6,13 @@ import { fmtDate } from '../../format.js';
 import { Badge, Button, Card, Confirm, Empty, Field, Loading, Modal, PageHeader, Section, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
 import PeoplePicker, { emptySelection } from './PeoplePicker.jsx';
 
+/** Admin: eventos do App. Clube: eventos só do clube (ex.: acampamento local). */
+const useEventsApi = () => {
+  const { actor } = useAuth();
+  const isClub = actor.type === 'club';
+  return { isClub, base: isClub ? '/club/events' : '/admin/events', directory: isClub ? '/club/directory' : '/admin/directory' };
+};
+
 const blank = (districtId) => ({ name: '', date: new Date().toISOString().slice(0, 10), location: '', description: '', district_id: districtId || '', attachments: [], promote: true });
 
 /** Anexos (fotos e PDF) para ilustrar o evento. */
@@ -24,6 +31,7 @@ export function Attachments({ list }) {
 
 function EventForm({ initial, onDone, onCancel }) {
   const { meta } = useAuth();
+  const ev = useEventsApi();
   const [f, setF] = useState(initial);
   const [files, setFiles] = useState([]);
   const [busy, run] = useAsync();
@@ -33,7 +41,7 @@ function EventForm({ initial, onDone, onCancel }) {
       name: f.name, date: f.date, location: f.location, description: f.description, district_id: f.district_id, promote: f.promote ? 1 : 0,
       keep: f.attachments.map((a) => a.url), files,
     });
-    await run(() => (f.id ? api.put('/admin/events/' + f.id, body) : api.post('/admin/events', body)), f.id ? 'Evento atualizado!' : 'Evento criado!');
+    await run(() => (f.id ? api.put(`${ev.base}/${f.id}`, body) : api.post(ev.base, body)), f.id ? 'Evento atualizado!' : 'Evento criado!');
     setFiles([]);
     onDone();
   };
@@ -42,12 +50,14 @@ function EventForm({ initial, onDone, onCancel }) {
       <Field label="Nome do evento" hint="Ex.: Acampamento do distrito"><input value={f.name} onChange={set('name')} /></Field>
       <div className="grid2">
         <Field label="Data"><input type="date" value={f.date} onChange={set('date')} /></Field>
-        <Field label="Distrito">
-          <select value={f.district_id || ''} onChange={set('district_id')}>
-            <option value="">Todos</option>
-            {meta.districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
-          </select>
-        </Field>
+        {!ev.isClub && (
+          <Field label="Distrito">
+            <select value={f.district_id || ''} onChange={set('district_id')}>
+              <option value="">Todos</option>
+              {meta.districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
+            </select>
+          </Field>
+        )}
       </div>
       <Field label="Local"><input value={f.location} onChange={set('location')} /></Field>
       <Field label="Descrição"><textarea value={f.description} onChange={set('description')} /></Field>
@@ -66,7 +76,7 @@ function EventForm({ initial, onDone, onCancel }) {
           </label>
         </div>
       </Field>
-      <label className="check"><input type="checkbox" checked={!!f.promote} onChange={(e) => setF({ ...f, promote: e.target.checked })} /> Mostrar na tela de todos ao abrir o app, até a data do evento</label>
+      <label className="check"><input type="checkbox" checked={!!f.promote} onChange={(e) => setF({ ...f, promote: e.target.checked })} /> Mostrar na tela {ev.isClub ? 'dos membros do clube' : 'de todos'} ao abrir o app, até a data do evento</label>
       <p className="muted small" style={{ marginTop: '-.4rem' }}>Todo evento é grátis. A primeira foto dos anexos vira a capa do aviso.</p>
       <div className="row" style={{ justifyContent: 'flex-end' }}>
         {onCancel && <Button variant="secondary" onClick={onCancel}>Cancelar</Button>}
@@ -77,12 +87,13 @@ function EventForm({ initial, onDone, onCancel }) {
 }
 
 function ParticipantsModal({ event, onClose, onChanged }) {
-  const directory = useLoad(() => api.get('/admin/directory'));
+  const ev = useEventsApi();
+  const directory = useLoad(() => api.get(ev.directory));
   const [adding, setAdding] = useState(false);
   const [sel, setSel] = useState(emptySelection);
   const [busy, run] = useAsync();
   const add = async () => {
-    const r = await run(() => api.post(`/admin/events/${event.id}/participants`, { clubs: [...sel.clubs], members: [...sel.members] }));
+    const r = await run(() => api.post(`${ev.base}/${event.id}/participants`, { clubs: [...sel.clubs], members: [...sel.members] }));
     notify(`${r.added} participante${r.added === 1 ? '' : 's'} adicionado${r.added === 1 ? '' : 's'}`);
     setSel(emptySelection());
     setAdding(false);
@@ -110,11 +121,12 @@ function ParticipantsModal({ event, onClose, onChanged }) {
 }
 
 function ParticipantRow({ p, event, onChanged }) {
+  const ev = useEventsApi();
   const [, run] = useAsync();
   return (
     <div className="row between" style={{ padding: '.4rem 0', borderBottom: '1px solid var(--line)' }}>
       <span className="ico">{p.target_type === 'club' ? <Tent size={15} /> : <UserRound size={15} />} {p.name}</span>
-      <Confirm text="Remover participante?" onYes={() => run(() => api.del(`/admin/events/${event.id}/participants/${p.target_type}/${p.target_id}`), 'Removido').then(onChanged)}>Remover</Confirm>
+      <Confirm text="Remover participante?" onYes={() => run(() => api.del(`${ev.base}/${event.id}/participants/${p.target_type}/${p.target_id}`), 'Removido').then(onChanged)}>Remover</Confirm>
     </div>
   );
 }
@@ -122,15 +134,16 @@ function ParticipantRow({ p, event, onChanged }) {
 /** Eventos: página própria com "Criar evento" e "Eventos criados". */
 export default function EventsAdmin() {
   const { meta } = useAuth();
+  const ev = useEventsApi();
   const [tab, setTab] = useState('criados');
-  const state = useLoad(() => api.get('/admin/events'));
+  const state = useLoad(() => api.get(ev.base));
   const [editing, setEditing] = useState(null);
   const [partsOf, setPartsOf] = useState(null);
   const [, run] = useAsync();
   const current = partsOf && state.data?.find((e) => e.id === partsOf);
   return (
     <>
-      <PageHeader title="Eventos" subtitle="Crie eventos e marque quem participou" />
+      <PageHeader title="Eventos" subtitle={ev.isClub ? 'Eventos do seu clube (ex.: acampamento local) — só os membros do clube veem' : 'Crie eventos e marque quem participou'} />
       <Tabs tabs={[['criar', 'Criar evento'], ['criados', 'Eventos criados']]} value={tab} onChange={setTab} />
       {tab === 'criar' && (
         <Card><EventForm key={state.data?.length} initial={blank(meta.districts[0]?.id)} onDone={() => { state.reload(); setTab('criados'); }} /></Card>
@@ -154,7 +167,7 @@ export default function EventsAdmin() {
                 <div className="row wrap">
                   <Button small variant="yellow" onClick={() => setPartsOf(e.id)}><Users size={14} /> Participantes</Button>
                   <Button small variant="secondary" onClick={() => setEditing(e)}><Pencil size={14} /> Editar</Button>
-                  <Confirm text="Excluir este evento? Ele sai do perfil de todos os participantes." onYes={() => run(() => api.del('/admin/events/' + e.id), 'Evento excluído').then(state.reload)}><Trash2 size={14} /> Excluir</Confirm>
+                  <Confirm text="Excluir este evento? Ele sai do perfil de todos os participantes." onYes={() => run(() => api.del(`${ev.base}/${e.id}`), 'Evento excluído').then(state.reload)}><Trash2 size={14} /> Excluir</Confirm>
                 </div>
               </Card>
             );

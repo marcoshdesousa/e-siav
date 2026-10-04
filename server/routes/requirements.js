@@ -14,7 +14,8 @@ function applies(actor, req) {
   const audience = { club: 'club', unit: 'unit', member: 'member' }[actor.type];
   if (req.audience !== audience) return false;
   if (actor.type === 'member' && actor.kind !== 'desbravador') return false; // liderança não tem requisitos
-  if (req.creator_type === 'club') return actor.type === 'unit' && req.club_id === actor.club_id;
+  // Requisitos do clube: só para as unidades e os desbravadores daquele clube.
+  if (req.creator_type === 'club') return req.club_id === actor.club_id && actor.type !== 'club';
   return req.scope === 'geral' || req.district_id === actor.district_id;
 }
 
@@ -116,8 +117,8 @@ r.post('/requirements', requireAuth('admin', 'club'), imageUpload.array('images'
       if (!get('SELECT 1 FROM districts WHERE id = ?', districtId)) fail(400, 'Escolha o distrito');
     }
   } else {
-    // Clube cria apenas para as próprias unidades.
-    audience = 'unit';
+    // Clube cria para as próprias unidades ou para os próprios desbravadores.
+    audience = b.audience === 'member' ? 'member' : 'unit';
     scope = 'clube';
     clubId = a.id;
   }

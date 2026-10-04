@@ -46,12 +46,13 @@ export function RankingTable({ rows, highlight, sub, link, avatarSquare = true }
 }
 
 /** Distrito do usuário ou todos. O administrador escolhe qualquer distrito. */
-function DistrictFilter({ value, onChange }) {
+function DistrictFilter({ value, onChange, withClub }) {
   const { actor, meta } = useAuth();
   const mine = meta.districts.find((d) => d.id === actor.district_id);
   if (mine) {
     return (
       <div className="seg" role="tablist">
+        {withClub && <button type="button" className={value === 'clube' ? 'active' : ''} onClick={() => onChange('clube')}>Meu clube</button>}
         <button type="button" className={value === mine.id ? 'active' : ''} onClick={() => onChange(mine.id)}>{mine.name}</button>
         <button type="button" className={value === null ? 'active' : ''} onClick={() => onChange(null)}>Todos</button>
       </div>
@@ -66,16 +67,21 @@ function DistrictFilter({ value, onChange }) {
 }
 
 const SUBTITLE = {
-  membros: 'Desbravadores · pontos dos requisitos gerais',
+  clube: 'Desbravadores do seu clube · requisitos do clube',
+  membros: 'Desbravadores · requisitos do App',
   unidades: 'Unidades de todos os clubes · requisitos gerais',
   clubes: 'Clubes · requisitos gerais de clube',
 };
 
 function GeneralRanking({ kind, base, highlight }) {
   const { actor } = useAuth();
-  const [district, setDistrict] = useState(actor.district_id ?? null);
+  const withClub = kind === 'membros' && !!actor.club_id;
+  const [district, setDistrict] = useState(withClub ? 'clube' : actor.district_id ?? null);
   const url = { membros: '/rankings/members', unidades: '/rankings/units', clubes: '/rankings/clubs' }[kind];
-  const state = useLoad(() => api.get(url + (district ? `?district_id=${district}` : '')), [kind, district]);
+  const state = useLoad(
+    () => (district === 'clube' ? api.get(`/rankings/club/${actor.club_id}/members`) : api.get(url + (district ? `?district_id=${district}` : ''))),
+    [kind, district],
+  );
   const props = {
     membros: { sub: (r) => r.club_name, link: (r) => `${base}/ver/membro/${r.code}`, avatarSquare: false },
     unidades: { sub: (r) => r.club_name, link: (r) => `${base}/ver/unidade/${r.id}` },
@@ -84,8 +90,8 @@ function GeneralRanking({ kind, base, highlight }) {
   return (
     <>
       <div className="rank-tools">
-        <span className="muted small">{SUBTITLE[kind]}</span>
-        <DistrictFilter value={district} onChange={setDistrict} />
+        <span className="muted small">{SUBTITLE[district === 'clube' ? 'clube' : kind]}</span>
+        <DistrictFilter value={district} onChange={setDistrict} withClub={withClub} />
       </div>
       <Loading {...state}>{(rows) => <RankingTable rows={rows} highlight={highlight} {...props} />}</Loading>
     </>
@@ -138,7 +144,10 @@ export default function RankingHub({ base }) {
         <div className="pos-grid">
           {actor.type === 'member' && (
             actor.kind === 'desbravador'
-              ? <SummaryCard gold icon={<Compass size={16} />} title="Minha posição" pos={summary.data.member} onClick={() => setTab('membros')} />
+              ? <>
+                <SummaryCard gold icon={<Compass size={16} />} title="Eu no meu clube" pos={summary.data.member_club} onClick={() => setTab('membros')} />
+                <SummaryCard gold icon={<Globe2 size={16} />} title="Eu no App" pos={summary.data.member} onClick={() => setTab('membros')} />
+              </>
               : <div className="pos-card muted small">A liderança não participa do ranking individual.</div>
           )}
           {summary.data.unit && <SummaryCard icon={<Flag size={16} />} title={`${summary.data.unit.name} no clube`} pos={summary.data.unit.club} onClick={() => setTab('clube')} />}

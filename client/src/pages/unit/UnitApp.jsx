@@ -35,7 +35,7 @@ export default function UnitApp() {
   return (
     <Shell tabs={tabs}>
       <Routes>
-        <Route index element={<><PageHeader title="Requisitos da unidade" subtitle="Cumpram juntos dentro do prazo e subam no ranking" /><RequirementsTodo groupByOrigin /></>} />
+        <Route index element={<><PageHeader title="Requisitos da unidade" subtitle="Cumpram juntos dentro do prazo e subam no ranking" /><RequirementsTodo originTabs clubLabel="Requisitos do clube" /></>} />
         <Route path="ranking" element={<RankingHub base={base} />} />
         <Route path="perfil" element={<UnitProfile />} />
         <Route path="clubes" element={<ClubsBrowser base={base} />} />

@@ -4,7 +4,7 @@ import { api, toForm } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { AUDIENCE_LABEL, fmtDateTime, isoToLocal, localToIso, timeLeft } from '../format.js';
 import {
-  Avatar, Badge, Button, Card, Confirm, Empty, Field, Gallery, ImagesInput, Loading, Modal, ModesPicker, QuizAnswer, QuizBuilder, Section, StateBadge, Tabs,
+  Avatar, Badge, Button, Card, Confirm, Empty, Field, Gallery, ImagesInput, Loading, Modal, ModesPicker, QuizAnswer, QuizBuilder, StateBadge, Tabs,
   modesLabel, notify, useAsync, useLoad,
 } from '../ui.jsx';
 
@@ -15,6 +15,8 @@ export function Lightbox({ src, onClose }) {
 
 /** Públicos dos requisitos, na ordem pedida: desbravadores, unidades e clubes. */
 const AUDIENCES = [['member', 'Desbravadores'], ['unit', 'Unidades'], ['club', 'Clubes']];
+/** O clube cria para as próprias unidades e para os próprios desbravadores. */
+const CLUB_AUDIENCES = [['unit', 'Unidades'], ['member', 'Desbravadores']];
 
 function RequirementCard({ r, onSubmit }) {
   const left = timeLeft(r.deadline);
@@ -94,29 +96,37 @@ function SubmitModal({ r, onClose, onDone }) {
   );
 }
 
-/** Requisitos para a conta logada cumprir. groupByOrigin: para a unidade (clube x geral). */
-export function RequirementsTodo({ groupByOrigin = false }) {
+/**
+ * Requisitos para a conta logada cumprir.
+ * Desbravador e unidade veem duas abas: requisitos do App (gerais) e do meu clube.
+ * O clube cumpre só os requisitos do App.
+ */
+export function RequirementsTodo({ originTabs = false, clubLabel = 'Requisitos do meu clube' }) {
   const state = useLoad(() => api.get('/requirements/mine'));
   const [sending, setSending] = useState(null);
+  const [origin, setOrigin] = useState('geral');
   const [filter, setFilter] = useState('abertos');
   const open = (r) => ['pendente', 'fora_do_prazo', 'recusado'].includes(r.state);
   return (
     <Loading {...state}>
-      {(list) => {
+      {(all) => {
+        const list = originTabs ? all.filter((r) => r.origin === origin) : all;
+        const openCount = (o) => all.filter((r) => r.origin === o && open(r)).length;
         const shown = list.filter((r) => (filter === 'abertos' ? open(r) : filter === 'enviados' ? r.state === 'enviado' : r.state === 'aprovado'));
         const counts = { abertos: list.filter(open).length, enviados: list.filter((r) => r.state === 'enviado').length };
-        const groups = groupByOrigin ? [['clube', 'Requisitos do seu clube'], ['geral', 'Requisitos gerais de unidade']] : [[null, null]];
         return (
           <>
-            <Tabs tabs={[['abertos', 'A cumprir', counts.abertos], ['enviados', 'Em avaliação', counts.enviados], ['aprovados', 'Aprovados']]} value={filter} onChange={setFilter} />
-            {groups.map(([origin, title]) => {
-              const items = shown.filter((r) => !origin || r.origin === origin);
-              return (
-                <Section key={origin || 'all'} title={title}>
-                  {items.length ? items.map((r) => <RequirementCard key={r.id} r={r} onSubmit={setSending} />) : <Empty icon={CheckCircle2}>Nada por aqui.</Empty>}
-                </Section>
-              );
-            })}
+            {originTabs && (
+              <Tabs tabs={[['geral', 'Requisitos do App', openCount('geral')], ['clube', clubLabel, openCount('clube')]]} value={origin} onChange={setOrigin} />
+            )}
+            <div className="seg" style={{ marginBottom: '.9rem' }}>
+              {[['abertos', 'A cumprir', counts.abertos], ['enviados', 'Em avaliação', counts.enviados], ['aprovados', 'Aprovados']].map(([k, l, n]) => (
+                <button key={k} type="button" className={filter === k ? 'active' : ''} onClick={() => setFilter(k)}>{l}{n ? ` (${n})` : ''}</button>
+              ))}
+            </div>
+            {shown.length ? shown.map((r) => <RequirementCard key={r.id} r={r} onSubmit={setSending} />) : (
+              <Empty icon={CheckCircle2}>{originTabs && origin === 'clube' ? 'Nenhum requisito do seu clube por aqui.' : 'Nada por aqui.'}</Empty>
+            )}
             {sending && <SubmitModal r={sending} onClose={() => setSending(null)} onDone={() => { setSending(null); state.reload(); }} />}
           </>
         );
@@ -172,7 +182,7 @@ export function RequirementForm({ audience: fixedAudience, onClose, onDone }) {
               </Field>
             )}
           </div>
-        ) : <Badge kind="blue">Para as unidades do seu clube</Badge>}
+        ) : <Badge kind="blue">{f.audience === 'member' ? 'Para os desbravadores do seu clube' : 'Para as unidades do seu clube'}</Badge>}
         <Field label="Título"><input value={f.title} onChange={set('title')} /></Field>
         <Field label="Como fazer" hint="Explique o requisito e o que deve ser enviado."><textarea value={f.description} onChange={set('description')} /></Field>
         <ImagesInput label="Fotos de exemplo (opcional)" urls={[]} onUrls={() => {}} files={images} onFiles={setImages} />
@@ -198,15 +208,16 @@ export function CreatedRequirements() {
   const { actor } = useAuth();
   const isAdmin = actor.type === 'admin';
   const state = useLoad(() => api.get('/requirements/created'));
-  const [audience, setAudience] = useState('member');
+  const audiences = isAdmin ? AUDIENCES : CLUB_AUDIENCES;
+  const [audience, setAudience] = useState(isAdmin ? 'member' : 'unit');
   const [creating, setCreating] = useState(false);
   const [, run] = useAsync();
   return (
     <>
-      {isAdmin && <Tabs tabs={AUDIENCES.map(([k, l]) => [k, l])} value={audience} onChange={setAudience} />}
-      <Button block onClick={() => setCreating(true)}>+ Novo requisito{isAdmin ? ` para ${AUDIENCE_LABEL[audience].toLowerCase()}` : ''}</Button>
+      <Tabs tabs={audiences} value={audience} onChange={setAudience} />
+      <Button block onClick={() => setCreating(true)}>+ Novo requisito para {AUDIENCE_LABEL[audience].toLowerCase()}</Button>
       <div className="mt">
-        <Loading data={state.data && state.data.filter((r) => !isAdmin || r.audience === audience)} loading={state.loading} error={state.error} empty="Nenhum requisito criado ainda.">
+        <Loading data={state.data && state.data.filter((r) => r.audience === audience)} loading={state.loading} error={state.error} empty="Nenhum requisito criado ainda.">
           {(list) => list.map((r) => (
             <Card key={r.id} className="req-card">
               <h3>{r.title}</h3>
@@ -225,7 +236,7 @@ export function CreatedRequirements() {
           ))}
         </Loading>
       </div>
-      {creating && <RequirementForm audience={isAdmin ? audience : 'unit'} onClose={() => setCreating(false)} onDone={() => { setCreating(false); state.reload(); }} />}
+      {creating && <RequirementForm audience={audience} onClose={() => setCreating(false)} onDone={() => { setCreating(false); state.reload(); }} />}
     </>
   );
 }
@@ -298,7 +309,7 @@ export function ReviewsPanel() {
   if (person) return <PersonReviews person={person} status={status} onBack={() => setPerson(null)} />;
   return (
     <>
-      {isAdmin && <Tabs tabs={AUDIENCES.map(([k, l]) => [k, l, pending[k]])} value={audience} onChange={setAudience} />}
+      <Tabs tabs={(isAdmin ? AUDIENCES : CLUB_AUDIENCES).map(([k, l]) => [k, l, pending[k]])} value={audience} onChange={setAudience} />
       <div className="row" style={{ marginBottom: '.8rem' }}>
         <div className="seg">
           {[['enviado', 'Para avaliar'], ['aprovado', 'Aprovados'], ['recusado', 'Recusados']].map(([k, l]) => (

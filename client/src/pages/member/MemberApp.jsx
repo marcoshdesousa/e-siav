@@ -97,7 +97,7 @@ export default function MemberApp() {
           <Shell tabs={tabs}>
             <Routes>
               <Route index element={<MyProfile />} />
-              <Route path="requisitos" element={isDbv ? <><PageHeader title="Requisitos" subtitle="Cumpra os requisitos e suba no ranking" /><RequirementsTodo /></> : <Navigate to={base} replace />} />
+              <Route path="requisitos" element={isDbv ? <><PageHeader title="Requisitos" subtitle="Cumpra os requisitos e suba no ranking" /><RequirementsTodo originTabs /></> : <Navigate to={base} replace />} />
               <Route path="especialidades" element={<MyAchievements key="e" type="especialidade" />} />
               <Route path="classes" element={<MyAchievements key="c" type="classe" />} />
               <Route path="cursos" element={<ContentList type="curso" base={base} />} />

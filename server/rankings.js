@@ -24,7 +24,7 @@ const scoreJoin = (type, idCol, reqFilter) => `
 /** Ranking de membros: só desbravadores, requisitos gerais de membro. */
 export function membersRanking(districtId = null) {
   const rows = all(
-    `SELECT m.id, m.name, m.photo, m.code, m.birth_date, c.id AS club_id, c.name AS club_name,
+    `SELECT m.id, m.name, m.photo, m.code, m.handle, m.birth_date, c.id AS club_id, c.name AS club_name,
             COALESCE(sc.points, 0) AS points, sc.last_at
      FROM members m JOIN clubs c ON c.id = m.club_id
      ${scoreJoin('member', 'm.id', "r.creator_type = 'admin' AND r.audience = 'member'")}
@@ -32,6 +32,20 @@ export function membersRanking(districtId = null) {
     districtId, districtId,
   ).filter((r) => memberKind(r.birth_date) === 'desbravador');
   rows.forEach((r) => delete r.birth_date);
+  return rank(rows);
+}
+
+/** Ranking de membros do clube: desbravadores do clube, requisitos criados pelo próprio clube. */
+export function clubMembersRanking(clubId) {
+  const rows = all(
+    `SELECT m.id, m.name, m.photo, m.code, m.handle, m.birth_date, c.id AS club_id, u.name AS unit_name,
+            COALESCE(sc.points, 0) AS points, sc.last_at
+     FROM members m JOIN clubs c ON c.id = m.club_id LEFT JOIN units u ON u.id = m.unit_id
+     ${scoreJoin('member', 'm.id', "r.creator_type = 'club' AND r.club_id = " + Number(clubId))}
+     WHERE m.club_id = ?`,
+    clubId,
+  ).filter((r) => memberKind(r.birth_date) === 'desbravador');
+  rows.forEach((r) => { delete r.birth_date; r.club_name = r.unit_name ? 'Unidade ' + r.unit_name : 'Sem unidade'; });
   return rank(rows);
 }
 
