@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Camera, ChevronDown, ChevronUp, Compass, Medal, Share2, X } from 'lucide-react';
+import { ArrowLeft, Camera, Check, ChevronDown, ChevronUp, Compass, ImagePlus, Medal, Share2, Trash2, X } from 'lucide-react';
 import { AppIcon, ICONS } from './icons.jsx';
 
 // ---------- Marca ----------
@@ -92,13 +92,15 @@ export function Button({ variant = 'primary', small, block, busy, children, ...p
   );
 }
 
-export function Field({ label, hint, children }) {
+/** group: para grupos de botões (o rótulo não fica preso ao primeiro botão). */
+export function Field({ label, hint, children, group = false }) {
+  const Tag = group ? 'div' : 'label';
   return (
-    <label className="field">
+    <Tag className="field" role={group ? 'group' : undefined} aria-label={group ? label : undefined}>
       {label && <span className="field-label">{label}</span>}
       {children}
       {hint && <span className="field-hint">{hint}</span>}
-    </label>
+    </Tag>
   );
 }
 
@@ -322,4 +324,113 @@ export function ShareButton({ path, title }) {
 
 export function Confirm({ text, onYes, children, variant = 'danger', small = true }) {
   return <Button variant={variant} small={small} onClick={() => confirm(text) && onYes()}>{children}</Button>;
+}
+
+// ---------- Formas de envio (relatório, foto, quiz) ----------
+export const MODE_INFO = {
+  texto: ['Relatório', 'Texto escrito pelo membro'],
+  foto: ['Foto', 'Uma ou mais fotos'],
+  quiz: ['Quiz', 'Perguntas de múltipla escolha'],
+};
+
+/** Escolha livre: qualquer combinação (nenhuma = só "marcar como feito", quando permitido). */
+export function ModesPicker({ value, onChange, allowNone = false }) {
+  const toggle = (m) => onChange(value.includes(m) ? value.filter((x) => x !== m) : ['texto', 'foto', 'quiz'].filter((x) => x === m || value.includes(x)));
+  return (
+    <div className="modes-picker">
+      {Object.entries(MODE_INFO).map(([k, [label, hint]]) => (
+        <button key={k} type="button" className={value.includes(k) ? 'on' : ''} onClick={() => toggle(k)} aria-pressed={value.includes(k)}>
+          <span className="modes-check">{value.includes(k) ? <Check size={14} strokeWidth={3} /> : null}</span>
+          <span><b>{label}</b><small>{hint}</small></span>
+        </button>
+      ))}
+      {allowNone && !value.length && <p className="field-hint">Sem forma de envio: o membro só marca como feito.</p>}
+    </div>
+  );
+}
+
+export const modesLabel = (modes = []) => (modes.length ? modes.map((m) => MODE_INFO[m][0]).join(' + ') : 'Marcar como feito');
+
+/** Fotos de exemplo: mantém as já salvas (urls) e adiciona novas (arquivos). */
+export function ImagesInput({ urls = [], files = [], onUrls, onFiles, label = 'Fotos de exemplo', max = 6 }) {
+  const previews = files.map((f) => ({ f, url: URL.createObjectURL(f) }));
+  useEffect(() => () => previews.forEach((p) => URL.revokeObjectURL(p.url)));
+  const total = urls.length + files.length;
+  return (
+    <div className="images-input">
+      <span className="field-label">{label}</span>
+      <div className="thumbs">
+        {urls.map((u) => (
+          <span key={u} className="thumb"><img src={u} alt="" /><button type="button" aria-label="Remover" onClick={() => onUrls(urls.filter((x) => x !== u))}><X size={14} /></button></span>
+        ))}
+        {previews.map((p, i) => (
+          <span key={i} className="thumb"><img src={p.url} alt="" /><button type="button" aria-label="Remover" onClick={() => onFiles(files.filter((x) => x !== p.f))}><X size={14} /></button></span>
+        ))}
+        {total < max && (
+          <label className="thumb add">
+            <ImagePlus size={22} />
+            <input type="file" accept="image/*" multiple hidden onChange={(e) => { onFiles([...files, ...e.target.files].slice(0, max - urls.length)); e.target.value = ''; }} />
+          </label>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/** Galeria das fotos de exemplo, com ampliação ao tocar. */
+export function Gallery({ images }) {
+  const [open, setOpen] = useState(null);
+  if (!images?.length) return null;
+  return (
+    <>
+      <div className="gallery">{images.map((u) => <img key={u} src={u} alt="Exemplo" onClick={() => setOpen(u)} />)}</div>
+      {open && <div className="lightbox" onClick={() => setOpen(null)}><img src={open} alt="" /></div>}
+    </>
+  );
+}
+
+/** Ícone de conteúdo: usa a imagem/insígnia enviada pelo admin ou o ícone escolhido. */
+export function ContentIcon({ c, size = 26 }) {
+  return c.image ? <img src={c.image} alt="" className="content-img" /> : <AppIcon name={c.icon} size={size} />;
+}
+
+export function QuizBuilder({ questions, setQuestions }) {
+  const upd = (i, patch) => setQuestions(questions.map((q, k) => (k === i ? { ...q, ...patch } : q)));
+  return (
+    <div className="stack">
+      {questions.map((q, i) => (
+        <div key={i} className="quiz-q stack">
+          <div className="row between"><b>Pergunta {i + 1}</b><button type="button" className="icon-btn" aria-label="Remover pergunta" onClick={() => setQuestions(questions.filter((_, k) => k !== i))}><Trash2 size={18} /></button></div>
+          <input placeholder="Enunciado" value={q.question} onChange={(e) => upd(i, { question: e.target.value })} />
+          {q.options.map((o, j) => (
+            <div key={j} className="row">
+              <input type="radio" name={'c' + i + '-' + questions.length} checked={q.correct === j} onChange={() => upd(i, { correct: j })} title="Resposta correta" />
+              <input placeholder={`Opção ${j + 1}`} value={o} onChange={(e) => upd(i, { options: q.options.map((x, k) => (k === j ? e.target.value : x)) })} />
+              {q.options.length > 2 && <button type="button" className="icon-btn" aria-label="Remover opção" onClick={() => upd(i, { options: q.options.filter((_, k) => k !== j), correct: q.correct >= j && q.correct > 0 ? q.correct - 1 : q.correct })}><X size={16} /></button>}
+            </div>
+          ))}
+          <div className="row">
+            {q.options.length < 6 && <Button type="button" small variant="secondary" onClick={() => upd(i, { options: [...q.options, ''] })}>+ Opção</Button>}
+            <span className="muted small">Marque a bolinha da resposta correta</span>
+          </div>
+        </div>
+      ))}
+      <Button type="button" variant="secondary" onClick={() => setQuestions([...questions, { question: '', options: ['', ''], correct: 0 }])}>+ Adicionar pergunta</Button>
+    </div>
+  );
+}
+
+/** Responder um quiz (lista de perguntas com opções). */
+export function QuizAnswer({ questions, answers, setAnswers }) {
+  return questions.map((q, i) => (
+    <div key={q.id ?? i} className="quiz-q">
+      <h4>{i + 1}. {q.question}</h4>
+      {q.options.map((o, j) => (
+        <label key={j} className={'quiz-opt' + (answers[i] === j ? ' selected' : '')}>
+          <input type="radio" name={'q' + (q.id ?? i)} checked={answers[i] === j} onChange={() => setAnswers(answers.map((x, k) => (k === i ? j : x)))} />
+          {o}
+        </label>
+      ))}
+    </div>
+  ));
 }

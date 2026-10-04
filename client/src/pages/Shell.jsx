@@ -3,6 +3,7 @@ import { useAuth } from '../auth.jsx';
 import { useRealtime } from '../realtime.jsx';
 import { LogOut, MessageCircle } from 'lucide-react';
 import { Avatar, LogoHorizontal } from '../ui.jsx';
+import AnnouncementPopup from './Announcement.jsx';
 
 const TYPE_LABEL = { admin: 'Administrador Geral', club: 'Sistema do Clube', unit: 'Portal da Unidade', member: '' };
 
@@ -39,6 +40,7 @@ export default function Shell({ tabs, children, hideNav = false }) {
           </div>
         </nav>
       )}
+      {actor.type !== 'admin' && <AnnouncementPopup />}
       {toast && (
         <div className="chat-toast" onClick={() => { setToast(null); nav(`${base}/chat/${toast.conversation_id}`); }}>
           <span className="toast-ico"><MessageCircle size={20} /></span>

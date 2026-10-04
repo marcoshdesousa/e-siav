@@ -1,15 +1,13 @@
 import { Router } from 'express';
 import { all, get, run, tx, nowIso } from '../db.js';
 import { requireAuth } from '../auth.js';
-import { privateImageUpload, privateUrl } from '../uploads.js';
-import { MODELOS_ENVIO, MAX_FOTOS_ENVIO } from '../config.js';
+import { imageUpload, fileUrl, privateImageUpload, privateUrl } from '../uploads.js';
+import { modesOf, parseModes, legacyModel } from '../modes.js';
+import { MAX_FOTOS_ENVIO } from '../config.js';
 import { fail, int, str, parseJson } from '../util.js';
 
 const r = Router();
 
-const needsText = (m) => m === 'texto' || m === 'texto_foto';
-const needsPhoto = (m) => m === 'foto' || m === 'texto_foto' || m === 'quiz_foto';
-const hasQuiz = (m) => m === 'quiz' || m === 'quiz_foto';
 
 /** Este requisito vale para esta conta? */
 function applies(actor, req) {
@@ -29,10 +27,13 @@ const publicQuestions = (reqId) =>
   all('SELECT id, question, options FROM quiz_questions WHERE requirement_id = ? ORDER BY ord, id', reqId).map((q) => ({ ...q, options: JSON.parse(q.options) }));
 
 function decorate(req, sub) {
+  const modes = modesOf(req);
   return {
     ...req,
+    modes,
+    images: parseJson(req.images, []),
     origin: req.creator_type === 'admin' ? 'geral' : 'clube',
-    questions: hasQuiz(req.model) ? publicQuestions(req.id) : [],
+    questions: modes.includes('quiz') ? publicQuestions(req.id) : [],
     state: stateOf(req, sub),
     submission: sub ? { ...sub, photos: JSON.parse(sub.photos), answers: parseJson(sub.answers, null) } : null,
   };
@@ -57,11 +58,12 @@ r.post('/requirements/:id/submit', requireAuth('club', 'unit', 'member'), privat
 
   const text = str(req.body.text, 5000);
   const photos = (req.files || []).map((f) => privateUrl('envio', f));
-  if (needsText(q.model) && text.length < 3) fail(400, 'Escreva o relatório');
-  if (needsPhoto(q.model) && !photos.length) fail(400, 'Envie pelo menos uma foto');
+  const modes = modesOf(q);
+  if (modes.includes('texto') && text.length < 3) fail(400, 'Escreva o relatório');
+  if (modes.includes('foto') && !photos.length) fail(400, 'Envie pelo menos uma foto');
 
   let correct = null, total = null, answers = null;
-  if (hasQuiz(q.model)) {
+  if (modes.includes('quiz')) {
     const questions = all('SELECT id, correct FROM quiz_questions WHERE requirement_id = ? ORDER BY ord, id', q.id);
     answers = parseJson(req.body.answers, []);
     if (!Array.isArray(answers) || answers.length !== questions.length) fail(400, 'Responda todas as perguntas');
@@ -72,9 +74,10 @@ r.post('/requirements/:id/submit', requireAuth('club', 'unit', 'member'), privat
   const now = nowIso();
   const late = Date.parse(q.deadline) < Date.now() ? 1 : 0;
   const base = late ? q.late_points : q.points;
-  // Quiz puro: nota proporcional calculada na hora. Demais modelos: aguardam avaliação.
-  const status = q.model === 'quiz' ? 'aprovado' : 'enviado';
-  const points = q.model === 'quiz' ? Math.round((base * correct) / total) : 0;
+  // Só quiz: nota proporcional calculada na hora. Com relatório ou foto: aguarda avaliação.
+  const onlyQuiz = modes.length === 1 && modes[0] === 'quiz';
+  const status = onlyQuiz ? 'aprovado' : 'enviado';
+  const points = onlyQuiz ? Math.round((base * correct) / total) : 0;
 
   tx(() => {
     if (existing) run('DELETE FROM submissions WHERE id = ?', existing.id);
@@ -89,15 +92,16 @@ r.post('/requirements/:id/submit', requireAuth('club', 'unit', 'member'), privat
 });
 
 // ---------- Criação (Administrador Geral e Clube) ----------
-r.post('/requirements', requireAuth('admin', 'club'), (req, res) => {
+r.post('/requirements', requireAuth('admin', 'club'), imageUpload.array('images', 6), (req, res) => {
   const a = req.actor;
   const b = req.body;
   const title = str(b.title, 150);
-  const model = b.model;
+  // Aceita "modes" (combinação livre) ou o antigo "model".
+  const modes = parseModes(b.modes).length ? parseModes(b.modes) : modesOf({ model: b.model });
   const points = int(b.points, -1);
   const latePoints = int(b.late_points, 0);
   if (!title) fail(400, 'Informe o título');
-  if (!MODELOS_ENVIO[model]) fail(400, 'Modelo de envio inválido');
+  if (!modes.length) fail(400, 'Escolha pelo menos uma forma de envio: relatório, foto ou quiz');
   if (points < 0) fail(400, 'Informe os pontos');
   if (latePoints < 0 || latePoints > points) fail(400, 'Pontos fora do prazo devem ser entre zero e os pontos no prazo');
   if (!b.deadline || Number.isNaN(Date.parse(b.deadline))) fail(400, 'Informe o prazo');
@@ -119,8 +123,9 @@ r.post('/requirements', requireAuth('admin', 'club'), (req, res) => {
   }
 
   let questions = [];
-  if (hasQuiz(model)) {
-    questions = (Array.isArray(b.questions) ? b.questions : []).map((qq) => ({
+  if (modes.includes('quiz')) {
+    const qs = parseJson(b.questions, []);
+    questions = (Array.isArray(qs) ? qs : []).map((qq) => ({
       question: str(qq.question, 300),
       options: (qq.options || []).map((o) => str(o, 200)).filter(Boolean),
       correct: int(qq.correct, 0),
@@ -134,9 +139,10 @@ r.post('/requirements', requireAuth('admin', 'club'), (req, res) => {
 
   const id = tx(() => {
     const id = Number(run(
-      `INSERT INTO requirements (creator_type, club_id, audience, scope, district_id, title, description, model, points, late_points, deadline)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
-      a.type, clubId, audience, scope, districtId, title, str(b.description, 3000), model, points, latePoints, new Date(b.deadline).toISOString(),
+      `INSERT INTO requirements (creator_type, club_id, audience, scope, district_id, title, description, model, modes, images, points, late_points, deadline)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+      a.type, clubId, audience, scope, districtId, title, str(b.description, 3000), legacyModel(modes), modes.join(','),
+      JSON.stringify((req.files || []).map(fileUrl)), points, latePoints, new Date(b.deadline).toISOString(),
     ).lastInsertRowid);
     questions.forEach((qq, i) => run('INSERT INTO quiz_questions (requirement_id, ord, question, options, correct) VALUES (?,?,?,?,?)', id, i, qq.question, JSON.stringify(qq.options), qq.correct));
     return id;
@@ -157,6 +163,7 @@ r.get('/requirements/created', requireAuth('admin', 'club'), (req, res) => {
      FROM requirements r LEFT JOIN districts d ON d.id = r.district_id WHERE ${where} ORDER BY r.deadline DESC`,
     ...p,
   );
+  rows.forEach((r0) => { r0.modes = modesOf(r0); r0.images = parseJson(r0.images, []); });
   res.json(rows);
 });
 
@@ -177,18 +184,43 @@ function submitterInfo(type, id) {
 r.get('/reviews', requireAuth('admin', 'club'), (req, res) => {
   const [where, ...p] = ownedFilter(req.actor, 'r.');
   const status = ['enviado', 'aprovado', 'recusado'].includes(req.query.status) ? req.query.status : 'enviado';
+  const extra = [];
+  const extraArgs = [];
+  if (['club', 'unit', 'member'].includes(req.query.submitter_type)) { extra.push('s.submitter_type = ?'); extraArgs.push(req.query.submitter_type); }
+  if (req.query.submitter_id) { extra.push('s.submitter_id = ?'); extraArgs.push(int(req.query.submitter_id)); }
   const rows = all(
-    `SELECT s.*, r.title, r.model, r.points AS req_points, r.late_points AS req_late_points, r.audience, r.deadline
+    `SELECT s.*, r.title, r.model, r.modes, r.points AS req_points, r.late_points AS req_late_points, r.audience, r.deadline
      FROM submissions s JOIN requirements r ON r.id = s.requirement_id
-     WHERE ${where} AND s.status = ?
+     WHERE ${where} AND s.status = ? ${extra.map((e) => 'AND ' + e).join(' ')}
      ORDER BY s.submitted_at ${status === 'enviado' ? 'ASC' : 'DESC'} LIMIT 200`,
-    ...p, status,
+    ...p, status, ...extraArgs,
   );
   for (const s of rows) {
+    s.modes = modesOf(s);
     s.photos = JSON.parse(s.photos);
     s.submitter = submitterInfo(s.submitter_type, s.submitter_id) || { name: '(removido)' };
   }
   res.json(rows);
+});
+
+// Avaliação organizada por pessoa: quem tem envios (por público e situação).
+r.get('/reviews/people', requireAuth('admin', 'club'), (req, res) => {
+  const [where, ...p] = ownedFilter(req.actor, 'r.');
+  const status = ['enviado', 'aprovado', 'recusado'].includes(req.query.status) ? req.query.status : 'enviado';
+  const type = ['club', 'unit', 'member'].includes(req.query.submitter_type) ? req.query.submitter_type : null;
+  const rows = all(
+    `SELECT s.submitter_type, s.submitter_id, COUNT(*) AS count, MIN(s.submitted_at) AS first_at
+     FROM submissions s JOIN requirements r ON r.id = s.requirement_id
+     WHERE ${where} AND s.status = ? AND (? IS NULL OR s.submitter_type = ?)
+     GROUP BY s.submitter_type, s.submitter_id ORDER BY first_at`,
+    ...p, status, type, type,
+  );
+  rows.forEach((x) => (x.submitter = submitterInfo(x.submitter_type, x.submitter_id) || { name: '(removido)' }));
+  const counts = Object.fromEntries(all(
+    `SELECT s.submitter_type AS t, COUNT(*) AS n FROM submissions s JOIN requirements r ON r.id = s.requirement_id
+     WHERE ${where} AND s.status = 'enviado' GROUP BY s.submitter_type`, ...p,
+  ).map((x) => [x.t, x.n]));
+  res.json({ people: rows, pending_by_type: counts });
 });
 
 r.post('/reviews/:id', requireAuth('admin', 'club'), (req, res) => {

@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { all, get, run, tx } from '../db.js';
 import { requireAuth, setLogin, getUsername } from '../auth.js';
-import { imageUpload, fileUrl } from '../uploads.js';
+import { imageUpload, fileUrl, attachmentUpload } from '../uploads.js';
 import { NOME_UNIDADE_LIDERANCA } from '../config.js';
-import { fail, int, str, validDate } from '../util.js';
+import { fail, int, str, validDate, parseJson, memberKind } from '../util.js';
 
 // Painel do Administrador Geral.
 // Observação: não existe aqui nenhuma rota que altere nome ou dados de membros —
@@ -176,6 +176,7 @@ r.delete('/admin/awards/:id', (req, res) => {
 r.get('/admin/events', (_req, res) => {
   const events = all(`SELECT e.*, d.name AS district_name FROM events e LEFT JOIN districts d ON d.id = e.district_id ORDER BY e.date DESC`);
   for (const e of events) {
+    e.attachments = parseJson(e.attachments, []);
     e.participants = all('SELECT target_type, target_id FROM event_participants WHERE event_id = ?', e.id);
     e.participants.forEach((p) => (p.name = targetName(p.target_type, p.target_id) || '(removido)'));
   }
@@ -187,29 +188,101 @@ function eventFields(body) {
   if (!validDate(body.date)) fail(400, 'Informe a data do evento');
   return [name, str(body.description, 1000), body.date, str(body.location, 120), int(body.district_id)];
 }
-r.post('/admin/events', (req, res) => {
-  const { lastInsertRowid } = run('INSERT INTO events (name, description, date, location, district_id) VALUES (?,?,?,?,?)', ...eventFields(req.body));
+/** Anexos do evento (fotos e PDF): mantém os que vieram em "keep" e soma os novos. */
+function attachmentsOf(req, current = []) {
+  const keepUrls = parseJson(req.body.keep, null);
+  const kept = Array.isArray(keepUrls) ? current.filter((a) => keepUrls.includes(a.url)) : current;
+  const added = (req.files || []).map((f) => ({
+    url: fileUrl(f), name: str(f.originalname, 120) || 'anexo', type: f.mimetype === 'application/pdf' ? 'pdf' : 'image',
+  }));
+  return JSON.stringify([...kept, ...added].slice(0, 10));
+}
+r.post('/admin/events', attachmentUpload.array('files', 10), (req, res) => {
+  const { lastInsertRowid } = run('INSERT INTO events (name, description, date, location, district_id, attachments) VALUES (?,?,?,?,?,?)', ...eventFields(req.body), attachmentsOf(req));
   res.json({ id: Number(lastInsertRowid) });
 });
-r.put('/admin/events/:id', (req, res) => {
-  run('UPDATE events SET name = ?, description = ?, date = ?, location = ?, district_id = ? WHERE id = ?', ...eventFields(req.body), int(req.params.id));
+r.put('/admin/events/:id', attachmentUpload.array('files', 10), (req, res) => {
+  const ev = get('SELECT * FROM events WHERE id = ?', int(req.params.id));
+  if (!ev) fail(404, 'Evento não encontrado');
+  run('UPDATE events SET name = ?, description = ?, date = ?, location = ?, district_id = ?, attachments = ? WHERE id = ?',
+    ...eventFields(req.body), attachmentsOf(req, parseJson(ev.attachments, [])), ev.id);
   res.json({ ok: true });
 });
 r.delete('/admin/events/:id', (req, res) => {
   run('DELETE FROM events WHERE id = ?', int(req.params.id));
   res.json({ ok: true });
 });
+// Marca participantes de uma vez: clubes e/ou membros (lista de ids).
 r.post('/admin/events/:id/participants', (req, res) => {
-  const { target_type: type } = req.body;
-  const targetId = int(req.body.target_id);
-  if (!['club', 'member'].includes(type)) fail(400, 'Participante inválido');
-  if (!targetName(type, targetId)) fail(404, 'Participante não encontrado');
-  run('INSERT OR IGNORE INTO event_participants (event_id, target_type, target_id) VALUES (?,?,?)', int(req.params.id), type, targetId);
-  res.json({ ok: true });
+  const eventId = int(req.params.id);
+  if (!get('SELECT 1 FROM events WHERE id = ?', eventId)) fail(404, 'Evento não encontrado');
+  const list = [];
+  if (req.body.target_type) list.push([req.body.target_type, int(req.body.target_id)]);
+  for (const id of req.body.clubs || []) list.push(['club', int(id)]);
+  for (const id of req.body.members || []) list.push(['member', int(id)]);
+  let added = 0;
+  tx(() => {
+    for (const [type, id] of list) {
+      if (!['club', 'member'].includes(type) || !targetName(type, id)) continue;
+      added += run('INSERT OR IGNORE INTO event_participants (event_id, target_type, target_id) VALUES (?,?,?)', eventId, type, id).changes;
+    }
+  });
+  res.json({ ok: true, added });
 });
 r.delete('/admin/events/:id/participants/:type/:tid', (req, res) => {
   run('DELETE FROM event_participants WHERE event_id = ? AND target_type = ? AND target_id = ?', int(req.params.id), req.params.type, int(req.params.tid));
   res.json({ ok: true });
+});
+
+// ---------- Diretório: clubes → unidades → pessoas (para escolher destinatários) ----------
+r.get('/admin/directory', (_req, res) => {
+  const clubs = all('SELECT c.id, c.name, c.logo, d.name AS district_name FROM clubs c JOIN districts d ON d.id = c.district_id ORDER BY d.name, c.name');
+  for (const c of clubs) {
+    c.units = all('SELECT id, name, logo, is_leadership FROM units WHERE club_id = ? ORDER BY is_leadership, name', c.id);
+    const members = all('SELECT id, name, photo, handle, cargo, unit_id, birth_date FROM members WHERE club_id = ? ORDER BY name', c.id);
+    for (const m of members) { m.kind = memberKind(m.birth_date); delete m.birth_date; }
+    for (const u of c.units) u.members = members.filter((m) => m.unit_id === u.id);
+    c.no_unit = members.filter((m) => !m.unit_id);
+  }
+  res.json(clubs);
+});
+
+// ---------- Entregar conteúdo ----------
+// Medalha/troféu → clubes, unidades e/ou pessoas. Classe/especialidade/curso → pessoas
+// (registrar como concluído no perfil, ou liberar o acesso a um item pago).
+r.post('/admin/deliver', (req, res) => {
+  const b = req.body;
+  const ids = (v) => [...new Set((Array.isArray(v) ? v : []).map(Number).filter(Boolean))];
+  const clubs = ids(b.clubs), units = ids(b.units), members = ids(b.members);
+  if (!clubs.length && !units.length && !members.length) fail(400, 'Escolha pelo menos um destinatário');
+  let delivered = 0;
+  if (b.item_type === 'medal') {
+    const medal = get('SELECT id FROM medals WHERE id = ?', int(b.item_id));
+    if (!medal) fail(404, 'Medalha ou troféu não encontrado');
+    tx(() => {
+      for (const [type, list, table] of [['club', clubs, 'clubs'], ['unit', units, 'units'], ['member', members, 'members']]) {
+        for (const id of list) {
+          if (!get(`SELECT 1 FROM ${table} WHERE id = ?`, id)) continue;
+          run('INSERT INTO medal_awards (medal_id, target_type, target_id, note, awarded_by) VALUES (?,?,?,?,?)', medal.id, type, id, str(b.note, 200) || null, req.actor.id);
+          delivered++;
+        }
+      }
+    });
+  } else if (b.item_type === 'content') {
+    const c = get('SELECT id, type FROM content WHERE id = ?', int(b.item_id));
+    if (!c) fail(404, 'Conteúdo não encontrado');
+    if (!members.length) fail(400, 'Escolha as pessoas que vão receber');
+    const action = b.action === 'acesso' ? 'acesso' : 'concluir';
+    tx(() => {
+      for (const id of members) {
+        if (!get('SELECT 1 FROM members WHERE id = ?', id)) continue;
+        if (action === 'acesso') run(`INSERT OR REPLACE INTO content_access (member_id, content_id, source) VALUES (?, ?, 'admin')`, id, c.id);
+        else run(`INSERT OR IGNORE INTO achievements (member_id, content_id, source) VALUES (?, ?, 'admin')`, id, c.id);
+        delivered++;
+      }
+    });
+  } else fail(400, 'Escolha o que vai entregar');
+  res.json({ ok: true, delivered });
 });
 
 export default r;

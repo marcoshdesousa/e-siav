@@ -30,7 +30,7 @@ Testes da API (permissões, privacidade, pontuação, ranking e chat): `npm test
 | Login Clube | Clube Águias do Vale | `aguias` / `aguias123` |
 | Login Clube | Clube Leões de Judá | `leoes` / `leoes123` |
 | Login Clube | Unidades | `falcoes`, `gavioes`, `panteras`, `tigres` / nome + `123` (ex.: `falcoes123`) |
-| Login Membros | Desbravadores | `pedro`, `ana`, `lucas`, `beatriz`, `gabriel`, `davi`, `sofia`, `rafael`, `isabela` / `dbv123` |
+| Login Membros | Desbravadores | `pedro`, `ana`, `lucas`, `beatriz`, `gabriel`, `davi`, `sofia`, `rafael`, `isabela` / `dbv123` (`pedro`, `ana` e `marcos` ainda não têm @: mostram a tela de primeiro acesso) |
 | Login Membros | Liderança | `marcos`, `juliana`, `carlos`, `fernanda` / `dbv123` |
 
 ## O que tem
@@ -44,7 +44,13 @@ Testes da API (permissões, privacidade, pontuação, ranking e chat): `npm test
 - **Requisitos**: modelos Texto, Foto, Quiz, Relatório + foto, Quiz + foto; pontos no prazo e fora do prazo; quiz com nota proporcional calculada na hora; demais modelos avaliados por quem criou; estados pendente, enviado, aprovado, recusado e fora do prazo.
 - **Quatro rankings** atualizados a cada envio pontuado (membros, unidades do clube, geral de unidades, clubes), com pódio, filtro por distrito e desempate por quem enviou primeiro. Não há ranking de liderança.
 - **Perfis públicos** com link para compartilhar: `/p/clube/:id`, `/p/unidade/:id`, `/p/membro/:código`. Clubes e unidades mostram só a quantidade de membros.
-- **Chat estilo WhatsApp**: Unidade (grupo), Diretoria (membro ↔ clube) e Direta (por código ou nome). Texto, áudio gravado na hora e fotos; tempo real via WebSocket; horário, ✓✓ de lida, aviso de nova mensagem; Denunciar e Bloquear em toda conversa (denúncias vão para a diretoria e para o Administrador Geral).
+- **Chat estilo WhatsApp**: Unidade (grupo), Diretoria (membro ↔ clube) e Direta (pelo @ ou pelo nome). Texto, áudio gravado na hora e fotos; tempo real via WebSocket; horário, ✓✓ de lida, aviso de nova mensagem; apagar mensagem para mim ou para todos; limpar conversa (só para você); arquivar e apagar conversas diretas; Denunciar e Bloquear em toda conversa (denúncias vão para a diretoria e para o Administrador Geral, com cópia da mensagem mesmo se ela for apagada depois).
+- **@ do membro**: escolhido no primeiro acesso; é por ele que os outros encontram a pessoa no chat, aparece no perfil e forma o link `/p/membro/@arroba`.
+- **Requisitos e classes com envio livre**: em cada requisito (geral ou de classe/especialidade) o criador marca o que o membro envia — relatório, foto e/ou quiz, em qualquer combinação — e pode anexar fotos de exemplo. Classes e especialidades têm análise própria (classe → pessoas → requisitos de cada uma).
+- **Entregar conteúdo**: medalhas, troféus, classes, especialidades e cursos entregues de uma vez, escolhendo clube → unidade → pessoas com caixinhas e "selecionar todos".
+- **Eventos** com anexos (fotos e PDF) e participantes marcados em massa.
+- **Anúncios**: aparecem grandes no meio da tela ao abrir o app; tocar mostra os detalhes.
+- **Modo claro e escuro** automáticos, seguindo o celular.
 
 ## Regras de permissão e privacidade
 
@@ -55,6 +61,7 @@ As regras são garantidas no servidor (cada rota filtra pelo dono da conta logad
 - A unidade só envia requisitos.
 - A busca por nome no chat só encontra membros do próprio clube; de outros clubes, só pelo código.
 - O perfil público do membro mostra a idade, nunca a data de nascimento.
+- O banco é atualizado por migrações que só acrescentam colunas e tabelas (`server/db.js`), sem apagar dados de quem já usa o app.
 - Fotos e áudios do chat e fotos de comprovação dos requisitos ficam fora da pasta pública e só abrem com login, para quem participa da conversa ou para quem enviou/avalia o requisito. Diretoria e Administrador Geral só veem a mídia de uma conversa privada quando ela foi denunciada a eles.
 - O login bloqueia por 15 minutos depois de 8 senhas erradas para o mesmo usuário (ou 30 no mesmo IP).
 

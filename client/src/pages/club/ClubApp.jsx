@@ -202,8 +202,8 @@ function MembersPage() {
                       <div className="sub">{m.age} anos · {m.cargo} · {m.unit_name || 'Sem unidade'}</div>
                       <div className="row wrap" style={{ marginTop: '.35rem', gap: '.3rem' }}>
                         <Badge kind={m.kind === 'desbravador' ? 'blue' : 'yellow'}>{KIND_LABEL[m.kind]}</Badge>
-                        <Badge>{m.code}</Badge>
-                        <Badge>@{m.username}</Badge>
+                        {m.handle ? <Badge kind="blue">@{m.handle}</Badge> : <Badge>sem @ ainda</Badge>}
+                        <Badge>login: {m.username}</Badge>
                       </div>
                       <div className="row wrap" style={{ marginTop: '.5rem', gap: '.35rem' }}>
                         <Button small variant="secondary" onClick={() => setEditing(m)}>Editar</Button>

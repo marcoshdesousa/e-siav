@@ -3,7 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { run, get, tx, resetDatabase, UPLOAD_DIR } from './db.js';
+import { run, get, all, tx, resetDatabase, UPLOAD_DIR } from './db.js';
 import { hashPassword } from './auth.js';
 import { newMemberCode } from './util.js';
 import { NOME_UNIDADE_LIDERANCA } from './config.js';
@@ -91,6 +91,8 @@ export function seed() {
         clubs[club], unit ? units[unit] : null, name, birthForAge(age, (key.length * 2) % 11), cargo, newMemberCode(), key === 'lucas' ? 1 : 0,
       );
       login('member', id, key, 'dbv123');
+      // Alguns ficam sem @ para mostrar a tela de primeiro acesso.
+      if (!['pedro', 'ana', 'marcos'].includes(key)) run('UPDATE members SET handle = ? WHERE id = ?', name.split(' ')[0].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') + '.' + name.split(' ').pop().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''), id);
       members[key] = id;
     }
 
@@ -101,22 +103,28 @@ export function seed() {
         'INSERT INTO content (type, name, description, icon, category, age, leader, is_free, price_cents) VALUES (?,?,?,?,?,?,?,?,?)',
         type, name, opts.description || '', opts.icon || 'book', opts.category || '', opts.age ?? null, opts.leader ? 1 : 0, opts.price ? 0 : 1, opts.price || 0,
       );
-      items.forEach(([title, body], i) => run('INSERT INTO content_items (content_id, ord, title, body) VALUES (?,?,?,?)', id, i, title, body));
+      items.forEach(([title, body, modes = '', quiz = []], i) => {
+        const itemId = ins('INSERT INTO content_items (content_id, ord, title, body, modes) VALUES (?,?,?,?,?)', id, i, title, body, modes);
+        quiz.forEach(([q, o, c], k) => run('INSERT INTO content_item_questions (item_id, ord, question, options, correct) VALUES (?,?,?,?,?)', itemId, k, q, JSON.stringify(o), c));
+      });
       content[key] = id;
     };
     const classItems = (extra) => [
-      ['Geral', 'Ter a idade da classe e participar ativamente do clube. Saber de cor o Voto e a Lei do Desbravador e explicar o seu significado.'],
-      ['Descoberta espiritual', 'Fazer as leituras bíblicas indicadas pela liderança e conversar com seu conselheiro sobre o que aprendeu.'],
+      ['Geral', 'Ter a idade da classe e participar ativamente do clube. Saber de cor o Voto e a Lei do Desbravador e explicar o seu significado.', 'quiz', [
+        ['Complete o Voto: "Pela graça de Deus, serei puro, bondoso e ___"', ['forte', 'leal', 'sábio'], 1],
+        ['Qual é o lema dos Desbravadores?', ['O amor de Cristo me motiva', 'Sempre alerta', 'Servir é viver'], 0],
+      ]],
+      ['Descoberta espiritual', 'Fazer as leituras bíblicas indicadas pela liderança e escrever um pequeno relatório sobre o que aprendeu.', 'texto'],
       ['Servindo a outros', 'Participar de uma ação de serviço à comunidade junto com a sua unidade.'],
       ['Desenvolvendo amizade', 'Conversar com a sua unidade sobre respeito, amizade e boas atitudes em grupo.'],
       ...extra,
     ];
     addContent('amigo', 'classe', 'Amigo', { age: 10, icon: 'compass', description: 'Primeira classe regular: descobrir o clube, a natureza e novas amizades.' }, classItems([
-      ['Natureza', 'Identificar cinco árvores ou plantas da sua região e registrar com fotos ou desenhos.'],
+      ['Natureza', 'Identificar cinco árvores ou plantas da sua região e registrar com fotos ou desenhos.', 'texto,foto'],
       ['Arte de acampar', 'Aprender a fazer o nó direito e o nó de escota e mostrar ao seu instrutor.'],
     ]));
     addContent('companheiro', 'classe', 'Companheiro', { age: 11, icon: 'handshake', description: 'Fortalece o trabalho em equipe e o cuidado com o próximo.' }, classItems([
-      ['Natureza', 'Observar e registrar aves ou insetos durante uma caminhada.'],
+      ['Natureza', 'Observar e registrar aves ou insetos durante uma caminhada.', 'texto,foto'],
       ['Arte de acampar', 'Montar uma barraca com a sua unidade em um acampamento ou atividade.'],
     ]));
     addContent('pesquisador', 'classe', 'Pesquisador', { age: 12, icon: 'search', description: 'Investigar a criação e aprofundar o estudo da Bíblia.' }, classItems([
@@ -297,6 +305,21 @@ export function seed() {
     for (const m of ['pedro', 'lucas', 'beatriz', 'marcos', 'juliana', 'sofia', 'isabela', 'carlos']) part(ev1, 'member', members[m]);
     part(ev2, 'club', clubs.aguias);
     for (const m of ['pedro', 'ana', 'marcos']) part(ev2, 'member', members[m]);
+
+    // Ana está fazendo a classe Companheiro: envios aguardando a análise do admin.
+    const compItems = all('SELECT id, title, modes FROM content_items WHERE content_id = ? ORDER BY ord', content.companheiro);
+    const prog = (item, status, text) => run(
+      `INSERT INTO content_progress (member_id, item_id, done_at, status, text, photos, submitted_at, reviewed_at) VALUES (?,?,?,?,?,'[]',?,?)`,
+      members.ana, item.id, iso(-2, 10), status, text || null, iso(-2, 10), status === 'aprovado' ? iso(-1, 9) : null,
+    );
+    prog(compItems[1], 'enviado', 'Li o livro de Rute e aprendi sobre lealdade e amizade.');
+    prog(compItems[2], 'aprovado');
+    prog(compItems[3], 'aprovado');
+    prog(compItems[4], 'enviado', 'Vi um bem-te-vi, um beija-flor e várias formigas cortadeiras.');
+
+    // Anúncio de exemplo
+    run('INSERT INTO announcements (title, body, link) VALUES (?,?,?)', 'Campori do Distrito Palmares',
+      'As inscrições para o Campori já estão abertas! Fale com a diretoria do seu clube e garanta a vaga da sua unidade. Teremos especialidades, gincanas e muita comunhão.', null);
 
     // ---------- Chat ----------
     const conv = (type, o) => ins('INSERT INTO conversations (type, club_id, unit_id, member_a, member_b) VALUES (?,?,?,?,?)', type, o.club ?? null, o.unit ?? null, o.a ?? null, o.b ?? null);

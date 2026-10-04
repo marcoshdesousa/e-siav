@@ -9,13 +9,15 @@ const browser = await chromium.launch();
 const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1.5 });
 const p = await ctx.newPage();
 await p.goto(B + '/');
-await p.locator('input').nth(0).fill('pedro');
+await p.locator('input').nth(0).fill('lucas');
 await p.locator('input[type=password]').fill('dbv123');
 await p.getByRole('button', { name: 'Entrar', exact: true }).click();
 await p.waitForURL('**/membro');
+await p.locator('.ann-x').click({ timeout: 3000 }).catch(() => {}); // fecha o anúncio
 for (const [route, name] of [['/membro', 'perfil'], ['/membro/ranking', 'ranking'], ['/membro/chat/1', 'chat'], ['/membro/requisitos', 'requisitos']]) {
   await p.goto(B + route);
   await p.waitForTimeout(900);
+  await p.locator('.ann-x').click({ timeout: 300 }).catch(() => {});
   await p.screenshot({ path: path.join(out, name + '.jpg'), type: 'jpeg', quality: 82 });
 }
 await browser.close();

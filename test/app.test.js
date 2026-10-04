@@ -185,10 +185,10 @@ test('chat: acesso por conversa, busca, bloqueio e denúncia', async () => {
   const unitConv = pedroConvs.find((c) => c.type === 'unidade');
   assert.equal((await sofia.get(`/chat/conversations/${unitConv.id}/messages`)).status, 404, 'outra unidade não lê o grupo');
 
-  // Nome só encontra no próprio clube; código encontra em qualquer clube.
-  assert.equal((await pedro.get('/chat/search?q=Sofia')).body.length, 0);
-  const byCode = (await pedro.get('/chat/search?q=' + sofia.actor.code)).body;
-  assert.equal(byCode[0]?.id, sofia.actor.id);
+  // Nome só encontra no próprio clube; o @ encontra em qualquer clube.
+  assert.equal((await pedro.get('/chat/search?q=Martins')).body.length, 0);
+  const byHandle = (await pedro.get('/chat/search?q=@' + sofia.actor.handle)).body;
+  assert.equal(byHandle[0]?.id, sofia.actor.id);
 
   const { body: direct } = await pedro.post('/chat/direct', { member_id: sofia.actor.id });
   const sent = await pedro.post(`/chat/conversations/${direct.id}/messages`, form({ body: 'Oi Sofia!' }));
@@ -276,4 +276,131 @@ test('site responde na página inicial e nas rotas do app', async () => {
     assert.equal(r.status, 200, p);
     assert.match(await r.text(), /<div id="root">/, p);
   }
+});
+
+test('@ do membro: obrigatório no primeiro acesso, único e usado no link do perfil', async () => {
+  const ana = await login('membros', 'ana');
+  assert.equal(ana.actor.handle, null);
+  assert.equal((await ana.put('/me/handle', { handle: 'A' })).status, 400, 'curto demais');
+  assert.equal((await ana.put('/me/handle', { handle: 'lucas.ferreira' })).status, 400, 'já em uso');
+  assert.equal((await ana.get('/me/handle/check?h=Ana.Souza')).body.ok, true);
+  assert.equal((await ana.put('/me/handle', { handle: '@Ana.Souza' })).body.handle, 'ana.souza');
+  const pub = await (await fetch(BASE + '/public/members/@ana.souza')).json();
+  assert.equal(pub.name, 'Ana Clara Souza');
+  assert.equal(pub.code, pub.code); // o código continua existindo internamente
+});
+
+test('chat: limpar só para mim, apagar mensagem para todos e apagar conversa', async () => {
+  const lucas = await login('membros', 'lucas');
+  const gabriel = await login('membros', 'gabriel');
+  const { body: conv } = await lucas.post('/chat/direct', { member_id: gabriel.actor.id });
+  const m1 = (await lucas.post(`/chat/conversations/${conv.id}/messages`, form({ body: 'primeira' }))).body;
+  const m2 = (await lucas.post(`/chat/conversations/${conv.id}/messages`, form({ body: 'segunda' }))).body;
+  // Apagar para mim
+  await gabriel.post(`/chat/messages/${m1.id}/hide`);
+  let msgs = (await gabriel.get(`/chat/conversations/${conv.id}/messages`)).body.messages;
+  assert.ok(!msgs.some((m) => m.id === m1.id));
+  assert.ok((await lucas.get(`/chat/conversations/${conv.id}/messages`)).body.messages.some((m) => m.id === m1.id), 'continua para o outro');
+  // Só quem enviou apaga para todos
+  assert.equal((await gabriel.post(`/chat/messages/${m2.id}/delete`)).status, 403);
+  await lucas.post(`/chat/messages/${m2.id}/delete`);
+  msgs = (await gabriel.get(`/chat/conversations/${conv.id}/messages`)).body.messages;
+  const deleted = msgs.find((m) => m.id === m2.id);
+  assert.equal(deleted.deleted, 1);
+  assert.equal(deleted.body, null);
+  // Limpar conversa: some só para quem limpou
+  await gabriel.post(`/chat/conversations/${conv.id}/clear`);
+  assert.equal((await gabriel.get(`/chat/conversations/${conv.id}/messages`)).body.messages.length, 0);
+  assert.ok((await lucas.get(`/chat/conversations/${conv.id}/messages`)).body.messages.length > 0);
+  // Arquivar e apagar conversa
+  await lucas.post(`/chat/conversations/${conv.id}/archive`, { archived: true });
+  assert.ok((await lucas.get('/chat/conversations')).body.find((c) => c.id === conv.id).archived);
+  await lucas.post(`/chat/conversations/${conv.id}/delete`, { for_all: false });
+  assert.ok(!(await lucas.get('/chat/conversations')).body.some((c) => c.id === conv.id), 'sai da lista');
+  await gabriel.post(`/chat/conversations/${conv.id}/messages`, form({ body: 'oi de novo' }));
+  assert.ok((await lucas.get('/chat/conversations')).body.some((c) => c.id === conv.id), 'volta com mensagem nova');
+});
+
+test('requisito com relatório + foto + quiz juntos e fotos de exemplo', async () => {
+  const admin = await login('membros', 'admin', 'admin123');
+  const fd = new FormData();
+  fd.append('audience', 'member');
+  fd.append('title', 'Tudo junto');
+  fd.append('modes', JSON.stringify(['texto', 'foto', 'quiz']));
+  fd.append('questions', JSON.stringify([{ question: 'Q?', options: ['a', 'b'], correct: 1 }]));
+  fd.append('points', '30');
+  fd.append('late_points', '10');
+  fd.append('deadline', new Date(Date.now() + 864e5).toISOString());
+  fd.append('images', PNG(), 'exemplo.png');
+  const r = await admin.post('/requirements', fd);
+  assert.equal(r.status, 200);
+  const davi = await login('membros', 'davi');
+  const req = (await davi.get('/requirements/mine')).body.find((x) => x.id === r.body.id);
+  assert.deepEqual(req.modes, ['texto', 'foto', 'quiz']);
+  assert.equal(req.images.length, 1);
+  const sub = new FormData();
+  sub.append('text', 'Fiz tudo');
+  sub.append('answers', '[1]');
+  sub.append('photos', PNG(), 'p.png');
+  const s = await davi.post(`/requirements/${r.body.id}/submit`, sub);
+  assert.equal(s.body.status, 'enviado', 'com relatório/foto vai para avaliação');
+  const people = (await admin.get('/reviews/people?submitter_type=member')).body.people;
+  assert.ok(people.some((p) => p.submitter_id === davi.actor.id));
+  const mine = (await admin.get(`/reviews?submitter_type=member&submitter_id=${davi.actor.id}`)).body;
+  assert.ok(mine.every((x) => x.submitter_id === davi.actor.id) && mine.length >= 1);
+});
+
+test('classes: envio do requisito, análise do admin e conclusão', async () => {
+  const admin = await login('membros', 'admin', 'admin123');
+  const list = (await admin.get('/admin/content-review?type=classe')).body;
+  const comp = list.find((c) => c.name === 'Companheiro');
+  assert.ok(comp.pending >= 2);
+  const people = (await admin.get('/admin/content-review/' + comp.id)).body.members;
+  const ana = people.find((m) => m.name === 'Ana Clara Souza');
+  const detail = (await admin.get(`/admin/content-review/${comp.id}/members/${ana.id}`)).body;
+  // Membro faz os que faltam
+  const anaLogin = await login('membros', 'ana');
+  for (const it of detail.items.filter((i) => !i.submission)) {
+    const fd = new FormData();
+    if (it.modes.includes('texto')) fd.append('text', 'Relatório do requisito');
+    if (it.modes.includes('foto')) fd.append('photos', PNG(), 'f.png');
+    if (it.modes.includes('quiz')) fd.append('answers', JSON.stringify(it.questions.map(() => 0)));
+    const r = await anaLogin.post(`/content/${comp.id}/items/${it.id}/submit`, fd);
+    assert.equal(r.status, 200, it.title);
+  }
+  const again = (await admin.get(`/admin/content-review/${comp.id}/members/${ana.id}`)).body;
+  let completed = false;
+  for (const it of again.items.filter((i) => i.submission?.status === 'enviado')) {
+    completed = (await admin.post(`/admin/content-review/${comp.id}/members/${ana.id}/items/${it.id}`, { decision: 'aprovado' })).body.completed;
+  }
+  assert.equal(completed, true, 'todos aprovados → classe concluída');
+  const prof = await (await fetch(BASE + '/public/members/@ana.souza')).json();
+  assert.ok(prof.classes.some((c) => c.name === 'Companheiro'));
+});
+
+test('entregar conteúdo em massa, eventos com participantes e anúncios', async () => {
+  const admin = await login('membros', 'admin', 'admin123');
+  const dir = (await admin.get('/admin/directory')).body;
+  const aguias = dir.find((c) => c.name.includes('Águias'));
+  const falcoes = aguias.units.find((u) => u.name === 'Falcões');
+  const memberIds = falcoes.members.map((m) => m.id);
+  const medal = (await admin.post('/admin/medals', form({ name: 'Unidade destaque', kind: 'medalha', icon: 'star' }))).body;
+  const d = await admin.post('/admin/deliver', { item_type: 'medal', item_id: medal.id, units: [falcoes.id], members: memberIds });
+  assert.equal(d.body.delivered, 1 + memberIds.length);
+  const astro = (await admin.get('/admin/content?type=especialidade')).body.find((c) => c.name === 'Astronomia');
+  await admin.post('/admin/deliver', { item_type: 'content', item_id: astro.id, action: 'acesso', members: memberIds });
+  const lucas = await login('membros', 'lucas');
+  assert.equal((await lucas.get('/content/' + astro.id)).body.has_access, true);
+
+  const ev = await admin.post('/admin/events', form({ name: 'Campori', date: '2026-11-20', location: 'Palmares' }));
+  const p = await admin.post(`/admin/events/${ev.body.id}/participants`, { clubs: [aguias.id], members: memberIds });
+  assert.equal(p.body.added, 1 + memberIds.length);
+
+  const unitAcc = await login('clube', 'falcoes', 'falcoes123');
+  assert.equal((await unitAcc.post('/admin/announcements', form({ title: 'x' }))).status, 403);
+  await admin.post('/admin/announcements', form({ title: 'Aviso importante', body: 'Texto', link: 'javascript:alert(1)' }));
+  const active = (await unitAcc.get('/announcements/active')).body;
+  const a = active.find((x) => x.title === 'Aviso importante');
+  assert.ok(a);
+  assert.equal(a.link, null, 'só aceita links http(s)');
 });

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
-  ArrowLeft, Ban, Camera, Check, CheckCheck, CheckCircle2, Flag, Image as ImageIcon, Mic, MessageCircle, MoreVertical, Search, SendHorizontal, ShieldCheck, Tent, X,
+  Archive, ArchiveRestore, ArrowLeft, Ban, Camera, Check, CheckCheck, ChevronDown, Eraser, EyeOff, Flag, Mic, Trash2, MessageCircle, MoreVertical, Search, SendHorizontal, ShieldCheck, Tent, X,
 } from 'lucide-react';
 import { api, toForm } from '../api.js';
 import { useAuth } from '../auth.jsx';
@@ -13,7 +13,7 @@ import { Lightbox } from './Requirements.jsx';
 
 function preview(last) {
   if (!last) return 'Nenhuma mensagem ainda';
-  const body = last.kind === 'audio' ? 'Mensagem de áudio' : last.kind === 'foto' ? 'Foto' : last.body;
+  const body = last.deleted ? 'Mensagem apagada' : last.kind === 'audio' ? 'Mensagem de áudio' : last.kind === 'foto' ? 'Foto' : last.body;
   return (last.mine ? 'Você: ' : '') + body;
 }
 
@@ -24,9 +24,13 @@ export function ChatHome({ base }) {
   const nav = useNavigate();
   const state = useLoad(() => api.get('/chat/conversations'));
   const [searching, setSearching] = useState(false);
+  const [showArchived, setShowArchived] = useState(false);
+  const [deleting, setDeleting] = useState(null);
+  const [, run] = useAsync();
   const reload = state.reload;
+  const archive = (c, archived) => run(() => api.post(`/chat/conversations/${c.id}/archive`, { archived }), archived ? 'Conversa arquivada' : 'Conversa desarquivada').then(reload);
 
-  useEffect(() => subscribe((e) => (e.type === 'message' || e.type === 'read') && reload()), [subscribe, reload]);
+  useEffect(() => subscribe((e) => ['message', 'read', 'deleted'].includes(e.type) && reload()), [subscribe, reload]);
 
   useEffect(() => {
     if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission().catch(() => {});
@@ -59,34 +63,70 @@ export function ChatHome({ base }) {
           </button>
         </div>
       )}
-      {actor.type === 'member' && <div className="section-head"><h2>Conversas diretas</h2></div>}
+      {actor.type === 'member' && (
+        <div className="section-head">
+          <h2>{showArchived ? 'Conversas arquivadas' : 'Conversas diretas'}</h2>
+          {(showArchived || state.data?.some((c) => c.archived)) && (
+            <button type="button" className="see-more" onClick={() => setShowArchived((x) => !x)}>
+              {showArchived ? <>Voltar</> : <><Archive size={14} /> Arquivadas ({state.data.filter((c) => c.archived).length})</>}
+            </button>
+          )}
+        </div>
+      )}
       <Loading
-        data={state.data && (actor.type === 'member' ? state.data.filter((c) => c.type === 'direta') : state.data)}
+        data={state.data && (actor.type === 'member' ? state.data.filter((c) => c.type === 'direta' && !!c.archived === showArchived) : state.data)}
         loading={state.loading} error={state.error}
-        empty={actor.type === 'club' ? 'Nenhuma mensagem recebida ainda.' : 'Nenhuma conversa direta ainda. Toque em “Direta” para começar.'}
+        empty={actor.type === 'club' ? 'Nenhuma mensagem recebida ainda.' : showArchived ? 'Nenhuma conversa arquivada.' : 'Nenhuma conversa direta ainda. Toque em “Direta” para começar.'}
       >
         {(list) => (
           <div className="chat-list">
             {list.map((c) => (
-              <Link key={c.id} to={`${base}/chat/${c.id}`} className="list-item">
-                <Avatar src={c.photo} name={c.title} size={50} square={c.type !== 'direta' && !(actor.type === 'club')} />
-                <div className="grow">
-                  <div className="row between">
-                    <span className="title ellipsis">{c.title}</span>
-                    <span className="chat-time">{c.last ? fmtChatTime(c.last.created_at) : ''}</span>
+              <div key={c.id} className="chat-row">
+                <Link to={`${base}/chat/${c.id}`} className="list-item">
+                  <Avatar src={c.photo} name={c.title} size={50} />
+                  <div className="grow">
+                    <div className="row between">
+                      <span className="title ellipsis">{c.title}</span>
+                      <span className="chat-time">{c.last ? fmtChatTime(c.last.created_at) : ''}</span>
+                    </div>
+                    <div className="row between">
+                      <span className={'sub ellipsis' + (c.last?.deleted ? ' deleted-text' : '')}>{preview(c.last)}</span>
+                      {c.unread > 0 && <span className="chat-unread">{c.unread}</span>}
+                    </div>
                   </div>
-                  <div className="row between">
-                    <span className="sub ellipsis">{c.type === 'unidade' && c.last && !c.last.mine ? c.last.sender_name.split(' ')[0] + ': ' : ''}{preview(c.last)}</span>
-                    {c.unread > 0 && <span className="chat-unread">{c.unread}</span>}
+                </Link>
+                {c.type === 'direta' && (
+                  <div className="chat-row-actions">
+                    <button type="button" className="icon-btn" aria-label={c.archived ? 'Desarquivar' : 'Arquivar'} title={c.archived ? 'Desarquivar' : 'Arquivar'} onClick={() => archive(c, !c.archived)}>
+                      {c.archived ? <ArchiveRestore size={18} /> : <Archive size={18} />}
+                    </button>
+                    <button type="button" className="icon-btn danger" aria-label="Apagar conversa" title="Apagar conversa" onClick={() => setDeleting(c)}><Trash2 size={18} /></button>
                   </div>
-                </div>
-              </Link>
+                )}
+              </div>
             ))}
           </div>
         )}
       </Loading>
+      {deleting && <DeleteConversation conv={deleting} onClose={() => setDeleting(null)} onDone={() => { setDeleting(null); reload(); }} />}
       {searching && <DirectSearch base={base} onClose={() => setSearching(false)} />}
     </>
+  );
+}
+
+/** Apagar conversa direta: some da sua lista. Opcionalmente apaga as SUAS mensagens para todos. */
+function DeleteConversation({ conv, onClose, onDone }) {
+  const [busy, run] = useAsync();
+  const del = (forAll) => run(() => api.post(`/chat/conversations/${conv.id}/delete`, { for_all: forAll }), 'Conversa apagada').then(onDone);
+  return (
+    <Modal title={`Apagar conversa com ${conv.title}?`} onClose={onClose}>
+      <p className="muted">A conversa sai da sua lista. Se a pessoa mandar uma mensagem nova, ela volta a aparecer.</p>
+      <div className="stack mt">
+        <Button variant="secondary" busy={busy} onClick={() => del(false)}>Apagar só para mim</Button>
+        <Button variant="red" busy={busy} onClick={() => del(true)}>Apagar para todos as minhas mensagens</Button>
+        <p className="muted small">“Para todos” apaga as mensagens que você enviou. As mensagens da outra pessoa só podem ser apagadas por ela.</p>
+      </div>
+    </Modal>
   );
 }
 
@@ -106,14 +146,14 @@ function DirectSearch({ base, onClose }) {
   };
   return (
     <Modal title="Nova conversa direta" onClose={onClose}>
-      <Field label="Código do membro ou nome" hint="Pelo nome você encontra membros do seu clube. De outros clubes, use o código (ex.: DBV-AB12C).">
-        <input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder="DBV-XXXXX ou nome" />
+      <Field label="@ ou nome" hint="Pelo @ você encontra membros de qualquer clube. Pelo nome, só do seu clube.">
+        <input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder="@arroba ou nome" autoCapitalize="none" />
       </Field>
       <div className="list mt">
         {results.map((m) => (
           <button key={m.id} className="list-item" style={{ border: 0, font: 'inherit', textAlign: 'left', cursor: 'pointer' }} onClick={() => start(m)}>
             <Avatar src={m.photo} name={m.name} size={42} />
-            <div className="grow"><div className="title">{m.name}</div><div className="sub">{m.club_name} · {m.code}</div></div>
+            <div className="grow"><div className="title">{m.name}</div><div className="sub">{m.handle ? '@' + m.handle + ' · ' : ''}{m.club_name}</div></div>
           </button>
         ))}
         {q.trim().length >= 2 && !results.length && <Empty icon={Search}>Ninguém encontrado.</Empty>}
@@ -233,6 +273,8 @@ export function ChatConversation({ base }) {
   const [blockGroup, setBlockGroup] = useState(false);
   const [photo, setPhoto] = useState(null);
   const [sending, setSending] = useState(false);
+  const [msgMenu, setMsgMenu] = useState(null);
+  const [deleteConv, setDeleteConv] = useState(false);
   const bodyRef = useRef(null);
   const atBottom = useRef(true);
 
@@ -259,6 +301,7 @@ export function ChatConversation({ base }) {
       if (!(e.message.sender_type === actor.type && e.message.sender_id === actor.id)) markRead(e.message.id);
     }
     if (e.type === 'read' && e.reader !== `${actor.type}:${actor.id}`) setOthersRead((x) => Math.max(x, e.last_read_id));
+    if (e.type === 'deleted') setMessages((ms) => ms && ms.map((m) => (m.id === e.message_id ? { ...m, deleted: 1, body: null, media: null, kind: 'texto' } : m)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [id, subscribe]);
 
@@ -297,6 +340,24 @@ export function ChatConversation({ base }) {
 
   const c = conv.data;
   const peer = c?.peer;
+  const clearConv = async () => {
+    setMenu(false);
+    if (!confirm('Limpar esta conversa? As mensagens somem só para você.')) return;
+    await api.post(`/chat/conversations/${id}/clear`);
+    setMessages([]);
+    notify('Conversa limpa');
+  };
+  const hideMsg = async (m) => {
+    setMsgMenu(null);
+    await api.post(`/chat/messages/${m.id}/hide`).catch((e) => notify(e.message, 'error'));
+    setMessages((ms) => ms.filter((x) => x.id !== m.id));
+  };
+  const deleteMsg = async (m) => {
+    setMsgMenu(null);
+    if (!confirm('Apagar esta mensagem para todos?')) return;
+    await api.post(`/chat/messages/${m.id}/delete`).catch((e) => notify(e.message, 'error'));
+    setMessages((ms) => ms.map((x) => (x.id === m.id ? { ...x, deleted: 1, body: null, media: null, kind: 'texto' } : x)));
+  };
   const toggleBlock = async () => {
     setMenu(false);
     if (c.i_blocked) await api.del(`/chat/blocks/${peer.type}/${peer.id}`);
@@ -322,6 +383,9 @@ export function ChatConversation({ base }) {
             <button className="icon-btn" onClick={() => setMenu((x) => !x)} aria-label="Opções"><MoreVertical size={22} /></button>
             {menu && (
               <div className="menu-pop" onMouseLeave={() => setMenu(false)}>
+                <button onClick={clearConv}><Eraser size={16} /> Limpar conversa</button>
+                {c.type === 'direta' && <button onClick={async () => { setMenu(false); await api.post(`/chat/conversations/${id}/archive`, { archived: true }); notify('Conversa arquivada'); nav(`${base}/chat`); }}><Archive size={16} /> Arquivar</button>}
+                {c.type === 'direta' && <button className="danger" onClick={() => { setMenu(false); setDeleteConv(true); }}><Trash2 size={16} /> Apagar conversa</button>}
                 <button className="danger" onClick={() => { setMenu(false); setReport({}); }}><Flag size={16} /> Denunciar</button>
                 {c.type === 'unidade'
                   ? <button className="danger" onClick={() => { setMenu(false); setBlockGroup(true); }}><Ban size={16} /> Bloquear membro</button>
@@ -347,8 +411,16 @@ export function ChatConversation({ base }) {
                   {sep && <div className="day-sep">{day}</div>}
                   <div className={'bubble' + (mine ? ' mine' : '')}>
                     {!mine && c?.type !== 'direta' && <div className="who">{m.sender?.name}</div>}
-                    {!mine && <button className="bubble-menu" title="Denunciar mensagem" onClick={() => setReport({ message: m })} aria-label="Denunciar mensagem"><Flag size={13} /></button>}
-                    {m.kind === 'texto' && <div style={{ whiteSpace: 'pre-wrap', paddingRight: mine ? 0 : 14 }}>{m.body}</div>}
+                    <button className="bubble-menu" onClick={() => setMsgMenu(msgMenu?.id === m.id ? null : m)} aria-label="Opções da mensagem"><ChevronDown size={15} /></button>
+                    {msgMenu?.id === m.id && (
+                      <div className={'menu-pop bubble-pop' + (mine ? ' mine' : '')} onMouseLeave={() => setMsgMenu(null)}>
+                        <button onClick={() => hideMsg(m)}><EyeOff size={16} /> Apagar para mim</button>
+                        {mine && !m.deleted && <button className="danger" onClick={() => deleteMsg(m)}><Trash2 size={16} /> Apagar para todos</button>}
+                        {!mine && !m.deleted && <button className="danger" onClick={() => { setMsgMenu(null); setReport({ message: m }); }}><Flag size={16} /> Denunciar</button>}
+                      </div>
+                    )}
+                    {m.deleted ? <div className="deleted-text ico"><Ban size={14} /> {mine ? 'Você apagou esta mensagem' : 'Mensagem apagada'}</div> : null}
+                    {m.kind === 'texto' && !m.deleted && <div style={{ whiteSpace: 'pre-wrap', paddingRight: 16 }}>{m.body}</div>}
                     {m.kind === 'foto' && <img className="photo" src={m.media} alt="Foto" onClick={() => setPhoto(m.media)} />}
                     {m.kind === 'audio' && <audio controls preload="none" src={m.media} />}
                     {m.kind !== 'texto' && m.body && <div>{m.body}</div>}
@@ -386,6 +458,7 @@ export function ChatConversation({ base }) {
         </div>
       )}
 
+      {deleteConv && c && <DeleteConversation conv={c} onClose={() => setDeleteConv(false)} onDone={() => nav(`${base}/chat`)} />}
       {report && c && <ReportModal conv={c} message={report.message} onClose={() => setReport(null)} />}
       {blockGroup && c && <BlockGroupModal conv={c} onClose={() => { setBlockGroup(false); api.get(`/chat/conversations/${id}/messages`).then((r) => setMessages(r.messages)); }} />}
       <Lightbox src={photo} onClose={() => setPhoto(null)} />

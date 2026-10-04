@@ -7,6 +7,7 @@ import { HttpError } from './util.js';
 
 const EXT = {
   'image/jpeg': '.jpg', 'image/png': '.png', 'image/webp': '.webp', 'image/gif': '.gif', 'image/svg+xml': '.svg',
+  'application/pdf': '.pdf',
   'audio/webm': '.webm', 'audio/ogg': '.ogg', 'audio/mpeg': '.mp3', 'audio/mp4': '.m4a', 'audio/aac': '.aac', 'audio/wav': '.wav', 'audio/x-m4a': '.m4a',
 };
 
@@ -18,14 +19,14 @@ const storage = (destination) => multer.diskStorage({
   },
 });
 
-function make(kinds, dir = UPLOAD_DIR) {
+function make(kinds, dir = UPLOAD_DIR, exact = []) {
   return multer({
     storage: storage(dir),
     limits: { fileSize: MAX_UPLOAD_MB * 1024 * 1024, files: 8 },
     fileFilter: (_req, file, cb) => {
       const base = file.mimetype.split(';')[0];
       // SVG enviado por usuário pode conter script: aceitamos só imagens rasterizadas.
-      const ok = kinds.some((k) => base.startsWith(k + '/')) && base !== 'image/svg+xml';
+      const ok = (kinds.some((k) => base.startsWith(k + '/')) || exact.includes(base)) && base !== 'image/svg+xml';
       cb(ok ? null : new HttpError(400, 'Tipo de arquivo não permitido'), ok);
     },
   });
@@ -33,6 +34,8 @@ function make(kinds, dir = UPLOAD_DIR) {
 
 // Públicos: fotos de perfil, logos e ícones (aparecem nos perfis públicos).
 export const imageUpload = make(['image']);
+// Anexos de eventos: fotos e PDF.
+export const attachmentUpload = make(['image'], UPLOAD_DIR, ['application/pdf']);
 export const fileUrl = (file) => (file ? '/uploads/' + file.filename : null);
 
 // Privados: servidos por /api/files/:kind/:name com checagem de permissão.

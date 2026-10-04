@@ -218,7 +218,7 @@ CREATE TABLE IF NOT EXISTS purchases (
 CREATE TABLE IF NOT EXISTS achievements (
   member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
   content_id INTEGER NOT NULL REFERENCES content(id) ON DELETE CASCADE,
-  source TEXT NOT NULL CHECK (source IN ('clube','online')),
+  source TEXT NOT NULL CHECK (source IN ('clube','online','admin')),
   date TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
   PRIMARY KEY (member_id, content_id)
 );
@@ -329,6 +329,88 @@ BEGIN SELECT RAISE(ABORT, 'Somente o Administrador Geral entrega medalhas'); END
 `;
 
 db.exec(SCHEMA);
+migrate();
+
+/**
+ * Migrações: só acrescentam colunas e tabelas, preservando os dados de quem
+ * já usa o app. Cada passo é idempotente.
+ */
+function migrate() {
+  const cols = (t) => db.prepare(`PRAGMA table_info(${t})`).all().map((c) => c.name);
+  const add = (t, col, def) => {
+    if (!cols(t).includes(col)) db.exec(`ALTER TABLE ${t} ADD COLUMN ${col} ${def}`);
+  };
+
+  // @ do membro (usado para ser encontrado no chat e no link do perfil)
+  add('members', 'handle', 'TEXT');
+  db.exec('CREATE UNIQUE INDEX IF NOT EXISTS ux_member_handle ON members(handle COLLATE NOCASE) WHERE handle IS NOT NULL');
+
+  // Requisitos: combinação livre de envio (texto, foto, quiz) e fotos de exemplo
+  add('requirements', 'modes', 'TEXT');
+  add('requirements', 'images', "TEXT NOT NULL DEFAULT '[]'");
+
+  // Conteúdo: imagem/insígnia própria; requisitos das classes com envio e avaliação
+  add('content', 'image', 'TEXT');
+  add('content_items', 'modes', "TEXT NOT NULL DEFAULT ''");
+  add('content_items', 'images', "TEXT NOT NULL DEFAULT '[]'");
+  for (const [c, d] of [['status', "TEXT NOT NULL DEFAULT 'aprovado'"], ['text', 'TEXT'], ['photos', "TEXT NOT NULL DEFAULT '[]'"], ['answers', 'TEXT'],
+    ['quiz_correct', 'INTEGER'], ['quiz_total', 'INTEGER'], ['feedback', 'TEXT'], ['submitted_at', 'TEXT'], ['reviewed_at', 'TEXT']]) add('content_progress', c, d);
+  db.exec(`CREATE TABLE IF NOT EXISTS content_item_questions (
+    id INTEGER PRIMARY KEY,
+    item_id INTEGER NOT NULL REFERENCES content_items(id) ON DELETE CASCADE,
+    ord INTEGER NOT NULL DEFAULT 0,
+    question TEXT NOT NULL,
+    options TEXT NOT NULL,
+    correct INTEGER NOT NULL
+  )`);
+
+  // Conquistas entregues pelo Administrador Geral (origem "admin"): recria a tabela se preciso
+  const achSql = db.prepare("SELECT sql FROM sqlite_master WHERE name = 'achievements'").get()?.sql || '';
+  if (!achSql.includes("'admin'")) {
+    db.exec(`PRAGMA foreign_keys = OFF; BEGIN;
+      CREATE TABLE achievements_new (
+        member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+        content_id INTEGER NOT NULL REFERENCES content(id) ON DELETE CASCADE,
+        source TEXT NOT NULL CHECK (source IN ('clube','online','admin')),
+        date TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+        PRIMARY KEY (member_id, content_id));
+      INSERT INTO achievements_new SELECT member_id, content_id, source, date FROM achievements;
+      DROP TABLE achievements; ALTER TABLE achievements_new RENAME TO achievements;
+      COMMIT; PRAGMA foreign_keys = ON;`);
+  }
+
+  // Eventos com anexos (PDF ou fotos)
+  add('events', 'attachments', "TEXT NOT NULL DEFAULT '[]'");
+
+  // Chat: apagar para todos, apagar para mim, limpar, arquivar e apagar conversa
+  add('messages', 'deleted', 'INTEGER NOT NULL DEFAULT 0');
+  db.exec(`CREATE TABLE IF NOT EXISTS message_hidden (
+    message_id INTEGER NOT NULL REFERENCES messages(id) ON DELETE CASCADE,
+    user_type TEXT NOT NULL, user_id INTEGER NOT NULL,
+    PRIMARY KEY (message_id, user_type, user_id)
+  )`);
+  db.exec(`CREATE TABLE IF NOT EXISTS conversation_user (
+    conversation_id INTEGER NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
+    user_type TEXT NOT NULL, user_id INTEGER NOT NULL,
+    cleared_id INTEGER NOT NULL DEFAULT 0,
+    archived INTEGER NOT NULL DEFAULT 0,
+    hidden INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (conversation_id, user_type, user_id)
+  )`);
+  // Cópia da mensagem denunciada (continua visível para quem analisa, mesmo se apagada)
+  add('reports', 'snapshot', 'TEXT');
+
+  // Anúncios que aparecem ao abrir o app
+  db.exec(`CREATE TABLE IF NOT EXISTS announcements (
+    id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    body TEXT NOT NULL DEFAULT '',
+    image TEXT,
+    link TEXT,
+    active INTEGER NOT NULL DEFAULT 1 CHECK (active IN (0,1)),
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+  )`);
+}
 
 /** Apaga tudo e recria o esquema (usado por "npm run seed"). */
 export function resetDatabase() {
@@ -338,6 +420,7 @@ export function resetDatabase() {
   for (const o of objs.filter((x) => x.type === 'table')) db.exec(`DROP TABLE IF EXISTS "${o.name}"`);
   db.exec('PRAGMA foreign_keys = ON');
   db.exec(SCHEMA);
+  migrate();
 }
 
 function clean(params) {

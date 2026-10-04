@@ -37,7 +37,9 @@ r.get('/public/units/:id', (req, res) => {
 });
 
 r.get('/public/members/:code', (req, res) => {
-  const m = memberProfile('code', String(req.params.code).toUpperCase());
+  // Link do perfil: /p/membro/@arroba (ou o código antigo).
+  const key = String(req.params.code);
+  const m = key.startsWith('@') ? memberProfile('handle', key.slice(1)) : memberProfile('code', key.toUpperCase()) || memberProfile('handle', key);
   if (!m) fail(404, 'Membro não encontrado');
   delete m.id;
   res.json(m);

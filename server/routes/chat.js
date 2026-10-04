@@ -1,5 +1,7 @@
 import { Router } from 'express';
-import { all, get, run, tx, nowIso } from '../db.js';
+import fs from 'node:fs';
+import path from 'node:path';
+import { all, get, run, tx, nowIso, PRIVATE_DIR } from '../db.js';
 import { requireAuth } from '../auth.js';
 import { privateMediaUpload, privateUrl } from '../uploads.js';
 import { pushTo } from '../realtime.js';
@@ -36,6 +38,22 @@ function loadConv(req) {
   return c;
 }
 
+/** Estado da conversa para o usuário: limpa até (cleared_id), arquivada, apagada da lista. */
+function userState(c, a) {
+  return get('SELECT cleared_id, archived, hidden FROM conversation_user WHERE conversation_id = ? AND user_type = ? AND user_id = ?', c.id, a.type, a.id)
+    || { cleared_id: 0, archived: 0, hidden: 0 };
+}
+function setUserState(c, a, fields) {
+  run('INSERT OR IGNORE INTO conversation_user (conversation_id, user_type, user_id) VALUES (?,?,?)', c.id, a.type, a.id);
+  for (const [k, v] of Object.entries(fields)) {
+    run(`UPDATE conversation_user SET ${k} = ? WHERE conversation_id = ? AND user_type = ? AND user_id = ?`, v, c.id, a.type, a.id);
+  }
+}
+
+/** Mensagens que o usuário pode ver: depois do "limpar" e sem as que ele apagou para si. */
+const VISIBLE = `conversation_id = ? AND id > ? AND id NOT IN (SELECT message_id FROM message_hidden WHERE user_type = ? AND user_id = ?)`;
+const visibleArgs = (c, a, st) => [c.id, st.cleared_id, a.type, a.id];
+
 const blocked = (byType, byId, tType, tId) => !!get('SELECT 1 FROM blocks WHERE blocker_type = ? AND blocker_id = ? AND blocked_type = ? AND blocked_id = ?', byType, byId, tType, tId);
 
 /** Remetentes que o usuário bloqueou (mensagens deles ficam ocultas). */
@@ -50,7 +68,7 @@ const senderCache = () => {
     if (!cache.has(k)) {
       cache.set(k, type === 'club'
         ? (({ name, logo }) => ({ name: 'Diretoria · ' + name, photo: logo }))(get('SELECT name, logo FROM clubs WHERE id = ?', id) || { name: '?' })
-        : get('SELECT name, photo, code FROM members WHERE id = ?', id) || { name: '(removido)' });
+        : get('SELECT name, photo, handle FROM members WHERE id = ?', id) || { name: '(removido)' });
     }
     return cache.get(k);
   };
@@ -67,12 +85,12 @@ function header(a, c) {
       const cl = get('SELECT name, logo FROM clubs WHERE id = ?', c.club_id);
       return { title: 'Diretoria', photo: cl.logo, subtitle: cl.name, peer: { type: 'club', id: c.club_id } };
     }
-    const m = get('SELECT m.name, m.photo, m.code, u.name AS unit FROM members m LEFT JOIN units u ON u.id = m.unit_id WHERE m.id = ?', c.member_a);
-    return { title: m.name, photo: m.photo, subtitle: (m.unit ? 'Unidade ' + m.unit : 'Sem unidade') + ' · ' + m.code, peer: { type: 'member', id: c.member_a } };
+    const m = get('SELECT m.name, m.photo, m.handle, u.name AS unit FROM members m LEFT JOIN units u ON u.id = m.unit_id WHERE m.id = ?', c.member_a);
+    return { title: m.name, photo: m.photo, subtitle: (m.unit ? 'Unidade ' + m.unit : 'Sem unidade') + (m.handle ? ' · @' + m.handle : ''), peer: { type: 'member', id: c.member_a } };
   }
   const otherId = c.member_a === a.id ? c.member_b : c.member_a;
-  const o = get('SELECT m.name, m.photo, m.code, cl.name AS club FROM members m JOIN clubs cl ON cl.id = m.club_id WHERE m.id = ?', otherId);
-  return { title: o.name, photo: o.photo, subtitle: o.club + ' · ' + o.code, peer: { type: 'member', id: otherId } };
+  const o = get('SELECT m.name, m.photo, m.handle, cl.name AS club FROM members m JOIN clubs cl ON cl.id = m.club_id WHERE m.id = ?', otherId);
+  return { title: o.name, photo: o.photo, subtitle: (o.handle ? '@' + o.handle + ' · ' : '') + o.club, peer: { type: 'member', id: otherId } };
 }
 
 function lastRead(c, type, id) {
@@ -84,16 +102,20 @@ function othersRead(a, c) {
   return get('SELECT MAX(last_read_id) AS m FROM conversation_reads WHERE conversation_id = ? AND NOT (reader_type = ? AND reader_id = ?)', c.id, a.type, a.id)?.m || 0;
 }
 
-function summarize(a, c, blockedKeys, sender) {
-  const msgs = all('SELECT * FROM messages WHERE conversation_id = ? ORDER BY id DESC LIMIT 30', c.id).filter((m) => !blockedKeys.has(key(m.sender_type, m.sender_id)));
-  const last = msgs[0] || null;
-  const lr = lastRead(c, a.type, a.id);
-  const unread = get(
-    `SELECT COUNT(*) n FROM messages WHERE conversation_id = ? AND id > ? AND NOT (sender_type = ? AND sender_id = ?)`,
-    c.id, lr, a.type, a.id,
+function unreadCount(a, c, st) {
+  const lr = Math.max(lastRead(c, a.type, a.id), st.cleared_id);
+  return get(
+    `SELECT COUNT(*) n FROM messages WHERE ${VISIBLE} AND id > ? AND deleted = 0 AND NOT (sender_type = ? AND sender_id = ?)`,
+    ...visibleArgs(c, a, st), lr, a.type, a.id,
   ).n;
+}
+
+function summarize(a, c, blockedKeys, sender) {
+  const st = userState(c, a);
+  const msgs = all(`SELECT * FROM messages WHERE ${VISIBLE} ORDER BY id DESC LIMIT 30`, ...visibleArgs(c, a, st)).filter((m) => !blockedKeys.has(key(m.sender_type, m.sender_id)));
+  const last = msgs[0] || null;
   return {
-    id: c.id, type: c.type, ...header(a, c), unread,
+    id: c.id, type: c.type, ...header(a, c), unread: unreadCount(a, c, st), archived: !!st.archived, hidden: !!st.hidden,
     last: last && { ...last, sender_name: sender(last.sender_type, last.sender_id).name, mine: last.sender_type === a.type && last.sender_id === a.id },
     last_at: last?.created_at || c.created_at,
   };
@@ -114,7 +136,8 @@ r.get('/chat/conversations', chatUser, (req, res) => {
   }
   const bl = blockedSet(a);
   const sender = senderCache();
-  const out = convs.map((c) => summarize(a, c, bl, sender)).sort((x, y) => (x.last_at < y.last_at ? 1 : -1));
+  // Conversa apagada da lista só volta quando chega mensagem nova.
+  const out = convs.map((c) => summarize(a, c, bl, sender)).filter((c) => !c.hidden).sort((x, y) => (x.last_at < y.last_at ? 1 : -1));
   res.json(out);
 });
 
@@ -127,7 +150,9 @@ r.get('/chat/unread', chatUser, (req, res) => {
   } else ids = all(`SELECT id FROM conversations WHERE type = 'diretoria' AND club_id = ?`, a.id);
   let total = 0;
   for (const { id } of ids) {
-    total += get(`SELECT COUNT(*) n FROM messages WHERE conversation_id = ? AND id > ? AND NOT (sender_type = ? AND sender_id = ?)`, id, lastRead({ id }, a.type, a.id), a.type, a.id).n;
+    const c = { id };
+    const st = userState(c, a);
+    if (!st.hidden) total += unreadCount(a, c, st);
   }
   res.json({ total });
 });
@@ -151,7 +176,8 @@ r.get('/chat/conversations/:id/messages', chatUser, (req, res) => {
   const before = int(req.query.before) || 1e15;
   const bl = blockedSet(req.actor);
   const sender = senderCache();
-  const rows = all('SELECT * FROM messages WHERE conversation_id = ? AND id < ? ORDER BY id DESC LIMIT 60', c.id, before)
+  const st = userState(c, req.actor);
+  const rows = all(`SELECT * FROM messages WHERE ${VISIBLE} AND id < ? ORDER BY id DESC LIMIT 60`, ...visibleArgs(c, req.actor, st), before)
     .filter((m) => !bl.has(key(m.sender_type, m.sender_id)))
     .reverse()
     .map((m) => ({ ...m, sender: sender(m.sender_type, m.sender_id) }));
@@ -174,6 +200,7 @@ r.post('/chat/conversations/:id/messages', chatUser, privateMediaUpload.single('
   const msg = tx(() => {
     const id = Number(run('INSERT INTO messages (conversation_id, sender_type, sender_id, kind, body, media, created_at) VALUES (?,?,?,?,?,?,?)', c.id, a.type, a.id, kind, body || null, privateUrl('chat', file), now).lastInsertRowid);
     run('UPDATE conversations SET last_message_at = ? WHERE id = ?', now, c.id);
+    run('UPDATE conversation_user SET hidden = 0 WHERE conversation_id = ?', c.id); // reaparece para quem tinha apagado
     run(`INSERT INTO conversation_reads (conversation_id, reader_type, reader_id, last_read_id) VALUES (?,?,?,?)
          ON CONFLICT (conversation_id, reader_type, reader_id) DO UPDATE SET last_read_id = excluded.last_read_id`, c.id, a.type, a.id, id);
     return get('SELECT * FROM messages WHERE id = ?', id);
@@ -195,17 +222,82 @@ r.post('/chat/conversations/:id/read', chatUser, (req, res) => {
   res.json({ ok: true });
 });
 
-// Busca para conversa direta: pelo código (qualquer clube) ou pelo nome (apenas no próprio clube).
+// Busca para conversa direta: pelo @ (qualquer clube) ou pelo nome (apenas no próprio clube).
 r.get('/chat/search', requireAuth('member'), (req, res) => {
-  const q = str(req.query.q, 60);
+  const raw = str(req.query.q, 60);
+  const q = raw.replace(/^@/, '');
   if (q.length < 2) return res.json([]);
   const rows = all(
-    `SELECT m.id, m.name, m.photo, m.code, c.name AS club_name FROM members m JOIN clubs c ON c.id = m.club_id
-     WHERE m.id <> ? AND (UPPER(m.code) = UPPER(?) OR UPPER(m.code) = UPPER('DBV-' || ?) OR (m.club_id = ? AND m.name LIKE ?))
-     ORDER BY m.name LIMIT 20`,
-    req.actor.id, q, q, req.actor.club_id, '%' + q + '%',
+    `SELECT m.id, m.name, m.photo, m.handle, c.name AS club_name FROM members m JOIN clubs c ON c.id = m.club_id
+     WHERE m.id <> ? AND ((m.handle IS NOT NULL AND m.handle LIKE ? ESCAPE '\\') OR (? = 0 AND m.club_id = ? AND m.name LIKE ?))
+     ORDER BY (m.handle = ?) DESC, m.name LIMIT 20`,
+    req.actor.id, q.replace(/[%_\\]/g, '\\$&') + '%', raw.startsWith('@') ? 1 : 0, req.actor.club_id, '%' + q + '%', q,
   );
   res.json(rows);
+});
+
+// ---------- Limpar, arquivar e apagar ----------
+// Limpar: some só para quem limpou.
+r.post('/chat/conversations/:id/clear', chatUser, (req, res) => {
+  const c = loadConv(req);
+  const maxId = get('SELECT MAX(id) AS m FROM messages WHERE conversation_id = ?', c.id).m || 0;
+  setUserState(c, req.actor, { cleared_id: maxId });
+  res.json({ ok: true });
+});
+
+r.post('/chat/conversations/:id/archive', chatUser, (req, res) => {
+  const c = loadConv(req);
+  if (c.type !== 'direta') fail(400, 'Só conversas diretas podem ser arquivadas');
+  setUserState(c, req.actor, { archived: req.body.archived === false ? 0 : 1 });
+  res.json({ ok: true });
+});
+
+/** Apaga uma mensagem para todos (só quem enviou). O conteúdo some; fica "Mensagem apagada". */
+function deleteForAll(m, c) {
+  const reported = !!get('SELECT 1 FROM reports WHERE message_id = ?', m.id);
+  if (m.media && !reported) {
+    // Mantém o arquivo se a mensagem foi denunciada (a análise continua possível).
+    fs.rm(path.join(PRIVATE_DIR, path.basename(m.media)), { force: true }, () => {});
+  }
+  run(`UPDATE messages SET deleted = 1, kind = 'texto', body = NULL, media = NULL WHERE id = ?`, m.id);
+  pushTo(participants(c).map((p) => key(p.type, p.id)), { type: 'deleted', conversation_id: c.id, message_id: m.id });
+}
+
+// Apagar conversa direta: sai da sua lista e é limpa para você. Com for_all, as SUAS mensagens são apagadas para todos.
+r.post('/chat/conversations/:id/delete', chatUser, (req, res) => {
+  const a = req.actor;
+  const c = loadConv(req);
+  if (c.type !== 'direta') fail(400, 'Só conversas diretas podem ser apagadas. Use "Limpar conversa".');
+  tx(() => {
+    if (req.body.for_all) {
+      for (const m of all('SELECT * FROM messages WHERE conversation_id = ? AND sender_type = ? AND sender_id = ? AND deleted = 0', c.id, a.type, a.id)) deleteForAll(m, c);
+    }
+    const maxId = get('SELECT MAX(id) AS m FROM messages WHERE conversation_id = ?', c.id).m || 0;
+    setUserState(c, a, { cleared_id: maxId, hidden: 1, archived: 0 });
+  });
+  res.json({ ok: true });
+});
+
+function loadMessage(req) {
+  const m = get('SELECT * FROM messages WHERE id = ?', int(req.params.id));
+  const c = m && get('SELECT * FROM conversations WHERE id = ?', m.conversation_id);
+  if (!m || !canAccess(req.actor, c)) fail(404, 'Mensagem não encontrada');
+  return [m, c];
+}
+
+// Apagar para mim
+r.post('/chat/messages/:id/hide', chatUser, (req, res) => {
+  const [m] = loadMessage(req);
+  run('INSERT OR IGNORE INTO message_hidden (message_id, user_type, user_id) VALUES (?,?,?)', m.id, req.actor.type, req.actor.id);
+  res.json({ ok: true });
+});
+
+// Apagar para todos (só a própria mensagem)
+r.post('/chat/messages/:id/delete', chatUser, (req, res) => {
+  const [m, c] = loadMessage(req);
+  if (m.sender_type !== req.actor.type || m.sender_id !== req.actor.id) fail(403, 'Você só pode apagar para todos as suas mensagens');
+  if (!m.deleted) deleteForAll(m, c);
+  res.json({ ok: true });
 });
 
 r.post('/chat/direct', requireAuth('member'), (req, res) => {
@@ -253,11 +345,13 @@ r.post('/chat/reports', chatUser, (req, res) => {
     if (peer) [reportedType, reportedId] = [peer.type, peer.id];
   }
   if (reportedType === 'member' && !participants(c).some((p) => p.type === 'member' && p.id === reportedId)) [reportedType, reportedId] = [null, null];
+  const msg = messageId ? get('SELECT sender_type, sender_id, kind, body, media, created_at FROM messages WHERE id = ?', messageId) : null;
+  const snapshot = msg ? JSON.stringify({ ...msg, sender: senderCache()(msg.sender_type, msg.sender_id).name }) : null;
   const reportedClub = reportedType === 'member' ? get('SELECT club_id FROM members WHERE id = ?', reportedId)?.club_id : reportedType === 'club' ? reportedId : null;
   run(
-    `INSERT INTO reports (reporter_type, reporter_id, club_id, reported_club_id, conversation_id, message_id, reported_type, reported_id, reason)
-     VALUES (?,?,?,?,?,?,?,?,?)`,
-    a.type, a.id, a.club_id, reportedClub ?? null, c.id, messageId, reportedType, reportedId, reason,
+    `INSERT INTO reports (reporter_type, reporter_id, club_id, reported_club_id, conversation_id, message_id, reported_type, reported_id, reason, snapshot)
+     VALUES (?,?,?,?,?,?,?,?,?,?)`,
+    a.type, a.id, a.club_id, reportedClub ?? null, c.id, messageId, reportedType, reportedId, reason, snapshot,
   );
   res.json({ ok: true });
 });
@@ -273,7 +367,9 @@ r.get('/reports', requireAuth('club', 'admin'), (req, res) => {
     r0.reported = r0.reported_type ? sender(r0.reported_type, r0.reported_id) : null;
     r0.reporter_club = get('SELECT name FROM clubs WHERE id = ?', r0.club_id)?.name;
     r0.conversation_type = get('SELECT type FROM conversations WHERE id = ?', r0.conversation_id)?.type;
-    r0.message = r0.message_id ? get('SELECT kind, body, media, created_at FROM messages WHERE id = ?', r0.message_id) : null;
+    // Usa a cópia feita na denúncia (a mensagem pode ter sido apagada depois).
+    r0.message = r0.snapshot ? JSON.parse(r0.snapshot) : r0.message_id ? get('SELECT kind, body, media, created_at FROM messages WHERE id = ?', r0.message_id) : null;
+    delete r0.snapshot;
   }
   res.json(rows);
 });

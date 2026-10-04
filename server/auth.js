@@ -52,7 +52,7 @@ export function loadActor(type, id) {
   }
   if (type === 'member') {
     const m = get(
-      `SELECT m.id, m.name, m.photo, m.code, m.cargo, m.birth_date, m.unit_id, m.club_id,
+      `SELECT m.id, m.name, m.photo, m.code, m.handle, m.cargo, m.birth_date, m.unit_id, m.club_id,
               c.district_id, c.name AS club_name, u.name AS unit_name
        FROM members m JOIN clubs c ON c.id = m.club_id LEFT JOIN units u ON u.id = m.unit_id
        WHERE m.id = ?`,

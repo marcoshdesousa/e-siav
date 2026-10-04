@@ -13,11 +13,11 @@ export function medalsOf(type, id) {
 
 export function eventsOf(type, id) {
   return all(
-    `SELECT e.id, e.name, e.description, e.date, e.location
+    `SELECT e.id, e.name, e.description, e.date, e.location, e.attachments
      FROM events e JOIN event_participants p ON p.event_id = e.id
      WHERE p.target_type = ? AND p.target_id = ? ORDER BY e.date DESC`,
     type, id,
-  );
+  ).map((e) => ({ ...e, attachments: JSON.parse(e.attachments || '[]') }));
 }
 
 const pos = (r) => (r ? { position: r.position, points: r.points } : null);
@@ -62,10 +62,10 @@ export function unitProfile(id) {
 
 export function memberProfile(where, value) {
   const m = get(
-    `SELECT m.id, m.name, m.photo, m.code, m.cargo, m.birth_date, m.excellence,
+    `SELECT m.id, m.name, m.photo, m.code, m.handle, m.cargo, m.birth_date, m.excellence,
             m.club_id, c.name AS club_name, c.logo AS club_logo, m.unit_id, u.name AS unit_name
      FROM members m JOIN clubs c ON c.id = m.club_id LEFT JOIN units u ON u.id = m.unit_id
-     WHERE m.${where === 'code' ? 'code' : 'id'} = ?`,
+     WHERE ${where === 'code' ? 'm.code = ?' : where === 'handle' ? 'm.handle = ? COLLATE NOCASE' : 'm.id = ?'}`,
     value,
   );
   if (!m) return null;

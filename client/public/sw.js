@@ -1,5 +1,5 @@
 // Service worker do App do DBV: app instalável e tela inicial disponível offline.
-const CACHE = 'dbv-v3';
+const CACHE = 'dbv-v4';
 const SHELL = ['/', '/manifest.webmanifest', '/logo.png', '/icons/icon-192.png', '/icons/icon-512.png'];
 
 self.addEventListener('install', (e) => {

@@ -19,7 +19,11 @@ function reportedTo(actor, messageId) {
 
 function canSeeChat(actor, url) {
   const m = get('SELECT id, conversation_id FROM messages WHERE media = ?', url);
-  if (!m) return false;
+  if (!m) {
+    // Mensagem apagada para todos: a mídia só fica disponível pela denúncia.
+    const rep = get('SELECT message_id FROM reports WHERE snapshot LIKE ?', `%"${url}"%`);
+    return !!rep && reportedTo(actor, rep.message_id);
+  }
   const c = get('SELECT * FROM conversations WHERE id = ?', m.conversation_id);
   return (['member', 'club'].includes(actor.type) && canAccess(actor, c)) || reportedTo(actor, m.id);
 }
@@ -36,11 +40,18 @@ function canSeeSubmission(actor, url) {
   return actor.type === 'club' && s.club_id === actor.id;
 }
 
+// Fotos enviadas nos requisitos de classes/especialidades: o próprio membro e o Administrador Geral.
+function canSeeItem(actor, url) {
+  const p = get('SELECT member_id FROM content_progress WHERE photos LIKE ?', `%"${url}"%`);
+  if (!p) return false;
+  return actor.type === 'admin' || (actor.type === 'member' && actor.id === p.member_id);
+}
+
 r.get('/files/:kind/:name', requireAuth(), (req, res) => {
   const { kind, name } = req.params;
   if (!NAME.test(name)) fail(404, 'Arquivo não encontrado');
   const url = `/api/files/${kind}/${name}`;
-  const ok = kind === 'chat' ? canSeeChat(req.actor, url) : kind === 'envio' ? canSeeSubmission(req.actor, url) : false;
+  const ok = kind === 'chat' ? canSeeChat(req.actor, url) : kind === 'envio' ? canSeeSubmission(req.actor, url) : kind === 'item' ? canSeeItem(req.actor, url) : false;
   if (!ok) fail(404, 'Arquivo não encontrado');
   res.setHeader('Cache-Control', 'private, max-age=3600');
   res.setHeader('X-Content-Type-Options', 'nosniff');

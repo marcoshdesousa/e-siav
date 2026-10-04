@@ -46,7 +46,7 @@ function ownMember(req) {
 
 r.get('/club/members', (req, res) => {
   const rows = all(
-    `SELECT m.id, m.name, m.photo, m.cargo, m.code, m.birth_date, m.excellence, m.unit_id, u.name AS unit_name
+    `SELECT m.id, m.name, m.photo, m.cargo, m.code, m.handle, m.birth_date, m.excellence, m.unit_id, u.name AS unit_name
      FROM members m LEFT JOIN units u ON u.id = m.unit_id WHERE m.club_id = ? ORDER BY m.name`,
     req.actor.id,
   );

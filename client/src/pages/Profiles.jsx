@@ -1,23 +1,35 @@
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Award, ChevronRight, Compass, Flag, MapPin, Tent, Users } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowLeft, Award, CalendarDays, ChevronRight, Compass, Flag, MapPin, Pencil, Tent, Users } from 'lucide-react';
+import { Attachments } from './admin/Events.jsx';
 import { api } from '../api.js';
 import { AppIcon } from '../icons.jsx';
 import { fmtDate, plural } from '../format.js';
 import { useAuth, homeFor } from '../auth.jsx';
-import { Avatar, Button, Empty, Loading, LogoHorizontal, MedalList, PositionBadge, RowSection, Section, ShareButton, useLoad } from '../ui.jsx';
+import { Avatar, Button, Empty, Loading, LogoHorizontal, MedalList, Modal, PositionBadge, RowSection, Section, ShareButton, useLoad } from '../ui.jsx';
 
 /** linkBase: "/p" (páginas públicas) ou "<app>/ver" (dentro do app). */
 const to = (linkBase, kind, id) => `${linkBase}/${kind}/${id}`;
 
 export function EventCard({ e }) {
+  const [open, setOpen] = useState(false);
   return (
-    <div className="list-item event-card">
-      <span className="trophy-bg"><Tent size={22} /></span>
-      <div className="grow">
-        <div className="title ellipsis">{e.name}</div>
-        <div className="sub ellipsis">{fmtDate(e.date)}{e.location ? ' · ' + e.location : ''}</div>
-      </div>
-    </div>
+    <>
+      <button type="button" className="list-item event-card" onClick={() => setOpen(true)} style={{ font: 'inherit', textAlign: 'left', cursor: 'pointer' }}>
+        <span className="trophy-bg"><Tent size={22} /></span>
+        <div className="grow">
+          <div className="title ellipsis">{e.name}</div>
+          <div className="sub ellipsis">{fmtDate(e.date)}{e.location ? ' · ' + e.location : ''}</div>
+        </div>
+      </button>
+      {open && (
+        <Modal title={e.name} onClose={() => setOpen(false)}>
+          <p className="muted ico"><CalendarDays size={15} /> {fmtDate(e.date)}{e.location ? <> · <MapPin size={15} /> {e.location}</> : null}</p>
+          {e.description && <p style={{ whiteSpace: 'pre-wrap' }}>{e.description}</p>}
+          <Attachments list={e.attachments} />
+        </Modal>
+      )}
+    </>
   );
 }
 
@@ -94,7 +106,7 @@ export function UnitProfileView({ unit: u, linkBase }) {
   );
 }
 
-export function MemberProfileView({ member: m, linkBase, photoAction }) {
+export function MemberProfileView({ member: m, linkBase, photoAction, onEditHandle }) {
   return (
     <>
       <div className="hero">
@@ -102,6 +114,7 @@ export function MemberProfileView({ member: m, linkBase, photoAction }) {
           <Avatar src={m.photo} name={m.name} size={104} />
           {photoAction}
           <h1>{m.name}</h1>
+          {m.handle && <span className="handle-chip">@{m.handle}{onEditHandle && <button type="button" className="handle-edit" onClick={onEditHandle} aria-label="Alterar @"><Pencil size={13} /></button>}</span>}
           <div className="chips">
             <span className="chip yellow">{m.cargo}</span>
             <span className="chip">{m.age} anos</span>
@@ -114,7 +127,7 @@ export function MemberProfileView({ member: m, linkBase, photoAction }) {
           <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.4rem' }}>
             {m.ranking && <PositionBadge position={m.ranking.position} points={m.ranking.points} label="no ranking de membros" />}
           </div>
-          <div className="mt"><ShareButton path={`/p/membro/${m.code}`} title={m.name} /></div>
+          <div className="mt"><ShareButton path={`/p/membro/${m.handle ? '@' + m.handle : m.code}`} title={m.name} /></div>
         </div>
       </div>
 
