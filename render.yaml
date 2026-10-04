@@ -1,0 +1,30 @@
+# Blueprint do Render para o App do DBV.
+# No Render: New → Blueprint → escolha este repositório → Apply.
+#
+# Plano grátis: o disco é apagado a cada deploy/reinício, então o banco volta
+# aos dados de exemplo do Distrito Palmares. Ótimo para testar.
+# Para guardar os dados de verdade: troque "plan: free" por "plan: starter",
+# descomente DATA_DIR e o bloco "disk" (disco persistente).
+services:
+  - type: web
+    name: app-do-dbv
+    runtime: node
+    plan: free
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 22.22.0
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: "1"
+      - key: JWT_SECRET
+        generateValue: true
+      # - key: DATA_DIR
+      #   value: /var/data
+    # disk:
+    #   name: dbv-data
+    #   mountPath: /var/data
+    #   sizeGB: 1

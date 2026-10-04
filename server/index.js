@@ -35,6 +35,7 @@ app.use(cookieParser());
 app.use(attachActor);
 
 const api = express.Router();
+api.get('/health', (_req, res) => res.json({ ok: true }));
 for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, chatRoutes, meRoutes, fileRoutes]) api.use(r);
 api.use((_req, _res, next) => next(new HttpError(404, 'Rota não encontrada')));
 app.use('/api', api);

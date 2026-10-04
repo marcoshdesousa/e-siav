@@ -77,7 +77,20 @@ test/              testes da API
 
 Itens pagos já têm preço, botão **Comprar**, pedido de compra e liberação de acesso. Enquanto o meio de pagamento não é definido, o pedido fica *pendente* e o Administrador Geral confirma o pagamento ou libera o acesso manualmente (aba Conteúdo → Compras). Para plugar um provedor, implemente `startCheckout()` e chame `confirmPurchase()` no webhook em `server/payments.js`.
 
-## Publicação
+## Publicar no Render
+
+O repositório já tem o `render.yaml` (Blueprint) pronto.
+
+1. Entre em [render.com](https://render.com) com a sua conta do GitHub.
+2. Clique em **New → Blueprint** e escolha o repositório `e-siav` (branch `claude/exciting-ramanujan-oanie1`, ou a branch principal se você renomear).
+3. Clique em **Apply**. O Render instala, gera o build e publica numa URL `https://app-do-dbv.onrender.com` (ou parecida).
+4. Abra a URL e entre com as contas de demonstração acima.
+
+Observações do plano grátis:
+- O serviço “dorme” depois de ~15 min sem acesso; o primeiro acesso depois disso demora cerca de 1 minuto.
+- O disco é temporário: a cada novo deploy ou reinício o banco volta aos dados de exemplo e as fotos enviadas somem. Para uso real, troque para o plano **Starter** com disco persistente (instruções dentro do `render.yaml`).
+
+## Publicação (outros servidores)
 
 - Use HTTPS (necessário para gravar áudio e instalar o app no celular).
 - Defina `JWT_SECRET` e mantenha a pasta `data/` (banco e uploads) em disco persistente; `DATA_DIR` muda o local.
