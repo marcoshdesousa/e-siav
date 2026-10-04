@@ -70,8 +70,8 @@ function ClubHome() {
           <Section title="Ranking das unidades" action={<Link to={`${base}/ranking`} className="small ico">Ver tudo <ChevronRight size={14} /></Link>}>
             <RankingTable rows={c.units_ranking} link={(r) => `${base}/ver/unidade/${r.id}`} />
           </Section>
-          <Section title="Medalhas e troféus"><MedalList medals={c.medals} /></Section>
-          <Section title="Eventos"><EventsList events={c.events} /></Section>
+          <MedalList medals={c.medals} />
+          <EventsList events={c.events} />
         </>
       )}
     </Loading>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CalendarClock, CheckCircle2, ClipboardList, Globe2, Star, Trash2, X, XCircle } from 'lucide-react';
+import { CalendarClock, CheckCircle2, ClipboardList, Globe2, Star, Timer, Trash2, X, XCircle } from 'lucide-react';
 import { api, toForm } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { AUDIENCE_LABEL, MODEL_LABEL, fmtDateTime, isoToLocal, localToIso, timeLeft } from '../format.js';
@@ -28,7 +28,7 @@ function RequirementCard({ r, onSubmit }) {
       <div className="req-meta">
         <span className="ico"><ClipboardList size={14} /> {MODEL_LABEL[r.model]}</span>
         <span className="req-points ico"><Star size={14} /> {r.points} pts no prazo</span>
-        <span>⏱️ {r.late_points} pts fora do prazo</span>
+        <span className="ico"><Timer size={14} /> {r.late_points} pts fora do prazo</span>
       </div>
       <div className="req-meta">
         <span className={'ico' + (left && left.includes('hora') ? ' deadline-soon' : '')}><CalendarClock size={14} /> Prazo: {fmtDateTime(r.deadline)}{left ? ` (faltam ${left})` : ' — encerrado'}</span>
@@ -273,7 +273,7 @@ function ReviewCard({ s, onDone }) {
       <h3 className="mt">{s.title}</h3>
       <div className="req-meta"><span className="ico"><ClipboardList size={14} /> {MODEL_LABEL[s.model]}</span><span className="req-points ico"><Star size={14} /> vale {s.late ? s.req_late_points : s.req_points} pts</span></div>
       {s.quiz_total ? <p className="small"><b>Quiz:</b> {s.quiz_correct}/{s.quiz_total} acertos (a pontuação é proporcional)</p> : null}
-      {s.text && <p style={{ whiteSpace: 'pre-wrap', background: 'var(--bg)', padding: '.6rem', borderRadius: 12 }}>{s.text}</p>}
+      {s.text && <p className="text-box">{s.text}</p>}
       {s.photos.length > 0 && <div className="photo-strip">{s.photos.map((p) => <img key={p} src={p} alt="" onClick={() => setPhoto(p)} style={{ cursor: 'zoom-in' }} />)}</div>}
       {s.status === 'enviado' ? (
         <div className="stack mt">

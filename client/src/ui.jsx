@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Camera, Compass, Medal, Share2, X } from 'lucide-react';
+import { ArrowLeft, Camera, ChevronDown, ChevronUp, Compass, Medal, Share2, X } from 'lucide-react';
 import { AppIcon, ICONS } from './icons.jsx';
 
 // ---------- Marca ----------
@@ -240,7 +240,7 @@ const AVATAR_COLORS = ['#0B3D91', '#D62828', '#1F7A4D', '#7A3E9D', '#D9822B', '#
 export function Avatar({ src, name, size = 44, square = false }) {
   const color = AVATAR_COLORS[(name || '').length % AVATAR_COLORS.length];
   return (
-    <span className={'avatar' + (square ? ' square' : '')} style={{ width: size, height: size, fontSize: size * 0.38, background: src ? '#fff' : color }}>
+    <span className={'avatar' + (square ? ' square' : '')} style={{ width: size, height: size, fontSize: size * 0.38, background: src ? 'var(--surface)' : color }}>
       {src ? <img src={src} alt="" /> : initials(name)}
     </span>
   );
@@ -248,20 +248,51 @@ export function Avatar({ src, name, size = 44, square = false }) {
 
 export const MedalIcon = ({ icon, size = 30 }) => <AppIcon name={icon} size={size} fallback={Medal} strokeWidth={1.9} />;
 
-export function MedalList({ medals }) {
-  if (!medals?.length) return <Empty icon="medal">Nenhuma medalha ou troféu ainda.</Empty>;
+/**
+ * Seção que mostra os itens em uma única fileira; se não couberem,
+ * aparece o botão "Ver mais" para abrir todos.
+ */
+export function RowSection({ title, items, render, empty, emptyIcon }) {
+  const ref = useRef(null);
+  const [open, setOpen] = useState(false);
+  const [overflow, setOverflow] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const check = () => setOverflow(open || el.scrollWidth > el.clientWidth + 2);
+    check();
+    const ro = new ResizeObserver(check);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [items, open]);
+  const count = items?.length || 0;
   return (
-    <div className="medal-grid">
-      {medals.map((m) => (
-        <div key={m.id} className={'medal ' + m.kind} title={m.description}>
-          <span className="medal-icon"><MedalIcon icon={m.icon} /></span>
-          <b>{m.name}</b>
-          {m.note && <small>{m.note}</small>}
-        </div>
-      ))}
+    <Section
+      title={`${title}${count ? ` (${count})` : ''}`}
+      action={overflow ? (
+        <button type="button" className="see-more" onClick={() => setOpen((o) => !o)}>
+          {open ? <>Ver menos <ChevronUp size={14} /></> : <>Ver mais <ChevronDown size={14} /></>}
+        </button>
+      ) : null}
+    >
+      {count ? <div ref={ref} className={'one-row' + (open ? ' open' : overflow ? ' fade' : '')}>{items.map(render)}</div> : <Empty icon={emptyIcon}>{empty}</Empty>}
+    </Section>
+  );
+}
+
+export function MedalCard({ m }) {
+  return (
+    <div className={'medal ' + m.kind} title={m.description}>
+      <span className="medal-icon"><MedalIcon icon={m.icon} /></span>
+      <b>{m.name}</b>
+      {m.note && <small>{m.note}</small>}
     </div>
   );
 }
+
+export const MedalList = ({ medals }) => (
+  <RowSection title="Medalhas e troféus" items={medals} empty="Nenhuma medalha ou troféu ainda." emptyIcon="medal" render={(m) => <MedalCard key={m.id} m={m} />} />
+);
 
 export function PositionBadge({ position, label, points }) {
   if (!position) return null;

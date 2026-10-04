@@ -45,20 +45,35 @@ export function RankingTable({ rows, highlight, sub, link, avatarSquare = true }
   );
 }
 
+/** Distrito do usuário ou todos. O administrador escolhe qualquer distrito. */
 function DistrictFilter({ value, onChange }) {
-  const { meta } = useAuth();
+  const { actor, meta } = useAuth();
+  const mine = meta.districts.find((d) => d.id === actor.district_id);
+  if (mine) {
+    return (
+      <div className="seg" role="tablist">
+        <button type="button" className={value === mine.id ? 'active' : ''} onClick={() => onChange(mine.id)}>{mine.name}</button>
+        <button type="button" className={value === null ? 'active' : ''} onClick={() => onChange(null)}>Todos</button>
+      </div>
+    );
+  }
   return (
-    <Field label="Filtrar por distrito">
-      <select value={value || ''} onChange={(e) => onChange(e.target.value ? Number(e.target.value) : null)}>
-        <option value="">Todos os distritos</option>
-        {meta.districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
-      </select>
-    </Field>
+    <select value={value || ''} onChange={(e) => onChange(e.target.value ? Number(e.target.value) : null)} style={{ width: 'auto' }}>
+      <option value="">Todos os distritos</option>
+      {meta.districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
+    </select>
   );
 }
 
+const SUBTITLE = {
+  membros: 'Desbravadores · pontos dos requisitos gerais',
+  unidades: 'Unidades de todos os clubes · requisitos gerais',
+  clubes: 'Clubes · requisitos gerais de clube',
+};
+
 function GeneralRanking({ kind, base, highlight }) {
-  const [district, setDistrict] = useState(null);
+  const { actor } = useAuth();
+  const [district, setDistrict] = useState(actor.district_id ?? null);
   const url = { membros: '/rankings/members', unidades: '/rankings/units', clubes: '/rankings/clubs' }[kind];
   const state = useLoad(() => api.get(url + (district ? `?district_id=${district}` : '')), [kind, district]);
   const props = {
@@ -68,10 +83,11 @@ function GeneralRanking({ kind, base, highlight }) {
   }[kind];
   return (
     <>
-      <DistrictFilter value={district} onChange={setDistrict} />
-      <div className="mt">
-        <Loading {...state}>{(rows) => <RankingTable rows={rows} highlight={highlight} {...props} />}</Loading>
+      <div className="rank-tools">
+        <span className="muted small">{SUBTITLE[kind]}</span>
+        <DistrictFilter value={district} onChange={setDistrict} />
       </div>
+      <Loading {...state}>{(rows) => <RankingTable rows={rows} highlight={highlight} {...props} />}</Loading>
     </>
   );
 }
@@ -87,13 +103,10 @@ export function ClubUnitsRanking({ clubId, base, highlight }) {
 
 function SummaryCard({ icon, title, pos, onClick, gold }) {
   return (
-    <button className={'summary-card' + (gold ? ' gold' : '')} onClick={onClick} style={{ width: '100%', textAlign: 'left', cursor: 'pointer', font: 'inherit' }}>
-      <span className="trophy-bg">{icon}</span>
-      <div className="grow">
-        <b>{title}</b>
-        <div className="muted small">{pos ? `${pos.points} pontos · ver tabela completa` : 'Sem posição ainda'}</div>
-      </div>
-      <span className="big">{pos ? `${pos.position}º` : '—'}</span>
+    <button type="button" className={'pos-card' + (gold ? ' gold' : '')} onClick={onClick}>
+      <span className="pos-card-top">{icon}<span className="ellipsis">{title}</span></span>
+      <span className="pos-card-num">{pos ? `${pos.position}º` : '—'}</span>
+      <span className="pos-card-pts">{pos ? `${pos.points} pontos` : 'Sem posição ainda'}</span>
     </button>
   );
 }
@@ -111,8 +124,8 @@ export default function RankingHub({ base }) {
   const myUnit = actor.type === 'unit' ? actor.id : actor.unit_id;
   const tabs = [
     ['membros', 'Membros'],
-    ...(clubId ? [['clube', 'Unidades do clube']] : []),
-    ['unidades', 'Unidades (geral)'],
+    ...(clubId ? [['clube', 'Unidades']] : []),
+    ['unidades', 'Unidades gerais'],
     ['clubes', 'Clubes'],
   ];
   const [tab, setTab] = useState(actor.type === 'member' ? 'membros' : actor.type === 'unit' ? 'clube' : actor.type === 'club' ? 'clubes' : 'membros');
@@ -122,15 +135,15 @@ export default function RankingHub({ base }) {
     <>
       <PageHeader title="Ranking" subtitle="Atualizado automaticamente a cada envio pontuado" />
       {summary.data && (
-        <div className="stack">
+        <div className="pos-grid">
           {actor.type === 'member' && (
             actor.kind === 'desbravador'
-              ? <SummaryCard gold icon={<Compass size={22} />} title="Minha posição" pos={summary.data.member} onClick={() => setTab('membros')} />
-              : <div className="card small muted">A liderança não participa do ranking individual, apenas consulta as tabelas.</div>
+              ? <SummaryCard gold icon={<Compass size={16} />} title="Minha posição" pos={summary.data.member} onClick={() => setTab('membros')} />
+              : <div className="pos-card muted small">A liderança não participa do ranking individual.</div>
           )}
-          {summary.data.unit && <SummaryCard icon={<Flag size={22} />} title={`Unidade ${summary.data.unit.name} no clube`} pos={summary.data.unit.club} onClick={() => setTab('clube')} />}
-          {summary.data.unit && <SummaryCard icon={<Globe2 size={22} />} title={`Unidade ${summary.data.unit.name} no geral`} pos={summary.data.unit.general} onClick={() => setTab('unidades')} />}
-          {summary.data.club && <SummaryCard icon={<Tent size={22} />} title={summary.data.club.name} pos={summary.data.club.position ? summary.data.club : null} onClick={() => setTab('clubes')} />}
+          {summary.data.unit && <SummaryCard icon={<Flag size={16} />} title={`${summary.data.unit.name} no clube`} pos={summary.data.unit.club} onClick={() => setTab('clube')} />}
+          {summary.data.unit && <SummaryCard icon={<Globe2 size={16} />} title={`${summary.data.unit.name} no geral`} pos={summary.data.unit.general} onClick={() => setTab('unidades')} />}
+          {summary.data.club && <SummaryCard icon={<Tent size={16} />} title="Meu clube" pos={summary.data.club.position ? summary.data.club : null} onClick={() => setTab('clubes')} />}
         </div>
       )}
       <Section>
@@ -142,7 +155,8 @@ export default function RankingHub({ base }) {
             </select>
           </Field>
         )}
-        {tab === 'clube' ? clubId && <div className="mt"><ClubUnitsRanking clubId={clubId} base={base} highlight={highlight} /></div> : <GeneralRanking kind={tab} base={base} highlight={highlight} />}
+        {tab === 'clube' && actor.type !== 'admin' && <div className="rank-tools"><span className="muted small">Unidades do seu clube · requisitos do clube</span></div>}
+        {tab === 'clube' ? clubId && <ClubUnitsRanking clubId={clubId} base={base} highlight={highlight} /> : <GeneralRanking kind={tab} base={base} highlight={highlight} />}
       </Section>
     </>
   );

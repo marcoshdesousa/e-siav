@@ -4,27 +4,33 @@ import { api } from '../api.js';
 import { AppIcon } from '../icons.jsx';
 import { fmtDate, plural } from '../format.js';
 import { useAuth, homeFor } from '../auth.jsx';
-import { Avatar, Empty, Loading, LogoHorizontal, MedalList, PositionBadge, Section, ShareButton, useLoad, Button } from '../ui.jsx';
+import { Avatar, Button, Empty, Loading, LogoHorizontal, MedalList, PositionBadge, RowSection, Section, ShareButton, useLoad } from '../ui.jsx';
 
 /** linkBase: "/p" (páginas públicas) ou "<app>/ver" (dentro do app). */
 const to = (linkBase, kind, id) => `${linkBase}/${kind}/${id}`;
 
-export function EventsList({ events }) {
-  if (!events?.length) return <Empty icon="tent">Nenhum evento registrado ainda.</Empty>;
+export function EventCard({ e }) {
   return (
-    <div className="list">
-      {events.map((e) => (
-        <div key={e.id} className="list-item">
-          <span className="trophy-bg"><Tent size={22} /></span>
-          <div className="grow">
-            <div className="title">{e.name}</div>
-            <div className="sub">{fmtDate(e.date)}{e.location ? ' · ' + e.location : ''}</div>
-          </div>
-        </div>
-      ))}
+    <div className="list-item event-card">
+      <span className="trophy-bg"><Tent size={22} /></span>
+      <div className="grow">
+        <div className="title ellipsis">{e.name}</div>
+        <div className="sub ellipsis">{fmtDate(e.date)}{e.location ? ' · ' + e.location : ''}</div>
+      </div>
     </div>
   );
 }
+
+export const EventsList = ({ events }) => (
+  <RowSection title="Eventos" items={events} empty="Nenhum evento registrado ainda." emptyIcon="tent" render={(e) => <EventCard key={e.id} e={e} />} />
+);
+
+const ChipRow = ({ title, items, empty, emptyIcon }) => (
+  <RowSection
+    title={title} items={items} empty={empty} emptyIcon={emptyIcon}
+    render={(c) => <span key={c.id} className="chip-light"><AppIcon name={c.icon} size={15} /> {c.name}</span>}
+  />
+);
 
 export function ClubProfileView({ club: c, linkBase }) {
   return (
@@ -59,8 +65,8 @@ export function ClubProfileView({ club: c, linkBase }) {
           ))}
         </div>
       </Section>
-      <Section title="Medalhas e troféus"><MedalList medals={c.medals} /></Section>
-      <Section title="Eventos"><EventsList events={c.events} /></Section>
+      <MedalList medals={c.medals} />
+      <EventsList events={c.events} />
     </>
   );
 }
@@ -83,7 +89,7 @@ export function UnitProfileView({ unit: u, linkBase }) {
           <div className="mt"><ShareButton path={`/p/unidade/${u.id}`} title={'Unidade ' + u.name} /></div>
         </div>
       </div>
-      <Section title="Medalhas e troféus"><MedalList medals={u.medals} /></Section>
+      <MedalList medals={u.medals} />
     </>
   );
 }
@@ -99,13 +105,12 @@ export function MemberProfileView({ member: m, linkBase, photoAction }) {
           <div className="chips">
             <span className="chip yellow">{m.cargo}</span>
             <span className="chip">{m.age} anos</span>
-            <span className="chip ico">{m.kind === 'desbravador' ? <><Compass size={14} /> Desbravador</> : <><Award size={14} /> Liderança</>}</span>
+            {m.cargo !== 'Desbravador' && <span className="chip ico">{m.kind === 'desbravador' ? <><Compass size={14} /> Desbravador</> : <><Award size={14} /> Liderança</>}</span>}
           </div>
           <div className="chips">
             <Link to={to(linkBase, 'clube', m.club_id)} className="chip ico"><Tent size={14} /> {m.club_name}</Link>
             {m.unit_id ? <Link to={to(linkBase, 'unidade', m.unit_id)} className="chip ico"><Flag size={14} /> {m.unit_name}</Link> : <span className="chip ico"><Flag size={14} /> Sem unidade</span>}
           </div>
-          <div className="chips"><span className="chip">Código: <b>{m.code}</b></span></div>
           <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.4rem' }}>
             {m.ranking && <PositionBadge position={m.ranking.position} points={m.ranking.points} label="no ranking de membros" />}
           </div>
@@ -120,29 +125,11 @@ export function MemberProfileView({ member: m, linkBase, photoAction }) {
         </div>
       ) : null}
 
-      <Section title={`Classes concluídas (${m.classes.length})`}>
-        {m.classes.length ? (
-          <div className="chips" style={{ justifyContent: 'flex-start' }}>
-            {m.classes.map((c) => <span key={c.id} className="chip-light ico"><AppIcon name={c.icon} size={14} /> {c.name}</span>)}
-          </div>
-        ) : <Empty icon="compass">Nenhuma classe concluída ainda.</Empty>}
-      </Section>
-      <Section title={`Especialidades (${m.specialties.length})`}>
-        {m.specialties.length ? (
-          <div className="chips" style={{ justifyContent: 'flex-start' }}>
-            {m.specialties.map((c) => <span key={c.id} className="chip-light ico"><AppIcon name={c.icon} size={14} /> {c.name}</span>)}
-          </div>
-        ) : <Empty icon="knot">Nenhuma especialidade ainda.</Empty>}
-      </Section>
-      {m.courses?.length ? (
-        <Section title="Cursos concluídos">
-          <div className="chips" style={{ justifyContent: 'flex-start' }}>
-            {m.courses.map((c) => <span key={c.id} className="chip-light ico"><AppIcon name={c.icon} size={14} /> {c.name}</span>)}
-          </div>
-        </Section>
-      ) : null}
-      <Section title="Medalhas e troféus"><MedalList medals={m.medals} /></Section>
-      <Section title="Eventos"><EventsList events={m.events} /></Section>
+      <ChipRow title="Classes concluídas" items={m.classes} empty="Nenhuma classe concluída ainda." emptyIcon="compass" />
+      <ChipRow title="Especialidades" items={m.specialties} empty="Nenhuma especialidade ainda." emptyIcon="knot" />
+      {m.courses?.length ? <ChipRow title="Cursos concluídos" items={m.courses} /> : null}
+      <MedalList medals={m.medals} />
+      <EventsList events={m.events} />
     </>
   );
 }

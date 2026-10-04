@@ -10,7 +10,6 @@ import { fmtChatTime, fmtDate, fmtTime } from '../format.js';
 import { Avatar, Button, Empty, Field, Loading, Modal, PageHeader, Spinner, useAsync, useLoad, notify } from '../ui.jsx';
 import { Lightbox } from './Requirements.jsx';
 
-const TYPE_ICON = { unidade: Flag, diretoria: Tent, direta: MessageCircle };
 
 function preview(last) {
   if (!last) return 'Nenhuma mensagem ainda';
@@ -43,13 +42,29 @@ export function ChatHome({ base }) {
     <>
       <PageHeader title={actor.type === 'club' ? 'Mensagens da diretoria' : 'Chat'} subtitle={actor.type === 'club' ? 'Mensagens que os membros enviam para a diretoria' : 'Converse sem sair da plataforma'} />
       {actor.type === 'member' && (
-        <div className="grid2" style={{ gridTemplateColumns: '1fr 1fr 1fr', marginBottom: '1rem' }}>
-          <button className="more-tile" onClick={() => openType('unidade')}><span className="tile-ico"><Flag size={22} /></span>Unidade<small>Grupo</small></button>
-          <button className="more-tile" onClick={() => openType('diretoria')}><span className="tile-ico"><Tent size={22} /></span>Diretoria<small>Do clube</small></button>
-          <button className="more-tile" onClick={() => setSearching(true)}><span className="tile-ico"><MessageCircle size={22} /></span>Direta<small>Nova conversa</small></button>
+        <div className="chat-tiles">
+          {[['unidade', Flag, 'Unidade', 'Grupo'], ['diretoria', Tent, 'Diretoria', 'Do clube']].map(([type, Ico, label, hint]) => {
+            const conv = state.data?.find((x) => x.type === type);
+            return (
+              <button key={type} type="button" className="chat-tile" onClick={() => openType(type)}>
+                <span className="tile-ico"><Ico size={22} /></span>
+                <b>{label}</b><small>{hint}</small>
+                {conv?.unread ? <span className="chat-unread">{conv.unread}</span> : null}
+              </button>
+            );
+          })}
+          <button type="button" className="chat-tile" onClick={() => setSearching(true)}>
+            <span className="tile-ico"><MessageCircle size={22} /></span>
+            <b>Direta</b><small>Nova conversa</small>
+          </button>
         </div>
       )}
-      <Loading {...state} empty={actor.type === 'club' ? 'Nenhuma mensagem recebida ainda.' : 'Nenhuma conversa.'}>
+      {actor.type === 'member' && <div className="section-head"><h2>Conversas diretas</h2></div>}
+      <Loading
+        data={state.data && (actor.type === 'member' ? state.data.filter((c) => c.type === 'direta') : state.data)}
+        loading={state.loading} error={state.error}
+        empty={actor.type === 'club' ? 'Nenhuma mensagem recebida ainda.' : 'Nenhuma conversa direta ainda. Toque em “Direta” para começar.'}
+      >
         {(list) => (
           <div className="chat-list">
             {list.map((c) => (
@@ -57,7 +72,7 @@ export function ChatHome({ base }) {
                 <Avatar src={c.photo} name={c.title} size={50} square={c.type !== 'direta' && !(actor.type === 'club')} />
                 <div className="grow">
                   <div className="row between">
-                    <span className="title ellipsis ico">{(() => { const T = TYPE_ICON[c.type]; return <T size={15} className="muted" />; })()} {c.title}</span>
+                    <span className="title ellipsis">{c.title}</span>
                     <span className="chat-time">{c.last ? fmtChatTime(c.last.created_at) : ''}</span>
                   </div>
                   <div className="row between">
