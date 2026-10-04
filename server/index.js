@@ -4,7 +4,7 @@ import http from 'node:http';
 import path from 'node:path';
 import fs from 'node:fs';
 import multer from 'multer';
-import { UPLOAD_DIR, get } from './db.js';
+import { UPLOAD_DIR, ROOT, get } from './db.js';
 import { attachActor } from './auth.js';
 import { attachRealtime } from './realtime.js';
 import { HttpError } from './util.js';
@@ -42,10 +42,17 @@ app.use('/api', api);
 
 app.use('/uploads', express.static(UPLOAD_DIR, { maxAge: '7d', setHeaders: (res) => res.setHeader('X-Content-Type-Options', 'nosniff') }));
 
-const dist = path.resolve('dist');
-if (fs.existsSync(dist)) {
+// Pasta do site gerada pelo build (vite). Caminho fixo a partir deste arquivo,
+// para funcionar qualquer que seja a pasta onde o servidor foi iniciado.
+const dist = path.join(ROOT, 'dist');
+if (fs.existsSync(path.join(dist, 'index.html'))) {
+  console.log('Site encontrado em', dist);
   app.use(express.static(dist, { index: false }));
-  app.get('/*splat', (_req, res) => res.sendFile(path.join(dist, 'index.html')));
+  app.get('/{*splat}', (_req, res) => res.sendFile(path.join(dist, 'index.html')));
+} else {
+  console.error(`ATENÇÃO: site não encontrado em ${dist}. Rode "npm run build" antes de "npm start".`);
+  app.get('/{*splat}', (_req, res) =>
+    res.status(503).send('<h1>App do DBV</h1><p>O site ainda não foi gerado. Rode <code>npm run build</code> e reinicie o servidor.</p>'));
 }
 
 // eslint-disable-next-line no-unused-vars

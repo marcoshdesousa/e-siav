@@ -1,8 +1,11 @@
 import { DatabaseSync } from 'node:sqlite';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-export const DATA_DIR = process.env.DATA_DIR || path.resolve('data');
+/** Pasta raiz do projeto (independe da pasta onde o servidor foi iniciado). */
+export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+export const DATA_DIR = process.env.DATA_DIR || path.join(ROOT, 'data');
 export const UPLOAD_DIR = path.join(DATA_DIR, 'uploads');
 // Arquivos privados (fotos/áudios do chat e fotos de comprovação): só com login.
 export const PRIVATE_DIR = path.join(DATA_DIR, 'private');

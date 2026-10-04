@@ -268,3 +268,12 @@ test('login bloqueia depois de muitas senhas erradas', async () => {
   assert.equal(await attempt('errada'), 429);
   assert.equal(await attempt('dbv123'), 429, 'nem a senha certa entra durante o bloqueio');
 });
+
+test('site responde na página inicial e nas rotas do app', async () => {
+  if (!fs.existsSync('dist/index.html')) return; // requer "npm run build"
+  for (const p of ['/', '/entrar', '/membro/ranking', '/p/clube/1']) {
+    const r = await fetch(`http://localhost:${PORT}${p}`);
+    assert.equal(r.status, 200, p);
+    assert.match(await r.text(), /<div id="root">/, p);
+  }
+});
