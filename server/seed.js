@@ -1,0 +1,337 @@
+// Dados de exemplo do Distrito Palmares: dois clubes, unidades, membros,
+// requisitos, envios, medalhas, eventos, conteúdo e conversas.
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { run, get, tx, resetDatabase, UPLOAD_DIR } from './db.js';
+import { hashPassword } from './auth.js';
+import { newMemberCode } from './util.js';
+import { NOME_UNIDADE_LIDERANCA } from './config.js';
+
+const day = 864e5;
+const iso = (offsetDays, hour = 23, min = 59) => {
+  const d = new Date(Date.now() + offsetDays * day);
+  d.setHours(hour, min, 0, 0);
+  return d.toISOString();
+};
+const dateOnly = (offsetDays) => new Date(Date.now() + offsetDays * day).toISOString().slice(0, 10);
+const birthForAge = (age, monthsAgo = 3) => {
+  const d = new Date();
+  d.setFullYear(d.getFullYear() - age);
+  d.setMonth(d.getMonth() - monthsAgo);
+  return d.toISOString().slice(0, 10);
+};
+
+const ICONS = {
+  compass: '<circle cx="50" cy="50" r="22" fill="none" stroke="#fff" stroke-width="5"/><path d="M50 32 L56 50 L50 68 L44 50 Z" fill="#FFC72C"/>',
+  wing: '<path d="M22 60 C35 30 60 26 78 34 C64 38 58 44 56 52 C66 50 72 52 78 58 C62 60 50 66 44 74 C40 66 32 62 22 60 Z" fill="#fff"/>',
+  paw: '<circle cx="50" cy="60" r="12" fill="#fff"/><circle cx="34" cy="44" r="6" fill="#fff"/><circle cx="46" cy="36" r="6" fill="#fff"/><circle cx="58" cy="36" r="6" fill="#fff"/><circle cx="68" cy="44" r="6" fill="#fff"/>',
+  mountain: '<path d="M18 72 L40 38 L52 54 L62 42 L82 72 Z" fill="#fff"/><path d="M40 38 L46 47 L34 47 Z" fill="#FFC72C"/>',
+  flame: '<path d="M50 22 C60 38 70 44 66 60 C64 70 56 76 50 76 C42 76 34 70 34 60 C34 50 42 46 44 36 C48 44 52 46 52 46 C54 38 52 30 50 22 Z" fill="#FFC72C"/>',
+  star: '<path d="M50 20 L58 42 L82 42 L62 56 L70 78 L50 64 L30 78 L38 56 L18 42 L42 42 Z" fill="#FFC72C"/>',
+};
+
+function makeLogo(file, color, icon, ring = '#FFC72C') {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="${color}"/><circle cx="50" cy="50" r="44" fill="none" stroke="${ring}" stroke-width="3"/>${ICONS[icon]}</svg>`;
+  fs.writeFileSync(path.join(UPLOAD_DIR, file), svg);
+  return '/uploads/' + file;
+}
+
+function login(type, id, username, password) {
+  run('INSERT INTO logins (username, password_hash, account_type, account_id) VALUES (?,?,?,?)', username, hashPassword(password), type, id);
+}
+const ins = (sql, ...p) => Number(run(sql, ...p).lastInsertRowid);
+
+export function seed() {
+  tx(() => {
+    const palmares = ins(`INSERT INTO districts (name) VALUES ('Distrito Palmares')`);
+
+    const admin = ins(`INSERT INTO admins (name) VALUES ('Administrador Geral')`);
+    login('admin', admin, 'admin', 'admin123');
+
+    // ---------- Clubes e unidades ----------
+    const clubs = {};
+    const units = {};
+    const clubDefs = [
+      { key: 'aguias', name: 'Clube Águias do Vale', color: '#0B3D91', icon: 'wing', user: 'aguias', units: [['falcoes', 'Falcões', '#D62828', 'wing'], ['gavioes', 'Gaviões', '#1F7A4D', 'mountain']] },
+      { key: 'leoes', name: 'Clube Leões de Judá', color: '#8A1C1C', icon: 'paw', user: 'leoes', units: [['panteras', 'Panteras', '#3A2E7A', 'paw'], ['tigres', 'Tigres', '#D9822B', 'flame']] },
+    ];
+    for (const c of clubDefs) {
+      const id = ins('INSERT INTO clubs (district_id, name, logo) VALUES (?,?,?)', palmares, c.name, makeLogo(`seed-club-${c.key}.svg`, c.color, c.icon));
+      login('club', id, c.user, c.user + '123');
+      clubs[c.key] = id;
+      units[c.key + ':lideranca'] = ins('INSERT INTO units (club_id, name, logo, is_leadership) VALUES (?,?,?,1)', id, NOME_UNIDADE_LIDERANCA, makeLogo(`seed-lid-${c.key}.svg`, '#0B3D91', 'star', '#fff'));
+      for (const [ukey, uname, ucolor, uicon] of c.units) {
+        const uid = ins('INSERT INTO units (club_id, name, logo) VALUES (?,?,?)', id, uname, makeLogo(`seed-unit-${ukey}.svg`, ucolor, uicon));
+        login('unit', uid, ukey, ukey + '123');
+        units[ukey] = uid;
+      }
+    }
+
+    // ---------- Membros (sem CPF) ----------
+    const members = {};
+    const memberDefs = [
+      ['pedro', 'aguias', 'falcoes', 'Pedro Henrique Lima', 12, 'Capitão'],
+      ['ana', 'aguias', 'gavioes', 'Ana Clara Souza', 11, 'Secretário'],
+      ['lucas', 'aguias', 'falcoes', 'Lucas Ferreira', 14, 'Desbravador'],
+      ['beatriz', 'aguias', 'gavioes', 'Beatriz Santos', 13, 'Capelão'],
+      ['gabriel', 'aguias', null, 'Gabriel Oliveira', 15, 'Desbravador'],
+      ['marcos', 'aguias', 'aguias:lideranca', 'Marcos Almeida', 34, 'Diretor'],
+      ['juliana', 'aguias', 'falcoes', 'Juliana Costa', 22, 'Conselheiro'],
+      ['davi', 'leoes', 'panteras', 'Davi Rodrigues', 10, 'Desbravador'],
+      ['sofia', 'leoes', 'tigres', 'Sofia Martins', 13, 'Capitão'],
+      ['rafael', 'leoes', 'panteras', 'Rafael Gomes', 12, 'Tesoureiro'],
+      ['isabela', 'leoes', 'tigres', 'Isabela Ribeiro', 14, 'Padioleiro'],
+      ['carlos', 'leoes', 'leoes:lideranca', 'Carlos Pereira', 41, 'Diretor'],
+      ['fernanda', 'leoes', 'leoes:lideranca', 'Fernanda Dias', 19, 'Instrutor'],
+    ];
+    for (const [key, club, unit, name, age, cargo] of memberDefs) {
+      const id = ins(
+        'INSERT INTO members (club_id, unit_id, name, birth_date, cargo, code, excellence) VALUES (?,?,?,?,?,?,?)',
+        clubs[club], unit ? units[unit] : null, name, birthForAge(age, (key.length * 2) % 11), cargo, newMemberCode(), key === 'lucas' ? 1 : 0,
+      );
+      login('member', id, key, 'dbv123');
+      members[key] = id;
+    }
+
+    // ---------- Conteúdo: classes, especialidades e cursos ----------
+    const content = {};
+    const addContent = (key, type, name, opts, items) => {
+      const id = ins(
+        'INSERT INTO content (type, name, description, icon, category, age, leader, is_free, price_cents) VALUES (?,?,?,?,?,?,?,?,?)',
+        type, name, opts.description || '', opts.icon || '📘', opts.category || '', opts.age ?? null, opts.leader ? 1 : 0, opts.price ? 0 : 1, opts.price || 0,
+      );
+      items.forEach(([title, body], i) => run('INSERT INTO content_items (content_id, ord, title, body) VALUES (?,?,?,?)', id, i, title, body));
+      content[key] = id;
+    };
+    const classItems = (extra) => [
+      ['Geral', 'Ter a idade da classe e participar ativamente do clube. Saber de cor o Voto e a Lei do Desbravador e explicar o seu significado.'],
+      ['Descoberta espiritual', 'Fazer as leituras bíblicas indicadas pela liderança e conversar com seu conselheiro sobre o que aprendeu.'],
+      ['Servindo a outros', 'Participar de uma ação de serviço à comunidade junto com a sua unidade.'],
+      ['Desenvolvendo amizade', 'Conversar com a sua unidade sobre respeito, amizade e boas atitudes em grupo.'],
+      ...extra,
+    ];
+    addContent('amigo', 'classe', 'Amigo', { age: 10, icon: '🧭', description: 'Primeira classe regular: descobrir o clube, a natureza e novas amizades.' }, classItems([
+      ['Natureza', 'Identificar cinco árvores ou plantas da sua região e registrar com fotos ou desenhos.'],
+      ['Arte de acampar', 'Aprender a fazer o nó direito e o nó de escota e mostrar ao seu instrutor.'],
+    ]));
+    addContent('companheiro', 'classe', 'Companheiro', { age: 11, icon: '🤝', description: 'Fortalece o trabalho em equipe e o cuidado com o próximo.' }, classItems([
+      ['Natureza', 'Observar e registrar aves ou insetos durante uma caminhada.'],
+      ['Arte de acampar', 'Montar uma barraca com a sua unidade em um acampamento ou atividade.'],
+    ]));
+    addContent('pesquisador', 'classe', 'Pesquisador', { age: 12, icon: '🔍', description: 'Investigar a criação e aprofundar o estudo da Bíblia.' }, classItems([
+      ['Natureza', 'Pesquisar sobre um bioma brasileiro e apresentar à unidade.'],
+      ['Orientação', 'Usar uma bússola para encontrar os pontos cardeais.'],
+    ]));
+    addContent('pioneiro', 'classe', 'Pioneiro', { age: 13, icon: '🏕️', description: 'Desafios ao ar livre e liderança em pequenos grupos.' }, classItems([
+      ['Arte de acampar', 'Planejar o cardápio de um acampamento de fim de semana.'],
+      ['Saúde', 'Conhecer cuidados básicos de primeiros socorros.'],
+    ]));
+    addContent('excursionista', 'classe', 'Excursionista', { age: 14, icon: '🥾', description: 'Explorar trilhas e servir com responsabilidade.' }, classItems([
+      ['Excursão', 'Participar de uma caminhada de pelo menos 10 km com a sua unidade.'],
+      ['Liderança', 'Ajudar a organizar uma atividade do clube.'],
+    ]));
+    addContent('guia', 'classe', 'Guia', { age: 15, icon: '🗺️', description: 'Última classe regular: preparar-se para guiar os mais novos.' }, classItems([
+      ['Liderança', 'Auxiliar um conselheiro durante um trimestre.'],
+      ['Orientação', 'Planejar um percurso usando mapa e bússola.'],
+    ]));
+    const leaderItems = (n) => [
+      ['Pré-requisitos', 'Ter 16 anos ou mais e ser membro ativo da liderança do clube.'],
+      ['Desenvolvimento pessoal', 'Estudar sobre o desenvolvimento de crianças e adolescentes.'],
+      ['Liderança na prática', `Liderar ${n} atividades do clube e registrar um relatório de cada uma.`],
+      ['Espiritualidade', 'Preparar e apresentar um momento devocional para o clube.'],
+    ];
+    addContent('lider', 'classe', 'Líder', { leader: true, icon: '🎖️', description: 'Classe de liderança para conselheiros e instrutores.' }, leaderItems(2));
+    addContent('lidermaster', 'classe', 'Líder Master', { leader: true, icon: '🏅', price: 2990, description: 'Aprofundamento em liderança e administração do clube.' }, leaderItems(4));
+    addContent('lidermasteravancado', 'classe', 'Líder Master Avançado', { leader: true, icon: '🏆', price: 3990, description: 'Formação avançada para líderes experientes.' }, leaderItems(6));
+
+    addContent('nos', 'especialidade', 'Nós e Amarras', { icon: '🪢', category: 'Atividades recreativas', description: 'Aprenda os principais nós usados em acampamentos.' }, [
+      ['Nó direito', 'Aprenda a fazer o nó direito e explique quando usá-lo. Marque como feito depois de praticar 3 vezes.'],
+      ['Lais de guia', 'Faça uma alça fixa com o lais de guia e use-a para prender uma corda em um tronco.'],
+      ['Nó de escota', 'Una duas cordas de espessuras diferentes com o nó de escota.'],
+      ['Amarra quadrada', 'Una dois bastões em cruz usando a amarra quadrada.'],
+    ]);
+    addContent('socorros', 'especialidade', 'Primeiros Socorros Básico', { icon: '⛑️', category: 'Saúde e ciência', description: 'Cuidados iniciais em pequenos acidentes.' }, [
+      ['Telefones de emergência', 'Memorize: SAMU 192, Bombeiros 193, Polícia 190.'],
+      ['Cortes e arranhões', 'Explique como limpar e proteger um ferimento leve.'],
+      ['Queimaduras', 'Descreva o que fazer (e o que não fazer) em uma queimadura leve.'],
+    ]);
+    addContent('acampamento', 'especialidade', 'Acampamento I', { icon: '⛺', category: 'Atividades recreativas', description: 'Primeiros passos para acampar com segurança.' }, [
+      ['Mochila', 'Monte uma lista do que levar para um acampamento de duas noites.'],
+      ['Barraca', 'Monte e desmonte uma barraca com a ajuda da sua unidade.'],
+      ['Fogueira segura', 'Explique as regras de segurança para fazer e apagar uma fogueira.'],
+    ]);
+    addContent('historias', 'especialidade', 'Arte de Contar Histórias', { icon: '📖', category: 'Artes e habilidades manuais', description: 'Conte histórias que inspiram.' }, [
+      ['Escolha', 'Escolha uma história bíblica e escreva um resumo dela.'],
+      ['Apresentação', 'Conte a história para a sua unidade ou família.'],
+    ]);
+    addContent('astronomia', 'especialidade', 'Astronomia', { icon: '🔭', category: 'Estudo da natureza', price: 1990, description: 'Explore o céu e as maravilhas da criação.' }, [
+      ['Constelações', 'Identifique o Cruzeiro do Sul e mais duas constelações no céu.'],
+      ['Sistema Solar', 'Faça uma maquete ou desenho do Sistema Solar.'],
+      ['Fases da Lua', 'Observe a Lua por 15 dias e registre as fases.'],
+    ]);
+
+    addContent('curso_acampamento', 'curso', 'Acampamento Seguro', { icon: '🔥', description: 'Curso em 4 aulas sobre segurança em acampamentos.' }, [
+      ['Aula 1 — Planejamento', 'Como planejar um acampamento: local, autorização dos pais, equipe e cardápio.'],
+      ['Aula 2 — Equipamentos', 'Barracas, sacos de dormir, lanternas e kit de primeiros socorros.'],
+      ['Aula 3 — Fogo e cozinha', 'Regras para fogueiras, fogareiros e higiene dos alimentos.'],
+      ['Aula 4 — Natureza', 'Deixe o lugar melhor do que encontrou: lixo, trilhas e animais.'],
+    ]);
+    addContent('curso_biblia', 'curso', 'Bíblia para Desbravadores', { icon: '📜', description: 'Conheça os livros da Bíblia de um jeito prático.' }, [
+      ['Aula 1 — Como a Bíblia é organizada', 'Antigo e Novo Testamento, livros, capítulos e versículos.'],
+      ['Aula 2 — Grandes histórias', 'De Gênesis a Apocalipse em 10 histórias.'],
+      ['Aula 3 — Devocional diário', 'Como criar o hábito da devoção matinal.'],
+    ]);
+    addContent('curso_lideranca', 'curso', 'Liderança Jovem', { icon: '🧑‍🏫', price: 4990, description: 'Para quem quer liderar unidades e projetos.' }, [
+      ['Aula 1 — O que é liderar', 'Liderança servidora e exemplo.'],
+      ['Aula 2 — Comunicação', 'Como falar com a unidade e ouvir cada membro.'],
+      ['Aula 3 — Planejamento', 'Metas, calendário e divisão de tarefas.'],
+      ['Aula 4 — Conflitos', 'Resolvendo conflitos com respeito.'],
+      ['Aula 5 — Projeto final', 'Planeje uma atividade completa para o seu clube.'],
+    ]);
+
+    // Conquistas registradas pelo clube.
+    const ach = (m, c, source = 'clube') => run('INSERT INTO achievements (member_id, content_id, source) VALUES (?,?,?)', members[m], content[c], source);
+    ach('pedro', 'amigo'); ach('pedro', 'companheiro'); ach('pedro', 'nos');
+    ach('lucas', 'amigo'); ach('lucas', 'companheiro'); ach('lucas', 'pesquisador'); ach('lucas', 'pioneiro'); ach('lucas', 'socorros'); ach('lucas', 'acampamento');
+    ach('ana', 'amigo'); ach('sofia', 'amigo'); ach('sofia', 'companheiro'); ach('sofia', 'pesquisador'); ach('sofia', 'historias', 'online');
+    ach('marcos', 'lider'); ach('carlos', 'lider'); ach('carlos', 'lidermaster');
+
+    run(`INSERT INTO content_access (member_id, content_id, source) VALUES (?, ?, 'admin')`, members.juliana, content.lidermaster);
+    run(`INSERT INTO purchases (member_id, content_id, price_cents, status) VALUES (?, ?, 1990, 'pendente')`, members.lucas, content.astronomia);
+
+    // ---------- Requisitos ----------
+    const req = (o) => {
+      const id = ins(
+        `INSERT INTO requirements (creator_type, club_id, audience, scope, district_id, title, description, model, points, late_points, deadline, created_at)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
+        o.club ? 'club' : 'admin', o.club ? clubs[o.club] : null, o.audience, o.club ? 'clube' : o.scope || 'geral', o.scope === 'distrito' ? palmares : null,
+        o.title, o.description, o.model, o.points, o.late, o.deadline, iso(-25, 10, 0),
+      );
+      (o.quiz || []).forEach(([q, opts, correct], i) => run('INSERT INTO quiz_questions (requirement_id, ord, question, options, correct) VALUES (?,?,?,?,?)', id, i, q, JSON.stringify(opts), correct));
+      return id;
+    };
+    const quizLei = [
+      ['Qual é o lema dos Desbravadores?', ['O amor de Cristo me motiva', 'Sempre alerta', 'Servir é viver', 'Unidos venceremos'], 0],
+      ['Complete o Voto: "Pela graça de Deus, serei puro, bondoso e ___"', ['forte', 'leal', 'sábio', 'alegre'], 1],
+      ['Qual destes itens faz parte da Lei do Desbravador?', ['Ter sempre um cântico no coração', 'Vencer todas as competições', 'Acampar todo mês', 'Ser o primeiro a chegar'], 0],
+      ['Qual é o alvo dos Desbravadores?', ['A mensagem do advento a todo o mundo em minha geração', 'Ganhar todos os camporis', 'Ter o maior clube do distrito', 'Conhecer todas as especialidades'], 0],
+    ];
+    const quizNos = [
+      ['Qual nó une duas cordas de mesma espessura?', ['Nó direito', 'Lais de guia', 'Volta do fiel', 'Nó de escota'], 0],
+      ['Qual nó forma uma alça fixa que não corre?', ['Nó corrediço', 'Lais de guia', 'Nó direito', 'Volta redonda'], 1],
+      ['Para unir cordas de espessuras diferentes usamos o:', ['Nó de escota', 'Nó direito', 'Nó cego', 'Catau'], 0],
+    ];
+    const quizSocorros = [
+      ['Qual é o número do SAMU?', ['192', '190', '193', '199'], 0],
+      ['Em um corte leve, o primeiro passo é:', ['Lavar com água e sabão', 'Passar pó de café', 'Assoprar', 'Cobrir com terra'], 0],
+    ];
+
+    const R = {
+      clubRelatorio: req({ audience: 'club', title: 'Relatório do Dia Mundial dos Desbravadores', description: 'Conte como foi a programação do seu clube no Dia Mundial dos Desbravadores.', model: 'texto', points: 100, late: 50, deadline: iso(20) }),
+      clubFotos: req({ audience: 'club', title: 'Fotos da ação solidária', description: 'Envie fotos da ação solidária realizada pelo clube neste trimestre.', model: 'foto', points: 80, late: 40, deadline: iso(-3) }),
+      clubQuiz: req({ audience: 'club', scope: 'distrito', title: 'Quiz da secretaria', description: 'Perguntas rápidas sobre o ideal dos Desbravadores para a secretaria do clube.', model: 'quiz', points: 60, late: 30, deadline: iso(15), quiz: quizLei }),
+      unitGrito: req({ audience: 'unit', title: 'Grito de guerra da unidade', description: 'Escreva o grito de guerra da unidade e envie uma foto da unidade reunida.', model: 'texto_foto', points: 60, late: 30, deadline: iso(10) }),
+      unitNos: req({ audience: 'unit', title: 'Quiz de nós e amarras', description: 'Respondam juntos, em unidade!', model: 'quiz', points: 50, late: 20, deadline: iso(15), quiz: quizNos }),
+      memLei: req({ audience: 'member', title: 'Quiz: Lei e Voto do Desbravador', description: 'Mostre que você conhece o ideal desbravador.', model: 'quiz', points: 40, late: 20, deadline: iso(30), quiz: quizLei }),
+      memLeitura: req({ audience: 'member', title: 'Relatório de leitura bíblica', description: 'Leia o livro de Jonas e escreva o que mais chamou a sua atenção.', model: 'texto', points: 30, late: 15, deadline: iso(7) }),
+      memFoto: req({ audience: 'member', title: 'Foto com o uniforme de gala', description: 'Envie uma foto sua com o uniforme completo.', model: 'foto', points: 20, late: 10, deadline: iso(-2) }),
+      memSocorros: req({ audience: 'member', scope: 'distrito', title: 'Primeiros socorros na prática', description: 'Responda ao quiz e envie uma foto montando um kit de primeiros socorros.', model: 'quiz_foto', points: 50, late: 25, deadline: iso(12), quiz: quizSocorros }),
+      aguiasBandeirim: req({ club: 'aguias', audience: 'unit', title: 'Bandeirim da unidade', description: 'Enviem uma foto do bandeirim da unidade finalizado.', model: 'foto', points: 40, late: 20, deadline: iso(5) }),
+      aguiasCantinho: req({ club: 'aguias', audience: 'unit', title: 'Relatório da reunião de unidade', description: 'Contem o que foi feito na última reunião da unidade.', model: 'texto', points: 30, late: 10, deadline: iso(-1) }),
+      leoesCantinho: req({ club: 'leoes', audience: 'unit', title: 'Cantinho da unidade', description: 'Escrevam sobre o cantinho da unidade e enviem uma foto.', model: 'texto_foto', points: 50, late: 25, deadline: iso(8) }),
+    };
+
+    const sub = (reqId, type, id, o) => run(
+      `INSERT INTO submissions (requirement_id, submitter_type, submitter_id, text, photos, answers, quiz_correct, quiz_total, status, late, points, submitted_at, reviewed_at)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+      reqId, type, id, o.text || null, JSON.stringify(o.photos || []), o.answers ? JSON.stringify(o.answers) : null, o.correct ?? null, o.total ?? null,
+      o.status || 'aprovado', o.late ? 1 : 0, o.points || 0, iso(o.at, 15, o.min || 0), o.status === 'enviado' ? null : iso(o.at, 18),
+    );
+    // Clubes
+    sub(R.clubFotos, 'club', clubs.aguias, { photos: [], status: 'aprovado', points: 80, at: -6 });
+    sub(R.clubQuiz, 'club', clubs.leoes, { answers: [0, 1, 0, 0], correct: 4, total: 4, points: 60, at: -4 });
+    sub(R.clubQuiz, 'club', clubs.aguias, { answers: [0, 1, 1, 0], correct: 3, total: 4, points: 45, at: -5 });
+    sub(R.clubFotos, 'club', clubs.leoes, { photos: [], status: 'aprovado', points: 40, late: true, at: -1 });
+    // Unidades (gerais)
+    sub(R.unitNos, 'unit', units.falcoes, { answers: [0, 1, 0], correct: 3, total: 3, points: 50, at: -7 });
+    sub(R.unitNos, 'unit', units.tigres, { answers: [0, 1, 1], correct: 2, total: 3, points: 33, at: -6 });
+    sub(R.unitNos, 'unit', units.panteras, { answers: [0, 0, 0], correct: 2, total: 3, points: 33, at: -5 });
+    sub(R.unitGrito, 'unit', units.gavioes, { text: 'Gaviões! Olhos no céu, pés no chão, sempre prontos para servir!', photos: [], status: 'enviado', at: -1 });
+    // Unidades (requisitos do clube)
+    sub(R.aguiasCantinho, 'unit', units.falcoes, { text: 'Fizemos a revisão dos nós e ensaiamos o grito de guerra.', status: 'aprovado', points: 30, at: -3 });
+    sub(R.aguiasCantinho, 'unit', units.gavioes, { text: 'Estudamos a classe Amigo e planejamos o bandeirim.', status: 'aprovado', points: 10, late: true, at: 0 });
+    sub(R.aguiasBandeirim, 'unit', units.gavioes, { photos: [], status: 'enviado', at: -1 });
+    sub(R.leoesCantinho, 'unit', units.tigres, { text: 'Montamos o cantinho com as especialidades da unidade.', photos: [], status: 'aprovado', points: 50, at: -2 });
+    // Membros (desbravadores)
+    sub(R.memLei, 'member', members.pedro, { answers: [0, 1, 0, 0], correct: 4, total: 4, points: 40, at: -9 });
+    sub(R.memLei, 'member', members.sofia, { answers: [0, 1, 0, 0], correct: 4, total: 4, points: 40, at: -8 });
+    sub(R.memLei, 'member', members.lucas, { answers: [0, 1, 0, 1], correct: 3, total: 4, points: 30, at: -8 });
+    sub(R.memLei, 'member', members.ana, { answers: [0, 0, 0, 1], correct: 2, total: 4, points: 20, at: -7 });
+    sub(R.memLei, 'member', members.rafael, { answers: [0, 1, 1, 0], correct: 3, total: 4, points: 30, at: -6 });
+    sub(R.memLeitura, 'member', members.sofia, { text: 'Aprendi que Deus dá segundas chances, como deu a Jonas e a Nínive.', status: 'aprovado', points: 30, at: -3 });
+    sub(R.memLeitura, 'member', members.lucas, { text: 'Jonas tentou fugir, mas Deus cuidou dele mesmo assim.', status: 'enviado', at: -1 });
+    sub(R.memFoto, 'member', members.isabela, { photos: [], status: 'aprovado', points: 20, at: -4 });
+    sub(R.memFoto, 'member', members.davi, { photos: [], status: 'recusado', at: -4 });
+
+    // ---------- Medalhas, troféus e eventos ----------
+    const medal = (kind, name, icon, description) => ins('INSERT INTO medals (kind, name, icon, description) VALUES (?,?,?,?)', kind, name, icon, description);
+    const award = (m, type, id, note) => run('INSERT INTO medal_awards (medal_id, target_type, target_id, note, awarded_by) VALUES (?,?,?,?,?)', m, type, id, note, admin);
+    const mesMedal = medal('medalha', 'Melhor clube do mês', '🏅', 'Clube de destaque do mês no distrito.');
+    const acampTrophy = medal('trofeu', 'Melhor do acampamento', '🏆', 'Destaque geral no acampamento do distrito.');
+    const anoTrophy = medal('trofeu', 'Melhor clube do ano de 2027', '🏆', 'Troféu anual do distrito (será entregue no fim de 2027).');
+    const unitMedal = medal('medalha', 'Unidade nota 10', '⭐', 'Unidade exemplar em organização e espírito de equipe.');
+    const destaque = medal('medalha', 'Desbravador destaque', '🎖️', 'Reconhecimento por dedicação e bom exemplo.');
+    void anoTrophy;
+    award(mesMedal, 'club', clubs.aguias, 'Setembro de 2026');
+    award(acampTrophy, 'club', clubs.leoes, 'Acampamento do Distrito Palmares');
+    award(unitMedal, 'unit', units.falcoes, null);
+    award(acampTrophy, 'unit', units.tigres, 'Acampamento do Distrito Palmares');
+    award(destaque, 'member', members.pedro, 'Acampamento do Distrito Palmares');
+    award(destaque, 'member', members.sofia, null);
+
+    const ev1 = ins('INSERT INTO events (name, description, date, location, district_id) VALUES (?,?,?,?,?)', 'Acampamento do Distrito Palmares', 'Três dias de atividades, especialidades e muita comunhão.', dateOnly(-30), 'Sítio Recanto Verde', palmares);
+    const ev2 = ins('INSERT INTO events (name, description, date, location, district_id) VALUES (?,?,?,?,?)', 'Dia Mundial dos Desbravadores', 'Desfile e programação especial nas igrejas do distrito.', dateOnly(-14), 'Praça Central de Palmares', palmares);
+    const part = (e, type, id) => run('INSERT INTO event_participants (event_id, target_type, target_id) VALUES (?,?,?)', e, type, id);
+    part(ev1, 'club', clubs.aguias); part(ev1, 'club', clubs.leoes);
+    for (const m of ['pedro', 'lucas', 'beatriz', 'marcos', 'juliana', 'sofia', 'isabela', 'carlos']) part(ev1, 'member', members[m]);
+    part(ev2, 'club', clubs.aguias);
+    for (const m of ['pedro', 'ana', 'marcos']) part(ev2, 'member', members[m]);
+
+    // ---------- Chat ----------
+    const conv = (type, o) => ins('INSERT INTO conversations (type, club_id, unit_id, member_a, member_b) VALUES (?,?,?,?,?)', type, o.club ?? null, o.unit ?? null, o.a ?? null, o.b ?? null);
+    const msg = (c, st, sid, body, minutesAgo) => {
+      const at = new Date(Date.now() - minutesAgo * 6e4).toISOString();
+      const id = ins(`INSERT INTO messages (conversation_id, sender_type, sender_id, kind, body, created_at) VALUES (?,?,?,'texto',?,?)`, c, st, sid, body, at);
+      run('UPDATE conversations SET last_message_at = ? WHERE id = ?', at, c);
+      return id;
+    };
+    const read = (c, t, id, last) => run('INSERT OR REPLACE INTO conversation_reads (conversation_id, reader_type, reader_id, last_read_id) VALUES (?,?,?,?)', c, t, id, last);
+    const falcoes = conv('unidade', { unit: units.falcoes, club: clubs.aguias });
+    msg(falcoes, 'member', members.juliana, 'Bom dia, Falcões! Não esqueçam o lenço no sábado 😉', 300);
+    let last = msg(falcoes, 'member', members.pedro, 'Pode deixar, conselheira!', 290);
+    read(falcoes, 'member', members.pedro, last);
+    msg(falcoes, 'member', members.lucas, 'Vou levar a corda para treinarmos os nós 🪢', 120);
+    const dirPedro = conv('diretoria', { club: clubs.aguias, a: members.pedro });
+    msg(dirPedro, 'member', members.pedro, 'Olá, diretoria! O uniforme de gala chega quando?', 200);
+    last = msg(dirPedro, 'club', clubs.aguias, 'Oi, Pedro! Chega na próxima semana. Avisaremos no grupo da unidade.', 180);
+    read(dirPedro, 'member', members.pedro, last);
+    read(dirPedro, 'club', clubs.aguias, last);
+    const dirAna = conv('diretoria', { club: clubs.aguias, a: members.ana });
+    msg(dirAna, 'member', members.ana, 'Posso levar minha irmã para conhecer o clube?', 45);
+    const direct = conv('direta', { a: Math.min(members.pedro, members.lucas), b: Math.max(members.pedro, members.lucas) });
+    msg(direct, 'member', members.lucas, 'Bora treinar o lais de guia amanhã?', 60);
+    const tigres = conv('unidade', { unit: units.tigres, club: clubs.leoes });
+    msg(tigres, 'member', members.sofia, 'Tigres, conseguimos o 1º lugar no cantinho! 🐯', 90);
+  });
+}
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  if (process.argv.includes('--reset')) resetDatabase();
+  if (get('SELECT 1 FROM admins LIMIT 1')) {
+    console.log('O banco já tem dados. Use "npm run seed" para recriar.');
+  } else {
+    seed();
+    console.log('Dados de exemplo criados.');
+  }
+}

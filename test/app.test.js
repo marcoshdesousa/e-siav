@@ -1,0 +1,224 @@
+// Testes de ponta a ponta da API: permissões, privacidade, pontuação, ranking e chat.
+import { test, before, after } from 'node:test';
+import assert from 'node:assert/strict';
+import { spawn } from 'node:child_process';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+
+const PORT = 3900 + Math.floor(Math.random() * 90);
+const BASE = `http://localhost:${PORT}/api`;
+let server;
+let dataDir;
+
+before(async () => {
+  dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dbv-test-'));
+  server = spawn(process.execPath, ['--disable-warning=ExperimentalWarning', 'server/index.js'], {
+    env: { ...process.env, PORT: String(PORT), DATA_DIR: dataDir, JWT_SECRET: 'test' },
+    stdio: ['ignore', 'pipe', 'inherit'],
+  });
+  await new Promise((resolve, reject) => {
+    server.stdout.on('data', (d) => String(d).includes('rodando') && resolve());
+    server.on('exit', (c) => reject(new Error('server exited ' + c)));
+  });
+});
+
+after(() => {
+  server?.kill();
+  fs.rmSync(dataDir, { recursive: true, force: true });
+});
+
+async function login(mode, username, password = 'dbv123') {
+  const res = await fetch(BASE + '/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode, username, password }) });
+  assert.equal(res.status, 200, `login ${username}`);
+  const cookie = res.headers.get('set-cookie').split(';')[0];
+  const { actor } = await res.json();
+  const call = async (method, url, body) => {
+    const opts = { method, headers: { cookie } };
+    if (body instanceof FormData) opts.body = body;
+    else if (body) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
+    const r = await fetch(BASE + url, opts);
+    return { status: r.status, body: await r.json().catch(() => null) };
+  };
+  return { actor, get: (u) => call('GET', u), post: (u, b = {}) => call('POST', u, b), put: (u, b = {}) => call('PUT', u, b), del: (u) => call('DELETE', u) };
+}
+
+const form = (obj) => {
+  const fd = new FormData();
+  for (const [k, v] of Object.entries(obj)) fd.append(k, v);
+  return fd;
+};
+
+test('login separa Login Clube e Login Membros', async () => {
+  const bad = await fetch(BASE + '/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'clube', username: 'pedro', password: 'dbv123' }) });
+  assert.equal(bad.status, 401, 'membro não entra pelo Login Clube');
+  const admin = await login('membros', 'admin', 'admin123');
+  assert.equal(admin.actor.type, 'admin', 'admin entra pelo Login Membros');
+  const unit = await login('clube', 'falcoes', 'falcoes123');
+  assert.equal(unit.actor.type, 'unit');
+});
+
+test('administrador não edita dados de membros; clube só edita os próprios', async () => {
+  const admin = await login('membros', 'admin', 'admin123');
+  assert.equal((await admin.put('/club/members/1', form({ name: 'Hack' }))).status, 403);
+  const leoes = await login('clube', 'leoes', 'leoes123');
+  assert.equal((await leoes.put('/club/members/1', form({ name: 'Hack' }))).status, 404, 'outro clube não acha o membro');
+  const aguias = await login('clube', 'aguias', 'aguias123');
+  assert.equal((await aguias.put('/club/members/1', form({ name: 'Pedro H. Lima' }))).status, 200);
+});
+
+test('membro só troca a própria foto e não acessa rotas do clube', async () => {
+  const pedro = await login('membros', 'pedro');
+  assert.equal((await pedro.get('/club/members')).status, 403);
+  const png = new Blob([Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64')], { type: 'image/png' });
+  const fd = new FormData();
+  fd.append('photo', png, 'p.png');
+  const r = await pedro.put('/me/photo', fd);
+  assert.equal(r.status, 200);
+  assert.match(r.body.photo, /^\/uploads\//);
+});
+
+test('idade define o tipo de conta; liderança sem unidade vai para "Liderança"', async () => {
+  const aguias = await login('clube', 'aguias', 'aguias123');
+  const d = new Date();
+  const birth = (age) => `${d.getFullYear() - age - 1}-01-15`;
+  assert.equal((await aguias.post('/club/members', form({ name: 'Muito Novo', birth_date: birth(8), username: 'novo1', password: '123456' }))).status, 400);
+  const r = await aguias.post('/club/members', form({ name: 'Nova Líder', birth_date: birth(20), username: 'novalider', password: '123456' }));
+  assert.equal(r.status, 200);
+  const m = (await aguias.get('/club/members/' + r.body.id)).body;
+  assert.equal(m.kind, 'lideranca');
+  const units = (await aguias.get('/club/units')).body;
+  assert.equal(m.unit_id, units.find((u) => u.is_leadership).id);
+  // Desbravador não pode entrar na unidade Liderança
+  const lid = units.find((u) => u.is_leadership).id;
+  assert.equal((await aguias.post('/club/members', form({ name: 'Dbv', birth_date: birth(12), unit_id: lid, username: 'dbvx', password: '123456' }))).status, 400);
+  // Unidade de outro clube é rejeitada
+  const leoes = await login('clube', 'leoes', 'leoes123');
+  const leoesUnit = (await leoes.get('/club/units')).body.find((u) => !u.is_leadership).id;
+  assert.equal((await aguias.post('/club/members', form({ name: 'X', birth_date: birth(12), unit_id: leoesUnit, username: 'xx1', password: '123456' }))).status, 400);
+});
+
+test('liderança não tem requisitos; unidade vê requisitos do clube e gerais', async () => {
+  const marcos = await login('membros', 'marcos');
+  assert.deepEqual((await marcos.get('/requirements/mine')).body, []);
+  const unit = await login('clube', 'falcoes', 'falcoes123');
+  const reqs = (await unit.get('/requirements/mine')).body;
+  assert.ok(reqs.some((r) => r.origin === 'clube') && reqs.some((r) => r.origin === 'geral'));
+  assert.ok(reqs.every((r) => r.audience === 'unit'));
+  // Unidade não cria requisitos
+  assert.equal((await unit.post('/requirements', { title: 'x' })).status, 403);
+  // Requisitos do outro clube não aparecem
+  const tigres = await login('clube', 'tigres', 'tigres123');
+  const titles = (await tigres.get('/requirements/mine')).body.map((r) => r.title);
+  assert.ok(!titles.includes('Bandeirim da unidade'));
+});
+
+test('quiz pontua proporcional na hora; envio fora do prazo usa pontos reduzidos', async () => {
+  const admin = await login('membros', 'admin', 'admin123');
+  const deadline = new Date(Date.now() + 864e5).toISOString();
+  const q = await admin.post('/requirements', {
+    audience: 'member', scope: 'geral', title: 'Quiz teste', model: 'quiz', points: 90, late_points: 30, deadline,
+    questions: [{ question: 'A?', options: ['1', '2'], correct: 0 }, { question: 'B?', options: ['1', '2'], correct: 1 }, { question: 'C?', options: ['1', '2'], correct: 0 }],
+  });
+  assert.equal(q.status, 200);
+  const gabriel = await login('membros', 'gabriel');
+  const before = (await gabriel.get('/rankings/members')).body.find((r) => r.id === gabriel.actor.id).points;
+  const r = await gabriel.post(`/requirements/${q.body.id}/submit`, form({ answers: JSON.stringify([0, 1, 1]) }));
+  assert.equal(r.status, 200);
+  assert.equal(r.body.points, 60, '2 de 3 acertos = 2/3 de 90');
+  assert.equal((await gabriel.post(`/requirements/${q.body.id}/submit`, form({ answers: '[0,1,0]' }))).status, 409, 'não reenviar aprovado');
+  const after = (await gabriel.get('/rankings/members')).body.find((r) => r.id === gabriel.actor.id).points;
+  assert.equal(after - before, 60, 'ranking atualizado automaticamente');
+
+  const late = await admin.post('/requirements', { audience: 'member', title: 'Texto atrasado', model: 'texto', points: 50, late_points: 10, deadline: new Date(Date.now() - 864e5).toISOString() });
+  const s = await gabriel.post(`/requirements/${late.body.id}/submit`, form({ text: 'Meu relatório' }));
+  assert.equal(s.body.status, 'enviado');
+  assert.equal(s.body.late, true);
+  const pending = (await admin.get('/reviews')).body.find((x) => x.requirement_id === late.body.id);
+  const rev = await admin.post('/reviews/' + pending.id, { decision: 'aprovado' });
+  assert.equal(rev.body.points, 10);
+});
+
+test('clube cria requisitos só para as próprias unidades e avalia', async () => {
+  const aguias = await login('clube', 'aguias', 'aguias123');
+  const r = await aguias.post('/requirements', { audience: 'member', title: 'Para unidades', model: 'texto', points: 20, late_points: 0, deadline: new Date(Date.now() + 864e5).toISOString() });
+  assert.equal(r.status, 200);
+  const gav = await login('clube', 'gavioes', 'gavioes123');
+  const mine = (await gav.get('/requirements/mine')).body.find((x) => x.id === r.body.id);
+  assert.equal(mine.audience, 'unit', 'público forçado para unidades');
+  const panteras = await login('clube', 'panteras', 'panteras123');
+  assert.equal((await panteras.post(`/requirements/${r.body.id}/submit`, form({ text: 'oi oi' }))).status, 404);
+  await gav.post(`/requirements/${r.body.id}/submit`, form({ text: 'Relatório da unidade' }));
+  const leoes = await login('clube', 'leoes', 'leoes123');
+  assert.ok(!(await leoes.get('/reviews')).body.some((s) => s.requirement_id === r.body.id), 'outro clube não avalia');
+  const sub = (await aguias.get('/reviews')).body.find((s) => s.requirement_id === r.body.id);
+  assert.equal((await aguias.post('/reviews/' + sub.id, { decision: 'aprovado' })).body.points, 20);
+});
+
+test('perfis públicos mostram só a quantidade de membros', async () => {
+  const club = await (await fetch(BASE + '/public/clubs/1')).json();
+  assert.ok(club.member_count > 0);
+  const json = JSON.stringify(club);
+  assert.ok(!json.includes('Pedro') && !json.includes('Lucas'), 'nenhum nome de membro no perfil do clube');
+  const unit = await (await fetch(BASE + '/public/units/2')).json();
+  assert.ok(!JSON.stringify(unit).includes('Pedro'));
+  const pedro = await login('membros', 'pedro');
+  const pub = await (await fetch(BASE + '/public/members/' + pedro.actor.code)).json();
+  assert.equal(pub.birth_date, undefined, 'data de nascimento não é exposta');
+  assert.ok(pub.age >= 10);
+});
+
+test('medalhas só pelo administrador e entrega manual', async () => {
+  const aguias = await login('clube', 'aguias', 'aguias123');
+  assert.equal((await aguias.post('/admin/medals', form({ name: 'x' }))).status, 403);
+  const admin = await login('membros', 'admin', 'admin123');
+  const m = await admin.post('/admin/medals', form({ name: 'Teste', kind: 'trofeu', icon: '🏆' }));
+  await admin.post(`/admin/medals/${m.body.id}/award`, { target_type: 'unit', target_id: 3 });
+  const unit = await (await fetch(BASE + '/public/units/3')).json();
+  assert.ok(unit.medals.some((x) => x.name === 'Teste'));
+});
+
+test('chat: acesso por conversa, busca, bloqueio e denúncia', async () => {
+  const pedro = await login('membros', 'pedro');
+  const sofia = await login('membros', 'sofia');
+  const pedroConvs = (await pedro.get('/chat/conversations')).body;
+  const unitConv = pedroConvs.find((c) => c.type === 'unidade');
+  assert.equal((await sofia.get(`/chat/conversations/${unitConv.id}/messages`)).status, 404, 'outra unidade não lê o grupo');
+
+  // Nome só encontra no próprio clube; código encontra em qualquer clube.
+  assert.equal((await pedro.get('/chat/search?q=Sofia')).body.length, 0);
+  const byCode = (await pedro.get('/chat/search?q=' + sofia.actor.code)).body;
+  assert.equal(byCode[0]?.id, sofia.actor.id);
+
+  const { body: direct } = await pedro.post('/chat/direct', { member_id: sofia.actor.id });
+  const sent = await pedro.post(`/chat/conversations/${direct.id}/messages`, form({ body: 'Oi Sofia!' }));
+  assert.equal(sent.status, 200);
+  await sofia.post('/chat/blocks', { type: 'member', id: pedro.actor.id });
+  assert.equal((await pedro.post(`/chat/conversations/${direct.id}/messages`, form({ body: 'oi?' }))).status, 403);
+
+  const rep = await sofia.post('/chat/reports', { conversation_id: direct.id, message_id: sent.body.id, reason: 'Mensagem inadequada' });
+  assert.equal(rep.status, 200);
+  const leoes = await login('clube', 'leoes', 'leoes123');
+  const aguias = await login('clube', 'aguias', 'aguias123');
+  const admin = await login('membros', 'admin', 'admin123');
+  assert.ok((await leoes.get('/reports')).body.some((r) => r.reason === 'Mensagem inadequada'), 'chega ao clube de quem denunciou');
+  assert.ok((await aguias.get('/reports')).body.some((r) => r.reason === 'Mensagem inadequada'), 'chega ao clube do denunciado');
+  assert.ok((await admin.get('/reports')).body.some((r) => r.reason === 'Mensagem inadequada'), 'chega ao Administrador Geral');
+
+  // Diretoria: mensagem do membro chega ao painel do clube.
+  const dir = pedroConvs.find((c) => c.type === 'diretoria');
+  await pedro.post(`/chat/conversations/${dir.id}/messages`, form({ body: 'Pergunta para a diretoria' }));
+  const inbox = (await aguias.get('/chat/conversations')).body;
+  assert.ok(inbox.some((c) => c.id === dir.id && c.last.body === 'Pergunta para a diretoria'));
+  assert.equal((await leoes.get(`/chat/conversations/${dir.id}`)).status, 404);
+});
+
+test('ranking: empate desempata por quem enviou primeiro', async () => {
+  const admin = await login('membros', 'admin', 'admin123');
+  const rows = (await admin.get('/rankings/members')).body;
+  for (let i = 1; i < rows.length; i++) {
+    const [a, b] = [rows[i - 1], rows[i]];
+    assert.ok(a.points > b.points || (a.points === b.points && (!b.last_at || !a.last_at || a.last_at <= b.last_at)), `ordem ${a.name} / ${b.name}`);
+  }
+  assert.ok(rows.every((r) => r.name !== 'Marcos Almeida'), 'liderança fora do ranking');
+});
