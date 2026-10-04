@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Compass, Flag, Globe2, Tent } from 'lucide-react';
 import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { Avatar, Field, Loading, PageHeader, Section, Tabs, useLoad, Empty } from '../ui.jsx';
 
 /** Tabela de ranking com pódio para os três primeiros. */
 export function RankingTable({ rows, highlight, sub, link, avatarSquare = true }) {
-  if (!rows.length) return <Empty icon="🏆">Ainda sem participantes.</Empty>;
+  if (!rows.length) return <Empty icon="trophy">Ainda sem participantes.</Empty>;
   const top = rows.slice(0, 3);
   const order = [top[1], top[0], top[2]];
   const Wrap = ({ r, children, className }) => (link ? <Link to={link(r)} className={className}>{children}</Link> : <div className={className}>{children}</div>);
@@ -20,7 +21,7 @@ export function RankingTable({ rows, highlight, sub, link, avatarSquare = true }
               <span className="name">{r.name}</span>
               {sub && <span className="sub ellipsis">{sub(r)}</span>}
               <div className="podium-step">
-                <span className="medal-num">{r.position === 1 ? '🥇' : r.position === 2 ? '🥈' : '🥉'}</span>
+                <span className="medal-num">{r.position}º</span>
                 <small>{r.points} pts</small>
               </div>
             </Wrap>
@@ -124,12 +125,12 @@ export default function RankingHub({ base }) {
         <div className="stack">
           {actor.type === 'member' && (
             actor.kind === 'desbravador'
-              ? <SummaryCard gold icon="🧭" title="Minha posição" pos={summary.data.member} onClick={() => setTab('membros')} />
+              ? <SummaryCard gold icon={<Compass size={22} />} title="Minha posição" pos={summary.data.member} onClick={() => setTab('membros')} />
               : <div className="card small muted">A liderança não participa do ranking individual, apenas consulta as tabelas.</div>
           )}
-          {summary.data.unit && <SummaryCard icon="🚩" title={`Unidade ${summary.data.unit.name} no clube`} pos={summary.data.unit.club} onClick={() => setTab('clube')} />}
-          {summary.data.unit && <SummaryCard icon="🌎" title={`Unidade ${summary.data.unit.name} no geral`} pos={summary.data.unit.general} onClick={() => setTab('unidades')} />}
-          {summary.data.club && <SummaryCard icon="🏕️" title={summary.data.club.name} pos={summary.data.club.position ? summary.data.club : null} onClick={() => setTab('clubes')} />}
+          {summary.data.unit && <SummaryCard icon={<Flag size={22} />} title={`Unidade ${summary.data.unit.name} no clube`} pos={summary.data.unit.club} onClick={() => setTab('clube')} />}
+          {summary.data.unit && <SummaryCard icon={<Globe2 size={22} />} title={`Unidade ${summary.data.unit.name} no geral`} pos={summary.data.unit.general} onClick={() => setTab('unidades')} />}
+          {summary.data.club && <SummaryCard icon={<Tent size={22} />} title={summary.data.club.name} pos={summary.data.club.position ? summary.data.club : null} onClick={() => setTab('clubes')} />}
         </div>
       )}
       <Section>

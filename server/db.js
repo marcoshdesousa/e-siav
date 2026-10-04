@@ -167,7 +167,7 @@ CREATE TABLE IF NOT EXISTS content (
   type TEXT NOT NULL CHECK (type IN ('especialidade','classe','curso')),
   name TEXT NOT NULL,
   description TEXT NOT NULL DEFAULT '',
-  icon TEXT NOT NULL DEFAULT '📘',
+  icon TEXT NOT NULL DEFAULT 'book',
   category TEXT NOT NULL DEFAULT '',
   age INTEGER,
   leader INTEGER NOT NULL DEFAULT 0 CHECK (leader IN (0,1)),

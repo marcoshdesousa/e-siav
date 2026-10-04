@@ -3,6 +3,7 @@ import { AuthProvider, homeFor, useAuth } from './auth.jsx';
 import { RealtimeProvider } from './realtime.jsx';
 import { Notices, Spinner } from './ui.jsx';
 import Login from './pages/Login.jsx';
+import Landing from './pages/Landing.jsx';
 import { PublicProfilePage } from './pages/Profiles.jsx';
 import AdminApp from './pages/admin/AdminApp.jsx';
 import ClubApp from './pages/club/ClubApp.jsx';
@@ -17,19 +18,13 @@ function Guard({ type, children }) {
   return children;
 }
 
-function Home() {
-  const { actor } = useAuth();
-  if (actor === undefined) return <Spinner />;
-  return <Navigate to={homeFor(actor)} replace />;
-}
-
 export default function App() {
   return (
     <AuthProvider>
       <RealtimeProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Landing />} />
             <Route path="/entrar" element={<Login />} />
             <Route path="/p/:kind/:id" element={<PublicProfilePage />} />
             <Route path="/admin/*" element={<Guard type="admin"><AdminApp /></Guard>} />

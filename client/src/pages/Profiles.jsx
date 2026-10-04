@@ -1,5 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
+import { ArrowLeft, Award, ChevronRight, Compass, Flag, MapPin, Tent, Users } from 'lucide-react';
 import { api } from '../api.js';
+import { AppIcon } from '../icons.jsx';
 import { fmtDate, plural } from '../format.js';
 import { useAuth, homeFor } from '../auth.jsx';
 import { Avatar, Empty, Loading, LogoHorizontal, MedalList, PositionBadge, Section, ShareButton, useLoad, Button } from '../ui.jsx';
@@ -8,12 +10,12 @@ import { Avatar, Empty, Loading, LogoHorizontal, MedalList, PositionBadge, Secti
 const to = (linkBase, kind, id) => `${linkBase}/${kind}/${id}`;
 
 export function EventsList({ events }) {
-  if (!events?.length) return <Empty icon="⛺">Nenhum evento registrado ainda.</Empty>;
+  if (!events?.length) return <Empty icon="tent">Nenhum evento registrado ainda.</Empty>;
   return (
     <div className="list">
       {events.map((e) => (
         <div key={e.id} className="list-item">
-          <span className="trophy-bg">⛺</span>
+          <span className="trophy-bg"><Tent size={22} /></span>
           <div className="grow">
             <div className="title">{e.name}</div>
             <div className="sub">{fmtDate(e.date)}{e.location ? ' · ' + e.location : ''}</div>
@@ -33,9 +35,9 @@ export function ClubProfileView({ club: c, linkBase }) {
           <Avatar src={c.logo} name={c.name} size={96} square />
           <h1>{c.name}</h1>
           <div className="chips">
-            <span className="chip">📍 {c.district_name}</span>
-            <span className="chip">👥 {plural(c.member_count, 'membro', 'membros')}</span>
-            <span className="chip">🚩 {plural(c.unit_count, 'unidade', 'unidades')}</span>
+            <span className="chip ico"><MapPin size={14} /> {c.district_name}</span>
+            <span className="chip ico"><Users size={14} /> {plural(c.member_count, 'membro', 'membros')}</span>
+            <span className="chip ico"><Flag size={14} /> {plural(c.unit_count, 'unidade', 'unidades')}</span>
           </div>
           <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.4rem' }}>
             {c.ranking && <PositionBadge position={c.ranking.position} points={c.ranking.points} label="no ranking de clubes" />}
@@ -52,7 +54,7 @@ export function ClubProfileView({ club: c, linkBase }) {
                 <div className="title">{u.name}</div>
                 <div className="sub">{plural(u.member_count, 'membro', 'membros')}</div>
               </div>
-              <span className="chev">›</span>
+              <ChevronRight className="chev" size={20} />
             </Link>
           ))}
         </div>
@@ -71,8 +73,8 @@ export function UnitProfileView({ unit: u, linkBase }) {
           <Avatar src={u.logo} name={u.name} size={96} square />
           <h1>Unidade {u.name}</h1>
           <div className="chips">
-            <Link to={to(linkBase, 'clube', u.club_id)} className="chip">🏕️ {u.club_name}</Link>
-            <span className="chip">👥 {plural(u.member_count, 'membro', 'membros')}</span>
+            <Link to={to(linkBase, 'clube', u.club_id)} className="chip ico"><Tent size={14} /> {u.club_name}</Link>
+            <span className="chip ico"><Users size={14} /> {plural(u.member_count, 'membro', 'membros')}</span>
           </div>
           <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.4rem' }}>
             {u.ranking_club && <PositionBadge position={u.ranking_club.position} points={u.ranking_club.points} label="no clube" />}
@@ -97,11 +99,11 @@ export function MemberProfileView({ member: m, linkBase, photoAction }) {
           <div className="chips">
             <span className="chip yellow">{m.cargo}</span>
             <span className="chip">{m.age} anos</span>
-            <span className="chip">{m.kind === 'desbravador' ? '🧭 Desbravador' : '🎖️ Liderança'}</span>
+            <span className="chip ico">{m.kind === 'desbravador' ? <><Compass size={14} /> Desbravador</> : <><Award size={14} /> Liderança</>}</span>
           </div>
           <div className="chips">
-            <Link to={to(linkBase, 'clube', m.club_id)} className="chip">🏕️ {m.club_name}</Link>
-            {m.unit_id ? <Link to={to(linkBase, 'unidade', m.unit_id)} className="chip">🚩 {m.unit_name}</Link> : <span className="chip">🚩 Sem unidade</span>}
+            <Link to={to(linkBase, 'clube', m.club_id)} className="chip ico"><Tent size={14} /> {m.club_name}</Link>
+            {m.unit_id ? <Link to={to(linkBase, 'unidade', m.unit_id)} className="chip ico"><Flag size={14} /> {m.unit_name}</Link> : <span className="chip ico"><Flag size={14} /> Sem unidade</span>}
           </div>
           <div className="chips"><span className="chip">Código: <b>{m.code}</b></span></div>
           <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.4rem' }}>
@@ -113,7 +115,7 @@ export function MemberProfileView({ member: m, linkBase, photoAction }) {
 
       {m.excellence ? (
         <div className="summary-card gold mt">
-          <span className="trophy-bg">🌟</span>
+          <span className="trophy-bg"><AppIcon name="sparkles" size={22} /></span>
           <div><b>Insígnia de Excelência</b><div className="muted small">Conquistada pelo membro</div></div>
         </div>
       ) : null}
@@ -121,21 +123,21 @@ export function MemberProfileView({ member: m, linkBase, photoAction }) {
       <Section title={`Classes concluídas (${m.classes.length})`}>
         {m.classes.length ? (
           <div className="chips" style={{ justifyContent: 'flex-start' }}>
-            {m.classes.map((c) => <span key={c.id} className="chip-light">{c.icon} {c.name}</span>)}
+            {m.classes.map((c) => <span key={c.id} className="chip-light ico"><AppIcon name={c.icon} size={14} /> {c.name}</span>)}
           </div>
-        ) : <Empty icon="🧭">Nenhuma classe concluída ainda.</Empty>}
+        ) : <Empty icon="compass">Nenhuma classe concluída ainda.</Empty>}
       </Section>
       <Section title={`Especialidades (${m.specialties.length})`}>
         {m.specialties.length ? (
           <div className="chips" style={{ justifyContent: 'flex-start' }}>
-            {m.specialties.map((c) => <span key={c.id} className="chip-light">{c.icon} {c.name}</span>)}
+            {m.specialties.map((c) => <span key={c.id} className="chip-light ico"><AppIcon name={c.icon} size={14} /> {c.name}</span>)}
           </div>
-        ) : <Empty icon="🪢">Nenhuma especialidade ainda.</Empty>}
+        ) : <Empty icon="knot">Nenhuma especialidade ainda.</Empty>}
       </Section>
       {m.courses?.length ? (
         <Section title="Cursos concluídos">
           <div className="chips" style={{ justifyContent: 'flex-start' }}>
-            {m.courses.map((c) => <span key={c.id} className="chip-light">{c.icon} {c.name}</span>)}
+            {m.courses.map((c) => <span key={c.id} className="chip-light ico"><AppIcon name={c.icon} size={14} /> {c.name}</span>)}
           </div>
         </Section>
       ) : null}
@@ -166,7 +168,7 @@ export function InAppProfile({ base }) {
   if (!KIND_URL[kind]) return <Empty>Perfil não encontrado.</Empty>;
   return (
     <>
-      <button className="back-link btn-ghost" style={{ border: 0, background: 'none', cursor: 'pointer', padding: 0 }} onClick={() => history.back()}>← Voltar</button>
+      <button className="back-link btn-ghost" style={{ border: 0, background: 'none', cursor: 'pointer', padding: 0 }} onClick={() => history.back()}><ArrowLeft size={16} /> Voltar</button>
       <ProfileByKind kind={kind} id={id} linkBase={`${base}/ver`} />
     </>
   );

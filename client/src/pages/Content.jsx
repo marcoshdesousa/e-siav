@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { ArrowLeft, Award, Check, Lock, ShoppingCart } from 'lucide-react';
 import { api } from '../api.js';
+import { AppIcon } from '../icons.jsx';
 import { useAuth } from '../auth.jsx';
 import { fmtMoney } from '../format.js';
 import { Badge, Button, Card, Empty, Loading, PageHeader, Section, useAsync, useLoad, notify } from '../ui.jsx';
@@ -12,7 +14,7 @@ const TITLES = {
 };
 
 function PriceTag({ c }) {
-  if (c.completed) return <Badge kind="yellow">🏅 Concluída</Badge>;
+  if (c.completed) return <Badge kind="yellow"><span className="ico"><Award size={13} /> Concluída</span></Badge>;
   if (c.is_free) return <Badge kind="green">Grátis</Badge>;
   if (c.has_access) return <Badge kind="blue">Liberado</Badge>;
   if (c.purchase_pending) return <Badge kind="yellow">Pedido pendente</Badge>;
@@ -23,7 +25,7 @@ function ContentCard({ c, base }) {
   const pct = c.items_count ? Math.round((c.done_count / c.items_count) * 100) : 0;
   return (
     <Link to={`${base}/conteudo/${c.id}`} className="list-item">
-      <span className="content-icon">{c.icon}</span>
+      <span className="content-icon"><AppIcon name={c.icon} size={26} /></span>
       <div className="grow">
         <div className="row between">
           <span className="title">{c.name}</span>
@@ -85,7 +87,7 @@ export function ContentDetail() {
 
   const toggle = async (item) => {
     const r = await run(() => api.post(`/content/${id}/items/${item.id}/done`, { undo: !!item.done_at }));
-    if (r.completed) notify('🎉 Parabéns! Concluído e já aparece no seu perfil.');
+    if (r.completed) notify('Parabéns! Concluído e já aparece no seu perfil.');
     state.reload();
   };
   const buy = async () => {
@@ -101,10 +103,10 @@ export function ContentDetail() {
         const verb = c.type === 'curso' ? 'Aula concluída' : 'Marcar como feito';
         return (
           <>
-            <button className="back-link" style={{ border: 0, background: 'none', cursor: 'pointer', padding: 0 }} onClick={() => history.back()}>← Voltar</button>
+            <button className="back-link" style={{ border: 0, background: 'none', cursor: 'pointer', padding: 0 }} onClick={() => history.back()}><ArrowLeft size={16} /> Voltar</button>
             <div className="hero">
               <div className="row" style={{ position: 'relative', zIndex: 1 }}>
-                <span className="content-icon" style={{ background: 'rgba(255,255,255,.18)' }}>{c.icon}</span>
+                <span className="content-icon" style={{ background: 'rgba(255,255,255,.18)', color: '#fff' }}><AppIcon name={c.icon} size={26} /></span>
                 <div className="grow">
                   <h1>{c.name}</h1>
                   <div className="muted small">
@@ -121,7 +123,7 @@ export function ContentDetail() {
               )}
             </div>
 
-            {c.completed && <div className="summary-card gold mt"><span className="trophy-bg">🏅</span><b>Concluído! Já aparece no seu perfil.</b></div>}
+            {c.completed && <div className="summary-card gold mt"><span className="trophy-bg"><Award size={22} /></span><b>Concluído! Já aparece no seu perfil.</b></div>}
 
             {!c.has_access && (
               <Card className="mt center">
@@ -130,7 +132,7 @@ export function ContentDetail() {
                 {c.purchase_pending ? (
                   <p><Badge kind="yellow">Pedido registrado — aguardando liberação</Badge></p>
                 ) : (
-                  <Button variant="red" block busy={busy} onClick={buy}>🛒 Comprar</Button>
+                  <Button variant="red" block busy={busy} onClick={buy}><ShoppingCart size={18} /> Comprar</Button>
                 )}
                 {buyMsg && <p className="small muted mt">{buyMsg}</p>}
               </Card>
@@ -140,10 +142,10 @@ export function ContentDetail() {
               <div className="stack">
                 {c.items.map((it, i) => (
                   <div key={it.id} className={'item-step' + (it.done_at ? ' done' : '') + (!c.has_access ? ' locked' : '')}>
-                    <span className="num">{it.done_at ? '✓' : i + 1}</span>
+                    <span className="num">{it.done_at ? <Check size={16} strokeWidth={3} /> : i + 1}</span>
                     <div className="grow">
                       <b>{it.title}</b>
-                      {c.has_access ? <p className="small" style={{ whiteSpace: 'pre-wrap' }}>{it.body}</p> : <p className="small muted">🔒 Disponível após a compra</p>}
+                      {c.has_access ? <p className="small" style={{ whiteSpace: 'pre-wrap' }}>{it.body}</p> : <p className="small muted ico"><Lock size={14} /> Disponível após a compra</p>}
                       {c.has_access && (
                         <Button small variant={it.done_at ? 'secondary' : 'primary'} disabled={busy} onClick={() => toggle(it)}>
                           {it.done_at ? 'Desfazer' : verb}

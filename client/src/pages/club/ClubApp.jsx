@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
+import {
+  Award, ChevronRight, ClipboardCheck, Compass, Flag, Inbox, Map, MapPin, Menu, MessageCircle, ShieldAlert, Sparkles, Tent, Trophy, Users,
+} from 'lucide-react';
 import { api, toForm } from '../../api.js';
+import { AppIcon } from '../../icons.jsx';
 import { useAuth } from '../../auth.jsx';
 import { useRealtime } from '../../realtime.jsx';
 import { KIND_LABEL, plural } from '../../format.js';
@@ -35,7 +39,7 @@ function ClubHome() {
             <div className="profile-head">
               <Avatar src={c.logo} name={c.name} size={88} square />
               <h1>{c.name}</h1>
-              <div className="chips"><span className="chip">📍 {c.district_name}</span><span className="chip">Usuário: {c.username}</span></div>
+              <div className="chips"><span className="chip ico"><MapPin size={14} /> {c.district_name}</span><span className="chip">Usuário: {c.username}</span></div>
               {c.ranking && <PositionBadge position={c.ranking.position} points={c.ranking.points} label="no ranking de clubes" />}
               <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.5rem' }}>
                 <ShareButton path={`/p/clube/${c.id}`} title={c.name} />
@@ -46,11 +50,11 @@ function ClubHome() {
 
           <Section title="Resumo">
             <div className="stats">
-              <Stat icon="🧭" value={c.desbravadores} label="Desbravadores" to={`${base}/membros`} />
-              <Stat icon="🎖️" value={c.lideranca} label="Liderança" to={`${base}/membros`} />
-              <Stat icon="🚩" value={c.unit_count} label="Unidades" to={`${base}/unidades`} />
-              <Stat icon="📥" value={c.pending_reviews} label="Envios p/ avaliar" to={`${base}/requisitos?aba=avaliar`} accent={c.pending_reviews > 0} />
-              <Stat icon="🚩" value={c.open_reports} label="Denúncias abertas" to={`${base}/denuncias`} accent={c.open_reports > 0} />
+              <Stat icon={Compass} value={c.desbravadores} label="Desbravadores" to={`${base}/membros`} />
+              <Stat icon={Award} value={c.lideranca} label="Liderança" to={`${base}/membros`} />
+              <Stat icon={Flag} value={c.unit_count} label="Unidades" to={`${base}/unidades`} />
+              <Stat icon={Inbox} value={c.pending_reviews} label="Envios p/ avaliar" to={`${base}/requisitos?aba=avaliar`} accent={c.pending_reviews > 0} />
+              <Stat icon={Flag} value={c.open_reports} label="Denúncias abertas" to={`${base}/denuncias`} accent={c.open_reports > 0} />
             </div>
           </Section>
 
@@ -63,7 +67,7 @@ function ClubHome() {
             </Card>
           </Section>
 
-          <Section title="Ranking das unidades" action={<Link to={`${base}/ranking`} className="small">Ver tudo ›</Link>}>
+          <Section title="Ranking das unidades" action={<Link to={`${base}/ranking`} className="small ico">Ver tudo <ChevronRight size={14} /></Link>}>
             <RankingTable rows={c.units_ranking} link={(r) => `${base}/ver/unidade/${r.id}`} />
           </Section>
           <Section title="Medalhas e troféus"><MedalList medals={c.medals} /></Section>
@@ -114,7 +118,7 @@ function MemberForm({ member, units, onClose, onDone }) {
             </select>
           </Field>
         </div>
-        <label className="check"><input type="checkbox" checked={f.excellence} onChange={(e) => setF({ ...f, excellence: e.target.checked })} /> 🌟 Tem a Insígnia de Excelência</label>
+        <label className="check"><input type="checkbox" checked={f.excellence} onChange={(e) => setF({ ...f, excellence: e.target.checked })} /> <Sparkles size={16} color="#B07D00" /> Tem a Insígnia de Excelência</label>
         <div className="grid2">
           <Field label="Usuário de acesso"><input value={f.username} onChange={set('username')} autoCapitalize="none" /></Field>
           <Field label={member ? 'Nova senha' : 'Senha'} hint={member ? 'Deixe em branco para manter' : 'Mínimo 6 caracteres'}><input type="text" value={f.password} onChange={set('password')} /></Field>
@@ -151,7 +155,7 @@ function AchievementsModal({ member, onClose, onDone }) {
                 {catalog.data.filter((c) => c.type === type).map((c) => (
                   <label key={c.id} className="check">
                     <input type="checkbox" checked={chosen.has(c.id) || online.has(c.id)} disabled={online.has(c.id)} onChange={() => toggle(c.id)} />
-                    {c.icon} {c.name}{c.leader ? ' (líder)' : c.age ? ` (${c.age} anos)` : ''}
+                    <AppIcon name={c.icon} size={16} /> {c.name}{c.leader ? ' (líder)' : c.age ? ` (${c.age} anos)` : ''}
                     {online.has(c.id) && <Badge kind="green">feita online</Badge>}
                   </label>
                 ))}
@@ -177,7 +181,7 @@ function MembersPage() {
     <>
       <PageHeader title="Membros" subtitle="Cadastre e atualize os membros do clube" action={<Button small onClick={() => setEditing('new')}>+ Novo</Button>} />
       <div className="grid2">
-        <input placeholder="🔎 Buscar por nome" value={q} onChange={(e) => setQ(e.target.value)} />
+        <input placeholder="Buscar por nome" value={q} onChange={(e) => setQ(e.target.value)} />
         <select value={unitFilter} onChange={(e) => setUnitFilter(e.target.value)}>
           <option value="">Todas as unidades</option>
           <option value="none">Sem unidade</option>
@@ -194,7 +198,7 @@ function MembersPage() {
                   <div key={m.id} className="list-item" style={{ alignItems: 'flex-start' }}>
                     <Avatar src={m.photo} name={m.name} size={48} />
                     <div className="grow">
-                      <div className="title">{m.name} {m.excellence ? '🌟' : ''}</div>
+                      <div className="title ico">{m.name} {m.excellence ? <Sparkles size={15} color="#B07D00" aria-label="Insígnia de Excelência" /> : null}</div>
                       <div className="sub">{m.age} anos · {m.cargo} · {m.unit_name || 'Sem unidade'}</div>
                       <div className="row wrap" style={{ marginTop: '.35rem', gap: '.3rem' }}>
                         <Badge kind={m.kind === 'desbravador' ? 'blue' : 'yellow'}>{KIND_LABEL[m.kind]}</Badge>
@@ -297,17 +301,17 @@ function RequirementsPage() {
 export default function ClubApp() {
   const { unread } = useRealtime();
   const tabs = [
-    { to: base, icon: '🏕️', label: 'Início', end: true },
-    { to: `${base}/membros`, icon: '👥', label: 'Membros' },
-    { to: `${base}/requisitos`, icon: '✅', label: 'Requisitos' },
-    { to: `${base}/chat`, icon: '💬', label: 'Chat', badge: unread },
-    { to: `${base}/mais`, icon: '☰', label: 'Mais' },
+    { to: base, icon: Tent, label: 'Início', end: true },
+    { to: `${base}/membros`, icon: Users, label: 'Membros' },
+    { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },
+    { to: `${base}/chat`, icon: MessageCircle, label: 'Chat', badge: unread },
+    { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
-    { to: `${base}/unidades`, icon: '🚩', label: 'Unidades', hint: 'Criar e editar' },
-    { to: `${base}/ranking`, icon: '🏆', label: 'Ranking', hint: 'Unidades e clubes' },
-    { to: `${base}/denuncias`, icon: '🛡️', label: 'Denúncias', hint: 'Do chat' },
-    { to: `${base}/clubes`, icon: '🗺️', label: 'Clubes', hint: 'Por distrito' },
+    { to: `${base}/unidades`, icon: Flag, label: 'Unidades', hint: 'Criar e editar' },
+    { to: `${base}/ranking`, icon: Trophy, label: 'Ranking', hint: 'Unidades e clubes' },
+    { to: `${base}/denuncias`, icon: ShieldAlert, label: 'Denúncias', hint: 'Do chat' },
+    { to: `${base}/clubes`, icon: Map, label: 'Clubes', hint: 'Por distrito' },
   ];
   return (
     <Routes>

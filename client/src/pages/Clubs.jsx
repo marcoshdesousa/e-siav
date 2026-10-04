@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api.js';
 import { plural } from '../format.js';
+import { ChevronRight, Trophy } from 'lucide-react';
 import { Avatar, Field, Loading, PageHeader, useLoad } from '../ui.jsx';
 
 /** Aba Clubes: escolhe o distrito e abre o perfil de um clube. */
@@ -36,8 +37,8 @@ export default function ClubsBrowser({ base }) {
                     <div className="title">{c.name}</div>
                     <div className="sub">{plural(c.unit_count, 'unidade', 'unidades')} · {plural(c.member_count, 'membro', 'membros')}</div>
                   </div>
-                  {c.position && <span className="badge badge-yellow">🏆 {c.position}º</span>}
-                  <span className="chev">›</span>
+                  {c.position && <span className="badge badge-yellow ico"><Trophy size={13} /> {c.position}º</span>}
+                  <ChevronRight className="chev" size={20} />
                 </Link>
               ))}
             </div>

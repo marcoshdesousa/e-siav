@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import {
+  CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Medal, Menu, Plus, ShieldAlert, ShoppingCart, Tent, Trash2, Trophy, UserRound, Users,
+} from 'lucide-react';
 import { api, toForm } from '../../api.js';
+import { AppIcon, CONTENT_ICON_KEYS, IconPicker, MEDAL_ICON_KEYS } from '../../icons.jsx';
 import { useAuth } from '../../auth.jsx';
 import { fmtDate, fmtDateTime, fmtMoney, plural } from '../../format.js';
 import {
@@ -31,24 +35,24 @@ function AdminHome() {
         {(o) => (
           <Section title="Visão geral">
             <div className="stats">
-              <Stat icon="🗺️" value={o.districts} label="Distritos" to={`${base}/clubes`} />
-              <Stat icon="🏕️" value={o.clubs} label="Clubes" to={`${base}/clubes`} />
-              <Stat icon="🚩" value={o.units} label="Unidades" />
-              <Stat icon="👥" value={o.members} label="Membros" />
-              <Stat icon="✅" value={o.requirements} label="Requisitos gerais" to={`${base}/requisitos`} />
-              <Stat icon="📥" value={o.pending_reviews} label="Envios p/ avaliar" to={`${base}/requisitos?aba=avaliar`} accent={o.pending_reviews > 0} />
-              <Stat icon="🛒" value={o.pending_purchases} label="Compras pendentes" to={`${base}/conteudo?aba=compras`} accent={o.pending_purchases > 0} />
-              <Stat icon="🛡️" value={o.open_reports} label="Denúncias abertas" to={`${base}/denuncias`} accent={o.open_reports > 0} />
+              <Stat icon={Map} value={o.districts} label="Distritos" to={`${base}/clubes`} />
+              <Stat icon={Tent} value={o.clubs} label="Clubes" to={`${base}/clubes`} />
+              <Stat icon={Flag} value={o.units} label="Unidades" />
+              <Stat icon={Users} value={o.members} label="Membros" />
+              <Stat icon={ClipboardCheck} value={o.requirements} label="Requisitos gerais" to={`${base}/requisitos`} />
+              <Stat icon={Inbox} value={o.pending_reviews} label="Envios p/ avaliar" to={`${base}/requisitos?aba=avaliar`} accent={o.pending_reviews > 0} />
+              <Stat icon={ShoppingCart} value={o.pending_purchases} label="Compras pendentes" to={`${base}/conteudo?aba=compras`} accent={o.pending_purchases > 0} />
+              <Stat icon={ShieldAlert} value={o.open_reports} label="Denúncias abertas" to={`${base}/denuncias`} accent={o.open_reports > 0} />
             </div>
           </Section>
         )}
       </Loading>
       <Section title="Atalhos">
         <MoreMenu items={[
-          { to: `${base}/medalhas`, icon: '🏅', label: 'Medalhas e troféus' },
-          { to: `${base}/eventos`, icon: '⛺', label: 'Eventos' },
-          { to: `${base}/ranking`, icon: '🏆', label: 'Rankings' },
-          { to: `${base}/explorar`, icon: '🗺️', label: 'Explorar clubes' },
+          { to: `${base}/medalhas`, icon: Medal, label: 'Medalhas e troféus' },
+          { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos' },
+          { to: `${base}/ranking`, icon: Trophy, label: 'Rankings' },
+          { to: `${base}/explorar`, icon: Map, label: 'Explorar clubes' },
         ]} />
       </Section>
       <p className="muted small mt center">Os dados pessoais dos membros são editados somente pelo clube de cada um.</p>
@@ -120,7 +124,7 @@ function ClubsAdmin() {
             <Loading {...districts}>
               {(list) => list.map((d) => (
                 <div key={d.id} className="list-item">
-                  <span className="trophy-bg">🗺️</span>
+                  <span className="trophy-bg"><Map size={22} /></span>
                   <div className="grow"><div className="title">{d.name}</div><div className="sub">{plural(d.club_count, 'clube', 'clubes')}</div></div>
                   <Button small variant="secondary" onClick={() => renameDistrict(d)}>Renomear</Button>
                 </div>
@@ -206,7 +210,7 @@ function ContentForm({ id, type, onClose, onDone }) {
     const c = existing.data;
     setF(c
       ? { ...c, is_free: !!c.is_free, leader: !!c.leader, price: c.price_cents ? (c.price_cents / 100).toFixed(2).replace('.', ',') : '', age: c.age ?? '', items: c.items }
-      : { type, name: '', description: '', icon: type === 'curso' ? '🎓' : type === 'classe' ? '🧭' : '🪢', category: '', age: '', leader: false, is_free: true, price: '', items: [{ title: '', body: '' }] });
+      : { type, name: '', description: '', icon: type === 'curso' ? 'graduation' : type === 'classe' ? 'compass' : 'knot', category: '', age: '', leader: false, is_free: true, price: '', items: [{ title: '', body: '' }] });
   }, [existing.loading, existing.data, type]);
   if (!f) return null;
   const set = (k) => (e) => setF({ ...f, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value });
@@ -219,10 +223,8 @@ function ContentForm({ id, type, onClose, onDone }) {
   return (
     <Modal title={(id ? 'Editar ' : 'Nova ') + TYPE_LABEL[f.type].toLowerCase()} onClose={onClose} footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} onClick={save}>Salvar</Button></>}>
       <div className="form">
-        <div className="grid2" style={{ gridTemplateColumns: '80px 1fr' }}>
-          <Field label="Ícone"><input value={f.icon} onChange={set('icon')} style={{ textAlign: 'center', fontSize: '1.3rem' }} /></Field>
-          <Field label="Nome"><input value={f.name} onChange={set('name')} /></Field>
-        </div>
+        <Field label="Nome"><input value={f.name} onChange={set('name')} /></Field>
+        <Field label="Ícone"><IconPicker keys={CONTENT_ICON_KEYS} value={f.icon} onChange={(icon) => setF({ ...f, icon })} /></Field>
         <Field label="Descrição"><textarea value={f.description} onChange={set('description')} /></Field>
         {f.type === 'especialidade' && <Field label="Categoria"><input value={f.category} onChange={set('category')} /></Field>}
         {f.type === 'classe' && (
@@ -239,7 +241,7 @@ function ContentForm({ id, type, onClose, onDone }) {
           <div className="stack">
             {f.items.map((it, i) => (
               <div key={i} className="quiz-q stack">
-                <div className="row between"><b>{itemLabel} {i + 1}</b><button type="button" className="icon-btn" onClick={() => setF({ ...f, items: f.items.filter((_, k) => k !== i) })}>🗑️</button></div>
+                <div className="row between"><b>{itemLabel} {i + 1}</b><button type="button" className="icon-btn" onClick={() => setF({ ...f, items: f.items.filter((_, k) => k !== i) })}><Trash2 size={18} /></button></div>
                 <input placeholder="Título" value={it.title} onChange={(e) => updItem(i, { title: e.target.value })} />
                 <textarea placeholder="Conteúdo / instruções" value={it.body} onChange={(e) => updItem(i, { body: e.target.value })} />
               </div>
@@ -270,7 +272,7 @@ function PurchasesAdmin() {
           <Field label="Item">
             <select value={grant.content_id} onChange={(e) => setGrant({ ...grant, content_id: e.target.value })}>
               <option value="">Escolha...</option>
-              {paid.map((c) => <option key={c.id} value={c.id}>{c.icon} {c.name} · {fmtMoney(c.price_cents)}</option>)}
+              {paid.map((c) => <option key={c.id} value={c.id}>{c.name} · {fmtMoney(c.price_cents)}</option>)}
             </select>
           </Field>
           <Button busy={busy} onClick={() => run(() => api.post('/admin/access', grant), 'Acesso liberado!').then(() => { setGrant({ member_code: '', content_id: '' }); reload(); })}>Liberar acesso</Button>
@@ -281,7 +283,7 @@ function PurchasesAdmin() {
         <Loading {...purchases} empty="Nenhum pedido.">
           {(list) => list.map((p) => (
             <div key={p.id} className="list-item" style={{ marginBottom: '.5rem' }}>
-              <span className="content-icon">{p.icon}</span>
+              <span className="content-icon"><AppIcon name={p.icon} size={24} /></span>
               <div className="grow">
                 <div className="title">{p.content_name}</div>
                 <div className="sub">{p.member_name} ({p.member_code}) · {p.club_name}</div>
@@ -301,7 +303,7 @@ function PurchasesAdmin() {
         <Loading {...access} empty="Nenhum acesso liberado.">
           {(list) => list.map((a) => (
             <div key={a.member_id + '-' + a.content_id} className="list-item" style={{ marginBottom: '.5rem' }}>
-              <span className="content-icon">{a.icon}</span>
+              <span className="content-icon"><AppIcon name={a.icon} size={24} /></span>
               <div className="grow"><div className="title">{a.content_name}</div><div className="sub">{a.member_name} ({a.member_code}) · {a.source === 'admin' ? 'liberado pelo admin' : 'compra'}</div></div>
               <Confirm text="Remover este acesso?" onYes={() => run(() => api.del(`/admin/access/${a.member_id}/${a.content_id}`), 'Acesso removido').then(reload)}>Remover</Confirm>
             </div>
@@ -328,7 +330,7 @@ function ContentAdmin() {
             <Loading {...list} empty="Nada cadastrado ainda.">
               {(items) => items.map((c) => (
                 <div key={c.id} className="list-item">
-                  <span className="content-icon">{c.icon}</span>
+                  <span className="content-icon"><AppIcon name={c.icon} size={24} /></span>
                   <div className="grow">
                     <div className="title">{c.name}</div>
                     <div className="sub">
@@ -367,7 +369,7 @@ function TargetPicker({ types, onPick }) {
             <button key={t.id} className="list-item" style={{ border: '1px solid var(--line)', font: 'inherit', textAlign: 'left', cursor: 'pointer' }} onClick={() => onPick(type, t)}>
               <Avatar src={t.photo || t.logo} name={t.name} size={36} square={type !== 'member'} />
               <div className="grow"><div className="title">{t.name}</div><div className="sub">{t.sub}</div></div>
-              <span className="chev">＋</span>
+              <Plus className="chev" size={20} />
             </button>
           ))}
         </Loading>
@@ -376,25 +378,24 @@ function TargetPicker({ types, onPick }) {
   );
 }
 
-const EMOJIS = ['🏅', '🏆', '🥇', '🥈', '🥉', '🎖️', '⭐', '🌟', '🔥', '⛺', '🧭', '🪢', '📖', '🎯', '💪', '🙌'];
 
 function MedalsAdmin() {
   const state = useLoad(() => api.get('/admin/medals'));
   const [creating, setCreating] = useState(false);
   const [awarding, setAwarding] = useState(null);
-  const [f, setF] = useState({ kind: 'medalha', name: '', description: '', icon: '🏅', icon_file: null });
+  const [f, setF] = useState({ kind: 'medalha', name: '', description: '', icon: 'medal', icon_file: null });
   const [busy, run] = useAsync();
   const awards = useLoad(() => (awarding ? api.get(`/admin/medals/${awarding.id}/awards`) : Promise.resolve([])), [awarding?.id]);
   const [note, setNote] = useState('');
   const create = async () => {
     await run(() => api.post('/admin/medals', toForm(f)), 'Criado!');
     setCreating(false);
-    setF({ kind: 'medalha', name: '', description: '', icon: '🏅', icon_file: null });
+    setF({ kind: 'medalha', name: '', description: '', icon: 'medal', icon_file: null });
     state.reload();
   };
   const award = async (type, t) => {
     if (!confirm(`Entregar "${awarding.name}" para ${t.name}?`)) return;
-    await run(() => api.post(`/admin/medals/${awarding.id}/award`, { target_type: type, target_id: t.id, note }), 'Entregue! 🎉');
+    await run(() => api.post(`/admin/medals/${awarding.id}/award`, { target_type: type, target_id: t.id, note }), 'Entregue!');
     awards.reload();
     state.reload();
   };
@@ -424,11 +425,11 @@ function MedalsAdmin() {
       {creating && (
         <Modal title="Nova medalha ou troféu" onClose={() => setCreating(false)} footer={<Button busy={busy} onClick={create}>Criar</Button>}>
           <div className="form">
-            <Tabs tabs={[['medalha', '🏅 Medalha'], ['trofeu', '🏆 Troféu']]} value={f.kind} onChange={(kind) => setF({ ...f, kind, icon: kind === 'trofeu' ? '🏆' : '🏅' })} />
+            <Tabs tabs={[['medalha', 'Medalha'], ['trofeu', 'Troféu']]} value={f.kind} onChange={(kind) => setF({ ...f, kind, icon: kind === 'trofeu' ? 'trophy' : 'medal' })} />
             <Field label="Nome" hint="Ex.: Melhor clube do mês"><input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
             <Field label="Descrição"><textarea value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })} /></Field>
             <Field label="Ícone">
-              <div className="row wrap">{EMOJIS.map((e) => <button key={e} type="button" className={'btn btn-sm ' + (f.icon === e && !f.icon_file ? 'btn-yellow' : 'btn-secondary')} onClick={() => setF({ ...f, icon: e, icon_file: null })}>{e}</button>)}</div>
+              <IconPicker keys={MEDAL_ICON_KEYS} value={f.icon_file ? null : f.icon} onChange={(icon) => setF({ ...f, icon, icon_file: null })} />
             </Field>
             <Field label="ou envie uma imagem"><input type="file" accept="image/*" onChange={(e) => setF({ ...f, icon_file: e.target.files[0] || null })} /></Field>
           </div>
@@ -474,7 +475,7 @@ function EventsAdmin() {
       <Loading {...state} empty="Nenhum evento.">
         {(list) => list.map((e) => (
           <Card key={e.id}>
-            <div className="row between"><h3>⛺ {e.name}</h3><span className="small muted">{fmtDate(e.date)}</span></div>
+            <div className="row between"><h3 className="ico"><CalendarDays size={18} /> {e.name}</h3><span className="small muted">{fmtDate(e.date)}</span></div>
             <p className="small muted">{e.location}{e.district_name ? ' · ' + e.district_name : ''}</p>
             {e.description && <p className="small">{e.description}</p>}
             <p className="small"><b>{e.participants.filter((p) => p.target_type === 'club').length}</b> clubes · <b>{e.participants.filter((p) => p.target_type === 'member').length}</b> membros</p>
@@ -511,7 +512,7 @@ function EventsAdmin() {
             <Section title="Participaram">
               {current.participants.length ? current.participants.map((p) => (
                 <div key={p.target_type + p.target_id} className="row between small" style={{ padding: '.3rem 0' }}>
-                  <span>{p.target_type === 'club' ? '🏕️' : '🧑'} {p.name}</span>
+                  <span className="ico">{p.target_type === 'club' ? <Tent size={15} /> : <UserRound size={15} />} {p.name}</span>
                   <Confirm text="Remover participante?" onYes={() => run(() => api.del(`/admin/events/${current.id}/participants/${p.target_type}/${p.target_id}`), 'Removido').then(state.reload)}>Remover</Confirm>
                 </div>
               )) : <Empty>Ninguém marcado ainda.</Empty>}
@@ -526,18 +527,18 @@ function EventsAdmin() {
 /** Painel do Administrador Geral. */
 export default function AdminApp() {
   const tabs = [
-    { to: base, icon: '🏠', label: 'Início', end: true },
-    { to: `${base}/clubes`, icon: '🏕️', label: 'Clubes' },
-    { to: `${base}/requisitos`, icon: '✅', label: 'Requisitos' },
-    { to: `${base}/conteudo`, icon: '📚', label: 'Conteúdo' },
-    { to: `${base}/mais`, icon: '☰', label: 'Mais' },
+    { to: base, icon: House, label: 'Início', end: true },
+    { to: `${base}/clubes`, icon: Tent, label: 'Clubes' },
+    { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },
+    { to: `${base}/conteudo`, icon: Library, label: 'Conteúdo' },
+    { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
-    { to: `${base}/medalhas`, icon: '🏅', label: 'Medalhas e troféus', hint: 'Criar e entregar' },
-    { to: `${base}/eventos`, icon: '⛺', label: 'Eventos', hint: 'Participantes' },
-    { to: `${base}/ranking`, icon: '🏆', label: 'Rankings', hint: 'Todas as tabelas' },
-    { to: `${base}/denuncias`, icon: '🛡️', label: 'Denúncias', hint: 'Do chat' },
-    { to: `${base}/explorar`, icon: '🗺️', label: 'Explorar clubes', hint: 'Perfis públicos' },
+    { to: `${base}/medalhas`, icon: Medal, label: 'Medalhas e troféus', hint: 'Criar e entregar' },
+    { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos', hint: 'Participantes' },
+    { to: `${base}/ranking`, icon: Trophy, label: 'Rankings', hint: 'Todas as tabelas' },
+    { to: `${base}/denuncias`, icon: ShieldAlert, label: 'Denúncias', hint: 'Do chat' },
+    { to: `${base}/explorar`, icon: Map, label: 'Explorar clubes', hint: 'Perfis públicos' },
   ];
   return (
     <Shell tabs={tabs}>

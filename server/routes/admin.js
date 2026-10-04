@@ -134,7 +134,7 @@ r.get('/admin/medals', (_req, res) => {
 r.post('/admin/medals', imageUpload.single('icon_file'), (req, res) => {
   const name = str(req.body.name, 100);
   const kind = req.body.kind === 'trofeu' ? 'trofeu' : 'medalha';
-  const icon = req.file ? fileUrl(req.file) : str(req.body.icon, 16) || (kind === 'trofeu' ? '🏆' : '🏅');
+  const icon = req.file ? fileUrl(req.file) : str(req.body.icon, 16) || (kind === 'trofeu' ? 'trophy' : 'medal');
   if (!name) fail(400, 'Informe o nome');
   const { lastInsertRowid } = run('INSERT INTO medals (kind, name, icon, description) VALUES (?,?,?,?)', kind, name, icon, str(req.body.description, 500));
   res.json({ id: Number(lastInsertRowid) });

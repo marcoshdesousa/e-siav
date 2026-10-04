@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import {
+  ArrowLeft, Ban, Camera, Check, CheckCheck, CheckCircle2, Flag, Image as ImageIcon, Mic, MessageCircle, MoreVertical, Search, SendHorizontal, ShieldCheck, Tent, X,
+} from 'lucide-react';
 import { api, toForm } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { useRealtime } from '../realtime.jsx';
@@ -7,11 +10,11 @@ import { fmtChatTime, fmtDate, fmtTime } from '../format.js';
 import { Avatar, Button, Empty, Field, Loading, Modal, PageHeader, Spinner, useAsync, useLoad, notify } from '../ui.jsx';
 import { Lightbox } from './Requirements.jsx';
 
-const TYPE_ICON = { unidade: '🚩', diretoria: '🏕️', direta: '💬' };
+const TYPE_ICON = { unidade: Flag, diretoria: Tent, direta: MessageCircle };
 
 function preview(last) {
   if (!last) return 'Nenhuma mensagem ainda';
-  const body = last.kind === 'audio' ? '🎤 Áudio' : last.kind === 'foto' ? '📷 Foto' : last.body;
+  const body = last.kind === 'audio' ? 'Mensagem de áudio' : last.kind === 'foto' ? 'Foto' : last.body;
   return (last.mine ? 'Você: ' : '') + body;
 }
 
@@ -41,9 +44,9 @@ export function ChatHome({ base }) {
       <PageHeader title={actor.type === 'club' ? 'Mensagens da diretoria' : 'Chat'} subtitle={actor.type === 'club' ? 'Mensagens que os membros enviam para a diretoria' : 'Converse sem sair da plataforma'} />
       {actor.type === 'member' && (
         <div className="grid2" style={{ gridTemplateColumns: '1fr 1fr 1fr', marginBottom: '1rem' }}>
-          <button className="more-tile" onClick={() => openType('unidade')}><span>🚩</span>Unidade<small>Grupo</small></button>
-          <button className="more-tile" onClick={() => openType('diretoria')}><span>🏕️</span>Diretoria<small>Do clube</small></button>
-          <button className="more-tile" onClick={() => setSearching(true)}><span>💬</span>Direta<small>Nova conversa</small></button>
+          <button className="more-tile" onClick={() => openType('unidade')}><span className="tile-ico"><Flag size={22} /></span>Unidade<small>Grupo</small></button>
+          <button className="more-tile" onClick={() => openType('diretoria')}><span className="tile-ico"><Tent size={22} /></span>Diretoria<small>Do clube</small></button>
+          <button className="more-tile" onClick={() => setSearching(true)}><span className="tile-ico"><MessageCircle size={22} /></span>Direta<small>Nova conversa</small></button>
         </div>
       )}
       <Loading {...state} empty={actor.type === 'club' ? 'Nenhuma mensagem recebida ainda.' : 'Nenhuma conversa.'}>
@@ -54,7 +57,7 @@ export function ChatHome({ base }) {
                 <Avatar src={c.photo} name={c.title} size={50} square={c.type !== 'direta' && !(actor.type === 'club')} />
                 <div className="grow">
                   <div className="row between">
-                    <span className="title ellipsis">{TYPE_ICON[c.type]} {c.title}</span>
+                    <span className="title ellipsis ico">{(() => { const T = TYPE_ICON[c.type]; return <T size={15} className="muted" />; })()} {c.title}</span>
                     <span className="chat-time">{c.last ? fmtChatTime(c.last.created_at) : ''}</span>
                   </div>
                   <div className="row between">
@@ -98,7 +101,7 @@ function DirectSearch({ base, onClose }) {
             <div className="grow"><div className="title">{m.name}</div><div className="sub">{m.club_name} · {m.code}</div></div>
           </button>
         ))}
-        {q.trim().length >= 2 && !results.length && <Empty icon="🔎">Ninguém encontrado.</Empty>}
+        {q.trim().length >= 2 && !results.length && <Empty icon={Search}>Ninguém encontrado.</Empty>}
       </div>
     </Modal>
   );
@@ -190,13 +193,13 @@ function AudioRecorder({ onAudio, disabled }) {
   if (rec) {
     return (
       <>
-        <button className="round-btn light" onClick={() => stop(true)} aria-label="Cancelar">✕</button>
-        <div className="recording">● Gravando {String(Math.floor(secs / 60)).padStart(2, '0')}:{String(secs % 60).padStart(2, '0')}</div>
-        <button className="round-btn rec" onClick={() => stop(false)} aria-label="Enviar áudio">➤</button>
+        <button className="round-btn light" onClick={() => stop(true)} aria-label="Cancelar"><X size={20} /></button>
+        <div className="recording"><span className="rec-dot" /> Gravando {String(Math.floor(secs / 60)).padStart(2, '0')}:{String(secs % 60).padStart(2, '0')}</div>
+        <button className="round-btn rec" onClick={() => stop(false)} aria-label="Enviar áudio"><SendHorizontal size={20} /></button>
       </>
     );
   }
-  return <button className="round-btn" onClick={start} disabled={disabled} aria-label="Gravar áudio">🎤</button>;
+  return <button className="round-btn" onClick={start} disabled={disabled} aria-label="Gravar áudio"><Mic size={20} /></button>;
 }
 
 /** Conversa aberta (tela cheia). */
@@ -293,7 +296,7 @@ export function ChatConversation({ base }) {
   return (
     <div className="chat-page">
       <div className="chat-head">
-        <button className="icon-btn" onClick={() => nav(`${base}/chat`)} aria-label="Voltar">←</button>
+        <button className="icon-btn" onClick={() => nav(`${base}/chat`)} aria-label="Voltar"><ArrowLeft size={22} /></button>
         {c ? (
           <>
             <Avatar src={c.photo} name={c.title} size={40} square={c.type === 'unidade'} />
@@ -301,13 +304,13 @@ export function ChatConversation({ base }) {
               <div className="t ellipsis">{c.title}</div>
               <div className="s ellipsis">{c.subtitle}</div>
             </div>
-            <button className="icon-btn" onClick={() => setMenu((x) => !x)} aria-label="Opções">⋮</button>
+            <button className="icon-btn" onClick={() => setMenu((x) => !x)} aria-label="Opções"><MoreVertical size={22} /></button>
             {menu && (
               <div className="menu-pop" onMouseLeave={() => setMenu(false)}>
-                <button className="danger" onClick={() => { setMenu(false); setReport({}); }}>🚩 Denunciar</button>
+                <button className="danger" onClick={() => { setMenu(false); setReport({}); }}><Flag size={16} /> Denunciar</button>
                 {c.type === 'unidade'
-                  ? <button className="danger" onClick={() => { setMenu(false); setBlockGroup(true); }}>⛔ Bloquear membro</button>
-                  : <button className="danger" onClick={toggleBlock}>⛔ {c.i_blocked ? 'Desbloquear' : 'Bloquear'}</button>}
+                  ? <button className="danger" onClick={() => { setMenu(false); setBlockGroup(true); }}><Ban size={16} /> Bloquear membro</button>
+                  : <button className="danger" onClick={toggleBlock}><Ban size={16} /> {c.i_blocked ? 'Desbloquear' : 'Bloquear'}</button>}
               </div>
             )}
           </>
@@ -318,7 +321,7 @@ export function ChatConversation({ base }) {
         {!messages ? <Spinner /> : (
           <>
             {hasMore && <button className="day-sep" style={{ border: 0, cursor: 'pointer' }} onClick={loadOlder}>Carregar mensagens anteriores</button>}
-            {!messages.length && <div className="day-sep">Envie a primeira mensagem 👋</div>}
+            {!messages.length && <div className="day-sep">Envie a primeira mensagem</div>}
             {messages.map((m) => {
               const day = fmtDate(m.created_at);
               const sep = day !== lastDay;
@@ -329,14 +332,14 @@ export function ChatConversation({ base }) {
                   {sep && <div className="day-sep">{day}</div>}
                   <div className={'bubble' + (mine ? ' mine' : '')}>
                     {!mine && c?.type !== 'direta' && <div className="who">{m.sender?.name}</div>}
-                    {!mine && <button className="bubble-menu" title="Denunciar mensagem" onClick={() => setReport({ message: m })}>⚑</button>}
+                    {!mine && <button className="bubble-menu" title="Denunciar mensagem" onClick={() => setReport({ message: m })} aria-label="Denunciar mensagem"><Flag size={13} /></button>}
                     {m.kind === 'texto' && <div style={{ whiteSpace: 'pre-wrap', paddingRight: mine ? 0 : 14 }}>{m.body}</div>}
                     {m.kind === 'foto' && <img className="photo" src={m.media} alt="Foto" onClick={() => setPhoto(m.media)} />}
                     {m.kind === 'audio' && <audio controls preload="none" src={m.media} />}
                     {m.kind !== 'texto' && m.body && <div>{m.body}</div>}
                     <div className="meta">
                       {fmtTime(m.created_at)}
-                      {mine && <span className={'ticks' + (othersRead >= m.id ? ' read' : '')} title={othersRead >= m.id ? 'Lida' : 'Enviada'}>{othersRead >= m.id ? '✓✓' : '✓'}</span>}
+                      {mine && <span className={'ticks' + (othersRead >= m.id ? ' read' : '')} title={othersRead >= m.id ? 'Lida' : 'Enviada'}>{othersRead >= m.id ? <CheckCheck size={15} /> : <Check size={15} />}</span>}
                     </div>
                   </div>
                 </div>
@@ -351,13 +354,13 @@ export function ChatConversation({ base }) {
       ) : (
         <div className="chat-input">
           <label className="round-btn light" aria-label="Enviar foto" style={{ cursor: 'pointer' }}>
-            📷
+            <Camera size={20} />
             <input type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files[0]; e.target.value = ''; if (f) send({ media: f }); }} />
           </label>
           {text.trim() ? (
             <>
               <textarea rows={1} value={text} onChange={(e) => setText(e.target.value)} placeholder="Mensagem" onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendText(); } }} />
-              <button className="round-btn" onClick={sendText} disabled={sending} aria-label="Enviar">➤</button>
+              <button className="round-btn" onClick={sendText} disabled={sending} aria-label="Enviar"><SendHorizontal size={20} /></button>
             </>
           ) : (
             <>
@@ -383,11 +386,11 @@ export function ReportsPanel() {
   return (
     <>
       <PageHeader title="Denúncias" subtitle="Denúncias feitas no chat" />
-      <Loading {...state} empty="Nenhuma denúncia. 🙌">
+      <Loading {...state} empty="Nenhuma denúncia.">
         {(list) => list.map((r) => (
           <div key={r.id} className="card">
             <div className="row between">
-              <b>{r.status === 'aberta' ? '🚩 Aberta' : '✅ Resolvida'}</b>
+              <b className="ico">{r.status === 'aberta' ? <><Flag size={16} color="var(--red)" /> Aberta</> : <><ShieldCheck size={16} color="var(--green)" /> Resolvida</>}</b>
               <span className="small muted">{fmtDate(r.created_at)} {fmtTime(r.created_at)}</span>
             </div>
             <p className="small"><b>Quem denunciou:</b> {r.reporter?.name}{r.reporter_club ? ` (${r.reporter_club})` : ''}</p>

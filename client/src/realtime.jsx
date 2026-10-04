@@ -34,7 +34,7 @@ export function RealtimeProvider({ children }) {
           if (!mine && activeConv.current !== data.conversation_id) {
             setUnread((n) => n + 1);
             const who = data.message.sender?.name || 'Nova mensagem';
-            const text = data.message.kind === 'audio' ? '🎤 Áudio' : data.message.kind === 'foto' ? '📷 Foto' : data.message.body;
+            const text = data.message.kind === 'audio' ? 'Mensagem de áudio' : data.message.kind === 'foto' ? 'Foto' : data.message.body;
             setToast({ id: Date.now(), who, text, conversation_id: data.conversation_id });
             if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
               try { new Notification(who, { body: text, icon: '/icons/icon-192.png' }); } catch { /* ignora */ }

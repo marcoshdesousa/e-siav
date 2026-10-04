@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { CalendarClock, CheckCircle2, ClipboardList, Globe2, Star, Trash2, X, XCircle } from 'lucide-react';
 import { api, toForm } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { AUDIENCE_LABEL, MODEL_LABEL, fmtDateTime, isoToLocal, localToIso, timeLeft } from '../format.js';
@@ -25,16 +26,16 @@ function RequirementCard({ r, onSubmit }) {
       </div>
       {r.description && <p className="muted small">{r.description}</p>}
       <div className="req-meta">
-        <span>📝 {MODEL_LABEL[r.model]}</span>
-        <span className="req-points">⭐ {r.points} pts no prazo</span>
+        <span className="ico"><ClipboardList size={14} /> {MODEL_LABEL[r.model]}</span>
+        <span className="req-points ico"><Star size={14} /> {r.points} pts no prazo</span>
         <span>⏱️ {r.late_points} pts fora do prazo</span>
       </div>
       <div className="req-meta">
-        <span className={left && left.includes('hora') ? 'deadline-soon' : ''}>📅 Prazo: {fmtDateTime(r.deadline)}{left ? ` (faltam ${left})` : ' — encerrado'}</span>
+        <span className={'ico' + (left && left.includes('hora') ? ' deadline-soon' : '')}><CalendarClock size={14} /> Prazo: {fmtDateTime(r.deadline)}{left ? ` (faltam ${left})` : ' — encerrado'}</span>
       </div>
       {s && s.status !== 'recusado' && (
         <div className="small" style={{ marginTop: '.3rem' }}>
-          {s.status === 'aprovado' ? <b style={{ color: 'var(--green)' }}>✅ +{s.points} pontos</b> : <span className="muted">Aguardando avaliação de quem criou o requisito.</span>}
+          {s.status === 'aprovado' ? <b className="ico" style={{ color: 'var(--green)' }}><CheckCircle2 size={15} /> +{s.points} pontos</b> : <span className="muted">Aguardando avaliação de quem criou o requisito.</span>}
           {s.quiz_total ? <span className="muted"> · Quiz: {s.quiz_correct}/{s.quiz_total} acertos</span> : null}
         </div>
       )}
@@ -114,7 +115,7 @@ export function RequirementsTodo({ groupByOrigin = false }) {
               const items = shown.filter((r) => !origin || r.origin === origin);
               return (
                 <Section key={origin || 'all'} title={title}>
-                  {items.length ? items.map((r) => <RequirementCard key={r.id} r={r} onSubmit={setSending} />) : <Empty icon="✅">Nada por aqui.</Empty>}
+                  {items.length ? items.map((r) => <RequirementCard key={r.id} r={r} onSubmit={setSending} />) : <Empty icon={CheckCircle2}>Nada por aqui.</Empty>}
                 </Section>
               );
             })}
@@ -133,13 +134,13 @@ function QuizBuilder({ questions, setQuestions }) {
     <div className="stack">
       {questions.map((q, i) => (
         <div key={i} className="quiz-q stack">
-          <div className="row between"><b>Pergunta {i + 1}</b><button type="button" className="icon-btn" onClick={() => setQuestions(questions.filter((_, k) => k !== i))}>🗑️</button></div>
+          <div className="row between"><b>Pergunta {i + 1}</b><button type="button" className="icon-btn" onClick={() => setQuestions(questions.filter((_, k) => k !== i))} aria-label="Remover pergunta"><Trash2 size={18} /></button></div>
           <input placeholder="Enunciado" value={q.question} onChange={(e) => upd(i, { question: e.target.value })} />
           {q.options.map((o, j) => (
             <div key={j} className="row">
               <input type="radio" name={'c' + i} checked={q.correct === j} onChange={() => upd(i, { correct: j })} title="Resposta correta" />
               <input placeholder={`Opção ${j + 1}`} value={o} onChange={(e) => upd(i, { options: q.options.map((x, k) => (k === j ? e.target.value : x)) })} />
-              {q.options.length > 2 && <button type="button" className="icon-btn" onClick={() => upd(i, { options: q.options.filter((_, k) => k !== j), correct: q.correct >= j && q.correct > 0 ? q.correct - 1 : q.correct })}>✕</button>}
+              {q.options.length > 2 && <button type="button" className="icon-btn" onClick={() => upd(i, { options: q.options.filter((_, k) => k !== j), correct: q.correct >= j && q.correct > 0 ? q.correct - 1 : q.correct })}><X size={16} /></button>}
             </div>
           ))}
           <div className="row">
@@ -235,10 +236,10 @@ export function CreatedRequirements() {
                 {actor.type === 'admin' && <Badge kind="blue">{AUDIENCE_LABEL[r.audience]}</Badge>}
               </div>
               <div className="req-meta">
-                <span>📝 {MODEL_LABEL[r.model]}</span>
-                <span className="req-points">⭐ {r.points}/{r.late_points} pts</span>
-                <span>📅 {fmtDateTime(r.deadline)}</span>
-                {actor.type === 'admin' && <span>🌎 {r.scope === 'geral' ? 'Geral' : r.district_name}</span>}
+                <span className="ico"><ClipboardList size={14} /> {MODEL_LABEL[r.model]}</span>
+                <span className="req-points ico"><Star size={14} /> {r.points}/{r.late_points} pts</span>
+                <span className="ico"><CalendarClock size={14} /> {fmtDateTime(r.deadline)}</span>
+                {actor.type === 'admin' && <span className="ico"><Globe2 size={14} /> {r.scope === 'geral' ? 'Geral' : r.district_name}</span>}
               </div>
               <div className="row between">
                 <span className="small muted">{r.submission_count} envios{r.pending_count ? ` · ${r.pending_count} para avaliar` : ''}</span>
@@ -270,7 +271,7 @@ function ReviewCard({ s, onDone }) {
         {s.late ? <Badge kind="red">Fora do prazo</Badge> : <Badge kind="green">No prazo</Badge>}
       </div>
       <h3 className="mt">{s.title}</h3>
-      <div className="req-meta"><span>📝 {MODEL_LABEL[s.model]}</span><span className="req-points">⭐ vale {s.late ? s.req_late_points : s.req_points} pts</span></div>
+      <div className="req-meta"><span className="ico"><ClipboardList size={14} /> {MODEL_LABEL[s.model]}</span><span className="req-points ico"><Star size={14} /> vale {s.late ? s.req_late_points : s.req_points} pts</span></div>
       {s.quiz_total ? <p className="small"><b>Quiz:</b> {s.quiz_correct}/{s.quiz_total} acertos (a pontuação é proporcional)</p> : null}
       {s.text && <p style={{ whiteSpace: 'pre-wrap', background: 'var(--bg)', padding: '.6rem', borderRadius: 12 }}>{s.text}</p>}
       {s.photos.length > 0 && <div className="photo-strip">{s.photos.map((p) => <img key={p} src={p} alt="" onClick={() => setPhoto(p)} style={{ cursor: 'zoom-in' }} />)}</div>}
@@ -283,7 +284,7 @@ function ReviewCard({ s, onDone }) {
           </div>
         </div>
       ) : (
-        <p className="small mt">{s.status === 'aprovado' ? `✅ Aprovado · ${s.points} pts` : '❌ Recusado'}{s.feedback ? ` — “${s.feedback}”` : ''}</p>
+        <p className="small mt ico">{s.status === 'aprovado' ? <><CheckCircle2 size={15} color="var(--green)" /> Aprovado · {s.points} pts</> : <><XCircle size={15} color="var(--red)" /> Recusado</>}{s.feedback ? ` — “${s.feedback}”` : ''}</p>
       )}
       <Lightbox src={photo} onClose={() => setPhoto(null)} />
     </Card>
@@ -296,7 +297,7 @@ export function ReviewsPanel() {
   return (
     <>
       <Tabs tabs={[['enviado', 'Para avaliar'], ['aprovado', 'Aprovados'], ['recusado', 'Recusados']]} value={status} onChange={setStatus} />
-      <Loading {...state} empty={status === 'enviado' ? 'Nenhum envio aguardando avaliação. 🎉' : 'Nada por aqui.'}>
+      <Loading {...state} empty={status === 'enviado' ? 'Nenhum envio aguardando avaliação.' : 'Nada por aqui.'}>
         {(list) => list.map((s) => <ReviewCard key={s.id} s={s} onDone={state.reload} />)}
       </Loading>
     </>

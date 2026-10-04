@@ -116,7 +116,7 @@ function contentFields(b) {
   const price = isFree ? 0 : Math.round(Number(String(b.price ?? '0').replace(',', '.')) * 100);
   if (!isFree && !(price > 0)) fail(400, 'Informe o preço do item pago');
   const age = type === 'classe' && !bool(b.leader) ? int(b.age) : null;
-  return [type, name, str(b.description, 3000), str(b.icon, 16) || '📘', str(b.category, 60), age, type === 'classe' && bool(b.leader) ? 1 : 0, isFree, price];
+  return [type, name, str(b.description, 3000), str(b.icon, 16) || 'book', str(b.category, 60), age, type === 'classe' && bool(b.leader) ? 1 : 0, isFree, price];
 }
 
 function saveItems(contentId, items) {

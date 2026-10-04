@@ -1,4 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
+import {
+  Camera, ClipboardCheck, Compass, GraduationCap, Menu, MessageCircle, Tent, Trophy, UserRound, Waypoints,
+} from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { useRealtime } from '../../realtime.jsx';
@@ -31,7 +34,7 @@ function MyProfile() {
           linkBase={`${base}/ver`}
           photoAction={
             <label className="chip yellow" style={{ cursor: 'pointer' }}>
-              {busy ? 'Enviando...' : '📷 Trocar foto'}
+              {busy ? 'Enviando...' : <span className="ico"><Camera size={14} /> Trocar foto</span>}
               <input type="file" accept="image/*" hidden onChange={(e) => e.target.files[0] && changePhoto(e.target.files[0])} />
             </label>
           }
@@ -46,17 +49,17 @@ export default function MemberApp() {
   const { unread } = useRealtime();
   const isDbv = actor.kind === 'desbravador';
   const tabs = [
-    { to: base, icon: '🧑', label: 'Perfil', end: true },
-    isDbv ? { to: `${base}/requisitos`, icon: '✅', label: 'Requisitos' } : { to: `${base}/classes`, icon: '🧭', label: 'Classes' },
-    { to: `${base}/ranking`, icon: '🏆', label: 'Ranking' },
-    { to: `${base}/chat`, icon: '💬', label: 'Chat', badge: unread },
-    { to: `${base}/mais`, icon: '☰', label: 'Mais' },
+    { to: base, icon: UserRound, label: 'Perfil', end: true },
+    isDbv ? { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' } : { to: `${base}/classes`, icon: Compass, label: 'Classes' },
+    { to: `${base}/ranking`, icon: Trophy, label: 'Ranking' },
+    { to: `${base}/chat`, icon: MessageCircle, label: 'Chat', badge: unread },
+    { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
-    { to: `${base}/especialidades`, icon: '🪢', label: 'Especialidades', hint: 'Faça online' },
-    { to: `${base}/classes`, icon: '🧭', label: 'Classes', hint: isDbv ? 'Sua classe e outras' : 'Regulares e de líder' },
-    { to: `${base}/cursos`, icon: '🎓', label: 'Cursos', hint: 'Aulas' },
-    { to: `${base}/clubes`, icon: '🏕️', label: 'Clubes', hint: 'Por distrito' },
+    { to: `${base}/especialidades`, icon: Waypoints, label: 'Especialidades', hint: 'Faça online' },
+    { to: `${base}/classes`, icon: Compass, label: 'Classes', hint: isDbv ? 'Sua classe e outras' : 'Regulares e de líder' },
+    { to: `${base}/cursos`, icon: GraduationCap, label: 'Cursos', hint: 'Aulas' },
+    { to: `${base}/clubes`, icon: Tent, label: 'Clubes', hint: 'Por distrito' },
   ];
   return (
     <Routes>

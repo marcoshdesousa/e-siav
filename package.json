@@ -23,6 +23,7 @@
     "cookie-parser": "^1.4.7",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
+    "lucide-react": "^1.52.0",
     "multer": "^2.4.0",
     "ws": "^8.22.0"
   },

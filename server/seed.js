@@ -99,7 +99,7 @@ export function seed() {
     const addContent = (key, type, name, opts, items) => {
       const id = ins(
         'INSERT INTO content (type, name, description, icon, category, age, leader, is_free, price_cents) VALUES (?,?,?,?,?,?,?,?,?)',
-        type, name, opts.description || '', opts.icon || '📘', opts.category || '', opts.age ?? null, opts.leader ? 1 : 0, opts.price ? 0 : 1, opts.price || 0,
+        type, name, opts.description || '', opts.icon || 'book', opts.category || '', opts.age ?? null, opts.leader ? 1 : 0, opts.price ? 0 : 1, opts.price || 0,
       );
       items.forEach(([title, body], i) => run('INSERT INTO content_items (content_id, ord, title, body) VALUES (?,?,?,?)', id, i, title, body));
       content[key] = id;
@@ -111,27 +111,27 @@ export function seed() {
       ['Desenvolvendo amizade', 'Conversar com a sua unidade sobre respeito, amizade e boas atitudes em grupo.'],
       ...extra,
     ];
-    addContent('amigo', 'classe', 'Amigo', { age: 10, icon: '🧭', description: 'Primeira classe regular: descobrir o clube, a natureza e novas amizades.' }, classItems([
+    addContent('amigo', 'classe', 'Amigo', { age: 10, icon: 'compass', description: 'Primeira classe regular: descobrir o clube, a natureza e novas amizades.' }, classItems([
       ['Natureza', 'Identificar cinco árvores ou plantas da sua região e registrar com fotos ou desenhos.'],
       ['Arte de acampar', 'Aprender a fazer o nó direito e o nó de escota e mostrar ao seu instrutor.'],
     ]));
-    addContent('companheiro', 'classe', 'Companheiro', { age: 11, icon: '🤝', description: 'Fortalece o trabalho em equipe e o cuidado com o próximo.' }, classItems([
+    addContent('companheiro', 'classe', 'Companheiro', { age: 11, icon: 'handshake', description: 'Fortalece o trabalho em equipe e o cuidado com o próximo.' }, classItems([
       ['Natureza', 'Observar e registrar aves ou insetos durante uma caminhada.'],
       ['Arte de acampar', 'Montar uma barraca com a sua unidade em um acampamento ou atividade.'],
     ]));
-    addContent('pesquisador', 'classe', 'Pesquisador', { age: 12, icon: '🔍', description: 'Investigar a criação e aprofundar o estudo da Bíblia.' }, classItems([
+    addContent('pesquisador', 'classe', 'Pesquisador', { age: 12, icon: 'search', description: 'Investigar a criação e aprofundar o estudo da Bíblia.' }, classItems([
       ['Natureza', 'Pesquisar sobre um bioma brasileiro e apresentar à unidade.'],
       ['Orientação', 'Usar uma bússola para encontrar os pontos cardeais.'],
     ]));
-    addContent('pioneiro', 'classe', 'Pioneiro', { age: 13, icon: '🏕️', description: 'Desafios ao ar livre e liderança em pequenos grupos.' }, classItems([
+    addContent('pioneiro', 'classe', 'Pioneiro', { age: 13, icon: 'tent', description: 'Desafios ao ar livre e liderança em pequenos grupos.' }, classItems([
       ['Arte de acampar', 'Planejar o cardápio de um acampamento de fim de semana.'],
       ['Saúde', 'Conhecer cuidados básicos de primeiros socorros.'],
     ]));
-    addContent('excursionista', 'classe', 'Excursionista', { age: 14, icon: '🥾', description: 'Explorar trilhas e servir com responsabilidade.' }, classItems([
+    addContent('excursionista', 'classe', 'Excursionista', { age: 14, icon: 'boots', description: 'Explorar trilhas e servir com responsabilidade.' }, classItems([
       ['Excursão', 'Participar de uma caminhada de pelo menos 10 km com a sua unidade.'],
       ['Liderança', 'Ajudar a organizar uma atividade do clube.'],
     ]));
-    addContent('guia', 'classe', 'Guia', { age: 15, icon: '🗺️', description: 'Última classe regular: preparar-se para guiar os mais novos.' }, classItems([
+    addContent('guia', 'classe', 'Guia', { age: 15, icon: 'map', description: 'Última classe regular: preparar-se para guiar os mais novos.' }, classItems([
       ['Liderança', 'Auxiliar um conselheiro durante um trimestre.'],
       ['Orientação', 'Planejar um percurso usando mapa e bússola.'],
     ]));
@@ -141,48 +141,48 @@ export function seed() {
       ['Liderança na prática', `Liderar ${n} atividades do clube e registrar um relatório de cada uma.`],
       ['Espiritualidade', 'Preparar e apresentar um momento devocional para o clube.'],
     ];
-    addContent('lider', 'classe', 'Líder', { leader: true, icon: '🎖️', description: 'Classe de liderança para conselheiros e instrutores.' }, leaderItems(2));
-    addContent('lidermaster', 'classe', 'Líder Master', { leader: true, icon: '🏅', price: 2990, description: 'Aprofundamento em liderança e administração do clube.' }, leaderItems(4));
-    addContent('lidermasteravancado', 'classe', 'Líder Master Avançado', { leader: true, icon: '🏆', price: 3990, description: 'Formação avançada para líderes experientes.' }, leaderItems(6));
+    addContent('lider', 'classe', 'Líder', { leader: true, icon: 'award', description: 'Classe de liderança para conselheiros e instrutores.' }, leaderItems(2));
+    addContent('lidermaster', 'classe', 'Líder Master', { leader: true, icon: 'medal', price: 2990, description: 'Aprofundamento em liderança e administração do clube.' }, leaderItems(4));
+    addContent('lidermasteravancado', 'classe', 'Líder Master Avançado', { leader: true, icon: 'trophy', price: 3990, description: 'Formação avançada para líderes experientes.' }, leaderItems(6));
 
-    addContent('nos', 'especialidade', 'Nós e Amarras', { icon: '🪢', category: 'Atividades recreativas', description: 'Aprenda os principais nós usados em acampamentos.' }, [
+    addContent('nos', 'especialidade', 'Nós e Amarras', { icon: 'knot', category: 'Atividades recreativas', description: 'Aprenda os principais nós usados em acampamentos.' }, [
       ['Nó direito', 'Aprenda a fazer o nó direito e explique quando usá-lo. Marque como feito depois de praticar 3 vezes.'],
       ['Lais de guia', 'Faça uma alça fixa com o lais de guia e use-a para prender uma corda em um tronco.'],
       ['Nó de escota', 'Una duas cordas de espessuras diferentes com o nó de escota.'],
       ['Amarra quadrada', 'Una dois bastões em cruz usando a amarra quadrada.'],
     ]);
-    addContent('socorros', 'especialidade', 'Primeiros Socorros Básico', { icon: '⛑️', category: 'Saúde e ciência', description: 'Cuidados iniciais em pequenos acidentes.' }, [
+    addContent('socorros', 'especialidade', 'Primeiros Socorros Básico', { icon: 'health', category: 'Saúde e ciência', description: 'Cuidados iniciais em pequenos acidentes.' }, [
       ['Telefones de emergência', 'Memorize: SAMU 192, Bombeiros 193, Polícia 190.'],
       ['Cortes e arranhões', 'Explique como limpar e proteger um ferimento leve.'],
       ['Queimaduras', 'Descreva o que fazer (e o que não fazer) em uma queimadura leve.'],
     ]);
-    addContent('acampamento', 'especialidade', 'Acampamento I', { icon: '⛺', category: 'Atividades recreativas', description: 'Primeiros passos para acampar com segurança.' }, [
+    addContent('acampamento', 'especialidade', 'Acampamento I', { icon: 'tent', category: 'Atividades recreativas', description: 'Primeiros passos para acampar com segurança.' }, [
       ['Mochila', 'Monte uma lista do que levar para um acampamento de duas noites.'],
       ['Barraca', 'Monte e desmonte uma barraca com a ajuda da sua unidade.'],
       ['Fogueira segura', 'Explique as regras de segurança para fazer e apagar uma fogueira.'],
     ]);
-    addContent('historias', 'especialidade', 'Arte de Contar Histórias', { icon: '📖', category: 'Artes e habilidades manuais', description: 'Conte histórias que inspiram.' }, [
+    addContent('historias', 'especialidade', 'Arte de Contar Histórias', { icon: 'book', category: 'Artes e habilidades manuais', description: 'Conte histórias que inspiram.' }, [
       ['Escolha', 'Escolha uma história bíblica e escreva um resumo dela.'],
       ['Apresentação', 'Conte a história para a sua unidade ou família.'],
     ]);
-    addContent('astronomia', 'especialidade', 'Astronomia', { icon: '🔭', category: 'Estudo da natureza', price: 1990, description: 'Explore o céu e as maravilhas da criação.' }, [
+    addContent('astronomia', 'especialidade', 'Astronomia', { icon: 'telescope', category: 'Estudo da natureza', price: 1990, description: 'Explore o céu e as maravilhas da criação.' }, [
       ['Constelações', 'Identifique o Cruzeiro do Sul e mais duas constelações no céu.'],
       ['Sistema Solar', 'Faça uma maquete ou desenho do Sistema Solar.'],
       ['Fases da Lua', 'Observe a Lua por 15 dias e registre as fases.'],
     ]);
 
-    addContent('curso_acampamento', 'curso', 'Acampamento Seguro', { icon: '🔥', description: 'Curso em 4 aulas sobre segurança em acampamentos.' }, [
+    addContent('curso_acampamento', 'curso', 'Acampamento Seguro', { icon: 'flame', description: 'Curso em 4 aulas sobre segurança em acampamentos.' }, [
       ['Aula 1 — Planejamento', 'Como planejar um acampamento: local, autorização dos pais, equipe e cardápio.'],
       ['Aula 2 — Equipamentos', 'Barracas, sacos de dormir, lanternas e kit de primeiros socorros.'],
       ['Aula 3 — Fogo e cozinha', 'Regras para fogueiras, fogareiros e higiene dos alimentos.'],
       ['Aula 4 — Natureza', 'Deixe o lugar melhor do que encontrou: lixo, trilhas e animais.'],
     ]);
-    addContent('curso_biblia', 'curso', 'Bíblia para Desbravadores', { icon: '📜', description: 'Conheça os livros da Bíblia de um jeito prático.' }, [
+    addContent('curso_biblia', 'curso', 'Bíblia para Desbravadores', { icon: 'scroll', description: 'Conheça os livros da Bíblia de um jeito prático.' }, [
       ['Aula 1 — Como a Bíblia é organizada', 'Antigo e Novo Testamento, livros, capítulos e versículos.'],
       ['Aula 2 — Grandes histórias', 'De Gênesis a Apocalipse em 10 histórias.'],
       ['Aula 3 — Devocional diário', 'Como criar o hábito da devoção matinal.'],
     ]);
-    addContent('curso_lideranca', 'curso', 'Liderança Jovem', { icon: '🧑‍🏫', price: 4990, description: 'Para quem quer liderar unidades e projetos.' }, [
+    addContent('curso_lideranca', 'curso', 'Liderança Jovem', { icon: 'graduation', price: 4990, description: 'Para quem quer liderar unidades e projetos.' }, [
       ['Aula 1 — O que é liderar', 'Liderança servidora e exemplo.'],
       ['Aula 2 — Comunicação', 'Como falar com a unidade e ouvir cada membro.'],
       ['Aula 3 — Planejamento', 'Metas, calendário e divisão de tarefas.'],
@@ -277,11 +277,11 @@ export function seed() {
     // ---------- Medalhas, troféus e eventos ----------
     const medal = (kind, name, icon, description) => ins('INSERT INTO medals (kind, name, icon, description) VALUES (?,?,?,?)', kind, name, icon, description);
     const award = (m, type, id, note) => run('INSERT INTO medal_awards (medal_id, target_type, target_id, note, awarded_by) VALUES (?,?,?,?,?)', m, type, id, note, admin);
-    const mesMedal = medal('medalha', 'Melhor clube do mês', '🏅', 'Clube de destaque do mês no distrito.');
-    const acampTrophy = medal('trofeu', 'Melhor do acampamento', '🏆', 'Destaque geral no acampamento do distrito.');
-    const anoTrophy = medal('trofeu', 'Melhor clube do ano de 2027', '🏆', 'Troféu anual do distrito (será entregue no fim de 2027).');
-    const unitMedal = medal('medalha', 'Unidade nota 10', '⭐', 'Unidade exemplar em organização e espírito de equipe.');
-    const destaque = medal('medalha', 'Desbravador destaque', '🎖️', 'Reconhecimento por dedicação e bom exemplo.');
+    const mesMedal = medal('medalha', 'Melhor clube do mês', 'medal', 'Clube de destaque do mês no distrito.');
+    const acampTrophy = medal('trofeu', 'Melhor do acampamento', 'trophy', 'Destaque geral no acampamento do distrito.');
+    const anoTrophy = medal('trofeu', 'Melhor clube do ano de 2027', 'trophy', 'Troféu anual do distrito (será entregue no fim de 2027).');
+    const unitMedal = medal('medalha', 'Unidade nota 10', 'star', 'Unidade exemplar em organização e espírito de equipe.');
+    const destaque = medal('medalha', 'Desbravador destaque', 'award', 'Reconhecimento por dedicação e bom exemplo.');
     void anoTrophy;
     award(mesMedal, 'club', clubs.aguias, 'Setembro de 2026');
     award(acampTrophy, 'club', clubs.leoes, 'Acampamento do Distrito Palmares');
@@ -308,10 +308,10 @@ export function seed() {
     };
     const read = (c, t, id, last) => run('INSERT OR REPLACE INTO conversation_reads (conversation_id, reader_type, reader_id, last_read_id) VALUES (?,?,?,?)', c, t, id, last);
     const falcoes = conv('unidade', { unit: units.falcoes, club: clubs.aguias });
-    msg(falcoes, 'member', members.juliana, 'Bom dia, Falcões! Não esqueçam o lenço no sábado 😉', 300);
+    msg(falcoes, 'member', members.juliana, 'Bom dia, Falcões! Não esqueçam o lenço no sábado.', 300);
     let last = msg(falcoes, 'member', members.pedro, 'Pode deixar, conselheira!', 290);
     read(falcoes, 'member', members.pedro, last);
-    msg(falcoes, 'member', members.lucas, 'Vou levar a corda para treinarmos os nós 🪢', 120);
+    msg(falcoes, 'member', members.lucas, 'Vou levar a corda para treinarmos os nós.', 120);
     const dirPedro = conv('diretoria', { club: clubs.aguias, a: members.pedro });
     msg(dirPedro, 'member', members.pedro, 'Olá, diretoria! O uniforme de gala chega quando?', 200);
     last = msg(dirPedro, 'club', clubs.aguias, 'Oi, Pedro! Chega na próxima semana. Avisaremos no grupo da unidade.', 180);
@@ -322,7 +322,7 @@ export function seed() {
     const direct = conv('direta', { a: Math.min(members.pedro, members.lucas), b: Math.max(members.pedro, members.lucas) });
     msg(direct, 'member', members.lucas, 'Bora treinar o lais de guia amanhã?', 60);
     const tigres = conv('unidade', { unit: units.tigres, club: clubs.leoes });
-    msg(tigres, 'member', members.sofia, 'Tigres, conseguimos o 1º lugar no cantinho! 🐯', 90);
+    msg(tigres, 'member', members.sofia, 'Tigres, conseguimos o 1º lugar no cantinho!', 90);
   });
 }
 

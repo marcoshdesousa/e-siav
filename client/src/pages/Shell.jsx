@@ -1,6 +1,7 @@
 import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../auth.jsx';
 import { useRealtime } from '../realtime.jsx';
+import { LogOut, MessageCircle } from 'lucide-react';
 import { Avatar, LogoHorizontal } from '../ui.jsx';
 
 const TYPE_LABEL = { admin: 'Administrador Geral', club: 'Sistema do Clube', unit: 'Portal da Unidade', member: '' };
@@ -22,7 +23,7 @@ export default function Shell({ tabs, children, hideNav = false }) {
           <span className="ellipsis">{subtitle}</span>
         </div>
         <Avatar src={actor.photo || actor.logo} name={actor.name} size={34} />
-        <button className="btn btn-sm btn-secondary" style={{ padding: ".35rem .6rem" }} onClick={async () => { await logout(); nav("/entrar"); }}>Sair</button>
+        <button className="icon-btn" title="Sair" aria-label="Sair" onClick={async () => { await logout(); nav('/'); }}><LogOut size={20} /></button>
       </header>
       <main className={'main' + (hideNav ? ' no-nav' : '')}>{children}</main>
       {!hideNav && (
@@ -30,7 +31,7 @@ export default function Shell({ tabs, children, hideNav = false }) {
           <div className="bottom-nav-inner">
             {tabs.map((t) => (
               <NavLink key={t.to} to={t.to} end={t.end}>
-                <span className="nav-ico">{t.icon}</span>
+                <span className="nav-ico"><t.icon size={22} strokeWidth={2} /></span>
                 {t.label}
                 {t.badge ? <span className="nav-badge">{t.badge > 99 ? '99+' : t.badge}</span> : null}
               </NavLink>
@@ -40,7 +41,7 @@ export default function Shell({ tabs, children, hideNav = false }) {
       )}
       {toast && (
         <div className="chat-toast" onClick={() => { setToast(null); nav(`${base}/chat/${toast.conversation_id}`); }}>
-          <span style={{ fontSize: '1.4rem' }}>💬</span>
+          <span className="toast-ico"><MessageCircle size={20} /></span>
           <div className="grow">
             <b className="ellipsis" style={{ display: 'block' }}>{toast.who}</b>
             <span className="muted ellipsis" style={{ display: 'block' }}>{toast.text}</span>
@@ -56,7 +57,7 @@ export function MoreMenu({ items }) {
     <div className="more-grid">
       {items.map((i) => (
         <Link key={i.to} to={i.to} className="more-tile">
-          <span>{i.icon}</span>
+          <span className="tile-ico"><i.icon size={22} /></span>
           {i.label}
           {i.hint && <small>{i.hint}</small>}
         </Link>

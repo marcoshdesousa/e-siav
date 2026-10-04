@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ArrowLeft, Camera, Compass, Medal, Share2, X } from 'lucide-react';
+import { AppIcon, ICONS } from './icons.jsx';
 
 // ---------- Marca ----------
 export const LogoIcon = ({ size = 40 }) => <img src="/logo.svg" width={size} height={size} alt="" className="logo-icon" />;
@@ -67,12 +69,16 @@ export function Loading({ data, loading, error, children, empty }) {
 }
 
 export const Spinner = () => <div className="spinner" aria-label="Carregando" />;
-export const Empty = ({ children, icon = '🧭' }) => (
+/** icon: chave de ICONS (ex.: "medal") ou componente Lucide. */
+export const Empty = ({ children, icon = Compass }) => {
+  const Cmp = typeof icon === 'string' ? ICONS[icon]?.[0] || Compass : icon;
+  return (
   <div className="empty">
-    <div className="empty-icon">{icon}</div>
+    <div className="empty-icon"><Cmp size={30} strokeWidth={1.75} /></div>
     <div>{children}</div>
   </div>
-);
+  );
+};
 
 // ---------- Formulários ----------
 export function Button({ variant = 'primary', small, block, busy, children, ...p }) {
@@ -125,7 +131,7 @@ export function ImagePicker({ value, onChange, label = 'Foto', round = true, nam
   return (
     <label className="image-picker">
       <span className={'image-picker-preview' + (round ? ' round' : '')}>
-        {preview ? <img src={preview} alt="" /> : <span>{name ? initials(name) : '📷'}</span>}
+        {preview ? <img src={preview} alt="" /> : <span>{name ? initials(name) : <Camera size={26} />}</span>}
       </span>
       <span className="image-picker-label">{label}<small>Toque para escolher</small></span>
       <input type="file" accept="image/*" hidden onChange={(e) => e.target.files[0] && onChange(e.target.files[0])} />
@@ -149,7 +155,7 @@ export function Modal({ title, onClose, children, footer }) {
       <div className="modal" role="dialog" aria-modal="true" aria-label={title}>
         <div className="modal-head">
           <h3>{title}</h3>
-          <button className="icon-btn" onClick={onClose} aria-label="Fechar">✕</button>
+          <button className="icon-btn" onClick={onClose} aria-label="Fechar"><X size={22} /></button>
         </div>
         <div className="modal-body">{children}</div>
         {footer && <div className="modal-foot">{footer}</div>}
@@ -177,7 +183,7 @@ export function PageHeader({ title, subtitle, action, back }) {
   return (
     <div className="page-header">
       <div>
-        {back && <Link to={back} className="back-link">← Voltar</Link>}
+        {back && <Link to={back} className="back-link ico"><ArrowLeft size={16} /> Voltar</Link>}
         <h1>{title}</h1>
         {subtitle && <p className="muted">{subtitle}</p>}
       </div>
@@ -211,10 +217,10 @@ export function StateBadge({ state, late }) {
   );
 }
 
-export const Stat = ({ icon, value, label, to, accent }) => {
+export const Stat = ({ icon: Ico, value, label, to, accent }) => {
   const inner = (
     <>
-      <span className="stat-icon">{icon}</span>
+      <span className="stat-icon"><Ico size={22} /></span>
       <span className="stat-value">{value}</span>
       <span className="stat-label">{label}</span>
     </>
@@ -238,11 +244,10 @@ export function Avatar({ src, name, size = 44, square = false }) {
   );
 }
 
-export const MedalIcon = ({ icon, size = 40 }) =>
-  icon?.startsWith('/') ? <img src={icon} alt="" style={{ width: size, height: size, objectFit: 'contain' }} /> : <span style={{ fontSize: size * 0.8, lineHeight: 1 }}>{icon}</span>;
+export const MedalIcon = ({ icon, size = 30 }) => <AppIcon name={icon} size={size} fallback={Medal} strokeWidth={1.9} />;
 
 export function MedalList({ medals }) {
-  if (!medals?.length) return <Empty icon="🏅">Nenhuma medalha ou troféu ainda.</Empty>;
+  if (!medals?.length) return <Empty icon="medal">Nenhuma medalha ou troféu ainda.</Empty>;
   return (
     <div className="medal-grid">
       {medals.map((m) => (
@@ -279,7 +284,7 @@ export function ShareButton({ path, title }) {
       prompt('Copie o link do perfil:', url);
     }
   };
-  return <Button variant="secondary" small onClick={share}>🔗 Compartilhar perfil</Button>;
+  return <Button variant="secondary" small onClick={share}><Share2 size={15} /> Compartilhar perfil</Button>;
 }
 
 export function Confirm({ text, onYes, children, variant = 'danger', small = true }) {

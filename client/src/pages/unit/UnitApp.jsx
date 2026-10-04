@@ -1,3 +1,4 @@
+import { ClipboardCheck, Flag, Tent, Trophy } from 'lucide-react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { api } from '../../api.js';
 import { Loading, PageHeader, useLoad } from '../../ui.jsx';
@@ -26,10 +27,10 @@ function UnitProfile() {
 /** Portal da Unidade: cumpre requisitos em grupo para subir no ranking. */
 export default function UnitApp() {
   const tabs = [
-    { to: base, icon: '✅', label: 'Requisitos', end: true },
-    { to: `${base}/ranking`, icon: '🏆', label: 'Ranking' },
-    { to: `${base}/perfil`, icon: '🚩', label: 'Perfil' },
-    { to: `${base}/clubes`, icon: '🏕️', label: 'Clubes' },
+    { to: base, icon: ClipboardCheck, label: 'Requisitos', end: true },
+    { to: `${base}/ranking`, icon: Trophy, label: 'Ranking' },
+    { to: `${base}/perfil`, icon: Flag, label: 'Perfil' },
+    { to: `${base}/clubes`, icon: Tent, label: 'Clubes' },
   ];
   return (
     <Shell tabs={tabs}>
