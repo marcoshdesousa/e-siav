@@ -16,6 +16,18 @@ r.get('/announcements/active', requireAuth(), (_req, res) => {
   res.json(all('SELECT id, title, body, image, link, created_at FROM announcements WHERE active = 1 ORDER BY created_at DESC LIMIT 3'));
 });
 
+// Eventos (sempre grátis) aparecem como anúncio na abertura do app até a data do evento.
+r.get('/events/upcoming', requireAuth(), (req, res) => {
+  const today = new Date(Date.now() - 3 * 36e5).toISOString().slice(0, 10); // fuso do Brasil
+  const district = req.actor.district_id ?? null;
+  const rows = all(
+    `SELECT id, name, description, date, location, attachments FROM events
+     WHERE promote = 1 AND date >= ? AND (district_id IS NULL OR ? IS NULL OR district_id = ?) ORDER BY date LIMIT 3`,
+    today, district, district,
+  );
+  res.json(rows.map((e) => ({ ...e, attachments: JSON.parse(e.attachments || '[]') })));
+});
+
 const admin = requireAuth('admin');
 
 r.get('/admin/announcements', admin, (_req, res) => {

@@ -7,6 +7,7 @@ import { run, get, all, tx, resetDatabase, UPLOAD_DIR } from './db.js';
 import { hashPassword } from './auth.js';
 import { newMemberCode } from './util.js';
 import { NOME_UNIDADE_LIDERANCA } from './config.js';
+import { syncCatalog } from './catalog.js';
 
 const day = 864e5;
 const iso = (offsetDays, hour = 23, min = 59) => {
@@ -109,76 +110,13 @@ export function seed() {
       });
       content[key] = id;
     };
-    const classItems = (extra) => [
-      ['Geral', 'Ter a idade da classe e participar ativamente do clube. Saber de cor o Voto e a Lei do Desbravador e explicar o seu significado.', 'quiz', [
-        ['Complete o Voto: "Pela graça de Deus, serei puro, bondoso e ___"', ['forte', 'leal', 'sábio'], 1],
-        ['Qual é o lema dos Desbravadores?', ['O amor de Cristo me motiva', 'Sempre alerta', 'Servir é viver'], 0],
-      ]],
-      ['Descoberta espiritual', 'Fazer as leituras bíblicas indicadas pela liderança e escrever um pequeno relatório sobre o que aprendeu.', 'texto'],
-      ['Servindo a outros', 'Participar de uma ação de serviço à comunidade junto com a sua unidade.'],
-      ['Desenvolvendo amizade', 'Conversar com a sua unidade sobre respeito, amizade e boas atitudes em grupo.'],
-      ...extra,
-    ];
-    addContent('amigo', 'classe', 'Amigo', { age: 10, icon: 'compass', description: 'Primeira classe regular: descobrir o clube, a natureza e novas amizades.' }, classItems([
-      ['Natureza', 'Identificar cinco árvores ou plantas da sua região e registrar com fotos ou desenhos.', 'texto,foto'],
-      ['Arte de acampar', 'Aprender a fazer o nó direito e o nó de escota e mostrar ao seu instrutor.'],
-    ]));
-    addContent('companheiro', 'classe', 'Companheiro', { age: 11, icon: 'handshake', description: 'Fortalece o trabalho em equipe e o cuidado com o próximo.' }, classItems([
-      ['Natureza', 'Observar e registrar aves ou insetos durante uma caminhada.', 'texto,foto'],
-      ['Arte de acampar', 'Montar uma barraca com a sua unidade em um acampamento ou atividade.'],
-    ]));
-    addContent('pesquisador', 'classe', 'Pesquisador', { age: 12, icon: 'search', description: 'Investigar a criação e aprofundar o estudo da Bíblia.' }, classItems([
-      ['Natureza', 'Pesquisar sobre um bioma brasileiro e apresentar à unidade.'],
-      ['Orientação', 'Usar uma bússola para encontrar os pontos cardeais.'],
-    ]));
-    addContent('pioneiro', 'classe', 'Pioneiro', { age: 13, icon: 'tent', description: 'Desafios ao ar livre e liderança em pequenos grupos.' }, classItems([
-      ['Arte de acampar', 'Planejar o cardápio de um acampamento de fim de semana.'],
-      ['Saúde', 'Conhecer cuidados básicos de primeiros socorros.'],
-    ]));
-    addContent('excursionista', 'classe', 'Excursionista', { age: 14, icon: 'boots', description: 'Explorar trilhas e servir com responsabilidade.' }, classItems([
-      ['Excursão', 'Participar de uma caminhada de pelo menos 10 km com a sua unidade.'],
-      ['Liderança', 'Ajudar a organizar uma atividade do clube.'],
-    ]));
-    addContent('guia', 'classe', 'Guia', { age: 15, icon: 'map', description: 'Última classe regular: preparar-se para guiar os mais novos.' }, classItems([
-      ['Liderança', 'Auxiliar um conselheiro durante um trimestre.'],
-      ['Orientação', 'Planejar um percurso usando mapa e bússola.'],
-    ]));
-    const leaderItems = (n) => [
-      ['Pré-requisitos', 'Ter 16 anos ou mais e ser membro ativo da liderança do clube.'],
-      ['Desenvolvimento pessoal', 'Estudar sobre o desenvolvimento de crianças e adolescentes.'],
-      ['Liderança na prática', `Liderar ${n} atividades do clube e registrar um relatório de cada uma.`],
-      ['Espiritualidade', 'Preparar e apresentar um momento devocional para o clube.'],
-    ];
-    addContent('lider', 'classe', 'Líder', { leader: true, icon: 'award', description: 'Classe de liderança para conselheiros e instrutores.' }, leaderItems(2));
-    addContent('lidermaster', 'classe', 'Líder Master', { leader: true, icon: 'medal', price: 2990, description: 'Aprofundamento em liderança e administração do clube.' }, leaderItems(4));
-    addContent('lidermasteravancado', 'classe', 'Líder Master Avançado', { leader: true, icon: 'trophy', price: 3990, description: 'Formação avançada para líderes experientes.' }, leaderItems(6));
+    // Classes e especialidades vêm do catálogo (não são vendidas nem feitas online).
+    syncCatalog();
+    const byName = (type, name) => get('SELECT id FROM content WHERE type = ? AND name = ?', type, name).id;
+    for (const [k, n] of [['amigo', 'Amigo'], ['companheiro', 'Companheiro'], ['pesquisador', 'Pesquisador'], ['pioneiro', 'Pioneiro'], ['lider', 'Líder'], ['lidermaster', 'Líder Master']]) content[k] = byName('classe', n);
+    for (const [k, n] of [['nos', 'Nós e Amarras'], ['socorros', 'Primeiros Socorros Básico'], ['acampamento', 'Acampamento I'], ['historias', 'Arte de Contar Histórias Cristãs'], ['culinaria', 'Culinária'], ['aves', 'Aves'], ['natacao', 'Natação Principiante I']]) content[k] = byName('especialidade', n);
 
-    addContent('nos', 'especialidade', 'Nós e Amarras', { icon: 'knot', category: 'Atividades recreativas', description: 'Aprenda os principais nós usados em acampamentos.' }, [
-      ['Nó direito', 'Aprenda a fazer o nó direito e explique quando usá-lo. Marque como feito depois de praticar 3 vezes.'],
-      ['Lais de guia', 'Faça uma alça fixa com o lais de guia e use-a para prender uma corda em um tronco.'],
-      ['Nó de escota', 'Una duas cordas de espessuras diferentes com o nó de escota.'],
-      ['Amarra quadrada', 'Una dois bastões em cruz usando a amarra quadrada.'],
-    ]);
-    addContent('socorros', 'especialidade', 'Primeiros Socorros Básico', { icon: 'health', category: 'Saúde e ciência', description: 'Cuidados iniciais em pequenos acidentes.' }, [
-      ['Telefones de emergência', 'Memorize: SAMU 192, Bombeiros 193, Polícia 190.'],
-      ['Cortes e arranhões', 'Explique como limpar e proteger um ferimento leve.'],
-      ['Queimaduras', 'Descreva o que fazer (e o que não fazer) em uma queimadura leve.'],
-    ]);
-    addContent('acampamento', 'especialidade', 'Acampamento I', { icon: 'tent', category: 'Atividades recreativas', description: 'Primeiros passos para acampar com segurança.' }, [
-      ['Mochila', 'Monte uma lista do que levar para um acampamento de duas noites.'],
-      ['Barraca', 'Monte e desmonte uma barraca com a ajuda da sua unidade.'],
-      ['Fogueira segura', 'Explique as regras de segurança para fazer e apagar uma fogueira.'],
-    ]);
-    addContent('historias', 'especialidade', 'Arte de Contar Histórias', { icon: 'book', category: 'Artes e habilidades manuais', description: 'Conte histórias que inspiram.' }, [
-      ['Escolha', 'Escolha uma história bíblica e escreva um resumo dela.'],
-      ['Apresentação', 'Conte a história para a sua unidade ou família.'],
-    ]);
-    addContent('astronomia', 'especialidade', 'Astronomia', { icon: 'telescope', category: 'Estudo da natureza', price: 1990, description: 'Explore o céu e as maravilhas da criação.' }, [
-      ['Constelações', 'Identifique o Cruzeiro do Sul e mais duas constelações no céu.'],
-      ['Sistema Solar', 'Faça uma maquete ou desenho do Sistema Solar.'],
-      ['Fases da Lua', 'Observe a Lua por 15 dias e registre as fases.'],
-    ]);
-
+    // Cursos (podem ser grátis ou pagos)
     addContent('curso_acampamento', 'curso', 'Acampamento Seguro', { icon: 'flame', description: 'Curso em 4 aulas sobre segurança em acampamentos.' }, [
       ['Aula 1 — Planejamento', 'Como planejar um acampamento: local, autorização dos pais, equipe e cardápio.'],
       ['Aula 2 — Equipamentos', 'Barracas, sacos de dormir, lanternas e kit de primeiros socorros.'],
@@ -202,11 +140,17 @@ export function seed() {
     const ach = (m, c, source = 'clube') => run('INSERT INTO achievements (member_id, content_id, source) VALUES (?,?,?)', members[m], content[c], source);
     ach('pedro', 'amigo'); ach('pedro', 'companheiro'); ach('pedro', 'nos');
     ach('lucas', 'amigo'); ach('lucas', 'companheiro'); ach('lucas', 'pesquisador'); ach('lucas', 'pioneiro'); ach('lucas', 'socorros'); ach('lucas', 'acampamento');
-    ach('ana', 'amigo'); ach('sofia', 'amigo'); ach('sofia', 'companheiro'); ach('sofia', 'pesquisador'); ach('sofia', 'historias', 'online');
+    ach('ana', 'amigo'); ach('sofia', 'amigo'); ach('sofia', 'companheiro'); ach('sofia', 'pesquisador'); ach('sofia', 'historias');
     ach('marcos', 'lider'); ach('carlos', 'lider'); ach('carlos', 'lidermaster');
 
-    run(`INSERT INTO content_access (member_id, content_id, source) VALUES (?, ?, 'admin')`, members.juliana, content.lidermaster);
-    run(`INSERT INTO purchases (member_id, content_id, price_cents, status) VALUES (?, ?, 1990, 'pendente')`, members.lucas, content.astronomia);
+    run(`INSERT INTO content_access (member_id, content_id, source) VALUES (?, ?, 'admin')`, members.juliana, content.curso_lideranca);
+    run(`INSERT INTO purchases (member_id, content_id, price_cents, status) VALUES (?, ?, 4990, 'pendente')`, members.lucas, content.curso_lideranca);
+
+    // Pedidos de membros: "tenho esta especialidade/classe" → a diretoria aprova
+    const pedido = (m, c) => run('INSERT INTO achievement_requests (member_id, content_id) VALUES (?, ?)', members[m], content[c]);
+    pedido('beatriz', 'culinaria'); pedido('beatriz', 'aves'); pedido('beatriz', 'amigo');
+    pedido('gabriel', 'natacao');
+    pedido('isabela', 'nos');
 
     // ---------- Requisitos ----------
     const req = (o) => {
@@ -300,26 +244,18 @@ export function seed() {
 
     const ev1 = ins('INSERT INTO events (name, description, date, location, district_id) VALUES (?,?,?,?,?)', 'Acampamento do Distrito Palmares', 'Três dias de atividades, especialidades e muita comunhão.', dateOnly(-30), 'Sítio Recanto Verde', palmares);
     const ev2 = ins('INSERT INTO events (name, description, date, location, district_id) VALUES (?,?,?,?,?)', 'Dia Mundial dos Desbravadores', 'Desfile e programação especial nas igrejas do distrito.', dateOnly(-14), 'Praça Central de Palmares', palmares);
+    ins('INSERT INTO events (name, description, date, location, district_id, promote) VALUES (?,?,?,?,?,1)', 'Campori do Distrito Palmares',
+      'Quatro dias de acampamento com todas as unidades do distrito: especialidades, gincanas, ordem unida e programação espiritual. Evento gratuito — confirme a inscrição com a diretoria do seu clube.',
+      dateOnly(40), 'Parque Ecológico de Palmares', palmares);
     const part = (e, type, id) => run('INSERT INTO event_participants (event_id, target_type, target_id) VALUES (?,?,?)', e, type, id);
     part(ev1, 'club', clubs.aguias); part(ev1, 'club', clubs.leoes);
     for (const m of ['pedro', 'lucas', 'beatriz', 'marcos', 'juliana', 'sofia', 'isabela', 'carlos']) part(ev1, 'member', members[m]);
     part(ev2, 'club', clubs.aguias);
     for (const m of ['pedro', 'ana', 'marcos']) part(ev2, 'member', members[m]);
 
-    // Ana está fazendo a classe Companheiro: envios aguardando a análise do admin.
-    const compItems = all('SELECT id, title, modes FROM content_items WHERE content_id = ? ORDER BY ord', content.companheiro);
-    const prog = (item, status, text) => run(
-      `INSERT INTO content_progress (member_id, item_id, done_at, status, text, photos, submitted_at, reviewed_at) VALUES (?,?,?,?,?,'[]',?,?)`,
-      members.ana, item.id, iso(-2, 10), status, text || null, iso(-2, 10), status === 'aprovado' ? iso(-1, 9) : null,
-    );
-    prog(compItems[1], 'enviado', 'Li o livro de Rute e aprendi sobre lealdade e amizade.');
-    prog(compItems[2], 'aprovado');
-    prog(compItems[3], 'aprovado');
-    prog(compItems[4], 'enviado', 'Vi um bem-te-vi, um beija-flor e várias formigas cortadeiras.');
-
     // Anúncio de exemplo
-    run('INSERT INTO announcements (title, body, link) VALUES (?,?,?)', 'Campori do Distrito Palmares',
-      'As inscrições para o Campori já estão abertas! Fale com a diretoria do seu clube e garanta a vaga da sua unidade. Teremos especialidades, gincanas e muita comunhão.', null);
+    run('INSERT INTO announcements (title, body, link) VALUES (?,?,?)', 'Bem-vindo ao App do DBV!',
+      'Agora o seu clube está no celular: cumpra requisitos, acompanhe o ranking, informe suas classes e especialidades e converse com a sua unidade.', null);
 
     // ---------- Chat ----------
     const conv = (type, o) => ins('INSERT INTO conversations (type, club_id, unit_id, member_a, member_b) VALUES (?,?,?,?,?)', type, o.club ?? null, o.unit ?? null, o.a ?? null, o.b ?? null);

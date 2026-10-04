@@ -116,14 +116,14 @@ export default function ContentReview({ type, embedded = false }) {
   const [contentId, setContentId] = useState(null);
   const [memberId, setMemberId] = useState(null);
   const list = useLoad(() => api.get('/admin/content-review?type=' + type), [type, contentId, memberId]);
-  const title = type === 'classe' ? 'Classes' : 'Especialidades';
+  const title = { classe: 'Classes', especialidade: 'Especialidades', curso: 'Cursos' }[type];
 
   let body;
   if (contentId && memberId) body = <MemberDetail contentId={contentId} memberId={memberId} onBack={() => setMemberId(null)} />;
   else if (contentId) body = <ContentMembers contentId={contentId} onBack={() => setContentId(null)} onPick={setMemberId} />;
   else {
     body = (
-      <Loading {...list} empty={`Nenhuma ${type} cadastrada.`}>
+      <Loading {...list} empty="Nenhum curso cadastrado.">
         {(items) => (
           <div className="list">
             {items.map((c) => (
@@ -144,7 +144,7 @@ export default function ContentReview({ type, embedded = false }) {
   }
   return (
     <>
-      {!embedded && <PageHeader title={`Análise de ${title.toLowerCase()}`} subtitle={`Toque em uma ${type} para ver quem está fazendo`} />}
+      {!embedded && <PageHeader title={`Análise de ${title.toLowerCase()}`} subtitle="Toque em um curso para ver quem está fazendo" />}
       {body}
     </>
   );

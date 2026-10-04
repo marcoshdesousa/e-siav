@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { ExternalLink, Megaphone, X } from 'lucide-react';
+import { CalendarDays, ExternalLink, MapPin, Megaphone, X } from 'lucide-react';
+import { fmtDate } from '../format.js';
+import { Attachments } from './admin/Events.jsx';
 import { api } from '../api.js';
 
 const SEEN_KEY = 'dbv-anuncios-vistos';
@@ -20,12 +22,15 @@ export function AnnouncementView({ a, onClose }) {
         <button type="button" className="ann-x" aria-label="Fechar anúncio" onClick={onClose}><X size={16} /></button>
         <button type="button" className="ann-card" onClick={() => setOpen(true)} disabled={open}>
           {a.image ? <img src={a.image} alt="" /> : <span className="ann-ph"><Megaphone size={56} /></span>}
+          {a.event && <span className="ann-kicker">Evento · {fmtDate(a.event.date)}</span>}
           <span className="ann-title">{a.title}</span>
           {!open && <span className="ann-hint">Toque para ver mais</span>}
         </button>
         {open && (
           <div className="ann-body">
+            {a.event && <p className="muted ico"><CalendarDays size={15} /> {fmtDate(a.event.date)}{a.event.location ? <> · <MapPin size={15} /> {a.event.location}</> : null}</p>}
             {a.body && <p>{a.body}</p>}
+            {a.event && <Attachments list={a.event.attachments} />}
             {a.link && <a className="btn btn-primary btn-block" href={a.link} target="_blank" rel="noreferrer">Abrir link <ExternalLink size={16} /></a>}
           </div>
         )}
@@ -38,7 +43,17 @@ export function AnnouncementView({ a, onClose }) {
 export default function AnnouncementPopup() {
   const [queue, setQueue] = useState([]);
   useEffect(() => {
-    api.get('/announcements/active').then((list) => setQueue(list.filter((a) => !seen().includes(a.id)))).catch(() => {});
+    Promise.all([
+      api.get('/announcements/active').catch(() => []),
+      api.get('/events/upcoming').catch(() => []),
+    ]).then(([anns, events]) => {
+      // Eventos aparecem como anúncio até a data do evento.
+      const evs = events.map((e) => ({
+        id: 'ev' + e.id, title: e.name, body: e.description, link: null,
+        image: e.attachments.find((x) => x.type === 'image')?.url || null, event: e,
+      }));
+      setQueue([...anns, ...evs].filter((a) => !seen().includes(a.id)));
+    });
   }, []);
   const current = queue[0];
   if (!current) return null;

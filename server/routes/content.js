@@ -7,11 +7,12 @@ import { parseModes } from '../modes.js';
 import { startCheckout, confirmPurchase } from '../payments.js';
 import { MAX_FOTOS_ENVIO } from '../config.js';
 
-// Especialidades, classes e cursos.
-// Cada requisito (item) pode pedir relatório, foto e/ou quiz; o Administrador Geral avalia.
-// Item sem forma de envio é só "marcar como feito".
+// Cursos (grátis ou pagos). Cada aula pode pedir relatório, foto e/ou quiz; o Administrador
+// Geral avalia. Aula sem forma de envio é só "marcar como concluída".
+// Classes e especialidades NÃO passam por aqui: não são vendidas nem feitas online
+// (o membro informa as que tem e a diretoria aprova — ver routes/achievements.js).
 const r = Router();
-const TYPES = ['especialidade', 'classe', 'curso'];
+const TYPES = ['curso'];
 
 function hasAccess(memberId, c) {
   return !!c.is_free || !!get('SELECT 1 FROM content_access WHERE member_id = ? AND content_id = ?', memberId, c.id);
@@ -72,13 +73,12 @@ function itemsFor(contentId, memberId, { withAnswers = false } = {}) {
 }
 
 r.get('/content', requireAuth('member'), (req, res) => {
-  const type = TYPES.includes(req.query.type) ? req.query.type : 'especialidade';
-  const rows = all('SELECT * FROM content WHERE type = ? ORDER BY leader, age, category, name', type).filter((c) => visibleTo(req.actor, c));
+  const rows = all(`SELECT * FROM content WHERE type = 'curso' ORDER BY name`);
   res.json(rows.map((c) => summary(req.actor, c)));
 });
 
 function loadVisible(req) {
-  const c = get('SELECT * FROM content WHERE id = ?', int(req.params.id));
+  const c = get(`SELECT * FROM content WHERE id = ? AND type = 'curso'`, int(req.params.id));
   if (!c || !visibleTo(req.actor, c)) fail(404, 'Conteúdo não encontrado');
   return c;
 }
@@ -148,17 +148,15 @@ r.post('/content/:id/buy', requireAuth('member'), (req, res) => {
 const admin = requireAuth('admin');
 
 r.get('/admin/content', admin, (req, res) => {
-  const type = TYPES.includes(req.query.type) ? req.query.type : null;
   const rows = all(
     `SELECT c.*, (SELECT COUNT(*) FROM content_items i WHERE i.content_id = c.id) AS items_count
-     FROM content c WHERE (? IS NULL OR c.type = ?) ORDER BY c.type, c.leader, c.age, c.name`,
-    type, type,
+     FROM content c WHERE c.type = 'curso' ORDER BY c.name`,
   );
   res.json(rows);
 });
 
 r.get('/admin/content/:id', admin, (req, res) => {
-  const c = get('SELECT * FROM content WHERE id = ?', int(req.params.id));
+  const c = get(`SELECT * FROM content WHERE id = ? AND type = 'curso'`, int(req.params.id));
   if (!c) fail(404, 'Conteúdo não encontrado');
   c.items = all('SELECT * FROM content_items WHERE content_id = ? ORDER BY ord, id', c.id).map((i) => {
     const modes = parseModes(i.modes);
@@ -168,8 +166,8 @@ r.get('/admin/content/:id', admin, (req, res) => {
 });
 
 function contentFields(b) {
-  const type = b.type;
-  if (!TYPES.includes(type)) fail(400, 'Tipo inválido');
+  const type = b.type || 'curso';
+  if (!TYPES.includes(type)) fail(400, 'Classes e especialidades não são criadas nem vendidas aqui. Use o catálogo.');
   const name = str(b.name, 120);
   if (!name) fail(400, 'Informe o nome');
   const isFree = bool(b.is_free) ? 1 : 0;
@@ -235,7 +233,7 @@ r.post('/admin/content', admin, imageUpload.any(), (req, res) => {
 
 r.put('/admin/content/:id', admin, imageUpload.any(), (req, res) => {
   const id = int(req.params.id);
-  if (!get('SELECT 1 FROM content WHERE id = ?', id)) fail(404, 'Conteúdo não encontrado');
+  if (!get(`SELECT 1 FROM content WHERE id = ? AND type = 'curso'`, id)) fail(404, 'Conteúdo não encontrado');
   const b = bodyOf(req);
   const f = contentFields(b);
   const files = req.files || [];
@@ -250,13 +248,13 @@ r.put('/admin/content/:id', admin, imageUpload.any(), (req, res) => {
 });
 
 r.delete('/admin/content/:id', admin, (req, res) => {
-  run('DELETE FROM content WHERE id = ?', int(req.params.id));
+  run(`DELETE FROM content WHERE id = ? AND type = 'curso'`, int(req.params.id));
   res.json({ ok: true });
 });
 
 // ---------- Análise de classes e especialidades ----------
 r.get('/admin/content-review', admin, (req, res) => {
-  const type = TYPES.includes(req.query.type) ? req.query.type : 'classe';
+  const type = 'curso';
   const rows = all(
     `SELECT c.id, c.name, c.icon, c.image, c.age, c.leader,
             (SELECT COUNT(*) FROM content_items i WHERE i.content_id = c.id) AS items_count,

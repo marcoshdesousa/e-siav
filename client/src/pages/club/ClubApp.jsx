@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import {
-  Award, ChevronRight, ClipboardCheck, Compass, Flag, Inbox, Map, MapPin, Menu, MessageCircle, ShieldAlert, Sparkles, Tent, Trophy, Users,
+  Award, BadgeCheck, Check, ChevronRight, ClipboardCheck, Compass, Flag, Inbox, Map, MapPin, Menu, MessageCircle, ShieldAlert, Sparkles, Tent, Trophy, Users,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
-import { AppIcon } from '../../icons.jsx';
 import { useAuth } from '../../auth.jsx';
 import { useRealtime } from '../../realtime.jsx';
 import { KIND_LABEL, plural } from '../../format.js';
@@ -17,6 +16,7 @@ import { CreatedRequirements, RequirementsTodo, ReviewsPanel } from '../Requirem
 import RankingHub, { RankingTable } from '../Ranking.jsx';
 import ClubsBrowser from '../Clubs.jsx';
 import { ChatConversation, ChatHome, ReportsPanel } from '../Chat.jsx';
+import CatalogPicker, { CatalogBadge } from '../Catalog.jsx';
 
 const base = '/clube';
 
@@ -53,6 +53,7 @@ function ClubHome() {
               <Stat icon={Compass} value={c.desbravadores} label="Desbravadores" to={`${base}/membros`} />
               <Stat icon={Award} value={c.lideranca} label="Liderança" to={`${base}/membros`} />
               <Stat icon={Flag} value={c.unit_count} label="Unidades" to={`${base}/unidades`} />
+              <Stat icon={BadgeCheck} value={c.pending_achievements} label="Classes/especialidades p/ aprovar" to={`${base}/aprovacoes`} accent={c.pending_achievements > 0} />
               <Stat icon={Inbox} value={c.pending_reviews} label="Envios p/ avaliar" to={`${base}/requisitos?aba=avaliar`} accent={c.pending_reviews > 0} />
               <Stat icon={Flag} value={c.open_reports} label="Denúncias abertas" to={`${base}/denuncias`} accent={c.open_reports > 0} />
             </div>
@@ -130,41 +131,106 @@ function MemberForm({ member, units, onClose, onDone }) {
 }
 
 function AchievementsModal({ member, onClose, onDone }) {
-  const catalog = useLoad(() => api.get('/club/catalog'));
+  const [type, setType] = useState('especialidade');
+  const catalogs = { classe: useLoad(() => api.get('/catalog?type=classe')), especialidade: useLoad(() => api.get('/catalog?type=especialidade')) };
   const detail = useLoad(() => api.get('/club/members/' + member.id));
   const [sel, setSel] = useState(null);
+  const [adding, setAdding] = useState(false);
+  const [newName, setNewName] = useState('');
   const [busy, run] = useAsync();
-  const chosen = sel ?? new Set((detail.data?.achievements || []).filter((a) => a.source === 'clube').map((a) => a.content_id));
-  const online = new Set((detail.data?.achievements || []).filter((a) => a.source === 'online').map((a) => a.content_id));
-  const toggle = (id) => {
-    const s = new Set(chosen);
-    s.has(id) ? s.delete(id) : s.add(id);
-    setSel(s);
-  };
+  const chosen = sel ?? new Set((detail.data?.achievements || []).map((a) => a.content_id));
   const save = async () => {
-    await run(() => api.put(`/club/members/${member.id}/achievements`, { content_ids: [...chosen] }), 'Conquistas salvas!');
+    await run(() => api.put(`/club/members/${member.id}/achievements`, { content_ids: [...chosen] }), 'Classes e especialidades salvas!');
     onDone();
   };
+  const addMissing = async () => {
+    const r = await run(() => api.post('/club/catalog', { name: newName }), 'Especialidade adicionada ao catálogo');
+    setNewName('');
+    setAdding(false);
+    await catalogs.especialidade.reload();
+    setSel(new Set([...chosen, r.id]));
+  };
+  const cat = catalogs[type];
   return (
-    <Modal title={`Classes e especialidades · ${member.name.split(' ')[0]}`} onClose={onClose} footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} onClick={save}>Salvar</Button></>}>
-      <Loading data={catalog.data && detail.data} loading={catalog.loading || detail.loading} error={catalog.error || detail.error}>
+    <Modal title={`Classes e especialidades · ${member.name.split(' ')[0]}`} onClose={onClose}
+      footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} onClick={save}>Salvar ({chosen.size})</Button></>}>
+      <Tabs tabs={[['especialidade', 'Especialidades'], ['classe', 'Classes']]} value={type} onChange={setType} />
+      <Loading data={cat.data && detail.data} loading={cat.loading || detail.loading} error={cat.error || detail.error}>
         {() => (
           <>
-            {[['classe', 'Classes concluídas'], ['especialidade', 'Especialidades']].map(([type, title]) => (
-              <Section key={type} title={title}>
-                {catalog.data.filter((c) => c.type === type).map((c) => (
-                  <label key={c.id} className="check">
-                    <input type="checkbox" checked={chosen.has(c.id) || online.has(c.id)} disabled={online.has(c.id)} onChange={() => toggle(c.id)} />
-                    <AppIcon name={c.icon} size={16} /> {c.name}{c.leader ? ' (líder)' : c.age ? ` (${c.age} anos)` : ''}
-                    {online.has(c.id) && <Badge kind="green">feita online</Badge>}
-                  </label>
-                ))}
-              </Section>
-            ))}
+            <CatalogPicker key={type} type={type} items={cat.data.filter((c) => !(type === 'classe' && c.leader && member.kind !== 'lideranca'))} selected={chosen} onChange={setSel} />
+            {type === 'especialidade' && (
+              <div className="mt">
+                {adding ? (
+                  <div className="row">
+                    <input autoFocus placeholder="Nome da especialidade" value={newName} onChange={(e) => setNewName(e.target.value)} />
+                    <Button small busy={busy} onClick={addMissing}>Adicionar</Button>
+                  </div>
+                ) : <button type="button" className="ig-link" onClick={() => setAdding(true)}>Não achou? Adicionar especialidade que falta</button>}
+              </div>
+            )}
           </>
         )}
       </Loading>
     </Modal>
+  );
+}
+
+/** Aprovações: classes e especialidades que os membros informaram ter. */
+function ApprovalsPage() {
+  const [status, setStatus] = useState('pendente');
+  const state = useLoad(() => api.get('/club/achievement-requests?status=' + status), [status]);
+  const [sel, setSel] = useState(new Set());
+  const [busy, run] = useAsync();
+  const decide = async (ids, decision) => {
+    await run(() => api.post('/club/achievement-requests/decide', { ids, decision }), decision === 'aprovado' ? 'Aprovado! Já aparece no perfil.' : 'Recusado');
+    setSel(new Set());
+    state.reload();
+  };
+  const toggle = (id) => { const s = new Set(sel); s.has(id) ? s.delete(id) : s.add(id); setSel(s); };
+  return (
+    <>
+      <PageHeader title="Aprovações" subtitle="Classes e especialidades que os membros dizem ter" />
+      <div className="seg" style={{ marginBottom: '1rem' }}>
+        {[['pendente', 'Para aprovar'], ['aprovado', 'Aprovadas'], ['recusado', 'Recusadas']].map(([k, l]) => (
+          <button key={k} type="button" className={status === k ? 'active' : ''} onClick={() => { setStatus(k); setSel(new Set()); }}>{l}</button>
+        ))}
+      </div>
+      <Loading {...state} empty={status === 'pendente' ? 'Nenhum pedido para aprovar.' : 'Nada por aqui.'}>
+        {(groups) => groups.map((g) => {
+          const ids = g.items.map((i) => i.id);
+          return (
+            <Card key={g.member_id}>
+              <div className="row">
+                <Avatar src={g.photo} name={g.name} size={44} />
+                <div className="grow"><b>{g.name}</b><div className="small muted">{g.unit_name || 'Sem unidade'}{g.handle ? ' · @' + g.handle : ''}</div></div>
+                <Badge kind={status === 'pendente' ? 'yellow' : status === 'aprovado' ? 'green' : 'red'}>{g.items.length}</Badge>
+              </div>
+              <div className="approve-list">
+                {g.items.map((i) => (
+                  <label key={i.id} className={'approve-item' + (sel.has(i.id) ? ' on' : '')}>
+                    {status === 'pendente' && <input type="checkbox" checked={sel.has(i.id)} onChange={() => toggle(i.id)} />}
+                    <CatalogBadge c={i} size={40} />
+                    <span className="grow"><b>{i.name}</b><small>{i.type === 'classe' ? 'Classe' : i.category}</small></span>
+                  </label>
+                ))}
+              </div>
+              {status === 'pendente' && (
+                <div className="row wrap" style={{ marginTop: '.6rem' }}>
+                  <Button small variant="green" busy={busy} onClick={() => decide(ids, 'aprovado')}><Check size={14} /> Aprovar tudo</Button>
+                  {ids.some((id) => sel.has(id)) && (
+                    <>
+                      <Button small variant="secondary" busy={busy} onClick={() => decide(ids.filter((id) => sel.has(id)), 'aprovado')}>Aprovar marcadas</Button>
+                      <Button small variant="danger" busy={busy} onClick={() => decide(ids.filter((id) => sel.has(id)), 'recusado')}>Recusar marcadas</Button>
+                    </>
+                  )}
+                </div>
+              )}
+            </Card>
+          );
+        })}
+      </Loading>
+    </>
   );
 }
 
@@ -308,6 +374,7 @@ export default function ClubApp() {
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
+    { to: `${base}/aprovacoes`, icon: BadgeCheck, label: 'Aprovações', hint: 'Classes e especialidades' },
     { to: `${base}/unidades`, icon: Flag, label: 'Unidades', hint: 'Criar e editar' },
     { to: `${base}/ranking`, icon: Trophy, label: 'Ranking', hint: 'Unidades e clubes' },
     { to: `${base}/denuncias`, icon: ShieldAlert, label: 'Denúncias', hint: 'Do chat' },
@@ -324,6 +391,7 @@ export default function ClubApp() {
               <Route index element={<ClubHome />} />
               <Route path="membros" element={<MembersPage />} />
               <Route path="unidades" element={<UnitsPage />} />
+              <Route path="aprovacoes" element={<ApprovalsPage />} />
               <Route path="requisitos" element={<RequirementsPage />} />
               <Route path="ranking" element={<RankingHub base={base} />} />
               <Route path="chat" element={<ChatHome base={base} />} />

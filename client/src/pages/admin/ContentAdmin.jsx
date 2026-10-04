@@ -118,7 +118,7 @@ function ContentForm({ id, type, onClose, onDone }) {
 }
 
 function ContentList({ type }) {
-  const list = useLoad(() => api.get('/admin/content?type=' + type), [type]);
+  const list = useLoad(() => api.get('/admin/content'), [type]);
   const [editing, setEditing] = useState(null);
   const [, run] = useAsync();
   return (
@@ -247,14 +247,14 @@ function Purchases() {
   );
 }
 
-const TABS = [['especialidade', 'Especialidades'], ['classe', 'Classes'], ['curso', 'Cursos'], ['medalhas', 'Medalhas e troféus'], ['compras', 'Compras']];
+const TABS = [['curso', 'Cursos'], ['medalhas', 'Medalhas e troféus'], ['compras', 'Compras']];
 
 /** Conteúdo: tudo o que o Administrador Geral cria (e vende). */
 export default function ContentAdmin() {
-  const [tab, setTab] = useState(new URLSearchParams(location.search).get('aba') || 'especialidade');
+  const [tab, setTab] = useState(new URLSearchParams(location.search).get('aba') || 'curso');
   return (
     <>
-      <PageHeader title="Conteúdo" subtitle="Crie e edite especialidades, classes, cursos e medalhas" />
+      <PageHeader title="Conteúdo" subtitle="Cursos (grátis ou pagos), medalhas e troféus (sempre grátis)" />
       <Tabs tabs={TABS} value={tab} onChange={setTab} />
       {tab === 'medalhas' ? <MedalsList /> : tab === 'compras' ? <Purchases /> : <ContentList key={tab} type={tab} />}
     </>

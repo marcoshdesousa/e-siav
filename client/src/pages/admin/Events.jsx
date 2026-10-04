@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { CalendarDays, FileText, MapPin, Paperclip, Pencil, Tent, Trash2, UserRound, Users, X } from 'lucide-react';
+import { CalendarDays, FileText, MapPin, Megaphone, Paperclip, Pencil, Tent, Trash2, UserRound, Users, X } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { fmtDate } from '../../format.js';
 import { Badge, Button, Card, Confirm, Empty, Field, Loading, Modal, PageHeader, Section, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
 import PeoplePicker, { emptySelection } from './PeoplePicker.jsx';
 
-const blank = (districtId) => ({ name: '', date: new Date().toISOString().slice(0, 10), location: '', description: '', district_id: districtId || '', attachments: [] });
+const blank = (districtId) => ({ name: '', date: new Date().toISOString().slice(0, 10), location: '', description: '', district_id: districtId || '', attachments: [], promote: true });
 
 /** Anexos (fotos e PDF) para ilustrar o evento. */
 export function Attachments({ list }) {
@@ -30,7 +30,7 @@ function EventForm({ initial, onDone, onCancel }) {
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
   const save = async () => {
     const body = toForm({
-      name: f.name, date: f.date, location: f.location, description: f.description, district_id: f.district_id,
+      name: f.name, date: f.date, location: f.location, description: f.description, district_id: f.district_id, promote: f.promote ? 1 : 0,
       keep: f.attachments.map((a) => a.url), files,
     });
     await run(() => (f.id ? api.put('/admin/events/' + f.id, body) : api.post('/admin/events', body)), f.id ? 'Evento atualizado!' : 'Evento criado!');
@@ -66,6 +66,8 @@ function EventForm({ initial, onDone, onCancel }) {
           </label>
         </div>
       </Field>
+      <label className="check"><input type="checkbox" checked={!!f.promote} onChange={(e) => setF({ ...f, promote: e.target.checked })} /> Mostrar na tela de todos ao abrir o app, até a data do evento</label>
+      <p className="muted small" style={{ marginTop: '-.4rem' }}>Todo evento é grátis. A primeira foto dos anexos vira a capa do aviso.</p>
       <div className="row" style={{ justifyContent: 'flex-end' }}>
         {onCancel && <Button variant="secondary" onClick={onCancel}>Cancelar</Button>}
         <Button busy={busy} onClick={save}>{f.id ? 'Salvar alterações' : 'Criar evento'}</Button>
@@ -144,6 +146,7 @@ export default function EventsAdmin() {
                   <h3 className="grow">{e.name}</h3>
                   <Badge kind="blue"><CalendarDays size={12} /> {fmtDate(e.date)}</Badge>
                 </div>
+                {e.promote && e.date >= new Date().toISOString().slice(0, 10) ? <Badge kind="yellow"><Megaphone size={12} /> Aparece na abertura do app</Badge> : null}
                 <p className="small muted ico"><MapPin size={14} /> {e.location || 'Local a definir'}{e.district_name ? ' · ' + e.district_name : ''}</p>
                 {e.description && <p className="small">{e.description}</p>}
                 <Attachments list={e.attachments} />
@@ -160,7 +163,7 @@ export default function EventsAdmin() {
       )}
       {editing && (
         <Modal title="Editar evento" onClose={() => setEditing(null)}>
-          <EventForm initial={{ ...editing, district_id: editing.district_id || '' }} onCancel={() => setEditing(null)} onDone={() => { setEditing(null); state.reload(); }} />
+          <EventForm initial={{ ...editing, district_id: editing.district_id || '', promote: !!editing.promote }} onCancel={() => setEditing(null)} onDone={() => { setEditing(null); state.reload(); }} />
         </Modal>
       )}
       {current && <ParticipantsModal event={current} onClose={() => setPartsOf(null)} onChanged={state.reload} />}

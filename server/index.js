@@ -19,12 +19,16 @@ import chatRoutes from './routes/chat.js';
 import meRoutes from './routes/me.js';
 import fileRoutes from './routes/files.js';
 import announcementRoutes from './routes/announcements.js';
+import achievementRoutes from './routes/achievements.js';
+import { syncCatalog } from './catalog.js';
 import { seed } from './seed.js';
 
 if (!get('SELECT 1 FROM admins LIMIT 1')) {
   console.log('Banco vazio: carregando dados de exemplo do Distrito Palmares...');
   seed();
 }
+
+syncCatalog();
 
 const app = express();
 app.disable('x-powered-by');
@@ -37,7 +41,7 @@ app.use(attachActor);
 
 const api = express.Router();
 api.get('/health', (_req, res) => res.json({ ok: true }));
-for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, chatRoutes, meRoutes, fileRoutes, announcementRoutes]) api.use(r);
+for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, chatRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes]) api.use(r);
 api.use((_req, _res, next) => next(new HttpError(404, 'Rota não encontrada')));
 app.use('/api', api);
 

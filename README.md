@@ -46,9 +46,12 @@ Testes da API (permissões, privacidade, pontuação, ranking e chat): `npm test
 - **Perfis públicos** com link para compartilhar: `/p/clube/:id`, `/p/unidade/:id`, `/p/membro/:código`. Clubes e unidades mostram só a quantidade de membros.
 - **Chat estilo WhatsApp**: Unidade (grupo), Diretoria (membro ↔ clube) e Direta (pelo @ ou pelo nome). Texto, áudio gravado na hora e fotos; tempo real via WebSocket; horário, ✓✓ de lida, aviso de nova mensagem; apagar mensagem para mim ou para todos; limpar conversa (só para você); arquivar e apagar conversas diretas; Denunciar e Bloquear em toda conversa (denúncias vão para a diretoria e para o Administrador Geral, com cópia da mensagem mesmo se ela for apagada depois).
 - **@ do membro**: escolhido no primeiro acesso; é por ele que os outros encontram a pessoa no chat, aparece no perfil e forma o link `/p/membro/@arroba`.
-- **Requisitos e classes com envio livre**: em cada requisito (geral ou de classe/especialidade) o criador marca o que o membro envia — relatório, foto e/ou quiz, em qualquer combinação — e pode anexar fotos de exemplo. Classes e especialidades têm análise própria (classe → pessoas → requisitos de cada uma).
-- **Entregar conteúdo**: medalhas, troféus, classes, especialidades e cursos entregues de uma vez, escolhendo clube → unidade → pessoas com caixinhas e "selecionar todos".
-- **Eventos** com anexos (fotos e PDF) e participantes marcados em massa.
+- **Requisitos com envio livre**: em cada requisito (geral ou aula de curso) o criador marca o que o membro envia — relatório, foto e/ou quiz, em qualquer combinação — e pode anexar fotos de exemplo.
+- **Classes e especialidades** não são vendidas nem feitas online: o membro informa as que já tem (catálogo com busca e filtro por área) e a **diretoria do clube aprova** em "Aprovações"; aprovadas, vão para o perfil. A diretoria também pode registrar direto no cadastro do membro e incluir uma especialidade que falte.
+- **Catálogo oficial** (admin): lista de classes e especialidades por área; dá para **importar a relação do manual** colando "código; nome; área" e **enviar as fotos em lote** (cada arquivo é ligado pelo nome ou código). Lista inicial em `server/catalog.js`.
+- **Conteúdo do admin**: só cursos (grátis ou pagos) e medalhas/troféus (sempre grátis).
+- **Entregar conteúdo**: medalhas, troféus e cursos entregues de uma vez, com filtros por distrito, clube, unidade e tipo de membro, busca e "selecionar todos".
+- **Eventos** (sempre grátis) com anexos (fotos e PDF), participantes marcados em massa e aviso na abertura do app até a data do evento.
 - **Anúncios**: aparecem grandes no meio da tela ao abrir o app; tocar mostra os detalhes.
 - **Modo claro e escuro** automáticos, seguindo o celular.
 
@@ -100,7 +103,7 @@ Observações do plano grátis:
 ## Publicação (outros servidores)
 
 - Use HTTPS (necessário para gravar áudio e instalar o app no celular).
-- Defina `JWT_SECRET` e mantenha a pasta `data/` (banco e uploads) em disco persistente; `DATA_DIR` muda o local.
+- Defina `JWT_SECRET` e mantenha a pasta `data/` (banco e uploads — inclusive as fotos do catálogo) em disco persistente; `DATA_DIR` muda o local.
 - `PORT` define a porta (padrão 3000).
 - Atrás de proxy reverso (Nginx, Render etc.), defina `TRUST_PROXY=1` para o limite de tentativas de login usar o IP real.
 

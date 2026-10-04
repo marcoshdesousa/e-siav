@@ -73,7 +73,7 @@ export function memberProfile(where, value) {
   m.kind = memberKind(m.birth_date);
   delete m.birth_date; // data de nascimento não é exibida no perfil
   const ach = all(
-    `SELECT ct.id, ct.type, ct.name, ct.icon, ct.leader, a.source, a.date
+    `SELECT ct.id, ct.type, ct.name, ct.icon, ct.image, ct.category, ct.leader, a.source, a.date
      FROM achievements a JOIN content ct ON ct.id = a.content_id WHERE a.member_id = ? ORDER BY ct.age, ct.name`,
     m.id,
   );

@@ -350,32 +350,47 @@ test('requisito com relatório + foto + quiz juntos e fotos de exemplo', async (
   assert.ok(mine.every((x) => x.submitter_id === davi.actor.id) && mine.length >= 1);
 });
 
-test('classes: envio do requisito, análise do admin e conclusão', async () => {
+test('classes e especialidades: o membro informa, a diretoria aprova e vai para o perfil', async () => {
+  const davi = await login('membros', 'davi');
+  const esp = (await davi.get('/catalog?type=especialidade')).body;
+  assert.ok(esp.length > 50, 'catálogo de especialidades carregado');
+  const aves = esp.find((c) => c.name === 'Aves');
+  const ast = esp.find((c) => c.name === 'Astronomia');
+  const lider = (await davi.get('/catalog?type=classe')).body.find((c) => c.name === 'Líder');
+  const r = await davi.post('/me/achievement-requests', { content_ids: [aves.id, ast.id, lider.id] });
+  assert.equal(r.body.created, 2, 'desbravador não pede classe de líder');
+  const leoes = await login('clube', 'leoes', 'leoes123');
+  const aguias = await login('clube', 'aguias', 'aguias123');
+  assert.ok(!(await aguias.get('/club/achievement-requests')).body.some((m) => m.member_id === davi.actor.id), 'outro clube não vê');
+  const group = (await leoes.get('/club/achievement-requests')).body.find((m) => m.member_id === davi.actor.id);
+  const [i1, i2] = group.items;
+  await leoes.post('/club/achievement-requests/decide', { ids: [i1.id], decision: 'aprovado' });
+  await leoes.post('/club/achievement-requests/decide', { ids: [i2.id], decision: 'recusado' });
+  const mine = (await davi.get('/me/achievements?type=especialidade')).body;
+  assert.equal(mine.approved.length, 1);
+  assert.equal(mine.requests.find((x) => x.id === i2.id).status, 'recusado');
+  // Admin não cria nem vende classe/especialidade
   const admin = await login('membros', 'admin', 'admin123');
-  const list = (await admin.get('/admin/content-review?type=classe')).body;
-  const comp = list.find((c) => c.name === 'Companheiro');
-  assert.ok(comp.pending >= 2);
-  const people = (await admin.get('/admin/content-review/' + comp.id)).body.members;
-  const ana = people.find((m) => m.name === 'Ana Clara Souza');
-  const detail = (await admin.get(`/admin/content-review/${comp.id}/members/${ana.id}`)).body;
-  // Membro faz os que faltam
-  const anaLogin = await login('membros', 'ana');
-  for (const it of detail.items.filter((i) => !i.submission)) {
-    const fd = new FormData();
-    if (it.modes.includes('texto')) fd.append('text', 'Relatório do requisito');
-    if (it.modes.includes('foto')) fd.append('photos', PNG(), 'f.png');
-    if (it.modes.includes('quiz')) fd.append('answers', JSON.stringify(it.questions.map(() => 0)));
-    const r = await anaLogin.post(`/content/${comp.id}/items/${it.id}/submit`, fd);
-    assert.equal(r.status, 200, it.title);
-  }
-  const again = (await admin.get(`/admin/content-review/${comp.id}/members/${ana.id}`)).body;
-  let completed = false;
-  for (const it of again.items.filter((i) => i.submission?.status === 'enviado')) {
-    completed = (await admin.post(`/admin/content-review/${comp.id}/members/${ana.id}/items/${it.id}`, { decision: 'aprovado' })).body.completed;
-  }
-  assert.equal(completed, true, 'todos aprovados → classe concluída');
-  const prof = await (await fetch(BASE + '/public/members/@ana.souza')).json();
-  assert.ok(prof.classes.some((c) => c.name === 'Companheiro'));
+  assert.equal((await admin.post('/admin/content', { type: 'especialidade', name: 'X', is_free: 1 })).status, 400);
+  assert.ok((await admin.get('/admin/content')).body.every((c) => c.type === 'curso'));
+});
+
+test('catálogo: importar a lista oficial e ligar as fotos pelo nome do arquivo', async () => {
+  const admin = await login('membros', 'admin', 'admin123');
+  const imp = (await admin.post('/admin/catalog/import', { text: 'EB-001; Profecias de Daniel; Ensinos Bíblicos\nAves; Estudo da Natureza\nlinha inválida' })).body;
+  assert.equal(imp.created, 1);
+  assert.equal(imp.updated, 1);
+  assert.equal(imp.skipped, 1);
+  const fd = new FormData();
+  fd.append('images', PNG(), 'profecias-de-daniel.png');
+  fd.append('images', PNG(), 'EB-001.png');
+  fd.append('images', PNG(), 'nao-existe.png');
+  const img = (await admin.post('/admin/catalog/images', fd)).body;
+  assert.equal(img.matched.length, 2);
+  assert.deepEqual(img.unmatched, ['nao-existe.png']);
+  const item = (await admin.get('/admin/catalog?type=especialidade')).body.items.find((c) => c.name === 'Profecias de Daniel');
+  assert.equal(item.category, 'Ensinos Bíblicos');
+  assert.ok(item.image);
 });
 
 test('entregar conteúdo em massa, eventos com participantes e anúncios', async () => {
@@ -387,12 +402,15 @@ test('entregar conteúdo em massa, eventos com participantes e anúncios', async
   const medal = (await admin.post('/admin/medals', form({ name: 'Unidade destaque', kind: 'medalha', icon: 'star' }))).body;
   const d = await admin.post('/admin/deliver', { item_type: 'medal', item_id: medal.id, units: [falcoes.id], members: memberIds });
   assert.equal(d.body.delivered, 1 + memberIds.length);
-  const astro = (await admin.get('/admin/content?type=especialidade')).body.find((c) => c.name === 'Astronomia');
-  await admin.post('/admin/deliver', { item_type: 'content', item_id: astro.id, action: 'acesso', members: memberIds });
+  const curso = (await admin.get('/admin/content')).body.find((c) => c.name === 'Liderança Jovem');
+  await admin.post('/admin/deliver', { item_type: 'content', item_id: curso.id, action: 'acesso', members: memberIds });
   const lucas = await login('membros', 'lucas');
-  assert.equal((await lucas.get('/content/' + astro.id)).body.has_access, true);
+  assert.equal((await lucas.get('/content/' + curso.id)).body.has_access, true);
+  const aves = (await admin.get('/catalog?type=especialidade')).body.find((c) => c.name === 'Aves');
+  assert.equal((await admin.post('/admin/deliver', { item_type: 'content', item_id: aves.id, members: memberIds })).status, 404, 'admin não entrega especialidade');
 
-  const ev = await admin.post('/admin/events', form({ name: 'Campori', date: '2026-11-20', location: 'Palmares' }));
+  const ev = await admin.post('/admin/events', form({ name: 'Campori', date: '2099-11-20', location: 'Palmares' }));
+  assert.ok((await lucas.get('/events/upcoming')).body.some((e) => e.name === 'Campori'), 'evento futuro aparece na abertura do app');
   const p = await admin.post(`/admin/events/${ev.body.id}/participants`, { clubs: [aguias.id], members: memberIds });
   assert.equal(p.body.added, 1 + memberIds.length);
 

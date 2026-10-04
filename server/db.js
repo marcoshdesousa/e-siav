@@ -400,6 +400,23 @@ function migrate() {
   // Cópia da mensagem denunciada (continua visível para quem analisa, mesmo se apagada)
   add('reports', 'snapshot', 'TEXT');
 
+  // Pedidos do membro: "tenho esta classe/especialidade" → a diretoria do clube aprova
+  db.exec(`CREATE TABLE IF NOT EXISTS achievement_requests (
+    id INTEGER PRIMARY KEY,
+    member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    content_id INTEGER NOT NULL REFERENCES content(id) ON DELETE CASCADE,
+    status TEXT NOT NULL DEFAULT 'pendente' CHECK (status IN ('pendente','aprovado','recusado')),
+    note TEXT,
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+    reviewed_at TEXT
+  )`);
+  db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS ux_ach_req_pending ON achievement_requests(member_id, content_id) WHERE status = 'pendente'`);
+  // Especialidade adicionada pela diretoria de um clube (quando falta no catálogo)
+  add('content', 'code', 'TEXT'); // código oficial da especialidade (ex.: do manual)
+  add('content', 'added_by_club', 'INTEGER REFERENCES clubs(id) ON DELETE SET NULL');
+  // Eventos aparecem na abertura do app até a data do evento
+  add('events', 'promote', 'INTEGER NOT NULL DEFAULT 1');
+
   // Anúncios que aparecem ao abrir o app
   db.exec(`CREATE TABLE IF NOT EXISTS announcements (
     id INTEGER PRIMARY KEY,

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import {
-  BookOpenCheck, CalendarDays, ClipboardCheck, Compass, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, ShieldAlert, ShoppingCart, Tent, Trophy, Users,
+  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, ShieldAlert, ShoppingCart, Tent, Trophy, Users,
 } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -18,6 +18,7 @@ import ContentReview from './ContentReview.jsx';
 import Deliver from './Deliver.jsx';
 import EventsAdmin from './Events.jsx';
 import AnnouncementsAdmin from './Announcements.jsx';
+import CatalogAdmin from './CatalogAdmin.jsx';
 
 const base = '/admin';
 
@@ -52,7 +53,7 @@ function AdminHome() {
       <Section title="Atalhos">
         <MoreMenu items={[
           { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo' },
-          { to: `${base}/classes`, icon: Compass, label: 'Analisar classes' },
+          { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial' },
           { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos' },
           { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios' },
         ]} />
@@ -195,11 +196,10 @@ function RequirementsAdmin() {
   return (
     <>
       <PageHeader title="Requisitos" subtitle="Desbravadores, unidades e clubes" />
-      <Tabs tabs={[['criados', 'Criados'], ['avaliar', 'Avaliar envios'], ['classes', 'Classes'], ['especialidades', 'Especialidades']]} value={tab} onChange={setTab} />
+      <Tabs tabs={[['criados', 'Criados'], ['avaliar', 'Avaliar envios'], ['cursos', 'Aulas dos cursos']]} value={tab} onChange={setTab} />
       {tab === 'criados' && <CreatedRequirements />}
       {tab === 'avaliar' && <ReviewsPanel />}
-      {tab === 'classes' && <ContentReview key="c" type="classe" embedded />}
-      {tab === 'especialidades' && <ContentReview key="e" type="especialidade" embedded />}
+      {tab === 'cursos' && <ContentReview type="curso" embedded />}
     </>
   );
 }
@@ -214,9 +214,8 @@ export default function AdminApp() {
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
-    { to: `${base}/classes`, icon: Compass, label: 'Classes', hint: 'Analisar requisitos' },
-    { to: `${base}/especialidades`, icon: BookOpenCheck, label: 'Especialidades', hint: 'Analisar requisitos' },
-    { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo', hint: 'Medalhas, classes e mais' },
+    { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo', hint: 'Medalhas, troféus e cursos' },
+    { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial', hint: 'Classes e especialidades' },
     { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos', hint: 'Criar e participantes' },
     { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: 'Aparecem ao abrir o app' },
     { to: `${base}/ranking`, icon: Trophy, label: 'Rankings', hint: 'Todas as tabelas' },
@@ -230,8 +229,8 @@ export default function AdminApp() {
         <Route path="clubes" element={<ClubsAdmin />} />
         <Route path="requisitos" element={<RequirementsAdmin />} />
         <Route path="conteudo" element={<ContentAdmin />} />
-        <Route path="classes" element={<ContentReview key="classe" type="classe" />} />
-        <Route path="especialidades" element={<ContentReview key="esp" type="especialidade" />} />
+        <Route path="catalogo" element={<CatalogAdmin />} />
+        <Route path="cursos" element={<ContentReview type="curso" />} />
         <Route path="entregar" element={<Deliver />} />
         <Route path="eventos" element={<EventsAdmin />} />
         <Route path="anuncios" element={<AnnouncementsAdmin />} />

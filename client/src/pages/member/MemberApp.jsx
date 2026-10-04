@@ -15,6 +15,7 @@ import RankingHub from '../Ranking.jsx';
 import ClubsBrowser from '../Clubs.jsx';
 import { ChatConversation, ChatHome } from '../Chat.jsx';
 import HandleSetup, { HandleField, useHandleCheck } from './HandleSetup.jsx';
+import MyAchievements from './MyAchievements.jsx';
 
 const base = '/membro';
 
@@ -82,8 +83,8 @@ export default function MemberApp() {
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
-    { to: `${base}/especialidades`, icon: Waypoints, label: 'Especialidades', hint: 'Faça online' },
-    { to: `${base}/classes`, icon: Compass, label: 'Classes', hint: isDbv ? 'Sua classe e outras' : 'Regulares e de líder' },
+    { to: `${base}/especialidades`, icon: Waypoints, label: 'Especialidades', hint: 'As que você tem' },
+    { to: `${base}/classes`, icon: Compass, label: 'Classes', hint: 'As que você tem' },
     { to: `${base}/cursos`, icon: GraduationCap, label: 'Cursos', hint: 'Aulas' },
     { to: `${base}/clubes`, icon: Tent, label: 'Clubes', hint: 'Por distrito' },
   ];
@@ -97,8 +98,8 @@ export default function MemberApp() {
             <Routes>
               <Route index element={<MyProfile />} />
               <Route path="requisitos" element={isDbv ? <><PageHeader title="Requisitos" subtitle="Cumpra os requisitos e suba no ranking" /><RequirementsTodo /></> : <Navigate to={base} replace />} />
-              <Route path="especialidades" element={<ContentList type="especialidade" base={base} />} />
-              <Route path="classes" element={<ContentList type="classe" base={base} />} />
+              <Route path="especialidades" element={<MyAchievements key="e" type="especialidade" />} />
+              <Route path="classes" element={<MyAchievements key="c" type="classe" />} />
               <Route path="cursos" element={<ContentList type="curso" base={base} />} />
               <Route path="conteudo/:id" element={<ContentDetail />} />
               <Route path="ranking" element={<RankingHub base={base} />} />

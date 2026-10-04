@@ -6,7 +6,7 @@ import { api } from '../api.js';
 import { AppIcon } from '../icons.jsx';
 import { fmtDate, plural } from '../format.js';
 import { useAuth, homeFor } from '../auth.jsx';
-import { Avatar, Button, Empty, Loading, LogoHorizontal, MedalList, Modal, PositionBadge, RowSection, Section, ShareButton, useLoad } from '../ui.jsx';
+import { Avatar, Button, ContentIcon, Empty, Loading, LogoHorizontal, MedalList, Modal, PositionBadge, RowSection, Section, ShareButton, useLoad } from '../ui.jsx';
 
 /** linkBase: "/p" (páginas públicas) ou "<app>/ver" (dentro do app). */
 const to = (linkBase, kind, id) => `${linkBase}/${kind}/${id}`;
@@ -40,7 +40,11 @@ export const EventsList = ({ events }) => (
 const ChipRow = ({ title, items, empty, emptyIcon }) => (
   <RowSection
     title={title} items={items} empty={empty} emptyIcon={emptyIcon}
-    render={(c) => <span key={c.id} className="chip-light"><AppIcon name={c.icon} size={15} /> {c.name}</span>}
+    render={(c) => (
+      <span key={c.id} className="ach-chip" title={c.category || ''}>
+        <span className="ach-img"><ContentIcon c={c} size={16} /></span>{c.name}
+      </span>
+    )}
   />
 );
 

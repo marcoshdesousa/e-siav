@@ -2,10 +2,9 @@ import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, Award, Check, Clock, Lock, RotateCcw, ShoppingCart, XCircle } from 'lucide-react';
 import { api, toForm } from '../api.js';
-import { useAuth } from '../auth.jsx';
 import { fmtMoney } from '../format.js';
 import {
-  Badge, Button, Card, ContentIcon, Empty, Gallery, Loading, Modal, PageHeader, Section, modesLabel, notify, useAsync, useLoad,
+  Badge, Button, Card, ContentIcon, Gallery, Loading, Modal, PageHeader, Section, modesLabel, notify, useAsync, useLoad,
 } from '../ui.jsx';
 import { ResponseFields } from './Requirements.jsx';
 
@@ -45,37 +44,13 @@ function ContentCard({ c, base }) {
 }
 
 export function ContentList({ type, base }) {
-  const { actor } = useAuth();
   const state = useLoad(() => api.get('/content?type=' + type), [type]);
   const [title, subtitle] = TITLES[type];
   return (
     <>
       <PageHeader title={title} subtitle={subtitle} />
-      <Loading {...state} empty="Nenhum conteúdo cadastrado ainda.">
-        {(list) => {
-          if (type !== 'classe') return <div className="list">{list.map((c) => <ContentCard key={c.id} c={c} base={base} />)}</div>;
-          const mine = list.filter((c) => c.is_my_class);
-          const regular = list.filter((c) => !c.leader && !c.is_my_class);
-          const leader = list.filter((c) => c.leader);
-          return (
-            <>
-              {actor.kind === 'desbravador' && (
-                <Section title="Sua classe">
-                  {mine.length ? <div className="list">{mine.map((c) => <ContentCard key={c.id} c={c} base={base} />)}</div> : <Empty>Não há classe cadastrada para a sua idade.</Empty>}
-                </Section>
-              )}
-              {actor.kind === 'lideranca' && (
-                <Section title="Classes de líder">
-                  <div className="list">{leader.map((c) => <ContentCard key={c.id} c={c} base={base} />)}</div>
-                </Section>
-              )}
-              <Section title={actor.kind === 'desbravador' ? 'Outras classes' : 'Classes regulares'}>
-                <p className="muted small" style={{ marginTop: '-.3rem', marginBottom: '.6rem' }}>Qualquer membro pode adquirir classes além da sua.</p>
-                <div className="list">{regular.map((c) => <ContentCard key={c.id} c={c} base={base} />)}</div>
-              </Section>
-            </>
-          );
-        }}
+      <Loading {...state} empty="Nenhum curso disponível ainda.">
+        {(list) => <div className="list">{list.map((c) => <ContentCard key={c.id} c={c} base={base} />)}</div>}
       </Loading>
     </>
   );

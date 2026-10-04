@@ -5,7 +5,7 @@ import { fmtMoney } from '../../format.js';
 import { Button, Card, ContentIcon, Field, MedalIcon, PageHeader, Section, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
 import PeoplePicker, { emptySelection } from './PeoplePicker.jsx';
 
-const KIND_TABS = [['medal', 'Medalhas e troféus'], ['especialidade', 'Especialidades'], ['classe', 'Classes'], ['curso', 'Cursos']];
+const KIND_TABS = [['medal', 'Medalhas e troféus'], ['curso', 'Cursos']];
 
 /**
  * Entregar conteúdo: escolhe o item, depois o clube, a unidade e as pessoas
@@ -17,7 +17,7 @@ export default function Deliver() {
   const content = useLoad(() => api.get('/admin/content'));
   const directory = useLoad(() => api.get('/admin/directory'));
   const [item, setItem] = useState(null);
-  const [action, setAction] = useState('concluir');
+  const [action, setAction] = useState('acesso');
   const [note, setNote] = useState('');
   const [sel, setSel] = useState(emptySelection);
   const [busy, run] = useAsync();
@@ -42,7 +42,7 @@ export default function Deliver() {
     <>
       <PageHeader title="Entregar conteúdo" subtitle="Escolha o item e quem vai receber" />
       <Section title="1. O que vai entregar">
-        <Tabs tabs={KIND_TABS} value={kind} onChange={(k) => { setKind(k); setItem(null); setAction('concluir'); }} />
+        <Tabs tabs={KIND_TABS} value={kind} onChange={(k) => { setKind(k); setItem(null); setAction('acesso'); }} />
         <div className="deliver-items">
           {items.map((it) => (
             <button key={it.id} type="button" className={'deliver-item' + (item?.id === it.id ? ' on' : '')} onClick={() => setItem(it)}>
@@ -59,10 +59,10 @@ export default function Deliver() {
       {item && !isMedal && (
         <Section title="Como entregar">
           <div className="seg">
-            <button type="button" className={action === 'concluir' ? 'active' : ''} onClick={() => setAction('concluir')}><Award size={14} /> Registrar como concluída</button>
             <button type="button" className={action === 'acesso' ? 'active' : ''} onClick={() => setAction('acesso')}><BookOpen size={14} /> Liberar acesso</button>
+            <button type="button" className={action === 'concluir' ? 'active' : ''} onClick={() => setAction('concluir')}><Award size={14} /> Registrar como concluído</button>
           </div>
-          <p className="muted small mt">{action === 'concluir' ? 'Aparece no perfil das pessoas como concluída.' : 'Libera o conteúdo (inclusive pago) para as pessoas fazerem no app.'}</p>
+          <p className="muted small mt">{action === 'concluir' ? 'Aparece no perfil das pessoas como curso concluído.' : 'Libera o curso (inclusive pago) para as pessoas fazerem no app.'}</p>
         </Section>
       )}
       {item && isMedal && (

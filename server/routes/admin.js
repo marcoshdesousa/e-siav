@@ -186,7 +186,7 @@ function eventFields(body) {
   const name = str(body.name, 120);
   if (!name) fail(400, 'Informe o nome do evento');
   if (!validDate(body.date)) fail(400, 'Informe a data do evento');
-  return [name, str(body.description, 1000), body.date, str(body.location, 120), int(body.district_id)];
+  return [name, str(body.description, 1000), body.date, str(body.location, 120), int(body.district_id), body.promote === undefined ? 1 : ['1', 'true', 1, true, 'on'].includes(body.promote) ? 1 : 0];
 }
 /** Anexos do evento (fotos e PDF): mantém os que vieram em "keep" e soma os novos. */
 function attachmentsOf(req, current = []) {
@@ -198,13 +198,13 @@ function attachmentsOf(req, current = []) {
   return JSON.stringify([...kept, ...added].slice(0, 10));
 }
 r.post('/admin/events', attachmentUpload.array('files', 10), (req, res) => {
-  const { lastInsertRowid } = run('INSERT INTO events (name, description, date, location, district_id, attachments) VALUES (?,?,?,?,?,?)', ...eventFields(req.body), attachmentsOf(req));
+  const { lastInsertRowid } = run('INSERT INTO events (name, description, date, location, district_id, promote, attachments) VALUES (?,?,?,?,?,?,?)', ...eventFields(req.body), attachmentsOf(req));
   res.json({ id: Number(lastInsertRowid) });
 });
 r.put('/admin/events/:id', attachmentUpload.array('files', 10), (req, res) => {
   const ev = get('SELECT * FROM events WHERE id = ?', int(req.params.id));
   if (!ev) fail(404, 'Evento não encontrado');
-  run('UPDATE events SET name = ?, description = ?, date = ?, location = ?, district_id = ?, attachments = ? WHERE id = ?',
+  run('UPDATE events SET name = ?, description = ?, date = ?, location = ?, district_id = ?, promote = ?, attachments = ? WHERE id = ?',
     ...eventFields(req.body), attachmentsOf(req, parseJson(ev.attachments, [])), ev.id);
   res.json({ ok: true });
 });
@@ -236,7 +236,7 @@ r.delete('/admin/events/:id/participants/:type/:tid', (req, res) => {
 
 // ---------- Diretório: clubes → unidades → pessoas (para escolher destinatários) ----------
 r.get('/admin/directory', (_req, res) => {
-  const clubs = all('SELECT c.id, c.name, c.logo, d.name AS district_name FROM clubs c JOIN districts d ON d.id = c.district_id ORDER BY d.name, c.name');
+  const clubs = all('SELECT c.id, c.name, c.logo, c.district_id, d.name AS district_name FROM clubs c JOIN districts d ON d.id = c.district_id ORDER BY d.name, c.name');
   for (const c of clubs) {
     c.units = all('SELECT id, name, logo, is_leadership FROM units WHERE club_id = ? ORDER BY is_leadership, name', c.id);
     const members = all('SELECT id, name, photo, handle, cargo, unit_id, birth_date FROM members WHERE club_id = ? ORDER BY name', c.id);
@@ -248,8 +248,8 @@ r.get('/admin/directory', (_req, res) => {
 });
 
 // ---------- Entregar conteúdo ----------
-// Medalha/troféu → clubes, unidades e/ou pessoas. Classe/especialidade/curso → pessoas
-// (registrar como concluído no perfil, ou liberar o acesso a um item pago).
+// Medalha/troféu → clubes, unidades e/ou pessoas. Curso → pessoas
+// (liberar o acesso, inclusive de curso pago, ou registrar como concluído).
 r.post('/admin/deliver', (req, res) => {
   const b = req.body;
   const ids = (v) => [...new Set((Array.isArray(v) ? v : []).map(Number).filter(Boolean))];
@@ -269,8 +269,9 @@ r.post('/admin/deliver', (req, res) => {
       }
     });
   } else if (b.item_type === 'content') {
-    const c = get('SELECT id, type FROM content WHERE id = ?', int(b.item_id));
-    if (!c) fail(404, 'Conteúdo não encontrado');
+    // Classes e especialidades não são entregues pelo admin (quem registra é a diretoria do clube).
+    const c = get(`SELECT id, type FROM content WHERE id = ? AND type = 'curso'`, int(b.item_id));
+    if (!c) fail(404, 'Curso não encontrado');
     if (!members.length) fail(400, 'Escolha as pessoas que vão receber');
     const action = b.action === 'acesso' ? 'acesso' : 'concluir';
     tx(() => {
