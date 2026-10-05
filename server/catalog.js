@@ -1,8 +1,8 @@
 // Catálogo de classes e especialidades dos Desbravadores.
 // Classes e especialidades não são vendidas nem feitas online: o membro informa
-// as que já tem e a diretoria do clube aprova. Para incluir itens, edite as listas
-// abaixo (são sincronizadas ao iniciar o servidor) — ou a diretoria do clube
-// adiciona uma especialidade que estiver faltando pelo painel do clube.
+// as que já tem e a diretoria do clube aprova. As classes são sincronizadas ao
+// iniciar o servidor; as especialidades são cadastradas pelo administrador
+// (uma a uma, com foto) dentro das áreas oficiais abaixo.
 import { all, get, run } from './db.js';
 
 export const CLASSES = [
@@ -37,7 +37,8 @@ const AREA_ICON = {
   'Habilidades Domésticas': 'flame',
 };
 
-export const SPECIALTIES = {
+/** Especialidades usadas só nos dados de exemplo (SEED_DEMO=1). */
+export const DEMO_SPECIALTIES = {
   'Artes e Habilidades Manuais': ['Arte de Contar Histórias Cristãs', 'Caligrafia', 'Cerâmica', 'Cestaria', 'Crochê', 'Desenho e Pintura', 'Escultura', 'Fotografia', 'Marcenaria', 'Música', 'Tricô'],
   'Atividades Agrícolas': ['Agricultura', 'Apicultura', 'Avicultura', 'Fruticultura', 'Horticultura', 'Jardinagem'],
   'Atividades Missionárias e Comunitárias': ['Cidadania Cristã', 'Evangelismo Pessoal', 'Liderança Juvenil', 'Serviço Comunitário', 'Temperança', 'Testemunho Juvenil', 'Vida Familiar'],
@@ -50,14 +51,17 @@ export const SPECIALTIES = {
 
 export const iconForArea = (area) => AREA_ICON[area] || 'award';
 
-/** Garante que o catálogo existe no banco (inclui o que faltar; não apaga nada). */
-export function syncCatalog() {
+/**
+ * Garante que as classes existem no banco (inclui o que faltar).
+ * demo: também inclui as especialidades de exemplo.
+ */
+export function syncCatalog({ demo = false } = {}) {
   for (const [name, age, leader, icon] of CLASSES) {
     if (!get(`SELECT 1 FROM content WHERE type = 'classe' AND name = ?`, name)) {
       run(`INSERT INTO content (type, name, icon, age, leader, is_free, price_cents) VALUES ('classe', ?, ?, ?, ?, 1, 0)`, name, icon, age, leader);
     }
   }
-  for (const [area, names] of Object.entries(SPECIALTIES)) {
+  for (const [area, names] of Object.entries(demo ? DEMO_SPECIALTIES : {})) {
     for (const name of names) {
       if (!get(`SELECT 1 FROM content WHERE type = 'especialidade' AND name = ?`, name)) {
         run(`INSERT INTO content (type, name, icon, category, is_free, price_cents) VALUES ('especialidade', ?, ?, ?, 1, 0)`, name, iconForArea(area), area);
@@ -66,6 +70,27 @@ export function syncCatalog() {
   }
   // Classes e especialidades nunca são pagas.
   run(`UPDATE content SET is_free = 1, price_cents = 0 WHERE type IN ('classe','especialidade')`);
+  if (demo) setFlag('specialties-cleanup');
+  else removeOldSpecialties();
+}
+
+const hasFlag = (key) => !!get('SELECT 1 FROM app_flags WHERE key = ?', key);
+const setFlag = (key) => run('INSERT OR IGNORE INTO app_flags (key) VALUES (?)', key);
+
+/**
+ * Uma única vez: tira as especialidades que o app cadastrava sozinho, para o
+ * administrador cadastrar as oficiais manualmente. Não mexe nas que alguém já tem
+ * no perfil ou pediu, nem nas que forem cadastradas depois.
+ */
+function removeOldSpecialties() {
+  if (hasFlag('specialties-cleanup')) return;
+  const names = new Set(Object.values(DEMO_SPECIALTIES).flat());
+  for (const c of all(`SELECT id, name FROM content WHERE type = 'especialidade'`)) {
+    if (!names.has(c.name)) continue;
+    if (get('SELECT 1 FROM achievements WHERE content_id = ? UNION ALL SELECT 1 FROM achievement_requests WHERE content_id = ?', c.id, c.id)) continue;
+    run('DELETE FROM content WHERE id = ?', c.id);
+  }
+  setFlag('specialties-cleanup');
 }
 
 export const catalog = (type) =>

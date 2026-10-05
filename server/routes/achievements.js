@@ -155,7 +155,7 @@ r.put('/admin/catalog/:id', admin, imageUpload.single('image'), (req, res) => {
   res.json({ ok: true });
 });
 
-r.post('/admin/catalog', admin, (req, res) => {
+r.post('/admin/catalog', admin, imageUpload.single('image'), (req, res) => {
   const type = typeOf(req.body.type);
   const name = str(req.body.name, 100);
   if (name.length < 2) fail(400, 'Informe o nome');
@@ -163,8 +163,9 @@ r.post('/admin/catalog', admin, (req, res) => {
   const category = type === 'especialidade' ? str(req.body.category, 60) || 'Outras' : '';
   const { lastInsertRowid } = run(
     'INSERT INTO content (type, code, name, icon, category, age, leader, is_free, price_cents) VALUES (?,?,?,?,?,?,?,1,0)',
-    type, str(req.body.code, 20) || null, name, type === 'especialidade' ? iconForArea(category) : 'compass', category, type === 'classe' ? int(req.body.age) : null, req.body.leader ? 1 : 0,
+    type, str(req.body.code, 20) || null, name, type === 'especialidade' ? iconForArea(category) : 'compass', category, type === 'classe' ? int(req.body.age) : null, ['1', 'true', 1, true].includes(req.body.leader) ? 1 : 0,
   );
+  if (req.file) run('UPDATE content SET image = ? WHERE id = ?', fileUrl(req.file), lastInsertRowid);
   res.json({ id: Number(lastInsertRowid) });
 });
 

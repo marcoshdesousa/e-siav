@@ -464,6 +464,8 @@ function migrate() {
   add('announcements', 'club_id', 'INTEGER REFERENCES clubs(id) ON DELETE CASCADE'); // criado pela diretoria do clube
   add('announcements', 'target_type', "TEXT NOT NULL DEFAULT 'all'"); // all | district | club
   add('announcements', 'target_id', 'INTEGER');
+  // Marcas de tarefas de manutenção que só rodam uma vez.
+  db.exec('CREATE TABLE IF NOT EXISTS app_flags (key TEXT PRIMARY KEY)');
 }
 
 /** Apaga tudo e recria o esquema (usado por "npm run seed"). */

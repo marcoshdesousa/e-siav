@@ -111,7 +111,7 @@ export function seed() {
       content[key] = id;
     };
     // Classes e especialidades vêm do catálogo (não são vendidas nem feitas online).
-    syncCatalog();
+    syncCatalog({ demo: true });
     const byName = (type, name) => get('SELECT id FROM content WHERE type = ? AND name = ?', type, name).id;
     for (const [k, n] of [['amigo', 'Amigo'], ['companheiro', 'Companheiro'], ['pesquisador', 'Pesquisador'], ['pioneiro', 'Pioneiro'], ['lider', 'Líder'], ['lidermaster', 'Líder Master']]) content[k] = byName('classe', n);
     for (const [k, n] of [['nos', 'Nós e Amarras'], ['socorros', 'Primeiros Socorros Básico'], ['acampamento', 'Acampamento I'], ['historias', 'Arte de Contar Histórias Cristãs'], ['culinaria', 'Culinária'], ['aves', 'Aves'], ['natacao', 'Natação Principiante I']]) content[k] = byName('especialidade', n);
