@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320">
+  <defs>
+    <path id="tri" d="M21 16H299V58L160 303L21 58Z"/>
+    <path id="shield" d="M79 72Q100 80 120 84Q140 78 160 74Q180 78 200 84Q220 80 241 72C240 135 215 170 160 191C105 170 80 135 79 72Z"/>
+    <clipPath id="ct"><use href="#tri"/></clipPath>
+    <clipPath id="cs"><use href="#shield"/></clipPath>
+  </defs>
+  <g stroke-linejoin="round">
+    <use href="#tri" fill="#E92A2F"/>
+    <g clip-path="url(#ct)" fill="none">
+      <use href="#tri" stroke="#F9C71D" stroke-width="32"/>
+      <use href="#tri" stroke="#E92A2F" stroke-width="16"/>
+    </g>
+    <use href="#shield" fill="#fff"/>
+    <g clip-path="url(#cs)" fill="none">
+      <use href="#shield" stroke="#E92A2F" stroke-width="26"/>
+      <use href="#shield" stroke="#F9C71D" stroke-width="14"/>
+    </g>
+  </g>
+  <g fill="#235293" transform="translate(120 140) rotate(-21)">
+    <path d="M6 -6.5L130 -1.2L136 0L130 1.2L6 6.5Z"/>
+    <path d="M-6 -24L-10 -32H11L7 -24V24L11 32H-10L-6 24Z"/>
+    <rect x="-22" y="-5" width="18" height="10"/>
+    <rect x="-33" y="-11" width="12" height="22" rx="1.5"/>
+  </g>
+</svg>

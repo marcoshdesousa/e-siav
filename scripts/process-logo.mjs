@@ -1,5 +1,6 @@
-// Converte a logo enviada (fundo preto) em PNG transparente e gera os ícones do PWA.
-// Uso: node scripts/process-logo.mjs caminho/da/logo.jpg
+// Gera a logo e os ícones do PWA a partir da logo vetorial (SVG, fundo transparente)
+// ou de uma imagem com fundo preto (que é removido).
+// Uso: node scripts/process-logo.mjs assets/logo.svg
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -10,19 +11,21 @@ const b64 = fs.readFileSync(src).toString('base64');
 const browser = await chromium.launch();
 const page = await browser.newPage();
 
-const outputs = await page.evaluate(async (dataUrl) => {
+const isSvg = src.endsWith('.svg');
+const outputs = await page.evaluate(async ({ dataUrl, isSvg }) => {
   const img = new Image();
   img.src = dataUrl;
   await img.decode();
-  const W = img.width, H = img.height;
+  // SVG é desenhado grande para os ícones saírem nítidos.
+  const W = isSvg ? 2048 : img.width, H = isSvg ? 2048 : img.height;
   const c = document.createElement('canvas');
   c.width = W; c.height = H;
   const ctx = c.getContext('2d');
-  ctx.drawImage(img, 0, 0);
+  ctx.drawImage(img, 0, 0, W, H);
   const data = ctx.getImageData(0, 0, W, H);
   const px = data.data;
   // Remove o fundo escuro conectado às bordas (flood fill), suavizando a borda.
-  const dark = (i) => px[i] + px[i + 1] + px[i + 2] < 150;
+  const dark = (i) => !isSvg && px[i] + px[i + 1] + px[i + 2] < 150;
   const seen = new Uint8Array(W * H);
   const stack = [];
   for (let x = 0; x < W; x++) stack.push(x, (H - 1) * W + x);
@@ -44,7 +47,7 @@ const outputs = await page.evaluate(async (dataUrl) => {
     if (px[p * 4 + 3] === 0) continue;
     const x = p % W, y = (p / W) | 0;
     const nb = [p - 1, p + 1, p - W, p + W].filter((q) => q >= 0 && q < W * H && Math.abs((q % W) - x) <= 1);
-    if (nb.some((q) => px[q * 4 + 3] === 0)) {
+    if (!isSvg && nb.some((q) => px[q * 4 + 3] === 0)) {
       const lum = Math.max(px[p * 4], px[p * 4 + 1], px[p * 4 + 2]);
       px[p * 4 + 3] = Math.min(255, lum * 1.6);
     }
@@ -77,7 +80,7 @@ const outputs = await page.evaluate(async (dataUrl) => {
     'icons/apple-touch-icon.png': render(180, 0.1, '#FFFFFF'),
     'favicon.png': render(64, 0),
   };
-}, 'data:image/jpeg;base64,' + b64);
+}, { dataUrl: (isSvg ? 'data:image/svg+xml;base64,' : 'data:image/jpeg;base64,') + b64, isSvg });
 
 for (const [file, url] of Object.entries(outputs)) {
   fs.writeFileSync(path.join(pub, file), Buffer.from(url.split(',')[1], 'base64'));

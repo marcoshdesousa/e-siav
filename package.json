@@ -15,7 +15,7 @@
     "start": "node --disable-warning=ExperimentalWarning server/index.js",
     "render-start": "test -f dist/index.html || npm run build; npm start",
     "seed": "node --disable-warning=ExperimentalWarning server/seed.js --reset",
-    "logo": "node scripts/process-logo.mjs assets/logo-original.jpg",
+    "logo": "node scripts/process-logo.mjs assets/logo.svg",
     "test": "node --disable-warning=ExperimentalWarning --test test/*.test.js"
   },
   "dependencies": {
