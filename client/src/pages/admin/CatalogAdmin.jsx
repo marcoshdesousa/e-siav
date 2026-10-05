@@ -141,7 +141,7 @@ export default function CatalogAdmin() {
           </label>
           <p className="muted small">Cada foto é ligada pelo <b>nome do arquivo</b>: “Nós e Amarras.png”, “nos-e-amarras.jpg” ou pelo código (“AR-012.png”). Pode mandar a pasta inteira.</p>
           <div className="grid2">
-            <Button variant="secondary" onClick={() => setAdding(true)}><Plus size={16} /> {type === 'classe' ? 'Nova classe' : 'Nova'}</Button>
+            <Button variant="secondary" onClick={() => setAdding(true)}><Plus size={16} /> {type === 'classe' ? 'Nova classe' : 'Nova especialidade'}</Button>
             {type === 'especialidade' && <Button variant="secondary" onClick={() => setImporting(true)}><FileUp size={16} /> Importar lista</Button>}
           </div>
           {busy && <p className="small muted">Enviando…</p>}
