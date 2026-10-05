@@ -290,6 +290,25 @@ export function seed() {
   });
 }
 
+/**
+ * Banco de verdade: só o acesso do Administrador Geral (login "admin").
+ * A senha vem da variável ADMIN_PASSWORD (nunca fica no código, que é público).
+ * Clubes, unidades e membros são criados pelo próprio app e nunca são apagados aqui.
+ */
+export function createInitialAdmin() {
+  const password = process.env.ADMIN_PASSWORD;
+  if (!password) {
+    console.warn('ADMIN_PASSWORD não definida: o acesso do administrador será criado quando ela for configurada.');
+    return false;
+  }
+  tx(() => {
+    const admin = ins(`INSERT INTO admins (name) VALUES ('Administrador Geral')`);
+    login('admin', admin, 'admin', password);
+  });
+  console.log('Acesso do administrador criado (login: admin).');
+  return true;
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   if (process.argv.includes('--reset')) resetDatabase();
   if (get('SELECT 1 FROM admins LIMIT 1')) {

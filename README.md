@@ -16,13 +16,15 @@ npm run build      # gera o frontend em dist/
 npm start          # http://localhost:3000
 ```
 
-Na primeira execução o banco é criado em `data/` e preenchido com os dados de exemplo. Para recriar do zero: `npm run seed`.
+Na primeira execução o banco é criado em `data/` (ou em `DATA_DIR`) só com o acesso do Administrador Geral: login `admin` e a senha definida em `ADMIN_PASSWORD` (ex.: `ADMIN_PASSWORD=minhasenha npm start`). Nada é apagado ao reiniciar.
+
+Para testar com os dados de exemplo do Distrito Palmares, use um banco vazio com `SEED_DEMO=1` (o `npm run dev` já faz isso) ou `npm run seed` (**apaga tudo** e recria os exemplos — nunca rode em produção).
 
 Desenvolvimento com recarga automática: `npm run dev` (API na porta 3000 e Vite na 5173).
 
 Testes da API (permissões, privacidade, pontuação, ranking e chat): `npm test`.
 
-### Contas de demonstração
+### Contas de demonstração (só com SEED_DEMO=1 / npm run seed)
 
 | Tela de entrada | Conta | Usuário / senha |
 |---|---|---|

@@ -5,11 +5,6 @@ import { homeFor, useAuth } from '../auth.jsx';
 import { platform, useInstall } from '../install.js';
 import { LogoIcon, Modal, Spinner } from '../ui.jsx';
 
-const DEMO = {
-  clube: [['aguias', 'aguias123', 'Clube Águias do Vale'], ['falcoes', 'falcoes123', 'Unidade Falcões']],
-  membros: [['pedro', 'dbv123', 'Desbravador'], ['marcos', 'dbv123', 'Liderança'], ['admin', 'admin123', 'Administrador Geral']],
-};
-
 const SHOTS = ['/showcase/perfil.jpg', '/showcase/ranking.jpg', '/showcase/chat.jpg', '/showcase/requisitos.jpg'];
 
 /** Celular com as telas do app trocando sozinhas (só no computador). */
@@ -84,7 +79,6 @@ export default function Login() {
   const [error, setError] = useState('');
   const [shake, setShake] = useState(0);
   const [busy, setBusy] = useState(false);
-  const [demo, setDemo] = useState(false);
 
   if (actor === undefined) return <Spinner />;
   if (actor) return <Navigate to={homeFor(actor)} replace />;
@@ -130,17 +124,6 @@ export default function Login() {
             </button>
             {error && <p className="ig-error" role="alert">{error}</p>}
 
-            <div className="ig-or"><span />OU<span /></div>
-            <button type="button" className="ig-link" onClick={() => setDemo((d) => !d)}>{demo ? 'Esconder contas de teste' : 'Usar uma conta de teste'}</button>
-            {demo && (
-              <div className="ig-demo">
-                {DEMO[mode].map(([u, p, l]) => (
-                  <button type="button" key={u} onClick={() => { setUsername(u); setPassword(p); }}>
-                    <b>{l}</b><span>{u} · {p}</span>
-                  </button>
-                ))}
-              </div>
-            )}
           </form>
 
           <div className="ig-card ig-signup">

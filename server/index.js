@@ -22,11 +22,17 @@ import announcementRoutes from './routes/announcements.js';
 import achievementRoutes from './routes/achievements.js';
 import clubEventRoutes from './routes/clubEvents.js';
 import { syncCatalog } from './catalog.js';
-import { seed } from './seed.js';
+import { createInitialAdmin, seed } from './seed.js';
 
+// Banco vazio: cria só o administrador. Os dados de exemplo só entram com SEED_DEMO=1
+// (testes e desenvolvimento). Nada que já existe no banco é apagado na inicialização.
 if (!get('SELECT 1 FROM admins LIMIT 1')) {
-  console.log('Banco vazio: carregando dados de exemplo do Distrito Palmares...');
-  seed();
+  if (process.env.SEED_DEMO === '1') {
+    console.log('Banco vazio: carregando dados de exemplo do Distrito Palmares...');
+    seed();
+  } else {
+    createInitialAdmin();
+  }
 }
 
 syncCatalog();
