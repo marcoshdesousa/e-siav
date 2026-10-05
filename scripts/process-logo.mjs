@@ -6,7 +6,10 @@ import path from 'node:path';
 
 const { chromium } = await import('playwright').catch(() => import('/opt/node22/lib/node_modules/playwright/index.mjs'));
 const src = process.argv[2];
-const pub = path.resolve('client/public');
+// Os arquivos ficam em /marca/: trocar a pasta (e não só o arquivo) garante que
+// navegadores e o app instalado não mostrem uma logo antiga guardada em cache.
+const pub = path.resolve('client/public/marca');
+fs.mkdirSync(pub, { recursive: true });
 const b64 = fs.readFileSync(src).toString('base64');
 const browser = await chromium.launch();
 const page = await browser.newPage();
@@ -74,10 +77,13 @@ const outputs = await page.evaluate(async ({ dataUrl, isSvg }) => {
   };
   return {
     'logo.png': render(512, 0.02),
-    'icons/icon-192.png': render(192, 0.04),
-    'icons/icon-512.png': render(512, 0.04),
-    'icons/maskable-512.png': render(512, 0.16, '#FFFFFF'),
-    'icons/apple-touch-icon.png': render(180, 0.1, '#FFFFFF'),
+    'icon-192.png': render(192, 0.04),
+    'icon-512.png': render(512, 0.04),
+    'maskable-512.png': render(512, 0.16, '#FFFFFF'),
+    'apple-touch-icon.png': render(180, 0.1, '#FFFFFF'),
+    'favicon-16.png': render(16, 0),
+    'favicon-32.png': render(32, 0),
+    'favicon-48.png': render(48, 0),
     'favicon.png': render(64, 0),
   };
 }, { dataUrl: (isSvg ? 'data:image/svg+xml;base64,' : 'data:image/jpeg;base64,') + b64, isSvg });
@@ -86,4 +92,21 @@ for (const [file, url] of Object.entries(outputs)) {
   fs.writeFileSync(path.join(pub, file), Buffer.from(url.split(',')[1], 'base64'));
   console.log('gerado', file);
 }
+if (isSvg) fs.copyFileSync(src, path.join(pub, 'logo.svg'));
+
+// favicon.ico (16, 32 e 48 px) para navegadores que pedem /favicon.ico direto.
+const sizes = [16, 32, 48];
+const pngs = sizes.map((n) => fs.readFileSync(path.join(pub, `favicon-${n}.png`)));
+const head = Buffer.alloc(6 + 16 * sizes.length);
+head.writeUInt16LE(0, 0); head.writeUInt16LE(1, 2); head.writeUInt16LE(sizes.length, 4);
+let offset = head.length;
+sizes.forEach((n, i) => {
+  const e = 6 + 16 * i;
+  head.writeUInt8(n, e); head.writeUInt8(n, e + 1); head.writeUInt16LE(1, e + 4); head.writeUInt16LE(32, e + 6);
+  head.writeUInt32LE(pngs[i].length, e + 8); head.writeUInt32LE(offset, e + 12);
+  offset += pngs[i].length;
+});
+fs.writeFileSync(path.resolve('client/public/favicon.ico'), Buffer.concat([head, ...pngs]));
+for (const n of sizes) fs.rmSync(path.join(pub, `favicon-${n}.png`));
+console.log('gerado favicon.ico');
 await browser.close();

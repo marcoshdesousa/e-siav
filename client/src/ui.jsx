@@ -5,7 +5,7 @@ import { AppIcon, ICONS } from './icons.jsx';
 
 // ---------- Marca ----------
 export const LogoIcon = ({ size = 40 }) => (
-  <img src="/logo.svg" width={size} height={size} alt="App do DBV" className="logo-icon" />
+  <img src="/marca/logo.svg" width={size} height={size} alt="App do DBV" className="logo-icon" />
 );
 
 export function LogoHorizontal({ light = false, size = 36 }) {

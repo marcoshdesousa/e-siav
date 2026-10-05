@@ -37,7 +37,7 @@ export function RealtimeProvider({ children }) {
             const text = data.message.kind === 'audio' ? 'Mensagem de áudio' : data.message.kind === 'foto' ? 'Foto' : data.message.body;
             setToast({ id: Date.now(), who, text, conversation_id: data.conversation_id });
             if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
-              try { new Notification(who, { body: text, icon: '/icons/icon-192.png' }); } catch { /* ignora */ }
+              try { new Notification(who, { body: text, icon: '/marca/icon-192.png' }); } catch { /* ignora */ }
             }
           }
         }

@@ -4,7 +4,7 @@ Plataforma para clubes de Desbravadores: gestão do clube (membros e unidades), 
 
 Aplicação web responsiva, pensada primeiro para celular e instalável como app (PWA). Toda a organização é por distrito (a primeira versão vem com o **Distrito Palmares**).
 
-<img src="client/public/logo.png" alt="Logo do App do DBV" width="160">
+<img src="client/public/marca/logo.svg" alt="Logo do App do DBV" width="160">
 
 ## Como rodar
 
@@ -113,6 +113,6 @@ Observações do plano grátis:
 
 ## Logo e identidade visual
 
-A logo fica em `assets/logo-original.jpg`. O comando `npm run logo` recorta o fundo e gera `client/public/logo.png`, o favicon e os ícones do app (`client/public/icons/`). As cores do app seguem a logo: azul-marinho da bússola (`#0E2A6B`), vermelho (`#D3111A`) e amarelo (`#FFC61A`). Os ícones da interface são da biblioteca [Lucide](https://lucide.dev) (sem emojis).
+A logo é vetorial e fica em `assets/logo.svg`. O comando `npm run logo` gera a pasta `client/public/marca/` (logo, ícones do app instalado, favicon) e o `client/public/favicon.ico`. Para trocar a logo, substitua o SVG e rode o comando. As cores do app seguem a logo: vermelho (`#E92A2F`), amarelo (`#F9C71D`) e azul-marinho (`#0E2A6B`). Os ícones da interface são da biblioteca [Lucide](https://lucide.dev) (sem emojis).
 
 As telas mostradas no celular da página de entrada ficam em `client/public/showcase/` e podem ser refeitas com o servidor rodando: `node scripts/showcase.mjs http://localhost:3000`.
