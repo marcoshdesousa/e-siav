@@ -32,4 +32,4 @@ services:
     disk:
       name: dbv-data
       mountPath: /var/data
-      sizeGB: 1
+      sizeGB: 3
