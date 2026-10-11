@@ -1,6 +1,6 @@
-// Service worker do App do DBV: app instalável e tela inicial disponível offline.
-const CACHE = 'dbv-v8';
-const SHELL = ['/', '/manifest.webmanifest', '/favicon.ico', '/marca/logo.svg', '/marca/logo.png', '/marca/favicon.png', '/marca/icon-192.png', '/marca/icon-512.png'];
+// Service worker do Exploradores do Brasil: app instalável e tela inicial disponível offline.
+const CACHE = 'dbv-v9';
+const SHELL = ['/', '/manifest.webmanifest', '/favicon.ico', '/marca/logo.png', '/marca/favicon.png', '/marca/icon-192.png', '/marca/icon-512.png'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));

@@ -1,4 +1,4 @@
-// Configurações editáveis do App do DBV.
+// Configurações editáveis do Exploradores do Brasil.
 // A lista de cargos fica aqui para ser fácil de alterar depois.
 
 export const CARGOS = {

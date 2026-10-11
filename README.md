@@ -1,10 +1,10 @@
-# App do DBV
+# Exploradores do Brasil
 
 Plataforma para clubes de Desbravadores: gestão do clube (membros e unidades), requisitos com pontuação e ranking, perfis públicos com medalhas e eventos, especialidades/classes/cursos e chat interno em tempo real.
 
 Aplicação web responsiva, pensada primeiro para celular e instalável como app (PWA). Toda a organização é por distrito (a primeira versão vem com o **Distrito Palmares**).
 
-<img src="client/public/marca/logo.svg" alt="Logo do App do DBV" width="160">
+<img src="client/public/marca/logo.png" alt="Logo do Exploradores do Brasil" width="160">
 
 ## Como rodar
 
@@ -113,6 +113,6 @@ Observações do plano grátis:
 
 ## Logo e identidade visual
 
-A logo é vetorial e fica em `assets/logo.svg`. O comando `npm run logo` gera a pasta `client/public/marca/` (logo, ícones do app instalado, favicon) e o `client/public/favicon.ico`. Para trocar a logo, substitua o SVG e rode o comando. As cores do app seguem a logo: vermelho (`#E92A2F`), amarelo (`#F9C71D`) e azul-marinho (`#0E2A6B`). Os ícones da interface são da biblioteca [Lucide](https://lucide.dev) (sem emojis).
+A arte da logo fica em `assets/logo-exploradores.jpg` (quadrada). O comando `npm run logo` gera a pasta `client/public/marca/` (logo, ícones do app instalado, favicon) e o `client/public/favicon.ico`. Para trocar a logo, substitua a imagem e rode o comando. As cores do app seguem a logo: verde-escuro (`#1B4D2B`), verde (`#3E8A3A`) e amarelo (`#F2DE2A`). Os ícones da interface são da biblioteca [Lucide](https://lucide.dev) (sem emojis).
 
 As telas mostradas no celular da página de entrada ficam em `client/public/showcase/` e podem ser refeitas com o servidor rodando: `node scripts/showcase.mjs http://localhost:3000`.

@@ -34,9 +34,9 @@ function FloatField({ label, type = 'text', value, onChange, autoComplete, right
 }
 
 const STEPS = {
-  ios: { title: 'Instalar no iPhone', steps: [[Share, 'No Safari, toque em Compartilhar (o quadrado com a seta para cima).'], [SquarePlus, 'Role e toque em “Adicionar à Tela de Início”.'], [Smartphone, 'Toque em “Adicionar”. O App do DBV aparece junto com os seus apps.']] },
-  android: { title: 'Instalar no Android', steps: [[MoreVertical, 'No Chrome, toque no menu (os três pontinhos no canto de cima).'], [Download, 'Toque em “Instalar app” ou “Adicionar à tela inicial”.'], [Smartphone, 'Confirme. O App do DBV aparece junto com os seus apps.']] },
-  desktop: { title: 'Instalar no computador', steps: [[Monitor, 'No Chrome ou Edge, clique no ícone de instalar na barra de endereço (à direita).'], [Download, 'Ou abra o menu do navegador e escolha “Instalar App do DBV”.'], [Monitor, 'O app abre em uma janela própria, como um programa.']] },
+  ios: { title: 'Instalar no iPhone', steps: [[Share, 'No Safari, toque em Compartilhar (o quadrado com a seta para cima).'], [SquarePlus, 'Role e toque em “Adicionar à Tela de Início”.'], [Smartphone, 'Toque em “Adicionar”. O Exploradores do Brasil aparece junto com os seus apps.']] },
+  android: { title: 'Instalar no Android', steps: [[MoreVertical, 'No Chrome, toque no menu (os três pontinhos no canto de cima).'], [Download, 'Toque em “Instalar app” ou “Adicionar à tela inicial”.'], [Smartphone, 'Confirme. O Exploradores do Brasil aparece junto com os seus apps.']] },
+  desktop: { title: 'Instalar no computador', steps: [[Monitor, 'No Chrome ou Edge, clique no ícone de instalar na barra de endereço (à direita).'], [Download, 'Ou abra o menu do navegador e escolha “Instalar Exploradores do Brasil”.'], [Monitor, 'O app abre em uma janela própria, como um programa.']] },
 };
 
 function InstallSection() {
@@ -105,7 +105,7 @@ export default function Login() {
         <div className="ig-col">
           <form className="ig-card ig-login" onSubmit={submit} key={shake} data-shake={shake > 0 || undefined}>
             <LogoIcon size={132} />
-            <h1 className="ig-brand">App do DBV</h1>
+            <h1 className="ig-brand">Exploradores do Brasil</h1>
             <p className="ig-tagline">Entre para ver o seu clube, a sua unidade e o ranking.</p>
 
             <div className="ig-switch" role="tablist" data-mode={mode}>
@@ -135,7 +135,7 @@ export default function Login() {
       </main>
       <footer className="ig-footer">
         <span>Clubes de Desbravadores</span>
-        <span>© {new Date().getFullYear()} App do DBV</span>
+        <span>© {new Date().getFullYear()} Exploradores do Brasil</span>
       </footer>
     </div>
   );

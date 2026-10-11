@@ -382,7 +382,7 @@ function RequirementsPage() {
     <>
       <PageHeader title="Requisitos" />
       <Tabs tabs={[['cumprir', 'Requisitos do App'], ['criados', 'Criados pelo clube'], ['avaliar', 'Avaliar']]} value={tab} onChange={setTab} />
-      {tab === 'cumprir' && <><p className="muted small">Requisitos que o App do DBV manda para o seu clube cumprir.</p><RequirementsTodo /></>}
+      {tab === 'cumprir' && <><p className="muted small">Requisitos que a administração do app manda para o seu clube cumprir.</p><RequirementsTodo /></>}
       {tab === 'criados' && <><p className="muted small">Crie requisitos com prazo e pontos para as unidades ou para os desbravadores do seu clube. Eles contam no ranking do clube.</p><CreatedRequirements /></>}
       {tab === 'avaliar' && <ReviewsPanel />}
     </>

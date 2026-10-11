@@ -259,7 +259,7 @@ export function seed() {
     for (const m of ['pedro', 'ana', 'marcos']) part(ev2, 'member', members[m]);
 
     // Anúncio de exemplo
-    run('INSERT INTO announcements (title, body, link) VALUES (?,?,?)', 'Bem-vindo ao App do DBV!',
+    run('INSERT INTO announcements (title, body, link) VALUES (?,?,?)', 'Bem-vindo ao Exploradores do Brasil!',
       'Agora o seu clube está no celular: cumpra requisitos, acompanhe o ranking, informe suas classes e especialidades e converse com a sua unidade.', null);
 
     // ---------- Chat ----------

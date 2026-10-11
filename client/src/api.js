@@ -1,4 +1,4 @@
-// Cliente HTTP da API do App do DBV.
+// Cliente HTTP da API do Exploradores do Brasil.
 async function request(method, url, body) {
   const opts = { method, credentials: 'same-origin', headers: {} };
   if (body instanceof FormData) opts.body = body;

@@ -64,7 +64,7 @@ if (fs.existsSync(path.join(dist, 'index.html'))) {
 } else {
   console.error(`ATENÇÃO: site não encontrado em ${dist}. Rode "npm run build" antes de "npm start".`);
   app.get('/{*splat}', (_req, res) =>
-    res.status(503).send('<h1>App do DBV</h1><p>O site ainda não foi gerado. Rode <code>npm run build</code> e reinicie o servidor.</p>'));
+    res.status(503).send('<h1>Exploradores do Brasil</h1><p>O site ainda não foi gerado. Rode <code>npm run build</code> e reinicie o servidor.</p>'));
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -81,4 +81,4 @@ app.use((err, _req, res, _next) => {
 const server = http.createServer(app);
 attachRealtime(server);
 const PORT = Number(process.env.PORT) || 3000;
-server.listen(PORT, () => console.log(`App do DBV rodando em http://localhost:${PORT}`));
+server.listen(PORT, () => console.log(`Exploradores do Brasil rodando em http://localhost:${PORT}`));
