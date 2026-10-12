@@ -5,7 +5,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { run, get, all, tx, resetDatabase, UPLOAD_DIR } from './db.js';
 import { hashPassword } from './auth.js';
-import { cleanCpf, newClubCode, newMemberCode } from './util.js';
+import { cleanCpf } from './util.js';
+import { saveFicha } from './ficha.js';
 import { NOME_UNIDADE_LIDERANCA } from './config.js';
 import { syncCatalog } from './catalog.js';
 
@@ -43,30 +44,59 @@ function login(type, id, username, password) {
 }
 const ins = (sql, ...p) => Number(run(sql, ...p).lastInsertRowid);
 
-export function seed() {
-  tx(() => {
-    const palmares = ins(`INSERT INTO districts (name) VALUES ('Distrito Palmares')`);
+/** Ficha completa de teste (cadastro + saúde), assinada pelo responsável. */
+function demoFicha(name, age, club) {
+  const first = name.split(' ')[0];
+  const minor = age < 18;
+  const resp = minor ? `Responsável de ${first} Teste` : name;
+  const f = {
+    sexo: /a$/.test(first) ? 'Feminino' : 'Masculino', whatsapp: '81999990000', doc_tipo: 'rg_cpf', rg: '1234567', rg_orgao: 'SSP/PE',
+    endereco: 'Rua das Palmeiras', numero: '100', bairro: 'Centro', cidade: 'Palmares', uf: 'PE', camiseta: minor ? '12' : 'M',
+    termo_imagem: true, termo_responsabilidade: true, termo_dados: true, assinatura_nome: resp, assinatura_cpf: '11144477735',
+    doencas: ['Catapora'], doencas_ok: true, sangue_tipo: 'O', sangue_rh: 'Positivo', plano_saude: '', cartao_sus: '',
+    termo_medico: true, med_assinatura_nome: resp, med_assinatura_cpf: '11144477735',
+    data_inscricao: new Date().toISOString().slice(0, 10), local_inscricao: `${club === 'aguias' ? '1º Clã Águias do Vale' : '2º Clã Leões de Judá'} — dados de teste`,
+  };
+  for (const k of ['cardiaco', 'alergia_medicamento', 'lactose', 'deficiencia', 'transfusao', 'alergia_pele', 'convulsao', 'psicologico', 'alergia', 'diabetes', 'ferimento', 'fratura', 'cirurgia', 'internacao']) f['q_' + k] = 'nao';
+  if (age >= 16) f.estado_civil = 'Solteiro';
+  if (minor) Object.assign(f, { mae_nome: `Mãe de ${first} Teste`, mae_whatsapp: '81999990000' });
+  return f;
+}
 
-    const admin = ins(`INSERT INTO admins (name) VALUES ('Administrador Geral')`);
-    login('admin', admin, 'admin', 'admin123');
+/**
+ * Dados de teste. production = true: no app no ar, cria só clãs, grupos e membros
+ * de teste (usa o admin e o distrito que já existem; não mexe no catálogo, cursos,
+ * medalhas, eventos e requisitos gerais).
+ */
+export function seed({ production = false } = {}) {
+  tx(() => {
+    const palmares = get(`SELECT id FROM districts WHERE name = 'Distrito Palmares'`)?.id
+      || (production && get('SELECT id FROM districts ORDER BY id LIMIT 1')?.id)
+      || ins(`INSERT INTO districts (name) VALUES ('Distrito Palmares')`);
+
+    let admin = get('SELECT id FROM admins ORDER BY id LIMIT 1')?.id;
+    if (!admin) {
+      admin = ins(`INSERT INTO admins (name) VALUES ('Administrador Geral')`);
+      login('admin', admin, 'admin', 'admin123');
+    }
 
     // ---------- Clãs e grupos ----------
     const clubs = {};
     const units = {};
     const clubDefs = [
-      { key: 'aguias', name: 'Clã Águias do Vale', director: 'Marcos Almeida', color: '#0B3D91', icon: 'wing', user: 'aguias', units: [['falcoes', 'Falcões', '#D62828', 'wing', '1111'], ['gavioes', 'Gaviões', '#1F7A4D', 'mountain', '2222']] },
-      { key: 'leoes', name: 'Clã Leões de Judá', director: 'Carlos Pereira', color: '#8A1C1C', icon: 'paw', user: 'leoes', units: [['panteras', 'Panteras', '#3A2E7A', 'paw', '3333'], ['tigres', 'Tigres', '#D9822B', 'flame', '4444']] },
+      { key: 'aguias', number: 1, code: '4821', password: 'AG2026', name: '1º Clã Águias do Vale', director: 'Marcos Almeida', color: '#0B3D91', icon: 'wing', user: 'aguias', lid: 'TU9001',
+        units: [['falcoes', 'Falcões', '#D62828', 'wing', 'FA1111'], ['gavioes', 'Gaviões', '#1F7A4D', 'mountain', 'GA2222']] },
+      { key: 'leoes', number: 2, code: '7350', password: 'LE2026', name: '2º Clã Leões de Judá', director: 'Carlos Pereira', color: '#8A1C1C', icon: 'paw', user: 'leoes', lid: 'TU9002',
+        units: [['panteras', 'Panteras', '#3A2E7A', 'paw', 'PA3333'], ['tigres', 'Tigres', '#D9822B', 'flame', 'TI4444']] },
     ];
     for (const c of clubDefs) {
-      const id = ins('INSERT INTO clubs (district_id, name, logo, code, director_name, history) VALUES (?,?,?,?,?,?)', palmares, c.name,
-        makeLogo(`seed-club-${c.key}.svg`, c.color, c.icon), newClubCode(), c.director, `O ${c.name} nasceu da vontade de levar aventura e fé aos jovens do bairro.`);
-      login('club', id, c.user, c.user + '123');
+      const id = ins('INSERT INTO clubs (district_id, name, number, logo, code, director_name, history) VALUES (?,?,?,?,?,?,?)', palmares, c.name, c.number,
+        makeLogo(`seed-club-${c.key}.svg`, c.color, c.icon), c.code, c.director, `O ${c.name} nasceu da vontade de levar aventura e fé aos jovens do bairro.`);
+      login('club', id, c.user, c.password);
       clubs[c.key] = id;
-      units[c.key + ':lideranca'] = ins('INSERT INTO units (club_id, name, logo, is_leadership, pin) VALUES (?,?,?,1,?)', id, NOME_UNIDADE_LIDERANCA, makeLogo(`seed-lid-${c.key}.svg`, '#0B3D91', 'star', '#fff'), c.key === 'aguias' ? '9001' : '9002');
+      units[c.key + ':lideranca'] = ins('INSERT INTO units (club_id, name, logo, is_leadership, pin) VALUES (?,?,?,1,?)', id, NOME_UNIDADE_LIDERANCA, makeLogo(`seed-lid-${c.key}.svg`, '#0B3D91', 'star', '#fff'), c.lid);
       for (const [ukey, uname, ucolor, uicon, pin] of c.units) {
-        const uid = ins('INSERT INTO units (club_id, name, logo, pin) VALUES (?,?,?,?)', id, uname, makeLogo(`seed-unit-${ukey}.svg`, ucolor, uicon), pin);
-        login('unit', uid, ukey, ukey + '123');
-        units[ukey] = uid;
+        units[ukey] = ins('INSERT INTO units (club_id, name, logo, pin) VALUES (?,?,?,?)', id, uname, makeLogo(`seed-unit-${ukey}.svg`, ucolor, uicon), pin);
       }
     }
 
@@ -97,14 +127,23 @@ export function seed() {
         if (cpf) return cpf;
       }
     };
+    // Códigos fixos (100001, 100002...) para facilitar os testes; senha de todos: dbv123.
     memberDefs.forEach(([key, club, unit, name, age, cargo], i) => {
+      const birth = birthForAge(age, (key.length * 2) % 11);
       const id = ins(
         'INSERT INTO members (club_id, unit_id, name, birth_date, cargo, code, cpf) VALUES (?,?,?,?,?,?,?)',
-        clubs[club], unit ? units[unit] : null, name, birthForAge(age, (key.length * 2) % 11), cargo, newMemberCode(), fakeCpf(123456000 + i * 1000),
+        clubs[club], unit ? units[unit] : null, name, birth, cargo, String(100001 + i), fakeCpf(123456000 + i * 1000),
       );
       login('member', id, key, 'dbv123');
       members[key] = id;
+      // Ficha completa para quase todos; Gabriel e Davi ficam com "dados incompletos".
+      if (!['gabriel', 'davi'].includes(key)) saveFicha(id, demoFicha(name, age, club), { acceptTerms: true });
     });
+    // Uma inscrição esperando aprovação (feita pelo link de cadastro).
+    const pend = ins(`INSERT INTO members (club_id, unit_id, name, birth_date, cargo, code, cpf, status) VALUES (?,?,?,?,?,?,?,'pendente')`,
+      clubs.aguias, null, 'Bruna Inscrita Teste', birthForAge(11, 2), 'Explorador', '100099', fakeCpf(123999000));
+    login('member', pend, 'bruna', 'dbv123');
+    saveFicha(pend, demoFicha('Bruna Inscrita Teste', 11, 'aguias'), { acceptTerms: true });
 
     // ---------- Conteúdo: cadernos guia, insígnias e cursos ----------
     const content = {};
@@ -120,24 +159,24 @@ export function seed() {
       content[key] = id;
     };
     // Cadernos guia e insígnias vêm do catálogo (não são vendidas nem feitas online).
-    syncCatalog({ demo: true });
-    const byName = (type, name) => get('SELECT id FROM content WHERE type = ? AND name = ?', type, name).id;
+    syncCatalog({ demo: !production });
+    const byName = (type, name) => get('SELECT id FROM content WHERE type = ? AND name = ?', type, name)?.id;
     for (const [k, n] of [['amigo', 'Mirins'], ['companheiro', 'Explorador'], ['pesquisador', 'Explorador 2'], ['pioneiro', 'Excelente'], ['lider', 'Líder']]) content[k] = byName('classe', n);
     for (const [k, n] of [['nos', 'Nós e Amarras'], ['socorros', 'Primeiros Socorros Básico'], ['acampamento', 'Acampamento I'], ['historias', 'Arte de Contar Histórias Cristãs'], ['culinaria', 'Culinária'], ['aves', 'Aves'], ['natacao', 'Natação Principiante I']]) content[k] = byName('especialidade', n);
 
-    // Cursos (podem ser grátis ou pagos)
-    addContent('curso_acampamento', 'curso', 'Acampamento Seguro', { icon: 'flame', description: 'Curso em 4 aulas sobre segurança em acampamentos.' }, [
+    // Cursos (só nos dados de exemplo locais)
+    if (!production) addContent('curso_acampamento', 'curso', 'Acampamento Seguro', { icon: 'flame', description: 'Curso em 4 aulas sobre segurança em acampamentos.' }, [
       ['Aula 1 — Planejamento', 'Como planejar um acampamento: local, autorização dos pais, equipe e cardápio.'],
       ['Aula 2 — Equipamentos', 'Barracas, sacos de dormir, lanternas e kit de primeiros socorros.'],
       ['Aula 3 — Fogo e cozinha', 'Regras para fogueiras, fogareiros e higiene dos alimentos.'],
       ['Aula 4 — Natureza', 'Deixe o lugar melhor do que encontrou: lixo, trilhas e animais.'],
     ]);
-    addContent('curso_biblia', 'curso', 'Bíblia para Exploradores', { icon: 'scroll', description: 'Conheça os livros da Bíblia de um jeito prático.' }, [
+    if (!production) addContent('curso_biblia', 'curso', 'Bíblia para Exploradores', { icon: 'scroll', description: 'Conheça os livros da Bíblia de um jeito prático.' }, [
       ['Aula 1 — Como a Bíblia é organizada', 'Antigo e Novo Testamento, livros, capítulos e versículos.'],
       ['Aula 2 — Grandes histórias', 'De Gênesis a Apocalipse em 10 histórias.'],
       ['Aula 3 — Devocional diário', 'Como criar o hábito da devoção matinal.'],
     ]);
-    addContent('curso_lideranca', 'curso', 'Liderança Jovem', { icon: 'graduation', price: 4990, description: 'Para quem quer liderar grupos e projetos.' }, [
+    if (!production) addContent('curso_lideranca', 'curso', 'Liderança Jovem', { icon: 'graduation', price: 4990, description: 'Para quem quer liderar grupos e projetos.' }, [
       ['Aula 1 — O que é liderar', 'Liderança servidora e exemplo.'],
       ['Aula 2 — Comunicação', 'Como falar com o grupo e ouvir cada membro.'],
       ['Aula 3 — Planejamento', 'Metas, calendário e divisão de tarefas.'],
@@ -146,23 +185,23 @@ export function seed() {
     ]);
 
     // Conquistas registradas pelo clã.
-    const ach = (m, c, source = 'clube') => run('INSERT INTO achievements (member_id, content_id, source) VALUES (?,?,?)', members[m], content[c], source);
+    const ach = (m, c, source = 'clube') => content[c] && run('INSERT INTO achievements (member_id, content_id, source) VALUES (?,?,?)', members[m], content[c], source);
     ach('pedro', 'amigo'); ach('pedro', 'companheiro'); ach('pedro', 'nos');
     ach('lucas', 'amigo'); ach('lucas', 'companheiro'); ach('lucas', 'pesquisador'); ach('lucas', 'pioneiro'); ach('lucas', 'socorros'); ach('lucas', 'acampamento');
     ach('ana', 'amigo'); ach('sofia', 'amigo'); ach('sofia', 'companheiro'); ach('sofia', 'pesquisador'); ach('sofia', 'historias');
     ach('marcos', 'lider'); ach('carlos', 'lider');
 
-    run(`INSERT INTO content_access (member_id, content_id, source) VALUES (?, ?, 'admin')`, members.juliana, content.curso_lideranca);
-    run(`INSERT INTO purchases (member_id, content_id, price_cents, status) VALUES (?, ?, 4990, 'pendente')`, members.lucas, content.curso_lideranca);
+    if (!production) run(`INSERT INTO content_access (member_id, content_id, source) VALUES (?, ?, 'admin')`, members.juliana, content.curso_lideranca);
 
     // Pedidos de membros: "tenho esta especialidade/classe" → a diretoria aprova
-    const pedido = (m, c) => run('INSERT INTO achievement_requests (member_id, content_id) VALUES (?, ?)', members[m], content[c]);
+    const pedido = (m, c) => content[c] && run('INSERT INTO achievement_requests (member_id, content_id) VALUES (?, ?)', members[m], content[c]);
     pedido('beatriz', 'culinaria'); pedido('beatriz', 'aves'); pedido('beatriz', 'amigo');
     pedido('gabriel', 'natacao');
     pedido('isabela', 'nos');
 
     // ---------- Requisitos ----------
     const req = (o) => {
+      if (production && !o.club) return null; // no ar: só requisitos dos clãs de teste
       const id = ins(
         `INSERT INTO requirements (creator_type, club_id, audience, member_kind, scope, district_id, title, description, model, points, late_points, deadline, created_at)
          VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
@@ -204,7 +243,7 @@ export function seed() {
       leoesCantinho: req({ club: 'leoes', audience: 'unit', title: 'Cantinho do grupo', description: 'Escrevam sobre o cantinho do grupo e enviem uma foto.', model: 'texto_foto', points: 50, late: 25, deadline: iso(8) }),
     };
 
-    const sub = (reqId, type, id, o) => run(
+    const sub = (reqId, type, id, o) => reqId && run(
       `INSERT INTO submissions (requirement_id, submitter_type, submitter_id, text, photos, answers, quiz_correct, quiz_total, status, late, points, submitted_at, reviewed_at)
        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       reqId, type, id, o.text || null, JSON.stringify(o.photos || []), o.answers ? JSON.stringify(o.answers) : null, o.correct ?? null, o.total ?? null,
@@ -240,6 +279,7 @@ export function seed() {
     sub(R.memFoto, 'member', members.isabela, { photos: [], status: 'aprovado', points: 20, at: -4 });
     sub(R.memFoto, 'member', members.davi, { photos: [], status: 'recusado', at: -4 });
 
+    if (!production) {
     // ---------- Medalhas, troféus e eventos ----------
     const medal = (kind, name, icon, description) => ins('INSERT INTO medals (kind, name, icon, description) VALUES (?,?,?,?)', kind, name, icon, description);
     const award = (m, type, id, note) => run('INSERT INTO medal_awards (medal_id, target_type, target_id, note, awarded_by) VALUES (?,?,?,?,?)', m, type, id, note, admin);
@@ -270,6 +310,8 @@ export function seed() {
     // Anúncio de exemplo
     run('INSERT INTO announcements (title, body, link) VALUES (?,?,?)', 'Bem-vindo ao Exploradores do Brasil!',
       'Agora o seu clã está no celular: cumpra requisitos, acompanhe o ranking, informe seus cadernos guia e insígnias e converse com o seu grupo.', null);
+
+    }
 
     // ---------- Chat ----------
     const conv = (type, o) => ins('INSERT INTO conversations (type, club_id, unit_id, member_a, member_b) VALUES (?,?,?,?,?)', type, o.club ?? null, o.unit ?? null, o.a ?? null, o.b ?? null);
@@ -326,4 +368,38 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     seed();
     console.log('Dados de exemplo criados.');
   }
+}
+
+/**
+ * Apaga todos os clãs (com grupos, membros, conversas e envios deles), mantendo o
+ * administrador, os distritos, o catálogo, os cursos e o que é do admin.
+ */
+export function wipeClubs() {
+  tx(() => {
+    run(`DELETE FROM submissions WHERE submitter_type IN ('club','unit','member')`);
+    run(`DELETE FROM medal_awards WHERE target_type IN ('club','unit','member')`);
+    run(`DELETE FROM event_participants WHERE target_type IN ('club','unit','member')`);
+    run(`DELETE FROM blocks`);
+    run(`DELETE FROM conversations`);
+    run(`DELETE FROM logins WHERE account_type IN ('club','unit','member')`);
+    run(`DELETE FROM members`);
+    run(`DELETE FROM units`);
+    run(`DELETE FROM clubs`);
+  });
+}
+
+/**
+ * Uma vez: troca os clãs que existiam pelos clãs de teste (pedido do dono do app,
+ * enquanto ninguém usa a plataforma). Se os dados de exemplo acabaram de ser
+ * criados (SEED_DEMO=1), só marca como feito.
+ */
+export function resetToDemoClubsOnce({ justSeeded = false } = {}) {
+  const KEY = 'demo-clubs-v1';
+  if (get('SELECT 1 FROM app_flags WHERE key = ?', KEY)) return;
+  if (!justSeeded && get('SELECT 1 FROM admins LIMIT 1')) {
+    wipeClubs();
+    seed({ production: true });
+    console.log('Clãs antigos apagados; clãs de teste criados.');
+  }
+  run('INSERT OR IGNORE INTO app_flags (key) VALUES (?)', KEY);
 }

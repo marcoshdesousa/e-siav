@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import {
-  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, ShieldAlert, Tent, Trophy, Users,
+  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, ShieldAlert, Tent, Trophy, UserPlus, Users,
 } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -19,6 +19,7 @@ import Deliver from './Deliver.jsx';
 import EventsAdmin from './Events.jsx';
 import AnnouncementsAdmin from './Announcements.jsx';
 import CatalogAdmin from './CatalogAdmin.jsx';
+import ClanApplications, { CreateClanLink } from './ClanApplications.jsx';
 
 const base = '/admin';
 
@@ -40,6 +41,7 @@ function AdminHome() {
             <div className="stats">
               <Stat icon={Map} value={o.districts} label="Distritos" to={`${base}/clubes`} />
               <Stat icon={Tent} value={o.clubs} label="Clãs" to={`${base}/clubes`} />
+              <Stat icon={UserPlus} value={o.clan_applications} label="Inscrição clã (novas)" to={`${base}/inscricoes-cla`} accent={o.clan_applications > 0} />
               <Stat icon={Flag} value={o.units} label="Grupos" />
               <Stat icon={Users} value={o.members} label="Membros" />
               <Stat icon={ClipboardCheck} value={o.requirements} label="Requisitos gerais" to={`${base}/requisitos`} />
@@ -51,7 +53,8 @@ function AdminHome() {
       </Loading>
       <Section title="Atalhos">
         <MoreMenu items={[
-          { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo' },
+          { to: `${base}/inscricoes-cla`, icon: UserPlus, label: 'Inscrição clã', hint: 'Pedidos para criar clã' },
+    { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo' },
           { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial' },
           { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos' },
           { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios' },
@@ -64,11 +67,12 @@ function AdminHome() {
 
 // ---------- Distritos, clãs e administradores ----------
 /**
- * Clã: nome, distrito e diretor. O código (0001, 0002...) é gerado pelo app;
- * a senha também, se ficar em branco. O login do clã é o código + a senha.
+ * Clã: o admin escreve só o nome, o distrito e o diretor. O app coloca o número
+ * na frente (1º, 2º...), cria o código (4 números) e a senha (2 letras + 4 números).
  */
-function ClubForm({ item, districts, onClose, onCreated, onSaved }) {
-  const [f, setF] = useState({ name: item?.name || '', district_id: item?.district_id || districts?.[0]?.id || '', director_name: item?.director_name || '', password: '' });
+const baseName = (n) => String(n || '').replace(/^\d+º\s*/, '').replace(/^cl[ãa]\s+/i, '');
+function ClubForm({ item, nextNumber, districts, onClose, onCreated, onSaved }) {
+  const [f, setF] = useState({ name: baseName(item?.name), district_id: item?.district_id || districts?.[0]?.id || '', director_name: item?.director_name || '' });
   const [busy, run] = useAsync();
   const save = async () => {
     if (item) {
@@ -76,24 +80,23 @@ function ClubForm({ item, districts, onClose, onCreated, onSaved }) {
       onSaved();
     } else {
       const r = await run(() => api.post('/admin/clubs', f), null);
-      onCreated({ ...r, name: f.name });
+      onCreated(r);
     }
   };
   return (
-    <Modal title={item ? `Editar clã ${item.code || ''}` : 'Novo clã'} onClose={onClose}
+    <Modal title={item ? `Editar ${item.name}` : 'Criar clã'} onClose={onClose}
       footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} disabled={!f.name.trim() || !f.director_name.trim()} onClick={save}>Salvar</Button></>}>
       <div className="form">
-        <Field label="Nome do clã"><input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder="Clã ..." /></Field>
+        <Field label="Nome do clã" hint={f.name.trim() ? `Vai ficar: ${item?.number ?? nextNumber}º Clã ${baseName(f.name)}` : 'O número entra sozinho na frente do nome'}>
+          <input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder="Ex.: Águias do Vale" />
+        </Field>
         <Field label="Distrito">
           <select value={f.district_id} onChange={(e) => setF({ ...f, district_id: e.target.value })}>
             {districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
           </select>
         </Field>
         <Field label="Diretor(a) do clã" hint="Responsável pelo clã. Dá para trocar todo ano."><input value={f.director_name} onChange={(e) => setF({ ...f, director_name: e.target.value })} /></Field>
-        <Field label={item ? 'Nova senha do clã' : 'Senha do clã'} hint={item ? 'Em branco mantém a atual' : 'Em branco: o app cria uma senha de 6 números'}>
-          <input value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} autoCapitalize="none" />
-        </Field>
-        {!item && <p className="muted small">O código do clã é criado automaticamente. Os grupos do clã entram com o mesmo código e a senha de cada grupo.</p>}
+        {!item && <p className="muted small">O app cria o código do clã e a senha (2 letras + 4 números). A senha não pode ser trocada. Os grupos entram com o mesmo código e a senha de cada grupo.</p>}
       </div>
     </Modal>
   );
@@ -173,7 +176,8 @@ function ClubsAdmin() {
       )}
       {tab === 'clubes' && (
         <>
-          <Button block onClick={() => setModal({ kind: 'club' })}>+ Novo clã</Button>
+          <Button block onClick={() => setModal({ kind: 'club' })}>+ Criar clã</Button>
+          <CreateClanLink />
           <div className="list mt">
             <Loading {...clubs} empty="Nenhum clã cadastrado.">
               {(list) => list.map((c) => (
@@ -182,7 +186,7 @@ function ClubsAdmin() {
                   <div className="grow">
                     <div className="title">{c.name}</div>
                     <div className="sub">{c.district_name} · {plural(c.unit_count, 'grupo', 'grupos')} · {plural(c.member_count, 'membro', 'membros')}</div>
-                    <div className="sub">Código <b>{c.code}</b>{c.director_name ? <> · Diretor(a): {c.director_name}</> : ''}</div>
+                    <div className="sub">Nº {c.number} · Código <b>{c.code}</b>{c.director_name ? <> · Diretor(a): {c.director_name}</> : ''}</div>
                   </div>
                   <Button small variant="secondary" onClick={() => setModal({ kind: 'club', item: c })}>Editar</Button>
                 </div>
@@ -213,16 +217,19 @@ function ClubsAdmin() {
           onClose={() => setModal(null)}
           onSaved={() => { setModal(null); clubs.reload(); districts.reload(); }}
           onCreated={(r) => { setModal({ kind: 'created', ...r }); clubs.reload(); districts.reload(); }}
+          nextNumber={Math.max(0, ...(clubs.data || []).map((c) => c.number || 0)) + 1}
         />
       )}
       {modal?.kind === 'created' && (
         <Modal title="Clã criado!" onClose={() => setModal(null)} footer={<Button onClick={() => setModal(null)}>Entendi</Button>}>
           <p className="center">Passe estes dados para o <b>{modal.name}</b>. Ele entra na tela <b>Clã</b>.</p>
+          <p className="center muted small" style={{ marginBottom: 0 }}>Número do clã</p>
+          <div className="code-big" style={{ fontSize: '1.6rem' }}>{modal.number}º</div>
           <p className="center muted small" style={{ marginBottom: 0 }}>Código do clã</p>
           <div className="code-big">{modal.code}</div>
           <p className="center muted small" style={{ marginBottom: 0 }}>Senha</p>
           <div className="code-big" style={{ fontSize: '1.6rem' }}>{modal.password}</div>
-          <p className="muted small center">Anote a senha: por segurança ela não aparece de novo. Dá para trocar em Editar.</p>
+          <p className="muted small center">Anote a senha: ela não aparece de novo e <b>não pode ser trocada</b>.</p>
         </Modal>
       )}
       {modal?.kind === 'admin' && (
@@ -260,6 +267,7 @@ export default function AdminApp() {
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
+    { to: `${base}/inscricoes-cla`, icon: UserPlus, label: 'Inscrição clã', hint: 'Pedidos para criar clã' },
     { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo', hint: 'Medalhas, troféus e cursos' },
     { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial', hint: 'Cadernos guia e insígnias' },
     { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos', hint: 'Criar e participantes' },
@@ -273,6 +281,7 @@ export default function AdminApp() {
       <Routes>
         <Route index element={<AdminHome />} />
         <Route path="clubes" element={<ClubsAdmin />} />
+        <Route path="inscricoes-cla" element={<ClanApplications />} />
         <Route path="requisitos" element={<RequirementsAdmin />} />
         <Route path="conteudo" element={<ContentAdmin />} />
         <Route path="catalogo" element={<CatalogAdmin />} />

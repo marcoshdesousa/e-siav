@@ -29,15 +29,27 @@ Testes da API (permissões, privacidade, pontuação, ranking e chat): `npm test
 | Tela de entrada | Conta | Como entra |
 |---|---|---|
 | Membros | Administrador Geral | usuário `admin` + senha (`ADMIN_PASSWORD`) |
-| Clã | Sistema do Clã | código do clã (4 números, ex.: `0001`) + senha do clã |
-| Clã | Portal do Grupo | código do clã + senha do grupo (4 números, gerada pelo app) |
+| Clã | Sistema do Clã | código do clã (4 números) + senha do clã (2 letras + 4 números, gerada pelo app) |
+| Clã | Portal do Grupo | código do clã + senha do grupo (2 letras + 4 números, gerada pelo app) |
 | Membros | Explorador / Tutor | código do membro (6 números) + senha |
 
-Novos membros entram pelo link de inscrição do clã (`/inscricao/0001`): ficha de cadastro, ficha médica e termos. A inscrição fica pendente até o clã aprovar. Ninguém é apagado: o clã desativa e pode reativar. Para mudar de clã, o clã novo pede a transferência (nome + CPF), o clã atual autoriza e o clã novo confirma.
+Cada clã tem um número (1º, 2º...) que entra no nome, um código de 4 números e dois links: o do perfil (`/p/clube/ID`) e o de cadastro (`/inscricao/CÓDIGO`). As senhas de clã e de grupo não podem ser trocadas. Quem quer abrir um clã usa `/criar-cla`; os pedidos aparecem em **Inscrição clã** no painel do admin.
 
-### Dados de exemplo (só com SEED_DEMO=1 / npm run seed)
+Novos membros entram pelo link de cadastro (ficha de cadastro + ficha de saúde em quiz, com assinaturas). A inscrição fica pendente até o clã aprovar. Ninguém é apagado: o clã desativa e pode reativar. Para mudar de clã, o clã novo pede a transferência (nome + CPF ou certidão), o clã atual autoriza e o clã novo confirma.
 
-Admin `admin` / `admin123`. Clãs `0001` (Águias, senha `aguias123`) e `0002` (Leões, senha `leoes123`); grupos com as senhas `1111`, `2222`, `3333`, `4444`. Membros: `pedro`, `ana`, `lucas`, `marcos`... com a senha `dbv123` (ou o código de 6 números de cada um).
+### Dados de teste
+
+No app no ar, os clãs antigos foram trocados uma vez pelos clãs de teste (o admin continua o mesmo). Localmente, `SEED_DEMO=1` cria tudo, com o admin `admin` / `admin123`.
+
+| Conta | Tela | Login | Senha |
+|---|---|---|---|
+| 1º Clã Águias do Vale | Clã | `4821` | `AG2026` |
+| Grupos Falcões / Gaviões / Tutores | Clã | `4821` | `FA1111` / `GA2222` / `TU9001` |
+| 2º Clã Leões de Judá | Clã | `7350` | `LE2026` |
+| Grupos Panteras / Tigres / Tutores | Clã | `7350` | `PA3333` / `TI4444` / `TU9002` |
+| Membros (Pedro, Ana, Lucas...) | Membros | `100001` a `100013` | `dbv123` |
+
+Links de cadastro de teste: `/inscricao/4821` e `/inscricao/7350`.
 
 ## O que tem
 

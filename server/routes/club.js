@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { all, get, run, tx } from '../db.js';
-import { requireAuth, setLogin, deleteLogin } from '../auth.js';
+import { requireAuth, setLogin, deleteLogin, checkAccountPassword } from '../auth.js';
 import { imageUpload, fileUrl } from '../uploads.js';
 import { CARGOS, CARGO_PADRAO } from '../config.js';
 import { fail, int, str, memberKind, roleOf, ageFrom, validDate, newMemberCode, newUnitPin, parseJson } from '../util.js';
@@ -223,19 +223,10 @@ r.get('/club/units', (req, res) => {
 r.post('/club/units', imageUpload.single('logo'), (req, res) => {
   const name = str(req.body.name, 80);
   if (!name) fail(400, 'Informe o nome do grupo');
-  const pin = newUnitPin(req.actor.id);
+  // Senha gerada pelo app (não pode ser trocada) e diferente da senha do clã.
+  const pin = newUnitPin(req.actor.id, (p) => checkAccountPassword('club', req.actor.id, p));
   const id = Number(run('INSERT INTO units (club_id, name, logo, pin) VALUES (?,?,?,?)', req.actor.id, name, fileUrl(req.file), pin).lastInsertRowid);
   res.json({ id, pin });
-});
-
-r.post('/club/units/:id/nova-senha', (req, res) => {
-  const u = ownUnit(req);
-  const pin = newUnitPin(req.actor.id);
-  tx(() => {
-    run('UPDATE units SET pin = ? WHERE id = ?', pin, u.id);
-    deleteLogin('unit', u.id); // login antigo (usuário e senha) deixa de valer
-  });
-  res.json({ pin });
 });
 
 r.put('/club/units/:id', imageUpload.single('logo'), (req, res) => {

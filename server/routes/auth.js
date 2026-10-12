@@ -43,9 +43,12 @@ function findAccount(mode, username, password) {
     if (/^\d{1,4}$/.test(user)) {
       const club = get('SELECT id FROM clubs WHERE code = ?', user.padStart(4, '0'));
       if (!club) return null;
-      const unit = /^\d{4}$/.test(pw) && get('SELECT id FROM units WHERE club_id = ? AND pin = ?', club.id, pw);
+      // Senhas geradas pelo app: 2 letras + 4 números (aceita minúsculas).
+      const up = pw.trim().toUpperCase();
+      const unit = get('SELECT id FROM units WHERE club_id = ? AND pin = ?', club.id, up);
       if (unit) return { account_type: 'unit', account_id: unit.id };
-      return checkAccountPassword('club', club.id, pw) ? { account_type: 'club', account_id: club.id } : null;
+      const ok = checkAccountPassword('club', club.id, pw) || checkAccountPassword('club', club.id, up);
+      return ok ? { account_type: 'club', account_id: club.id } : null;
     }
     return checkLogin(user, pw, ['club', 'unit']);
   }

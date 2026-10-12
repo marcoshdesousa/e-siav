@@ -24,6 +24,18 @@ r.get('/public/districts/:id/clubs', (req, res) => {
   res.json(rows);
 });
 
+// Busca de clã pelo número (1º, 2º...), pelo código (4 números) ou pelo nome.
+r.get('/public/clubs/search', (req, res) => {
+  const q = String(req.query.q || '').trim().replace(/º/g, '').slice(0, 80);
+  if (!q) return res.json([]);
+  const rows = /^\d+$/.test(q)
+    ? all(`SELECT c.id, c.name, c.number, c.code, c.logo, d.name AS district_name FROM clubs c JOIN districts d ON d.id = c.district_id
+           WHERE c.number = ? OR c.code = ? ORDER BY c.number LIMIT 20`, Number(q), q.padStart(4, '0'))
+    : all(`SELECT c.id, c.name, c.number, c.code, c.logo, d.name AS district_name FROM clubs c JOIN districts d ON d.id = c.district_id
+           WHERE c.name LIKE ? ORDER BY c.number LIMIT 30`, '%' + q + '%');
+  res.json(rows);
+});
+
 r.get('/public/clubs/:id', (req, res) => {
   const c = clubProfile(int(req.params.id));
   if (!c) fail(404, 'Clã não encontrado');

@@ -124,7 +124,7 @@ export default function Login() {
             </button>
             {error && <p className="ig-error" role="alert">{error}</p>}
             <p className="ig-hint">{mode === 'clube'
-              ? 'Com a senha do clã você entra no Sistema do Clã. Com a senha de um grupo, entra no Portal do Grupo.'
+              ? 'Código do clã (4 números) + senha (2 letras e 4 números). A senha do clã abre o Sistema do Clã; a de um grupo abre o Portal do Grupo.'
               : 'Use o código de 6 números que você recebeu ao se inscrever.'}</p>
 
           </form>

@@ -525,7 +525,7 @@ function UnitForm({ unit, onClose, onDone }) {
       <div className="form">
         <ImagePicker label="Logo do grupo" value={f.logo} onChange={(logo) => setF({ ...f, logo })} round={false} name={f.name} />
         <Field label="Nome"><input value={f.name} disabled={unit?.is_leadership} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
-        {!unit && <p className="muted small">O app cria uma senha de 4 números para o grupo. O padrinho entra pelo Login Clã com o código do clã e essa senha.</p>}
+        {!unit && <p className="muted small">O app cria a senha do grupo (2 letras + 4 números), que não pode ser trocada. O padrinho entra pela tela Clã com o código do clã e essa senha.</p>}
       </div>
     </Modal>
   );
@@ -540,7 +540,7 @@ function UnitsPage() {
   return (
     <>
       <PageHeader title="Grupos" subtitle="Cada membro pertence a um único grupo" action={<Button small onClick={() => setEditing('new')}>+ Novo</Button>} />
-      <Card className="small">Para entrar no Portal do Grupo: tela <b>Clã</b>, código do clã <b>{actor.code}</b> e a senha do grupo abaixo.</Card>
+      <Card className="small">Para entrar no Portal do Grupo: tela <b>Clã</b>, código do clã <b>{actor.code}</b> e a senha do grupo abaixo. As senhas são criadas pelo app e <b>não podem ser trocadas</b>: guarde bem.</Card>
       <Loading {...state}>
         {(list) => (
           <div className="list mt">
@@ -552,8 +552,6 @@ function UnitsPage() {
                   <div className="sub">{plural(u.member_count, 'membro', 'membros')} · senha <span className="pin-box"><KeyRound size={13} />{u.pin}</span></div>
                   <div className="row wrap" style={{ marginTop: '.4rem', gap: '.35rem' }}>
                     <Button small variant="secondary" onClick={() => setEditing(u)}>Editar</Button>
-                    <Confirm text={`Gerar uma nova senha para o grupo ${u.name}? A senha atual para de funcionar.`}
-                      onYes={() => run(() => api.post(`/club/units/${u.id}/nova-senha`), 'Nova senha criada').then(done)}>Nova senha</Confirm>
                     <Link to={`${base}/ver/unidade/${u.id}`}><Button small variant="ghost">Perfil</Button></Link>
                     {!u.is_leadership && <Confirm text={`Excluir o grupo ${u.name}? Os membros ficarão sem grupo.`} onYes={() => run(() => api.del('/club/units/' + u.id), 'Grupo excluído').then(done)}>Excluir</Confirm>}
                   </div>

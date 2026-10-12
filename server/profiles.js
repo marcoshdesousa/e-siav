@@ -25,7 +25,7 @@ const pos = (r) => (r ? { position: r.position, points: r.points } : null);
 /** Perfil público do clã: só a QUANTIDADE de membros, nunca os nomes. */
 export function clubProfile(id) {
   const c = get(
-    `SELECT c.id, c.name, c.photo, c.logo, c.code, c.director_name, c.history, c.district_id, d.name AS district_name
+    `SELECT c.id, c.name, c.number, c.photo, c.logo, c.code, c.director_name, c.history, c.district_id, d.name AS district_name
      FROM clubs c JOIN districts d ON d.id = c.district_id WHERE c.id = ?`,
     id,
   );

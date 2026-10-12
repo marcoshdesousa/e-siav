@@ -2,10 +2,38 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api.js';
 import { plural } from '../format.js';
-import { ChevronRight, Trophy } from 'lucide-react';
+import { ChevronRight, Search, Trophy } from 'lucide-react';
 import { Avatar, Field, Loading, PageHeader, useLoad } from '../ui.jsx';
 
-/** Aba Clãs: escolhe o distrito e abre o perfil de um clã. */
+/** Busca de clã pelo número (1º, 2º...), pelo código (4 números) ou pelo nome. */
+function ClanSearch({ base }) {
+  const [q, setQ] = useState('');
+  const [results, setResults] = useState(null);
+  useEffect(() => {
+    if (!q.trim()) { setResults(null); return undefined; }
+    const t = setTimeout(() => api.get('/public/clubs/search?q=' + encodeURIComponent(q.trim())).then(setResults).catch(() => setResults([])), 250);
+    return () => clearTimeout(t);
+  }, [q]);
+  return (
+    <>
+      <div className="cat-search"><Search size={18} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Pesquisar clã: número, código ou nome" /></div>
+      {results && (
+        <div className="list mt">
+          {results.map((c) => (
+            <Link key={c.id} to={`${base}/ver/clube/${c.id}`} className="list-item">
+              <Avatar src={c.logo} name={c.name} size={48} square />
+              <div className="grow"><div className="title">{c.name}</div><div className="sub">Código {c.code} · {c.district_name}</div></div>
+              <ChevronRight className="chev" size={20} />
+            </Link>
+          ))}
+          {!results.length && <p className="muted small center">Nenhum clã encontrado.</p>}
+        </div>
+      )}
+    </>
+  );
+}
+
+/** Aba Clãs: pesquisa ou escolhe o distrito e abre o perfil de um clã. */
 export default function ClubsBrowser({ base }) {
   const districts = useLoad(() => api.get('/public/districts'));
   const [district, setDistrict] = useState(null);
@@ -16,7 +44,9 @@ export default function ClubsBrowser({ base }) {
 
   return (
     <>
-      <PageHeader title="Clãs" subtitle="Conheça os clãs do seu distrito" />
+      <PageHeader title="Clãs" subtitle="Pesquise pelo número, pelo código ou pelo nome" />
+      <ClanSearch base={base} />
+      <h2 className="mt" style={{ marginBottom: '.5rem' }}>Por distrito</h2>
       <Loading {...districts}>
         {(ds) => (
           <Field label="Distrito">

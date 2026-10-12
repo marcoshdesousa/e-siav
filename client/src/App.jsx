@@ -4,6 +4,7 @@ import { RealtimeProvider } from './realtime.jsx';
 import { Notices, Spinner } from './ui.jsx';
 import Login from './pages/Login.jsx';
 import SignupPage from './pages/Signup.jsx';
+import CreateClanPage from './pages/CreateClan.jsx';
 import { PublicProfilePage } from './pages/Profiles.jsx';
 import AdminApp from './pages/admin/AdminApp.jsx';
 import ClubApp from './pages/club/ClubApp.jsx';
@@ -28,6 +29,7 @@ export default function App() {
             <Route path="/entrar" element={<Login />} />
             <Route path="/p/:kind/:id" element={<PublicProfilePage />} />
             <Route path="/inscricao/:code" element={<SignupPage />} />
+            <Route path="/criar-cla" element={<CreateClanPage />} />
             <Route path="/admin/*" element={<Guard type="admin"><AdminApp /></Guard>} />
             <Route path="/clube/*" element={<Guard type="club"><ClubApp /></Guard>} />
             <Route path="/unidade/*" element={<Guard type="unit"><UnitApp /></Guard>} />

@@ -594,6 +594,41 @@ function migrate() {
     db.exec(`UPDATE requirements SET member_kind = 'desbravador' WHERE audience = 'member' AND member_kind IS NULL`);
     setFlag('member-kind-default');
   }
+  // Número do clã (1º, 2º...), separado do código.
+  add('clubs', 'number', 'INTEGER');
+  for (const c of db.prepare('SELECT id FROM clubs WHERE number IS NULL ORDER BY id').all()) {
+    const n = (db.prepare('SELECT MAX(number) n FROM clubs').get().n || 0) + 1;
+    db.prepare('UPDATE clubs SET number = ? WHERE id = ?').run(n, c.id);
+  }
+  // Senha dos grupos no formato novo: 2 letras + 4 números.
+  const LETRAS = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  for (const u of db.prepare(`SELECT id, club_id FROM units WHERE pin IS NULL OR NOT (pin GLOB '[A-Z][A-Z][0-9][0-9][0-9][0-9]')`).all()) {
+    for (;;) {
+      const pin = LETRAS[crypto.randomInt(24)] + LETRAS[crypto.randomInt(24)] + String(crypto.randomInt(10000)).padStart(4, '0');
+      if (db.prepare('SELECT 1 FROM units WHERE club_id = ? AND pin = ?').get(u.club_id, pin)) continue;
+      db.prepare('UPDATE units SET pin = ? WHERE id = ?').run(pin, u.id);
+      break;
+    }
+  }
+
+  // Pedidos para criar um clã (página pública /criar-cla).
+  db.exec(`CREATE TABLE IF NOT EXISTS clan_applications (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    cpf TEXT NOT NULL,
+    whatsapp TEXT NOT NULL,
+    uf TEXT NOT NULL,
+    city TEXT NOT NULL,
+    neighborhood TEXT NOT NULL,
+    adults INTEGER NOT NULL DEFAULT 0,
+    teens INTEGER NOT NULL DEFAULT 0,
+    kids_6_9 INTEGER NOT NULL DEFAULT 0,
+    kids_10_15 INTEGER NOT NULL DEFAULT 0,
+    clan_name TEXT,
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+    viewed_at TEXT
+  )`);
+
   // Requisito criado por um grupo só aceita envios dos membros daquele grupo.
   db.exec(`CREATE TRIGGER IF NOT EXISTS trg_submission_unit_req
     BEFORE INSERT ON submissions

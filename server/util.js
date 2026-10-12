@@ -41,22 +41,40 @@ export function newMemberCode() {
   }
 }
 
-/** Código do clã: 4 números em sequência (0001, 0002...). */
+/** Código do clã: 4 números aleatórios, único (é o login do clã e dos grupos). */
 export function newClubCode() {
-  const max = get('SELECT MAX(CAST(code AS INTEGER)) n FROM clubs').n || 0;
-  return String(max + 1).padStart(4, '0');
-}
-
-/** Senha do grupo: 4 números aleatórios, sem repetir dentro do clã. */
-export function newUnitPin(clubId) {
   for (;;) {
-    const pin = String(crypto.randomInt(10000)).padStart(4, '0');
-    if (!get('SELECT 1 FROM units WHERE club_id = ? AND pin = ?', clubId, pin)) return pin;
+    const code = String(crypto.randomInt(1000, 10000));
+    if (!get('SELECT 1 FROM clubs WHERE code = ?', code)) return code;
   }
 }
 
-/** Senha inicial do clã: 6 números aleatórios (pode ser trocada depois). */
-export const newClubPassword = () => String(crypto.randomInt(100000, 1000000));
+/** Número do clã: a ordem de criação (1º, 2º, 3º...). */
+export const newClubNumber = () => (get('SELECT MAX(number) n FROM clubs').n || 0) + 1;
+
+/** Nome mostrado no app: "1º Clã Águias" (o número vem na frente, sozinho). */
+export function clubDisplayName(number, raw) {
+  const base = String(raw || '').trim().replace(/^\d+\s*º\s*/, '').replace(/^cl[ãa]\s+/i, '').trim();
+  return `${number}º Clã ${base}`;
+}
+
+// Senhas de clã e de grupo: 2 letras + 4 números (ex.: KR4827), geradas pelo app
+// e que não podem ser trocadas. Sem I e O para não confundir com 1 e 0.
+const LETRAS = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+const novaSenha = () => LETRAS[crypto.randomInt(LETRAS.length)] + LETRAS[crypto.randomInt(LETRAS.length)] + String(crypto.randomInt(10000)).padStart(4, '0');
+export const SENHA_RE = /^[A-Z]{2}\d{4}$/;
+
+export const newClubPassword = novaSenha;
+
+/** Senha do grupo: única dentro do clã e diferente da senha do clã. */
+export function newUnitPin(clubId, isClubPassword = () => false) {
+  for (;;) {
+    const pin = novaSenha();
+    if (get('SELECT 1 FROM units WHERE club_id = ? AND pin = ?', clubId, pin)) continue;
+    if (isClubPassword(pin)) continue;
+    return pin;
+  }
+}
 
 /** CPF: só números, com dígitos verificadores válidos. Retorna os 11 dígitos ou null. */
 export function cleanCpf(v) {

@@ -23,19 +23,24 @@ import achievementRoutes from './routes/achievements.js';
 import clubEventRoutes from './routes/clubEvents.js';
 import signupRoutes from './routes/signup.js';
 import transferRoutes from './routes/transfers.js';
+import clanApplicationRoutes from './routes/clanApplications.js';
 import { syncCatalog } from './catalog.js';
-import { createInitialAdmin, seed } from './seed.js';
+import { createInitialAdmin, resetToDemoClubsOnce, seed } from './seed.js';
 
-// Banco vazio: cria só o administrador. Os dados de exemplo só entram com SEED_DEMO=1
-// (testes e desenvolvimento). Nada que já existe no banco é apagado na inicialização.
+// Banco vazio: cria só o administrador. Os dados de exemplo completos só entram com
+// SEED_DEMO=1 (testes e desenvolvimento). Nada que já existe é apagado na inicialização,
+// a não ser a troca única dos clãs antigos pelos clãs de teste (resetToDemoClubsOnce).
+let justSeeded = false;
 if (!get('SELECT 1 FROM admins LIMIT 1')) {
   if (process.env.SEED_DEMO === '1') {
     console.log('Banco vazio: carregando dados de exemplo do Distrito Palmares...');
     seed();
+    justSeeded = true;
   } else {
     createInitialAdmin();
   }
 }
+resetToDemoClubsOnce({ justSeeded });
 
 syncCatalog();
 
@@ -50,7 +55,7 @@ app.use(attachActor);
 
 const api = express.Router();
 api.get('/health', (_req, res) => res.json({ ok: true }));
-for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, chatRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, signupRoutes, transferRoutes]) api.use(r);
+for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, chatRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, signupRoutes, transferRoutes, clanApplicationRoutes]) api.use(r);
 api.use((_req, _res, next) => next(new HttpError(404, 'Rota não encontrada')));
 app.use('/api', api);
 
