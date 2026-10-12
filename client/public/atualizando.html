@@ -44,7 +44,8 @@
           .then(function (r) { if (r.ok) location.replace(volta); })
           .catch(function () {});
       }
-      setInterval(confere, 20000);
+      confere();
+      setInterval(confere, 4000);
     })();
   </script>
 </body>
