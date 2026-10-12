@@ -771,3 +771,21 @@ button.list-item:disabled { cursor: default; opacity: .75; }
 .contact-line.off { background: var(--surface-3); color: var(--muted); }
 .day-picker { border: 1.5px solid var(--line); border-radius: 16px; padding: .6rem; background: var(--surface); }
 .day-picker .cal-d { aspect-ratio: auto; height: 38px; }
+
+/* ---------- Celular e computador: nada passa da largura da tela ---------- */
+html, body { overflow-x: hidden; max-width: 100%; }
+.modal-body, .card, .main { overflow-x: hidden; }
+.grid2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.grid-addr { grid-template-columns: minmax(0, 1fr) 96px; }
+.grid2 > *, .grid-addr > *, .field, .form > * { min-width: 0; }
+input, select, textarea { min-width: 0; max-width: 100%; }
+/* iPhone: campo de data/hora tem largura própria e "estoura" a tela. */
+input[type='date'], input[type='time'], input[type='datetime-local'], input[type='month'] {
+  -webkit-appearance: none; appearance: none; display: block; min-height: 50px; text-align: left; line-height: 1.2;
+}
+input::-webkit-date-and-time-value { text-align: left; margin: 0; }
+input::-webkit-datetime-edit { padding: 0; }
+/* No celular, os campos lado a lado ficam um embaixo do outro. */
+@media (max-width: 520px) {
+  .form .grid2, .modal .grid2 { grid-template-columns: minmax(0, 1fr); }
+}
