@@ -3,6 +3,9 @@ import { all, get, run, tx } from '../db.js';
 import { requireAuth, setLogin, getUsername } from '../auth.js';
 import { imageUpload, fileUrl, attachmentUpload } from '../uploads.js';
 import { NOME_UNIDADE_LIDERANCA } from '../config.js';
+import { listMembers, listUnits, memberFicha } from '../clubData.js';
+import { clubProfile } from '../profiles.js';
+import { ensureInstallments } from '../fees.js';
 import { fail, int, str, validDate, parseJson, memberKind, newClubCode, newClubNumber, newClubPassword, newUnitPin, clubDisplayName } from '../util.js';
 
 // Painel do Administrador Geral.
@@ -73,6 +76,7 @@ r.post('/admin/clubs', (req, res) => {
     const id = Number(run('INSERT INTO clubs (district_id, name, number, code, director_name) VALUES (?,?,?,?,?)', districtId, full, number, code, director).lastInsertRowid);
     run('INSERT INTO units (club_id, name, is_leadership, pin) VALUES (?, ?, 1, ?)', id, NOME_UNIDADE_LIDERANCA, newUnitPin(id, (p) => p === password));
     setLogin('club', id, 'cla' + code, password);
+    ensureInstallments(id);
     return { id, code, number, name: full };
   });
   res.json({ ...out, password });
@@ -96,6 +100,19 @@ r.put('/admin/clubs/:id', (req, res) => {
     }
   });
   res.json({ ok: true });
+});
+
+// Visualizar o clã por dentro: membros, fichas e grupos. Só leitura — o admin não edita nada.
+r.get('/admin/clubs/:id/view', (req, res) => {
+  const id = int(req.params.id);
+  const club = clubProfile(id);
+  if (!club) fail(404, 'Clã não encontrado');
+  res.json({ club, members: listMembers(id), units: listUnits(id) });
+});
+r.get('/admin/clubs/:id/members/:mid/ficha', (req, res) => {
+  const f = memberFicha(int(req.params.id), int(req.params.mid));
+  if (!f) fail(404, 'Membro não encontrado');
+  res.json(f);
 });
 
 // ---------- Administradores ----------

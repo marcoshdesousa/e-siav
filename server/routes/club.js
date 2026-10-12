@@ -1,10 +1,12 @@
+import crypto from 'node:crypto';
 import { Router } from 'express';
 import { all, get, run, tx } from '../db.js';
 import { requireAuth, setLogin, deleteLogin, checkAccountPassword } from '../auth.js';
 import { imageUpload, fileUrl } from '../uploads.js';
 import { CARGOS, CARGO_PADRAO } from '../config.js';
-import { fail, int, str, memberKind, roleOf, ageFrom, validDate, newMemberCode, newUnitPin, parseJson } from '../util.js';
-import { checkIdentity, cleanFicha, fichaCompleta, getFicha, saveFicha, validateSignup } from '../ficha.js';
+import { fail, int, str, memberKind, ageFrom, validDate, newMemberCode, newUnitPin, parseJson } from '../util.js';
+import { checkIdentity, cleanFicha, saveFicha, validateSignup } from '../ficha.js';
+import { listMembers, listUnits, memberFicha } from '../clubData.js';
 import { clubProfile } from '../profiles.js';
 import { clubUnitsRanking } from '../rankings.js';
 
@@ -21,7 +23,7 @@ r.get('/club/overview', (req, res) => {
   profile.signup_pending = get(`SELECT COUNT(*) n FROM members WHERE club_id = ? AND status = 'pendente'`, id).n;
   profile.transfers_pending = get(`SELECT COUNT(*) n FROM transfers WHERE (from_club_id = ? AND status = 'pendente_origem') OR (to_club_id = ? AND status = 'pendente_destino')`, id, id).n;
   profile.pending_reviews = get(`SELECT COUNT(*) n FROM submissions s JOIN requirements r ON r.id = s.requirement_id WHERE r.creator_type = 'club' AND r.club_id = ? AND s.status = 'enviado'`, id).n;
-  profile.pending_achievements = get(`SELECT COUNT(*) n FROM achievement_requests q JOIN members m ON m.id = q.member_id WHERE m.club_id = ? AND q.status = 'pendente'`, id).n;
+  profile.pending_achievements = get(`SELECT COUNT(*) n FROM achievement_requests q JOIN members m ON m.id = q.member_id JOIN content c ON c.id = q.content_id WHERE m.club_id = ? AND q.status = 'pendente' AND c.type = 'especialidade'`, id).n;
   profile.open_reports = get(`SELECT COUNT(*) n FROM reports WHERE status = 'aberta' AND (club_id = ? OR reported_club_id = ?)`, id, id).n;
   profile.desbravadores = 0;
   profile.lideranca = 0;
@@ -54,21 +56,7 @@ function ownMember(req) {
   return m;
 }
 
-r.get('/club/members', (req, res) => {
-  const rows = all(
-    `SELECT m.id, m.name, m.photo, m.cargo, m.code, m.cpf, m.birth_cert, m.status, m.birth_date, m.unit_id, m.created_at, u.name AS unit_name
-     FROM members m LEFT JOIN units u ON u.id = m.unit_id WHERE m.club_id = ? ORDER BY m.name`,
-    req.actor.id,
-  );
-  for (const m of rows) {
-    m.age = ageFrom(m.birth_date);
-    m.kind = memberKind(m.birth_date);
-    m.role = roleOf(m.kind, m.cargo);
-    // Sem a ficha completa (cadastro + saúde) o membro aparece com "dados incompletos".
-    m.incomplete = !fichaCompleta(getFicha(m.id), m.birth_date) || !(m.cpf || m.birth_cert);
-  }
-  res.json(rows);
-});
+r.get('/club/members', (req, res) => res.json(listMembers(req.actor.id)));
 
 r.get('/club/members/:id', (req, res) => {
   const m = ownMember(req);
@@ -104,7 +92,8 @@ function memberFields(req, existing) {
   return { name, birth, cargo, unitId, cpf: ids.cpf, certidao: ids.certidao };
 }
 
-// Cadastro feito pelo clã: precisa de todos os dados, igual à inscrição pelo link.
+// Cadastro feito pelo clã: todos os dados da ficha. As assinaturas e os termos ficam
+// com o responsável, que recebe um link só desse membro. Assinou, o membro fica ativo.
 r.post('/club/members', imageUpload.single('photo'), (req, res) => {
   const ficha = cleanFicha(req.body);
   if (ficha.doc_tipo === 'certidao') req.body.cpf = req.body.cpf || '';
@@ -112,19 +101,21 @@ r.post('/club/members', imageUpload.single('photo'), (req, res) => {
   const f = memberFields(req);
   if (ficha.doc_tipo !== 'certidao' && !f.cpf) fail(400, 'Informe o CPF');
   if (str(req.body.name, 120).split(/\s+/).length < 2) fail(400, 'Informe o nome completo');
-  validateSignup(ficha, f.birth);
+  validateSignup(ficha, f.birth, { signed: false });
+  for (const k of ['assinatura_nome', 'assinatura_cpf', 'med_assinatura_nome', 'med_assinatura_cpf', 'termo_medico', 'termo_imagem', 'termo_responsabilidade', 'termo_dados']) delete ficha[k];
   if (String(req.body.password || '').length < 6) fail(400, 'Crie uma senha com pelo menos 6 caracteres');
   ficha.data_inscricao = new Date().toISOString().slice(0, 10);
   ficha.local_inscricao = `${get('SELECT name FROM clubs WHERE id = ?', req.actor.id).name} — cadastro pelo clã`;
+  const token = crypto.randomBytes(18).toString('base64url');
   const out = tx(() => {
     const code = newMemberCode();
     const id = Number(run(
-      'INSERT INTO members (club_id, unit_id, name, birth_date, photo, cargo, code, cpf, birth_cert) VALUES (?,?,?,?,?,?,?,?,?)',
-      req.actor.id, f.unitId, f.name, f.birth, fileUrl(req.file), f.cargo, code, f.cpf, f.certidao,
+      `INSERT INTO members (club_id, unit_id, name, birth_date, photo, cargo, code, cpf, birth_cert, status, terms_token) VALUES (?,?,?,?,?,?,?,?,?,'pendente',?)`,
+      req.actor.id, f.unitId, f.name, f.birth, fileUrl(req.file), f.cargo, code, f.cpf, f.certidao, token,
     ).lastInsertRowid);
     setLogin('member', id, code, req.body.password);
-    saveFicha(id, ficha, { acceptTerms: true });
-    return { id, code };
+    saveFicha(id, ficha);
+    return { id, code, terms_token: token };
   });
   res.json(out);
 });
@@ -159,6 +150,7 @@ r.post('/club/members/:id/reativar', (req, res) => {
 r.post('/club/members/:id/aprovar', (req, res) => {
   const m = ownMember(req);
   if (m.status !== 'pendente') fail(400, 'Esta inscrição já foi analisada');
+  if (m.terms_token) fail(400, 'O responsável ainda não assinou o termo');
   const f = memberFields(req, m);
   run(`UPDATE members SET status = 'ativo', unit_id = ?, cargo = ? WHERE id = ?`, f.unitId, f.cargo, m.id);
   res.json({ ok: true });
@@ -176,7 +168,7 @@ r.post('/club/members/:id/recusar', (req, res) => {
 // Ficha de cadastro, ficha médica e termos.
 r.get('/club/members/:id/ficha', (req, res) => {
   const m = ownMember(req);
-  res.json({ member: { id: m.id, name: m.name, cpf: m.cpf, birth_cert: m.birth_cert, birth_date: m.birth_date, code: m.code }, ficha: getFicha(m.id) });
+  res.json(memberFicha(req.actor.id, m.id));
 });
 r.put('/club/members/:id/ficha', (req, res) => {
   const m = ownMember(req);
@@ -210,14 +202,7 @@ function ownUnit(req) {
   return u;
 }
 
-r.get('/club/units', (req, res) => {
-  const rows = all(
-    `SELECT u.*, (SELECT COUNT(*) FROM members m WHERE m.unit_id = u.id AND m.status = 'ativo') AS member_count
-     FROM units u WHERE u.club_id = ? ORDER BY u.is_leadership, u.name`,
-    req.actor.id,
-  );
-  res.json(rows);
-});
+r.get('/club/units', (req, res) => res.json(listUnits(req.actor.id)));
 
 // O login do grupo é o código do clã + uma senha de 4 números gerada pelo app.
 r.post('/club/units', imageUpload.single('logo'), (req, res) => {

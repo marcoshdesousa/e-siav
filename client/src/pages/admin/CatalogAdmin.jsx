@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Camera, FileUp, ImageUp, Pencil, Plus, Trash2, Upload } from 'lucide-react';
 import { api, toForm } from '../../api.js';
-import { Badge, Button, Card, Confirm, Field, Loading, Modal, PageHeader, Section, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
+import { Badge, Button, Card, Confirm, Field, Loading, Modal, PageHeader, Section, notify, useAsync, useLoad } from '../../ui.jsx';
 import { CatalogBadge, groupCatalog } from '../Catalog.jsx';
 
 /** Edita um item (nome, área, código e foto). */
@@ -94,11 +94,11 @@ function sections(type, d) {
 }
 
 /**
- * Catálogo oficial de cadernos guia e insígnias: aqui só se mantém a lista e as fotos
+ * Catálogo oficial de insígnias: aqui só se mantém a lista e as fotos
  * (nada é vendido nem tem requisito online). Quem registra no perfil é a diretoria do clã.
  */
 export default function CatalogAdmin() {
-  const [type, setType] = useState('especialidade');
+  const type = 'especialidade';
   const state = useLoad(() => api.get('/admin/catalog?type=' + type), [type]);
   const [importing, setImporting] = useState(false);
   const [text, setText] = useState('');
@@ -127,8 +127,7 @@ export default function CatalogAdmin() {
 
   return (
     <>
-      <PageHeader title="Catálogo oficial" subtitle="Cadernos guia e insígnias com as fotos originais" />
-      <Tabs tabs={[['especialidade', 'Insígnias'], ['classe', 'Cadernos guia']]} value={type} onChange={(t) => { setType(t); setResult(null); }} />
+      <PageHeader title="Catálogo oficial" subtitle="Insígnias com as fotos originais" />
       <Card>
         <div className="stack">
           <label className="btn btn-primary btn-block"><Upload size={18} /> Enviar fotos (várias de uma vez)

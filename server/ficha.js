@@ -91,7 +91,8 @@ export function cleanFicha(body = {}) {
  * Confere a ficha da inscrição. A idade decide o que aparece:
  * menor de 18 → pais/responsável e assinatura do responsável; 16+ → profissional de saúde.
  */
-export function validateSignup(f, birthDate) {
+/** signed = false: confere só os dados (o responsável assina depois pelo link do termo). */
+export function validateSignup(f, birthDate, { signed = true } = {}) {
   const age = ageFrom(birthDate);
   const need = (cond, msg) => { if (!cond) fail(400, msg); };
   need(SEXOS.includes(f.sexo), 'Informe o sexo');
@@ -111,14 +112,23 @@ export function validateSignup(f, birthDate) {
     need(!f.mae_nome || f.mae_whatsapp, 'Informe o WhatsApp da mãe');
     need(!f.responsavel_outro || (f.responsavel_nome && f.responsavel_whatsapp), 'Informe o nome e o WhatsApp do responsável legal');
   }
+  validateMedical(f);
+  if (signed) validateSignature(f, age);
+}
+
+/** Termos aceitos e assinatura digital (nome completo + CPF de quem assina). */
+export function validateSignature(f, age) {
+  const need = (cond, msg) => { if (!cond) fail(400, msg); };
   need(TERMOS.every((t) => f[t]), 'É preciso aceitar os termos');
+  need(f.termo_medico, 'Ficha de saúde: confirme a declaração');
   need(f.assinatura_nome && f.assinatura_nome.split(/\s+/).length >= 2, age < 18 ? 'O responsável precisa assinar com o nome completo' : 'Assine com o seu nome completo');
   need(cleanCpf(f.assinatura_cpf), age < 18 ? 'Informe o CPF do responsável' : 'Informe o seu CPF na assinatura');
-  validateMedical(f, age);
+  need(f.med_assinatura_nome && f.med_assinatura_nome.split(/\s+/).length >= 2, age < 18 ? 'Ficha de saúde: o responsável precisa assinar' : 'Ficha de saúde: assine com o seu nome completo');
+  need(cleanCpf(f.med_assinatura_cpf), 'Ficha de saúde: informe o CPF de quem assina');
 }
 
 /** Ficha de saúde: toda pergunta respondida e, quando for "sim", o porquê. */
-export function validateMedical(f, age) {
+export function validateMedical(f) {
   const need = (cond, msg) => { if (!cond) fail(400, msg); };
   need(f.doencas_ok, 'Ficha de saúde: marque as doenças que já teve (ou "nenhuma")');
   for (const [k, q, det] of MED_PERGUNTAS) {
@@ -127,9 +137,6 @@ export function validateMedical(f, age) {
   }
   need(SANGUE_TIPOS.includes(f.sangue_tipo), 'Ficha de saúde: informe o tipo sanguíneo (ou "não sei")');
   need(f.sangue_tipo === 'Não sei' || SANGUE_RH.includes(f.sangue_rh), 'Ficha de saúde: informe o fator RH');
-  need(f.termo_medico, 'Ficha de saúde: confirme a declaração');
-  need(f.med_assinatura_nome && f.med_assinatura_nome.split(/\s+/).length >= 2, age < 18 ? 'Ficha de saúde: o responsável precisa assinar' : 'Ficha de saúde: assine com o seu nome completo');
-  need(cleanCpf(f.med_assinatura_cpf), 'Ficha de saúde: informe o CPF de quem assina');
 }
 
 /** A ficha está completa? (cadastro + saúde). Sem ficha completa, o membro aparece com "dados incompletos". */

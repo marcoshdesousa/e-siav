@@ -41,12 +41,6 @@ export default function MyAchievements({ type }) {
   return (
     <>
       <PageHeader title={L.title} subtitle={`${L.many} que você tem, ${L.approved} pela diretoria do seu clã`} />
-      {type === 'classe' && (
-        <div className="summary-card mt" style={{ marginBottom: '.8rem' }}>
-          <span className="trophy-bg"><Clock size={20} /></span>
-          <div><b>Requisitos dos cadernos guia: em breve</b><div className="muted small">Estamos preparando os requisitos de cada caderno para você fazer pelo app.</div></div>
-        </div>
-      )}
       <Button block onClick={() => setAdding(true)}><Plus size={18} /> {L.add}</Button>
       <Loading {...mine}>
         {(d) => {

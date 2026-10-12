@@ -14,7 +14,7 @@ await p.locator('input[type=password]').fill('dbv123');
 await p.getByRole('button', { name: 'Entrar', exact: true }).click();
 await p.waitForURL('**/membro');
 await p.locator('.ann-x').click({ timeout: 3000 }).catch(() => {}); // fecha o anúncio
-for (const [route, name] of [['/membro', 'perfil'], ['/membro/ranking', 'ranking'], ['/membro/chat/1', 'chat'], ['/membro/requisitos', 'requisitos']]) {
+for (const [route, name] of [['/membro', 'perfil'], ['/membro/ranking', 'ranking'], ['/membro/requisitos', 'requisitos']]) {
   await p.goto(B + route);
   await p.waitForTimeout(900);
   await p.locator('.ann-x').click({ timeout: 300 }).catch(() => {});

@@ -5,7 +5,7 @@ import { homeFor, useAuth } from '../auth.jsx';
 import { platform, useInstall } from '../install.js';
 import { LogoIcon, Modal, Spinner } from '../ui.jsx';
 
-const SHOTS = ['/showcase/perfil.jpg', '/showcase/ranking.jpg', '/showcase/chat.jpg', '/showcase/requisitos.jpg'];
+const SHOTS = ['/showcase/perfil.jpg', '/showcase/ranking.jpg', '/showcase/requisitos.jpg'];
 
 /** Celular com as telas do app trocando sozinhas (só no computador). */
 function PhoneShowcase() {

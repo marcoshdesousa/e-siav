@@ -611,6 +611,32 @@ function migrate() {
     }
   }
 
+  // Link do termo: o clã cadastra o membro e o responsável assina pelo link.
+  add('members', 'terms_token', 'TEXT');
+  db.exec('CREATE UNIQUE INDEX IF NOT EXISTS ux_member_terms_token ON members(terms_token) WHERE terms_token IS NOT NULL');
+
+  // Taxas: parcelas mensais do clã e taxa anual por membro (pagas no Pix).
+  db.exec(`CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT)`);
+  for (const [k, v] of [['fee_member_year_cents', '250'], ['fee_club_month_cents', '3085'], ['club_installments', '12'], ['pix_key', '']]) {
+    db.prepare('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)').run(k, v);
+  }
+  db.exec(`CREATE TABLE IF NOT EXISTS club_installments (
+    id INTEGER PRIMARY KEY,
+    club_id INTEGER NOT NULL REFERENCES clubs(id) ON DELETE CASCADE,
+    n INTEGER NOT NULL,
+    due_date TEXT NOT NULL,
+    amount_cents INTEGER NOT NULL,
+    paid_at TEXT,
+    UNIQUE (club_id, n)
+  )`);
+  db.exec(`CREATE TABLE IF NOT EXISTS member_fees (
+    member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    year INTEGER NOT NULL,
+    amount_cents INTEGER NOT NULL,
+    paid_at TEXT NOT NULL,
+    PRIMARY KEY (member_id, year)
+  )`);
+
   // Pedidos para criar um clã (página pública /criar-cla).
   db.exec(`CREATE TABLE IF NOT EXISTS clan_applications (
     id INTEGER PRIMARY KEY,

@@ -1,4 +1,4 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import { ArrowLeft, Award, CalendarDays, ChevronRight, Compass, Flag, MapPin, Hash, Tent, Users } from 'lucide-react';
 import { Attachments } from './admin/Events.jsx';
@@ -136,11 +136,10 @@ export function MemberProfileView({ member: m, linkBase, photoAction }) {
           <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.4rem' }}>
             {m.ranking && <PositionBadge position={m.ranking.position} points={m.ranking.points} label="no ranking de membros" />}
           </div>
-          <div className="mt"><ShareButton path={`/p/membro/${m.code}`} title={m.name} /></div>
+          <div className="mt"><ShareButton path={`/${m.code}`} title={m.name} /></div>
         </div>
       </div>
 
-      <ChipRow title="Cadernos guia concluídos" items={m.classes} empty="Nenhum caderno guia concluído ainda." emptyIcon="compass" />
       <ChipRow title="Insígnias" items={m.specialties} empty="Nenhuma insígnia ainda." emptyIcon="knot" />
       {m.courses?.length ? <ChipRow title="Cursos concluídos" items={m.courses} /> : null}
       <MedalList medals={m.medals} />
@@ -177,8 +176,17 @@ export function InAppProfile({ base }) {
 }
 
 /** Link público para compartilhar: /p/clube/1, /p/unidade/2, /p/membro/DBV-XXXXX */
-export function PublicProfilePage() {
-  const { kind, id } = useParams();
+/** Link de bio do explorador: site/123456 (só para ver; editar é pelo app). */
+export function MemberLinkPage() {
+  const { code } = useParams();
+  if (!/^\d{6}$/.test(code || '')) return <Navigate to="/" replace />;
+  return <PublicProfilePage kind="membro" id={code} />;
+}
+
+export function PublicProfilePage({ kind: kindProp, id: idProp }) {
+  const params = useParams();
+  const kind = kindProp || params.kind;
+  const id = idProp || params.id;
   const { actor } = useAuth();
   return (
     <div className="app">

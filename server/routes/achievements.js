@@ -34,7 +34,7 @@ r.post('/me/achievement-requests', requireAuth('member'), (req, res) => {
   let created = 0;
   tx(() => {
     for (const id of ids) {
-      const c = get(`SELECT id, type, leader FROM content WHERE id = ? AND type IN ('classe','especialidade')`, id);
+      const c = get(`SELECT id, type, leader FROM content WHERE id = ? AND type = 'especialidade'`, id); // cadernos guia: fora por enquanto
       if (!c) continue;
       if (c.type === 'classe' && c.leader && req.actor.kind !== 'lideranca') continue;
       if (get('SELECT 1 FROM achievements WHERE member_id = ? AND content_id = ?', req.actor.id, id)) continue;
@@ -57,7 +57,7 @@ r.get('/club/achievement-requests', requireAuth('club'), (req, res) => {
             m.id AS member_id, m.name AS member_name, m.photo AS member_photo, m.code, u.name AS unit_name
      FROM achievement_requests q JOIN content c ON c.id = q.content_id JOIN members m ON m.id = q.member_id
      LEFT JOIN units u ON u.id = m.unit_id
-     WHERE m.club_id = ? AND q.status = ? ORDER BY m.name, c.type, c.name LIMIT 500`,
+     WHERE m.club_id = ? AND q.status = ? AND c.type = 'especialidade' ORDER BY m.name, c.name LIMIT 500`,
     req.actor.id, status,
   );
   // Agrupado por membro

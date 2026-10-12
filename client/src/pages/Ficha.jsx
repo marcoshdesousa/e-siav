@@ -3,12 +3,32 @@ import { ArrowLeft, ArrowRight, Check, HeartPulse } from 'lucide-react';
 import { Button, Field } from '../ui.jsx';
 import { fmtCpf } from '../format.js';
 
-/** Termos aceitos na inscrição. */
+/**
+ * Termos que o responsável (ou o próprio membro, se for maior de idade) assina.
+ * [chave, título, texto]
+ */
 export const TERMOS = [
-  ['termo_imagem', 'Autorizo o uso de imagem (fotos e vídeos) nas atividades e divulgações do clã.'],
-  ['termo_responsabilidade', 'Autorizo a participação nas atividades do clã (reuniões, acampamentos e eventos) e confirmo que as informações da ficha médica são verdadeiras.'],
-  ['termo_dados', 'Concordo que estes dados fiquem guardados no sistema do clã, só para cadastro, segurança e atendimento médico, como manda a LGPD.'],
+  ['termo_responsabilidade', 'Autorização para participar das atividades',
+    'Autorizo a participação nas atividades do clã de Exploradores: reuniões, aulas práticas, excursões, acampamentos, eventos e atividades ao ar livre, com o acompanhamento da liderança e dos tutores. Em caso de emergência, autorizo a liderança a prestar os primeiros socorros e a buscar atendimento médico, avisando a família o quanto antes.'],
+  ['termo_imagem', 'Uso de imagem e voz',
+    'Autorizo, sem custo, o uso de imagem e voz (fotos, vídeos e áudios) feitos nas atividades do clã, para registro e divulgação nas redes sociais, no app e em materiais do clã e do movimento Exploradores do Brasil. A autorização pode ser cancelada a qualquer momento, pedindo à diretoria do clã.'],
+  ['termo_dados', 'Proteção de dados (LGPD)',
+    'Concordo que os dados da ficha de cadastro e da ficha de saúde fiquem guardados no sistema do clã e sejam usados só para o cadastro, a segurança e o atendimento médico do membro. Esses dados não são vendidos nem divulgados, e posso pedir para conferir ou corrigir a qualquer momento.'],
 ];
+export const DECLARACAO_CADASTRO = 'Me responsabilizo por todas as informações desta Ficha de Cadastro, e garanto como fiel e verdadeiro.';
+export const DECLARACAO_SAUDE = 'Me responsabilizo por todas as informações desta Ficha de Saúde, e garanto que nenhuma outra informação foi omitida, que pode vir a prejudicar o membro e o clã, em caso de um atendimento médico de emergência.';
+
+/** Caixas dos termos com título e texto. */
+export function TermosLista({ value: f, onChange }) {
+  return (
+    <div className="stack" style={{ gap: '.55rem' }}>
+      {TERMOS.map(([k, title, text]) => (
+        <label key={k} className="check termo"><input type="checkbox" checked={!!f[k]} onChange={(e) => onChange({ ...f, [k]: e.target.checked })} />
+          <span><b style={{ display: 'block' }}>{title}</b>{text}</span></label>
+      ))}
+    </div>
+  );
+}
 
 const SEXOS = ['Feminino', 'Masculino', 'Outro'];
 const AREAS_SAUDE = ['Dentista', 'Enfermeiro', 'Fisioterapeuta', 'Médico', 'Socorrista', 'Téc. de Enfermagem', 'Outro'];
@@ -128,12 +148,8 @@ export function TermosAssinatura({ value: f, onChange, minor }) {
   return (
     <div className="form">
       <h3 className="ficha-title">Termos {minor ? '(o responsável aceita)' : ''}</h3>
-      <div className="stack" style={{ gap: '.5rem' }}>
-        {TERMOS.map(([k, text]) => (
-          <label key={k} className="check termo"><input type="checkbox" checked={!!f[k]} onChange={(e) => onChange({ ...f, [k]: e.target.checked })} /> {text}</label>
-        ))}
-      </div>
-      <p className="declaracao">Me responsabilizo por todas as informações desta Ficha de Cadastro, e garanto como fiel e verdadeiro.</p>
+      <TermosLista value={f} onChange={onChange} />
+      <p className="declaracao">{DECLARACAO_CADASTRO}</p>
       <div className="grid2">
         <Field label={minor ? 'Assinatura do responsável (nome completo)' : 'Assinatura (seu nome completo)'}>
           <input value={f.assinatura_nome || ''} onChange={(e) => onChange({ ...f, assinatura_nome: e.target.value })} />
@@ -322,7 +338,7 @@ export function SaudeAssinatura({ value: f, onChange, minor }) {
   return (
     <div className="form">
       <label className="check termo"><input type="checkbox" checked={!!f.termo_medico} onChange={(e) => onChange({ ...f, termo_medico: e.target.checked })} />
-        Me responsabilizo por todas as informações desta Ficha de Saúde, e garanto que nenhuma outra informação foi omitida, que pode vir a prejudicar o membro e o clã, em caso de um atendimento médico de emergência.</label>
+        {DECLARACAO_SAUDE}</label>
       <div className="grid2">
         <Field label={minor ? 'Assinatura do responsável (nome completo)' : 'Assinatura (seu nome completo)'}>
           <input value={f.med_assinatura_nome || ''} onChange={(e) => onChange({ ...f, med_assinatura_nome: e.target.value })} />
@@ -336,7 +352,7 @@ export function SaudeAssinatura({ value: f, onChange, minor }) {
 }
 
 /** O que falta na parte 1 (cadastro) — mesmas regras do servidor. */
-export function cadastroFaltando({ name, age, cpf, password, password2, needPassword = true }, f) {
+export function cadastroFaltando({ name, age, cpf, password, password2, needPassword = true, signed = true }, f) {
   const minor = age != null && age < 18;
   return [
     (name || '').trim().split(/\s+/).length < 2 && 'nome completo',
@@ -350,8 +366,8 @@ export function cadastroFaltando({ name, age, cpf, password, password2, needPass
     minor && ((f.pai_nome && !f.pai_whatsapp) || (f.mae_nome && !f.mae_whatsapp) || (f.responsavel_outro && !(f.responsavel_nome && f.responsavel_whatsapp))) && 'WhatsApp dos pais/responsável',
     !f.camiseta && 'camiseta',
     age >= 16 && !f.estado_civil && 'estado civil',
-    !TERMOS.every(([k]) => f[k]) && 'termos',
-    !((f.assinatura_nome || '').trim().split(/\s+/).length >= 2 && (f.assinatura_cpf || '').length === 11) && 'assinatura',
+    signed && !TERMOS.every(([k]) => f[k]) && 'termos',
+    signed && !((f.assinatura_nome || '').trim().split(/\s+/).length >= 2 && (f.assinatura_cpf || '').length === 11) && 'assinatura',
     needPassword && !((password || '').length >= 6 && password === password2) && 'senha',
   ].filter(Boolean);
 }

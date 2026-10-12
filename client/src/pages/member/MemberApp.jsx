@@ -1,10 +1,9 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import {
-  Camera, ClipboardCheck, Compass, GraduationCap, Menu, MessageCircle, Tent, Trophy, UserRound, Waypoints,
+  Camera, ClipboardCheck, GraduationCap, Menu, Tent, Trophy, UserRound, Waypoints,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
-import { useRealtime } from '../../realtime.jsx';
 import { Loading, PageHeader, useAsync, useLoad } from '../../ui.jsx';
 import Shell, { MoreMenu } from '../Shell.jsx';
 import { InAppProfile, MemberProfileView } from '../Profiles.jsx';
@@ -12,7 +11,6 @@ import { RequirementsTodo } from '../Requirements.jsx';
 import { ContentDetail, ContentList } from '../Content.jsx';
 import RankingHub from '../Ranking.jsx';
 import ClubsBrowser from '../Clubs.jsx';
-import { ChatConversation, ChatHome } from '../Chat.jsx';
 import MyAchievements from './MyAchievements.jsx';
 
 const base = '/membro';
@@ -49,24 +47,20 @@ function MyProfile() {
 
 export default function MemberApp() {
   const { actor } = useAuth();
-  const { unread } = useRealtime();
   const isDbv = actor.kind === 'desbravador';
   const tabs = [
     { to: base, icon: UserRound, label: 'Perfil', end: true },
     { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },
     { to: `${base}/ranking`, icon: Trophy, label: 'Ranking' },
-    { to: `${base}/chat`, icon: MessageCircle, label: 'Chat', badge: unread },
+    { to: `${base}/especialidades`, icon: Waypoints, label: 'Insígnias' },
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
-    { to: `${base}/especialidades`, icon: Waypoints, label: 'Insígnias', hint: 'As que você tem' },
-    { to: `${base}/classes`, icon: Compass, label: 'Cadernos guia', hint: 'Os que você tem' },
     { to: `${base}/cursos`, icon: GraduationCap, label: 'Cursos', hint: 'Aulas' },
     { to: `${base}/clubes`, icon: Tent, label: 'Clãs', hint: 'Por distrito' },
   ];
   return (
     <Routes>
-      <Route path="chat/:id" element={<ChatConversation base={base} />} />
       <Route
         path="*"
         element={
@@ -75,12 +69,10 @@ export default function MemberApp() {
               <Route index element={<MyProfile />} />
               <Route path="requisitos" element={<><PageHeader title="Requisitos" subtitle={isDbv ? 'Cumpra os requisitos e suba no ranking' : 'Requisitos para a liderança e os tutores'} /><RequirementsTodo originTabs groupTab={isDbv} /></>} />
               <Route path="especialidades" element={<MyAchievements key="e" type="especialidade" />} />
-              <Route path="classes" element={<MyAchievements key="c" type="classe" />} />
               <Route path="cursos" element={<ContentList type="curso" base={base} />} />
               <Route path="conteudo/:id" element={<ContentDetail />} />
               <Route path="ranking" element={<RankingHub base={base} />} />
               <Route path="clubes" element={<ClubsBrowser base={base} />} />
-              <Route path="chat" element={<ChatHome base={base} />} />
               <Route path="ver/:kind/:id" element={<InAppProfile base={base} />} />
               <Route path="mais" element={<><PageHeader title="Mais" /><MoreMenu items={more} /></>} />
               <Route path="*" element={<Navigate to={base} replace />} />

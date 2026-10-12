@@ -1,7 +1,6 @@
 import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../auth.jsx';
-import { useRealtime } from '../realtime.jsx';
-import { LogOut, MessageCircle } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import { Avatar, LogoHorizontal } from '../ui.jsx';
 import AnnouncementPopup from './Announcement.jsx';
 
@@ -10,7 +9,6 @@ const TYPE_LABEL = { admin: 'Administrador Geral', club: 'Sistema do Clã', unit
 /** Estrutura de app: cabeçalho azul + abas na parte de baixo. */
 export default function Shell({ tabs, children, hideNav = false }) {
   const { actor, logout } = useAuth();
-  const { toast, setToast } = useRealtime();
   const nav = useNavigate();
   const base = { admin: '/admin', club: '/clube', unit: '/unidade', member: '/membro' }[actor.type];
   const subtitle = actor.type === 'member' ? actor.club_name : actor.type === 'unit' ? actor.club_name : TYPE_LABEL[actor.type];
@@ -41,15 +39,6 @@ export default function Shell({ tabs, children, hideNav = false }) {
         </nav>
       )}
       {actor.type !== 'admin' && <AnnouncementPopup />}
-      {toast && (
-        <div className="chat-toast" onClick={() => { setToast(null); nav(`${base}/chat/${toast.conversation_id}`); }}>
-          <span className="toast-ico"><MessageCircle size={20} /></span>
-          <div className="grow">
-            <b className="ellipsis" style={{ display: 'block' }}>{toast.who}</b>
-            <span className="muted ellipsis" style={{ display: 'block' }}>{toast.text}</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

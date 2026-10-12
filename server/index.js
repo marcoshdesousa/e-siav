@@ -4,9 +4,8 @@ import http from 'node:http';
 import path from 'node:path';
 import fs from 'node:fs';
 import multer from 'multer';
-import { UPLOAD_DIR, ROOT, get } from './db.js';
+import { UPLOAD_DIR, ROOT, all, get } from './db.js';
 import { attachActor } from './auth.js';
-import { attachRealtime } from './realtime.js';
 import { HttpError } from './util.js';
 import authRoutes from './routes/auth.js';
 import publicRoutes from './routes/public.js';
@@ -15,7 +14,6 @@ import clubRoutes from './routes/club.js';
 import requirementRoutes from './routes/requirements.js';
 import contentRoutes from './routes/content.js';
 import rankingRoutes from './routes/rankings.js';
-import chatRoutes from './routes/chat.js';
 import meRoutes from './routes/me.js';
 import fileRoutes from './routes/files.js';
 import announcementRoutes from './routes/announcements.js';
@@ -24,6 +22,9 @@ import clubEventRoutes from './routes/clubEvents.js';
 import signupRoutes from './routes/signup.js';
 import transferRoutes from './routes/transfers.js';
 import clanApplicationRoutes from './routes/clanApplications.js';
+import termRoutes from './routes/terms.js';
+import feeRoutes from './routes/fees.js';
+import { ensureInstallments } from './fees.js';
 import { syncCatalog } from './catalog.js';
 import { createInitialAdmin, resetToDemoClubsOnce, seed } from './seed.js';
 
@@ -41,6 +42,8 @@ if (!get('SELECT 1 FROM admins LIMIT 1')) {
   }
 }
 resetToDemoClubsOnce({ justSeeded });
+// Todo clã tem as suas parcelas (criadas a partir da data de criação do clã).
+for (const c of all('SELECT id, created_at FROM clubs')) ensureInstallments(c.id, c.created_at);
 
 syncCatalog();
 
@@ -55,7 +58,7 @@ app.use(attachActor);
 
 const api = express.Router();
 api.get('/health', (_req, res) => res.json({ ok: true }));
-for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, chatRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, signupRoutes, transferRoutes, clanApplicationRoutes]) api.use(r);
+for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, signupRoutes, transferRoutes, clanApplicationRoutes, termRoutes, feeRoutes]) api.use(r);
 api.use((_req, _res, next) => next(new HttpError(404, 'Rota não encontrada')));
 app.use('/api', api);
 
@@ -86,6 +89,5 @@ app.use((err, _req, res, _next) => {
 });
 
 const server = http.createServer(app);
-attachRealtime(server);
 const PORT = Number(process.env.PORT) || 3000;
 server.listen(PORT, () => console.log(`Exploradores do Brasil rodando em http://localhost:${PORT}`));

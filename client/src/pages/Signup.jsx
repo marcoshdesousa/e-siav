@@ -19,7 +19,9 @@ export function CadastroFlow({ local, mode = 'link', extra = null, submitLabel, 
   const [ficha, setFicha] = useState({ doc_tipo: 'rg_cpf' });
   const age = ageOf(f.birth_date);
   const minor = age != null && age < 18;
-  const missing = cadastroFaltando({ ...f, age, needPassword: true }, ficha);
+  // No cadastro pelo clã, quem assina é o responsável, depois, pelo link do termo.
+  const signed = mode !== 'cla';
+  const missing = cadastroFaltando({ ...f, age, needPassword: true, signed }, ficha);
   const top = () => window.scrollTo({ top: 0, behavior: 'smooth' });
   const assinaturaOk = ficha.termo_medico && (ficha.med_assinatura_nome || '').trim().split(/\s+/).length >= 2 && (ficha.med_assinatura_cpf || '').length === 11;
   const send = () => onSubmit({ ...ficha, ...f, cpf: ficha.doc_tipo === 'certidao' ? '' : f.cpf, certidao: ficha.doc_tipo === 'certidao' ? ficha.certidao : '' });
@@ -39,7 +41,8 @@ export function CadastroFlow({ local, mode = 'link', extra = null, submitLabel, 
             <DocFields value={ficha} onChange={setFicha} cpf={f.cpf} onCpf={(cpf) => setF({ ...f, cpf })} />
           </div>
           <FichaForm value={ficha} onChange={setFicha} age={age} />
-          <TermosAssinatura value={ficha} onChange={setFicha} minor={minor} />
+          {signed ? <TermosAssinatura value={ficha} onChange={setFicha} minor={minor} />
+            : <p className="small muted">Os termos e as assinaturas ficam com o {minor ? 'responsável' : 'próprio membro'}: depois de salvar, você recebe o link do termo para enviar.</p>}
           <div className="form">
             <p className="small muted">Data: <b>{new Date().toLocaleDateString('pt-BR')}</b> · Local: <b>{local}</b></p>
             <h3 className="ficha-title">{mode === 'cla' ? 'Senha de acesso do membro' : 'Senha de acesso'}</h3>
@@ -54,7 +57,7 @@ export function CadastroFlow({ local, mode = 'link', extra = null, submitLabel, 
       )}
       {step === 'saude' && (
         <Card>
-          <SaudeQuiz value={ficha} onChange={setFicha} onDone={() => { setStep('assinar'); top(); }} />
+          <SaudeQuiz value={ficha} onChange={setFicha} onDone={() => { if (signed) { setStep('assinar'); top(); } else send(); }} />
           <button type="button" className="ig-link mt" onClick={() => { setStep('cadastro'); top(); }}><ArrowLeft size={14} /> Voltar para a ficha de cadastro</button>
         </Card>
       )}

@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import {
-  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, ShieldAlert, Tent, Trophy, UserPlus, Users,
+  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, Tent, Trophy, UserPlus, Users, Wallet,
 } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -12,7 +12,6 @@ import { InAppProfile } from '../Profiles.jsx';
 import { CreatedRequirements, ReviewsPanel } from '../Requirements.jsx';
 import RankingHub from '../Ranking.jsx';
 import ClubsBrowser from '../Clubs.jsx';
-import { ReportsPanel } from '../Chat.jsx';
 import ContentAdmin from './ContentAdmin.jsx';
 import ContentReview from './ContentReview.jsx';
 import Deliver from './Deliver.jsx';
@@ -20,6 +19,8 @@ import EventsAdmin from './Events.jsx';
 import AnnouncementsAdmin from './Announcements.jsx';
 import CatalogAdmin from './CatalogAdmin.jsx';
 import ClanApplications, { CreateClanLink } from './ClanApplications.jsx';
+import ClanView from './ClanView.jsx';
+import { AdminClubPayments, AdminPayments } from '../Payments.jsx';
 
 const base = '/admin';
 
@@ -46,14 +47,14 @@ function AdminHome() {
               <Stat icon={Users} value={o.members} label="Membros" />
               <Stat icon={ClipboardCheck} value={o.requirements} label="Requisitos gerais" to={`${base}/requisitos`} />
               <Stat icon={Inbox} value={o.pending_reviews} label="Envios p/ avaliar" to={`${base}/requisitos?aba=avaliar`} accent={o.pending_reviews > 0} />
-              <Stat icon={ShieldAlert} value={o.open_reports} label="Denúncias abertas" to={`${base}/denuncias`} accent={o.open_reports > 0} />
             </div>
           </Section>
         )}
       </Loading>
       <Section title="Atalhos">
         <MoreMenu items={[
-          { to: `${base}/inscricoes-cla`, icon: UserPlus, label: 'Inscrição clã', hint: 'Pedidos para criar clã' },
+          { to: `${base}/pagamentos`, icon: Wallet, label: 'Pagamentos', hint: 'Taxas e chave Pix' },
+    { to: `${base}/inscricoes-cla`, icon: UserPlus, label: 'Inscrição clã', hint: 'Pedidos para criar clã' },
     { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo' },
           { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial' },
           { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos' },
@@ -188,7 +189,10 @@ function ClubsAdmin() {
                     <div className="sub">{c.district_name} · {plural(c.unit_count, 'grupo', 'grupos')} · {plural(c.member_count, 'membro', 'membros')}</div>
                     <div className="sub">Nº {c.number} · Código <b>{c.code}</b>{c.director_name ? <> · Diretor(a): {c.director_name}</> : ''}</div>
                   </div>
-                  <Button small variant="secondary" onClick={() => setModal({ kind: 'club', item: c })}>Editar</Button>
+                  <div className="stack" style={{ gap: '.35rem' }}>
+                    <Link to={`${base}/clubes/${c.id}`}><Button small>Ver por dentro</Button></Link>
+                    <Button small variant="secondary" onClick={() => setModal({ kind: 'club', item: c })}>Editar</Button>
+                  </div>
                 </div>
               ))}
             </Loading>
@@ -243,7 +247,7 @@ function ClubsAdmin() {
   );
 }
 
-/** Requisitos: criados e avaliação (separados por exploradores, grupos e clãs) e análise das cadernos guia/insígnias. */
+/** Requisitos: criados e avaliação (separados por exploradores, grupos e clãs) e análise dos cursos. */
 function RequirementsAdmin() {
   const [tab, setTab] = useState(new URLSearchParams(location.search).get('aba') || 'criados');
   return (
@@ -267,13 +271,13 @@ export default function AdminApp() {
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
+    { to: `${base}/pagamentos`, icon: Wallet, label: 'Pagamentos', hint: 'Taxas e chave Pix' },
     { to: `${base}/inscricoes-cla`, icon: UserPlus, label: 'Inscrição clã', hint: 'Pedidos para criar clã' },
     { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo', hint: 'Medalhas, troféus e cursos' },
-    { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial', hint: 'Cadernos guia e insígnias' },
+    { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial', hint: 'Insígnias' },
     { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos', hint: 'Criar e participantes' },
     { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: 'Aparecem ao abrir o app' },
     { to: `${base}/ranking`, icon: Trophy, label: 'Rankings', hint: 'Todas as tabelas' },
-    { to: `${base}/denuncias`, icon: ShieldAlert, label: 'Denúncias', hint: 'Do chat' },
     { to: `${base}/explorar`, icon: Map, label: 'Explorar clãs', hint: 'Perfis públicos' },
   ];
   return (
@@ -281,7 +285,10 @@ export default function AdminApp() {
       <Routes>
         <Route index element={<AdminHome />} />
         <Route path="clubes" element={<ClubsAdmin />} />
+        <Route path="clubes/:id" element={<ClanView base={base} />} />
         <Route path="inscricoes-cla" element={<ClanApplications />} />
+        <Route path="pagamentos" element={<AdminPayments base={base} />} />
+        <Route path="pagamentos/:id" element={<AdminClubPayments base={base} />} />
         <Route path="requisitos" element={<RequirementsAdmin />} />
         <Route path="conteudo" element={<ContentAdmin />} />
         <Route path="catalogo" element={<CatalogAdmin />} />
@@ -291,7 +298,6 @@ export default function AdminApp() {
         <Route path="anuncios" element={<AnnouncementsAdmin />} />
         <Route path="medalhas" element={<Navigate to={`${base}/conteudo?aba=medalhas`} replace />} />
         <Route path="ranking" element={<RankingHub base={base} />} />
-        <Route path="denuncias" element={<ReportsPanel />} />
         <Route path="explorar" element={<ClubsBrowser base={base} />} />
         <Route path="ver/:kind/:id" element={<InAppProfile base={base} />} />
         <Route path="mais" element={<><PageHeader title="Mais" /><MoreMenu items={more} /></>} />
