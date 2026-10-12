@@ -25,6 +25,7 @@ import clanApplicationRoutes from './routes/clanApplications.js';
 import termRoutes from './routes/terms.js';
 import feeRoutes from './routes/fees.js';
 import { ensureInstallments } from './fees.js';
+import { expireYear } from './memberStatus.js';
 import { syncCatalog } from './catalog.js';
 import { createInitialAdmin, resetToDemoClubsOnce, seed } from './seed.js';
 
@@ -44,6 +45,9 @@ if (!get('SELECT 1 FROM admins LIMIT 1')) {
 resetToDemoClubsOnce({ justSeeded });
 // Todo clã tem as suas parcelas (criadas a partir da data de criação do clã).
 for (const c of all('SELECT id, created_at FROM clubs')) ensureInstallments(c.id, c.created_at);
+// Virada do ano: quem não teve a inscrição renovada pelo clã fica esperando (confere de hora em hora).
+expireYear();
+setInterval(expireYear, 60 * 60 * 1000).unref();
 
 syncCatalog();
 

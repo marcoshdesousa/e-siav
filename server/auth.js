@@ -5,6 +5,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { get, run, DATA_DIR } from './db.js';
 import { fail, memberKind, roleOf } from './util.js';
+import { pendingReason, waitingMessage } from './memberStatus.js';
 
 function loadSecret() {
   if (process.env.JWT_SECRET) return process.env.JWT_SECRET;
@@ -52,16 +53,26 @@ export function loadActor(type, id) {
   }
   if (type === 'member') {
     const m = get(
-      `SELECT m.id, m.name, m.photo, m.code, m.cargo, m.birth_date, m.unit_id, m.club_id,
+      `SELECT m.id, m.name, m.photo, m.code, m.cargo, m.birth_date, m.unit_id, m.club_id, m.status, m.terms_token, m.approved_at, m.cleared_year,
               c.district_id, c.name AS club_name, u.name AS unit_name
        FROM members m JOIN clubs c ON c.id = m.club_id LEFT JOIN units u ON u.id = m.unit_id
-       WHERE m.id = ? AND m.status = 'ativo'`,
+       WHERE m.id = ? AND m.status IN ('ativo', 'pendente')`,
       id,
     );
-    return m && { type, ...m, kind: memberKind(m.birth_date), role: roleOf(memberKind(m.birth_date), m.cargo) };
+    if (!m) return null;
+    // Pendente entra no app, mas só vê a mensagem de espera (nada de pagamento).
+    const waiting = m.status === 'pendente' ? waitingMessage(pendingReason(m)) : null;
+    const { status: _s, terms_token: _t, approved_at: _a, cleared_year: _c, ...rest } = m;
+    return { type, ...rest, waiting, kind: memberKind(m.birth_date), role: roleOf(memberKind(m.birth_date), m.cargo) };
   }
   return null;
 }
+
+/** Só precisa estar logado (o membro esperando aprovação também passa). */
+export const requireLogin = (req, _res, next) => {
+  if (!req.actor) fail(401, 'Faça login para continuar');
+  next();
+};
 
 export function attachActor(req, _res, next) {
   req.actor = actorFromToken(req.cookies?.[COOKIE]);
@@ -70,6 +81,7 @@ export function attachActor(req, _res, next) {
 
 export const requireAuth = (...types) => (req, _res, next) => {
   if (!req.actor) fail(401, 'Faça login para continuar');
+  if (req.actor.waiting) fail(403, req.actor.waiting);
   if (types.length && !types.includes(req.actor.type)) fail(403, 'Acesso não permitido para esta conta');
   next();
 };

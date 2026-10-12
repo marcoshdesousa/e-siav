@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import {
-  Camera, ClipboardCheck, GraduationCap, Menu, Tent, Trophy, UserRound, Waypoints,
+  Camera, ClipboardCheck, GraduationCap, Menu, Tent, Trophy, UserRound, Waypoints, Hourglass,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -45,6 +45,17 @@ function MyProfile() {
   );
 }
 
+/** Membro ainda não liberado pelo clã: qualquer aba mostra só esta mensagem. */
+function Waiting({ text }) {
+  return (
+    <div className="waiting-screen">
+      <Hourglass size={48} />
+      <h1>{text}</h1>
+      <p className="muted">Quando o seu clã liberar, tudo aparece aqui. Não precisa fazer nada.</p>
+    </div>
+  );
+}
+
 export default function MemberApp() {
   const { actor } = useAuth();
   const isDbv = actor.kind === 'desbravador';
@@ -65,7 +76,7 @@ export default function MemberApp() {
         path="*"
         element={
           <Shell tabs={tabs}>
-            <Routes>
+            {actor.waiting ? <Waiting text={actor.waiting} /> : <Routes>
               <Route index element={<MyProfile />} />
               <Route path="requisitos" element={<><PageHeader title="Requisitos" subtitle={isDbv ? 'Cumpra os requisitos e suba no ranking' : 'Requisitos para a liderança e os tutores'} /><RequirementsTodo originTabs groupTab={isDbv} /></>} />
               <Route path="especialidades" element={<MyAchievements key="e" type="especialidade" />} />
@@ -76,7 +87,7 @@ export default function MemberApp() {
               <Route path="ver/:kind/:id" element={<InAppProfile base={base} />} />
               <Route path="mais" element={<><PageHeader title="Mais" /><MoreMenu items={more} /></>} />
               <Route path="*" element={<Navigate to={base} replace />} />
-            </Routes>
+            </Routes>}
           </Shell>
         }
       />

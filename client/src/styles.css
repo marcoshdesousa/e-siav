@@ -440,7 +440,7 @@ input[type='file'] { padding: .55rem; }
 .ig-field input { height: 52px; padding: 1.3rem .95rem .35rem; border-radius: 14px; font-size: .95rem; }
 .ig-field span { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: .92rem; pointer-events: none; transition: all .15s ease; }
 .ig-field input:focus + span, .ig-field.filled span { top: .55rem; transform: none; font-size: .7rem; font-weight: 700; }
-.ig-field .ig-hint { color: var(--muted); font-size: .78rem; text-align: center; margin: .7rem 0 0; line-height: 1.35; }
+.ig-hint { color: var(--muted); font-size: .78rem; text-align: center; margin: .7rem 0 0; line-height: 1.35; }
 .ig-show { position: absolute; right: .7rem; top: 50%; transform: translateY(-50%); border: 0; background: none; font-weight: 800; font-size: .82rem; color: var(--link); cursor: pointer; }
 .ig-field:has(.ig-show) input { padding-right: 5rem; }
 .ig-submit { width: 100%; margin-top: .5rem; height: 50px; border: 0; border-radius: 14px; background: linear-gradient(135deg, var(--navy) 0%, var(--navy-3) 100%); color: #fff; font-family: var(--font-title); font-weight: 600; font-size: 1rem; cursor: pointer; display: grid; place-items: center; transition: opacity .2s, transform .08s, box-shadow .2s; box-shadow: 0 8px 20px rgba(27, 77, 43, .3); }
@@ -697,3 +697,10 @@ label.btn { cursor: pointer; }
 .plain-fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 .pay-n { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-3); color: var(--navy); font-weight: 800; flex: none; }
 .pay-n.ok { background: var(--green-soft); color: var(--green-ink); }
+.waiting-screen { text-align: center; padding: 3.5rem 1.2rem; color: var(--navy); display: flex; flex-direction: column; align-items: center; gap: .4rem; }
+.waiting-screen h1 { font-size: 1.45rem; margin: .6rem 0 0; color: var(--ink); }
+.waiting-screen p { max-width: 320px; margin: .2rem auto 0; }
+.check-all { gap: .5rem; font-size: .9rem; font-weight: 600; margin: .4rem 0 .6rem; cursor: pointer; }
+.list-item.pick { cursor: pointer; }
+.list-item input[type=checkbox], .check-all input { width: 18px; height: 18px; accent-color: var(--navy); flex: none; }
+.pay-bar { position: sticky; bottom: calc(84px + env(safe-area-inset-bottom)); margin-top: .8rem; display: flex; align-items: center; justify-content: space-between; gap: .6rem; padding: .7rem .9rem; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 8px 24px rgba(0, 0, 0, .12); }

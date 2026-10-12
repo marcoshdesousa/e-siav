@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { COOKIE, checkAccountPassword, checkLogin, signToken, loadActor, requireAuth, getUsername } from '../auth.js';
+import { COOKIE, checkAccountPassword, checkLogin, signToken, loadActor, requireLogin, getUsername } from '../auth.js';
 import { CARGOS, CARGOS_18, CARGOS_LIDERANCA, IDADE_MIN_DIRETOR, MODELOS_ENVIO } from '../config.js';
 import { all, get } from '../db.js';
 import { fail } from '../util.js';
-import { PENDING_MSG, checkMemberPassword, pendingReason } from '../memberStatus.js';
+import { checkMemberPassword } from '../memberStatus.js';
 
 const r = Router();
 
@@ -78,7 +78,6 @@ r.post('/auth/login', (req, res) => {
   falhas.delete(keys[1]);
   if (login.account_type === 'member') {
     const m = get('SELECT * FROM members WHERE id = ?', login.account_id);
-    if (m.status === 'pendente') fail(403, PENDING_MSG[pendingReason(m)] || PENDING_MSG.aprovacao);
     if (m.status === 'inativo') fail(403, 'Sua conta está desativada. Fale com a diretoria do seu clã.');
   }
   const actor = loadActor(login.account_type, login.account_id);
@@ -95,7 +94,7 @@ r.post('/auth/logout', (_req, res) => {
   res.json({ ok: true });
 });
 
-r.get('/auth/me', requireAuth(), (req, res) => {
+r.get('/auth/me', requireLogin, (req, res) => {
   res.json({ actor: { ...req.actor, username: getUsername(req.actor.type, req.actor.id) } });
 });
 

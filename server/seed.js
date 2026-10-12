@@ -131,13 +131,13 @@ export function seed({ production = false } = {}) {
     memberDefs.forEach(([key, club, unit, name, age, cargo], i) => {
       const birth = birthForAge(age, (key.length * 2) % 11);
       const id = ins(
-        `INSERT INTO members (club_id, unit_id, name, birth_date, cargo, code, cpf, approved_at, fee_cleared_at) VALUES (?,?,?,?,?,?,?,strftime('%Y-%m-%dT%H:%M:%fZ','now'),strftime('%Y-%m-%dT%H:%M:%fZ','now'))`,
-        clubs[club], unit ? units[unit] : null, name, birth, cargo, String(100001 + i), fakeCpf(123456000 + i * 1000),
+        `INSERT INTO members (club_id, unit_id, name, birth_date, cargo, code, cpf, approved_at, cleared_year) VALUES (?,?,?,?,?,?,?,strftime('%Y-%m-%dT%H:%M:%fZ','now'),?)`,
+        clubs[club], unit ? units[unit] : null, name, birth, cargo, String(100001 + i), fakeCpf(123456000 + i * 1000), new Date().getFullYear(),
       );
       login('member', id, key, 'dbv123'); // usuário antigo (pedro, lucas...); a senha que vale é o ano de nascimento
       members[key] = id;
-      // Taxa do ano paga por quase todos (Gabriel e Davi ainda devem).
-      if (!['gabriel', 'davi'].includes(key)) run(`INSERT INTO member_fees (member_id, year, amount_cents, paid_at) VALUES (?, ?, 250, strftime('%Y-%m-%dT%H:%M:%fZ','now'))`, id, new Date().getFullYear());
+      // Inscrição do ano paga.
+      run(`INSERT INTO member_fees (member_id, year, amount_cents, paid_at) VALUES (?, ?, 250, strftime('%Y-%m-%dT%H:%M:%fZ','now'))`, id, new Date().getFullYear());
       // Ficha completa para quase todos; Gabriel e Davi ficam com "dados incompletos".
       if (!['gabriel', 'davi'].includes(key)) saveFicha(id, demoFicha(name, age, club), { acceptTerms: true });
     });
@@ -146,7 +146,7 @@ export function seed({ production = false } = {}) {
       clubs.aguias, null, 'Bruna Inscrita Teste', birthForAge(11, 2), 'Explorador', '100099', fakeCpf(123999000));
     login('member', pend, 'bruna', 'dbv123');
     saveFicha(pend, demoFicha('Bruna Inscrita Teste', 11, 'aguias'), { acceptTerms: true });
-    // Um cadastro feito pelo clã, com termo assinado, esperando o pagamento da taxa (R$ 2,50).
+    // Um cadastro feito pelo clã, com termo assinado, esperando o clã pagar a inscrição do ano.
     const pag = ins(`INSERT INTO members (club_id, unit_id, name, birth_date, cargo, code, cpf, status, approved_at) VALUES (?,?,?,?,?,?,?,'pendente',strftime('%Y-%m-%dT%H:%M:%fZ','now'))`,
       clubs.aguias, units.gavioes, 'Rafaela Nunes Teste', birthForAge(12, 4), 'Explorador', '100098', fakeCpf(123998000));
     login('member', pag, 'rafaela', 'dbv123');

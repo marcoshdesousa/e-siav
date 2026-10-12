@@ -109,7 +109,7 @@ export default function SignupPage() {
               <h1 style={{ marginTop: '.5rem' }}>Inscrição enviada!</h1>
               <p>Agora a diretoria do <b>{done.club_name}</b> confere e aprova a sua inscrição.</p>
               <AccessInfo code={done.code} password={done.password} />
-              <p className="muted small">Você entra no app depois que o clã aprovar e a taxa de inscrição (R$ 2,50) for paga.</p>
+              <p className="muted small">Você já pode entrar no app. Até o clã aprovar, vai aparecer "Esperando a aprovação do clã".</p>
               <Link to="/"><Button block>Ir para a tela de entrada</Button></Link>
             </Card>
           ) : (

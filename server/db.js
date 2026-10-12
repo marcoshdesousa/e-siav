@@ -649,6 +649,24 @@ function migrate() {
     setFlag('member-approval-fee-v1');
   }
 
+  // Inscrição anual: o ano até quando o membro está liberado. Quem já estava liberado fica no ano atual.
+  add('members', 'cleared_year', 'INTEGER');
+  if (!flag('member-cleared-year-v1')) {
+    db.prepare('UPDATE members SET cleared_year = ? WHERE cleared_year IS NULL AND fee_cleared_at IS NOT NULL').run(new Date().getFullYear());
+    setFlag('member-cleared-year-v1');
+  }
+  // Pedidos de pagamento da inscrição anual: o clã escolhe os membros e paga no Pix; a equipe confirma.
+  db.exec(`CREATE TABLE IF NOT EXISTS fee_orders (
+    id INTEGER PRIMARY KEY,
+    club_id INTEGER NOT NULL REFERENCES clubs(id) ON DELETE CASCADE,
+    year INTEGER NOT NULL,
+    member_ids TEXT NOT NULL,
+    amount_cents INTEGER NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+    confirmed_at TEXT,
+    canceled_at TEXT
+  )`);
+
   // Número do grupo dentro do clã (1 a 10), usado no link: /cla/CÓDIGO/NÚMERO.
   add('units', 'number', 'INTEGER');
   for (const u of db.prepare('SELECT id, club_id FROM units WHERE number IS NULL AND is_leadership = 0 ORDER BY id').all()) {

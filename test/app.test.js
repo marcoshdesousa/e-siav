@@ -109,24 +109,39 @@ test('taxas: 12 parcelas do clã (30 dias depois) e R$ 2,50 por membro no ano', 
   const admin = await login('membros', 'admin', 'admin123');
   await admin.put('/admin/pagamentos/config', { fee_member_year: '2,50', fee_club_month: '30,85', club_installments: 12, pix_key: 'pix@exploradores.com' });
   await admin.post(`/admin/pagamentos/parcela/${p.installments[0].id}`, { paid: true });
-  // Rafaela: cadastro completo, esperando a taxa. Só entra e aparece como ativa depois do pagamento.
+  // Rafaela: cadastro completo, falta o clã pagar a inscrição do ano. Ela entra, mas só vê "esperando".
   const rafa = p.member_fee.members.find((m) => m.name === 'Rafaela Nunes Teste');
   assert.ok(rafa && !rafa.paid_at, 'membro pendente aparece na cobrança');
   const situacao = async () => (await aguias.get('/club/members')).body.find((m) => m.id === rafa.id);
-  assert.equal((await situacao()).pending_reason, 'pagamento');
-  const tenta = () => fetch(BASE + '/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'membros', username: rafa.code, password: birthYear(rafa.code) }) });
-  const bloqueado = await tenta();
-  assert.equal(bloqueado.status, 403);
-  assert.match((await bloqueado.json()).error, /pagamento/);
+  assert.equal((await situacao()).pending_reason, 'inscricao');
+  let rafaLogin = await login('membros', rafa.code);
+  assert.equal(rafaLogin.actor.waiting, 'Esperando a aprovação do clã', 'entra, mas esperando (sem falar em pagamento)');
+  assert.equal((await rafaLogin.get('/rankings/members')).status, 403, 'não consegue fazer nada');
+  // O clã escolhe os membros e paga de uma vez; a equipe confirma o Pix
+  const pedido = await aguias.post('/club/pagamentos/inscricoes', { member_ids: [rafa.id] });
+  assert.equal(pedido.status, 200);
+  assert.equal(pedido.body.amount_cents, 250);
+  assert.equal((await aguias.post('/club/pagamentos/inscricoes', { member_ids: [rafa.id] })).status, 400, 'já está em um pagamento');
+  assert.equal((await aguias.post('/club/pagamentos/inscricoes', { member_ids: [1] })).status, 400, 'já pago');
+  const pedidos = (await admin.get('/admin/pagamentos/inscricoes')).body;
+  assert.ok(pedidos.some((o) => o.id === pedido.body.id && o.members[0].name === 'Rafaela Nunes Teste'));
+  assert.equal((await admin.post(`/admin/pagamentos/inscricoes/${pedido.body.id}/confirmar`)).status, 200);
+  assert.equal((await situacao()).status, 'ativo', 'pago: fica ativa');
+  rafaLogin = await login('membros', rafa.code);
+  assert.equal(rafaLogin.actor.waiting, null);
+  assert.equal((await rafaLogin.get('/rankings/members')).status, 200);
+  // Virada do ano: quem não foi renovado espera o clã atualizar
+  const db = new DatabaseSync(path.join(dataDir, 'dbv.sqlite'));
+  db.prepare(`UPDATE members SET status = 'pendente', cleared_year = cleared_year - 1 WHERE id = ?`).run(rafa.id);
+  db.close();
+  assert.equal((await situacao()).pending_reason, 'renovacao');
+  assert.equal((await login('membros', rafa.code)).actor.waiting, 'Esperando o seu clã atualizar o sistema');
   await admin.post('/admin/pagamentos/membros', { member_ids: [rafa.id], paid: true });
-  assert.equal((await situacao()).status, 'ativo', 'pagou: fica ativo');
-  assert.equal((await tenta()).status, 200);
-  await admin.post('/admin/pagamentos/membros', { member_ids: [rafa.id], paid: false });
-  assert.equal((await situacao()).pending_reason, 'pagamento', 'desfez o pagamento: volta a esperar');
-  await admin.post('/admin/pagamentos/membros', { member_ids: [rafa.id], paid: true });
+  assert.equal((await situacao()).status, 'ativo');
   const depois = (await aguias.get('/club/pagamentos')).body;
   assert.equal(depois.installments[0].state, 'paga');
   assert.equal(depois.member_fee.paid_count, p.member_fee.paid_count + 1);
+  assert.equal(depois.orders.length, 0);
   assert.equal(depois.pix_key, 'pix@exploradores.com');
   assert.equal((await aguias.post(`/admin/pagamentos/parcela/${p.installments[1].id}`, { paid: true })).status, 403, 'clã não marca pagamento');
 });
@@ -381,7 +396,8 @@ test('inscrição pelo link: fica pendente até o clã aprovar; desativar tira o
   assert.equal(password, String(d.getFullYear() - 12), 'senha: ano de nascimento');
   assert.equal((await post({ ...body, name: 'Outra Pessoa' })).status, 409, 'CPF único');
   const tryLogin = () => fetch(BASE + '/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'membros', username: code, password }) });
-  assert.equal((await tryLogin()).status, 403, 'pendente não entra');
+  const waiting = async () => { const r = await tryLogin(); assert.equal(r.status, 200); return (await r.json()).actor.waiting; };
+  assert.equal(await waiting(), 'Esperando a aprovação do clã', 'pendente entra, mas só vê a espera');
 
   const aguias = await login('clube', 'aguias', 'AG2026');
   const joana = (await aguias.get('/club/members')).body.find((m) => m.code === code);
@@ -405,15 +421,16 @@ test('inscrição pelo link: fica pendente até o clã aprovar; desativar tira o
   const leoes = await login('clube', 'leoes', 'LE2026');
   assert.equal((await leoes.get(`/club/members/${joana.id}/ficha`)).status, 404, 'outro clã não vê a ficha');
   await aguias.post(`/club/members/${joana.id}/aprovar`, {});
-  assert.equal((await tryLogin()).status, 403, 'aprovada, mas esperando a taxa');
-  assert.equal((await aguias.get('/club/members')).body.find((m) => m.id === joana.id).pending_reason, 'pagamento');
-  await admin.post('/admin/pagamentos/membros', { member_ids: [joana.id], paid: true });
-  assert.equal((await tryLogin()).status, 200, 'pagou: entra');
+  assert.equal(await waiting(), 'Esperando a aprovação do clã', 'aprovada, mas falta a inscrição do ano');
+  assert.equal((await aguias.get('/club/members')).body.find((m) => m.id === joana.id).pending_reason, 'inscricao');
+  const o = await aguias.post('/club/pagamentos/inscricoes', { member_ids: [joana.id] });
+  await admin.post(`/admin/pagamentos/inscricoes/${o.body.id}/confirmar`);
+  assert.equal(await waiting(), null, 'inscrição paga: liberada');
   await aguias.post(`/club/members/${joana.id}/desativar`);
   assert.equal((await tryLogin()).status, 403, 'desativado não entra');
   assert.equal((await aguias.del(`/club/members/${joana.id}`)).status, 404, 'ninguém é apagado');
   await aguias.post(`/club/members/${joana.id}/reativar`);
-  assert.equal((await tryLogin()).status, 200);
+  assert.equal(await waiting(), null);
 });
 
 test('cadastro pelo clã: fica pendente até o responsável assinar o termo pelo link', async () => {
@@ -429,7 +446,8 @@ test('cadastro pelo clã: fica pendente até o responsável assinar o termo pelo
   assert.equal(m.pending_reason, 'termo');
   const tryLogin = () => fetch(BASE + '/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'membros', username: r.body.code, password: r.body.password }) });
   assert.equal(r.body.password, String(d.getFullYear() - 11));
-  assert.equal((await tryLogin()).status, 403);
+  const waiting = async () => (await (await tryLogin()).json()).actor.waiting;
+  assert.equal(await waiting(), 'Esperando a aprovação do clã');
   const termo = BASE + '/public/termo/' + r.body.terms_token;
   const info = await (await fetch(termo)).json();
   assert.equal(info.name, 'Caio Cadastro Manual');
@@ -438,10 +456,10 @@ test('cadastro pelo clã: fica pendente até o responsável assinar o termo pelo
   const ok = { assinatura_nome: 'Mãe do Caio', assinatura_cpf: cpf(900000071), termo_imagem: true, termo_responsabilidade: true, termo_dados: true, termo_medico: true };
   assert.equal((await sign({ ...ok, termo_imagem: false })).status, 400);
   assert.equal((await sign(ok)).status, 200);
-  assert.equal((await tryLogin()).status, 403, 'assinou, mas falta a taxa');
+  assert.equal(await waiting(), 'Esperando a aprovação do clã', 'assinou, mas falta a inscrição do ano');
   const admin = await login('membros', 'admin', 'admin123');
   await admin.post('/admin/pagamentos/membros', { member_ids: [r.body.id], paid: true });
-  assert.equal((await tryLogin()).status, 200, 'termo assinado e taxa paga: ativo');
+  assert.equal(await waiting(), null, 'termo assinado e inscrição paga: ativo');
   assert.equal((await fetch(termo)).status, 404, 'link vale uma vez só');
   const ficha = (await aguias.get(`/club/members/${r.body.id}/ficha`)).body.ficha;
   assert.equal(ficha.med_assinatura_nome, 'Mãe do Caio');

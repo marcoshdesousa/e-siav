@@ -116,9 +116,9 @@ export default function Login() {
               <button type="button" role="tab" aria-selected={mode === 'clube'} onClick={() => setMode('clube')}><Tent size={17} /> Clã</button>
             </div>
 
-            <FloatField label={mode === 'clube' ? 'Código do clã' : 'Seu código (6 números)'} value={username} onChange={setUsername} autoComplete="username" inputMode={mode === 'clube' ? 'numeric' : undefined} />
+            <FloatField label={mode === 'clube' ? 'Código do clã' : 'Seu código'} value={username} onChange={setUsername} autoComplete="username" inputMode={mode === 'clube' ? 'numeric' : undefined} />
             <FloatField
-              label={mode === 'clube' ? 'Senha' : 'Senha (ano de nascimento)'} type={show ? 'text' : 'password'} value={password} onChange={setPassword} autoComplete="current-password"
+              label="Senha" type={show ? 'text' : 'password'} value={password} onChange={setPassword} autoComplete="current-password"
               right={password ? <button type="button" className="ig-show" onClick={() => setShow((s) => !s)}>{show ? 'Ocultar' : 'Mostrar'}</button> : null}
             />
             <button className="ig-submit" disabled={busy || !username || password.length < 1}>
@@ -126,8 +126,8 @@ export default function Login() {
             </button>
             {error && <p className="ig-error" role="alert">{error}</p>}
             <p className="ig-hint">{mode === 'clube'
-              ? 'Código do clã (4 números) + senha (2 letras e 4 números). A senha do clã abre o Sistema do Clã; a de um grupo abre o Portal do Grupo.'
-              : 'Seu código de 6 números + a senha, que é o ano em que você nasceu (ex.: 2006).'}</p>
+              ? 'Coloque o código do clã e a senha. Para entrar como grupo, use a senha do seu grupo.'
+              : 'Coloque o seu código e a sua senha.'}</p>
 
           </form>
 

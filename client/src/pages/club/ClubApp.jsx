@@ -399,7 +399,7 @@ function NewMemberPage() {
         <Modal title="Membro cadastrado!" onClose={() => nav(`${base}/membros?aba=pendente`)} footer={<Button onClick={() => nav(`${base}/membros?aba=pendente`)}>Entendi</Button>}>
           <p className="center">Acesso do membro na tela Membros:</p>
           <AccessInfo code={created.code} password={created.password} />
-          <p className="center small">É um <b>pré-cadastro</b>: o membro fica pendente até assinarem o termo e a taxa de R$ 2,50 ser paga (Pix, em Pagamentos). Envie o link do termo:</p>
+          <p className="center small">É um <b>pré-cadastro</b>: o membro entra no app, mas só usa depois que assinarem o termo e o clã pagar a inscrição do ano (em Pagamentos). Envie o link do termo:</p>
           <TermLinkInline member={{ name: created.name, terms_token: created.terms_token, kind: created.kind }} />
         </Modal>
       )}
@@ -488,7 +488,7 @@ export default function ClubApp() {
   ];
   const more = [
     { to: `${base}/aprovacoes`, icon: BadgeCheck, label: 'Aprovações', hint: 'Insígnias dos membros' },
-    { to: `${base}/pagamentos`, icon: Wallet, label: 'Pagamentos', hint: 'Parcelas e taxa dos membros' },
+    { to: `${base}/pagamentos`, icon: Wallet, label: 'Pagamentos', hint: 'Plano do clã e inscrição dos membros' },
     { to: `${base}/transferencias`, icon: ArrowLeftRight, label: 'Transferências', hint: 'Trazer alguém de outro clã' },
     { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos', hint: 'Do seu clã' },
     { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: 'Para os seus membros' },
