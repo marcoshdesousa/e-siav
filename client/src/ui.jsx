@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Camera, Check, ChevronDown, ChevronUp, Compass, ImagePlus, Medal, Share2, Trash2, X } from 'lucide-react';
 import { AppIcon, ICONS } from './icons.jsx';
 
@@ -433,4 +433,14 @@ export function QuizAnswer({ questions, answers, setAnswers }) {
       ))}
     </div>
   ));
+}
+
+/**
+ * "Voltar" que anda só dentro do app. Se a tela foi aberta direto (sem tela anterior do app),
+ * vai para o início em vez de voltar para páginas antigas do navegador.
+ */
+export function BackButton({ fallback, className = 'back-link', style }) {
+  const nav = useNavigate();
+  const back = () => (window.history.state?.idx > 0 ? nav(-1) : nav(fallback, { replace: true }));
+  return <button type="button" className={className} style={style} onClick={back}><ArrowLeft size={16} /> Voltar</button>;
 }

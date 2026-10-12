@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Award, Check, Clock, Lock, RotateCcw, XCircle } from 'lucide-react';
+import {
+  Award, Check, Clock, Lock, RotateCcw, XCircle,
+} from 'lucide-react';
 import { api, toForm } from '../api.js';
 import {
-  Badge, Button, ContentIcon, Gallery, Loading, Modal, PageHeader, Section, modesLabel, notify, useAsync, useLoad,
+  BackButton, Badge, Button, ContentIcon, Gallery, Loading, Modal, PageHeader, Section, modesLabel, notify, useAsync, useLoad,
 } from '../ui.jsx';
 import { ResponseFields } from './Requirements.jsx';
 
@@ -95,7 +97,7 @@ export function ContentDetail() {
     <Loading {...state}>
       {(c) => (
         <>
-          <button type="button" className="back-link" onClick={() => history.back()}><ArrowLeft size={16} /> Voltar</button>
+          <BackButton fallback={location.pathname.split('/').slice(0, 2).join('/') || '/'} />
           <div className="hero">
             <div className="row" style={{ position: 'relative', zIndex: 1 }}>
               <span className="content-icon" style={{ background: 'rgba(255,255,255,.95)', width: 64, height: 64 }}><ContentIcon c={c} size={30} /></span>

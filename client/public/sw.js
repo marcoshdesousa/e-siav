@@ -1,5 +1,5 @@
 // Service worker do Exploradores do Brasil: app instalável e tela inicial disponível offline.
-const CACHE = 'dbv-v16';
+const CACHE = 'dbv-v17';
 const SHELL = ['/', '/atualizando.html', '/manifest.webmanifest', '/favicon.ico', '/marca/logo.png', '/marca/favicon.png', '/marca/icon-192.png', '/marca/icon-512.png'];
 
 self.addEventListener('install', (e) => {
