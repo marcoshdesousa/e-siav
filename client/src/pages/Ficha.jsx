@@ -51,7 +51,7 @@ function Choice({ options, value, onChange, disabled }) {
  * Ficha de cadastro (modelo do Registro de Membro).
  * A idade decide o que aparece: menor de 18 → pais e responsável; 16+ → profissional de saúde.
  */
-export default function FichaForm({ value: f, onChange, age = null, readOnly = false }) {
+export default function FichaForm({ value: f, onChange, age = null, readOnly = false, personal = true }) {
   const set = (k) => (v) => onChange({ ...f, [k]: v });
   const input = (k, props = {}) => (
     <input value={f[k] || ''} onChange={(e) => onChange({ ...f, [k]: e.target.value })} disabled={readOnly} {...props} />
@@ -65,11 +65,19 @@ export default function FichaForm({ value: f, onChange, age = null, readOnly = f
   const minor = age != null && age < 18;
   return (
     <div className="form">
-      <h3 className="ficha-title">Ficha de cadastro</h3>
-      <Field group label="Sexo">
-        <Choice options={SEXOS.map((s) => [s, s])} value={f.sexo} onChange={set('sexo')} disabled={readOnly} />
-      </Field>
-      {f.sexo === 'Outro' && <Field label="Como você se identifica?">{input('sexo_outro')}</Field>}
+      {personal && (
+        <>
+          <h3 className="ficha-title">Dados pessoais</h3>
+          <SexoField value={f} onChange={onChange} disabled={readOnly} />
+          {f.doc_tipo !== 'certidao' ? (
+            <div className="grid2">
+              <Field label="RG">{input('rg')}</Field>
+              <Field label="Órgão expedidor">{input('rg_orgao', { placeholder: 'SSP/PE' })}</Field>
+            </div>
+          ) : <Field label="Certidão de nascimento">{input('certidao')}</Field>}
+        </>
+      )}
+      <h3 className="ficha-title">Contato e endereço</h3>
       <Field label="WhatsApp" hint="Se o explorador não tiver WhatsApp, coloque o do responsável.">{input('whatsapp', { inputMode: 'tel', placeholder: '(00) 00000-0000' })}</Field>
 
       <div className="grid-addr">
@@ -86,13 +94,7 @@ export default function FichaForm({ value: f, onChange, age = null, readOnly = f
         <Field label="Referência" hint="Opcional">{input('referencia', { placeholder: 'Perto de...' })}</Field>
       </div>
 
-      {f.doc_tipo !== 'certidao' && (
-        <div className="grid2">
-          <Field label="RG">{input('rg')}</Field>
-          <Field label="Órgão expedidor">{input('rg_orgao', { placeholder: 'SSP/PE' })}</Field>
-        </div>
-      )}
-
+      <h3 className="ficha-title">Outros dados</h3>
       {age != null && age >= 16 && (
         <>
           <Field group label="Você é profissional de saúde?">
@@ -174,8 +176,26 @@ export function DocFields({ value: f, onChange, cpf, onCpf }) {
           <input value={f.certidao || ''} onChange={(e) => onChange({ ...f, certidao: e.target.value })} />
         </Field>
       ) : (
-        <Field label="CPF"><input value={cpf} onChange={(e) => onCpf(fmtCpf(e.target.value))} inputMode="numeric" placeholder="000.000.000-00" /></Field>
+        <>
+          <Field label="CPF"><input value={cpf} onChange={(e) => onCpf(fmtCpf(e.target.value))} inputMode="numeric" placeholder="000.000.000-00" /></Field>
+          <div className="grid2">
+            <Field label="RG"><input value={f.rg || ''} onChange={(e) => onChange({ ...f, rg: e.target.value })} /></Field>
+            <Field label="Órgão expedidor"><input value={f.rg_orgao || ''} onChange={(e) => onChange({ ...f, rg_orgao: e.target.value })} placeholder="SSP/PE" /></Field>
+          </div>
+        </>
       )}
+    </>
+  );
+}
+
+/** Sexo: Feminino, Masculino ou Outro (escrevendo como se identifica). */
+export function SexoField({ value: f, onChange, disabled }) {
+  return (
+    <>
+      <Field group label="Sexo">
+        <Choice options={SEXOS.map((x) => [x, x])} value={f.sexo} onChange={(v) => onChange({ ...f, sexo: v })} disabled={disabled} />
+      </Field>
+      {f.sexo === 'Outro' && <Field label="Como você se identifica?"><input value={f.sexo_outro || ''} onChange={(e) => onChange({ ...f, sexo_outro: e.target.value })} disabled={disabled} /></Field>}
     </>
   );
 }

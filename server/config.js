@@ -2,7 +2,8 @@
 // A lista de cargos fica aqui para ser fácil de alterar depois.
 
 // desbravador = Explorador (10–15 anos); lideranca = Liderança e Tutores (16+). Os nomes internos não mudam.
-export const CARGOS_LIDERANCA = ['Diretor Geral', 'Diretora Geral', 'Diretor Mirins', 'Diretora Mirins', 'Secretaria', 'Tesoureira', 'Orador', 'Enfermeiros'];
+export const CARGOS_LIDERANCA = [
+  'Diretor Geral', 'Diretora Geral', 'Diretor Associado', 'Diretora Associada', 'Diretor Mirins', 'Diretora Mirins', 'Secretaria', 'Tesoureira', 'Orador', 'Enfermeiros'];
 export const CARGOS_TUTORES = [
   'Tutor de Ordem Unida', 'Tutor de Atividades', 'Tutor Criativo', 'Tutor de Atividades Mirins', 'Tutor de Especialidades',
   'Tutor de Especialidades Mirins', 'Tutor de Acampamentos', 'Tutor de Acampamentos Mirins', 'Padrinho Líder', 'Padrinho Excelente',
@@ -12,12 +13,16 @@ export const CARGOS = {
   lideranca: [...CARGOS_LIDERANCA, ...CARGOS_TUTORES],
 };
 
+// Cargos de diretoria só a partir de 18 anos. Os demais cargos de Liderança e Tutores, a partir de 16.
+export const CARGOS_18 = ['Diretor Geral', 'Diretora Geral', 'Diretor Associado', 'Diretora Associada', 'Diretor Mirins', 'Diretora Mirins'];
+export const IDADE_MIN_DIRETOR = 18;
+
 export const CARGO_PADRAO = { desbravador: 'Explorador', lideranca: 'Tutor de Atividades' };
 
 /** Cargos antigos → novos (aplicado ao iniciar o servidor). */
 export const CARGOS_RENOMEADOS = {
   Desbravador: 'Explorador', Conselheiro: 'Tutor de Atividades', Instrutor: 'Tutor de Atividades', Tutor: 'Tutor de Atividades',
-  'Tutor de Insígnias': 'Tutor de Especialidades', 'Tutor de Acampamento': 'Tutor de Acampamentos', Diretor: 'Diretor Geral', 'Diretor Associado': 'Diretor Geral',
+  'Tutor de Insígnias': 'Tutor de Especialidades', 'Tutor de Acampamento': 'Tutor de Acampamentos', Diretor: 'Diretor Geral',
   Secretário: 'Secretaria', Tesoureiro: 'Tesoureira', Capelão: 'Orador',
 };
 

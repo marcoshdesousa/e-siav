@@ -73,7 +73,7 @@ function AdminHome() {
  */
 const baseName = (n) => String(n || '').replace(/^\d+º\s*/, '').replace(/^cl[ãa]\s+/i, '');
 function ClubForm({ item, nextNumber, districts, onClose, onCreated, onSaved }) {
-  const [f, setF] = useState({ name: baseName(item?.name), district_id: item?.district_id || districts?.[0]?.id || '', director_name: item?.director_name || '' });
+  const [f, setF] = useState({ name: baseName(item?.name), district_id: item?.district_id || districts?.[0]?.id || '', director_name: item?.director_name || '', associate_directors: item?.associate_directors || '' });
   const [busy, run] = useAsync();
   const save = async () => {
     if (item) {
@@ -96,7 +96,10 @@ function ClubForm({ item, nextNumber, districts, onClose, onCreated, onSaved }) 
             {districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
           </select>
         </Field>
-        <Field label="Diretor(a) do clã" hint="Responsável pelo clã. Dá para trocar todo ano."><input value={f.director_name} onChange={(e) => setF({ ...f, director_name: e.target.value })} /></Field>
+        <Field label="Diretor(a) do clã" hint="Responsável pelo clã. Só o administrativo troca (todo ano)."><input value={f.director_name} onChange={(e) => setF({ ...f, director_name: e.target.value })} /></Field>
+        <Field label="Diretores associados (opcional)" hint="Um nome por linha.">
+          <textarea rows={3} value={f.associate_directors} onChange={(e) => setF({ ...f, associate_directors: e.target.value })} placeholder={'Ex.: Ana Souza\nJoão Lima'} />
+        </Field>
         {!item && <p className="muted small">O app cria o código do clã e a senha (2 letras + 4 números). A senha não pode ser trocada. Os grupos entram com o mesmo código e a senha de cada grupo.</p>}
       </div>
     </Modal>
@@ -187,7 +190,7 @@ function ClubsAdmin() {
                   <div className="grow">
                     <div className="title">{c.name}</div>
                     <div className="sub">{c.district_name} · {plural(c.unit_count, 'grupo', 'grupos')} · {plural(c.member_count, 'membro', 'membros')}</div>
-                    <div className="sub">Nº {c.number} · Código <b>{c.code}</b>{c.director_name ? <> · Diretor(a): {c.director_name}</> : ''}</div>
+                    <div className="sub">Nº {c.number} · Código <b>{c.code}</b>{c.director_name ? <> · Diretor(a): {c.director_name}</> : ''}{c.associate_directors ? <> · Associados: {c.associate_directors.split('\n').join(', ')}</> : ''}</div>
                   </div>
                   <div className="stack" style={{ gap: '.35rem' }}>
                     <Link to={`${base}/clubes/${c.id}`}><Button small>Ver por dentro</Button></Link>

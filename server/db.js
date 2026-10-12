@@ -503,6 +503,7 @@ function migrate() {
   // Clã: código de 4 dígitos (0001, 0002...), nome do diretor e história.
   add('clubs', 'code', 'TEXT');
   add('clubs', 'director_name', 'TEXT');
+  add('clubs', 'associate_directors', 'TEXT'); // um nome por linha; só o admin muda
   add('clubs', 'history', 'TEXT');
   db.exec('CREATE UNIQUE INDEX IF NOT EXISTS ux_club_code ON clubs(code) WHERE code IS NOT NULL');
   for (const c of db.prepare('SELECT id FROM clubs WHERE code IS NULL ORDER BY id').all()) {

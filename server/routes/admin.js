@@ -47,9 +47,15 @@ r.put('/admin/districts/:id', (req, res) => {
 });
 
 // ---------- Clãs ----------
+/** Diretores associados: um nome por linha (até 10). */
+function associates(v) {
+  const list = (Array.isArray(v) ? v : String(v ?? '').split('\n')).map((n) => str(n, 100)).filter(Boolean).slice(0, 10);
+  return list.length ? list.join('\n') : null;
+}
+
 r.get('/admin/clubs', (_req, res) => {
   const rows = all(
-    `SELECT c.id, c.name, c.number, c.logo, c.code, c.director_name, c.district_id, d.name AS district_name,
+    `SELECT c.id, c.name, c.number, c.logo, c.code, c.director_name, c.associate_directors, c.district_id, d.name AS district_name,
             (SELECT COUNT(*) FROM members m WHERE m.club_id = c.id AND m.status = 'ativo') AS member_count,
             (SELECT COUNT(*) FROM units u WHERE u.club_id = c.id) AS unit_count
      FROM clubs c JOIN districts d ON d.id = c.district_id ORDER BY c.number`,
@@ -73,7 +79,7 @@ r.post('/admin/clubs', (req, res) => {
     const code = newClubCode();
     const number = newClubNumber();
     const full = clubDisplayName(number, name);
-    const id = Number(run('INSERT INTO clubs (district_id, name, number, code, director_name) VALUES (?,?,?,?,?)', districtId, full, number, code, director).lastInsertRowid);
+    const id = Number(run('INSERT INTO clubs (district_id, name, number, code, director_name, associate_directors) VALUES (?,?,?,?,?,?)', districtId, full, number, code, director, associates(req.body.associate_directors)).lastInsertRowid);
     run('INSERT INTO units (club_id, name, is_leadership, pin) VALUES (?, ?, 1, ?)', id, NOME_UNIDADE_LIDERANCA, newUnitPin(id, (p) => p === password));
     setLogin('club', id, 'cla' + code, password);
     ensureInstallments(id);
@@ -98,6 +104,7 @@ r.put('/admin/clubs/:id', (req, res) => {
       if (!director) fail(400, 'Informe o nome do diretor do clã');
       run('UPDATE clubs SET director_name = ? WHERE id = ?', director, id);
     }
+    if (req.body.associate_directors !== undefined) run('UPDATE clubs SET associate_directors = ? WHERE id = ?', associates(req.body.associate_directors), id);
   });
   res.json({ ok: true });
 });

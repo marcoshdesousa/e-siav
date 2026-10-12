@@ -84,14 +84,14 @@ export function seed({ production = false } = {}) {
     const clubs = {};
     const units = {};
     const clubDefs = [
-      { key: 'aguias', number: 1, code: '4821', password: 'AG2026', name: '1º Clã Águias do Vale', director: 'Marcos Almeida', color: '#0B3D91', icon: 'wing', user: 'aguias', lid: 'TU9001',
+      { key: 'aguias', number: 1, code: '4821', password: 'AG2026', name: '1º Clã Águias do Vale', director: 'Marcos Almeida', associates: 'Juliana Costa', color: '#0B3D91', icon: 'wing', user: 'aguias', lid: 'TU9001',
         units: [['falcoes', 'Falcões', '#D62828', 'wing', 'FA1111'], ['gavioes', 'Gaviões', '#1F7A4D', 'mountain', 'GA2222']] },
       { key: 'leoes', number: 2, code: '7350', password: 'LE2026', name: '2º Clã Leões de Judá', director: 'Carlos Pereira', color: '#8A1C1C', icon: 'paw', user: 'leoes', lid: 'TU9002',
         units: [['panteras', 'Panteras', '#3A2E7A', 'paw', 'PA3333'], ['tigres', 'Tigres', '#D9822B', 'flame', 'TI4444']] },
     ];
     for (const c of clubDefs) {
-      const id = ins('INSERT INTO clubs (district_id, name, number, logo, code, director_name, history) VALUES (?,?,?,?,?,?,?)', palmares, c.name, c.number,
-        makeLogo(`seed-club-${c.key}.svg`, c.color, c.icon), c.code, c.director, `O ${c.name} nasceu da vontade de levar aventura e fé aos jovens do bairro.`);
+      const id = ins('INSERT INTO clubs (district_id, name, number, logo, code, director_name, associate_directors, history) VALUES (?,?,?,?,?,?,?,?)', palmares, c.name, c.number,
+        makeLogo(`seed-club-${c.key}.svg`, c.color, c.icon), c.code, c.director, c.associates || null, `O ${c.name} nasceu da vontade de levar aventura e fé aos jovens do bairro.`);
       login('club', id, c.user, c.password);
       clubs[c.key] = id;
       units[c.key + ':lideranca'] = ins('INSERT INTO units (club_id, name, logo, is_leadership, pin) VALUES (?,?,?,1,?)', id, NOME_UNIDADE_LIDERANCA, makeLogo(`seed-lid-${c.key}.svg`, '#0B3D91', 'star', '#fff'), c.lid);

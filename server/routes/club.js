@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { all, get, run, tx } from '../db.js';
 import { requireAuth, setLogin, deleteLogin, checkAccountPassword } from '../auth.js';
 import { imageUpload, fileUrl } from '../uploads.js';
-import { CARGOS, CARGO_PADRAO } from '../config.js';
+import { CARGOS, CARGOS_18, CARGO_PADRAO, IDADE_MIN_DIRETOR } from '../config.js';
 import { fail, int, str, memberKind, ageFrom, validDate, newMemberCode, newUnitPin, parseJson } from '../util.js';
 import { checkIdentity, cleanFicha, saveFicha, validateSignup } from '../ficha.js';
 import { listMembers, listUnits, memberFicha } from '../clubData.js';
@@ -39,12 +39,7 @@ r.put('/club/profile', imageUpload.fields([{ name: 'photo', maxCount: 1 }, { nam
   const logo = req.files?.logo?.[0];
   if (photo) run('UPDATE clubs SET photo = ? WHERE id = ?', fileUrl(photo), req.actor.id);
   if (logo) run('UPDATE clubs SET logo = ? WHERE id = ?', fileUrl(logo), req.actor.id);
-  // Nome do diretor (troca a cada ano, se mudar) e a história do clã.
-  if (req.body.director_name !== undefined) {
-    const director = str(req.body.director_name, 100);
-    if (!director) fail(400, 'Informe o nome do diretor');
-    run('UPDATE clubs SET director_name = ? WHERE id = ?', director, req.actor.id);
-  }
+  // História do clã. O nome do diretor só o administrativo muda (todo ano).
   if (req.body.history !== undefined) run('UPDATE clubs SET history = ? WHERE id = ?', str(req.body.history, 5000) || null, req.actor.id);
   res.json({ ok: true });
 });
@@ -77,6 +72,10 @@ function memberFields(req, existing) {
   if (!kind) fail(400, 'O membro precisa ter pelo menos 10 anos');
   let cargo = str(b.cargo ?? existing?.cargo, 60);
   if (!CARGOS[kind].includes(cargo)) cargo = CARGO_PADRAO[kind];
+  if (CARGOS_18.includes(cargo) && ageFrom(birth) < IDADE_MIN_DIRETOR) {
+    if (b.cargo !== undefined) fail(400, `O cargo ${cargo} é só para quem tem ${IDADE_MIN_DIRETOR} anos ou mais`);
+    cargo = CARGO_PADRAO[kind];
+  }
 
   let unitId = b.unit_id === undefined ? existing?.unit_id ?? null : int(b.unit_id);
   if (unitId) {
@@ -170,9 +169,26 @@ r.get('/club/members/:id/ficha', (req, res) => {
   const m = ownMember(req);
   res.json(memberFicha(req.actor.id, m.id));
 });
+// A ficha também traz os dados pessoais do membro (nome, nascimento, CPF ou certidão).
+// Grupo e cargo ficam no "Editar".
 r.put('/club/members/:id/ficha', (req, res) => {
   const m = ownMember(req);
-  saveFicha(m.id, cleanFicha(req.body));
+  const ficha = cleanFicha(req.body);
+  const b = req.body;
+  const personal = b.name !== undefined || b.birth_date !== undefined || b.cpf !== undefined || b.certidao !== undefined;
+  const fields = { name: b.name, birth_date: b.birth_date };
+  if (b.cpf !== undefined || b.certidao !== undefined) {
+    Object.assign(fields, ficha.doc_tipo === 'certidao' ? { cpf: '', certidao: b.certidao ?? '' } : { cpf: b.cpf ?? '', certidao: '' });
+  }
+  const f = personal ? memberFields({ body: fields, actor: req.actor }, m) : null;
+  if (f && ficha.doc_tipo !== 'certidao' && !f.cpf && (b.cpf !== undefined)) fail(400, 'Informe o CPF');
+  tx(() => {
+    if (f) {
+      run('UPDATE members SET name = ?, birth_date = ?, cargo = ?, unit_id = ?, cpf = ?, birth_cert = ? WHERE id = ? AND club_id = ?',
+        f.name, f.birth, f.cargo, f.unitId, f.cpf, f.certidao, m.id, req.actor.id);
+    }
+    saveFicha(m.id, ficha);
+  });
   res.json({ ok: true });
 });
 

@@ -5,8 +5,7 @@ import {
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
-import { KIND_LABEL, fmtCpf, plural } from '../../format.js';
-import { DocFields } from '../Ficha.jsx';
+import { KIND_LABEL, plural } from '../../format.js';
 import { FichaModal, MembersBrowser, TermLinkInline, TermLinkModal, memberActions } from './Members.jsx';
 import { CadastroFlow } from '../Signup.jsx';
 import TransfersPage from './Transfers.jsx';
@@ -45,7 +44,7 @@ function ClubHome() {
               <Avatar src={c.logo} name={c.name} size={88} square />
               <h1>{c.name}</h1>
               <div className="chips"><span className="chip ico"><MapPin size={14} /> {c.district_name}</span><span className="chip ico"><KeyRound size={14} /> Código do clã: <b>{c.code}</b></span></div>
-              {c.director_name && <p className="small" style={{ margin: '.2rem 0 .4rem' }}>Diretor(a): <b>{c.director_name}</b></p>}
+              {c.director_name && <p className="small" style={{ margin: '.2rem 0 .4rem' }}>Diretor(a): <b>{c.director_name}</b>{c.associate_directors ? <> · Associados: {c.associate_directors.split('\n').join(', ')}</> : ''}</p>}
               {c.ranking && <PositionBadge position={c.ranking.position} points={c.ranking.points} label="no ranking de clãs" />}
               <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.5rem' }}>
                 <ShareButton path={`/p/clube/${c.id}`} title={c.name} />
@@ -117,86 +116,84 @@ function SignupLink({ code, id }) {
   );
 }
 
-/** Nome do diretor (troca a cada ano, se mudar) e a história do clã. */
+/** História do clã. O nome do diretor só o administrativo muda (todo ano). */
 function ClubInfoForm({ club, onDone }) {
-  const [f, setF] = useState({ director_name: club.director_name || '', history: club.history || '' });
+  const [history, setHistory] = useState(club.history || '');
   const [busy, run] = useAsync();
   const save = async () => {
-    await run(() => api.put('/club/profile', toForm(f)), 'Salvo!');
+    await run(() => api.put('/club/profile', toForm({ history })), 'Salvo!');
     onDone();
   };
-  const changed = f.director_name !== (club.director_name || '') || f.history !== (club.history || '');
   return (
-    <Section title="Diretor e história do clã">
+    <Section title="História do clã">
       <Card>
         <div className="form">
-          <Field label="Diretor(a) do clã" hint="O responsável pelo clã. Troque quando mudar a diretoria."><input value={f.director_name} onChange={(e) => setF({ ...f, director_name: e.target.value })} /></Field>
-          <Field label="Nossa história" hint="Aparece no perfil público do clã."><textarea value={f.history} onChange={(e) => setF({ ...f, history: e.target.value })} placeholder="Como o clã começou, conquistas, acampamentos marcantes..." style={{ minHeight: 120 }} /></Field>
-          <div className="row" style={{ justifyContent: 'flex-end' }}><Button busy={busy} disabled={!changed} onClick={save}>Salvar</Button></div>
+          <p className="small muted" style={{ margin: 0 }}>Diretor(a): <b>{club.director_name || '—'}</b>{club.associate_directors ? <> · Associados: <b>{club.associate_directors.split('\n').join(', ')}</b></> : ''}. Quem troca a diretoria é o administrativo.</p>
+          <Field label="Nossa história" hint="Aparece no perfil público do clã."><textarea value={history} onChange={(e) => setHistory(e.target.value)} placeholder="Como o clã começou, conquistas, acampamentos marcantes..." style={{ minHeight: 120 }} /></Field>
+          <div className="row" style={{ justifyContent: 'flex-end' }}><Button busy={busy} disabled={history === (club.history || '')} onClick={save}>Salvar</Button></div>
         </div>
       </Card>
     </Section>
   );
 }
 
-/** Cargos separados em Liderança e Tutores (16+); explorador tem um cargo só. */
-function CargoOptions({ kind }) {
+/**
+ * Cargos pela idade: 10 a 15 anos só Explorador; 16+ Liderança e Tutores;
+ * diretoria (Geral, Associado, Mirins) só a partir de 18.
+ */
+function CargoOptions({ kind, age }) {
   const { meta } = useAuth();
   if (kind !== 'lideranca') return (meta.cargos[kind] || []).map((c) => <option key={c}>{c}</option>);
   const lid = meta.cargos_lideranca || [];
+  const min18 = meta.cargos_18 || [];
+  const opt = (c) => {
+    const blocked = min18.includes(c) && age != null && age < (meta.idade_min_diretor || 18);
+    return <option key={c} value={c} disabled={blocked}>{c}{blocked ? ' (18+)' : ''}</option>;
+  };
   return (
     <>
-      <optgroup label="Liderança">{lid.map((c) => <option key={c}>{c}</option>)}</optgroup>
-      <optgroup label="Tutores">{meta.cargos.lideranca.filter((c) => !lid.includes(c)).map((c) => <option key={c}>{c}</option>)}</optgroup>
+      <optgroup label="Liderança">{lid.map(opt)}</optgroup>
+      <optgroup label="Tutores">{meta.cargos.lideranca.filter((c) => !lid.includes(c)).map(opt)}</optgroup>
     </>
   );
 }
 
-
 // ---------- Membros ----------
+/** Editar membro: grupo e cargo. Os dados pessoais ficam na Ficha. */
 function MemberForm({ member, units, onClose, onDone }) {
-  const { meta } = useAuth();
-  const [f, setF] = useState({
-    name: member?.name || '', birth_date: member?.birth_date || '', cargo: member?.cargo || '', unit_id: member?.unit_id || '',
-    cpf: fmtCpf(member?.cpf), certidao: member?.birth_cert || '', doc_tipo: !member?.cpf && member?.birth_cert ? 'certidao' : 'rg_cpf', password: '', photo: member?.photo || null,
-  });
+  const [f, setF] = useState({ cargo: member.cargo || '', unit_id: member.unit_id || '', password: '' });
   const [busy, run] = useAsync();
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
-  const age = f.birth_date ? Math.floor((Date.now() - Date.parse(f.birth_date + 'T12:00:00')) / 31557600000) : null;
-  const kind = age == null ? null : age < 10 ? 'invalido' : age <= 15 ? 'desbravador' : 'lideranca';
-  const cargos = kind && kind !== 'invalido' ? meta.cargos[kind] : [];
+  const kind = member.kind;
   const availableUnits = units.filter((u) => !(u.is_leadership && kind === 'desbravador'));
   const save = async () => {
-    const body = { ...f, photo: f.photo instanceof File ? f.photo : undefined, unit_id: f.unit_id || '', certidao: f.doc_tipo === 'certidao' ? f.certidao : '', cpf: f.doc_tipo === 'certidao' ? '' : f.cpf };
-    delete body.doc_tipo;
-    const r = await run(() => (member ? api.put('/club/members/' + member.id, toForm(body)) : api.post('/club/members', toForm(body))), member ? 'Membro atualizado!' : null);
-    onDone(member ? null : r.code);
+    const body = { cargo: f.cargo, unit_id: f.unit_id || '' };
+    if (f.password) body.password = f.password;
+    await run(() => api.put('/club/members/' + member.id, toForm(body)), 'Membro atualizado!');
+    onDone();
   };
   return (
-    <Modal title={member ? 'Editar membro' : 'Novo membro'} onClose={onClose} footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} onClick={save}>Salvar</Button></>}>
+    <Modal title={`Editar ${member.name}`} onClose={onClose} footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} onClick={save}>Salvar</Button></>}>
       <div className="form">
-        <ImagePicker value={f.photo} onChange={(photo) => setF({ ...f, photo })} name={f.name} />
-        <Field label="Nome completo"><input value={f.name} onChange={set('name')} /></Field>
-        <Field label="Data de nascimento" hint={kind === 'invalido' ? 'O membro precisa ter pelo menos 10 anos.' : kind ? `${age} anos · conta de ${KIND_LABEL[kind]}` : 'A idade define o tipo de conta: 10 a 15 anos Explorador, 16+ Tutor.'}>
-          <input type="date" value={f.birth_date} onChange={set('birth_date')} />
-        </Field>
+        <p className="small muted" style={{ marginTop: 0 }}>
+          {member.age} anos · {KIND_LABEL[kind]} · código <b>{member.code}</b>.{' '}
+          {kind === 'desbravador' ? 'De 10 a 15 anos o cargo é Explorador.' : member.age < 18 ? 'Cargos de diretoria só a partir de 18 anos.' : ''}
+          {' '}Nome, nascimento e documentos ficam em <b>Ficha</b>.
+        </p>
         <div className="grid2">
-          <Field label="Cargo">
-            <select value={f.cargo} onChange={set('cargo')} disabled={!cargos.length}>
-              <option value="">Padrão</option>
-              <CargoOptions kind={kind} />
-            </select>
-          </Field>
           <Field label="Grupo" hint={kind === 'lideranca' ? 'Sem escolha: entra no grupo Tutores' : 'Sem escolha: aparece como "Sem grupo"'}>
             <select value={f.unit_id} onChange={set('unit_id')}>
               <option value="">{kind === 'lideranca' ? 'Tutores (automático)' : 'Sem grupo'}</option>
               {availableUnits.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
             </select>
           </Field>
+          <Field label="Cargo">
+            <select value={f.cargo} onChange={set('cargo')}>
+              <CargoOptions kind={kind} age={member.age} />
+            </select>
+          </Field>
         </div>
-        <DocFields value={f} onChange={setF} cpf={f.cpf} onCpf={(cpf) => setF({ ...f, cpf })} />
-        <Field label={member ? 'Nova senha' : 'Senha'} hint={member ? 'Deixe em branco para manter' : 'Mínimo 6 caracteres'}><input type="text" value={f.password} onChange={set('password')} /></Field>
-        <p className="muted small">{member ? <>Código de acesso: <b>{member.code}</b>. O membro entra com o código e a senha.</> : 'O app gera um código de 6 números para o membro entrar, junto com a senha.'}</p>
+        <Field label="Nova senha" hint="Só se o membro esqueceu. Deixe em branco para manter."><input type="text" value={f.password} onChange={set('password')} /></Field>
       </div>
     </Modal>
   );
@@ -346,7 +343,7 @@ function ApproveModal({ member, units, onClose, onDone }) {
           <Field label="Cargo">
             <select value={f.cargo} onChange={(e) => setF({ ...f, cargo: e.target.value })}>
               <option value="">Padrão</option>
-              <CargoOptions kind={member.kind} />
+              <CargoOptions kind={member.kind} age={member.age} />
             </select>
           </Field>
         </div>

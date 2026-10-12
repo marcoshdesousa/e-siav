@@ -313,11 +313,15 @@ test('clã: número automático, código, senhas geradas (2 letras + 4 números)
   assert.deepEqual(await busca('3'), [novo.body.id]);
   assert.deepEqual(await busca(novo.body.code), [novo.body.id]);
   assert.ok((await busca('tucan')).includes(novo.body.id));
-  // Diretor e história
+  // História: o clã muda. Diretor: só o admin (o clã tentar não muda nada).
   await cla.put('/club/profile', form({ director_name: 'Paula Diretora', history: 'Fundado em 2026.' }));
-  const pub = await (await fetch(BASE + '/public/clubs/' + novo.body.id)).json();
-  assert.equal(pub.director_name, 'Paula Diretora');
+  let pub = await (await fetch(BASE + '/public/clubs/' + novo.body.id)).json();
+  assert.equal(pub.director_name, 'Paulo Diretor', 'clã não troca o diretor');
   assert.equal(pub.history, 'Fundado em 2026.');
+  assert.equal((await admin.put('/admin/clubs/' + novo.body.id, { director_name: 'Paula Diretora', associate_directors: 'Ana Lima\n\nJoão Reis' })).status, 200);
+  pub = await (await fetch(BASE + '/public/clubs/' + novo.body.id)).json();
+  assert.equal(pub.director_name, 'Paula Diretora');
+  assert.equal(pub.associate_directors, 'Ana Lima\nJoão Reis');
 });
 
 const pedroFicha = async () => (await login('membros', 'pedro')).get('/club/members/1/ficha');
@@ -590,4 +594,33 @@ test('anúncios por público e do clube; eventos do clube', async () => {
   assert.ok(!(await pedro.get('/events/upcoming')).body.some((e) => e.name === 'Acampamento local'));
   const prof = await (await fetch(BASE + '/public/members/' + sofia.actor.code)).json();
   assert.ok(prof.events.some((e) => e.name === 'Acampamento local'));
+});
+
+test('cargos pela idade: 10–15 só Explorador, 16+ tutores, diretoria só 18+; Editar e Ficha', async () => {
+  const cla = await login('clube', '4821', 'AG2026');
+  const bia = (await cla.get('/club/members')).body.find((m) => m.name === 'Beatriz Santos');
+  const url = '/club/members/' + bia.id;
+  // 13 anos: qualquer outro cargo vira Explorador
+  await cla.put(url, form({ cargo: 'Tutor de Atividades' }));
+  assert.equal((await cla.get(url)).body.cargo, 'Explorador');
+  // Pela ficha o clã corrige o nascimento: agora 16 anos
+  const d = new Date();
+  const ficha = (await cla.get(url + '/ficha')).body;
+  const original = ficha.member.birth_date;
+  assert.equal((await cla.put(url + '/ficha', { ...ficha.ficha, name: 'Beatriz Santos', birth_date: `${d.getFullYear() - 17}-01-01` })).status, 200);
+  assert.equal((await cla.get(url)).body.kind, 'lideranca');
+  const dir = await cla.put(url, form({ cargo: 'Diretor Associado' }));
+  assert.equal(dir.status, 400, 'diretor associado só com 18+');
+  assert.equal((await cla.put(url, form({ cargo: 'Diretor Geral' }))).status, 400, 'diretor geral só com 18+');
+  assert.equal((await cla.put(url, form({ cargo: 'Tutor de Atividades' }))).status, 200);
+  assert.equal((await cla.get(url)).body.cargo, 'Tutor de Atividades');
+  // 18+: pode ser diretor associado
+  await cla.put(url + '/ficha', { ...ficha.ficha, birth_date: `${d.getFullYear() - 19}-01-01` });
+  assert.equal((await cla.put(url, form({ cargo: 'Diretor Associado' }))).status, 200);
+  // Volta como estava
+  await cla.put(url + '/ficha', { ...ficha.ficha, birth_date: original });
+  await cla.put(url, form({ cargo: 'Explorador' }));
+  const back = (await cla.get(url)).body;
+  assert.equal(back.cargo, 'Explorador');
+  assert.equal(back.birth_date, original);
 });

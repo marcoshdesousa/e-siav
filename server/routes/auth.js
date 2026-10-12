@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { COOKIE, checkAccountPassword, checkLogin, signToken, loadActor, requireAuth, getUsername } from '../auth.js';
-import { CARGOS, CARGOS_LIDERANCA, MODELOS_ENVIO } from '../config.js';
+import { CARGOS, CARGOS_18, CARGOS_LIDERANCA, IDADE_MIN_DIRETOR, MODELOS_ENVIO } from '../config.js';
 import { all, get } from '../db.js';
 import { fail } from '../util.js';
 
@@ -95,7 +95,7 @@ r.get('/auth/me', requireAuth(), (req, res) => {
 });
 
 r.get('/meta', (_req, res) => {
-  res.json({ cargos: CARGOS, cargos_lideranca: CARGOS_LIDERANCA, modelos: MODELOS_ENVIO, districts: all('SELECT id, name FROM districts ORDER BY name') });
+  res.json({ cargos: CARGOS, cargos_lideranca: CARGOS_LIDERANCA, cargos_18: CARGOS_18, idade_min_diretor: IDADE_MIN_DIRETOR, modelos: MODELOS_ENVIO, districts: all('SELECT id, name FROM districts ORDER BY name') });
 });
 
 export default r;

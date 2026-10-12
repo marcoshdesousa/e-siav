@@ -29,7 +29,7 @@ export default function ClanView({ base }) {
                   <span className="chip ico"><MapPin size={14} /> {c.district_name}</span>
                   <span className="chip ico"><KeyRound size={14} /> Código {c.code}</span>
                 </div>
-                {c.director_name && <p className="small" style={{ margin: '.3rem 0 0' }}>Diretor(a): <b>{c.director_name}</b></p>}
+                {c.director_name && <p className="small" style={{ margin: '.3rem 0 0' }}>Diretor(a): <b>{c.director_name}</b>{c.associate_directors ? <><br />Diretores associados: <b>{c.associate_directors.split('\n').join(', ')}</b></> : ''}</p>}
               </div>
             </div>
             <Card className="small"><Eye size={14} style={{ verticalAlign: '-2px' }} /> Você está vendo o clã por dentro. <b>Nada pode ser editado daqui</b>: só o próprio clã altera os dados.</Card>

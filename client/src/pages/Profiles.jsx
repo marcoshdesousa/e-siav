@@ -63,7 +63,7 @@ export function ClubProfileView({ club: c, linkBase }) {
           <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.4rem' }}>
             {c.ranking && <PositionBadge position={c.ranking.position} points={c.ranking.points} label="no ranking de clãs" />}
           </div>
-          {c.director_name && <p className="small" style={{ margin: '.5rem 0 0' }}>Diretor(a): <b>{c.director_name}</b></p>}
+          {c.director_name && <p className="small" style={{ margin: '.5rem 0 0' }}>Diretor(a): <b>{c.director_name}</b>{c.associate_directors ? <><br />Diretores associados: <b>{c.associate_directors.split('\n').join(', ')}</b></> : ''}</p>}
           <div className="mt"><ShareButton path={`/p/clube/${c.id}`} title={c.name} /></div>
         </div>
       </div>

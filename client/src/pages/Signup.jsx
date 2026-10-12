@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, CheckCircle2, UserPlus } from 'lucide-react';
 import { api } from '../api.js';
 import { Avatar, Button, Card, Field, Loading, LogoHorizontal, useAsync, useLoad } from '../ui.jsx';
-import FichaForm, { DocFields, SaudeAssinatura, SaudeQuiz, TermosAssinatura, cadastroFaltando } from './Ficha.jsx';
+import FichaForm, { DocFields, SaudeAssinatura, SaudeQuiz, SexoField, TermosAssinatura, cadastroFaltando } from './Ficha.jsx';
 
 const ageOf = (d) => (d ? Math.floor((Date.now() - Date.parse(d + 'T12:00:00')) / 31557600000) : null);
 
@@ -38,9 +38,10 @@ export function CadastroFlow({ local, mode = 'link', extra = null, submitLabel, 
             <Field label="Data de nascimento" hint={age != null ? (age < 10 ? 'É preciso ter pelo menos 10 anos' : `${age} anos`) : 'A ficha muda conforme a idade'}>
               <input type="date" value={f.birth_date} onChange={(e) => setF({ ...f, birth_date: e.target.value })} />
             </Field>
+            <SexoField value={ficha} onChange={setFicha} />
             <DocFields value={ficha} onChange={setFicha} cpf={f.cpf} onCpf={(cpf) => setF({ ...f, cpf })} />
           </div>
-          <FichaForm value={ficha} onChange={setFicha} age={age} />
+          <FichaForm value={ficha} onChange={setFicha} age={age} personal={false} />
           {signed ? <TermosAssinatura value={ficha} onChange={setFicha} minor={minor} />
             : <p className="small muted">Os termos e as assinaturas ficam com o {minor ? 'responsável' : 'próprio membro'}: depois de salvar, você recebe o link do termo para enviar.</p>}
           <div className="form">

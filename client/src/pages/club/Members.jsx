@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { Check, Copy, FileText, Hash, Link2, MessageCircle, RotateCcw } from 'lucide-react';
 import { api } from '../../api.js';
 import { fmtCpf, fmtDate } from '../../format.js';
-import { Avatar, Badge, Button, Card, Confirm, Empty, Loading, Modal, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
-import FichaForm, { SaudeLista } from '../Ficha.jsx';
+import { Avatar, Badge, Button, Card, Confirm, Empty, Field, Loading, Modal, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
+import FichaForm, { DocFields, SaudeLista, SexoField } from '../Ficha.jsx';
 
 /** Em que lista o membro aparece: ativo, pendente (termo, aprovação ou dados) ou inativo. */
 export const memberGroup = (m) => (m.status === 'inativo' ? 'inativo' : m.pending_reason ? 'pendente' : 'ativo');
@@ -14,6 +14,29 @@ const REASON = {
   aprovacao: ['blue', 'Inscrição para aprovar'],
   dados: ['red', 'Dados incompletos'],
 };
+
+const ageOf = (birth) => (birth ? Math.floor((Date.now() - Date.parse(birth + 'T12:00:00')) / 31557600000) : null);
+
+/** Dados do membro + ficha juntos, para editar tudo no mesmo formulário. */
+const initial = (d) => ({
+  ...d.ficha, name: d.member.name, birth_date: d.member.birth_date || '', cpf: fmtCpf(d.member.cpf),
+  certidao: d.member.birth_cert || d.ficha.certidao || '', doc_tipo: d.ficha.doc_tipo || (!d.member.cpf && d.member.birth_cert ? 'certidao' : 'rg_cpf'),
+});
+
+/** Ficha de cadastro: dados pessoais primeiro (nome, nascimento, sexo, documentos), depois contato e endereço. */
+function DadosPessoais({ value: f, onChange }) {
+  const age = ageOf(f.birth_date);
+  return (
+    <div className="form">
+      <h3 className="ficha-title">Dados pessoais</h3>
+      <Field label="Nome completo"><input value={f.name} onChange={(e) => onChange({ ...f, name: e.target.value })} /></Field>
+      <Field label="Data de nascimento" hint={age != null ? `${age} anos` : ''}><input type="date" value={f.birth_date} onChange={(e) => onChange({ ...f, birth_date: e.target.value })} /></Field>
+      <SexoField value={f} onChange={onChange} />
+      <DocFields value={f} onChange={onChange} cpf={f.cpf} onCpf={(cpf) => onChange({ ...f, cpf })} />
+      <FichaForm value={f} onChange={onChange} age={age} personal={false} />
+    </div>
+  );
+}
 
 /**
  * Ficha do membro em duas partes: ficha de cadastro e ficha médica.
@@ -41,8 +64,8 @@ export function FichaModal({ member, url, onClose, readOnly = false }) {
             <Tabs tabs={[['cadastro', 'Ficha de cadastro'], ['medica', 'Ficha médica']]} value={part} onChange={setPart} />
             <fieldset disabled={readOnly} className="plain-fieldset">
               {part === 'cadastro'
-                ? <FichaForm value={f || d.ficha} onChange={setF} age={d.member.age ?? member.age} />
-                : <SaudeLista value={f || d.ficha} onChange={setF} />}
+                ? <DadosPessoais value={f || initial(d)} onChange={setF} />
+                : <SaudeLista value={f || initial(d)} onChange={setF} />}
             </fieldset>
             {d.ficha.terms_accepted_at ? (
               <Card className="small mt">
