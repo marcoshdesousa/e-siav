@@ -69,28 +69,33 @@ function DistrictFilter({ value, onChange, withClub }) {
 const SUBTITLE = {
   clube: 'Exploradores do seu clã · requisitos do clã',
   membros: 'Exploradores · requisitos do App',
+  lideranca_clube: 'Liderança e tutores do seu clã · requisitos do clã',
+  lideranca: 'Liderança e tutores de todos os clãs · requisitos do App',
   unidades: 'Grupos de todos os clãs · requisitos gerais',
   clubes: 'Clãs · requisitos gerais de clã',
 };
 
 function GeneralRanking({ kind, base, highlight }) {
   const { actor } = useAuth();
-  const withClub = kind === 'membros' && !!actor.club_id;
+  const people = kind === 'membros' || kind === 'lideranca';
+  const withClub = people && !!actor.club_id;
   const [district, setDistrict] = useState(withClub ? 'clube' : actor.district_id ?? null);
-  const url = { membros: '/rankings/members', unidades: '/rankings/units', clubes: '/rankings/clubs' }[kind];
+  const url = { membros: '/rankings/members', lideranca: '/rankings/leaders', unidades: '/rankings/units', clubes: '/rankings/clubs' }[kind];
+  const clubUrl = kind === 'lideranca' ? 'leaders' : 'members';
   const state = useLoad(
-    () => (district === 'clube' ? api.get(`/rankings/club/${actor.club_id}/members`) : api.get(url + (district ? `?district_id=${district}` : ''))),
+    () => (district === 'clube' ? api.get(`/rankings/club/${actor.club_id}/${clubUrl}`) : api.get(url + (district ? `?district_id=${district}` : ''))),
     [kind, district],
   );
   const props = {
     membros: { sub: (r) => r.club_name, link: (r) => `${base}/ver/membro/${r.code}`, avatarSquare: false },
+    lideranca: { sub: (r) => r.club_name, link: (r) => `${base}/ver/membro/${r.code}`, avatarSquare: false },
     unidades: { sub: (r) => r.club_name, link: (r) => `${base}/ver/grupo/${r.id}` },
     clubes: { sub: (r) => r.district_name, link: (r) => `${base}/ver/cla/${r.id}` },
   }[kind];
   return (
     <>
       <div className="rank-tools">
-        <span className="muted small">{SUBTITLE[district === 'clube' ? 'clube' : kind]}</span>
+        <span className="muted small">{SUBTITLE[district === 'clube' ? (kind === 'lideranca' ? 'lideranca_clube' : 'clube') : kind]}</span>
         <DistrictFilter value={district} onChange={setDistrict} withClub={withClub} />
       </div>
       <Loading {...state}>{(rows) => <RankingTable rows={rows} highlight={highlight} {...props} />}</Loading>
@@ -119,7 +124,7 @@ function SummaryCard({ icon, title, pos, onClick, gold }) {
 
 /**
  * Aba Ranking. O membro vê de uma vez a sua posição, a do seu grupo e a do seu clã,
- * e pode abrir cada tabela completa. Não existe ranking de tutores.
+ * e pode abrir cada tabela completa. Exploradores e liderança/tutores têm rankings separados.
  */
 export default function RankingHub({ base }) {
   const { actor } = useAuth();
@@ -128,14 +133,16 @@ export default function RankingHub({ base }) {
   const [adminClub, setAdminClub] = useState(null);
   const clubId = actor.type === 'admin' ? adminClub ?? adminClubs.data?.[0]?.id : actor.club_id;
   const myUnit = actor.type === 'unit' ? actor.id : actor.unit_id;
+  const isLeader = actor.type === 'member' && actor.kind === 'lideranca';
   const tabs = [
-    ['membros', 'Membros'],
+    ['membros', 'Exploradores'],
+    ['lideranca', 'Liderança e tutores'],
     ...(clubId ? [['clube', 'Grupos']] : []),
     ['unidades', 'Grupos gerais'],
     ['clubes', 'Clãs'],
   ];
-  const [tab, setTab] = useState(actor.type === 'member' ? 'membros' : actor.type === 'unit' ? 'clube' : actor.type === 'club' ? 'clubes' : 'membros');
-  const highlight = { membros: actor.type === 'member' ? actor.id : null, clube: myUnit, unidades: myUnit, clubes: clubId }[tab];
+  const [tab, setTab] = useState(isLeader ? 'lideranca' : actor.type === 'member' ? 'membros' : actor.type === 'unit' ? 'clube' : actor.type === 'club' ? 'clubes' : 'membros');
+  const highlight = { membros: actor.type === 'member' ? actor.id : null, lideranca: actor.type === 'member' ? actor.id : null, clube: myUnit, unidades: myUnit, clubes: clubId }[tab];
 
   return (
     <>
@@ -148,7 +155,10 @@ export default function RankingHub({ base }) {
                 <SummaryCard gold icon={<Compass size={16} />} title="Eu no meu clã" pos={summary.data.member_club} onClick={() => setTab('membros')} />
                 <SummaryCard gold icon={<Globe2 size={16} />} title="Eu no App" pos={summary.data.member} onClick={() => setTab('membros')} />
               </>
-              : <div className="pos-card muted small">Os tutores não participam do ranking individual.</div>
+              : <>
+                <SummaryCard gold icon={<Compass size={16} />} title="Eu no meu clã" pos={summary.data.leader_club} onClick={() => setTab('lideranca')} />
+                <SummaryCard gold icon={<Globe2 size={16} />} title="Eu no App" pos={summary.data.leader} onClick={() => setTab('lideranca')} />
+              </>
           )}
           {summary.data.unit && <SummaryCard icon={<Flag size={16} />} title={`${summary.data.unit.name} no clã`} pos={summary.data.unit.club} onClick={() => setTab('clube')} />}
           {summary.data.unit && <SummaryCard icon={<Globe2 size={16} />} title={`${summary.data.unit.name} no geral`} pos={summary.data.unit.general} onClick={() => setTab('unidades')} />}

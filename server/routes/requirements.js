@@ -13,6 +13,8 @@ const r = Router();
 function applies(actor, req) {
   const audience = { club: 'club', unit: 'unit', member: 'member' }[actor.type];
   if (req.audience !== audience) return false;
+  // O grupo Tutores não entra no ranking de grupos: não recebe requisitos de grupo.
+  if (actor.type === 'unit' && actor.is_leadership) return false;
   // Requisito de membro pode ser só para exploradores ou só para tutores/liderança.
   if (actor.type === 'member' && req.member_kind && req.member_kind !== actor.kind) return false;
   // Requisitos do clã: só para os grupos e os membros daquele clã.
@@ -126,6 +128,7 @@ r.post('/requirements', requireAuth('admin', 'club', 'unit'), imageUpload.array(
     scope = 'clube';
     clubId = a.id;
   } else {
+    if (a.is_leadership) fail(403, 'O grupo Tutores não cria requisitos de grupo');
     // Grupo cria só para os próprios exploradores.
     audience = 'member';
     scope = 'grupo';

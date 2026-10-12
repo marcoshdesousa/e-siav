@@ -45,7 +45,7 @@ export function loadActor(type, id) {
   }
   if (type === 'unit') {
     const u = get(
-      `SELECT u.id, u.name, u.logo, u.club_id, c.district_id, c.name AS club_name
+      `SELECT u.id, u.name, u.logo, u.club_id, u.is_leadership, c.district_id, c.name AS club_name
        FROM units u JOIN clubs c ON c.id = u.club_id WHERE u.id = ?`,
       id,
     );

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { get } from '../db.js';
 import { requireAuth } from '../auth.js';
-import { membersRanking, clubsRanking, unitsRanking, clubUnitsRanking, clubMembersRanking, positionOf } from '../rankings.js';
+import { membersRanking, clubsRanking, unitsRanking, clubUnitsRanking, clubMembersRanking, leadersRanking, clubLeadersRanking, positionOf } from '../rankings.js';
 import { fail, int } from '../util.js';
 
 const r = Router();
@@ -11,6 +11,7 @@ const district = (req) => int(req.query.district_id);
 
 r.get('/rankings/members', (req, res) => res.json(membersRanking(district(req))));
 r.get('/rankings/clubs', (req, res) => res.json(clubsRanking(district(req))));
+r.get('/rankings/leaders', (req, res) => res.json(leadersRanking(district(req))));
 r.get('/rankings/units', (req, res) => res.json(unitsRanking(district(req))));
 
 // Ranking interno de grupos: visível ao próprio clã (e ao Administrador Geral).
@@ -29,6 +30,13 @@ r.get('/rankings/club/:clubId/members', (req, res) => {
   res.json(clubMembersRanking(clubId));
 });
 
+// Melhor da liderança e dos tutores do clã (requisitos criados pelo clã).
+r.get('/rankings/club/:clubId/leaders', (req, res) => {
+  const clubId = int(req.params.clubId);
+  if (req.actor.type !== 'admin' && req.actor.club_id !== clubId) fail(403, 'Ranking de outro clã');
+  res.json(clubLeadersRanking(clubId));
+});
+
 const pick = (row) => (row ? { position: row.position, points: row.points } : null);
 
 // Resumo: a posição do membro, da seu grupo e do seu clã de uma vez.
@@ -41,6 +49,8 @@ r.get('/rankings/summary', (req, res) => {
   res.json({
     member: a.type === 'member' && a.kind === 'desbravador' ? pick(positionOf(membersRanking(), a.id)) : null,
     member_club: a.type === 'member' && a.kind === 'desbravador' ? pick(positionOf(clubMembersRanking(clubId), a.id)) : null,
+    leader: a.type === 'member' && a.kind === 'lideranca' ? pick(positionOf(leadersRanking(), a.id)) : null,
+    leader_club: a.type === 'member' && a.kind === 'lideranca' ? pick(positionOf(clubLeadersRanking(clubId), a.id)) : null,
     unit: unitRow && !unitRow.is_leadership
       ? { name: unitRow.name, id: unitRow.id, club: pick(positionOf(clubUnitsRanking(clubId), unitId)), general: pick(positionOf(unitsRanking(), unitId)) }
       : null,

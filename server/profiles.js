@@ -1,6 +1,6 @@
 import { all, get } from './db.js';
 import { ageFrom, memberKind, roleOf } from './util.js';
-import { clubsRanking, unitsRanking, clubUnitsRanking, membersRanking, positionOf } from './rankings.js';
+import { clubsRanking, unitsRanking, clubUnitsRanking, membersRanking, leadersRanking, positionOf } from './rankings.js';
 
 export function medalsOf(type, id) {
   return all(
@@ -81,7 +81,8 @@ export function memberProfile(where, value) {
   m.classes = ach.filter((a) => a.type === 'classe');
   m.specialties = ach.filter((a) => a.type === 'especialidade');
   m.courses = ach.filter((a) => a.type === 'curso');
-  m.ranking = m.kind === 'desbravador' ? pos(positionOf(membersRanking(), m.id)) : null;
+  // Exploradores e liderança/tutores têm rankings separados.
+  m.ranking = pos(positionOf(m.kind === 'desbravador' ? membersRanking() : leadersRanking(), m.id));
   m.events = eventsOf('member', m.id);
   m.medals = medalsOf('member', m.id);
   return m;

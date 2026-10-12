@@ -706,3 +706,39 @@ test('links do clã pelo código: /cla/CÓDIGO e /cla/CÓDIGO/Nº do grupo (1 a 
   await aguias.del('/club/units/' + novos[0].id);
   assert.equal((await aguias.post('/club/units', form({ name: 'Volta o 3' }))).body.number, 3);
 });
+
+test('ranking da liderança e tutores: no clã e no App, separado dos exploradores; grupo Tutores fora do ranking de grupos', async () => {
+  const deadline = new Date(Date.now() + 864e5).toISOString();
+  const aguias = await login('clube', 'aguias', 'AG2026');
+  const admin = await login('membros', 'admin', 'admin123');
+  const juliana = await login('membros', 'juliana'); // tutora
+  const aprovar = async (quem, reqId, sub) => {
+    const s = (await quem.get('/reviews')).body.find((x) => x.requirement_id === reqId && x.submitter_id === sub);
+    assert.equal((await quem.post('/reviews/' + s.id, { decision: 'aprovado' })).status, 200);
+  };
+  // Requisito do clã para a liderança/tutores: conta no "melhor tutor do clã"
+  const rc = await aguias.post('/requirements', form({ title: 'Planejar reunião', audience: 'member', member_kind: 'lideranca', modes: 'texto', points: '40', late_points: '0', deadline }));
+  await juliana.post(`/requirements/${rc.body.id}/submit`, form({ text: 'Planejei' }));
+  await aprovar(aguias, rc.body.id, juliana.actor.id);
+  const doCla = (await aguias.get(`/rankings/club/${aguias.actor.id}/leaders`)).body;
+  assert.equal(doCla[0].name, 'Juliana Costa', 'melhor tutor do clã');
+  assert.ok(!doCla.some((r) => r.name === 'Pedro Henrique Lima'), 'explorador não entra no ranking da liderança');
+  // Requisito do App para a liderança: conta no ranking da liderança de todos os clãs
+  const ra = await admin.post('/requirements', form({ title: 'Curso de liderança', audience: 'member', member_kind: 'lideranca', modes: 'texto', points: '25', late_points: '0', deadline }));
+  await juliana.post(`/requirements/${ra.body.id}/submit`, form({ text: 'Fiz' }));
+  await aprovar(admin, ra.body.id, juliana.actor.id);
+  const geral = (await juliana.get('/rankings/leaders')).body;
+  assert.equal(geral.find((r) => r.name === 'Juliana Costa').points, 25, 'no App só contam os requisitos do App');
+  assert.ok(geral.some((r) => r.club_name === '2º Clã Leões de Judá'), 'liderança de todos os clãs');
+  assert.ok(!(await juliana.get('/rankings/members')).body.some((r) => r.name === 'Juliana Costa'), 'fora do ranking de exploradores');
+  const resumo = (await juliana.get('/rankings/summary')).body;
+  assert.equal(resumo.leader_club.position, 1);
+  assert.ok(resumo.leader.position >= 1, 'vê a própria colocação no App');
+  // Grupo Tutores: fora do ranking de grupos e não recebe requisito de grupo
+  const tutores = await login('clube', '4821', 'TU9001');
+  const rg = await admin.post('/requirements', form({ title: 'Desafio dos grupos', audience: 'unit', modes: 'texto', points: '10', late_points: '0', deadline }));
+  assert.ok(!(await tutores.get('/requirements/mine')).body.some((x) => x.id === rg.body.id));
+  assert.ok(!(await tutores.get('/rankings/units')).body.some((u) => u.name === 'Tutores'));
+  assert.ok(!(await aguias.get(`/rankings/club/${aguias.actor.id}/units`)).body.rows.some((u) => u.name === 'Tutores'));
+  assert.equal((await tutores.post('/requirements', form({ title: 'x', modes: 'texto', points: '1', late_points: '0', deadline }))).status, 403);
+});

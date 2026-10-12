@@ -142,7 +142,7 @@ export function MemberProfileView({ member: m, linkBase, photoAction }) {
             {m.unit_id ? <Link to={to(linkBase, 'grupo', m.unit_id, groupLink(m.club_code, m.unit_number, m.unit_is_leadership))} className="chip ico"><Flag size={14} /> {m.unit_name}</Link> : <span className="chip ico"><Flag size={14} /> Sem grupo</span>}
           </div>
           <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.4rem' }}>
-            {m.ranking && <PositionBadge position={m.ranking.position} points={m.ranking.points} label="no ranking de membros" />}
+            {m.ranking && <PositionBadge position={m.ranking.position} points={m.ranking.points} label={m.kind === 'desbravador' ? 'no ranking de exploradores' : 'no ranking da liderança'} />}
           </div>
           <div className="mt"><ShareButton path={`/${m.code}`} title={m.name} /></div>
         </div>

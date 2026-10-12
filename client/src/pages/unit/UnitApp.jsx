@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ClipboardCheck, ClipboardPlus, Flag, Trophy } from 'lucide-react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { api } from '../../api.js';
+import { useAuth } from '../../auth.jsx';
 import { Button, Card, Loading, PageHeader, Section, Tabs, useAsync, useLoad } from '../../ui.jsx';
 import Shell from '../Shell.jsx';
 import { InAppProfile, UnitProfileView } from '../Profiles.jsx';
@@ -57,13 +58,18 @@ function GroupRequirements() {
 /** Portal do Grupo: abre no perfil; cumpre requisitos em grupo e cria requisitos para os exploradores do grupo. */
 export default function UnitApp() {
   const { pathname } = useLocation();
+  const { actor } = useAuth();
+  // O grupo Tutores não cumpre requisitos de grupo nem entra no ranking de grupos.
+  const lid = !!actor.is_leadership;
   // Bolinha com o número de requisitos em aberto (atualiza a cada troca de tela).
-  const reqs = useLoad(() => api.get('/requirements/mine'), [pathname]);
+  const reqs = useLoad(() => (lid ? Promise.resolve([]) : api.get('/requirements/mine')), [pathname]);
   const abertos = (reqs.data || []).filter((r) => ['pendente', 'fora_do_prazo', 'recusado'].includes(r.state)).length;
   const tabs = [
     { to: base, icon: Flag, label: 'Perfil', end: true },
-    { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos', badge: abertos },
-    { to: `${base}/exploradores`, icon: ClipboardPlus, label: 'Criar' },
+    ...(lid ? [] : [
+      { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos', badge: abertos },
+      { to: `${base}/exploradores`, icon: ClipboardPlus, label: 'Criar' },
+    ]),
     { to: `${base}/ranking`, icon: Trophy, label: 'Ranking' },
   ];
   return (

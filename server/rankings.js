@@ -49,6 +49,37 @@ export function clubMembersRanking(clubId) {
   return rank(rows);
 }
 
+/**
+ * Ranking da liderança e dos tutores (16+), separado do dos exploradores.
+ * No App: requisitos de membro criados pelo App. Entre todos os clãs.
+ */
+export function leadersRanking(districtId = null) {
+  const rows = all(
+    `SELECT m.id, m.name, m.photo, m.code, m.cargo, m.birth_date, c.id AS club_id, c.name AS club_name,
+            COALESCE(sc.points, 0) AS points, sc.last_at
+     FROM members m JOIN clubs c ON c.id = m.club_id
+     ${scoreJoin('member', 'm.id', "r.creator_type = 'admin' AND r.audience = 'member'")}
+     WHERE m.status = 'ativo' AND (? IS NULL OR c.district_id = ?)`,
+    districtId, districtId,
+  ).filter((r) => memberKind(r.birth_date) === 'lideranca');
+  rows.forEach((r) => delete r.birth_date);
+  return rank(rows);
+}
+
+/** Melhor da liderança e dos tutores do clã: requisitos de membro criados pelo próprio clã. */
+export function clubLeadersRanking(clubId) {
+  const rows = all(
+    `SELECT m.id, m.name, m.photo, m.code, m.cargo, m.birth_date, c.id AS club_id,
+            COALESCE(sc.points, 0) AS points, sc.last_at
+     FROM members m JOIN clubs c ON c.id = m.club_id
+     ${scoreJoin('member', 'm.id', "r.creator_type = 'club' AND r.club_id = " + Number(clubId))}
+     WHERE m.club_id = ? AND m.status = 'ativo'`,
+    clubId,
+  ).filter((r) => memberKind(r.birth_date) === 'lideranca');
+  rows.forEach((r) => { delete r.birth_date; r.club_name = r.cargo; });
+  return rank(rows);
+}
+
 /** Ranking de clãs: requisitos gerais de clã. */
 export function clubsRanking(districtId = null) {
   return rank(all(
