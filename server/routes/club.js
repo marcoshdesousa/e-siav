@@ -35,10 +35,9 @@ r.get('/club/overview', (req, res) => {
   res.json(profile);
 });
 
-r.put('/club/profile', imageUpload.fields([{ name: 'photo', maxCount: 1 }, { name: 'logo', maxCount: 1 }]), (req, res) => {
-  const photo = req.files?.photo?.[0];
+// O clã tem só a logo (não tem foto de capa).
+r.put('/club/profile', imageUpload.fields([{ name: 'logo', maxCount: 1 }]), (req, res) => {
   const logo = req.files?.logo?.[0];
-  if (photo) run('UPDATE clubs SET photo = ? WHERE id = ?', fileUrl(photo), req.actor.id);
   if (logo) run('UPDATE clubs SET logo = ? WHERE id = ?', fileUrl(logo), req.actor.id);
   // História do clã. O nome do diretor só o administrativo muda (todo ano).
   if (req.body.history !== undefined) run('UPDATE clubs SET history = ? WHERE id = ?', str(req.body.history, 5000) || null, req.actor.id);

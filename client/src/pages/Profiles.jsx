@@ -57,7 +57,6 @@ export function ClubProfileView({ club: c, linkBase }) {
   return (
     <>
       <div className="hero">
-        {c.photo && <div className="hero-cover" style={{ backgroundImage: `url(${c.photo})` }} />}
         <div className="profile-head">
           <Avatar src={c.logo} name={c.name} size={96} square />
           <h1>{c.name}</h1>

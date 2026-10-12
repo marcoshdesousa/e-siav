@@ -39,7 +39,6 @@ function ClubHome() {
       {(c) => (
         <>
           <div className="hero">
-            {c.photo && <div className="hero-cover" style={{ backgroundImage: `url(${c.photo})` }} />}
             <div className="profile-head">
               <Avatar src={c.logo} name={c.name} size={88} square />
               <h1>{c.name}</h1>
@@ -68,11 +67,10 @@ function ClubHome() {
           <SignupLink code={c.code} />
           <ClubInfoForm club={c} onDone={() => { state.reload(); refresh(); }} />
 
-          <Section title="Foto e logo do clã">
+          <Section title="Logo do clã">
             <Card>
               <div className="stack">
                 <ImagePicker label="Logo do clã" value={c.logo} onChange={upload('logo')} round={false} name={c.name} />
-                <ImagePicker label="Foto de capa do clã" value={c.photo} onChange={upload('photo')} round={false} />
               </div>
             </Card>
           </Section>
