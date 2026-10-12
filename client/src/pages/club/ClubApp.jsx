@@ -1,13 +1,14 @@
 import { useState } from 'react';
-import { Link, Navigate, Route, Routes } from 'react-router-dom';
+import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import {
-  ArrowLeftRight, Award, BadgeCheck, Copy, FileText, Hash, KeyRound, Link2, RotateCcw, Share2, UserPlus, CalendarDays, Check, Megaphone, Plus, ChevronRight, ClipboardCheck, Compass, Flag, Inbox, Map, MapPin, Menu, MessageCircle, ShieldAlert, Tent, Trophy, Users,
+  ArrowLeft, ArrowLeftRight, Award, BadgeCheck, Copy, FileText, Hash, KeyRound, Link2, RotateCcw, Share2, UserPlus, CalendarDays, Check, Megaphone, Plus, ChevronRight, ClipboardCheck, Compass, Flag, Inbox, Map, MapPin, Menu, MessageCircle, ShieldAlert, Tent, Trophy, Users,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { useRealtime } from '../../realtime.jsx';
 import { KIND_LABEL, fmtCpf, fmtDate, plural } from '../../format.js';
-import FichaForm, { DocFields } from '../Ficha.jsx';
+import FichaForm, { DocFields, SaudeLista } from '../Ficha.jsx';
+import { CadastroFlow } from '../Signup.jsx';
 import TransfersPage from './Transfers.jsx';
 import {
   Avatar, Badge, Button, Card, Confirm, Empty, Field, ImagePicker, Loading, MedalList, Modal, PageHeader, PositionBadge, Section, ShareButton, Stat, Tabs, notify, useAsync, useLoad,
@@ -66,7 +67,7 @@ function ClubHome() {
             </div>
           </Section>
 
-          <SignupLink code={c.code} />
+          <SignupLink code={c.code} id={c.id} />
           <ClubInfoForm club={c} onDone={() => { state.reload(); refresh(); }} />
 
           <Section title="Foto e logo do clã">
@@ -89,23 +90,30 @@ function ClubHome() {
   );
 }
 
-/** Link de inscrição do clã: quem se inscreve por ele entra como pendente. */
-function SignupLink({ code }) {
-  const url = `${location.origin}/inscricao/${code}`;
+function LinkBox({ title, text, url }) {
   const copy = async () => {
     try { await navigator.clipboard.writeText(url); notify('Link copiado!'); } catch { notify('Não deu para copiar. Selecione o link e copie.', 'error'); }
   };
-  const share = () => navigator.share?.({ title: 'Inscrição no clã', url }).catch(() => {});
+  const share = () => navigator.share?.({ title, url }).catch(() => {});
   return (
-    <Section title="Link de inscrição">
-      <Card>
-        <p className="small muted" style={{ marginTop: 0 }}>Envie este link para quem quer entrar no clã. A pessoa preenche a ficha de cadastro, a ficha médica e os termos, e você aprova em Membros.</p>
-        <div className="signup-link"><Link2 size={16} /> <span className="ellipsis">{url}</span></div>
-        <div className="row wrap mt">
-          <Button small onClick={copy}><Copy size={14} /> Copiar link</Button>
-          {navigator.share && <Button small variant="secondary" onClick={share}><Share2 size={14} /> Compartilhar</Button>}
-        </div>
-      </Card>
+    <Card>
+      <b>{title}</b>
+      <p className="small muted" style={{ margin: '.2rem 0 .5rem' }}>{text}</p>
+      <div className="signup-link"><Link2 size={16} /> <span className="ellipsis">{url}</span></div>
+      <div className="row wrap mt">
+        <Button small onClick={copy}><Copy size={14} /> Copiar</Button>
+        {navigator.share && <Button small variant="secondary" onClick={share}><Share2 size={14} /> Compartilhar</Button>}
+      </div>
+    </Card>
+  );
+}
+
+/** Cada clã tem dois links: o do perfil do clã e o de cadastro (inscrição). */
+function SignupLink({ code, id }) {
+  return (
+    <Section title="Links do clã">
+      <LinkBox title="Link do clã" text="Perfil público do clã: história, grupos, medalhas e ranking." url={`${location.origin}/p/clube/${id}`} />
+      <LinkBox title="Link de cadastro" text="Para quem quer entrar no clã: ficha de cadastro, ficha de saúde e termos. Você aprova em Membros → Inscrições." url={`${location.origin}/inscricao/${code}`} />
     </Section>
   );
 }
@@ -335,11 +343,14 @@ function FichaModal({ member, onClose }) {
               Código <b>{d.member.code}</b> · {d.member.cpf ? <>CPF {fmtCpf(d.member.cpf)}</> : d.member.birth_cert ? <>Certidão {d.member.birth_cert}</> : 'sem documento'}
             </p>
             {d.ficha.termo_imagem === false && <Badge kind="red">Sem autorização de uso de imagem</Badge>}
+            {member.incomplete && <Badge kind="yellow">Dados incompletos: complete a ficha</Badge>}
             <FichaForm value={f || d.ficha} onChange={setF} age={member.age} />
+            <SaudeLista value={f || d.ficha} onChange={setF} />
             {d.ficha.terms_accepted_at && (
               <Card className="small mt">
-                <b>Termos aceitos</b> em {fmtDate(d.ficha.terms_accepted_at)}{d.ficha.local_inscricao ? ` · ${d.ficha.local_inscricao}` : ''}<br />
-                Assinado por <b>{d.ficha.assinatura_nome || '—'}</b>{d.ficha.assinatura_cpf ? ` · CPF ${fmtCpf(d.ficha.assinatura_cpf)}` : ''}
+                <b>Ficha assinada</b> em {fmtDate(d.ficha.terms_accepted_at)}{d.ficha.local_inscricao ? ` · ${d.ficha.local_inscricao}` : ''}<br />
+                Cadastro: <b>{d.ficha.assinatura_nome || '—'}</b>{d.ficha.assinatura_cpf ? ` · CPF ${fmtCpf(d.ficha.assinatura_cpf)}` : ''}<br />
+                Saúde: <b>{d.ficha.med_assinatura_nome || '—'}</b>{d.ficha.med_assinatura_cpf ? ` · CPF ${fmtCpf(d.ficha.med_assinatura_cpf)}` : ''}
               </Card>
             )}
           </>
@@ -399,7 +410,7 @@ function MembersPage() {
   const counts = Object.fromEntries(MEMBER_TABS.map(([k]) => [k, (members.data || []).filter((m) => m.status === k).length]));
   return (
     <>
-      <PageHeader title="Membros" subtitle="Ninguém é apagado: quem sai do clã fica desativado" action={<Button small onClick={() => setEditing('new')}>+ Novo</Button>} />
+      <PageHeader title="Membros" subtitle="Ninguém é apagado: quem sai do clã fica desativado" action={<Link to={`${base}/membros/novo`}><Button small>+ Novo</Button></Link>} />
       <Tabs tabs={MEMBER_TABS.map(([k, l]) => [k, counts[k] ? `${l} (${counts[k]})` : l])} value={tab} onChange={setTab} />
       <div className="grid2">
         <input placeholder="Buscar por nome ou código" value={q} onChange={(e) => setQ(e.target.value)} />
@@ -427,6 +438,7 @@ function MembersPage() {
                         <Badge kind={m.kind === 'desbravador' ? 'blue' : 'yellow'}>{m.role}</Badge>
                         <Badge><Hash size={11} /> {m.code}</Badge>
                         {m.status === 'pendente' && <Badge kind="yellow">Inscrito em {fmtDate(m.created_at)}</Badge>}
+                        {m.incomplete && <Badge kind="red">Dados incompletos</Badge>}
                       </div>
                       <div className="row wrap" style={{ marginTop: '.5rem', gap: '.35rem' }}>
                         {m.status === 'pendente' ? (
@@ -468,6 +480,31 @@ function MembersPage() {
         <Modal title="Membro cadastrado!" onClose={() => setNewCode(null)} footer={<Button onClick={() => setNewCode(null)}>Entendi</Button>}>
           <p className="center">Passe este código para o membro. Ele entra com o código e a senha que você criou.</p>
           <div className="code-big">{newCode}</div>
+        </Modal>
+      )}
+    </>
+  );
+}
+
+/** Cadastro feito pelo clã: precisa de todos os dados, igual à inscrição pelo link. */
+function NewMemberPage() {
+  const { actor } = useAuth();
+  const nav = useNavigate();
+  const [code, setCode] = useState(null);
+  const [busy, run] = useAsync();
+  const send = async (body) => {
+    const r = await run(() => api.post('/club/members', body), null);
+    setCode(r.code);
+  };
+  return (
+    <>
+      <button type="button" className="back-link" onClick={() => nav(`${base}/membros`)}><ArrowLeft size={16} /> Membros</button>
+      <PageHeader title="Novo membro" subtitle="Preencha todos os dados. O grupo e o cargo você escolhe depois, em Editar." />
+      <CadastroFlow mode="cla" local={`${actor.name} — cadastro pelo clã`} submitLabel="Cadastrar membro" busy={busy} onSubmit={send} />
+      {code && (
+        <Modal title="Membro cadastrado!" onClose={() => nav(`${base}/membros`)} footer={<Button onClick={() => nav(`${base}/membros`)}>Entendi</Button>}>
+          <p className="center">Passe este código para o membro. Ele entra com o código e a senha que você criou.</p>
+          <div className="code-big">{code}</div>
         </Modal>
       )}
     </>
@@ -575,6 +612,7 @@ export default function ClubApp() {
             <Routes>
               <Route index element={<ClubHome />} />
               <Route path="membros" element={<MembersPage />} />
+              <Route path="membros/novo" element={<NewMemberPage />} />
               <Route path="unidades" element={<UnitsPage />} />
               <Route path="aprovacoes" element={<ApprovalsPage />} />
               <Route path="transferencias" element={<TransfersPage />} />

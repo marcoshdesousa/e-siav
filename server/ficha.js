@@ -18,13 +18,36 @@ export const FICHA_CAMPOS = {
   responsavel_nome: 120, responsavel_whatsapp: 30,
   // Outros
   camiseta: 10, estado_civil: 20,
-  // Ficha médica
-  tipo_sanguineo: 10, alergias: 500, medicamentos: 500, doencas: 500, restricoes_alimentares: 300, deficiencias: 300,
-  plano_saude: 120, cartao_sus: 30, contato_emergencia_nome: 120, contato_emergencia_telefone: 30, observacoes_medicas: 800,
-  // Assinatura (nome e CPF de quem assina: o responsável, ou a própria pessoa se for maior)
-  assinatura_nome: 120, assinatura_cpf: 14,
+  // Ficha de saúde (modelo da Ficha de Saúde)
+  plano_saude: 120, cartao_sus: 30, sangue_tipo: 10, sangue_rh: 10,
+  // Assinaturas (nome e CPF de quem assina: o responsável, ou a própria pessoa se for maior)
+  assinatura_nome: 120, assinatura_cpf: 14, med_assinatura_nome: 120, med_assinatura_cpf: 14,
 };
-const SIM_NAO = ['saude_profissional', 'responsavel_outro'];
+const SIM_NAO = ['saude_profissional', 'responsavel_outro', 'doencas_ok', 'termo_medico'];
+
+/** Doenças que a pessoa já teve (marcar as que teve). */
+export const DOENCAS = ['Catapora', 'Meningite', 'Hepatite', 'Dengue', 'Pneumonia', 'Malária', 'Febre amarela', 'H1N1', 'Cólera',
+  'Rubéola', 'Sarampo', 'Tétano', 'Varíola', 'Coqueluche', 'Difteria', 'Caxumba', 'Rinite', 'Bronquite'];
+
+/** Perguntas de sim/não da ficha de saúde: [chave, pergunta, o que escrever se for "sim"]. */
+export const MED_PERGUNTAS = [
+  ['cardiaco', 'Tem problemas cardíacos?', 'Quais medicamentos usa?'],
+  ['alergia_medicamento', 'Tem alergia a algum medicamento?', 'A quais medicamentos tem alergia?'],
+  ['lactose', 'Tem intolerância à lactose?', 'Quais medicamentos usa?'],
+  ['deficiencia', 'Tem alguma deficiência?', 'Qual deficiência?'],
+  ['transfusao', 'Já recebeu transfusão de sangue?', null],
+  ['alergia_pele', 'Tem alergia na pele?', 'Quais medicamentos usa?'],
+  ['convulsao', 'Tem ou teve desmaio ou convulsão?', 'Quais medicamentos usa?'],
+  ['psicologico', 'Tem algum problema psicológico?', 'Faz acompanhamento? Conte um pouco.'],
+  ['alergia', 'Possui alguma outra alergia?', 'A quê? Quais medicamentos usa?'],
+  ['diabetes', 'É diabético?', 'Quais medicamentos usa?'],
+  ['ferimento', 'Teve algum ferimento grave recente?', null],
+  ['fratura', 'Teve algum tipo de fratura recente?', 'Qual fratura?'],
+  ['cirurgia', 'Já passou por cirurgias?', 'Quais cirurgias?'],
+  ['internacao', 'Ficou internado nos últimos 5 anos?', 'Qual foi o motivo da internação?'],
+];
+export const SANGUE_TIPOS = ['A', 'B', 'O', 'AB', 'Não sei'];
+export const SANGUE_RH = ['Positivo', 'Negativo', 'Não sei'];
 
 /** Termos aceitos na inscrição. */
 export const TERMOS = ['termo_imagem', 'termo_responsabilidade', 'termo_dados'];
@@ -41,6 +64,19 @@ export function cleanFicha(body = {}) {
     if (v) data[k] = v;
   }
   for (const k of [...SIM_NAO, ...TERMOS]) data[k] = bool(body[k]);
+  // Doenças: só as da lista. Perguntas: "sim"/"nao" e o texto quando for sim.
+  const doencas = Array.isArray(body.doencas) ? body.doencas : String(body.doencas || '').split(',');
+  data.doencas = DOENCAS.filter((d) => doencas.includes(d));
+  for (const [k, , det] of MED_PERGUNTAS) {
+    const v = body['q_' + k];
+    if (v === 'sim' || v === 'nao') data['q_' + k] = v;
+    if (v === 'sim' && det) {
+      const t = str(body['q_' + k + '_det'], 500);
+      if (t) data['q_' + k + '_det'] = t;
+    }
+  }
+  if (data.med_assinatura_cpf) data.med_assinatura_cpf = data.med_assinatura_cpf.replace(/\D/g, '');
+  if (data.sangue_tipo === 'Não sei') delete data.sangue_rh;
   if (data.assinatura_cpf) data.assinatura_cpf = data.assinatura_cpf.replace(/\D/g, '');
   if (data.uf) data.uf = data.uf.toUpperCase();
   if (data.sexo !== 'Outro') delete data.sexo_outro;
@@ -62,6 +98,9 @@ export function validateSignup(f, birthDate) {
   need(f.sexo !== 'Outro' || f.sexo_outro, 'Escreva como você se identifica');
   need(f.whatsapp, 'Informe o WhatsApp');
   need(f.endereco && f.numero && f.bairro && f.cidade && f.uf, 'Preencha o endereço: rua, número, bairro, cidade e estado');
+  need(f.doc_tipo === 'certidao' || (f.rg && f.rg_orgao), 'Informe o RG e o órgão expedidor');
+  need(f.camiseta, 'Informe o tamanho da camiseta');
+  need(age < 16 || f.estado_civil, 'Informe o estado civil');
   if (age >= 16 && f.saude_profissional) {
     need(AREAS_SAUDE.includes(f.saude_area), 'Escolha a sua área na saúde');
     need(f.saude_area !== 'Outro' || f.saude_area_outro, 'Escreva a sua área na saúde');
@@ -75,6 +114,32 @@ export function validateSignup(f, birthDate) {
   need(TERMOS.every((t) => f[t]), 'É preciso aceitar os termos');
   need(f.assinatura_nome && f.assinatura_nome.split(/\s+/).length >= 2, age < 18 ? 'O responsável precisa assinar com o nome completo' : 'Assine com o seu nome completo');
   need(cleanCpf(f.assinatura_cpf), age < 18 ? 'Informe o CPF do responsável' : 'Informe o seu CPF na assinatura');
+  validateMedical(f, age);
+}
+
+/** Ficha de saúde: toda pergunta respondida e, quando for "sim", o porquê. */
+export function validateMedical(f, age) {
+  const need = (cond, msg) => { if (!cond) fail(400, msg); };
+  need(f.doencas_ok, 'Ficha de saúde: marque as doenças que já teve (ou "nenhuma")');
+  for (const [k, q, det] of MED_PERGUNTAS) {
+    need(f['q_' + k], `Ficha de saúde: responda "${q}"`);
+    if (det) need(f['q_' + k] !== 'sim' || f['q_' + k + '_det'], `Ficha de saúde: ${det.toLowerCase()}`);
+  }
+  need(SANGUE_TIPOS.includes(f.sangue_tipo), 'Ficha de saúde: informe o tipo sanguíneo (ou "não sei")');
+  need(f.sangue_tipo === 'Não sei' || SANGUE_RH.includes(f.sangue_rh), 'Ficha de saúde: informe o fator RH');
+  need(f.termo_medico, 'Ficha de saúde: confirme a declaração');
+  need(f.med_assinatura_nome && f.med_assinatura_nome.split(/\s+/).length >= 2, age < 18 ? 'Ficha de saúde: o responsável precisa assinar' : 'Ficha de saúde: assine com o seu nome completo');
+  need(cleanCpf(f.med_assinatura_cpf), 'Ficha de saúde: informe o CPF de quem assina');
+}
+
+/** A ficha está completa? (cadastro + saúde). Sem ficha completa, o membro aparece com "dados incompletos". */
+export function fichaCompleta(ficha, birthDate) {
+  try {
+    validateSignup(ficha, birthDate);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export function getFicha(memberId) {

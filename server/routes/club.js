@@ -4,7 +4,7 @@ import { requireAuth, setLogin, deleteLogin } from '../auth.js';
 import { imageUpload, fileUrl } from '../uploads.js';
 import { CARGOS, CARGO_PADRAO } from '../config.js';
 import { fail, int, str, memberKind, roleOf, ageFrom, validDate, newMemberCode, newUnitPin, parseJson } from '../util.js';
-import { checkIdentity, cleanFicha, getFicha, saveFicha } from '../ficha.js';
+import { checkIdentity, cleanFicha, fichaCompleta, getFicha, saveFicha, validateSignup } from '../ficha.js';
 import { clubProfile } from '../profiles.js';
 import { clubUnitsRanking } from '../rankings.js';
 
@@ -64,6 +64,8 @@ r.get('/club/members', (req, res) => {
     m.age = ageFrom(m.birth_date);
     m.kind = memberKind(m.birth_date);
     m.role = roleOf(m.kind, m.cargo);
+    // Sem a ficha completa (cadastro + saúde) o membro aparece com "dados incompletos".
+    m.incomplete = !fichaCompleta(getFicha(m.id), m.birth_date) || !(m.cpf || m.birth_cert);
   }
   res.json(rows);
 });
@@ -102,9 +104,18 @@ function memberFields(req, existing) {
   return { name, birth, cargo, unitId, cpf: ids.cpf, certidao: ids.certidao };
 }
 
+// Cadastro feito pelo clã: precisa de todos os dados, igual à inscrição pelo link.
 r.post('/club/members', imageUpload.single('photo'), (req, res) => {
+  const ficha = cleanFicha(req.body);
+  if (ficha.doc_tipo === 'certidao') req.body.cpf = req.body.cpf || '';
+  else req.body.certidao = '';
   const f = memberFields(req);
+  if (ficha.doc_tipo !== 'certidao' && !f.cpf) fail(400, 'Informe o CPF');
+  if (str(req.body.name, 120).split(/\s+/).length < 2) fail(400, 'Informe o nome completo');
+  validateSignup(ficha, f.birth);
   if (String(req.body.password || '').length < 6) fail(400, 'Crie uma senha com pelo menos 6 caracteres');
+  ficha.data_inscricao = new Date().toISOString().slice(0, 10);
+  ficha.local_inscricao = `${get('SELECT name FROM clubs WHERE id = ?', req.actor.id).name} — cadastro pelo clã`;
   const out = tx(() => {
     const code = newMemberCode();
     const id = Number(run(
@@ -112,6 +123,7 @@ r.post('/club/members', imageUpload.single('photo'), (req, res) => {
       req.actor.id, f.unitId, f.name, f.birth, fileUrl(req.file), f.cargo, code, f.cpf, f.certidao,
     ).lastInsertRowid);
     setLogin('member', id, code, req.body.password);
+    saveFicha(id, ficha, { acceptTerms: true });
     return { id, code };
   });
   res.json(out);

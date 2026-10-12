@@ -51,6 +51,19 @@ const cpf = (n) => {
   return d.join('');
 };
 
+// Ficha completa (cadastro + saúde) para a inscrição e o cadastro pelo clã.
+const PERGUNTAS = ['cardiaco', 'alergia_medicamento', 'lactose', 'deficiencia', 'transfusao', 'alergia_pele', 'convulsao', 'psicologico',
+  'alergia', 'diabetes', 'ferimento', 'fratura', 'cirurgia', 'internacao'];
+const fichaCompleta = (extra = {}) => ({
+  sexo: 'Feminino', whatsapp: '11999999999', endereco: 'Rua A', numero: '10', bairro: 'Centro', cidade: 'Palmares', uf: 'pe',
+  rg: '1234567', rg_orgao: 'SSP/PE', camiseta: 'M', estado_civil: 'Solteiro',
+  mae_nome: 'Maria Mãe', mae_whatsapp: '11999999999',
+  termo_imagem: true, termo_responsabilidade: true, termo_dados: true, assinatura_nome: 'Maria Mãe', assinatura_cpf: cpf(900000011),
+  doencas: ['Catapora'], doencas_ok: true, ...Object.fromEntries(PERGUNTAS.map((k) => ['q_' + k, 'nao'])),
+  sangue_tipo: 'O', sangue_rh: 'Positivo', termo_medico: true, med_assinatura_nome: 'Maria Mãe', med_assinatura_cpf: cpf(900000011),
+  ...extra,
+});
+
 const form = (obj) => {
   const fd = new FormData();
   for (const [k, v] of Object.entries(obj)) fd.append(k, v);
@@ -90,9 +103,10 @@ test('idade define o tipo de conta; liderança sem unidade vai para "Liderança"
   const aguias = await login('clube', 'aguias', 'aguias123');
   const d = new Date();
   const birth = (age) => `${d.getFullYear() - age - 1}-01-15`;
-  assert.equal((await aguias.post('/club/members', form({ name: 'Muito Novo', birth_date: birth(8), cpf: cpf(900000001), password: '123456' }))).status, 400);
-  assert.equal((await aguias.post('/club/members', form({ name: 'Sem CPF', birth_date: birth(20), password: '123456' }))).status, 400, 'CPF é obrigatório');
-  const r = await aguias.post('/club/members', form({ name: 'Nova Líder', birth_date: birth(20), cpf: cpf(900000002), password: '123456' }));
+  assert.equal((await aguias.post('/club/members', fichaCompleta({ name: 'Muito Novo Teste', birth_date: birth(8), cpf: cpf(900000001), password: '123456' }))).status, 400);
+  assert.equal((await aguias.post('/club/members', fichaCompleta({ name: 'Sem Cpf Teste', birth_date: birth(20), password: '123456' }))).status, 400, 'CPF é obrigatório');
+  assert.equal((await aguias.post('/club/members', { name: 'Só Dados Básicos', birth_date: birth(20), cpf: cpf(900000002), password: '123456' })).status, 400, 'clã precisa de todos os dados');
+  const r = await aguias.post('/club/members', fichaCompleta({ name: 'Nova Líder', birth_date: birth(20), cpf: cpf(900000002), password: '123456' }));
   assert.match(r.body.code, /^\d{6}$/, 'código de 6 números');
   assert.equal(r.status, 200);
   const m = (await aguias.get('/club/members/' + r.body.id)).body;
@@ -101,11 +115,11 @@ test('idade define o tipo de conta; liderança sem unidade vai para "Liderança"
   assert.equal(m.unit_id, units.find((u) => u.is_leadership).id);
   // Desbravador não pode entrar na unidade Liderança
   const lid = units.find((u) => u.is_leadership).id;
-  assert.equal((await aguias.post('/club/members', form({ name: 'Dbv', birth_date: birth(12), unit_id: lid, cpf: cpf(900000003), password: '123456' }))).status, 400);
+  assert.equal((await aguias.post('/club/members', fichaCompleta({ name: 'Dbv Teste', birth_date: birth(12), unit_id: lid, cpf: cpf(900000003), password: '123456' }))).status, 400);
   // Unidade de outro clube é rejeitada
   const leoes = await login('clube', 'leoes', 'leoes123');
   const leoesUnit = (await leoes.get('/club/units')).body.find((u) => !u.is_leadership).id;
-  assert.equal((await aguias.post('/club/members', form({ name: 'X', birth_date: birth(12), unit_id: leoesUnit, cpf: cpf(900000004), password: '123456' }))).status, 400);
+  assert.equal((await aguias.post('/club/members', fichaCompleta({ name: 'X Teste', birth_date: birth(12), unit_id: leoesUnit, cpf: cpf(900000004), password: '123456' }))).status, 400);
 });
 
 test('requisitos de explorador não aparecem para tutor; grupo vê requisitos do clã e gerais', async () => {
@@ -330,16 +344,17 @@ test('inscrição pelo link: fica pendente até o clã aprovar; desativar tira o
   const d = new Date();
   const info = await (await fetch(BASE + '/public/inscricao/0001')).json();
   assert.equal(info.name, 'Clã Águias do Vale');
-  const body = {
+  const body = fichaCompleta({
     name: 'Joana Inscrita', birth_date: `${d.getFullYear() - 12}-03-10`, cpf: cpf(900000010), password: 'senha123',
-    sexo: 'Feminino', whatsapp: '11999999999', endereco: 'Rua A', numero: '10', bairro: 'Centro', cidade: 'Palmares', uf: 'pe',
-    mae_nome: 'Maria Mãe', mae_whatsapp: '11999999999', alergias: 'Amendoim',
-    termo_imagem: true, termo_responsabilidade: true, termo_dados: true, assinatura_nome: 'Maria Mãe', assinatura_cpf: cpf(900000011),
-  };
+    q_alergia_medicamento: 'sim', q_alergia_medicamento_det: 'Dipirona',
+  });
   const post = (b) => fetch(BASE + '/public/inscricao/0001', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) });
   assert.equal((await post({ ...body, termo_imagem: false })).status, 400, 'termos obrigatórios');
   assert.equal((await post({ ...body, mae_nome: '', mae_whatsapp: '' })).status, 400, 'menor precisa de pai, mãe ou responsável');
   assert.equal((await post({ ...body, sexo: 'Outro' })).status, 400, 'outro: precisa escrever');
+  assert.equal((await post({ ...body, q_alergia_medicamento_det: '' })).status, 400, 'sim pede o porquê');
+  assert.equal((await post({ ...body, q_cirurgia: undefined })).status, 400, 'todas as perguntas respondidas');
+  assert.equal((await post({ ...body, med_assinatura_nome: '' })).status, 400, 'ficha de saúde assinada');
   // Adulto: sem pais nem responsável; documento pela certidão de nascimento
   const adulto = { ...body, name: 'Carlos Adulto Teste', birth_date: `${d.getFullYear() - 30}-01-01`, cpf: '', doc_tipo: 'certidao', certidao: '123456 01 55 2010 1 00012 123 0001234-56',
     mae_nome: '', mae_whatsapp: '', assinatura_nome: 'Carlos Adulto Teste', saude_profissional: true, saude_area: 'Médico' };
@@ -356,7 +371,10 @@ test('inscrição pelo link: fica pendente até o clã aprovar; desativar tira o
   const joana = (await aguias.get('/club/members')).body.find((m) => m.code === code);
   assert.equal(joana.status, 'pendente');
   const ficha = (await aguias.get(`/club/members/${joana.id}/ficha`)).body.ficha;
-  assert.equal(ficha.alergias, 'Amendoim');
+  assert.equal(ficha.q_alergia_medicamento_det, 'Dipirona');
+  assert.deepEqual(ficha.doencas, ['Catapora']);
+  assert.equal(joana.incomplete, false);
+  assert.ok((await aguias.get('/club/members')).body.find((m) => m.name === 'Lucas Ferreira').incomplete, 'exemplo sem ficha: incompleto');
   assert.equal(ficha.local_inscricao, 'Clã Águias do Vale — sistema online');
   assert.equal(ficha.uf, 'PE');
   const admin = await login('membros', 'admin', 'admin123');

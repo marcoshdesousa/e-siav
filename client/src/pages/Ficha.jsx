@@ -1,4 +1,6 @@
-import { Field } from '../ui.jsx';
+import { useState } from 'react';
+import { ArrowLeft, ArrowRight, Check, HeartPulse } from 'lucide-react';
+import { Button, Field } from '../ui.jsx';
 import { fmtCpf } from '../format.js';
 
 /** Termos aceitos na inscrição. */
@@ -12,7 +14,6 @@ const SEXOS = ['Feminino', 'Masculino', 'Outro'];
 const AREAS_SAUDE = ['Dentista', 'Enfermeiro', 'Fisioterapeuta', 'Médico', 'Socorrista', 'Téc. de Enfermagem', 'Outro'];
 const ESTADOS_CIVIS = ['Solteiro', 'Casado', 'Divorciado', 'Viúvo', 'Não informado'];
 const CAMISETAS = ['2', '4', '6', '8', '10', '12', '14', '16', 'PP', 'P', 'M', 'G', 'GG', 'XG', 'XGG'];
-const SANGUE = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', 'Não sei'];
 const UFS = ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'];
 
 /** Botões de escolha (sim/não, sexo...). */
@@ -27,16 +28,13 @@ function Choice({ options, value, onChange, disabled }) {
 }
 
 /**
- * Ficha de cadastro (modelo do Registro de Membro) + ficha médica.
+ * Ficha de cadastro (modelo do Registro de Membro).
  * A idade decide o que aparece: menor de 18 → pais e responsável; 16+ → profissional de saúde.
  */
 export default function FichaForm({ value: f, onChange, age = null, readOnly = false }) {
   const set = (k) => (v) => onChange({ ...f, [k]: v });
   const input = (k, props = {}) => (
     <input value={f[k] || ''} onChange={(e) => onChange({ ...f, [k]: e.target.value })} disabled={readOnly} {...props} />
-  );
-  const area = (k, placeholder) => (
-    <textarea value={f[k] || ''} onChange={(e) => onChange({ ...f, [k]: e.target.value })} disabled={readOnly} placeholder={placeholder} style={{ minHeight: 70 }} />
   );
   const select = (k, list, empty = '—') => (
     <select value={f[k] || ''} onChange={(e) => onChange({ ...f, [k]: e.target.value })} disabled={readOnly}>
@@ -118,25 +116,9 @@ export default function FichaForm({ value: f, onChange, age = null, readOnly = f
 
       <div className="grid2">
         <Field label="Tamanho da camiseta">{select('camiseta', CAMISETAS)}</Field>
-        <Field label="Estado civil">{select('estado_civil', ESTADOS_CIVIS)}</Field>
+        {age != null && age >= 16 && <Field label="Estado civil">{select('estado_civil', ESTADOS_CIVIS)}</Field>}
       </div>
 
-      <h3 className="ficha-title">Ficha médica</h3>
-      <div className="grid2">
-        <Field label="Tipo sanguíneo">{select('tipo_sanguineo', SANGUE)}</Field>
-        <Field label="Cartão do SUS">{input('cartao_sus', { inputMode: 'numeric' })}</Field>
-      </div>
-      <Field label="Plano de saúde">{input('plano_saude', { placeholder: 'Nome do plano e número da carteirinha' })}</Field>
-      <Field label="Alergias">{area('alergias', 'Remédios, alimentos, picadas de inseto... (em branco se não tiver)')}</Field>
-      <Field label="Remédios de uso contínuo">{area('medicamentos', 'Nome, dose e horário')}</Field>
-      <Field label="Doenças ou condições de saúde">{area('doencas', 'Asma, diabetes, epilepsia, problemas no coração...')}</Field>
-      <Field label="Restrições alimentares">{area('restricoes_alimentares')}</Field>
-      <Field label="Deficiências ou necessidades especiais">{area('deficiencias')}</Field>
-      <div className="grid2">
-        <Field label="Contato de emergência">{input('contato_emergencia_nome', { placeholder: 'Nome' })}</Field>
-        <Field label="Telefone de emergência">{input('contato_emergencia_telefone', { inputMode: 'tel' })}</Field>
-      </div>
-      <Field label="Outras observações médicas">{area('observacoes_medicas')}</Field>
     </div>
   );
 }
@@ -180,4 +162,196 @@ export function DocFields({ value: f, onChange, cpf, onCpf }) {
       )}
     </>
   );
+}
+
+// ---------- Ficha de saúde ----------
+export const DOENCAS = ['Catapora', 'Meningite', 'Hepatite', 'Dengue', 'Pneumonia', 'Malária', 'Febre amarela', 'H1N1', 'Cólera',
+  'Rubéola', 'Sarampo', 'Tétano', 'Varíola', 'Coqueluche', 'Difteria', 'Caxumba', 'Rinite', 'Bronquite'];
+
+/** [chave, pergunta, o que escrever se for "sim"] — igual ao servidor. */
+export const MED_PERGUNTAS = [
+  ['cardiaco', 'Tem problemas cardíacos?', 'Quais medicamentos usa?'],
+  ['alergia_medicamento', 'Tem alergia a algum medicamento?', 'A quais medicamentos tem alergia?'],
+  ['lactose', 'Tem intolerância à lactose?', 'Quais medicamentos usa?'],
+  ['deficiencia', 'Tem alguma deficiência?', 'Qual deficiência?'],
+  ['transfusao', 'Já recebeu transfusão de sangue?', null],
+  ['alergia_pele', 'Tem alergia na pele?', 'Quais medicamentos usa?'],
+  ['convulsao', 'Tem ou teve desmaio ou convulsão?', 'Quais medicamentos usa?'],
+  ['psicologico', 'Tem algum problema psicológico?', 'Faz acompanhamento? Conte um pouco.'],
+  ['alergia', 'Possui alguma outra alergia?', 'A quê? Quais medicamentos usa?'],
+  ['diabetes', 'É diabético?', 'Quais medicamentos usa?'],
+  ['ferimento', 'Teve algum ferimento grave recente?', null],
+  ['fratura', 'Teve algum tipo de fratura recente?', 'Qual fratura?'],
+  ['cirurgia', 'Já passou por cirurgias?', 'Quais cirurgias?'],
+  ['internacao', 'Ficou internado nos últimos 5 anos?', 'Qual foi o motivo da internação?'],
+];
+const SANGUE_TIPOS = ['A', 'B', 'O', 'AB', 'Não sei'];
+const SANGUE_RH = ['Positivo', 'Negativo', 'Não sei'];
+
+/** O que falta na ficha de saúde (vazio = completa). */
+export function saudeFaltando(f) {
+  const out = [];
+  if (!f.doencas_ok) out.push('doenças');
+  for (const [k, q, det] of MED_PERGUNTAS) {
+    if (!f['q_' + k]) out.push(q);
+    else if (f['q_' + k] === 'sim' && det && !f['q_' + k + '_det']) out.push(det);
+  }
+  if (!SANGUE_TIPOS.includes(f.sangue_tipo) || (f.sangue_tipo !== 'Não sei' && !f.sangue_rh)) out.push('tipo sanguíneo');
+  return out;
+}
+
+function YesNo({ value, onChange }) {
+  return (
+    <div className="quiz-yn">
+      <button type="button" className={value === 'sim' ? 'on yes' : ''} onClick={() => onChange('sim')}><Check size={18} /> Sim</button>
+      <button type="button" className={value === 'nao' ? 'on no' : ''} onClick={() => onChange('nao')}>Não</button>
+    </div>
+  );
+}
+
+/** Uma pergunta da ficha de saúde (sim/não e, se sim, o porquê). */
+function Pergunta({ f, onChange, k, q, det, autoFocus }) {
+  const v = f['q_' + k];
+  return (
+    <div className="quiz-q">
+      <h3>{q}</h3>
+      <YesNo value={v} onChange={(x) => onChange({ ...f, ['q_' + k]: x })} />
+      {v === 'sim' && det && (
+        <Field label={det}>
+          <textarea autoFocus={autoFocus} value={f['q_' + k + '_det'] || ''} onChange={(e) => onChange({ ...f, ['q_' + k + '_det']: e.target.value })} style={{ minHeight: 70 }} />
+        </Field>
+      )}
+    </div>
+  );
+}
+
+function Doencas({ f, onChange }) {
+  const list = f.doencas || [];
+  const toggle = (d) => onChange({ ...f, doencas_ok: true, doencas: list.includes(d) ? list.filter((x) => x !== d) : [...list, d] });
+  return (
+    <div className="quiz-q">
+      <h3>Quais destas doenças já teve?</h3>
+      <p className="muted small">Toque em todas as que já teve. Se não teve nenhuma, toque em "Nenhuma".</p>
+      <div className="quiz-chips">
+        {DOENCAS.map((d) => <button key={d} type="button" className={list.includes(d) ? 'on' : ''} onClick={() => toggle(d)}>{d}</button>)}
+      </div>
+      <button type="button" className={'quiz-none' + (f.doencas_ok && !list.length ? ' on' : '')} onClick={() => onChange({ ...f, doencas_ok: true, doencas: [] })}>Nenhuma dessas</button>
+    </div>
+  );
+}
+
+function Sangue({ f, onChange }) {
+  return (
+    <div className="quiz-q">
+      <h3>Tipo sanguíneo</h3>
+      <div className="quiz-chips">
+        {SANGUE_TIPOS.map((t) => <button key={t} type="button" className={f.sangue_tipo === t ? 'on' : ''} onClick={() => onChange({ ...f, sangue_tipo: t })}>{t}</button>)}
+      </div>
+      {f.sangue_tipo && f.sangue_tipo !== 'Não sei' && (
+        <>
+          <h3 style={{ marginTop: '1rem' }}>Fator RH</h3>
+          <div className="quiz-chips">
+            {SANGUE_RH.map((t) => <button key={t} type="button" className={f.sangue_rh === t ? 'on' : ''} onClick={() => onChange({ ...f, sangue_rh: t })}>{t}</button>)}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Ficha de saúde em formato de quiz: uma pergunta por vez, com Sim/Não.
+ * Quando é "sim", aparece a caixinha para explicar. No fim: plano de saúde e SUS.
+ */
+export function SaudeQuiz({ value: f, onChange, onDone }) {
+  const steps = [
+    { key: 'doencas', ok: f.doencas_ok, render: () => <Doencas f={f} onChange={onChange} /> },
+    ...MED_PERGUNTAS.map(([k, q, det]) => ({
+      key: k, ok: !!f['q_' + k] && !(f['q_' + k] === 'sim' && det && !f['q_' + k + '_det']),
+      render: () => <Pergunta f={f} onChange={onChange} k={k} q={q} det={det} autoFocus />,
+    })),
+    { key: 'sangue', ok: SANGUE_TIPOS.includes(f.sangue_tipo) && (f.sangue_tipo === 'Não sei' || !!f.sangue_rh), render: () => <Sangue f={f} onChange={onChange} /> },
+    {
+      key: 'plano', ok: true,
+      render: () => (
+        <div className="quiz-q">
+          <h3>Plano de saúde e SUS</h3>
+          <Field label="Plano de saúde" hint="Nome do plano e número da carteirinha (se tiver)"><input value={f.plano_saude || ''} onChange={(e) => onChange({ ...f, plano_saude: e.target.value })} /></Field>
+          <Field label="Nº do cartão do SUS" hint="Se tiver"><input value={f.cartao_sus || ''} onChange={(e) => onChange({ ...f, cartao_sus: e.target.value })} inputMode="numeric" /></Field>
+        </div>
+      ),
+    },
+  ];
+  const [i, setI] = useState(0);
+  const step = steps[i];
+  const last = i === steps.length - 1;
+  return (
+    <div className="quiz">
+      <div className="quiz-top">
+        <span className="ico"><HeartPulse size={16} /> Ficha de saúde</span>
+        <span className="muted small">{i + 1} de {steps.length}</span>
+      </div>
+      <div className="progress"><span style={{ width: ((i + 1) / steps.length) * 100 + '%' }} /></div>
+      <div key={step.key} className="quiz-step">{step.render()}</div>
+      <div className="row between mt">
+        <Button variant="secondary" disabled={i === 0} onClick={() => setI(i - 1)}><ArrowLeft size={16} /> Voltar</Button>
+        <Button disabled={!step.ok} onClick={() => (last ? onDone() : setI(i + 1))}>{last ? 'Concluir' : 'Próxima'} {!last && <ArrowRight size={16} />}</Button>
+      </div>
+    </div>
+  );
+}
+
+/** Ficha de saúde inteira numa página (o clã confere e corrige). */
+export function SaudeLista({ value: f, onChange }) {
+  return (
+    <div className="form">
+      <h3 className="ficha-title">Ficha de saúde</h3>
+      <Doencas f={f} onChange={onChange} />
+      {MED_PERGUNTAS.map(([k, q, det]) => <Pergunta key={k} f={f} onChange={onChange} k={k} q={q} det={det} />)}
+      <Sangue f={f} onChange={onChange} />
+      <div className="grid2">
+        <Field label="Plano de saúde"><input value={f.plano_saude || ''} onChange={(e) => onChange({ ...f, plano_saude: e.target.value })} /></Field>
+        <Field label="Nº do cartão do SUS"><input value={f.cartao_sus || ''} onChange={(e) => onChange({ ...f, cartao_sus: e.target.value })} /></Field>
+      </div>
+    </div>
+  );
+}
+
+/** Declaração e assinatura da ficha de saúde. */
+export function SaudeAssinatura({ value: f, onChange, minor }) {
+  return (
+    <div className="form">
+      <label className="check termo"><input type="checkbox" checked={!!f.termo_medico} onChange={(e) => onChange({ ...f, termo_medico: e.target.checked })} />
+        Me responsabilizo por todas as informações desta Ficha de Saúde, e garanto que nenhuma outra informação foi omitida, que pode vir a prejudicar o membro e o clã, em caso de um atendimento médico de emergência.</label>
+      <div className="grid2">
+        <Field label={minor ? 'Assinatura do responsável (nome completo)' : 'Assinatura (seu nome completo)'}>
+          <input value={f.med_assinatura_nome || ''} onChange={(e) => onChange({ ...f, med_assinatura_nome: e.target.value })} />
+        </Field>
+        <Field label={minor ? 'CPF do responsável' : 'Seu CPF'}>
+          <input value={fmtCpf(f.med_assinatura_cpf)} onChange={(e) => onChange({ ...f, med_assinatura_cpf: e.target.value.replace(/\D/g, '') })} inputMode="numeric" placeholder="000.000.000-00" />
+        </Field>
+      </div>
+    </div>
+  );
+}
+
+/** O que falta na parte 1 (cadastro) — mesmas regras do servidor. */
+export function cadastroFaltando({ name, age, cpf, password, password2, needPassword = true }, f) {
+  const minor = age != null && age < 18;
+  return [
+    (name || '').trim().split(/\s+/).length < 2 && 'nome completo',
+    !(age >= 10) && 'data de nascimento',
+    (f.doc_tipo === 'certidao' ? (f.certidao || '').length < 6 : (cpf || '').replace(/\D/g, '').length !== 11 || !f.rg || !f.rg_orgao) && 'documento',
+    (!f.sexo || (f.sexo === 'Outro' && !f.sexo_outro)) && 'sexo',
+    !f.whatsapp && 'WhatsApp',
+    !(f.endereco && f.numero && f.bairro && f.cidade && f.uf) && 'endereço',
+    age >= 16 && f.saude_profissional && (!f.saude_area || (f.saude_area === 'Outro' && !f.saude_area_outro)) && 'área da saúde',
+    minor && !(f.pai_nome || f.mae_nome || f.responsavel_outro) && 'pai, mãe ou responsável',
+    minor && ((f.pai_nome && !f.pai_whatsapp) || (f.mae_nome && !f.mae_whatsapp) || (f.responsavel_outro && !(f.responsavel_nome && f.responsavel_whatsapp))) && 'WhatsApp dos pais/responsável',
+    !f.camiseta && 'camiseta',
+    age >= 16 && !f.estado_civil && 'estado civil',
+    !TERMOS.every(([k]) => f[k]) && 'termos',
+    !((f.assinatura_nome || '').trim().split(/\s+/).length >= 2 && (f.assinatura_cpf || '').length === 11) && 'assinatura',
+    needPassword && !((password || '').length >= 6 && password === password2) && 'senha',
+  ].filter(Boolean);
 }

@@ -676,3 +676,21 @@ label.btn { cursor: pointer; }
 .seg.seg-wrap { display: flex; flex-wrap: wrap; border-radius: 16px; }
 .seg.seg-wrap button { flex: 1 1 auto; }
 .declaracao { font-style: italic; font-weight: 700; text-align: center; font-size: .9rem; margin: .8rem 0 .2rem; }
+
+/* Ficha de saúde em formato de quiz */
+.quiz { display: flex; flex-direction: column; gap: .6rem; }
+.quiz-top { display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--navy); }
+.quiz-step { animation: pop .2s; min-height: 220px; }
+.quiz-q h3 { font-size: 1.15rem; margin: .4rem 0 .7rem; }
+.quiz-yn { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-bottom: .8rem; }
+.quiz-yn button { height: 56px; border-radius: 16px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); font: 800 1.05rem var(--font-title); display: flex; align-items: center; justify-content: center; gap: .4rem; cursor: pointer; }
+.quiz-yn button.on.yes { background: var(--navy); border-color: var(--navy); color: #fff; }
+.quiz-yn button.on.no { background: var(--surface-3); border-color: var(--navy-3); color: var(--navy); }
+.quiz-chips { display: flex; flex-wrap: wrap; gap: .45rem; }
+.quiz-chips button { border: 2px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: .5rem .9rem; font: 700 .9rem var(--font); cursor: pointer; }
+.quiz-chips button.on { background: var(--navy); border-color: var(--navy); color: #fff; }
+.quiz-none { margin-top: .7rem; width: 100%; border: 2px dashed var(--line); background: none; border-radius: 14px; padding: .65rem; font: 700 .9rem var(--font); color: var(--muted); cursor: pointer; }
+.quiz-none.on { border-style: solid; border-color: var(--navy-3); color: var(--navy); background: var(--surface-3); }
+.steps-head { display: flex; gap: .5rem; margin: 0 0 .8rem; }
+.steps-head span { flex: 1; text-align: center; font-size: .78rem; font-weight: 800; padding: .45rem; border-radius: 999px; background: var(--surface-3); color: var(--muted); }
+.steps-head span.on { background: var(--navy); color: #fff; }
