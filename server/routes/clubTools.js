@@ -13,40 +13,53 @@ const club = requireAuth('club');
 const admin = requireAuth('admin');
 
 // ---------- Agenda ----------
+/**
+ * Dias do item: uma lista de dias escolhidos no calendário (um, vários seguidos ou soltos).
+ * Também aceita data + "até" (do dia tal ao dia tal).
+ */
 function agendaFields(b) {
   const title = str(b.title, 120);
   if (!title) fail(400, 'Escreva o que vai acontecer');
-  if (!validDate(b.date)) fail(400, 'Escolha a data');
-  const end = b.end_date && validDate(b.end_date) && b.end_date >= b.date ? b.end_date : null;
+  let dates = Array.isArray(b.dates) ? [...new Set(b.dates.filter(validDate))].sort() : [];
+  if (!dates.length && validDate(b.date)) {
+    const end = b.end_date && validDate(b.end_date) && b.end_date >= b.date ? b.end_date : b.date;
+    for (let d = new Date(b.date + 'T12:00:00Z'); d.toISOString().slice(0, 10) <= end && dates.length < 92; d = new Date(d.getTime() + 864e5)) dates.push(d.toISOString().slice(0, 10));
+  }
+  if (!dates.length) fail(400, 'Escolha pelo menos um dia');
+  if (dates.length > 92) fail(400, 'No máximo 92 dias');
   const time = /^\d{2}:\d{2}$/.test(b.time || '') ? b.time : null;
-  return { title, date: b.date, end, time, location: str(b.location, 160) || null, description: str(b.description, 1000) || null };
+  return {
+    title, date: dates[0], end: dates.length > 1 ? dates[dates.length - 1] : null, dates: JSON.stringify(dates),
+    time, location: str(b.location, 160) || null, description: str(b.description, 1000) || null,
+  };
 }
-const AGENDA_COLS = `a.id, a.creator_type, a.scope, a.title, a.description, a.location, a.date, a.end_date, a.time, a.club_id, a.district_id,
+const withDates = (rows) => rows.map((a) => ({ ...a, dates: a.dates ? JSON.parse(a.dates) : null }));
+const AGENDA_COLS = `a.id, a.creator_type, a.scope, a.title, a.description, a.location, a.date, a.end_date, a.dates, a.time, a.club_id, a.district_id,
   d.name AS district_name, c.name AS club_name`;
 const AGENDA_FROM = 'agenda_items a LEFT JOIN districts d ON d.id = a.district_id LEFT JOIN clubs c ON c.id = a.club_id';
 
 /** Agenda que um clã (ou um membro/grupo dele) vê: a do clã + a do App para todos, o distrito ou o clã. */
 function agendaFor(clubId, districtId) {
-  return all(
+  return withDates(all(
     `SELECT ${AGENDA_COLS} FROM ${AGENDA_FROM}
      WHERE (a.creator_type = 'club' AND a.club_id = ?)
         OR (a.creator_type = 'admin' AND (a.scope = 'geral' OR (a.scope = 'distrito' AND a.district_id = ?) OR (a.scope = 'clube' AND a.club_id = ?)))
      ORDER BY a.date, a.time`,
     clubId, districtId, clubId,
-  );
+  ));
 }
 r.get('/agenda', requireAuth('club', 'unit', 'member'), (req, res) => res.json(agendaFor(req.actor.club_id, req.actor.district_id)));
 
 r.post('/club/agenda', club, (req, res) => {
   const f = agendaFields(req.body);
-  const id = Number(run(`INSERT INTO agenda_items (creator_type, club_id, scope, title, description, location, date, end_date, time) VALUES ('club',?,'clube',?,?,?,?,?,?)`,
-    req.actor.id, f.title, f.description, f.location, f.date, f.end, f.time).lastInsertRowid);
+  const id = Number(run(`INSERT INTO agenda_items (creator_type, club_id, scope, title, description, location, date, end_date, dates, time) VALUES ('club',?,'clube',?,?,?,?,?,?,?)`,
+    req.actor.id, f.title, f.description, f.location, f.date, f.end, f.dates, f.time).lastInsertRowid);
   res.json({ id });
 });
 r.put('/club/agenda/:id', club, (req, res) => {
   const f = agendaFields(req.body);
-  const { changes } = run(`UPDATE agenda_items SET title = ?, description = ?, location = ?, date = ?, end_date = ?, time = ? WHERE id = ? AND creator_type = 'club' AND club_id = ?`,
-    f.title, f.description, f.location, f.date, f.end, f.time, int(req.params.id), req.actor.id);
+  const { changes } = run(`UPDATE agenda_items SET title = ?, description = ?, location = ?, date = ?, end_date = ?, dates = ?, time = ? WHERE id = ? AND creator_type = 'club' AND club_id = ?`,
+    f.title, f.description, f.location, f.date, f.end, f.dates, f.time, int(req.params.id), req.actor.id);
   if (!changes) fail(404, 'Item da agenda não encontrado');
   res.json({ ok: true });
 });
@@ -57,7 +70,7 @@ r.delete('/club/agenda/:id', club, (req, res) => {
 });
 
 // Admin: agenda para todos os clãs, um distrito ou um clã.
-r.get('/admin/agenda', admin, (_req, res) => res.json(all(`SELECT ${AGENDA_COLS} FROM ${AGENDA_FROM} WHERE a.creator_type = 'admin' ORDER BY a.date, a.time`)));
+r.get('/admin/agenda', admin, (_req, res) => res.json(withDates(all(`SELECT ${AGENDA_COLS} FROM ${AGENDA_FROM} WHERE a.creator_type = 'admin' ORDER BY a.date, a.time`))));
 r.post('/admin/agenda', admin, (req, res) => {
   const f = agendaFields(req.body);
   const scope = ['geral', 'distrito', 'clube'].includes(req.body.scope) ? req.body.scope : 'geral';
@@ -71,8 +84,8 @@ r.post('/admin/agenda', admin, (req, res) => {
     clubId = int(req.body.club_id);
     if (!get('SELECT 1 FROM clubs WHERE id = ?', clubId)) fail(400, 'Escolha o clã');
   }
-  const id = Number(run(`INSERT INTO agenda_items (creator_type, club_id, scope, district_id, title, description, location, date, end_date, time) VALUES ('admin',?,?,?,?,?,?,?,?,?)`,
-    clubId, scope, districtId, f.title, f.description, f.location, f.date, f.end, f.time).lastInsertRowid);
+  const id = Number(run(`INSERT INTO agenda_items (creator_type, club_id, scope, district_id, title, description, location, date, end_date, dates, time) VALUES ('admin',?,?,?,?,?,?,?,?,?,?)`,
+    clubId, scope, districtId, f.title, f.description, f.location, f.date, f.end, f.dates, f.time).lastInsertRowid);
   res.json({ id });
 });
 r.delete('/admin/agenda/:id', admin, (req, res) => {

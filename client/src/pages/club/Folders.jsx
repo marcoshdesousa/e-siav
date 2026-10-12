@@ -29,7 +29,30 @@ export function waLink(phone, text = '') {
 // ---------- Agenda ----------
 const ORIGEM = { clube: ['green', 'Do clã'], geral: ['yellow', 'Para todos os clãs'], distrito: ['blue', 'Do distrito'] };
 const origemDe = (a) => (a.creator_type === 'club' ? ORIGEM.clube : a.scope === 'distrito' ? ORIGEM.distrito : a.scope === 'clube' ? ['yellow', 'Do App para o clã'] : ORIGEM.geral);
-const inDay = (a, d) => a.date <= d && (a.end_date || a.date) >= d;
+const inDay = (a, d) => (a.dates ? a.dates.includes(d) : a.date <= d && (a.end_date || a.date) >= d);
+/** Todos os dias de um item (lista escolhida ou do dia tal ao dia tal). */
+const daysOf = (a) => {
+  if (a.dates?.length) return a.dates;
+  const out = [];
+  for (let d = new Date(a.date + 'T12:00:00Z'); out.length < 92; d = new Date(d.getTime() + 864e5)) {
+    const iso = d.toISOString().slice(0, 10);
+    if (iso > (a.end_date || a.date)) break;
+    out.push(iso);
+  }
+  return out;
+};
+const isoAdd = (iso, n) => new Date(new Date(iso + 'T12:00:00Z').getTime() + n * 864e5).toISOString().slice(0, 10);
+/** "24, 25 e 26 de outubro" ou "30 de outubro a 2 de novembro". */
+function diasTexto(days) {
+  if (!days.length) return '';
+  const seguidos = days.every((d, i) => i === 0 || isoAdd(days[i - 1], 1) === d);
+  const dm = (d) => `${Number(d.slice(8, 10))} de ${MESES[Number(d.slice(5, 7)) - 1].toLowerCase()}`;
+  if (days.length === 1) return dm(days[0]);
+  if (seguidos && days.length > 3) return `${dm(days[0])} a ${dm(days[days.length - 1])}`;
+  const sameMonth = days.every((d) => d.slice(0, 7) === days[0].slice(0, 7));
+  if (sameMonth) return `${days.slice(0, -1).map((d) => Number(d.slice(8, 10))).join(', ')} e ${dm(days[days.length - 1])}`;
+  return `${days.slice(0, -1).map(dm).join(', ')} e ${dm(days[days.length - 1])}`;
+}
 
 /** Calendário do mês com as datas marcadas. */
 function MonthCalendar({ year, month, items, selected, onSelect }) {
@@ -63,7 +86,7 @@ function AgendaItem({ a, onEdit, onDelete }) {
       <div className="grow">
         <div className="row between" style={{ alignItems: 'flex-start' }}><b>{a.title}</b><Badge kind={kind}>{label}</Badge></div>
         <div className="small muted">
-          {a.end_date ? <>Até {fmtDate(a.end_date)}</> : null}
+          {daysOf(a).length > 1 ? <span className="ico"><CalendarDays size={12} /> {daysOf(a).length} dias: {diasTexto(daysOf(a))}</span> : null}
           {a.time ? <span className="ico"><Clock size={12} /> {a.time}</span> : null}
           {a.location ? <span className="ico"><MapPin size={12} /> {a.location}</span> : null}
         </div>
@@ -80,19 +103,63 @@ function AgendaItem({ a, onEdit, onDelete }) {
 }
 
 /** Formulário de um item da agenda (clã ou admin). */
+/** Escolher os dias tocando no calendário: um, vários seguidos (acampamento, semana) ou soltos. */
+function DayPicker({ value, onChange }) {
+  const start = value[0] || today();
+  const [ym, setYm] = useState([Number(start.slice(0, 4)), Number(start.slice(5, 7)) - 1]);
+  const [y, m] = ym;
+  const first = new Date(y, m, 1).getDay();
+  const days = new Date(y, m + 1, 0).getDate();
+  const cells = [...Array(first).fill(null), ...Array.from({ length: days }, (_, i) => i + 1)];
+  const toggle = (iso) => onChange(value.includes(iso) ? value.filter((d) => d !== iso) : [...value, iso].sort());
+  const move = (d) => setYm(([yy, mm]) => (mm + d < 0 ? [yy - 1, 11] : mm + d > 11 ? [yy + 1, 0] : [yy, mm + d]));
+  const fill = () => {
+    const out = [];
+    for (let d = value[0]; d <= value[value.length - 1]; d = isoAdd(d, 1)) out.push(d);
+    onChange(out);
+  };
+  const seguidos = value.every((d, i) => i === 0 || isoAdd(value[i - 1], 1) === d);
+  return (
+    <div className="day-picker">
+      <div className="row between" style={{ marginBottom: '.3rem' }}>
+        <button type="button" className="icon-btn light" onClick={() => move(-1)} aria-label="Mês anterior"><ChevronLeft size={18} /></button>
+        <b>{MESES[m]} de {y}</b>
+        <button type="button" className="icon-btn light" onClick={() => move(1)} aria-label="Próximo mês"><ChevronRight size={18} /></button>
+      </div>
+      <div className="cal">
+        {SEMANA.map((s, i) => <span key={'h' + i} className="cal-h">{s}</span>)}
+        {cells.map((d, i) => {
+          if (!d) return <span key={'e' + i} />;
+          const iso = `${y}-${pad(m + 1)}-${pad(d)}`;
+          return <button type="button" key={iso} onClick={() => toggle(iso)} className={'cal-d' + (iso === today() ? ' today' : '') + (value.includes(iso) ? ' sel' : '')}>{d}</button>;
+        })}
+      </div>
+      <p className="small" style={{ margin: '.5rem 0 0' }}>
+        {value.length ? <><b>{value.length} {value.length === 1 ? 'dia' : 'dias'}:</b> {diasTexto(value)}</> : <span className="muted">Toque nos dias. Pode escolher um dia, vários seguidos (acampamento, semana) ou dias soltos.</span>}
+      </p>
+      {value.length > 0 && (
+        <div className="row wrap" style={{ gap: '.35rem', marginTop: '.4rem' }}>
+          {value.length > 1 && !seguidos && <Button small variant="secondary" onClick={fill}>Preencher do {Number(value[0].slice(8, 10))} ao {Number(value[value.length - 1].slice(8, 10))}</Button>}
+          <Button small variant="ghost" onClick={() => onChange([])}>Limpar</Button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Formulário de um item da agenda (clã ou admin). */
 export function AgendaForm({ item, onClose, onSave, extra = null }) {
-  const [f, setF] = useState({ title: item?.title || '', date: item?.date || today(), end_date: item?.end_date || '', time: item?.time || '', location: item?.location || '', description: item?.description || '', ...(item?._extra || {}) });
+  const [f, setF] = useState({
+    title: item?.title || '', dates: item?.date ? daysOf(item) : [today()], time: item?.time || '', location: item?.location || '', description: item?.description || '', ...(item?._extra || {}),
+  });
   const [busy, run] = useAsync();
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
   return (
     <Modal title={item?.id ? 'Editar na agenda' : 'Marcar na agenda'} onClose={onClose}
-      footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} disabled={!f.title.trim() || !f.date} onClick={() => run(() => onSave(f), 'Agenda salva!').then(onClose)}>Salvar</Button></>}>
+      footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} disabled={!f.title.trim() || !f.dates.length} onClick={() => run(() => onSave(f), 'Agenda salva!').then(onClose)}>Salvar</Button></>}>
       <div className="form">
         <Field label="O que vai acontecer"><input value={f.title} onChange={set('title')} placeholder="Ex.: Reunião, acampamento, ordem unida" /></Field>
-        <div className="grid2">
-          <Field label="Data"><input type="date" value={f.date} onChange={set('date')} /></Field>
-          <Field label="Até (opcional)" hint="Para eventos de mais de um dia"><input type="date" value={f.end_date} onChange={set('end_date')} /></Field>
-        </div>
+        <Field group label="Dias"><DayPicker value={f.dates} onChange={(dates) => setF({ ...f, dates })} /></Field>
         <div className="grid2">
           <Field label="Horário (opcional)"><input type="time" value={f.time} onChange={set('time')} /></Field>
           <Field label="Local (opcional)"><input value={f.location} onChange={set('location')} /></Field>

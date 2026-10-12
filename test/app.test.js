@@ -758,6 +758,14 @@ test('pastas do clã: agenda (clã + App), finanças, patrimônio, biblioteca, c
   assert.ok(agA.includes(meu.body.id) && agA.includes(soAguias.body.id) && agA.includes(todos.body.id));
   assert.ok(!agL.includes(meu.body.id) && !agL.includes(soAguias.body.id) && agL.includes(todos.body.id), 'outro clã só vê o que é para ele');
   assert.equal((await leoes.del('/club/agenda/' + meu.body.id)).status, 404, 'não apaga a agenda de outro clã');
+  // Vários dias de uma vez: seguidos (acampamento) ou soltos
+  const acamp = await aguias.post('/club/agenda', { title: 'Acampamento', dates: ['2027-01-15', '2027-01-16', '2027-01-17'] });
+  const soltos = await aguias.post('/club/agenda', { title: 'Ensaios', dates: ['2027-02-10', '2027-02-03', '2027-02-24'] });
+  const ag = (await aguias.get('/agenda')).body;
+  const a1 = ag.find((a) => a.id === acamp.body.id);
+  assert.deepEqual([a1.date, a1.end_date, a1.dates.length], ['2027-01-15', '2027-01-17', 3]);
+  assert.deepEqual(ag.find((a) => a.id === soltos.body.id).dates, ['2027-02-03', '2027-02-10', '2027-02-24'], 'dias soltos em ordem');
+  assert.equal((await aguias.post('/club/agenda', { title: 'Sem dia', dates: [] })).status, 400);
   assert.equal((await aguias.del('/club/agenda/' + todos.body.id)).status, 404, 'clã não apaga a agenda do App');
   // Minhas finanças: só controle
   await aguias.post('/club/financas', { kind: 'entrada', description: 'Acampamento de inverno', amount: '500,00', date: d });

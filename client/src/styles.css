@@ -769,3 +769,5 @@ button.list-item:disabled { cursor: default; opacity: .75; }
 .contact-line small { font-weight: 600; font-size: .72rem; opacity: .85; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .contact-line.resp { background: var(--blue-soft); color: var(--blue-ink); }
 .contact-line.off { background: var(--surface-3); color: var(--muted); }
+.day-picker { border: 1.5px solid var(--line); border-radius: 16px; padding: .6rem; background: var(--surface); }
+.day-picker .cal-d { aspect-ratio: auto; height: 38px; }
