@@ -5,6 +5,7 @@ import { Router } from 'express';
 import { get, run, tx } from '../db.js';
 import { ageFrom, fail, str } from '../util.js';
 import { getFicha, saveFicha, validateSignature, TERMOS } from '../ficha.js';
+import { refreshStatus } from '../memberStatus.js';
 
 const r = Router();
 
@@ -38,7 +39,8 @@ r.post('/public/termo/:token', (req, res) => {
   tx(() => {
     const { terms_accepted_at: _a, updated_at: _u, ...ficha } = getFicha(m.id);
     saveFicha(m.id, { ...ficha, ...sign, termo_assinado_por_link: true }, { acceptTerms: true });
-    run(`UPDATE members SET status = 'ativo', terms_token = NULL WHERE id = ?`, m.id);
+    run('UPDATE members SET terms_token = NULL WHERE id = ?', m.id);
+    refreshStatus(m.id); // só fica ativo depois da taxa paga
   });
   res.json({ ok: true, name: m.name, club_name: m.club_name });
 });

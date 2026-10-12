@@ -40,8 +40,8 @@ function AdminHome() {
         {(o) => (
           <Section title="Visão geral">
             <div className="stats">
-              <Stat icon={Map} value={o.districts} label="Distritos" to={`${base}/clubes`} />
-              <Stat icon={Tent} value={o.clubs} label="Clãs" to={`${base}/clubes`} />
+              <Stat icon={Map} value={o.districts} label="Distritos" to={`${base}/clas`} />
+              <Stat icon={Tent} value={o.clubs} label="Clãs" to={`${base}/clas`} />
               <Stat icon={UserPlus} value={o.clan_applications} label="Inscrição clã (novas)" to={`${base}/inscricoes-cla`} accent={o.clan_applications > 0} />
               <Stat icon={Flag} value={o.units} label="Grupos" />
               <Stat icon={Users} value={o.members} label="Membros" />
@@ -193,7 +193,7 @@ function ClubsAdmin() {
                     <div className="sub">Nº {c.number} · Código <b>{c.code}</b>{c.director_name ? <> · Diretor(a): {c.director_name}</> : ''}{c.associate_directors ? <> · Associados: {c.associate_directors.split('\n').join(', ')}</> : ''}</div>
                   </div>
                   <div className="stack" style={{ gap: '.35rem' }}>
-                    <Link to={`${base}/clubes/${c.id}`}><Button small>Ver por dentro</Button></Link>
+                    <Link to={`${base}/clas/${c.id}`}><Button small>Ver por dentro</Button></Link>
                     <Button small variant="secondary" onClick={() => setModal({ kind: 'club', item: c })}>Editar</Button>
                   </div>
                 </div>
@@ -268,7 +268,7 @@ function RequirementsAdmin() {
 export default function AdminApp() {
   const tabs = [
     { to: base, icon: House, label: 'Início', end: true },
-    { to: `${base}/clubes`, icon: Tent, label: 'Clãs' },
+    { to: `${base}/clas`, icon: Tent, label: 'Clãs' },
     { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },
     { to: `${base}/conteudo`, icon: Library, label: 'Conteúdo' },
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
@@ -287,8 +287,8 @@ export default function AdminApp() {
     <Shell tabs={tabs}>
       <Routes>
         <Route index element={<AdminHome />} />
-        <Route path="clubes" element={<ClubsAdmin />} />
-        <Route path="clubes/:id" element={<ClanView base={base} />} />
+        <Route path="clas" element={<ClubsAdmin />} />
+        <Route path="clas/:id" element={<ClanView base={base} />} />
         <Route path="inscricoes-cla" element={<ClanApplications />} />
         <Route path="pagamentos" element={<AdminPayments base={base} />} />
         <Route path="pagamentos/:id" element={<AdminClubPayments base={base} />} />

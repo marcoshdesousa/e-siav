@@ -10,7 +10,7 @@ const TYPE_LABEL = { admin: 'Administrador Geral', club: 'Sistema do Clã', unit
 export default function Shell({ tabs, children, hideNav = false }) {
   const { actor, logout } = useAuth();
   const nav = useNavigate();
-  const base = { admin: '/admin', club: '/clube', unit: '/unidade', member: '/membro' }[actor.type];
+  const base = { admin: '/admin', club: '/cla', unit: '/grupo', member: '/membro' }[actor.type];
   const subtitle = actor.type === 'member' ? actor.club_name : actor.type === 'unit' ? actor.club_name : TYPE_LABEL[actor.type];
 
   return (

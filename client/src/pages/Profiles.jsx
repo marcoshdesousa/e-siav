@@ -8,7 +8,11 @@ import { useAuth, homeFor } from '../auth.jsx';
 import { Avatar, Button, Card, ContentIcon, Empty, Loading, LogoHorizontal, MedalList, Modal, PositionBadge, RowSection, Section, ShareButton, useLoad } from '../ui.jsx';
 
 /** linkBase: "/p" (páginas públicas) ou "<app>/ver" (dentro do app). */
-const to = (linkBase, kind, id) => `${linkBase}/${kind}/${id}`;
+// Links públicos: /cla/CÓDIGO (clã), /cla/CÓDIGO/Nº (grupo) e /CÓDIGO-DO-MEMBRO.
+export const clanLink = (code) => `/cla/${code}`;
+export const groupLink = (clubCode, number, isLeadership) => `/cla/${clubCode}/${isLeadership ? 'tutores' : number}`;
+// Dentro do app o perfil abre nas abas (base/ver/cla/ID); na página pública usa o link bonito.
+const to = (linkBase, kind, id, pretty) => (linkBase === '/p' && pretty ? pretty : `${linkBase}/${kind}/${id}`);
 
 export function EventCard({ e }) {
   const [open, setOpen] = useState(false);
@@ -64,7 +68,7 @@ export function ClubProfileView({ club: c, linkBase }) {
             {c.ranking && <PositionBadge position={c.ranking.position} points={c.ranking.points} label="no ranking de clãs" />}
           </div>
           {c.director_name && <p className="small" style={{ margin: '.5rem 0 0' }}>Diretor(a): <b>{c.director_name}</b>{c.associate_directors ? <><br />Diretores associados: <b>{c.associate_directors.split('\n').join(', ')}</b></> : ''}</p>}
-          <div className="mt"><ShareButton path={`/p/clube/${c.id}`} title={c.name} /></div>
+          <div className="mt"><ShareButton path={clanLink(c.code)} title={c.name} /></div>
         </div>
       </div>
       {c.history && (
@@ -75,7 +79,7 @@ export function ClubProfileView({ club: c, linkBase }) {
       <Section title={`Grupos (${c.unit_count})`}>
         <div className="list">
           {c.units.map((u) => (
-            <Link key={u.id} to={to(linkBase, 'unidade', u.id)} className="list-item">
+            <Link key={u.id} to={to(linkBase, 'grupo', u.id, groupLink(c.code, u.number, u.is_leadership))} className="list-item">
               <Avatar src={u.logo} name={u.name} size={42} square />
               <div className="grow">
                 <div className="title">{u.name}</div>
@@ -100,14 +104,14 @@ export function UnitProfileView({ unit: u, linkBase }) {
           <Avatar src={u.logo} name={u.name} size={96} square />
           <h1>Grupo {u.name}</h1>
           <div className="chips">
-            <Link to={to(linkBase, 'clube', u.club_id)} className="chip ico"><Tent size={14} /> {u.club_name}</Link>
+            <Link to={to(linkBase, 'cla', u.club_id, clanLink(u.club_code))} className="chip ico"><Tent size={14} /> {u.club_name}</Link>
             <span className="chip ico"><Users size={14} /> {plural(u.member_count, 'membro', 'membros')}</span>
           </div>
           <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.4rem' }}>
             {u.ranking_club && <PositionBadge position={u.ranking_club.position} points={u.ranking_club.points} label="no clã" />}
             {u.ranking_general && <PositionBadge position={u.ranking_general.position} points={u.ranking_general.points} label="no ranking geral" />}
           </div>
-          <div className="mt"><ShareButton path={`/p/unidade/${u.id}`} title={'Grupo ' + u.name} /></div>
+          <div className="mt"><ShareButton path={groupLink(u.club_code, u.number, u.is_leadership)} title={'Grupo ' + u.name} /></div>
         </div>
       </div>
       <MedalList medals={u.medals} />
@@ -130,8 +134,8 @@ export function MemberProfileView({ member: m, linkBase, photoAction }) {
             {m.cargo !== m.role && <span className="chip ico">{m.kind === 'desbravador' ? <Compass size={14} /> : <Award size={14} />} {m.role}</span>}
           </div>
           <div className="chips">
-            <Link to={to(linkBase, 'clube', m.club_id)} className="chip ico"><Tent size={14} /> {m.club_name}</Link>
-            {m.unit_id ? <Link to={to(linkBase, 'unidade', m.unit_id)} className="chip ico"><Flag size={14} /> {m.unit_name}</Link> : <span className="chip ico"><Flag size={14} /> Sem grupo</span>}
+            <Link to={to(linkBase, 'cla', m.club_id, clanLink(m.club_code))} className="chip ico"><Tent size={14} /> {m.club_name}</Link>
+            {m.unit_id ? <Link to={to(linkBase, 'grupo', m.unit_id, groupLink(m.club_code, m.unit_number, m.unit_is_leadership))} className="chip ico"><Flag size={14} /> {m.unit_name}</Link> : <span className="chip ico"><Flag size={14} /> Sem grupo</span>}
           </div>
           <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.4rem' }}>
             {m.ranking && <PositionBadge position={m.ranking.position} points={m.ranking.points} label="no ranking de membros" />}
@@ -148,15 +152,21 @@ export function MemberProfileView({ member: m, linkBase, photoAction }) {
   );
 }
 
-const KIND_URL = { clube: (id) => `/public/clubs/${id}`, unidade: (id) => `/public/units/${id}`, membro: (id) => `/public/members/${id}` };
+const KIND_URL = {
+  cla: (id) => `/public/clubs/${id}`, grupo: (id) => `/public/units/${id}`, membro: (id) => `/public/members/${id}`,
+  // Links públicos pelo código: "4821" (clã) e "4821/2" (grupo nº 2 do clã)
+  cla_codigo: (code) => `/public/cla/${code}`, grupo_codigo: (path) => `/public/cla/${path}`,
+  clube: (id) => `/public/clubs/${id}`, unidade: (id) => `/public/units/${id}`, // links antigos (/p/clube/1)
+};
+const VIEW = { cla: 'cla', clube: 'cla', cla_codigo: 'cla', grupo: 'grupo', unidade: 'grupo', grupo_codigo: 'grupo', membro: 'membro' };
 
 function ProfileByKind({ kind, id, linkBase }) {
   const state = useLoad(() => api.get(KIND_URL[kind](id)), [kind, id]);
   return (
     <Loading {...state}>
       {(d) =>
-        kind === 'clube' ? <ClubProfileView club={d} linkBase={linkBase} />
-          : kind === 'unidade' ? <UnitProfileView unit={d} linkBase={linkBase} />
+        VIEW[kind] === 'cla' ? <ClubProfileView club={d} linkBase={linkBase} />
+          : VIEW[kind] === 'grupo' ? <UnitProfileView unit={d} linkBase={linkBase} />
             : <MemberProfileView member={d} linkBase={linkBase} />
       }
     </Loading>
@@ -175,7 +185,12 @@ export function InAppProfile({ base }) {
   );
 }
 
-/** Link público para compartilhar: /p/clube/1, /p/unidade/2, /p/membro/DBV-XXXXX */
+/** Link público do clã e dos grupos: /cla/4821 e /cla/4821/2 (ou /cla/4821/tutores). */
+export function ClanLinkPage({ code, n }) {
+  if (n) return <PublicProfilePage kind="grupo_codigo" id={`${code}/${n}`} />;
+  return <PublicProfilePage kind="cla_codigo" id={code} />;
+}
+
 /** Link de bio do explorador: site/123456 (só para ver; editar é pelo app). */
 export function MemberLinkPage() {
   const { code } = useParams();

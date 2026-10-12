@@ -1,9 +1,10 @@
 import crypto from 'node:crypto';
 import { Router } from 'express';
 import { all, get, run, tx } from '../db.js';
-import { requireAuth, setLogin, deleteLogin, checkAccountPassword } from '../auth.js';
+import { requireAuth, deleteLogin, checkAccountPassword } from '../auth.js';
 import { imageUpload, fileUrl } from '../uploads.js';
-import { CARGOS, CARGOS_18, CARGO_PADRAO, IDADE_MIN_DIRETOR } from '../config.js';
+import { CARGOS, CARGOS_18, CARGO_PADRAO, IDADE_MIN_DIRETOR, MAX_GRUPOS } from '../config.js';
+import { createMemberLogin, memberPassword, refreshStatus } from '../memberStatus.js';
 import { fail, int, str, memberKind, ageFrom, validDate, newMemberCode, newUnitPin, parseJson } from '../util.js';
 import { checkIdentity, cleanFicha, saveFicha, validateSignup } from '../ficha.js';
 import { listMembers, listUnits, memberFicha } from '../clubData.js';
@@ -102,19 +103,18 @@ r.post('/club/members', imageUpload.single('photo'), (req, res) => {
   if (str(req.body.name, 120).split(/\s+/).length < 2) fail(400, 'Informe o nome completo');
   validateSignup(ficha, f.birth, { signed: false });
   for (const k of ['assinatura_nome', 'assinatura_cpf', 'med_assinatura_nome', 'med_assinatura_cpf', 'termo_medico', 'termo_imagem', 'termo_responsabilidade', 'termo_dados']) delete ficha[k];
-  if (String(req.body.password || '').length < 6) fail(400, 'Crie uma senha com pelo menos 6 caracteres');
   ficha.data_inscricao = new Date().toISOString().slice(0, 10);
   ficha.local_inscricao = `${get('SELECT name FROM clubs WHERE id = ?', req.actor.id).name} — cadastro pelo clã`;
   const token = crypto.randomBytes(18).toString('base64url');
   const out = tx(() => {
     const code = newMemberCode();
     const id = Number(run(
-      `INSERT INTO members (club_id, unit_id, name, birth_date, photo, cargo, code, cpf, birth_cert, status, terms_token) VALUES (?,?,?,?,?,?,?,?,?,'pendente',?)`,
+      `INSERT INTO members (club_id, unit_id, name, birth_date, photo, cargo, code, cpf, birth_cert, status, terms_token, approved_at) VALUES (?,?,?,?,?,?,?,?,?,'pendente',?,strftime('%Y-%m-%dT%H:%M:%fZ','now'))`,
       req.actor.id, f.unitId, f.name, f.birth, fileUrl(req.file), f.cargo, code, f.cpf, f.certidao, token,
     ).lastInsertRowid);
-    setLogin('member', id, code, req.body.password);
+    createMemberLogin(id, code);
     saveFicha(id, ficha);
-    return { id, code, terms_token: token };
+    return { id, code, password: memberPassword(f.birth), terms_token: token };
   });
   res.json(out);
 });
@@ -126,7 +126,6 @@ r.put('/club/members/:id', imageUpload.single('photo'), (req, res) => {
     run('UPDATE members SET name = ?, birth_date = ?, cargo = ?, unit_id = ?, cpf = ?, birth_cert = ? WHERE id = ? AND club_id = ?',
       f.name, f.birth, f.cargo, f.unitId, f.cpf, f.certidao, m.id, req.actor.id);
     if (req.file) run('UPDATE members SET photo = ? WHERE id = ?', fileUrl(req.file), m.id);
-    if (req.body.password) setLogin('member', m.id, null, req.body.password);
   });
   res.json({ ok: true });
 });
@@ -148,15 +147,18 @@ r.post('/club/members/:id/reativar', (req, res) => {
 // Inscrição feita pelo link do clã: o clã aprova (escolhendo grupo e cargo) ou recusa.
 r.post('/club/members/:id/aprovar', (req, res) => {
   const m = ownMember(req);
-  if (m.status !== 'pendente') fail(400, 'Esta inscrição já foi analisada');
+  if (m.status !== 'pendente' || m.approved_at) fail(400, 'Esta inscrição já foi analisada');
   if (m.terms_token) fail(400, 'O responsável ainda não assinou o termo');
   const f = memberFields(req, m);
-  run(`UPDATE members SET status = 'ativo', unit_id = ?, cargo = ? WHERE id = ?`, f.unitId, f.cargo, m.id);
+  tx(() => {
+    run(`UPDATE members SET approved_at = strftime('%Y-%m-%dT%H:%M:%fZ','now'), unit_id = ?, cargo = ? WHERE id = ?`, f.unitId, f.cargo, m.id);
+    refreshStatus(m.id); // fica ativo quando a taxa estiver paga
+  });
   res.json({ ok: true });
 });
 r.post('/club/members/:id/recusar', (req, res) => {
   const m = ownMember(req);
-  if (m.status !== 'pendente') fail(400, 'Só inscrições pendentes podem ser recusadas');
+  if (m.status !== 'pendente' || m.approved_at) fail(400, 'Só inscrições esperando aprovação podem ser recusadas');
   tx(() => {
     deleteLogin('member', m.id);
     run('DELETE FROM members WHERE id = ?', m.id);
@@ -226,8 +228,13 @@ r.post('/club/units', imageUpload.single('logo'), (req, res) => {
   if (!name) fail(400, 'Informe o nome do grupo');
   // Senha gerada pelo app (não pode ser trocada) e diferente da senha do clã.
   const pin = newUnitPin(req.actor.id, (p) => checkAccountPassword('club', req.actor.id, p));
-  const id = Number(run('INSERT INTO units (club_id, name, logo, pin) VALUES (?,?,?,?)', req.actor.id, name, fileUrl(req.file), pin).lastInsertRowid);
-  res.json({ id, pin });
+  // Número do grupo no clã (1 a 10): o menor livre.
+  const used = new Set(all('SELECT number FROM units WHERE club_id = ? AND number IS NOT NULL', req.actor.id).map((u) => u.number));
+  let number = 1;
+  while (used.has(number)) number++;
+  if (number > MAX_GRUPOS) fail(400, `O clã pode ter no máximo ${MAX_GRUPOS} grupos`);
+  const id = Number(run('INSERT INTO units (club_id, name, logo, pin, number) VALUES (?,?,?,?,?)', req.actor.id, name, fileUrl(req.file), pin, number).lastInsertRowid);
+  res.json({ id, pin, number });
 });
 
 r.put('/club/units/:id', imageUpload.single('logo'), (req, res) => {

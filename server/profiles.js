@@ -32,8 +32,8 @@ export function clubProfile(id) {
   if (!c) return null;
   c.member_count = get(`SELECT COUNT(*) AS n FROM members WHERE club_id = ? AND status = 'ativo'`, id).n;
   c.units = all(
-    `SELECT u.id, u.name, u.logo, u.is_leadership, (SELECT COUNT(*) FROM members m WHERE m.unit_id = u.id AND m.status = 'ativo') AS member_count
-     FROM units u WHERE u.club_id = ? ORDER BY u.is_leadership, u.name`,
+    `SELECT u.id, u.name, u.logo, u.is_leadership, u.number, (SELECT COUNT(*) FROM members m WHERE m.unit_id = u.id AND m.status = 'ativo') AS member_count
+     FROM units u WHERE u.club_id = ? ORDER BY u.is_leadership, u.number, u.name`,
     id,
   );
   c.unit_count = c.units.length;
@@ -46,7 +46,7 @@ export function clubProfile(id) {
 
 export function unitProfile(id) {
   const u = get(
-    `SELECT u.id, u.name, u.logo, u.is_leadership, u.club_id, c.name AS club_name, c.logo AS club_logo, c.district_id
+    `SELECT u.id, u.name, u.logo, u.is_leadership, u.number, u.club_id, c.code AS club_code, c.name AS club_name, c.logo AS club_logo, c.district_id
      FROM units u JOIN clubs c ON c.id = u.club_id WHERE u.id = ?`,
     id,
   );
@@ -63,7 +63,7 @@ export function unitProfile(id) {
 export function memberProfile(where, value) {
   const m = get(
     `SELECT m.id, m.name, m.photo, m.code, m.cargo, m.birth_date,
-            m.club_id, c.name AS club_name, c.logo AS club_logo, m.unit_id, u.name AS unit_name
+            m.club_id, c.code AS club_code, c.name AS club_name, c.logo AS club_logo, m.unit_id, u.name AS unit_name, u.number AS unit_number, u.is_leadership AS unit_is_leadership
      FROM members m JOIN clubs c ON c.id = m.club_id LEFT JOIN units u ON u.id = m.unit_id
      WHERE m.status = 'ativo' AND ${where === 'code' ? 'm.code = ?' : 'm.id = ?'}`,
     value,

@@ -3,10 +3,11 @@
 import { all, get } from './db.js';
 import { ageFrom, memberKind, roleOf } from './util.js';
 import { fichaCompleta, getFicha } from './ficha.js';
+import { pendingReason } from './memberStatus.js';
 
 export function listMembers(clubId) {
   const rows = all(
-    `SELECT m.id, m.name, m.photo, m.cargo, m.code, m.cpf, m.birth_cert, m.status, m.terms_token, m.birth_date, m.unit_id, m.created_at, u.name AS unit_name
+    `SELECT m.id, m.name, m.photo, m.cargo, m.code, m.cpf, m.birth_cert, m.status, m.terms_token, m.approved_at, m.fee_cleared_at, m.birth_date, m.unit_id, m.created_at, u.name AS unit_name
      FROM members m LEFT JOIN units u ON u.id = m.unit_id WHERE m.club_id = ? ORDER BY m.name`,
     clubId,
   );
@@ -17,14 +18,14 @@ export function listMembers(clubId) {
     // Sem a ficha completa (cadastro + saúde) o membro aparece com "dados incompletos".
     m.incomplete = !fichaCompleta(getFicha(m.id), m.birth_date) || !(m.cpf || m.birth_cert);
     // Pendente: esperando a assinatura do termo, a aprovação da inscrição ou com dados faltando.
-    m.pending_reason = m.status === 'inativo' ? null : m.status === 'pendente' ? (m.terms_token ? 'termo' : 'aprovacao') : m.incomplete ? 'dados' : null;
+    m.pending_reason = m.status === 'inativo' ? null : m.status === 'pendente' ? pendingReason(m) || 'aprovacao' : m.incomplete ? 'dados' : null;
   }
   return rows;
 }
 
 export const listUnits = (clubId) => all(
   `SELECT u.*, (SELECT COUNT(*) FROM members m WHERE m.unit_id = u.id AND m.status = 'ativo') AS member_count
-   FROM units u WHERE u.club_id = ? ORDER BY u.is_leadership, u.name`,
+   FROM units u WHERE u.club_id = ? ORDER BY u.is_leadership, u.number, u.name`,
   clubId,
 );
 

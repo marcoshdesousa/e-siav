@@ -84,8 +84,8 @@ function GeneralRanking({ kind, base, highlight }) {
   );
   const props = {
     membros: { sub: (r) => r.club_name, link: (r) => `${base}/ver/membro/${r.code}`, avatarSquare: false },
-    unidades: { sub: (r) => r.club_name, link: (r) => `${base}/ver/unidade/${r.id}` },
-    clubes: { sub: (r) => r.district_name, link: (r) => `${base}/ver/clube/${r.id}` },
+    unidades: { sub: (r) => r.club_name, link: (r) => `${base}/ver/grupo/${r.id}` },
+    clubes: { sub: (r) => r.district_name, link: (r) => `${base}/ver/cla/${r.id}` },
   }[kind];
   return (
     <>
@@ -102,7 +102,7 @@ export function ClubUnitsRanking({ clubId, base, highlight }) {
   const state = useLoad(() => api.get(`/rankings/club/${clubId}/units`), [clubId]);
   return (
     <Loading {...state}>
-      {(d) => <RankingTable rows={d.rows} highlight={highlight} link={(r) => `${base}/ver/unidade/${r.id}`} />}
+      {(d) => <RankingTable rows={d.rows} highlight={highlight} link={(r) => `${base}/ver/grupo/${r.id}`} />}
     </Loading>
   );
 }

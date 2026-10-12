@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, CheckCircle2, UserPlus } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2, KeyRound, UserPlus } from 'lucide-react';
 import { api } from '../api.js';
 import { Avatar, Button, Card, Field, Loading, LogoHorizontal, useAsync, useLoad } from '../ui.jsx';
 import FichaForm, { DocFields, SaudeAssinatura, SaudeQuiz, SexoField, TermosAssinatura, cadastroFaltando } from './Ficha.jsx';
@@ -15,13 +15,13 @@ const ageOf = (d) => (d ? Math.floor((Date.now() - Date.parse(d + 'T12:00:00')) 
  */
 export function CadastroFlow({ local, mode = 'link', extra = null, submitLabel, busy, onSubmit }) {
   const [step, setStep] = useState('cadastro');
-  const [f, setF] = useState({ name: '', birth_date: '', cpf: '', password: '', password2: '' });
+  const [f, setF] = useState({ name: '', birth_date: '', cpf: '' });
   const [ficha, setFicha] = useState({ doc_tipo: 'rg_cpf' });
   const age = ageOf(f.birth_date);
   const minor = age != null && age < 18;
   // No cadastro pelo clã, quem assina é o responsável, depois, pelo link do termo.
   const signed = mode !== 'cla';
-  const missing = cadastroFaltando({ ...f, age, needPassword: true, signed }, ficha);
+  const missing = cadastroFaltando({ ...f, age, needPassword: false, signed }, ficha);
   const top = () => window.scrollTo({ top: 0, behavior: 'smooth' });
   const assinaturaOk = ficha.termo_medico && (ficha.med_assinatura_nome || '').trim().split(/\s+/).length >= 2 && (ficha.med_assinatura_cpf || '').length === 11;
   const send = () => onSubmit({ ...ficha, ...f, cpf: ficha.doc_tipo === 'certidao' ? '' : f.cpf, certidao: ficha.doc_tipo === 'certidao' ? ficha.certidao : '' });
@@ -46,11 +46,7 @@ export function CadastroFlow({ local, mode = 'link', extra = null, submitLabel, 
             : <p className="small muted">Os termos e as assinaturas ficam com o {minor ? 'responsável' : 'próprio membro'}: depois de salvar, você recebe o link do termo para enviar.</p>}
           <div className="form">
             <p className="small muted">Data: <b>{new Date().toLocaleDateString('pt-BR')}</b> · Local: <b>{local}</b></p>
-            <h3 className="ficha-title">{mode === 'cla' ? 'Senha de acesso do membro' : 'Senha de acesso'}</h3>
-            <div className="grid2">
-              <Field label="Crie uma senha" hint="Mínimo 6 caracteres"><input type="password" value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} autoComplete="new-password" /></Field>
-              <Field label="Repita a senha" hint={f.password2 && f.password !== f.password2 ? 'As senhas não são iguais' : ''}><input type="password" value={f.password2} onChange={(e) => setF({ ...f, password2: e.target.value })} autoComplete="new-password" /></Field>
-            </div>
+            <p className="small muted"><KeyRound size={14} style={{ verticalAlign: '-2px' }} /> O acesso é automático: o app cria um <b>código de 6 números</b> e a <b>senha é o ano de nascimento</b>{f.birth_date ? <> ({f.birth_date.slice(0, 4)})</> : ''}. Não dá para mudar.</p>
             {missing.length > 0 && <p className="small muted center">Falta: {missing.join(', ')}.</p>}
             <Button block disabled={missing.length > 0} onClick={() => { setStep('saude'); top(); }}>Continuar para a ficha de saúde <ArrowRight size={16} /></Button>
           </div>
@@ -74,6 +70,17 @@ export function CadastroFlow({ local, mode = 'link', extra = null, submitLabel, 
         </Card>
       )}
     </>
+  );
+}
+
+/** Aviso com o código (6 números, aleatório) e a senha (ano de nascimento). Nenhum dos dois muda. */
+export function AccessInfo({ code, password }) {
+  return (
+    <div className="access-info">
+      <div><small>Código</small><div className="code-big">{code}</div></div>
+      <div><small>Senha</small><div className="code-big">{password}</div></div>
+      <p className="small" style={{ margin: 0 }}><b>Anote!</b> A senha é o ano de nascimento. O código e a senha não podem ser alterados.</p>
+    </div>
   );
 }
 
@@ -101,8 +108,8 @@ export default function SignupPage() {
               <CheckCircle2 size={56} color="var(--green)" />
               <h1 style={{ marginTop: '.5rem' }}>Inscrição enviada!</h1>
               <p>Agora a diretoria do <b>{done.club_name}</b> confere e aprova a sua inscrição.</p>
-              <p className="muted small">Guarde o seu código de acesso. Depois da aprovação, entre na tela <b>Membros</b> com ele e a senha que você criou.</p>
-              <div className="code-big">{done.code}</div>
+              <AccessInfo code={done.code} password={done.password} />
+              <p className="muted small">Você entra no app depois que o clã aprovar e a taxa de inscrição (R$ 2,50) for paga.</p>
               <Link to="/"><Button block>Ir para a tela de entrada</Button></Link>
             </Card>
           ) : (

@@ -3,6 +3,7 @@ import { COOKIE, checkAccountPassword, checkLogin, signToken, loadActor, require
 import { CARGOS, CARGOS_18, CARGOS_LIDERANCA, IDADE_MIN_DIRETOR, MODELOS_ENVIO } from '../config.js';
 import { all, get } from '../db.js';
 import { fail } from '../util.js';
+import { PENDING_MSG, checkMemberPassword, pendingReason } from '../memberStatus.js';
 
 const r = Router();
 
@@ -34,7 +35,7 @@ setInterval(() => {
  * Descobre a conta pelo que foi digitado:
  * - Login Clã: código do clã (4 números) + senha. A senha do clã abre o Sistema do Clã;
  *   a senha de um grupo (4 números) abre o Portal daquele grupo.
- * - Login Membros: código do membro (6 números) + senha, ou usuário (administrador e contas antigas).
+ * - Login Membros: código do membro (6 números) + ano de nascimento, ou usuário (administrador e contas antigas).
  */
 function findAccount(mode, username, password) {
   const user = String(username || '').trim();
@@ -52,14 +53,15 @@ function findAccount(mode, username, password) {
     }
     return checkLogin(user, pw, ['club', 'unit']);
   }
+  // Membro: código de 6 números + ano de nascimento (ex.: 2006).
   if (/^\d{6}$/.test(user)) {
-    const m = get('SELECT id, status FROM members WHERE code = ?', user);
-    if (!m || !checkAccountPassword('member', m.id, pw)) return null;
-    return { account_type: 'member', account_id: m.id, status: m.status };
+    const m = get('SELECT id FROM members WHERE code = ?', user);
+    if (!m || !checkMemberPassword(m.id, pw)) return null;
+    return { account_type: 'member', account_id: m.id };
   }
-  const login = checkLogin(user, pw, ['member', 'admin']);
-  if (login?.account_type === 'member') login.status = get('SELECT status FROM members WHERE id = ?', login.account_id)?.status;
-  return login;
+  const row = get('SELECT account_type, account_id FROM logins WHERE username = ?', user);
+  if (row?.account_type === 'member') return checkMemberPassword(row.account_id, pw) ? row : null;
+  return checkLogin(user, pw, ['admin']);
 }
 
 // Login Clã: conta do clã e contas de grupo.
@@ -74,8 +76,11 @@ r.post('/auth/login', (req, res) => {
     fail(401, mode === 'clube' ? 'Código do clã ou senha incorretos' : 'Código ou senha incorretos');
   }
   falhas.delete(keys[1]);
-  if (login.status === 'pendente') fail(403, 'Sua inscrição ainda está esperando a aprovação do clã.');
-  if (login.status === 'inativo') fail(403, 'Sua conta está desativada. Fale com a diretoria do seu clã.');
+  if (login.account_type === 'member') {
+    const m = get('SELECT * FROM members WHERE id = ?', login.account_id);
+    if (m.status === 'pendente') fail(403, PENDING_MSG[pendingReason(m)] || PENDING_MSG.aprovacao);
+    if (m.status === 'inativo') fail(403, 'Sua conta está desativada. Fale com a diretoria do seu clã.');
+  }
   const actor = loadActor(login.account_type, login.account_id);
   if (!actor) fail(401, 'Conta não encontrada');
   if (actor.type === 'member' && !actor.kind) fail(403, 'Conta de membro com idade abaixo do mínimo');

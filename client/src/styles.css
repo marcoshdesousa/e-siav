@@ -458,19 +458,13 @@ input[type='file'] { padding: .55rem; }
 .ig-signup b { color: var(--link); }
 .ig-get { text-align: center; margin-top: .3rem; }
 .ig-get p { font-size: .92rem; margin-bottom: .75rem; }
-.ig-stores { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
-.ig-stores button { background: #000; color: #fff; border: 1px solid #000; border-radius: 12px; padding: .5rem .5rem; display: flex; align-items: center; justify-content: center; gap: .4rem; cursor: pointer; font-family: var(--font-title); font-weight: 600; font-size: .82rem; transition: transform .1s; }
-.ig-stores button:hover { transform: translateY(-1px); }
-.ig-stores button span { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.05; }
-.ig-stores button small { font-size: .58rem; font-weight: 500; opacity: .8; }
+.ig-install { display: inline-flex; align-items: center; gap: .45rem; background: transparent; color: var(--link); border: 1.5px solid var(--line); border-radius: 999px; padding: .55rem 1.1rem; cursor: pointer; font-family: var(--font-title); font-weight: 700; font-size: .9rem; }
+.ig-install:hover { border-color: var(--link); }
 .ig-steps { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .85rem; }
 .ig-steps li { display: flex; gap: .8rem; align-items: center; text-align: left; }
 .ig-step-ico { width: 44px; height: 44px; border-radius: 14px; background: var(--blue-soft); color: var(--blue-ink); display: grid; place-items: center; flex: none; }
 .ig-footer { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; padding: 1.4rem 1rem calc(1.4rem + env(safe-area-inset-bottom)); color: var(--muted); font-size: .78rem; }
 .ig-phone { display: none; }
-@media (prefers-color-scheme: dark) {
-  .ig-stores button { background: #fff; color: #000; border-color: #fff; }
-}
 @media (min-width: 880px) {
   .ig { background: var(--bg); }
   .ig-main { padding-top: 3rem; }
@@ -672,6 +666,10 @@ label.btn { cursor: pointer; }
 .signup-link { display: flex; align-items: center; gap: .45rem; background: var(--surface-2); border: 1px dashed var(--line); border-radius: 12px; padding: .6rem .75rem; font-size: .85rem; min-width: 0; }
 .pin-box { display: inline-flex; align-items: center; gap: .35rem; font-family: var(--font-title); font-weight: 800; letter-spacing: .18em; background: var(--yellow-soft); color: var(--yellow-ink); border-radius: 10px; padding: .15rem .55rem; }
 .code-big { font-family: var(--font-title); font-size: 2.2rem; font-weight: 800; letter-spacing: .2em; text-align: center; color: var(--navy); margin: .4rem 0; }
+.access-info { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem .8rem; text-align: center; background: var(--surface-3); border-radius: 14px; padding: .8rem; margin: .6rem 0; }
+.access-info small { color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.access-info .code-big { font-size: 1.7rem; letter-spacing: .12em; margin: .1rem 0; }
+.access-info p { grid-column: 1 / -1; }
 .grid-addr { display: grid; grid-template-columns: 1fr 96px; gap: .75rem; }
 .seg.seg-wrap { display: flex; flex-wrap: wrap; border-radius: 16px; }
 .seg.seg-wrap button { flex: 1 1 auto; }

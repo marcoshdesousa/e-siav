@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { all } from '../db.js';
+import { all, get } from '../db.js';
 import { clubProfile, unitProfile, memberProfile } from '../profiles.js';
 import { clubsRanking } from '../rankings.js';
 import { fail, int } from '../util.js';
@@ -40,6 +40,24 @@ r.get('/public/clubs/:id', (req, res) => {
   const c = clubProfile(int(req.params.id));
   if (!c) fail(404, 'Clã não encontrado');
   res.json(c);
+});
+
+// Links bonitos: /cla/4821 (clã) e /cla/4821/2 (grupo nº 2 do clã; "tutores" para o grupo Tutores).
+r.get('/public/cla/:code', (req, res) => {
+  const c = get('SELECT id FROM clubs WHERE code = ?', String(req.params.code).trim());
+  const p = c && clubProfile(c.id);
+  if (!p) fail(404, 'Clã não encontrado');
+  res.json(p);
+});
+r.get('/public/cla/:code/:n', (req, res) => {
+  const n = String(req.params.n).toLowerCase();
+  const u = get(
+    `SELECT u.id FROM units u JOIN clubs c ON c.id = u.club_id WHERE c.code = ? AND ${n === 'tutores' ? 'u.is_leadership = 1' : 'u.number = ?'}`,
+    ...[String(req.params.code).trim(), ...(n === 'tutores' ? [] : [int(n)])],
+  );
+  const p = u && unitProfile(u.id);
+  if (!p) fail(404, 'Grupo não encontrado');
+  res.json(p);
 });
 
 r.get('/public/units/:id', (req, res) => {

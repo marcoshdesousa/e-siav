@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { Apple, Compass, Download, Monitor, Share, Smartphone, SquarePlus, Tent, MoreVertical } from 'lucide-react';
+import { Compass, Download, Monitor, Share, Smartphone, SquarePlus, Tent, MoreVertical } from 'lucide-react';
 import { homeFor, useAuth } from '../auth.jsx';
 import { platform, useInstall } from '../install.js';
 import { LogoIcon, Modal, Spinner } from '../ui.jsx';
@@ -43,20 +43,22 @@ function InstallSection() {
   const install = useInstall();
   const [help, setHelp] = useState(null);
   if (install.installed) return null;
-  const go = async (target) => {
-    if (target !== 'ios' && target === platform() && (await install.prompt())) return;
+  // Um botão só: instala direto quando o navegador deixa; senão mostra o passo a passo do aparelho.
+  const go = async () => {
+    const target = platform();
+    if (target !== 'ios' && (await install.prompt())) return;
     setHelp(target);
   };
   return (
     <div className="ig-get">
-      <p>Instale o aplicativo.</p>
-      <div className="ig-stores">
-        <button type="button" onClick={() => go('android')}><Smartphone size={22} /><span><small>Instalar no</small>Android</span></button>
-        <button type="button" onClick={() => go('ios')}><Apple size={22} /><span><small>Instalar no</small>iPhone</span></button>
-        <button type="button" onClick={() => go('desktop')}><Monitor size={22} /><span><small>Instalar no</small>Computador</span></button>
-      </div>
+      <button type="button" className="ig-install" onClick={go}><Download size={18} /> Instalar o aplicativo</button>
       {help && (
         <Modal title={STEPS[help].title} onClose={() => setHelp(null)}>
+          <div className="seg" style={{ marginBottom: '.6rem' }}>
+            {[['android', 'Android'], ['ios', 'iPhone'], ['desktop', 'Computador']].map(([k, l]) => (
+              <button key={k} type="button" className={help === k ? 'active' : ''} onClick={() => setHelp(k)}>{l}</button>
+            ))}
+          </div>
           <ol className="ig-steps">
             {STEPS[help].steps.map(([Ico, text], k) => (
               <li key={k}><span className="ig-step-ico"><Ico size={20} /></span><span>{text}</span></li>
@@ -116,7 +118,7 @@ export default function Login() {
 
             <FloatField label={mode === 'clube' ? 'Código do clã' : 'Seu código (6 números)'} value={username} onChange={setUsername} autoComplete="username" inputMode={mode === 'clube' ? 'numeric' : undefined} />
             <FloatField
-              label="Senha" type={show ? 'text' : 'password'} value={password} onChange={setPassword} autoComplete="current-password"
+              label={mode === 'clube' ? 'Senha' : 'Senha (ano de nascimento)'} type={show ? 'text' : 'password'} value={password} onChange={setPassword} autoComplete="current-password"
               right={password ? <button type="button" className="ig-show" onClick={() => setShow((s) => !s)}>{show ? 'Ocultar' : 'Mostrar'}</button> : null}
             />
             <button className="ig-submit" disabled={busy || !username || password.length < 1}>
@@ -125,7 +127,7 @@ export default function Login() {
             {error && <p className="ig-error" role="alert">{error}</p>}
             <p className="ig-hint">{mode === 'clube'
               ? 'Código do clã (4 números) + senha (2 letras e 4 números). A senha do clã abre o Sistema do Clã; a de um grupo abre o Portal do Grupo.'
-              : 'Use o código de 6 números que você recebeu ao se inscrever.'}</p>
+              : 'Seu código de 6 números + a senha, que é o ano em que você nasceu (ex.: 2006).'}</p>
 
           </form>
 

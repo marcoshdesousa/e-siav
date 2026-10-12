@@ -20,7 +20,7 @@ function ClanSearch({ base }) {
       {results && (
         <div className="list mt">
           {results.map((c) => (
-            <Link key={c.id} to={`${base}/ver/clube/${c.id}`} className="list-item">
+            <Link key={c.id} to={`${base}/ver/cla/${c.id}`} className="list-item">
               <Avatar src={c.logo} name={c.name} size={48} square />
               <div className="grow"><div className="title">{c.name}</div><div className="sub">Código {c.code} · {c.district_name}</div></div>
               <ChevronRight className="chev" size={20} />
@@ -61,7 +61,7 @@ export default function ClubsBrowser({ base }) {
           {(list) => (
             <div className="list">
               {list.map((c) => (
-                <Link key={c.id} to={`${base}/ver/clube/${c.id}`} className="list-item">
+                <Link key={c.id} to={`${base}/ver/cla/${c.id}`} className="list-item">
                   <Avatar src={c.logo} name={c.name} size={52} square />
                   <div className="grow">
                     <div className="title">{c.name}</div>

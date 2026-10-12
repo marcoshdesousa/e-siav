@@ -57,7 +57,7 @@ export default function MemberApp() {
   ];
   const more = [
     { to: `${base}/cursos`, icon: GraduationCap, label: 'Cursos', hint: 'Aulas' },
-    { to: `${base}/clubes`, icon: Tent, label: 'Clãs', hint: 'Por distrito' },
+    { to: `${base}/clas`, icon: Tent, label: 'Clãs', hint: 'Por distrito' },
   ];
   return (
     <Routes>
@@ -72,7 +72,7 @@ export default function MemberApp() {
               <Route path="cursos" element={<ContentList type="curso" base={base} />} />
               <Route path="conteudo/:id" element={<ContentDetail />} />
               <Route path="ranking" element={<RankingHub base={base} />} />
-              <Route path="clubes" element={<ClubsBrowser base={base} />} />
+              <Route path="clas" element={<ClubsBrowser base={base} />} />
               <Route path="ver/:kind/:id" element={<InAppProfile base={base} />} />
               <Route path="mais" element={<><PageHeader title="Mais" /><MoreMenu items={more} /></>} />
               <Route path="*" element={<Navigate to={base} replace />} />

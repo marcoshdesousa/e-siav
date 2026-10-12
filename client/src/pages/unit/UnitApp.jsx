@@ -9,7 +9,7 @@ import { CreatedRequirements, RequirementsTodo, ReviewsPanel } from '../Requirem
 import RankingHub from '../Ranking.jsx';
 import ClubsBrowser from '../Clubs.jsx';
 
-const base = '/unidade';
+const base = '/grupo';
 
 function UnitProfile() {
   const state = useLoad(() => api.get('/me/profile'));
@@ -44,7 +44,7 @@ export default function UnitApp() {
     { to: `${base}/exploradores`, icon: ClipboardPlus, label: 'Criar' },
     { to: `${base}/ranking`, icon: Trophy, label: 'Ranking' },
     { to: `${base}/perfil`, icon: Flag, label: 'Perfil' },
-    { to: `${base}/clubes`, icon: Tent, label: 'Clãs' },
+    { to: `${base}/clas`, icon: Tent, label: 'Clãs' },
   ];
   return (
     <Shell tabs={tabs}>
@@ -53,7 +53,7 @@ export default function UnitApp() {
         <Route path="exploradores" element={<GroupRequirements />} />
         <Route path="ranking" element={<RankingHub base={base} />} />
         <Route path="perfil" element={<UnitProfile />} />
-        <Route path="clubes" element={<ClubsBrowser base={base} />} />
+        <Route path="clas" element={<ClubsBrowser base={base} />} />
         <Route path="ver/:kind/:id" element={<InAppProfile base={base} />} />
         <Route path="*" element={<Navigate to={base} replace />} />
       </Routes>

@@ -7,7 +7,7 @@ import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { KIND_LABEL, plural } from '../../format.js';
 import { FichaModal, MembersBrowser, TermLinkInline, TermLinkModal, memberActions } from './Members.jsx';
-import { CadastroFlow } from '../Signup.jsx';
+import { AccessInfo, CadastroFlow } from '../Signup.jsx';
 import TransfersPage from './Transfers.jsx';
 import { ClubPayments } from '../Payments.jsx';
 import {
@@ -22,7 +22,7 @@ import CatalogPicker, { CatalogBadge } from '../Catalog.jsx';
 import EventsAdmin from '../admin/Events.jsx';
 import AnnouncementsAdmin from '../admin/Announcements.jsx';
 
-const base = '/clube';
+const base = '/cla';
 
 // ---------- Início / perfil do clã ----------
 function ClubHome() {
@@ -47,8 +47,8 @@ function ClubHome() {
               {c.director_name && <p className="small" style={{ margin: '.2rem 0 .4rem' }}>Diretor(a): <b>{c.director_name}</b>{c.associate_directors ? <> · Associados: {c.associate_directors.split('\n').join(', ')}</> : ''}</p>}
               {c.ranking && <PositionBadge position={c.ranking.position} points={c.ranking.points} label="no ranking de clãs" />}
               <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.5rem' }}>
-                <ShareButton path={`/p/clube/${c.id}`} title={c.name} />
-                <Link to={`${base}/ver/clube/${c.id}`}><Button variant="yellow" small>Ver perfil público</Button></Link>
+                <ShareButton path={`/cla/${c.code}`} title={c.name} />
+                <Link to={`${base}/ver/cla/${c.id}`}><Button variant="yellow" small>Ver perfil público</Button></Link>
               </div>
             </div>
           </div>
@@ -57,7 +57,7 @@ function ClubHome() {
             <div className="stats">
               <Stat icon={Compass} value={c.desbravadores} label="Exploradores" to={`${base}/membros`} />
               <Stat icon={Award} value={c.lideranca} label="Tutores" to={`${base}/membros`} />
-              <Stat icon={Flag} value={c.unit_count} label="Grupos" to={`${base}/unidades`} />
+              <Stat icon={Flag} value={c.unit_count} label="Grupos" to={`${base}/grupos`} />
               <Stat icon={BadgeCheck} value={c.pending_achievements} label="Insígnias p/ aprovar" to={`${base}/aprovacoes`} accent={c.pending_achievements > 0} />
               <Stat icon={Inbox} value={c.pending_reviews} label="Envios p/ avaliar" to={`${base}/requisitos?aba=avaliar`} accent={c.pending_reviews > 0} />
               <Stat icon={UserPlus} value={c.signup_pending} label="Inscrições p/ aprovar" to={`${base}/membros?aba=pendente`} accent={c.signup_pending > 0} />
@@ -65,7 +65,7 @@ function ClubHome() {
             </div>
           </Section>
 
-          <SignupLink code={c.code} id={c.id} />
+          <SignupLink code={c.code} />
           <ClubInfoForm club={c} onDone={() => { state.reload(); refresh(); }} />
 
           <Section title="Foto e logo do clã">
@@ -78,7 +78,7 @@ function ClubHome() {
           </Section>
 
           <Section title="Ranking dos grupos" action={<Link to={`${base}/ranking`} className="small ico">Ver tudo <ChevronRight size={14} /></Link>}>
-            <RankingTable rows={c.units_ranking} link={(r) => `${base}/ver/unidade/${r.id}`} />
+            <RankingTable rows={c.units_ranking} link={(r) => `${base}/ver/grupo/${r.id}`} />
           </Section>
           <MedalList medals={c.medals} />
           <EventsList events={c.events} />
@@ -107,10 +107,10 @@ function LinkBox({ title, text, url }) {
 }
 
 /** Cada clã tem dois links: o do perfil do clã e o de cadastro (inscrição). */
-function SignupLink({ code, id }) {
+function SignupLink({ code }) {
   return (
     <Section title="Links do clã">
-      <LinkBox title="Link do clã" text="Perfil público do clã: história, grupos, medalhas e ranking." url={`${location.origin}/p/clube/${id}`} />
+      <LinkBox title="Link do clã" text="Perfil público do clã: história, grupos, medalhas e ranking. Cada grupo tem o seu: o link do clã + / + o número do grupo." url={`${location.origin}/cla/${code}`} />
       <LinkBox title="Link de cadastro" text="Para quem quer entrar no clã: ficha de cadastro, ficha de saúde e termos. Você aprova em Membros → Inscrições." url={`${location.origin}/inscricao/${code}`} />
     </Section>
   );
@@ -161,14 +161,13 @@ function CargoOptions({ kind, age }) {
 // ---------- Membros ----------
 /** Editar membro: grupo e cargo. Os dados pessoais ficam na Ficha. */
 function MemberForm({ member, units, onClose, onDone }) {
-  const [f, setF] = useState({ cargo: member.cargo || '', unit_id: member.unit_id || '', password: '' });
+  const [f, setF] = useState({ cargo: member.cargo || '', unit_id: member.unit_id || '' });
   const [busy, run] = useAsync();
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
   const kind = member.kind;
   const availableUnits = units.filter((u) => !(u.is_leadership && kind === 'desbravador'));
   const save = async () => {
     const body = { cargo: f.cargo, unit_id: f.unit_id || '' };
-    if (f.password) body.password = f.password;
     await run(() => api.put('/club/members/' + member.id, toForm(body)), 'Membro atualizado!');
     onDone();
   };
@@ -193,7 +192,7 @@ function MemberForm({ member, units, onClose, onDone }) {
             </select>
           </Field>
         </div>
-        <Field label="Nova senha" hint="Só se o membro esqueceu. Deixe em branco para manter."><input type="text" value={f.password} onChange={set('password')} /></Field>
+        <p className="small muted">Acesso: código <b>{member.code}</b> + senha <b>{String(member.birth_date || '').slice(0, 4)}</b> (ano de nascimento). Não dá para mudar.</p>
       </div>
     </Modal>
   );
@@ -398,9 +397,9 @@ function NewMemberPage() {
       <CadastroFlow mode="cla" local={`${actor.name} — cadastro pelo clã`} submitLabel="Cadastrar membro" busy={busy} onSubmit={send} />
       {created && (
         <Modal title="Membro cadastrado!" onClose={() => nav(`${base}/membros?aba=pendente`)} footer={<Button onClick={() => nav(`${base}/membros?aba=pendente`)}>Entendi</Button>}>
-          <p className="center">Código de acesso do membro (ele entra com o código e a senha que você criou):</p>
-          <div className="code-big">{created.code}</div>
-          <p className="center small">O membro fica <b>pendente</b> até assinarem o termo. Envie o link abaixo:</p>
+          <p className="center">Acesso do membro na tela Membros:</p>
+          <AccessInfo code={created.code} password={created.password} />
+          <p className="center small">É um <b>pré-cadastro</b>: o membro fica pendente até assinarem o termo e a taxa de R$ 2,50 ser paga (Pix, em Pagamentos). Envie o link do termo:</p>
           <TermLinkInline member={{ name: created.name, terms_token: created.terms_token, kind: created.kind }} />
         </Modal>
       )}
@@ -436,7 +435,7 @@ function UnitsPage() {
   const done = () => { setEditing(null); state.reload(); };
   return (
     <>
-      <PageHeader title="Grupos" subtitle="Cada membro pertence a um único grupo" action={<Button small onClick={() => setEditing('new')}>+ Novo</Button>} />
+      <PageHeader title="Grupos" subtitle="Cada membro pertence a um único grupo · até 10 grupos, numerados de 1 a 10" action={<Button small onClick={() => setEditing('new')}>+ Novo</Button>} />
       <Card className="small">Para entrar no Portal do Grupo: tela <b>Clã</b>, código do clã <b>{actor.code}</b> e a senha do grupo abaixo. As senhas são criadas pelo app e <b>não podem ser trocadas</b>: guarde bem.</Card>
       <Loading {...state}>
         {(list) => (
@@ -445,11 +444,12 @@ function UnitsPage() {
               <div key={u.id} className="list-item">
                 <Avatar src={u.logo} name={u.name} size={52} square />
                 <div className="grow">
-                  <div className="title">{u.name} {u.is_leadership ? <Badge kind="yellow">automático</Badge> : null}</div>
+                  <div className="title">{u.is_leadership ? '' : `Grupo ${u.number} · `}{u.name} {u.is_leadership ? <Badge kind="yellow">automático</Badge> : null}</div>
                   <div className="sub">{plural(u.member_count, 'membro', 'membros')} · senha <span className="pin-box"><KeyRound size={13} />{u.pin}</span></div>
+                  <div className="sub ellipsis">Link: {location.host}/cla/{actor.code}/{u.is_leadership ? 'tutores' : u.number}</div>
                   <div className="row wrap" style={{ marginTop: '.4rem', gap: '.35rem' }}>
                     <Button small variant="secondary" onClick={() => setEditing(u)}>Editar</Button>
-                    <Link to={`${base}/ver/unidade/${u.id}`}><Button small variant="ghost">Perfil</Button></Link>
+                    <Link to={`${base}/ver/grupo/${u.id}`}><Button small variant="ghost">Perfil</Button></Link>
                     {!u.is_leadership && <Confirm text={`Excluir o grupo ${u.name}? Os membros ficarão sem grupo.`} onYes={() => run(() => api.del('/club/units/' + u.id), 'Grupo excluído').then(done)}>Excluir</Confirm>}
                   </div>
                 </div>
@@ -483,7 +483,7 @@ export default function ClubApp() {
     { to: base, icon: Tent, label: 'Início', end: true },
     { to: `${base}/membros`, icon: Users, label: 'Membros' },
     { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },
-    { to: `${base}/unidades`, icon: Flag, label: 'Grupos' },
+    { to: `${base}/grupos`, icon: Flag, label: 'Grupos' },
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
@@ -493,7 +493,7 @@ export default function ClubApp() {
     { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos', hint: 'Do seu clã' },
     { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: 'Para os seus membros' },
     { to: `${base}/ranking`, icon: Trophy, label: 'Ranking', hint: 'Grupos e clãs' },
-    { to: `${base}/clubes`, icon: Map, label: 'Clãs', hint: 'Por distrito' },
+    { to: `${base}/clas`, icon: Map, label: 'Clãs', hint: 'Por distrito' },
   ];
   return (
     <Routes>
@@ -505,7 +505,7 @@ export default function ClubApp() {
               <Route index element={<ClubHome />} />
               <Route path="membros" element={<MembersPage />} />
               <Route path="membros/novo" element={<NewMemberPage />} />
-              <Route path="unidades" element={<UnitsPage />} />
+              <Route path="grupos" element={<UnitsPage />} />
               <Route path="aprovacoes" element={<ApprovalsPage />} />
               <Route path="transferencias" element={<TransfersPage />} />
               <Route path="pagamentos" element={<ClubPayments />} />
@@ -513,7 +513,7 @@ export default function ClubApp() {
               <Route path="anuncios" element={<AnnouncementsAdmin />} />
               <Route path="requisitos" element={<RequirementsPage />} />
               <Route path="ranking" element={<RankingHub base={base} />} />
-              <Route path="clubes" element={<ClubsBrowser base={base} />} />
+              <Route path="clas" element={<ClubsBrowser base={base} />} />
               <Route path="ver/:kind/:id" element={<InAppProfile base={base} />} />
               <Route path="mais" element={<><PageHeader title="Mais" /><MoreMenu items={more} /></>} />
               <Route path="*" element={<Navigate to={base} replace />} />

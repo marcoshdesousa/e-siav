@@ -3,6 +3,7 @@ import { all, get, run, tx } from '../db.js';
 import { requireAuth } from '../auth.js';
 import { fail, int, str } from '../util.js';
 import { clubPayments, feeConfig, setSetting, toCents } from '../fees.js';
+import { refreshStatus } from '../memberStatus.js';
 
 const r = Router();
 
@@ -71,8 +72,20 @@ r.post('/admin/pagamentos/membros', admin, (req, res) => {
   const cents = feeConfig().fee_member_year_cents;
   tx(() => {
     for (const id of ids) {
-      if (req.body.paid) run(`INSERT OR IGNORE INTO member_fees (member_id, year, amount_cents, paid_at) VALUES (?,?,?,strftime('%Y-%m-%dT%H:%M:%fZ','now'))`, id, year, cents);
-      else run('DELETE FROM member_fees WHERE member_id = ? AND year = ?', id, year);
+      if (req.body.paid) {
+        const now = new Date().toISOString();
+        run('INSERT OR IGNORE INTO member_fees (member_id, year, amount_cents, paid_at) VALUES (?,?,?,?)', id, year, cents, now);
+        // Primeira taxa paga: o cadastro é liberado e o membro aparece no sistema.
+        run('UPDATE members SET fee_cleared_at = ? WHERE id = ? AND fee_cleared_at IS NULL', now, id);
+        refreshStatus(id);
+      } else {
+        const fee = get('SELECT paid_at FROM member_fees WHERE member_id = ? AND year = ?', id, year);
+        run('DELETE FROM member_fees WHERE member_id = ? AND year = ?', id, year);
+        // Desfez o pagamento que liberou um cadastro novo: volta a esperar o pagamento.
+        if (fee && !get('SELECT 1 FROM member_fees WHERE member_id = ?', id)) {
+          run(`UPDATE members SET fee_cleared_at = NULL, status = CASE WHEN status = 'ativo' THEN 'pendente' ELSE status END WHERE id = ? AND fee_cleared_at = ?`, id, fee.paid_at);
+        }
+      }
     }
   });
   res.json({ ok: true });

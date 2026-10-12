@@ -3,7 +3,7 @@
 // como "pendente" e só acessa o app depois que o clã aprovar.
 import { Router } from 'express';
 import { get, run, tx } from '../db.js';
-import { setLogin } from '../auth.js';
+import { createMemberLogin, memberPassword } from '../memberStatus.js';
 import { CARGO_PADRAO } from '../config.js';
 import { fail, str, validDate, memberKind, newMemberCode } from '../util.js';
 import { checkIdentity, cleanFicha, saveFicha, validateSignup } from '../ficha.js';
@@ -43,7 +43,6 @@ r.post('/public/inscricao/:code', (req, res) => {
   const { cpf, certidao } = checkIdentity({ cpf: ficha.doc_tipo === 'certidao' ? b.cpf || null : b.cpf, certidao: ficha.doc_tipo === 'certidao' ? ficha.certidao : null });
   if (ficha.doc_tipo !== 'certidao' && !cpf) fail(400, 'Informe o CPF');
   validateSignup(ficha, b.birth_date);
-  if (String(b.password || '').length < 6) fail(400, 'Crie uma senha com pelo menos 6 caracteres');
   // Data e local da ficha: o dia da inscrição e o clã, pelo sistema online.
   ficha.data_inscricao = new Date().toISOString().slice(0, 10);
   ficha.local_inscricao = `${c.name} — sistema online`;
@@ -54,11 +53,12 @@ r.post('/public/inscricao/:code', (req, res) => {
       `INSERT INTO members (club_id, unit_id, name, birth_date, cargo, code, cpf, birth_cert, status) VALUES (?,?,?,?,?,?,?,?,'pendente')`,
       c.id, null, name, b.birth_date, CARGO_PADRAO[kind], code, cpf, certidao,
     ).lastInsertRowid);
-    setLogin('member', id, code, b.password);
+    createMemberLogin(id, code);
     saveFicha(id, ficha, { acceptTerms: true });
     return { code };
   });
-  res.json({ ...out, club_name: c.name });
+  // Senha: o ano de nascimento. Código e senha não mudam.
+  res.json({ ...out, password: memberPassword(b.birth_date), club_name: c.name });
 });
 
 export default r;

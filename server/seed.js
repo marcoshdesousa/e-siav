@@ -95,9 +95,9 @@ export function seed({ production = false } = {}) {
       login('club', id, c.user, c.password);
       clubs[c.key] = id;
       units[c.key + ':lideranca'] = ins('INSERT INTO units (club_id, name, logo, is_leadership, pin) VALUES (?,?,?,1,?)', id, NOME_UNIDADE_LIDERANCA, makeLogo(`seed-lid-${c.key}.svg`, '#0B3D91', 'star', '#fff'), c.lid);
-      for (const [ukey, uname, ucolor, uicon, pin] of c.units) {
-        units[ukey] = ins('INSERT INTO units (club_id, name, logo, pin) VALUES (?,?,?,?)', id, uname, makeLogo(`seed-unit-${ukey}.svg`, ucolor, uicon), pin);
-      }
+      c.units.forEach(([ukey, uname, ucolor, uicon, pin], k) => {
+        units[ukey] = ins('INSERT INTO units (club_id, name, logo, pin, number) VALUES (?,?,?,?,?)', id, uname, makeLogo(`seed-unit-${ukey}.svg`, ucolor, uicon), pin, k + 1);
+      });
     }
 
     // ---------- Membros ----------
@@ -127,15 +127,17 @@ export function seed({ production = false } = {}) {
         if (cpf) return cpf;
       }
     };
-    // Códigos fixos (100001, 100002...) para facilitar os testes; senha de todos: dbv123.
+    // Códigos fixos (100001, 100002...) para facilitar os testes. A senha é o ano de nascimento.
     memberDefs.forEach(([key, club, unit, name, age, cargo], i) => {
       const birth = birthForAge(age, (key.length * 2) % 11);
       const id = ins(
-        'INSERT INTO members (club_id, unit_id, name, birth_date, cargo, code, cpf) VALUES (?,?,?,?,?,?,?)',
+        `INSERT INTO members (club_id, unit_id, name, birth_date, cargo, code, cpf, approved_at, fee_cleared_at) VALUES (?,?,?,?,?,?,?,strftime('%Y-%m-%dT%H:%M:%fZ','now'),strftime('%Y-%m-%dT%H:%M:%fZ','now'))`,
         clubs[club], unit ? units[unit] : null, name, birth, cargo, String(100001 + i), fakeCpf(123456000 + i * 1000),
       );
-      login('member', id, key, 'dbv123');
+      login('member', id, key, 'dbv123'); // usuário antigo (pedro, lucas...); a senha que vale é o ano de nascimento
       members[key] = id;
+      // Taxa do ano paga por quase todos (Gabriel e Davi ainda devem).
+      if (!['gabriel', 'davi'].includes(key)) run(`INSERT INTO member_fees (member_id, year, amount_cents, paid_at) VALUES (?, ?, 250, strftime('%Y-%m-%dT%H:%M:%fZ','now'))`, id, new Date().getFullYear());
       // Ficha completa para quase todos; Gabriel e Davi ficam com "dados incompletos".
       if (!['gabriel', 'davi'].includes(key)) saveFicha(id, demoFicha(name, age, club), { acceptTerms: true });
     });
@@ -144,6 +146,11 @@ export function seed({ production = false } = {}) {
       clubs.aguias, null, 'Bruna Inscrita Teste', birthForAge(11, 2), 'Explorador', '100099', fakeCpf(123999000));
     login('member', pend, 'bruna', 'dbv123');
     saveFicha(pend, demoFicha('Bruna Inscrita Teste', 11, 'aguias'), { acceptTerms: true });
+    // Um cadastro feito pelo clã, com termo assinado, esperando o pagamento da taxa (R$ 2,50).
+    const pag = ins(`INSERT INTO members (club_id, unit_id, name, birth_date, cargo, code, cpf, status, approved_at) VALUES (?,?,?,?,?,?,?,'pendente',strftime('%Y-%m-%dT%H:%M:%fZ','now'))`,
+      clubs.aguias, units.gavioes, 'Rafaela Nunes Teste', birthForAge(12, 4), 'Explorador', '100098', fakeCpf(123998000));
+    login('member', pag, 'rafaela', 'dbv123');
+    saveFicha(pag, demoFicha('Rafaela Nunes Teste', 12, 'aguias'), { acceptTerms: true });
 
     // ---------- Conteúdo: cadernos guia, insígnias e cursos ----------
     const content = {};

@@ -638,6 +638,26 @@ function migrate() {
     PRIMARY KEY (member_id, year)
   )`);
 
+  // Cadastro do membro: aprovado pelo clã e taxa paga. Só depois disso fica ativo.
+  add('members', 'approved_at', 'TEXT');
+  add('members', 'fee_cleared_at', 'TEXT');
+  if (!flag('member-approval-fee-v1')) {
+    // Quem já existia: aprovado (menos inscrições esperando aprovação) e, se ativo, sem cobrar de novo.
+    db.exec(`UPDATE members SET approved_at = COALESCE(created_at, strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+             WHERE approved_at IS NULL AND NOT (status = 'pendente' AND terms_token IS NULL)`);
+    db.exec(`UPDATE members SET fee_cleared_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE fee_cleared_at IS NULL AND status <> 'pendente'`);
+    setFlag('member-approval-fee-v1');
+  }
+
+  // Número do grupo dentro do clã (1 a 10), usado no link: /cla/CÓDIGO/NÚMERO.
+  add('units', 'number', 'INTEGER');
+  for (const u of db.prepare('SELECT id, club_id FROM units WHERE number IS NULL AND is_leadership = 0 ORDER BY id').all()) {
+    const used = new Set(db.prepare('SELECT number FROM units WHERE club_id = ? AND number IS NOT NULL').all(u.club_id).map((x) => x.number));
+    let n = 1;
+    while (used.has(n)) n++;
+    db.prepare('UPDATE units SET number = ? WHERE id = ?').run(n, u.id);
+  }
+
   // Pedidos para criar um clã (página pública /criar-cla).
   db.exec(`CREATE TABLE IF NOT EXISTS clan_applications (
     id INTEGER PRIMARY KEY,

@@ -17,7 +17,7 @@ export default function ClanView({ base }) {
   const [ficha, setFicha] = useState(null);
   return (
     <>
-      <Link to={`${base}/clubes`} className="back-link"><ArrowLeft size={16} /> Clãs</Link>
+      <Link to={`${base}/clas`} className="back-link"><ArrowLeft size={16} /> Clãs</Link>
       <Loading {...state}>
         {({ club: c, members, units }) => (
           <>

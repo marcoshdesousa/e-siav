@@ -12,6 +12,7 @@ export const memberGroup = (m) => (m.status === 'inativo' ? 'inativo' : m.pendin
 const REASON = {
   termo: ['yellow', 'Esperando o termo'],
   aprovacao: ['blue', 'Inscrição para aprovar'],
+  pagamento: ['yellow', 'Esperando pagamento (R$ 2,50)'],
   dados: ['red', 'Dados incompletos'],
 };
 
@@ -187,6 +188,7 @@ export function memberActions({ base, run, done, setFicha, setEditing, setAch, s
     return (
       <>
         {m.pending_reason === 'termo' && <Button small variant="yellow" onClick={() => setTermFor(m)}><Link2 size={14} /> Link do termo</Button>}
+        {m.pending_reason === 'pagamento' && <Link to={`${base}/pagamentos`}><Button small variant="yellow">Pagar R$ 2,50 (Pix)</Button></Link>}
         <Button small variant="secondary" onClick={() => setEditing(m)}>Editar</Button>
         <Button small variant="secondary" onClick={() => setFicha(m)}><FileText size={14} /> Ficha</Button>
         {m.status === 'ativo' && (

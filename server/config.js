@@ -39,6 +39,8 @@ export const MODELOS_ENVIO = {
 };
 
 export const NOME_UNIDADE_LIDERANCA = 'Tutores';
+// Grupos por clã, numerados de 1 a 10 (o grupo Tutores fica fora da conta).
+export const MAX_GRUPOS = 10;
 
 export const MAX_FOTOS_ENVIO = 5;
 export const MAX_UPLOAD_MB = 10;
