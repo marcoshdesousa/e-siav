@@ -704,3 +704,8 @@ label.btn { cursor: pointer; }
 .list-item.pick { cursor: pointer; }
 .list-item input[type=checkbox], .check-all input { width: 18px; height: 18px; accent-color: var(--navy); flex: none; }
 .pay-bar { position: sticky; bottom: calc(84px + env(safe-area-inset-bottom)); margin-top: .8rem; display: flex; align-items: center; justify-content: space-between; gap: .6rem; padding: .7rem .9rem; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: 0 8px 24px rgba(0, 0, 0, .12); }
+
+/* iPhone: campo com letra menor que 16px faz o Safari dar zoom sozinho ao digitar. No celular, todo campo usa 16px. */
+@media (max-width: 900px) {
+  input:not([type='checkbox']):not([type='radio']):not([type='file']), select, textarea { font-size: 16px !important; }
+}
