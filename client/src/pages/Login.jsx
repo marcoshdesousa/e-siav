@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Compass, Download, Monitor, Share, Smartphone, SquarePlus, Tent, MoreVertical } from 'lucide-react';
+import { api } from '../api.js';
 import { homeFor, useAuth } from '../auth.jsx';
 import { platform, useInstall } from '../install.js';
 import { LogoIcon, Modal, Spinner } from '../ui.jsx';
@@ -70,6 +71,26 @@ function InstallSection() {
   );
 }
 
+/** IMPROVISO PARA TESTES (tirar depois): entrar com um clique nas contas de exemplo. */
+function QuickLogin({ mode, onPick }) {
+  const [list, setList] = useState(null);
+  useEffect(() => { api.get('/auth/contas-teste').then(setList).catch(() => setList({ clube: [], membros: [] })); }, []);
+  const items = list?.[mode] || [];
+  if (!items.length) return null;
+  return (
+    <>
+      <div className="ig-or"><span />ENTRAR COMO (TESTE)<span /></div>
+      <div className="ig-demo">
+        {items.map((a) => (
+          <button type="button" key={a.username + a.label} onClick={() => onPick(a)}>
+            <b>{a.label}</b><span>{a.sub}</span>
+          </button>
+        ))}
+      </div>
+    </>
+  );
+}
+
 /** Tela de entrada (também é a página inicial do site). */
 export default function Login() {
   const { actor, login } = useAuth();
@@ -85,12 +106,11 @@ export default function Login() {
   if (actor === undefined) return <Spinner />;
   if (actor) return <Navigate to={homeFor(actor)} replace />;
 
-  const submit = async (e) => {
-    e.preventDefault();
+  const enter = async (u, pw) => {
     setBusy(true);
     setError('');
     try {
-      const a = await login(mode, username, password);
+      const a = await login(mode, u, pw);
       nav(homeFor(a), { replace: true });
     } catch (err) {
       setError(err.message);
@@ -98,6 +118,15 @@ export default function Login() {
     } finally {
       setBusy(false);
     }
+  };
+  const submit = (e) => {
+    e.preventDefault();
+    enter(username, password);
+  };
+  const pick = (a) => {
+    setUsername(a.username);
+    setPassword(a.password || '');
+    if (a.password) enter(a.username, a.password);
   };
 
   return (
@@ -125,6 +154,7 @@ export default function Login() {
               {busy ? <span className="btn-spin" /> : 'Entrar'}
             </button>
             {error && <p className="ig-error" role="alert">{error}</p>}
+            <QuickLogin mode={mode} onPick={pick} />
             <p className="ig-hint">{mode === 'clube'
               ? 'Coloque o código do clã e a senha. Para entrar como grupo, use a senha do seu grupo.'
               : 'Coloque o seu código e a sua senha.'}</p>

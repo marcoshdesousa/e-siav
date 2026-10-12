@@ -98,6 +98,33 @@ r.get('/auth/me', requireLogin, (req, res) => {
   res.json({ actor: { ...req.actor, username: getUsername(req.actor.type, req.actor.id) } });
 });
 
+// IMPROVISO PARA TESTES (tirar depois): contas de exemplo para a tela de entrada.
+// Só aparecem se a conta de exemplo existir com os dados do exemplo. Desligar com QUICK_LOGIN=0.
+const DEMO_CLAS = [['4821', 'AG2026', '1º Clã Águias do Vale'], ['7350', 'LE2026', '2º Clã Leões de Judá']];
+const DEMO_GRUPOS = [['4821', 'FA1111', 'Grupo Falcões (Águias)']];
+const DEMO_MEMBROS = [
+  ['100001', 'Pedro Henrique Lima', 'Explorador'], ['100006', 'Marcos Almeida', 'Liderança (diretor)'],
+  ['100007', 'Juliana Costa', 'Tutor'], ['100098', 'Rafaela Nunes Teste', 'Esperando aprovação'],
+];
+r.get('/auth/contas-teste', (_req, res) => {
+  if (process.env.QUICK_LOGIN === '0') return res.json({ clube: [], membros: [] });
+  const clube = [];
+  for (const [code, pw, label] of DEMO_CLAS) {
+    const c = get('SELECT id FROM clubs WHERE code = ?', code);
+    if (c && checkAccountPassword('club', c.id, pw)) clube.push({ label, sub: 'Sistema do Clã', username: code, password: pw });
+  }
+  for (const [code, pin, label] of DEMO_GRUPOS) {
+    if (get('SELECT 1 FROM units u JOIN clubs c ON c.id = u.club_id WHERE c.code = ? AND u.pin = ?', code, pin)) clube.push({ label, sub: 'Portal do Grupo', username: code, password: pin });
+  }
+  const membros = [];
+  for (const [code, name, label] of DEMO_MEMBROS) {
+    const m = get(`SELECT birth_date FROM members WHERE code = ? AND name LIKE ? AND status <> 'inativo'`, code, name.split(' ')[0] + '%');
+    if (m) membros.push({ label: name, sub: label, username: code, password: m.birth_date.slice(0, 4) });
+  }
+  membros.push({ label: 'Administrador Geral', sub: 'Digite a senha', username: 'admin', password: null });
+  res.json({ clube, membros });
+});
+
 r.get('/meta', (_req, res) => {
   res.json({ cargos: CARGOS, cargos_lideranca: CARGOS_LIDERANCA, cargos_18: CARGOS_18, idade_min_diretor: IDADE_MIN_DIRETOR, modelos: MODELOS_ENVIO, districts: all('SELECT id, name FROM districts ORDER BY name') });
 });
