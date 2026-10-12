@@ -5,7 +5,7 @@ import { plural } from '../format.js';
 import { ChevronRight, Trophy } from 'lucide-react';
 import { Avatar, Field, Loading, PageHeader, useLoad } from '../ui.jsx';
 
-/** Aba Clubes: escolhe o distrito e abre o perfil de um clube. */
+/** Aba Clãs: escolhe o distrito e abre o perfil de um clã. */
 export default function ClubsBrowser({ base }) {
   const districts = useLoad(() => api.get('/public/districts'));
   const [district, setDistrict] = useState(null);
@@ -16,7 +16,7 @@ export default function ClubsBrowser({ base }) {
 
   return (
     <>
-      <PageHeader title="Clubes" subtitle="Conheça os clubes do seu distrito" />
+      <PageHeader title="Clãs" subtitle="Conheça os clãs do seu distrito" />
       <Loading {...districts}>
         {(ds) => (
           <Field label="Distrito">
@@ -27,7 +27,7 @@ export default function ClubsBrowser({ base }) {
         )}
       </Loading>
       <div className="mt">
-        <Loading {...clubs} empty="Nenhum clube neste distrito.">
+        <Loading {...clubs} empty="Nenhum clã neste distrito.">
           {(list) => (
             <div className="list">
               {list.map((c) => (
@@ -35,7 +35,7 @@ export default function ClubsBrowser({ base }) {
                   <Avatar src={c.logo} name={c.name} size={52} square />
                   <div className="grow">
                     <div className="title">{c.name}</div>
-                    <div className="sub">{plural(c.unit_count, 'unidade', 'unidades')} · {plural(c.member_count, 'membro', 'membros')}</div>
+                    <div className="sub">{plural(c.unit_count, 'grupo', 'grupos')} · {plural(c.member_count, 'membro', 'membros')}</div>
                   </div>
                   {c.position && <span className="badge badge-yellow ico"><Trophy size={13} /> {c.position}º</span>}
                   <ChevronRight className="chev" size={20} />

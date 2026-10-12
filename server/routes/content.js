@@ -9,7 +9,7 @@ import { MAX_FOTOS_ENVIO } from '../config.js';
 
 // Cursos (grátis ou pagos). Cada aula pode pedir relatório, foto e/ou quiz; o Administrador
 // Geral avalia. Aula sem forma de envio é só "marcar como concluída".
-// Classes e especialidades NÃO passam por aqui: não são vendidas nem feitas online
+// Cadernos guia e insígnias NÃO passam por aqui: não são vendidas nem feitas online
 // (o membro informa as que tem e a diretoria aprova — ver routes/achievements.js).
 const r = Router();
 const TYPES = ['curso'];
@@ -18,7 +18,7 @@ function hasAccess(memberId, c) {
   return !!c.is_free || !!get('SELECT 1 FROM content_access WHERE member_id = ? AND content_id = ?', memberId, c.id);
 }
 
-/** Desbravador não vê classes de líder; liderança vê regulares e de líder. */
+/** Desbravador não vê cadernos guia de líder; liderança vê regulares e de líder. */
 const visibleTo = (actor, c) => !(c.type === 'classe' && c.leader && actor.kind !== 'lideranca');
 
 const approvedCount = (contentId, memberId) =>
@@ -134,6 +134,7 @@ r.post('/content/:id/items/:itemId/submit', requireAuth('member'), privateImageU
 });
 
 r.post('/content/:id/buy', requireAuth('member'), (req, res) => {
+  fail(410, 'Nada no app é vendido');
   const c = loadVisible(req);
   if (hasAccess(req.actor.id, c)) fail(409, 'Você já tem acesso a este conteúdo');
   let p = get(`SELECT * FROM purchases WHERE member_id = ? AND content_id = ? AND status = 'pendente'`, req.actor.id, c.id);
@@ -167,12 +168,12 @@ r.get('/admin/content/:id', admin, (req, res) => {
 
 function contentFields(b) {
   const type = b.type || 'curso';
-  if (!TYPES.includes(type)) fail(400, 'Classes e especialidades não são criadas nem vendidas aqui. Use o catálogo.');
+  if (!TYPES.includes(type)) fail(400, 'Cadernos guia e insígnias não são criadas nem vendidas aqui. Use o catálogo.');
   const name = str(b.name, 120);
   if (!name) fail(400, 'Informe o nome');
-  const isFree = bool(b.is_free) ? 1 : 0;
-  const price = isFree ? 0 : Math.round(Number(String(b.price ?? '0').replace(',', '.')) * 100);
-  if (!isFree && !(price > 0)) fail(400, 'Informe o preço do item pago');
+  // Nada no app é vendido: todo conteúdo é grátis.
+  const isFree = 1;
+  const price = 0;
   const age = type === 'classe' && !bool(b.leader) ? int(b.age) : null;
   return [type, name, str(b.description, 3000), str(b.icon, 16) || 'book', str(b.category, 60), age, type === 'classe' && bool(b.leader) ? 1 : 0, isFree, price];
 }
@@ -252,7 +253,7 @@ r.delete('/admin/content/:id', admin, (req, res) => {
   res.json({ ok: true });
 });
 
-// ---------- Análise de classes e especialidades ----------
+// ---------- Análise de cadernos guia e insígnias ----------
 r.get('/admin/content-review', admin, (req, res) => {
   const type = 'curso';
   const rows = all(
@@ -260,7 +261,7 @@ r.get('/admin/content-review', admin, (req, res) => {
             (SELECT COUNT(*) FROM content_items i WHERE i.content_id = c.id) AS items_count,
             (SELECT COUNT(DISTINCT p.member_id) FROM content_progress p JOIN content_items i ON i.id = p.item_id WHERE i.content_id = c.id) AS members,
             (SELECT COUNT(*) FROM content_progress p JOIN content_items i ON i.id = p.item_id WHERE i.content_id = c.id AND p.status = 'enviado') AS pending
-     FROM content c WHERE c.type = ? ORDER BY c.leader, c.age, c.name`,
+     FROM content c WHERE c.type = ? ORDER BY c.leader, c.id`,
     type,
   );
   res.json(rows);

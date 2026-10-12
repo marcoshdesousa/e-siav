@@ -63,11 +63,11 @@ function AnnouncementForm({ initial, isClub, onClose, onDone }) {
           <input value={f.link || ''} onChange={(e) => setF({ ...f, link: e.target.value })} placeholder="www.site.com.br/inscricao" inputMode="url" autoCapitalize="none" />
         </Field>
         {isClub ? (
-          <p className="muted small">Este anúncio aparece só para os desbravadores, a liderança e as unidades do seu clube.</p>
+          <p className="muted small">Este anúncio aparece só para os desbravadores, a liderança e os grupos do seu clã.</p>
         ) : (
           <Field group label="Quem vai ver">
             <div className="seg">
-              {[['all', 'Todo o App'], ['district', 'Um distrito'], ['club', 'Um clube']].map(([k, l]) => (
+              {[['all', 'Todo o App'], ['district', 'Um distrito'], ['club', 'Um clã']].map(([k, l]) => (
                 <button key={k} type="button" className={f.target_type === k ? 'active' : ''} onClick={() => setF({ ...f, target_type: k, target_id: '' })}>{l}</button>
               ))}
             </div>
@@ -79,7 +79,7 @@ function AnnouncementForm({ initial, isClub, onClose, onDone }) {
             )}
             {f.target_type === 'club' && (
               <select value={f.target_id || ''} onChange={(e) => setF({ ...f, target_id: e.target.value })} style={{ marginTop: '.5rem' }}>
-                <option value="">Escolha o clube</option>
+                <option value="">Escolha o clã</option>
                 {(clubs.data || []).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             )}
@@ -92,9 +92,9 @@ function AnnouncementForm({ initial, isClub, onClose, onDone }) {
   );
 }
 
-const TARGET = (a) => (a.club_id ? null : a.target_type === 'district' ? `Distrito: ${a.target_name}` : a.target_type === 'club' ? `Clube: ${a.target_name}` : 'Todo o App');
+const TARGET = (a) => (a.club_id ? null : a.target_type === 'district' ? `Distrito: ${a.target_name}` : a.target_type === 'club' ? `Clã: ${a.target_name}` : 'Todo o App');
 
-/** Anúncios. Admin: para todos, um distrito ou um clube. Clube: só para os próprios membros. */
+/** Anúncios. Admin: para todos, um distrito ou um clã. Clã: só para os próprios membros. */
 export default function AnnouncementsAdmin() {
   const { actor } = useAuth();
   const isClub = actor.type === 'club';
@@ -103,7 +103,7 @@ export default function AnnouncementsAdmin() {
   const [, run] = useAsync();
   return (
     <>
-      <PageHeader title="Anúncios" subtitle={isClub ? 'Aparecem para os membros do seu clube ao abrir o app' : 'Aparecem no meio da tela quando a pessoa entra no app'}
+      <PageHeader title="Anúncios" subtitle={isClub ? 'Aparecem para os membros do seu clã ao abrir o app' : 'Aparecem no meio da tela quando a pessoa entra no app'}
         action={<Button small onClick={() => setEditing({ title: '', body: '', link: '', image: null, active: true, target_type: 'all', target_id: '' })}>+ Novo</Button>} />
       <Loading {...state} empty="Nenhum anúncio criado.">
         {(list) => list.map((a) => (

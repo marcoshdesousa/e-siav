@@ -1,23 +1,27 @@
-// Catálogo de classes e especialidades dos Desbravadores.
-// Classes e especialidades não são vendidas nem feitas online: o membro informa
-// as que já tem e a diretoria do clube aprova. As classes são sincronizadas ao
-// iniciar o servidor; as especialidades são cadastradas pelo administrador
+// Catálogo de cadernos guia e insígnias dos Desbravadores.
+// Cadernos guia e insígnias não são vendidas nem feitas online: o membro informa
+// as que já tem e a diretoria do clã aprova. Os cadernos guia são sincronizadas ao
+// iniciar o servidor; as insígnias são cadastradas pelo administrador
 // (uma a uma, com foto) dentro das áreas oficiais abaixo.
 import { all, get, run } from './db.js';
 
+/**
+ * Cadernos guia (no banco: type 'classe'), na ordem em que aparecem.
+ * Cada caderno tem o seu broche guia: a foto do caderno pode ser o broche.
+ */
 export const CLASSES = [
-  // Classes regulares (idade) e avançadas
-  ['Amigo', 10, 0, 'compass'], ['Amigo da Natureza', 10, 0, 'leaf'],
-  ['Companheiro', 11, 0, 'handshake'], ['Companheiro de Excursionismo', 11, 0, 'boots'],
-  ['Pesquisador', 12, 0, 'search'], ['Pesquisador de Campo e Bosque', 12, 0, 'trees'],
-  ['Pioneiro', 13, 0, 'tent'], ['Pioneiro de Novas Fronteiras', 13, 0, 'map'],
-  ['Excursionista', 14, 0, 'boots'], ['Excursionista na Mata', 14, 0, 'trees'],
-  ['Guia', 15, 0, 'map'], ['Guia de Exploração', 15, 0, 'compass'],
-  // Classes de liderança
-  ['Líder', null, 1, 'award'], ['Líder Master', null, 1, 'medal'], ['Líder Master Avançado', null, 1, 'trophy'],
+  ['Mirins', null, 0, 'compass'],
+  ['Explorador', null, 0, 'map'],
+  ['Explorador 2', null, 0, 'trees'],
+  ['Excelente', null, 0, 'medal'],
+  ['Líder', null, 1, 'award'],
 ];
 
-/** Áreas oficiais das especialidades (Manual de Especialidades). */
+/** Cadernos guia antigas (Desbravadores), tiradas uma vez do catálogo se ninguém as tiver. */
+const OLD_CLASSES = ['Amigo', 'Amigo da Natureza', 'Companheiro', 'Companheiro de Excursionismo', 'Pesquisador', 'Pesquisador de Campo e Bosque',
+  'Pioneiro', 'Pioneiro de Novas Fronteiras', 'Excursionista', 'Excursionista na Mata', 'Guia', 'Guia de Exploração', 'Líder Master', 'Líder Master Avançado'];
+
+/** Áreas das insígnias (no banco: type 'especialidade'). */
 export const AREAS = [
   'ADRA', 'Artes e Habilidades Manuais', 'Atividades Agrícolas', 'Atividades Missionárias e Comunitárias', 'Atividades Profissionais',
   'Atividades Recreativas', 'Ciência e Saúde', 'Ensinos Bíblicos', 'Estudo da Natureza', 'Habilidades Domésticas', 'Mestrados',
@@ -37,7 +41,7 @@ const AREA_ICON = {
   'Habilidades Domésticas': 'flame',
 };
 
-/** Especialidades usadas só nos dados de exemplo (SEED_DEMO=1). */
+/** Insígnias usadas só nos dados de exemplo (SEED_DEMO=1). */
 export const DEMO_SPECIALTIES = {
   'Artes e Habilidades Manuais': ['Arte de Contar Histórias Cristãs', 'Caligrafia', 'Cerâmica', 'Cestaria', 'Crochê', 'Desenho e Pintura', 'Escultura', 'Fotografia', 'Marcenaria', 'Música', 'Tricô'],
   'Atividades Agrícolas': ['Agricultura', 'Apicultura', 'Avicultura', 'Fruticultura', 'Horticultura', 'Jardinagem'],
@@ -52,8 +56,8 @@ export const DEMO_SPECIALTIES = {
 export const iconForArea = (area) => AREA_ICON[area] || 'award';
 
 /**
- * Garante que as classes existem no banco (inclui o que faltar).
- * demo: também inclui as especialidades de exemplo.
+ * Garante que os cadernos guia existem no banco (inclui o que faltar).
+ * demo: também inclui as insígnias de exemplo.
  */
 export function syncCatalog({ demo = false } = {}) {
   for (const [name, age, leader, icon] of CLASSES) {
@@ -68,17 +72,30 @@ export function syncCatalog({ demo = false } = {}) {
       }
     }
   }
-  // Classes e especialidades nunca são pagas.
-  run(`UPDATE content SET is_free = 1, price_cents = 0 WHERE type IN ('classe','especialidade')`);
+  // Nada no app é vendido.
+  run(`UPDATE content SET is_free = 1, price_cents = 0`);
   if (demo) setFlag('specialties-cleanup');
   else removeOldSpecialties();
+  removeOldClasses();
+}
+
+/** Uma única vez: tira os cadernos guia antigas que ninguém tem nem pediu (os cadernos guia ficam). */
+function removeOldClasses() {
+  if (hasFlag('classes-cleanup')) return;
+  for (const name of OLD_CLASSES) {
+    const c = get(`SELECT id FROM content WHERE type = 'classe' AND name = ?`, name);
+    if (!c) continue;
+    if (get('SELECT 1 FROM achievements WHERE content_id = ? UNION ALL SELECT 1 FROM achievement_requests WHERE content_id = ?', c.id, c.id)) continue;
+    run('DELETE FROM content WHERE id = ?', c.id);
+  }
+  setFlag('classes-cleanup');
 }
 
 const hasFlag = (key) => !!get('SELECT 1 FROM app_flags WHERE key = ?', key);
 const setFlag = (key) => run('INSERT OR IGNORE INTO app_flags (key) VALUES (?)', key);
 
 /**
- * Uma única vez: tira as especialidades que o app cadastrava sozinho, para o
+ * Uma única vez: tira as insígnias que o app cadastrava sozinho, para o
  * administrador cadastrar as oficiais manualmente. Não mexe nas que alguém já tem
  * no perfil ou pediu, nem nas que forem cadastradas depois.
  */
@@ -94,7 +111,7 @@ function removeOldSpecialties() {
 }
 
 export const catalog = (type) =>
-  all(`SELECT id, type, code, name, icon, image, category, age, leader FROM content WHERE type = ? ORDER BY ${type === 'classe' ? 'leader, age IS NULL, age, name' : 'category, name'}`, type);
+  all(`SELECT id, type, code, name, icon, image, category, age, leader FROM content WHERE type = ? ORDER BY ${type === 'classe' ? 'leader, id' : 'category, name'}`, type);
 
 /** Nome "normalizado" para comparar (sem acento, minúsculo, só letras e números). */
 export const norm = (s) => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();

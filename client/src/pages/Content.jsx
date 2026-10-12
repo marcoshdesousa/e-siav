@@ -1,25 +1,21 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Award, Check, Clock, Lock, RotateCcw, ShoppingCart, XCircle } from 'lucide-react';
+import { ArrowLeft, Award, Check, Clock, Lock, RotateCcw, XCircle } from 'lucide-react';
 import { api, toForm } from '../api.js';
-import { fmtMoney } from '../format.js';
 import {
-  Badge, Button, Card, ContentIcon, Gallery, Loading, Modal, PageHeader, Section, modesLabel, notify, useAsync, useLoad,
+  Badge, Button, ContentIcon, Gallery, Loading, Modal, PageHeader, Section, modesLabel, notify, useAsync, useLoad,
 } from '../ui.jsx';
 import { ResponseFields } from './Requirements.jsx';
 
 const TITLES = {
-  especialidade: ['Especialidades', 'Faça especialidades online, cumprindo os requisitos no app'],
-  classe: ['Classes', 'Requisitos de cada classe'],
+  especialidade: ['Insígnias', 'Faça insígnias online, cumprindo os requisitos no app'],
+  classe: ['Cadernos guia', 'Requisitos de cada caderno guia'],
   curso: ['Cursos', 'Cursos em aulas para desbravadores e liderança'],
 };
 
-function PriceTag({ c }) {
+function StatusTag({ c }) {
   if (c.completed) return <Badge kind="yellow"><Award size={13} /> Concluída</Badge>;
-  if (c.is_free) return <Badge kind="green">Grátis</Badge>;
-  if (c.has_access) return <Badge kind="blue">Liberado</Badge>;
-  if (c.purchase_pending) return <Badge kind="yellow">Pedido pendente</Badge>;
-  return <span className="price">{fmtMoney(c.price_cents)}</span>;
+  return null;
 }
 
 function ContentCard({ c, base }) {
@@ -30,7 +26,7 @@ function ContentCard({ c, base }) {
       <div className="grow">
         <div className="row between">
           <span className="title">{c.name}</span>
-          <PriceTag c={c} />
+          <StatusTag c={c} />
         </div>
         <div className="sub">
           {c.type === 'classe' && !c.leader ? `${c.age} anos · ` : ''}
@@ -87,18 +83,11 @@ export function ContentDetail() {
   const { id } = useParams();
   const state = useLoad(() => api.get('/content/' + id), [id]);
   const [busy, run] = useAsync();
-  const [buyMsg, setBuyMsg] = useState(null);
   const [sending, setSending] = useState(null);
 
   const markDone = async (item, undo = false) => {
     const r = await run(() => api.post(`/content/${id}/items/${item.id}/submit`, { undo }));
     if (r.completed) notify('Parabéns! Concluído e já aparece no seu perfil.');
-    state.reload();
-  };
-  const buy = async () => {
-    const r = await run(() => api.post(`/content/${id}/buy`));
-    setBuyMsg(r.message);
-    if (r.checkout_url) location.href = r.checkout_url;
     state.reload();
   };
 
@@ -113,7 +102,7 @@ export function ContentDetail() {
               <div className="grow">
                 <h1>{c.name}</h1>
                 <div className="muted small">
-                  {c.type === 'classe' ? (c.leader ? 'Classe de líder' : `Classe · ${c.age} anos`) : c.type === 'curso' ? 'Curso' : `Especialidade${c.category ? ' · ' + c.category : ''}`}
+                  {c.type === 'classe' ? 'Caderno guia' : c.type === 'curso' ? 'Curso' : `Insígnia${c.category ? ' · ' + c.category : ''}`}
                 </div>
               </div>
             </div>
@@ -127,19 +116,6 @@ export function ContentDetail() {
           </div>
 
           {c.completed && <div className="summary-card gold mt"><span className="trophy-bg"><Award size={22} /></span><b>Concluído! Já aparece no seu perfil.</b></div>}
-
-          {!c.has_access && (
-            <Card className="mt center">
-              <div className="price" style={{ fontSize: '1.6rem' }}>{fmtMoney(c.price_cents)}</div>
-              <p className="muted small">Conteúdo pago. O acesso abre depois da compra.</p>
-              {c.purchase_pending ? (
-                <p><Badge kind="yellow">Pedido registrado — aguardando aprovação</Badge></p>
-              ) : (
-                <Button variant="red" block busy={busy} onClick={buy}><ShoppingCart size={18} /> Comprar</Button>
-              )}
-              {buyMsg && <p className="small muted mt">{buyMsg}</p>}
-            </Card>
-          )}
 
           <Section title={c.type === 'curso' ? 'Aulas' : 'Requisitos'}>
             <div className="stack">
@@ -172,7 +148,7 @@ export function ContentDetail() {
                             )}
                           </div>
                         </>
-                      ) : <p className="small muted ico"><Lock size={14} /> Disponível após a compra</p>}
+                      ) : <p className="small muted ico"><Lock size={14} /> Indisponível no momento</p>}
                     </div>
                   </div>
                 );

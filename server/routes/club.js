@@ -7,8 +7,8 @@ import { fail, int, str, bool, memberKind, ageFrom, validDate, newMemberCode, pa
 import { clubProfile } from '../profiles.js';
 import { clubUnitsRanking } from '../rankings.js';
 
-// Sistema do Clube: conta única da secretaria, diretores e diretores associados.
-// Toda consulta é filtrada por club_id = clube logado: cada clube só vê e edita os seus.
+// Sistema do Clã: conta única da secretaria, diretores e diretores associados.
+// Toda consulta é filtrada por club_id = clã logado: cada clã só vê e edita os seus.
 const r = Router();
 r.use('/club', requireAuth('club'));
 
@@ -41,7 +41,7 @@ r.put('/club/profile', imageUpload.fields([{ name: 'photo', maxCount: 1 }, { nam
 // ---------- Membros ----------
 function ownMember(req) {
   const m = get('SELECT * FROM members WHERE id = ? AND club_id = ?', int(req.params.id), req.actor.id);
-  if (!m) fail(404, 'Membro não encontrado neste clube');
+  if (!m) fail(404, 'Membro não encontrado neste clã');
   return m;
 }
 
@@ -83,10 +83,10 @@ function memberFields(req, existing) {
   let unitId = b.unit_id === undefined ? existing?.unit_id ?? null : int(b.unit_id);
   if (unitId) {
     const u = get('SELECT * FROM units WHERE id = ? AND club_id = ?', unitId, req.actor.id);
-    if (!u) fail(400, 'Unidade inválida');
-    if (u.is_leadership && kind === 'desbravador') fail(400, 'Desbravadores não podem entrar na unidade Liderança');
+    if (!u) fail(400, 'Grupo inválido');
+    if (u.is_leadership && kind === 'desbravador') fail(400, 'Desbravadores não podem entrar no grupo Liderança');
   }
-  // Liderança sem unidade entra automaticamente na unidade "Liderança".
+  // Liderança sem grupo entra automaticamente no grupo "Liderança".
   if (!unitId && kind === 'lideranca') unitId = leadershipUnit(req.actor.id);
   const excellence = b.excellence === undefined ? existing?.excellence ?? 0 : bool(b.excellence) ? 1 : 0;
   return { name, birth, cargo, unitId, excellence };
@@ -126,7 +126,7 @@ r.delete('/club/members/:id', (req, res) => {
   res.json({ ok: true });
 });
 
-// Classes e especialidades concluídas, registradas pelo clube.
+// Cadernos guia e insígnias concluídas, registradas pelo clã.
 r.put('/club/members/:id/achievements', (req, res) => {
   const m = ownMember(req);
   const ids = parseJson(req.body.content_ids, []).map(Number).filter(Boolean);
@@ -140,15 +140,15 @@ r.put('/club/members/:id/achievements', (req, res) => {
   res.json({ ok: true });
 });
 
-// Catálogo de classes/especialidades para o clube registrar conclusões.
+// Catálogo de classes/especialidades para o clã registrar conclusões.
 r.get('/club/catalog', (_req, res) => {
   res.json(all(`SELECT id, type, name, icon, age, leader FROM content WHERE type IN ('classe','especialidade') ORDER BY type, leader, age, name`));
 });
 
-// ---------- Unidades ----------
+// ---------- Grupos ----------
 function ownUnit(req) {
   const u = get('SELECT * FROM units WHERE id = ? AND club_id = ?', int(req.params.id), req.actor.id);
-  if (!u) fail(404, 'Unidade não encontrada neste clube');
+  if (!u) fail(404, 'Grupo não encontrado neste clã');
   return u;
 }
 
@@ -164,7 +164,7 @@ r.get('/club/units', (req, res) => {
 
 r.post('/club/units', imageUpload.single('logo'), (req, res) => {
   const name = str(req.body.name, 80);
-  if (!name) fail(400, 'Informe o nome da unidade');
+  if (!name) fail(400, 'Informe o nome do grupo');
   const id = tx(() => {
     const id = Number(run('INSERT INTO units (club_id, name, logo) VALUES (?,?,?)', req.actor.id, name, fileUrl(req.file)).lastInsertRowid);
     setLogin('unit', id, req.body.username, req.body.password);
@@ -186,7 +186,7 @@ r.put('/club/units/:id', imageUpload.single('logo'), (req, res) => {
 
 r.delete('/club/units/:id', (req, res) => {
   const u = ownUnit(req);
-  if (u.is_leadership) fail(400, 'A unidade Liderança não pode ser removida');
+  if (u.is_leadership) fail(400, 'O grupo Liderança não pode ser removido');
   tx(() => {
     const members = all('SELECT id, birth_date FROM members WHERE unit_id = ?', u.id);
     const lid = leadershipUnit(req.actor.id);

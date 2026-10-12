@@ -62,11 +62,11 @@ function AddItem({ type, areas, area, onClose, onDone }) {
   const [image, setImage] = useState(null);
   const [busy, run] = useAsync();
   const save = async () => {
-    await run(() => api.post('/admin/catalog', toForm({ ...f, type, leader: f.leader ? 1 : 0, image: image || undefined })), type === 'classe' ? 'Classe adicionada!' : 'Especialidade adicionada!');
+    await run(() => api.post('/admin/catalog', toForm({ ...f, type, leader: f.leader ? 1 : 0, image: image || undefined })), type === 'classe' ? 'Caderno guia adicionado!' : 'Insígnia adicionada!');
     onDone();
   };
   return (
-    <Modal title={type === 'classe' ? 'Nova classe' : 'Nova especialidade'} onClose={onClose} footer={<Button busy={busy} disabled={f.name.trim().length < 2} onClick={save}>Adicionar</Button>}>
+    <Modal title={type === 'classe' ? 'Novo caderno guia' : 'Nova insígnia'} onClose={onClose} footer={<Button busy={busy} disabled={f.name.trim().length < 2} onClick={save}>Adicionar</Button>}>
       <div className="form">
         <PhotoPicker c={{ type, name: f.name, category: f.category }} file={image} onChange={setImage} />
         <Field label="Nome"><input autoFocus value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
@@ -77,19 +77,14 @@ function AddItem({ type, areas, area, onClose, onDone }) {
             </Field>
             <Field label="Código"><input value={f.code} onChange={(e) => setF({ ...f, code: e.target.value })} placeholder="Opcional" /></Field>
           </div>
-        ) : (
-          <div className="grid2">
-            <label className="check"><input type="checkbox" checked={f.leader} onChange={(e) => setF({ ...f, leader: e.target.checked })} /> Classe de liderança</label>
-            {!f.leader && <Field label="Idade"><input type="number" min="10" max="15" value={f.age} onChange={(e) => setF({ ...f, age: e.target.value })} /></Field>}
-          </div>
-        )}
-        <p className="muted small">Nada no catálogo é vendido: os membros informam as que têm e o clube aprova.</p>
+        ) : null}
+        <p className="muted small">Nada no catálogo é vendido: os membros informam as que têm e o clã aprova.</p>
       </div>
     </Modal>
   );
 }
 
-/** Especialidades: todas as áreas oficiais aparecem, mesmo vazias. */
+/** Insígnias: todas as áreas oficiais aparecem, mesmo vazias. */
 function sections(type, d) {
   const groups = groupCatalog(type, d.items);
   if (type !== 'especialidade') return groups;
@@ -99,8 +94,8 @@ function sections(type, d) {
 }
 
 /**
- * Catálogo oficial de classes e especialidades: aqui só se mantém a lista e as fotos
- * (nada é vendido nem tem requisito online). Quem registra no perfil é a diretoria do clube.
+ * Catálogo oficial de cadernos guia e insígnias: aqui só se mantém a lista e as fotos
+ * (nada é vendido nem tem requisito online). Quem registra no perfil é a diretoria do clã.
  */
 export default function CatalogAdmin() {
   const [type, setType] = useState('especialidade');
@@ -132,8 +127,8 @@ export default function CatalogAdmin() {
 
   return (
     <>
-      <PageHeader title="Catálogo oficial" subtitle="Classes e especialidades com as fotos originais" />
-      <Tabs tabs={[['especialidade', 'Especialidades'], ['classe', 'Classes']]} value={type} onChange={(t) => { setType(t); setResult(null); }} />
+      <PageHeader title="Catálogo oficial" subtitle="Cadernos guia e insígnias com as fotos originais" />
+      <Tabs tabs={[['especialidade', 'Insígnias'], ['classe', 'Cadernos guia']]} value={type} onChange={(t) => { setType(t); setResult(null); }} />
       <Card>
         <div className="stack">
           <label className="btn btn-primary btn-block"><Upload size={18} /> Enviar fotos (várias de uma vez)
@@ -141,7 +136,7 @@ export default function CatalogAdmin() {
           </label>
           <p className="muted small">Cada foto é ligada pelo <b>nome do arquivo</b>: “Nós e Amarras.png”, “nos-e-amarras.jpg” ou pelo código (“AR-012.png”). Pode mandar a pasta inteira.</p>
           <div className="grid2">
-            <Button variant="secondary" onClick={() => setAdding(true)}><Plus size={16} /> {type === 'classe' ? 'Nova classe' : 'Nova especialidade'}</Button>
+            <Button variant="secondary" onClick={() => setAdding(true)}><Plus size={16} /> {type === 'classe' ? 'Novo caderno guia' : 'Nova insígnia'}</Button>
             {type === 'especialidade' && <Button variant="secondary" onClick={() => setImporting(true)}><FileUp size={16} /> Importar lista</Button>}
           </div>
           {busy && <p className="small muted">Enviando…</p>}
@@ -162,14 +157,14 @@ export default function CatalogAdmin() {
               {sections(type, d).map(([g, list]) => (
                 <Section key={g} title={`${g} (${list.length})`}
                   action={type === 'especialidade' && <Button small variant="secondary" onClick={() => setAdding(g)}><Plus size={14} /> Adicionar</Button>}>
-                  {!list.length && <p className="muted small">Nenhuma especialidade nesta área ainda.</p>}
+                  {!list.length && <p className="muted small">Nenhuma insígnia nesta área ainda.</p>}
                   <div className="list">
                     {list.map((c) => (
                       <div key={c.id} className="list-item">
                         <CatalogBadge c={c} size={48} />
                         <div className="grow">
                           <div className="title">{c.name}</div>
-                          <div className="sub">{c.code ? c.code + ' · ' : ''}{c.age ? `${c.age} anos · ` : ''}{c.holders} no perfil{!c.image ? ' · sem foto' : ''}</div>
+                          <div className="sub">{c.code ? c.code + ' · ' : ''}{c.holders} no perfil{!c.image ? ' · sem foto' : ''}</div>
                         </div>
                         <label className="icon-btn" aria-label={c.image ? 'Trocar foto' : 'Colocar foto'} title={c.image ? 'Trocar foto' : 'Colocar foto'}>
                           <Camera size={18} />
@@ -190,7 +185,7 @@ export default function CatalogAdmin() {
       </Loading>
       {importing && (
         <Modal title="Importar lista do manual" onClose={() => setImporting(false)} footer={<Button busy={busy} disabled={!text.trim()} onClick={doImport}>Importar</Button>}>
-          <p className="muted small">Cole a relação do Manual de Especialidades, <b>uma por linha</b>, no formato <code>código; nome; área</code> (ou <code>nome; área</code>). Pode colar direto de uma planilha. As que já existem são atualizadas.</p>
+          <p className="muted small">Cole a relação do Manual de Insígnias, <b>uma por linha</b>, no formato <code>código; nome; área</code> (ou <code>nome; área</code>). Pode colar direto de uma planilha. As que já existem são atualizadas.</p>
           <textarea style={{ minHeight: 240, fontFamily: 'monospace', fontSize: '.85rem' }} value={text} onChange={(e) => setText(e.target.value)}
             placeholder={'AR-001; Nós e Amarras; Atividades Recreativas\nEB-001; Profecias de Daniel; Ensinos Bíblicos'} />
         </Modal>

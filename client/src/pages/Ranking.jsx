@@ -52,7 +52,7 @@ function DistrictFilter({ value, onChange, withClub }) {
   if (mine) {
     return (
       <div className="seg" role="tablist">
-        {withClub && <button type="button" className={value === 'clube' ? 'active' : ''} onClick={() => onChange('clube')}>Meu clube</button>}
+        {withClub && <button type="button" className={value === 'clube' ? 'active' : ''} onClick={() => onChange('clube')}>Meu clã</button>}
         <button type="button" className={value === mine.id ? 'active' : ''} onClick={() => onChange(mine.id)}>{mine.name}</button>
         <button type="button" className={value === null ? 'active' : ''} onClick={() => onChange(null)}>Todos</button>
       </div>
@@ -67,10 +67,10 @@ function DistrictFilter({ value, onChange, withClub }) {
 }
 
 const SUBTITLE = {
-  clube: 'Desbravadores do seu clube · requisitos do clube',
+  clube: 'Desbravadores do seu clã · requisitos do clã',
   membros: 'Desbravadores · requisitos do App',
-  unidades: 'Unidades de todos os clubes · requisitos gerais',
-  clubes: 'Clubes · requisitos gerais de clube',
+  unidades: 'Grupos de todos os clãs · requisitos gerais',
+  clubes: 'Clãs · requisitos gerais de clã',
 };
 
 function GeneralRanking({ kind, base, highlight }) {
@@ -118,7 +118,7 @@ function SummaryCard({ icon, title, pos, onClick, gold }) {
 }
 
 /**
- * Aba Ranking. O membro vê de uma vez a sua posição, a da sua unidade e a do seu clube,
+ * Aba Ranking. O membro vê de uma vez a sua posição, a do seu grupo e a do seu clã,
  * e pode abrir cada tabela completa. Não existe ranking de liderança.
  */
 export default function RankingHub({ base }) {
@@ -130,9 +130,9 @@ export default function RankingHub({ base }) {
   const myUnit = actor.type === 'unit' ? actor.id : actor.unit_id;
   const tabs = [
     ['membros', 'Membros'],
-    ...(clubId ? [['clube', 'Unidades']] : []),
-    ['unidades', 'Unidades gerais'],
-    ['clubes', 'Clubes'],
+    ...(clubId ? [['clube', 'Grupos']] : []),
+    ['unidades', 'Grupos gerais'],
+    ['clubes', 'Clãs'],
   ];
   const [tab, setTab] = useState(actor.type === 'member' ? 'membros' : actor.type === 'unit' ? 'clube' : actor.type === 'club' ? 'clubes' : 'membros');
   const highlight = { membros: actor.type === 'member' ? actor.id : null, clube: myUnit, unidades: myUnit, clubes: clubId }[tab];
@@ -145,26 +145,26 @@ export default function RankingHub({ base }) {
           {actor.type === 'member' && (
             actor.kind === 'desbravador'
               ? <>
-                <SummaryCard gold icon={<Compass size={16} />} title="Eu no meu clube" pos={summary.data.member_club} onClick={() => setTab('membros')} />
+                <SummaryCard gold icon={<Compass size={16} />} title="Eu no meu clã" pos={summary.data.member_club} onClick={() => setTab('membros')} />
                 <SummaryCard gold icon={<Globe2 size={16} />} title="Eu no App" pos={summary.data.member} onClick={() => setTab('membros')} />
               </>
               : <div className="pos-card muted small">A liderança não participa do ranking individual.</div>
           )}
-          {summary.data.unit && <SummaryCard icon={<Flag size={16} />} title={`${summary.data.unit.name} no clube`} pos={summary.data.unit.club} onClick={() => setTab('clube')} />}
+          {summary.data.unit && <SummaryCard icon={<Flag size={16} />} title={`${summary.data.unit.name} no clã`} pos={summary.data.unit.club} onClick={() => setTab('clube')} />}
           {summary.data.unit && <SummaryCard icon={<Globe2 size={16} />} title={`${summary.data.unit.name} no geral`} pos={summary.data.unit.general} onClick={() => setTab('unidades')} />}
-          {summary.data.club && <SummaryCard icon={<Tent size={16} />} title="Meu clube" pos={summary.data.club.position ? summary.data.club : null} onClick={() => setTab('clubes')} />}
+          {summary.data.club && <SummaryCard icon={<Tent size={16} />} title="Meu clã" pos={summary.data.club.position ? summary.data.club : null} onClick={() => setTab('clubes')} />}
         </div>
       )}
       <Section>
         <Tabs tabs={tabs} value={tab} onChange={setTab} />
         {tab === 'clube' && actor.type === 'admin' && (
-          <Field label="Clube">
+          <Field label="Clã">
             <select value={clubId || ''} onChange={(e) => setAdminClub(Number(e.target.value))}>
               {(adminClubs.data || []).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </Field>
         )}
-        {tab === 'clube' && actor.type !== 'admin' && <div className="rank-tools"><span className="muted small">Unidades do seu clube · requisitos do clube</span></div>}
+        {tab === 'clube' && actor.type !== 'admin' && <div className="rank-tools"><span className="muted small">Grupos do seu clã · requisitos do clã</span></div>}
         {tab === 'clube' ? clubId && <ClubUnitsRanking clubId={clubId} base={base} highlight={highlight} /> : <GeneralRanking kind={tab} base={base} highlight={highlight} />}
       </Section>
     </>

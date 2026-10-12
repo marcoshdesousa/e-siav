@@ -106,12 +106,12 @@ export default function Login() {
           <form className="ig-card ig-login" onSubmit={submit} key={shake} data-shake={shake > 0 || undefined}>
             <LogoIcon size={132} />
             <h1 className="ig-brand">Exploradores do Brasil</h1>
-            <p className="ig-tagline">Entre para ver o seu clube, a sua unidade e o ranking.</p>
+            <p className="ig-tagline">Entre para ver o seu clã, o seu grupo e o ranking.</p>
 
             <div className="ig-switch" role="tablist" data-mode={mode}>
               <span className="ig-switch-pill" />
               <button type="button" role="tab" aria-selected={mode === 'membros'} onClick={() => setMode('membros')}><Compass size={17} /> Membros</button>
-              <button type="button" role="tab" aria-selected={mode === 'clube'} onClick={() => setMode('clube')}><Tent size={17} /> Clube</button>
+              <button type="button" role="tab" aria-selected={mode === 'clube'} onClick={() => setMode('clube')}><Tent size={17} /> Clã</button>
             </div>
 
             <FloatField label="Usuário" value={username} onChange={setUsername} autoComplete="username" />
@@ -127,14 +127,14 @@ export default function Login() {
           </form>
 
           <div className="ig-card ig-signup">
-            Não tem uma conta? <b>Peça à secretaria do seu clube.</b>
+            Não tem uma conta? <b>Peça à secretaria do seu clã.</b>
           </div>
 
           <InstallSection />
         </div>
       </main>
       <footer className="ig-footer">
-        <span>Clubes de Desbravadores</span>
+        <span>Clãs, grupos e aventura</span>
         <span>© {new Date().getFullYear()} Exploradores do Brasil</span>
       </footer>
     </div>

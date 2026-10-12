@@ -22,7 +22,7 @@ export function eventsOf(type, id) {
 
 const pos = (r) => (r ? { position: r.position, points: r.points } : null);
 
-/** Perfil público do clube: só a QUANTIDADE de membros, nunca os nomes. */
+/** Perfil público do clã: só a QUANTIDADE de membros, nunca os nomes. */
 export function clubProfile(id) {
   const c = get(
     `SELECT c.id, c.name, c.photo, c.logo, c.district_id, d.name AS district_name
@@ -74,7 +74,7 @@ export function memberProfile(where, value) {
   delete m.birth_date; // data de nascimento não é exibida no perfil
   const ach = all(
     `SELECT ct.id, ct.type, ct.name, ct.icon, ct.image, ct.category, ct.leader, a.source, a.date
-     FROM achievements a JOIN content ct ON ct.id = a.content_id WHERE a.member_id = ? ORDER BY ct.age, ct.name`,
+     FROM achievements a JOIN content ct ON ct.id = a.content_id WHERE a.member_id = ? ORDER BY ct.leader, ct.id`,
     m.id,
   );
   m.classes = ach.filter((a) => a.type === 'classe');

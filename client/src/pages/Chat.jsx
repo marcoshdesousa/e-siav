@@ -39,7 +39,7 @@ export function ChatHome({ base }) {
   const openType = (type) => {
     const c = state.data?.find((x) => x.type === type);
     if (c) nav(`${base}/chat/${c.id}`);
-    else notify(type === 'unidade' ? 'Você ainda não está em uma unidade.' : 'Conversa indisponível', 'error');
+    else notify(type === 'unidade' ? 'Você ainda não está em um grupo.' : 'Conversa indisponível', 'error');
   };
 
   return (
@@ -47,7 +47,7 @@ export function ChatHome({ base }) {
       <PageHeader title={actor.type === 'club' ? 'Mensagens da diretoria' : 'Chat'} subtitle={actor.type === 'club' ? 'Mensagens que os membros enviam para a diretoria' : 'Converse sem sair da plataforma'} />
       {actor.type === 'member' && (
         <div className="chat-tiles">
-          {[['unidade', Flag, 'Unidade', 'Grupo'], ['diretoria', Tent, 'Diretoria', 'Do clube']].map(([type, Ico, label, hint]) => {
+          {[['unidade', Flag, 'Grupo', 'Grupo'], ['diretoria', Tent, 'Diretoria', 'Do clã']].map(([type, Ico, label, hint]) => {
             const conv = state.data?.find((x) => x.type === type);
             return (
               <button key={type} type="button" className="chat-tile" onClick={() => openType(type)}>
@@ -146,7 +146,7 @@ function DirectSearch({ base, onClose }) {
   };
   return (
     <Modal title="Nova conversa direta" onClose={onClose}>
-      <Field label="@ ou nome" hint="Pelo @ você encontra membros de qualquer clube. Pelo nome, só do seu clube.">
+      <Field label="@ ou nome" hint="Pelo @ você encontra membros de qualquer clã. Pelo nome, só do seu clã.">
         <input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder="@arroba ou nome" autoCapitalize="none" />
       </Field>
       <div className="list mt">
@@ -174,7 +174,7 @@ function ReportModal({ conv, message, onClose }) {
   return (
     <Modal title="Denunciar" onClose={onClose} footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button variant="red" busy={busy} onClick={send}>Enviar denúncia</Button></>}>
       <div className="form">
-        <p className="muted small">A denúncia chega à diretoria do clube e ao Administrador Geral. Se você se sentir em perigo, fale também com um adulto de confiança.</p>
+        <p className="muted small">A denúncia chega à diretoria do clã e ao Administrador Geral. Se você se sentir em perigo, fale também com um adulto de confiança.</p>
         {message && <div className="quiz-q small">“{message.kind === 'texto' ? message.body : message.kind === 'audio' ? 'Áudio' : 'Foto'}” — {message.sender?.name}</div>}
         {conv.members && !message && (
           <Field label="Quem você quer denunciar? (opcional)">
@@ -466,11 +466,11 @@ export function ChatConversation({ base }) {
   );
 }
 
-/** Denúncias recebidas (diretoria do clube e Administrador Geral). */
+/** Denúncias recebidas (diretoria do clã e Administrador Geral). */
 export function ReportsPanel() {
   const state = useLoad(() => api.get('/reports'));
   const [, run] = useAsync();
-  const TYPE = { unidade: 'Grupo da unidade', diretoria: 'Conversa com a diretoria', direta: 'Conversa direta' };
+  const TYPE = { unidade: 'Conversa do grupo', diretoria: 'Conversa com a diretoria', direta: 'Conversa direta' };
   return (
     <>
       <PageHeader title="Denúncias" subtitle="Denúncias feitas no chat" />

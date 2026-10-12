@@ -71,7 +71,7 @@ if (fs.existsSync(path.join(dist, 'index.html'))) {
 app.use((err, _req, res, _next) => {
   if (err instanceof HttpError) return res.status(err.status).json({ error: err.message });
   if (err instanceof multer.MulterError) return res.status(400).json({ error: err.code === 'LIMIT_FILE_SIZE' ? 'Arquivo muito grande' : 'Erro no envio do arquivo' });
-  if (err?.code === 'ERR_SQLITE_ERROR' && /constraint|RAISE|ABORT|unidade|clube|requisito/i.test(err.message)) {
+  if (err?.code === 'ERR_SQLITE_ERROR' && /constraint|RAISE|ABORT|grupo|clã|unidade|clube|requisito/i.test(err.message)) {
     return res.status(400).json({ error: err.message.replace(/^.*?:\s*/, '') });
   }
   console.error(err);

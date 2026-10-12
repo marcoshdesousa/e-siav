@@ -22,7 +22,7 @@ import AnnouncementsAdmin from '../admin/Announcements.jsx';
 
 const base = '/clube';
 
-// ---------- Início / perfil do clube ----------
+// ---------- Início / perfil do clã ----------
 function ClubHome() {
   const { refresh } = useAuth();
   const state = useLoad(() => api.get('/club/overview'));
@@ -42,7 +42,7 @@ function ClubHome() {
               <Avatar src={c.logo} name={c.name} size={88} square />
               <h1>{c.name}</h1>
               <div className="chips"><span className="chip ico"><MapPin size={14} /> {c.district_name}</span><span className="chip">Usuário: {c.username}</span></div>
-              {c.ranking && <PositionBadge position={c.ranking.position} points={c.ranking.points} label="no ranking de clubes" />}
+              {c.ranking && <PositionBadge position={c.ranking.position} points={c.ranking.points} label="no ranking de clãs" />}
               <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.5rem' }}>
                 <ShareButton path={`/p/clube/${c.id}`} title={c.name} />
                 <Link to={`${base}/ver/clube/${c.id}`}><Button variant="yellow" small>Ver perfil público</Button></Link>
@@ -54,23 +54,23 @@ function ClubHome() {
             <div className="stats">
               <Stat icon={Compass} value={c.desbravadores} label="Desbravadores" to={`${base}/membros`} />
               <Stat icon={Award} value={c.lideranca} label="Liderança" to={`${base}/membros`} />
-              <Stat icon={Flag} value={c.unit_count} label="Unidades" to={`${base}/unidades`} />
-              <Stat icon={BadgeCheck} value={c.pending_achievements} label="Classes/especialidades p/ aprovar" to={`${base}/aprovacoes`} accent={c.pending_achievements > 0} />
+              <Stat icon={Flag} value={c.unit_count} label="Grupos" to={`${base}/unidades`} />
+              <Stat icon={BadgeCheck} value={c.pending_achievements} label="Cadernos e insígnias p/ aprovar" to={`${base}/aprovacoes`} accent={c.pending_achievements > 0} />
               <Stat icon={Inbox} value={c.pending_reviews} label="Envios p/ avaliar" to={`${base}/requisitos?aba=avaliar`} accent={c.pending_reviews > 0} />
               <Stat icon={Flag} value={c.open_reports} label="Denúncias abertas" to={`${base}/denuncias`} accent={c.open_reports > 0} />
             </div>
           </Section>
 
-          <Section title="Foto e logo do clube">
+          <Section title="Foto e logo do clã">
             <Card>
               <div className="stack">
-                <ImagePicker label="Logo do clube" value={c.logo} onChange={upload('logo')} round={false} name={c.name} />
-                <ImagePicker label="Foto de capa do clube" value={c.photo} onChange={upload('photo')} round={false} />
+                <ImagePicker label="Logo do clã" value={c.logo} onChange={upload('logo')} round={false} name={c.name} />
+                <ImagePicker label="Foto de capa do clã" value={c.photo} onChange={upload('photo')} round={false} />
               </div>
             </Card>
           </Section>
 
-          <Section title="Ranking das unidades" action={<Link to={`${base}/ranking`} className="small ico">Ver tudo <ChevronRight size={14} /></Link>}>
+          <Section title="Ranking dos grupos" action={<Link to={`${base}/ranking`} className="small ico">Ver tudo <ChevronRight size={14} /></Link>}>
             <RankingTable rows={c.units_ranking} link={(r) => `${base}/ver/unidade/${r.id}`} />
           </Section>
           <MedalList medals={c.medals} />
@@ -114,9 +114,9 @@ function MemberForm({ member, units, onClose, onDone }) {
               {cargos.map((c) => <option key={c}>{c}</option>)}
             </select>
           </Field>
-          <Field label="Unidade" hint={kind === 'lideranca' ? 'Sem escolha: entra na unidade Liderança' : 'Sem escolha: aparece como "Sem unidade"'}>
+          <Field label="Grupo" hint={kind === 'lideranca' ? 'Sem escolha: entra no grupo Liderança' : 'Sem escolha: aparece como "Sem grupo"'}>
             <select value={f.unit_id} onChange={set('unit_id')}>
-              <option value="">{kind === 'lideranca' ? 'Liderança (automático)' : 'Sem unidade'}</option>
+              <option value="">{kind === 'lideranca' ? 'Liderança (automático)' : 'Sem grupo'}</option>
               {availableUnits.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
             </select>
           </Field>
@@ -126,7 +126,7 @@ function MemberForm({ member, units, onClose, onDone }) {
           <Field label="Usuário de acesso"><input value={f.username} onChange={set('username')} autoCapitalize="none" /></Field>
           <Field label={member ? 'Nova senha' : 'Senha'} hint={member ? 'Deixe em branco para manter' : 'Mínimo 6 caracteres'}><input type="text" value={f.password} onChange={set('password')} /></Field>
         </div>
-        <p className="muted small">Não pedimos CPF. Guardamos só nome, data de nascimento, foto, cargo e unidade.</p>
+        <p className="muted small">Não pedimos CPF. Guardamos só nome, data de nascimento, foto, cargo e grupo.</p>
       </div>
     </Modal>
   );
@@ -151,7 +151,7 @@ function AchievementsModal({ member, onClose, onDone }) {
     onDone();
   };
   const addMissing = async () => {
-    const r = await run(() => api.post('/club/catalog', { name: newName }), 'Especialidade adicionada ao catálogo');
+    const r = await run(() => api.post('/club/catalog', { name: newName }), 'Insígnia adicionada ao catálogo');
     setNewName('');
     setAdding(false);
     await catalogs.especialidade.reload();
@@ -159,10 +159,10 @@ function AchievementsModal({ member, onClose, onDone }) {
   };
   const cat = catalogs[type];
   return (
-    <Modal title={`Classes e especialidades · ${member.name.split(' ')[0]}`} onClose={onClose}
+    <Modal title={`Cadernos guia e insígnias · ${member.name.split(' ')[0]}`} onClose={onClose}
       footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} onClick={save}>Salvar ({chosen.size})</Button></>}>
       <label className="check exc-check"><input type="checkbox" checked={exc} onChange={(e) => setExcellence(e.target.checked)} /> <Sparkles size={16} color="#B07D00" /> Tem a Insígnia de Excelência</label>
-      <Tabs tabs={[['especialidade', 'Especialidades'], ['classe', 'Classes']]} value={type} onChange={setType} />
+      <Tabs tabs={[['especialidade', 'Insígnias'], ['classe', 'Cadernos guia']]} value={type} onChange={setType} />
       <Loading data={cat.data && detail.data} loading={cat.loading || detail.loading} error={cat.error || detail.error}>
         {() => (
           <>
@@ -171,10 +171,10 @@ function AchievementsModal({ member, onClose, onDone }) {
               <div className="mt">
                 {adding ? (
                   <div className="row">
-                    <input autoFocus placeholder="Nome da especialidade" value={newName} onChange={(e) => setNewName(e.target.value)} />
+                    <input autoFocus placeholder="Nome da insígnia" value={newName} onChange={(e) => setNewName(e.target.value)} />
                     <Button small busy={busy} onClick={addMissing}>Adicionar</Button>
                   </div>
-                ) : <button type="button" className="ig-link" onClick={() => setAdding(true)}>Não achou? Adicionar especialidade que falta</button>}
+                ) : <button type="button" className="ig-link" onClick={() => setAdding(true)}>Não achou? Adicionar insígnia que falta</button>}
               </div>
             )}
           </>
@@ -184,7 +184,7 @@ function AchievementsModal({ member, onClose, onDone }) {
   );
 }
 
-/** Aprovações: classes e especialidades que os membros informaram ter. */
+/** Aprovações: cadernos guia e insígnias que os membros informaram ter. */
 function ApprovalsPage() {
   const [status, setStatus] = useState('pendente');
   const members = useLoad(() => api.get('/club/members'));
@@ -201,16 +201,16 @@ function ApprovalsPage() {
   const toggle = (id) => { const s = new Set(sel); s.has(id) ? s.delete(id) : s.add(id); setSel(s); };
   return (
     <>
-      <PageHeader title="Aprovações" subtitle="Classes e especialidades que os membros dizem ter"
+      <PageHeader title="Aprovações" subtitle="Cadernos guia e insígnias que os membros dizem ter"
         action={<Button small onClick={() => setPicking(true)}><Plus size={15} /> Adicionar</Button>} />
       {picking && (
         <Modal title="Adicionar para qual membro?" onClose={() => setPicking(false)}>
-          <p className="muted small" style={{ marginBottom: '.6rem' }}>Registre especialidades, classes e a Insígnia de Excelência mesmo que o membro não tenha pedido.</p>
+          <p className="muted small" style={{ marginBottom: '.6rem' }}>Registre insígnias, cadernos guia e a Insígnia de Excelência mesmo que o membro não tenha pedido.</p>
           <div className="list">
             {(members.data || []).map((m) => (
               <button key={m.id} type="button" className="list-item" style={{ font: 'inherit', textAlign: 'left', cursor: 'pointer' }} onClick={() => { setPicking(false); setAddFor(m); }}>
                 <Avatar src={m.photo} name={m.name} size={38} />
-                <div className="grow"><div className="title">{m.name}</div><div className="sub">{m.unit_name || 'Sem unidade'} · {m.cargo}</div></div>
+                <div className="grow"><div className="title">{m.name}</div><div className="sub">{m.unit_name || 'Sem grupo'} · {m.cargo}</div></div>
               </button>
             ))}
           </div>
@@ -229,7 +229,7 @@ function ApprovalsPage() {
             <Card key={g.member_id}>
               <div className="row">
                 <Avatar src={g.photo} name={g.name} size={44} />
-                <div className="grow"><b>{g.name}</b><div className="small muted">{g.unit_name || 'Sem unidade'}{g.handle ? ' · @' + g.handle : ''}</div></div>
+                <div className="grow"><b>{g.name}</b><div className="small muted">{g.unit_name || 'Sem grupo'}{g.handle ? ' · @' + g.handle : ''}</div></div>
                 <Badge kind={status === 'pendente' ? 'yellow' : status === 'aprovado' ? 'green' : 'red'}>{g.items.length}</Badge>
               </div>
               <div className="approve-list">
@@ -237,7 +237,7 @@ function ApprovalsPage() {
                   <label key={i.id} className={'approve-item' + (sel.has(i.id) ? ' on' : '')}>
                     {status === 'pendente' && <input type="checkbox" checked={sel.has(i.id)} onChange={() => toggle(i.id)} />}
                     <CatalogBadge c={i} size={40} />
-                    <span className="grow"><b>{i.name}</b><small>{i.type === 'classe' ? 'Classe' : i.category}</small></span>
+                    <span className="grow"><b>{i.name}</b><small>{i.type === 'classe' ? 'Caderno guia' : i.category}</small></span>
                   </label>
                 ))}
               </div>
@@ -271,12 +271,12 @@ function MembersPage() {
   const done = () => { setEditing(null); setAch(null); members.reload(); units.reload(); };
   return (
     <>
-      <PageHeader title="Membros" subtitle="Cadastre e atualize os membros do clube" action={<Button small onClick={() => setEditing('new')}>+ Novo</Button>} />
+      <PageHeader title="Membros" subtitle="Cadastre e atualize os membros do clã" action={<Button small onClick={() => setEditing('new')}>+ Novo</Button>} />
       <div className="grid2">
         <input placeholder="Buscar por nome" value={q} onChange={(e) => setQ(e.target.value)} />
         <select value={unitFilter} onChange={(e) => setUnitFilter(e.target.value)}>
-          <option value="">Todas as unidades</option>
-          <option value="none">Sem unidade</option>
+          <option value="">Todos os grupos</option>
+          <option value="none">Sem grupo</option>
           {(units.data || []).map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
         </select>
       </div>
@@ -291,7 +291,7 @@ function MembersPage() {
                     <Avatar src={m.photo} name={m.name} size={48} />
                     <div className="grow">
                       <div className="title ico">{m.name} {m.excellence ? <Sparkles size={15} color="#B07D00" aria-label="Insígnia de Excelência" /> : null}</div>
-                      <div className="sub">{m.age} anos · {m.cargo} · {m.unit_name || 'Sem unidade'}</div>
+                      <div className="sub">{m.age} anos · {m.cargo} · {m.unit_name || 'Sem grupo'}</div>
                       <div className="row wrap" style={{ marginTop: '.35rem', gap: '.3rem' }}>
                         <Badge kind={m.kind === 'desbravador' ? 'blue' : 'yellow'}>{KIND_LABEL[m.kind]}</Badge>
                         {m.handle ? <Badge kind="blue">@{m.handle}</Badge> : <Badge>sem @ ainda</Badge>}
@@ -299,9 +299,9 @@ function MembersPage() {
                       </div>
                       <div className="row wrap" style={{ marginTop: '.5rem', gap: '.35rem' }}>
                         <Button small variant="secondary" onClick={() => setEditing(m)}>Editar</Button>
-                        <Button small variant="secondary" onClick={() => setAch(m)}>Classes/Especialidades</Button>
+                        <Button small variant="secondary" onClick={() => setAch(m)}>Cadernos e insígnias</Button>
                         <Link to={`${base}/ver/membro/${m.code}`}><Button small variant="ghost">Perfil</Button></Link>
-                        <Confirm text={`Remover ${m.name} do clube?`} onYes={() => run(() => api.del('/club/members/' + m.id), 'Membro removido').then(done)}>Remover</Confirm>
+                        <Confirm text={`Remover ${m.name} do clã?`} onYes={() => run(() => api.del('/club/members/' + m.id), 'Membro removido').then(done)}>Remover</Confirm>
                       </div>
                     </div>
                   </div>
@@ -318,25 +318,25 @@ function MembersPage() {
   );
 }
 
-// ---------- Unidades ----------
+// ---------- Grupos ----------
 function UnitForm({ unit, onClose, onDone }) {
   const [f, setF] = useState({ name: unit?.name || '', username: unit?.username || '', password: '', logo: unit?.logo || null });
   const [busy, run] = useAsync();
   const save = async () => {
     const body = { ...f, logo: f.logo instanceof File ? f.logo : undefined };
-    await run(() => (unit ? api.put('/club/units/' + unit.id, toForm(body)) : api.post('/club/units', toForm(body))), 'Unidade salva!');
+    await run(() => (unit ? api.put('/club/units/' + unit.id, toForm(body)) : api.post('/club/units', toForm(body))), 'Grupo salvo!');
     onDone();
   };
   return (
-    <Modal title={unit ? 'Editar unidade' : 'Nova unidade'} onClose={onClose} footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} onClick={save}>Salvar</Button></>}>
+    <Modal title={unit ? 'Editar grupo' : 'Novo grupo'} onClose={onClose} footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} onClick={save}>Salvar</Button></>}>
       <div className="form">
-        <ImagePicker label="Logo da unidade" value={f.logo} onChange={(logo) => setF({ ...f, logo })} round={false} name={f.name} />
+        <ImagePicker label="Logo do grupo" value={f.logo} onChange={(logo) => setF({ ...f, logo })} round={false} name={f.name} />
         <Field label="Nome"><input value={f.name} disabled={unit?.is_leadership} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
         <div className="grid2">
-          <Field label="Login da unidade"><input value={f.username} onChange={(e) => setF({ ...f, username: e.target.value })} autoCapitalize="none" /></Field>
+          <Field label="Login do grupo"><input value={f.username} onChange={(e) => setF({ ...f, username: e.target.value })} autoCapitalize="none" /></Field>
           <Field label={unit ? 'Nova senha' : 'Senha'} hint={unit ? 'Em branco mantém' : 'Mínimo 6 caracteres'}><input value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} /></Field>
         </div>
-        <p className="muted small">A unidade entra pelo “Login Clube” com este usuário e senha para cumprir requisitos em grupo.</p>
+        <p className="muted small">O grupo entra pelo “Login Clã” com este usuário e senha para cumprir requisitos em grupo.</p>
       </div>
     </Modal>
   );
@@ -349,7 +349,7 @@ function UnitsPage() {
   const done = () => { setEditing(null); state.reload(); };
   return (
     <>
-      <PageHeader title="Unidades" subtitle="Cada membro pertence a uma única unidade" action={<Button small onClick={() => setEditing('new')}>+ Nova</Button>} />
+      <PageHeader title="Grupos" subtitle="Cada membro pertence a um único grupo" action={<Button small onClick={() => setEditing('new')}>+ Novo</Button>} />
       <Loading {...state}>
         {(list) => (
           <div className="list">
@@ -362,7 +362,7 @@ function UnitsPage() {
                   <div className="row wrap" style={{ marginTop: '.4rem', gap: '.35rem' }}>
                     <Button small variant="secondary" onClick={() => setEditing(u)}>Editar</Button>
                     <Link to={`${base}/ver/unidade/${u.id}`}><Button small variant="ghost">Perfil</Button></Link>
-                    {!u.is_leadership && <Confirm text={`Excluir a unidade ${u.name}? Os membros ficarão sem unidade.`} onYes={() => run(() => api.del('/club/units/' + u.id), 'Unidade excluída').then(done)}>Excluir</Confirm>}
+                    {!u.is_leadership && <Confirm text={`Excluir o grupo ${u.name}? Os membros ficarão sem grupo.`} onYes={() => run(() => api.del('/club/units/' + u.id), 'Grupo excluído').then(done)}>Excluir</Confirm>}
                   </div>
                 </div>
               </div>
@@ -381,15 +381,15 @@ function RequirementsPage() {
   return (
     <>
       <PageHeader title="Requisitos" />
-      <Tabs tabs={[['cumprir', 'Requisitos do App'], ['criados', 'Criados pelo clube'], ['avaliar', 'Avaliar']]} value={tab} onChange={setTab} />
-      {tab === 'cumprir' && <><p className="muted small">Requisitos que a administração do app manda para o seu clube cumprir.</p><RequirementsTodo /></>}
-      {tab === 'criados' && <><p className="muted small">Crie requisitos com prazo e pontos para as unidades ou para os desbravadores do seu clube. Eles contam no ranking do clube.</p><CreatedRequirements /></>}
+      <Tabs tabs={[['cumprir', 'Requisitos do App'], ['criados', 'Criados pelo clã'], ['avaliar', 'Avaliar']]} value={tab} onChange={setTab} />
+      {tab === 'cumprir' && <><p className="muted small">Requisitos que a administração do app manda para o seu clã cumprir.</p><RequirementsTodo /></>}
+      {tab === 'criados' && <><p className="muted small">Crie requisitos com prazo e pontos para os grupos ou para os desbravadores do seu clã. Eles contam no ranking do clã.</p><CreatedRequirements /></>}
       {tab === 'avaliar' && <ReviewsPanel />}
     </>
   );
 }
 
-/** Sistema do Clube. */
+/** Sistema do Clã. */
 export default function ClubApp() {
   const { unread } = useRealtime();
   const tabs = [
@@ -400,13 +400,13 @@ export default function ClubApp() {
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
-    { to: `${base}/aprovacoes`, icon: BadgeCheck, label: 'Aprovações', hint: 'Classes e especialidades' },
-    { to: `${base}/unidades`, icon: Flag, label: 'Unidades', hint: 'Criar e editar' },
-    { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos', hint: 'Do seu clube' },
+    { to: `${base}/aprovacoes`, icon: BadgeCheck, label: 'Aprovações', hint: 'Cadernos guia e insígnias' },
+    { to: `${base}/unidades`, icon: Flag, label: 'Grupos', hint: 'Criar e editar' },
+    { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos', hint: 'Do seu clã' },
     { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: 'Para os seus membros' },
-    { to: `${base}/ranking`, icon: Trophy, label: 'Ranking', hint: 'Unidades e clubes' },
+    { to: `${base}/ranking`, icon: Trophy, label: 'Ranking', hint: 'Grupos e clãs' },
     { to: `${base}/denuncias`, icon: ShieldAlert, label: 'Denúncias', hint: 'Do chat' },
-    { to: `${base}/clubes`, icon: Map, label: 'Clubes', hint: 'Por distrito' },
+    { to: `${base}/clubes`, icon: Map, label: 'Clãs', hint: 'Por distrito' },
   ];
   return (
     <Routes>

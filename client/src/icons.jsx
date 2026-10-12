@@ -4,7 +4,7 @@ import {
 } from 'lucide-react';
 
 /**
- * Ícones de conteúdo (classes, especialidades, cursos) e de medalhas/troféus.
+ * Ícones de conteúdo (cadernos guia, insígnias, cursos) e de medalhas/troféus.
  * O banco guarda só a chave (ex.: "compass"); a interface desenha o ícone.
  */
 export const ICONS = {

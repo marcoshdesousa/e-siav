@@ -7,13 +7,13 @@ import { Button, Empty, Loading, Modal, PageHeader, Section, notify, useAsync, u
 import CatalogPicker, { CatalogBadge, groupCatalog } from '../Catalog.jsx';
 
 const LABEL = {
-  classe: { title: 'Classes', one: 'classe', many: 'classes', add: 'Informar classes que eu tenho' },
-  especialidade: { title: 'Especialidades', one: 'especialidade', many: 'especialidades', add: 'Informar especialidades que eu tenho' },
+  classe: { title: 'Cadernos guia', many: 'Os cadernos guia', none: 'Nenhum caderno guia aprovado ainda.', mark: 'todos os cadernos guia', add: 'Informar cadernos guia que eu tenho', approved: 'aprovados', them: 'os' },
+  especialidade: { title: 'Insígnias', many: 'As insígnias', none: 'Nenhuma insígnia aprovada ainda.', mark: 'todas as insígnias', add: 'Informar insígnias que eu tenho', approved: 'aprovadas', them: 'as' },
 };
 
 /**
- * Classes e especialidades do membro: ele marca as que já tem e envia para a
- * diretoria do clube. Depois de aprovadas, aparecem no perfil.
+ * Cadernos guia e insígnias do membro: ele marca as que já tem e envia para a
+ * diretoria do clã. Depois de aprovadas, aparecem no perfil.
  */
 export default function MyAchievements({ type }) {
   const { actor } = useAuth();
@@ -40,7 +40,7 @@ export default function MyAchievements({ type }) {
 
   return (
     <>
-      <PageHeader title={L.title} subtitle={`As ${L.many} que você tem, aprovadas pela diretoria do seu clube`} />
+      <PageHeader title={L.title} subtitle={`${L.many} que você tem, ${L.approved} pela diretoria do seu clã`} />
       <Button block onClick={() => setAdding(true)}><Plus size={18} /> {L.add}</Button>
       <Loading {...mine}>
         {(d) => {
@@ -71,7 +71,7 @@ export default function MyAchievements({ type }) {
                       ))}
                     </div>
                   </div>
-                )) : <Empty icon="award">Nenhuma {L.one} aprovada ainda. Toque no botão acima para informar as que você tem.</Empty>}
+                )) : <Empty icon="award">{L.none} Toque no botão acima para informar {L.them} que você tem.</Empty>}
               </Section>
               {refused.length > 0 && (
                 <Section title="Não aprovadas">
@@ -79,7 +79,7 @@ export default function MyAchievements({ type }) {
                     {refused.map((r) => (
                       <div key={r.id} className="list-item">
                         <CatalogBadge c={r} size={40} />
-                        <div className="grow"><div className="title">{r.name}</div><div className="sub ico"><XCircle size={13} /> Fale com a diretoria do seu clube</div></div>
+                        <div className="grow"><div className="title">{r.name}</div><div className="sub ico"><XCircle size={13} /> Fale com a diretoria do seu clã</div></div>
                         <button type="button" className="icon-btn" aria-label="Remover da lista" onClick={() => cancel(r.id)}><X size={18} /></button>
                       </div>
                     ))}
@@ -93,7 +93,7 @@ export default function MyAchievements({ type }) {
       {adding && (
         <Modal title={L.add} onClose={() => setAdding(false)}
           footer={<Button block busy={busy} disabled={!sel.size} onClick={send}><Send size={16} /> Enviar {sel.size || ''} para a diretoria</Button>}>
-          <p className="muted small" style={{ marginBottom: '.8rem' }}>Marque todas as {L.many} que você já concluiu. A diretoria do seu clube confere e aprova.</p>
+          <p className="muted small" style={{ marginBottom: '.8rem' }}>Marque {L.mark} que você já concluiu. A diretoria do seu clã confere e aprova.</p>
           <Loading {...cat}>{() => <CatalogPicker type={type} items={items} selected={sel} onChange={setSel} locked={locked} />}</Loading>
         </Modal>
       )}

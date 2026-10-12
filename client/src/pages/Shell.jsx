@@ -5,7 +5,7 @@ import { LogOut, MessageCircle } from 'lucide-react';
 import { Avatar, LogoHorizontal } from '../ui.jsx';
 import AnnouncementPopup from './Announcement.jsx';
 
-const TYPE_LABEL = { admin: 'Administrador Geral', club: 'Sistema do Clube', unit: 'Portal da Unidade', member: '' };
+const TYPE_LABEL = { admin: 'Administrador Geral', club: 'Sistema do Clã', unit: 'Portal do Grupo', member: '' };
 
 /** Estrutura de app: cabeçalho azul + abas na parte de baixo. */
 export default function Shell({ tabs, children, hideNav = false }) {

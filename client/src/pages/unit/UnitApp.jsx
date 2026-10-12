@@ -17,25 +17,25 @@ function UnitProfile() {
       {(u) => (
         <>
           <UnitProfileView unit={u} linkBase={`${base}/ver`} />
-          <p className="muted small center mt">Nome, logo e membros da unidade são cadastrados pelo clube.</p>
+          <p className="muted small center mt">Nome, logo e membros do grupo são cadastrados pelo clã.</p>
         </>
       )}
     </Loading>
   );
 }
 
-/** Portal da Unidade: cumpre requisitos em grupo para subir no ranking. */
+/** Portal do Grupo: cumpre requisitos em grupo para subir no ranking. */
 export default function UnitApp() {
   const tabs = [
     { to: base, icon: ClipboardCheck, label: 'Requisitos', end: true },
     { to: `${base}/ranking`, icon: Trophy, label: 'Ranking' },
     { to: `${base}/perfil`, icon: Flag, label: 'Perfil' },
-    { to: `${base}/clubes`, icon: Tent, label: 'Clubes' },
+    { to: `${base}/clubes`, icon: Tent, label: 'Clãs' },
   ];
   return (
     <Shell tabs={tabs}>
       <Routes>
-        <Route index element={<><PageHeader title="Requisitos da unidade" subtitle="Cumpram juntos dentro do prazo e subam no ranking" /><RequirementsTodo originTabs clubLabel="Requisitos do clube" /></>} />
+        <Route index element={<><PageHeader title="Requisitos do grupo" subtitle="Cumpram juntos dentro do prazo e subam no ranking" /><RequirementsTodo originTabs clubLabel="Requisitos do clã" /></>} />
         <Route path="ranking" element={<RankingHub base={base} />} />
         <Route path="perfil" element={<UnitProfile />} />
         <Route path="clubes" element={<ClubsBrowser base={base} />} />

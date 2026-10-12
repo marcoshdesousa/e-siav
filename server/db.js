@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS requirements (
   deadline TEXT NOT NULL,
   created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
   CHECK (late_points <= points),
-  -- Requisito de clube vale só para as unidades e os desbravadores daquele clube.
+  -- Requisito de clã vale só para os grupos e os desbravadores daquele clã.
   CHECK (creator_type = 'admin' OR (audience IN ('unit','member') AND club_id IS NOT NULL AND scope = 'clube')),
   CHECK (creator_type = 'club' OR (club_id IS NULL AND scope IN ('geral','distrito'))),
   CHECK (scope <> 'distrito' OR district_id IS NOT NULL)
@@ -161,7 +161,7 @@ CREATE TABLE IF NOT EXISTS event_participants (
   PRIMARY KEY (event_id, target_type, target_id)
 );
 
--- Especialidades, classes e cursos (criados só pelo Administrador Geral).
+-- Insígnias, cadernos guia e cursos (criados só pelo Administrador Geral).
 CREATE TABLE IF NOT EXISTS content (
   id INTEGER PRIMARY KEY,
   type TEXT NOT NULL CHECK (type IN ('especialidade','classe','curso')),
@@ -214,7 +214,7 @@ CREATE TABLE IF NOT EXISTS purchases (
   updated_at TEXT
 );
 
--- Classes e especialidades concluídas (registradas pelo clube ou feitas online).
+-- Cadernos guia e insígnias concluídas (registradas pelo clã ou feitas online).
 CREATE TABLE IF NOT EXISTS achievements (
   member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
   content_id INTEGER NOT NULL REFERENCES content(id) ON DELETE CASCADE,
@@ -287,25 +287,25 @@ CREATE TABLE IF NOT EXISTS reports (
 
 -- ===== Regras de integridade garantidas no próprio banco =====
 
--- O membro não troca de clube: cada clube só edita os próprios membros.
+-- O membro não troca de clã: cada clã só edita os próprios membros.
 CREATE TRIGGER IF NOT EXISTS trg_member_club_immutable
 BEFORE UPDATE OF club_id ON members WHEN NEW.club_id <> OLD.club_id
-BEGIN SELECT RAISE(ABORT, 'O clube de um membro não pode ser alterado'); END;
+BEGIN SELECT RAISE(ABORT, 'O clã de um membro não pode ser alterado'); END;
 
 CREATE TRIGGER IF NOT EXISTS trg_unit_club_immutable
 BEFORE UPDATE OF club_id ON units WHEN NEW.club_id <> OLD.club_id
-BEGIN SELECT RAISE(ABORT, 'O clube de uma unidade não pode ser alterado'); END;
+BEGIN SELECT RAISE(ABORT, 'O clã de um grupo não pode ser alterado'); END;
 
--- A unidade do membro precisa ser do mesmo clube.
+-- O grupo do membro precisa ser do mesmo clã.
 CREATE TRIGGER IF NOT EXISTS trg_member_unit_club_ins
 BEFORE INSERT ON members WHEN NEW.unit_id IS NOT NULL
   AND (SELECT club_id FROM units WHERE id = NEW.unit_id) IS NOT NEW.club_id
-BEGIN SELECT RAISE(ABORT, 'A unidade pertence a outro clube'); END;
+BEGIN SELECT RAISE(ABORT, 'O grupo pertence a outro clã'); END;
 
 CREATE TRIGGER IF NOT EXISTS trg_member_unit_club_upd
 BEFORE UPDATE OF unit_id ON members WHEN NEW.unit_id IS NOT NULL
   AND (SELECT club_id FROM units WHERE id = NEW.unit_id) IS NOT NEW.club_id
-BEGIN SELECT RAISE(ABORT, 'A unidade pertence a outro clube'); END;
+BEGIN SELECT RAISE(ABORT, 'O grupo pertence a outro clã'); END;
 
 -- Envio precisa vir do público do requisito.
 CREATE TRIGGER IF NOT EXISTS trg_submission_audience
@@ -313,7 +313,7 @@ BEFORE INSERT ON submissions
 WHEN (SELECT audience FROM requirements WHERE id = NEW.requirement_id) IS NOT NEW.submitter_type
 BEGIN SELECT RAISE(ABORT, 'Este requisito não é para este tipo de conta'); END;
 
--- Requisito criado por um clube só aceita envios das unidades daquele clube.
+-- Requisito criado por um clã só aceita envios dos grupos daquele clã.
 CREATE TRIGGER IF NOT EXISTS trg_submission_club_req2
 BEFORE INSERT ON submissions
 WHEN (SELECT creator_type FROM requirements WHERE id = NEW.requirement_id) = 'club'
@@ -322,7 +322,7 @@ WHEN (SELECT creator_type FROM requirements WHERE id = NEW.requirement_id) = 'cl
                 WHEN 'unit' THEN (SELECT club_id FROM units WHERE id = NEW.submitter_id)
                 WHEN 'member' THEN (SELECT club_id FROM members WHERE id = NEW.submitter_id)
               END)
-BEGIN SELECT RAISE(ABORT, 'Requisito de outro clube'); END;
+BEGIN SELECT RAISE(ABORT, 'Requisito de outro clã'); END;
 
 -- Medalhas nunca são entregues por gatilho automático: só por um administrador.
 CREATE TRIGGER IF NOT EXISTS trg_award_requires_admin
@@ -352,7 +352,7 @@ function migrate() {
   add('requirements', 'modes', 'TEXT');
   add('requirements', 'images', "TEXT NOT NULL DEFAULT '[]'");
 
-  // Conteúdo: imagem/insígnia própria; requisitos das classes com envio e avaliação
+  // Conteúdo: imagem/insígnia própria; requisitos dos cadernos guia com envio e avaliação
   add('content', 'image', 'TEXT');
   add('content_items', 'modes', "TEXT NOT NULL DEFAULT ''");
   add('content_items', 'images', "TEXT NOT NULL DEFAULT '[]'");
@@ -382,7 +382,7 @@ function migrate() {
       COMMIT; PRAGMA foreign_keys = ON;`);
   }
 
-  // Requisitos do clube também para os desbravadores do clube: amplia a regra antiga
+  // Requisitos do clã também para os desbravadores do clã: amplia a regra antiga
   // (recria a tabela preservando tudo; os ids continuam os mesmos).
   const reqSql = db.prepare("SELECT sql FROM sqlite_master WHERE name = 'requirements'").get()?.sql || '';
   if (reqSql.includes("audience = 'unit' AND club_id IS NOT NULL")) {
@@ -410,7 +410,7 @@ function migrate() {
   }
   db.exec('DROP TRIGGER IF EXISTS trg_submission_club_req');
 
-  // Eventos e anúncios do clube (só para os membros dele) e público-alvo dos anúncios
+  // Eventos e anúncios do clã (só para os membros dele) e público-alvo dos anúncios
   add('events', 'club_id', 'INTEGER REFERENCES clubs(id) ON DELETE CASCADE');
 
   // Eventos com anexos (PDF ou fotos)
@@ -434,7 +434,7 @@ function migrate() {
   // Cópia da mensagem denunciada (continua visível para quem analisa, mesmo se apagada)
   add('reports', 'snapshot', 'TEXT');
 
-  // Pedidos do membro: "tenho esta classe/especialidade" → a diretoria do clube aprova
+  // Pedidos do membro: "tenho esta classe/especialidade" → a diretoria do clã aprova
   db.exec(`CREATE TABLE IF NOT EXISTS achievement_requests (
     id INTEGER PRIMARY KEY,
     member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
@@ -445,8 +445,8 @@ function migrate() {
     reviewed_at TEXT
   )`);
   db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS ux_ach_req_pending ON achievement_requests(member_id, content_id) WHERE status = 'pendente'`);
-  // Especialidade adicionada pela diretoria de um clube (quando falta no catálogo)
-  add('content', 'code', 'TEXT'); // código oficial da especialidade (ex.: do manual)
+  // Insígnia adicionada pela diretoria de um clã (quando falta no catálogo)
+  add('content', 'code', 'TEXT'); // código oficial da insígnia (ex.: do manual)
   add('content', 'added_by_club', 'INTEGER REFERENCES clubs(id) ON DELETE SET NULL');
   // Eventos aparecem na abertura do app até a data do evento
   add('events', 'promote', 'INTEGER NOT NULL DEFAULT 1');
@@ -461,11 +461,20 @@ function migrate() {
     active INTEGER NOT NULL DEFAULT 1 CHECK (active IN (0,1)),
     created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
   )`);
-  add('announcements', 'club_id', 'INTEGER REFERENCES clubs(id) ON DELETE CASCADE'); // criado pela diretoria do clube
+  add('announcements', 'club_id', 'INTEGER REFERENCES clubs(id) ON DELETE CASCADE'); // criado pela diretoria do clã
   add('announcements', 'target_type', "TEXT NOT NULL DEFAULT 'all'"); // all | district | club
   add('announcements', 'target_id', 'INTEGER');
   // Marcas de tarefas de manutenção que só rodam uma vez.
   db.exec('CREATE TABLE IF NOT EXISTS app_flags (key TEXT PRIMARY KEY)');
+
+  // Uma vez: recria os gatilhos para as mensagens usarem os nomes novos (Clã, Grupo).
+  if (!db.prepare(`SELECT 1 FROM app_flags WHERE key = 'trigger-names-cla'`).get()) {
+    for (const t of ['trg_member_club_immutable', 'trg_unit_club_immutable', 'trg_member_unit_club_ins', 'trg_member_unit_club_upd', 'trg_submission_club_req2']) {
+      db.exec(`DROP TRIGGER IF EXISTS ${t}`);
+    }
+    db.exec(SCHEMA);
+    db.exec(`INSERT INTO app_flags (key) VALUES ('trigger-names-cla')`);
+  }
 }
 
 /** Apaga tudo e recria o esquema (usado por "npm run seed"). */

@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Check, ChevronDown, ChevronUp, ImageUp, Pencil, Trash2, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, ImageUp, Pencil, Trash2, X } from 'lucide-react';
 import { api, toForm } from '../../api.js';
-import { fmtDateTime, fmtMoney, plural } from '../../format.js';
+import { plural } from '../../format.js';
 import { CONTENT_ICON_KEYS, IconPicker, MEDAL_ICON_KEYS } from '../../icons.jsx';
 import {
-  Badge, Button, Card, Confirm, ContentIcon, Field, ImagesInput, Loading, MedalIcon, Modal, ModesPicker, PageHeader, QuizBuilder, Section, Tabs,
+  Button, Confirm, ContentIcon, Field, ImagesInput, Loading, MedalIcon, Modal, ModesPicker, PageHeader, QuizBuilder, Section, Tabs,
   modesLabel, useAsync, useLoad,
 } from '../../ui.jsx';
 
-const TYPE_LABEL = { especialidade: 'Especialidade', classe: 'Classe', curso: 'Curso' };
+const TYPE_LABEL = { especialidade: 'Insígnia', classe: 'Caderno guia', curso: 'Curso' };
 const newItem = () => ({ title: '', body: '', modes: [], images: [], files: [], questions: [{ question: '', options: ['', ''], correct: 0 }], open: true });
 
 function ItemEditor({ it, i, label, update, remove, move, count }) {
@@ -81,7 +81,7 @@ function ContentForm({ id, type, onClose, onDone }) {
     <Modal title={(id ? 'Editar ' : 'Nova ') + TYPE_LABEL[f.type].toLowerCase()} onClose={onClose} footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} onClick={save}>Salvar</Button></>}>
       <div className="form">
         <Field label="Nome"><input value={f.name} onChange={set('name')} /></Field>
-        <Field group label={f.type === 'classe' ? 'Insígnia da classe' : 'Imagem'} hint="Envie a imagem oficial (PNG com fundo transparente fica melhor). Sem imagem, usa o ícone abaixo.">
+        <Field group label={f.type === 'classe' ? 'Insígnia do caderno guia' : 'Imagem'} hint="Envie a imagem oficial (PNG com fundo transparente fica melhor). Sem imagem, usa o ícone abaixo.">
           <div className="row">
             <span className="content-icon" style={{ width: 72, height: 72 }}>{preview ? <img src={preview} alt="" className="content-img" /> : <ContentIcon c={{ icon: f.icon }} size={30} />}</span>
             <label className="btn btn-secondary btn-sm"><ImageUp size={15} /> Enviar imagem
@@ -95,13 +95,11 @@ function ContentForm({ id, type, onClose, onDone }) {
         {f.type === 'especialidade' && <Field label="Categoria"><input value={f.category} onChange={set('category')} /></Field>}
         {f.type === 'classe' && (
           <div className="grid2">
-            <label className="check"><input type="checkbox" checked={f.leader} onChange={set('leader')} /> Classe de líder</label>
+            <label className="check"><input type="checkbox" checked={f.leader} onChange={set('leader')} /> Caderno guia de líder</label>
             {!f.leader && <Field label="Idade"><input type="number" min="10" max="15" value={f.age} onChange={set('age')} /></Field>}
           </div>
         )}
         <div className="grid2">
-          <label className="check"><input type="checkbox" checked={f.is_free} onChange={set('is_free')} /> Grátis</label>
-          {!f.is_free && <Field label={f.type === 'classe' ? 'Preço da classe (R$)' : 'Preço (R$)'} hint="Valor fixo do item inteiro"><input inputMode="decimal" value={f.price} onChange={set('price')} placeholder="19,90" /></Field>}
         </div>
         <Section title={`${itemLabel}s (${f.items.length})`}>
           <div className="stack">
@@ -132,7 +130,7 @@ function ContentList({ type }) {
               <div className="grow">
                 <div className="title">{c.name}</div>
                 <div className="sub">
-                  {c.type === 'classe' ? (c.leader ? 'Líder · ' : `${c.age} anos · `) : ''}{plural(c.items_count, c.type === 'curso' ? 'aula' : 'requisito', c.type === 'curso' ? 'aulas' : 'requisitos')} · {c.is_free ? 'Grátis' : fmtMoney(c.price_cents)}
+                  {plural(c.items_count, c.type === 'curso' ? 'aula' : 'requisito', c.type === 'curso' ? 'aulas' : 'requisitos')}
                 </div>
               </div>
               <button type="button" className="icon-btn" aria-label="Editar" onClick={() => setEditing({ id: c.id })}><Pencil size={18} /></button>
@@ -146,7 +144,7 @@ function ContentList({ type }) {
   );
 }
 
-/** Medalhas e troféus: aqui só se cria (sempre grátis). A entrega fica em "Entregar conteúdo". */
+/** Medalhas e troféus: aqui só se cria. A entrega fica em "Entregar conteúdo". */
 function MedalsList() {
   const state = useLoad(() => api.get('/admin/medals'));
   const [creating, setCreating] = useState(false);
@@ -182,7 +180,7 @@ function MedalsList() {
         <Modal title="Nova medalha ou troféu" onClose={() => setCreating(false)} footer={<Button busy={busy} onClick={create}>Criar</Button>}>
           <div className="form">
             <Tabs tabs={[['medalha', 'Medalha'], ['trofeu', 'Troféu']]} value={f.kind} onChange={(kind) => setF({ ...f, kind, icon: kind === 'trofeu' ? 'trophy' : 'medal' })} />
-            <Field label="Nome" hint="Ex.: Melhor clube do mês"><input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
+            <Field label="Nome" hint="Ex.: Melhor clã do mês"><input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
             <Field label="Descrição"><textarea value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })} /></Field>
             <Field group label="Ícone"><IconPicker keys={MEDAL_ICON_KEYS} value={f.icon_file ? null : f.icon} onChange={(icon) => setF({ ...f, icon, icon_file: null })} /></Field>
             <Field label="ou envie uma imagem"><input type="file" accept="image/*" onChange={(e) => setF({ ...f, icon_file: e.target.files[0] || null })} /></Field>
@@ -193,70 +191,16 @@ function MedalsList() {
   );
 }
 
-const STATUS = { pendente: ['yellow', 'Pendente'], pago: ['green', 'Aprovada'], cancelado: ['red', 'Recusada'] };
+const TABS = [['curso', 'Cursos'], ['medalhas', 'Medalhas e troféus']];
 
-/** Compras: aprovar ou recusar. Com pagamento automático, a aprovação acontece sozinha. */
-function Purchases() {
-  const purchases = useLoad(() => api.get('/admin/purchases'));
-  const access = useLoad(() => api.get('/admin/access'));
-  const [, run] = useAsync();
-  const reload = () => { purchases.reload(); access.reload(); };
-  return (
-    <>
-      <Card className="small muted">Quando o pagamento automático estiver ligado, a compra é aprovada sozinha assim que o pagamento é confirmado. Sem ele, aprove ou recuse aqui.</Card>
-      <Section title="Pedidos de compra">
-        <Loading {...purchases} empty="Nenhum pedido.">
-          {(list) => (
-            <div className="list">
-              {list.map((p) => (
-                <div key={p.id} className="list-item" style={{ alignItems: 'flex-start' }}>
-                  <span className="content-icon"><ContentIcon c={p} size={22} /></span>
-                  <div className="grow">
-                    <div className="row between"><span className="title">{p.content_name}</span><Badge kind={STATUS[p.status][0]}>{STATUS[p.status][1]}</Badge></div>
-                    <div className="sub">{p.member_name}{p.member_handle ? ` · @${p.member_handle}` : ''} · {p.club_name}</div>
-                    <div className="sub">{fmtMoney(p.price_cents)} · {fmtDateTime(p.created_at)}</div>
-                    {p.status === 'pendente' && (
-                      <div className="row" style={{ marginTop: '.5rem' }}>
-                        <Button small variant="green" onClick={() => run(() => api.post(`/admin/purchases/${p.id}/confirm`), 'Compra aprovada').then(reload)}><Check size={14} /> Aprovar</Button>
-                        <Button small variant="danger" onClick={() => run(() => api.post(`/admin/purchases/${p.id}/cancel`), 'Compra recusada').then(reload)}><X size={14} /> Recusar</Button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </Loading>
-      </Section>
-      <Section title="Acessos liberados">
-        <Loading {...access} empty="Nenhum acesso liberado.">
-          {(list) => (
-            <div className="list">
-              {list.map((a) => (
-                <div key={a.member_id + '-' + a.content_id} className="list-item">
-                  <span className="content-icon"><ContentIcon c={a} size={22} /></span>
-                  <div className="grow"><div className="title">{a.content_name}</div><div className="sub">{a.member_name} · {a.source === 'admin' ? 'liberado pela administração' : 'compra'}</div></div>
-                  <Confirm text="Remover este acesso?" onYes={() => run(() => api.del(`/admin/access/${a.member_id}/${a.content_id}`), 'Acesso removido').then(reload)}>Remover</Confirm>
-                </div>
-              ))}
-            </div>
-          )}
-        </Loading>
-      </Section>
-    </>
-  );
-}
-
-const TABS = [['curso', 'Cursos'], ['medalhas', 'Medalhas e troféus'], ['compras', 'Compras']];
-
-/** Conteúdo: tudo o que o Administrador Geral cria (e vende). */
+/** Conteúdo: tudo o que o Administrador Geral cria. Nada é vendido. */
 export default function ContentAdmin() {
   const [tab, setTab] = useState(new URLSearchParams(location.search).get('aba') || 'curso');
   return (
     <>
-      <PageHeader title="Conteúdo" subtitle="Cursos (grátis ou pagos), medalhas e troféus (sempre grátis)" />
+      <PageHeader title="Conteúdo" subtitle="Cursos, medalhas e troféus" />
       <Tabs tabs={TABS} value={tab} onChange={setTab} />
-      {tab === 'medalhas' ? <MedalsList /> : tab === 'compras' ? <Purchases /> : <ContentList key={tab} type={tab} />}
+      {tab === 'medalhas' ? <MedalsList /> : <ContentList key={tab} type={tab} />}
     </>
   );
 }

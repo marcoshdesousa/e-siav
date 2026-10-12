@@ -41,7 +41,7 @@ function MyProfile() {
   const [editHandle, setEditHandle] = useState(false);
   const state = useLoad(() => api.get('/me/profile'));
   const [busy, run] = useAsync();
-  // O membro só troca a própria foto; os demais dados são editados pelo clube.
+  // O membro só troca a própria foto; os demais dados são editados pelo clã.
   const changePhoto = async (file) => {
     await run(() => api.put('/me/photo', toForm({ photo: file })), 'Foto atualizada!');
     state.reload();
@@ -77,16 +77,16 @@ export default function MemberApp() {
   if (!actor.handle) return <HandleSetup />;
   const tabs = [
     { to: base, icon: UserRound, label: 'Perfil', end: true },
-    isDbv ? { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' } : { to: `${base}/classes`, icon: Compass, label: 'Classes' },
+    isDbv ? { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' } : { to: `${base}/classes`, icon: Compass, label: 'Cadernos guia' },
     { to: `${base}/ranking`, icon: Trophy, label: 'Ranking' },
     { to: `${base}/chat`, icon: MessageCircle, label: 'Chat', badge: unread },
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
-    { to: `${base}/especialidades`, icon: Waypoints, label: 'Especialidades', hint: 'As que você tem' },
-    { to: `${base}/classes`, icon: Compass, label: 'Classes', hint: 'As que você tem' },
+    { to: `${base}/especialidades`, icon: Waypoints, label: 'Insígnias', hint: 'As que você tem' },
+    { to: `${base}/classes`, icon: Compass, label: 'Cadernos guia', hint: 'Os que você tem' },
     { to: `${base}/cursos`, icon: GraduationCap, label: 'Cursos', hint: 'Aulas' },
-    { to: `${base}/clubes`, icon: Tent, label: 'Clubes', hint: 'Por distrito' },
+    { to: `${base}/clubes`, icon: Tent, label: 'Clãs', hint: 'Por distrito' },
   ];
   return (
     <Routes>

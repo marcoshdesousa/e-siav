@@ -26,13 +26,13 @@ r.get('/public/districts/:id/clubs', (req, res) => {
 
 r.get('/public/clubs/:id', (req, res) => {
   const c = clubProfile(int(req.params.id));
-  if (!c) fail(404, 'Clube não encontrado');
+  if (!c) fail(404, 'Clã não encontrado');
   res.json(c);
 });
 
 r.get('/public/units/:id', (req, res) => {
   const u = unitProfile(int(req.params.id));
-  if (!u) fail(404, 'Unidade não encontrada');
+  if (!u) fail(404, 'Grupo não encontrado');
   res.json(u);
 });
 

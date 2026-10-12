@@ -7,7 +7,7 @@ import { privateMediaUpload, privateUrl } from '../uploads.js';
 import { pushTo } from '../realtime.js';
 import { fail, int, str } from '../util.js';
 
-// Chat: Unidade (grupo), Diretoria (membro ↔ conta do clube) e Direta (membro ↔ membro).
+// Chat: Grupo (grupo), Diretoria (membro ↔ conta do clã) e Direta (membro ↔ membro).
 const r = Router();
 const chatUser = requireAuth('member', 'club');
 
@@ -78,7 +78,7 @@ function header(a, c) {
   if (c.type === 'unidade') {
     const u = get('SELECT name, logo FROM units WHERE id = ?', c.unit_id);
     const n = get('SELECT COUNT(*) n FROM members WHERE unit_id = ?', c.unit_id).n;
-    return { title: 'Unidade ' + u.name, photo: u.logo, subtitle: `Grupo da unidade · ${n} membros` };
+    return { title: 'Grupo ' + u.name, photo: u.logo, subtitle: `Conversa do grupo · ${n} membros` };
   }
   if (c.type === 'diretoria') {
     if (a.type === 'member') {
@@ -86,7 +86,7 @@ function header(a, c) {
       return { title: 'Diretoria', photo: cl.logo, subtitle: cl.name, peer: { type: 'club', id: c.club_id } };
     }
     const m = get('SELECT m.name, m.photo, m.handle, u.name AS unit FROM members m LEFT JOIN units u ON u.id = m.unit_id WHERE m.id = ?', c.member_a);
-    return { title: m.name, photo: m.photo, subtitle: (m.unit ? 'Unidade ' + m.unit : 'Sem unidade') + (m.handle ? ' · @' + m.handle : ''), peer: { type: 'member', id: c.member_a } };
+    return { title: m.name, photo: m.photo, subtitle: (m.unit ? 'Grupo ' + m.unit : 'Sem grupo') + (m.handle ? ' · @' + m.handle : ''), peer: { type: 'member', id: c.member_a } };
   }
   const otherId = c.member_a === a.id ? c.member_b : c.member_a;
   const o = get('SELECT m.name, m.photo, m.handle, cl.name AS club FROM members m JOIN clubs cl ON cl.id = m.club_id WHERE m.id = ?', otherId);
@@ -161,7 +161,7 @@ r.get('/chat/conversations/:id', chatUser, (req, res) => {
   const c = loadConv(req);
   const out = { id: c.id, type: c.type, ...header(req.actor, c) };
   if (c.type === 'unidade') {
-    // Membros do mesmo grupo (mesmo clube) — usado para denunciar ou bloquear alguém.
+    // Membros do mesmo grupo (mesmo clã) — usado para denunciar ou bloquear alguém.
     out.members = all('SELECT id, name, photo, cargo FROM members WHERE unit_id = ? AND id <> ? ORDER BY name', c.unit_id, req.actor.id);
   }
   if (out.peer) {
@@ -222,7 +222,7 @@ r.post('/chat/conversations/:id/read', chatUser, (req, res) => {
   res.json({ ok: true });
 });
 
-// Busca para conversa direta: pelo @ (qualquer clube) ou pelo nome (apenas no próprio clube).
+// Busca para conversa direta: pelo @ (qualquer clã) ou pelo nome (apenas no próprio clã).
 r.get('/chat/search', requireAuth('member'), (req, res) => {
   const raw = str(req.query.q, 60);
   const q = raw.replace(/^@/, '');
@@ -329,7 +329,7 @@ r.delete('/chat/blocks/:type/:id', chatUser, (req, res) => {
 });
 
 // ---------- Denunciar ----------
-// A denúncia chega à diretoria do clube e ao Administrador Geral.
+// A denúncia chega à diretoria do clã e ao Administrador Geral.
 r.post('/chat/reports', chatUser, (req, res) => {
   const a = req.actor;
   const c = get('SELECT * FROM conversations WHERE id = ?', int(req.body.conversation_id));

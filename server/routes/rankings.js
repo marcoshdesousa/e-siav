@@ -13,25 +13,25 @@ r.get('/rankings/members', (req, res) => res.json(membersRanking(district(req)))
 r.get('/rankings/clubs', (req, res) => res.json(clubsRanking(district(req))));
 r.get('/rankings/units', (req, res) => res.json(unitsRanking(district(req))));
 
-// Ranking interno de unidades: visível ao próprio clube (e ao Administrador Geral).
+// Ranking interno de grupos: visível ao próprio clã (e ao Administrador Geral).
 r.get('/rankings/club/:clubId/units', (req, res) => {
   const clubId = int(req.params.clubId);
-  if (req.actor.type !== 'admin' && req.actor.club_id !== clubId) fail(403, 'Ranking de outro clube');
+  if (req.actor.type !== 'admin' && req.actor.club_id !== clubId) fail(403, 'Ranking de outro clã');
   const club = get('SELECT id, name FROM clubs WHERE id = ?', clubId);
-  if (!club) fail(404, 'Clube não encontrado');
+  if (!club) fail(404, 'Clã não encontrado');
   res.json({ club, rows: clubUnitsRanking(clubId) });
 });
 
-// Ranking de desbravadores do clube (requisitos criados pelo clube).
+// Ranking de desbravadores do clã (requisitos criados pelo clã).
 r.get('/rankings/club/:clubId/members', (req, res) => {
   const clubId = int(req.params.clubId);
-  if (req.actor.type !== 'admin' && req.actor.club_id !== clubId) fail(403, 'Ranking de outro clube');
+  if (req.actor.type !== 'admin' && req.actor.club_id !== clubId) fail(403, 'Ranking de outro clã');
   res.json(clubMembersRanking(clubId));
 });
 
 const pick = (row) => (row ? { position: row.position, points: row.points } : null);
 
-// Resumo: a posição do membro, da sua unidade e do seu clube de uma vez.
+// Resumo: a posição do membro, da seu grupo e do seu clã de uma vez.
 r.get('/rankings/summary', (req, res) => {
   const a = req.actor;
   if (a.type === 'admin') return res.json({});

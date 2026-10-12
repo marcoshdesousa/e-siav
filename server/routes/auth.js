@@ -6,7 +6,7 @@ import { fail } from '../util.js';
 
 const r = Router();
 
-// Limite de tentativas erradas de senha: 8 por usuário e 30 por IP (um clube
+// Limite de tentativas erradas de senha: 8 por usuário e 30 por IP (um clã
 // inteiro pode entrar pela mesma rede da igreja) a cada 15 minutos.
 const LIMITE = { user: 8, ip: 30 };
 const JANELA_MS = 15 * 60 * 1000;
@@ -30,7 +30,7 @@ setInterval(() => {
   for (const [k, f] of falhas) if (Date.now() - f.inicio > JANELA_MS) falhas.delete(k);
 }, JANELA_MS).unref();
 
-// Login Clube: conta do clube e contas de unidade.
+// Login Clã: conta do clã e contas de grupo.
 // Login Membros: desbravadores, liderança e Administrador Geral.
 r.post('/auth/login', (req, res) => {
   const { mode, username, password } = req.body || {};

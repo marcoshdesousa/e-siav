@@ -111,12 +111,12 @@ function ContentMembers({ contentId, onBack, onPick }) {
   );
 }
 
-/** Análise de classes ou especialidades: classe → pessoas → requisitos de cada pessoa. */
+/** Análise de cadernos guia ou insígnias: caderno guia → pessoas → requisitos de cada pessoa. */
 export default function ContentReview({ type, embedded = false }) {
   const [contentId, setContentId] = useState(null);
   const [memberId, setMemberId] = useState(null);
   const list = useLoad(() => api.get('/admin/content-review?type=' + type), [type, contentId, memberId]);
-  const title = { classe: 'Classes', especialidade: 'Especialidades', curso: 'Cursos' }[type];
+  const title = { classe: 'Cadernos guia', especialidade: 'Insígnias', curso: 'Cursos' }[type];
 
   let body;
   if (contentId && memberId) body = <MemberDetail contentId={contentId} memberId={memberId} onBack={() => setMemberId(null)} />;
@@ -131,7 +131,7 @@ export default function ContentReview({ type, embedded = false }) {
                 <span className="content-icon"><ContentIcon c={c} size={24} /></span>
                 <div className="grow">
                   <div className="title">{c.name}</div>
-                  <div className="sub">{type === 'classe' ? (c.leader ? 'Líder · ' : `${c.age} anos · `) : ''}{c.members} pessoa{c.members === 1 ? '' : 's'} fazendo</div>
+                  <div className="sub">{c.members} pessoa{c.members === 1 ? '' : 's'} fazendo</div>
                 </div>
                 {c.pending ? <Badge kind="yellow">{c.pending} p/ analisar</Badge> : null}
                 <ChevronRight className="chev" size={20} />

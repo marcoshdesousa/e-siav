@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import {
-  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, ShieldAlert, ShoppingCart, Tent, Trophy, Users,
+  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, ShieldAlert, Tent, Trophy, Users,
 } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -39,12 +39,11 @@ function AdminHome() {
           <Section title="Visão geral">
             <div className="stats">
               <Stat icon={Map} value={o.districts} label="Distritos" to={`${base}/clubes`} />
-              <Stat icon={Tent} value={o.clubs} label="Clubes" to={`${base}/clubes`} />
-              <Stat icon={Flag} value={o.units} label="Unidades" />
+              <Stat icon={Tent} value={o.clubs} label="Clãs" to={`${base}/clubes`} />
+              <Stat icon={Flag} value={o.units} label="Grupos" />
               <Stat icon={Users} value={o.members} label="Membros" />
               <Stat icon={ClipboardCheck} value={o.requirements} label="Requisitos gerais" to={`${base}/requisitos`} />
               <Stat icon={Inbox} value={o.pending_reviews} label="Envios p/ avaliar" to={`${base}/requisitos?aba=avaliar`} accent={o.pending_reviews > 0} />
-              <Stat icon={ShoppingCart} value={o.pending_purchases} label="Compras pendentes" to={`${base}/conteudo?aba=compras`} accent={o.pending_purchases > 0} />
               <Stat icon={ShieldAlert} value={o.open_reports} label="Denúncias abertas" to={`${base}/denuncias`} accent={o.open_reports > 0} />
             </div>
           </Section>
@@ -58,12 +57,12 @@ function AdminHome() {
           { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios' },
         ]} />
       </Section>
-      <p className="muted small mt center">Os dados pessoais dos membros são editados somente pelo clube de cada um.</p>
+      <p className="muted small mt center">Os dados pessoais dos membros são editados somente pelo clã de cada um.</p>
     </>
   );
 }
 
-// ---------- Distritos, clubes e administradores ----------
+// ---------- Distritos, clãs e administradores ----------
 function NameLoginForm({ title, item, withDistrict, districts, onClose, onSave }) {
   const [f, setF] = useState({ name: item?.name || '', district_id: item?.district_id || districts?.[0]?.id || '', username: item?.username || '', password: '' });
   const [busy, run] = useAsync();
@@ -113,8 +112,8 @@ function ClubsAdmin() {
 
   return (
     <>
-      <PageHeader title="Clubes e acessos" />
-      <Tabs tabs={[['clubes', 'Clubes'], ['distritos', 'Distritos'], ['admins', 'Administradores']]} value={tab} onChange={setTab} />
+      <PageHeader title="Clãs e acessos" />
+      <Tabs tabs={[['clubes', 'Clãs'], ['distritos', 'Distritos'], ['admins', 'Administradores']]} value={tab} onChange={setTab} />
       {tab === 'distritos' && (
         <>
           <Card>
@@ -128,7 +127,7 @@ function ClubsAdmin() {
               {(list) => list.map((d) => (
                 <div key={d.id} className="list-item">
                   <span className="trophy-bg"><Map size={22} /></span>
-                  <div className="grow"><div className="title">{d.name}</div><div className="sub">{plural(d.club_count, 'clube', 'clubes')}</div></div>
+                  <div className="grow"><div className="title">{d.name}</div><div className="sub">{plural(d.club_count, 'clã', 'clãs')}</div></div>
                   <Button small variant="secondary" onClick={() => renameDistrict(d)}>Renomear</Button>
                 </div>
               ))}
@@ -138,16 +137,16 @@ function ClubsAdmin() {
       )}
       {tab === 'clubes' && (
         <>
-          <Button block onClick={() => setModal({ kind: 'club' })}>+ Novo clube</Button>
+          <Button block onClick={() => setModal({ kind: 'club' })}>+ Novo clã</Button>
           <div className="list mt">
-            <Loading {...clubs} empty="Nenhum clube cadastrado.">
+            <Loading {...clubs} empty="Nenhum clã cadastrado.">
               {(list) => list.map((c) => (
                 <div key={c.id} className="list-item">
                   <Avatar src={c.logo} name={c.name} size={48} square />
                   <div className="grow">
                     <div className="title">{c.name}</div>
-                    <div className="sub">{c.district_name} · {plural(c.unit_count, 'unidade', 'unidades')} · {plural(c.member_count, 'membro', 'membros')}</div>
-                    <div className="sub">Login do Sistema do Clube: <b>@{c.username}</b></div>
+                    <div className="sub">{c.district_name} · {plural(c.unit_count, 'grupo', 'grupos')} · {plural(c.member_count, 'membro', 'membros')}</div>
+                    <div className="sub">Login do Sistema do Clã: <b>@{c.username}</b></div>
                   </div>
                   <Button small variant="secondary" onClick={() => setModal({ kind: 'club', item: c })}>Editar</Button>
                 </div>
@@ -174,7 +173,7 @@ function ClubsAdmin() {
       )}
       {modal?.kind === 'club' && (
         <NameLoginForm
-          title={modal.item ? 'Editar clube' : 'Novo clube'} item={modal.item} withDistrict districts={districts.data || []}
+          title={modal.item ? 'Editar clã' : 'Novo clã'} item={modal.item} withDistrict districts={districts.data || []}
           onClose={() => setModal(null)}
           onSave={(f) => (modal.item ? api.put('/admin/clubs/' + modal.item.id, f) : api.post('/admin/clubs', f)).then(() => { clubs.reload(); districts.reload(); })}
         />
@@ -190,12 +189,12 @@ function ClubsAdmin() {
   );
 }
 
-/** Requisitos: criados e avaliação (separados por desbravadores, unidades e clubes) e análise das classes/especialidades. */
+/** Requisitos: criados e avaliação (separados por desbravadores, grupos e clãs) e análise das cadernos guia/insígnias. */
 function RequirementsAdmin() {
   const [tab, setTab] = useState(new URLSearchParams(location.search).get('aba') || 'criados');
   return (
     <>
-      <PageHeader title="Requisitos" subtitle="Desbravadores, unidades e clubes" />
+      <PageHeader title="Requisitos" subtitle="Desbravadores, grupos e clãs" />
       <Tabs tabs={[['criados', 'Criados'], ['avaliar', 'Avaliar envios'], ['cursos', 'Aulas dos cursos']]} value={tab} onChange={setTab} />
       {tab === 'criados' && <CreatedRequirements />}
       {tab === 'avaliar' && <ReviewsPanel />}
@@ -208,19 +207,19 @@ function RequirementsAdmin() {
 export default function AdminApp() {
   const tabs = [
     { to: base, icon: House, label: 'Início', end: true },
-    { to: `${base}/clubes`, icon: Tent, label: 'Clubes' },
+    { to: `${base}/clubes`, icon: Tent, label: 'Clãs' },
     { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },
     { to: `${base}/conteudo`, icon: Library, label: 'Conteúdo' },
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
     { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo', hint: 'Medalhas, troféus e cursos' },
-    { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial', hint: 'Classes e especialidades' },
+    { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial', hint: 'Cadernos guia e insígnias' },
     { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos', hint: 'Criar e participantes' },
     { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: 'Aparecem ao abrir o app' },
     { to: `${base}/ranking`, icon: Trophy, label: 'Rankings', hint: 'Todas as tabelas' },
     { to: `${base}/denuncias`, icon: ShieldAlert, label: 'Denúncias', hint: 'Do chat' },
-    { to: `${base}/explorar`, icon: Map, label: 'Explorar clubes', hint: 'Perfis públicos' },
+    { to: `${base}/explorar`, icon: Map, label: 'Explorar clãs', hint: 'Perfis públicos' },
   ];
   return (
     <Shell tabs={tabs}>
