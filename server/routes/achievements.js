@@ -54,7 +54,7 @@ r.get('/club/achievement-requests', requireAuth('club'), (req, res) => {
   const status = ['pendente', 'aprovado', 'recusado'].includes(req.query.status) ? req.query.status : 'pendente';
   const rows = all(
     `SELECT q.id, q.status, q.created_at, q.reviewed_at, c.id AS content_id, c.type, c.name, c.icon, c.image, c.category,
-            m.id AS member_id, m.name AS member_name, m.photo AS member_photo, m.handle, u.name AS unit_name
+            m.id AS member_id, m.name AS member_name, m.photo AS member_photo, m.code, u.name AS unit_name
      FROM achievement_requests q JOIN content c ON c.id = q.content_id JOIN members m ON m.id = q.member_id
      LEFT JOIN units u ON u.id = m.unit_id
      WHERE m.club_id = ? AND q.status = ? ORDER BY m.name, c.type, c.name LIMIT 500`,
@@ -63,7 +63,7 @@ r.get('/club/achievement-requests', requireAuth('club'), (req, res) => {
   // Agrupado por membro
   const byMember = new Map();
   for (const x of rows) {
-    if (!byMember.has(x.member_id)) byMember.set(x.member_id, { member_id: x.member_id, name: x.member_name, photo: x.member_photo, handle: x.handle, unit_name: x.unit_name, items: [] });
+    if (!byMember.has(x.member_id)) byMember.set(x.member_id, { member_id: x.member_id, name: x.member_name, photo: x.member_photo, code: x.code, unit_name: x.unit_name, items: [] });
     byMember.get(x.member_id).items.push({ id: x.id, status: x.status, created_at: x.created_at, content_id: x.content_id, type: x.type, name: x.name, icon: x.icon, image: x.image, category: x.category });
   }
   res.json([...byMember.values()]);

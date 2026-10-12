@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -286,12 +287,27 @@ CREATE TABLE IF NOT EXISTS reports (
   created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
 );
 
+-- Transferência de membro entre clãs: o clã novo pede, o clã antigo aceita
+-- e o clã novo confirma. Só então o membro muda de clã (com todo o histórico).
+CREATE TABLE IF NOT EXISTS transfers (
+  id INTEGER PRIMARY KEY,
+  member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+  from_club_id INTEGER NOT NULL REFERENCES clubs(id) ON DELETE CASCADE,
+  to_club_id INTEGER NOT NULL REFERENCES clubs(id) ON DELETE CASCADE,
+  status TEXT NOT NULL DEFAULT 'pendente_origem'
+    CHECK (status IN ('pendente_origem','pendente_destino','concluida','recusada','cancelada')),
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+  updated_at TEXT,
+  CHECK (from_club_id <> to_club_id)
+);
+
 -- ===== Regras de integridade garantidas no próprio banco =====
 
--- O membro não troca de clã: cada clã só edita os próprios membros.
+-- O membro só troca de clã por uma transferência aceita pelos dois clãs.
 CREATE TRIGGER IF NOT EXISTS trg_member_club_immutable
 BEFORE UPDATE OF club_id ON members WHEN NEW.club_id <> OLD.club_id
-BEGIN SELECT RAISE(ABORT, 'O clã de um membro não pode ser alterado'); END;
+  AND NOT EXISTS (SELECT 1 FROM transfers t WHERE t.member_id = NEW.id AND t.to_club_id = NEW.club_id AND t.status = 'concluida')
+BEGIN SELECT RAISE(ABORT, 'O clã de um membro só muda por transferência aceita'); END;
 
 CREATE TRIGGER IF NOT EXISTS trg_unit_club_immutable
 BEFORE UPDATE OF club_id ON units WHEN NEW.club_id <> OLD.club_id
@@ -480,6 +496,108 @@ function migrate() {
   // Exploradores: grupo "Liderança" vira "Tutores" e cargos antigos ganham o nome novo.
   db.prepare(`UPDATE units SET name = ? WHERE is_leadership = 1 AND name = 'Liderança'`).run(NOME_UNIDADE_LIDERANCA);
   for (const [old, novo] of Object.entries(CARGOS_RENOMEADOS)) db.prepare('UPDATE members SET cargo = ? WHERE cargo = ?').run(novo, old);
+
+  const flag = (key) => !!db.prepare('SELECT 1 FROM app_flags WHERE key = ?').get(key);
+  const setFlag = (key) => db.prepare('INSERT OR IGNORE INTO app_flags (key) VALUES (?)').run(key);
+
+  // Clã: código de 4 dígitos (0001, 0002...), nome do diretor e história.
+  add('clubs', 'code', 'TEXT');
+  add('clubs', 'director_name', 'TEXT');
+  add('clubs', 'history', 'TEXT');
+  db.exec('CREATE UNIQUE INDEX IF NOT EXISTS ux_club_code ON clubs(code) WHERE code IS NOT NULL');
+  for (const c of db.prepare('SELECT id FROM clubs WHERE code IS NULL ORDER BY id').all()) {
+    const max = db.prepare('SELECT MAX(CAST(code AS INTEGER)) n FROM clubs').get().n || 0;
+    db.prepare('UPDATE clubs SET code = ? WHERE id = ?').run(String(max + 1).padStart(4, '0'), c.id);
+  }
+
+  // Grupo: senha de 4 números gerada pelo app (única dentro do clã). Entra com o código do clã.
+  add('units', 'pin', 'TEXT');
+  db.exec('CREATE UNIQUE INDEX IF NOT EXISTS ux_unit_pin ON units(club_id, pin) WHERE pin IS NOT NULL');
+  for (const u of db.prepare('SELECT id, club_id FROM units WHERE pin IS NULL').all()) {
+    for (;;) {
+      const pin = String(crypto.randomInt(10000)).padStart(4, '0');
+      if (db.prepare('SELECT 1 FROM units WHERE club_id = ? AND pin = ?').get(u.club_id, pin)) continue;
+      db.prepare('UPDATE units SET pin = ? WHERE id = ?').run(pin, u.id);
+      break;
+    }
+  }
+
+  // Membro: código de 6 números, CPF (um clã por pessoa), situação e ficha (cadastro, médica, termos).
+  add('members', 'cpf', 'TEXT');
+  add('members', 'status', "TEXT NOT NULL DEFAULT 'ativo'");
+  db.exec('CREATE UNIQUE INDEX IF NOT EXISTS ux_member_cpf ON members(cpf) WHERE cpf IS NOT NULL');
+  db.exec(`CREATE TABLE IF NOT EXISTS member_records (
+    member_id INTEGER PRIMARY KEY REFERENCES members(id) ON DELETE CASCADE,
+    data TEXT NOT NULL DEFAULT '{}',
+    terms_accepted_at TEXT,
+    updated_at TEXT
+  )`);
+  for (const m of db.prepare(`SELECT id FROM members WHERE NOT (code GLOB '[0-9][0-9][0-9][0-9][0-9][0-9]')`).all()) {
+    for (;;) {
+      const code = String(crypto.randomInt(100000, 1000000));
+      if (db.prepare('SELECT 1 FROM members WHERE code = ?').get(code)) continue;
+      db.prepare('UPDATE members SET code = ? WHERE id = ?').run(code, m.id);
+      break;
+    }
+  }
+
+  // Uma vez: o gatilho do clã do membro passa a aceitar transferências concluídas.
+  if (!flag('trigger-transfer')) {
+    db.exec('DROP TRIGGER IF EXISTS trg_member_club_immutable');
+    db.exec(SCHEMA);
+    setFlag('trigger-transfer');
+  }
+
+  // Requisitos criados pelo grupo (para os exploradores do grupo) e requisitos de membro
+  // só para exploradores ou só para tutores/liderança. Recria a tabela preservando os ids.
+  const reqSql2 = db.prepare("SELECT sql FROM sqlite_master WHERE name = 'requirements'").get()?.sql || '';
+  if (!reqSql2.includes("creator_type IN ('admin','club','unit')")) {
+    let newSql = reqSql2.replace(/CREATE TABLE( IF NOT EXISTS)? "?requirements"?/, 'CREATE TABLE requirements_new');
+    const swaps = [
+      ["creator_type IN ('admin','club')", "creator_type IN ('admin','club','unit')"],
+      ["scope IN ('geral','distrito','clube')", "scope IN ('geral','distrito','clube','grupo')"],
+      ["club_id INTEGER REFERENCES clubs(id) ON DELETE CASCADE,",
+        "club_id INTEGER REFERENCES clubs(id) ON DELETE CASCADE,\n  unit_id INTEGER REFERENCES units(id) ON DELETE CASCADE,\n  member_kind TEXT CHECK (member_kind IN ('desbravador','lideranca')),"],
+      ["CHECK (creator_type = 'admin' OR (audience IN ('unit','member') AND club_id IS NOT NULL AND scope = 'clube'))",
+        "CHECK (creator_type <> 'club' OR (audience IN ('unit','member') AND club_id IS NOT NULL AND scope = 'clube'))," +
+        "\n  CHECK (creator_type <> 'unit' OR (audience = 'member' AND club_id IS NOT NULL AND unit_id IS NOT NULL AND scope = 'grupo'))"],
+      ["CHECK (creator_type = 'club' OR (club_id IS NULL AND scope IN ('geral','distrito')))",
+        "CHECK (creator_type <> 'admin' OR (club_id IS NULL AND scope IN ('geral','distrito')))"],
+    ];
+    for (const [a, b] of swaps) {
+      if (!newSql.includes(a)) throw new Error('Migração de requisitos: trecho não encontrado: ' + a);
+      newSql = newSql.replace(a, b);
+    }
+    const columns = cols('requirements').join(', ');
+    db.exec('PRAGMA foreign_keys = OFF');
+    db.exec('BEGIN');
+    try {
+      db.exec(newSql);
+      db.exec(`INSERT INTO requirements_new (${columns}) SELECT ${columns} FROM requirements`);
+      db.exec('DROP TABLE requirements');
+      db.exec('PRAGMA legacy_alter_table = ON');
+      db.exec('ALTER TABLE requirements_new RENAME TO requirements');
+      db.exec('PRAGMA legacy_alter_table = OFF');
+      db.exec('COMMIT');
+    } catch (e) {
+      db.exec('ROLLBACK');
+      throw e;
+    } finally {
+      db.exec('PRAGMA foreign_keys = ON');
+    }
+  }
+  // Uma vez: requisitos de membro que já existiam eram só para exploradores.
+  if (!flag('member-kind-default')) {
+    db.exec(`UPDATE requirements SET member_kind = 'desbravador' WHERE audience = 'member' AND member_kind IS NULL`);
+    setFlag('member-kind-default');
+  }
+  // Requisito criado por um grupo só aceita envios dos membros daquele grupo.
+  db.exec(`CREATE TRIGGER IF NOT EXISTS trg_submission_unit_req
+    BEFORE INSERT ON submissions
+    WHEN (SELECT creator_type FROM requirements WHERE id = NEW.requirement_id) = 'unit'
+      AND (NEW.submitter_type <> 'member'
+           OR (SELECT unit_id FROM requirements WHERE id = NEW.requirement_id) IS NOT (SELECT unit_id FROM members WHERE id = NEW.submitter_id))
+    BEGIN SELECT RAISE(ABORT, 'Requisito de outro grupo'); END`);
 }
 
 /** Apaga tudo e recria o esquema (usado por "npm run seed"). */

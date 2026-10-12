@@ -146,14 +146,14 @@ function DirectSearch({ base, onClose }) {
   };
   return (
     <Modal title="Nova conversa direta" onClose={onClose}>
-      <Field label="@ ou nome" hint="Pelo @ você encontra membros de qualquer clã. Pelo nome, só do seu clã.">
-        <input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder="@arroba ou nome" autoCapitalize="none" />
+      <Field label="Código ou nome" hint="Pelo código de 6 números você encontra membros de qualquer clã. Pelo nome, só do seu clã.">
+        <input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder="123456 ou nome" autoCapitalize="none" />
       </Field>
       <div className="list mt">
         {results.map((m) => (
           <button key={m.id} className="list-item" style={{ border: 0, font: 'inherit', textAlign: 'left', cursor: 'pointer' }} onClick={() => start(m)}>
             <Avatar src={m.photo} name={m.name} size={42} />
-            <div className="grow"><div className="title">{m.name}</div><div className="sub">{m.handle ? '@' + m.handle + ' · ' : ''}{m.club_name}</div></div>
+            <div className="grow"><div className="title">{m.name}</div><div className="sub">{m.code ? m.code + ' · ' : ''}{m.club_name}</div></div>
           </button>
         ))}
         {q.trim().length >= 2 && !results.length && <Empty icon={Search}>Ninguém encontrado.</Empty>}

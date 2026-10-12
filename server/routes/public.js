@@ -15,7 +15,7 @@ r.get('/public/districts/:id/clubs', (req, res) => {
   const ranking = clubsRanking(id);
   const rows = all(
     `SELECT c.id, c.name, c.logo, c.photo,
-            (SELECT COUNT(*) FROM members m WHERE m.club_id = c.id) AS member_count,
+            (SELECT COUNT(*) FROM members m WHERE m.club_id = c.id AND m.status = 'ativo') AS member_count,
             (SELECT COUNT(*) FROM units u WHERE u.club_id = c.id) AS unit_count
      FROM clubs c WHERE c.district_id = ? ORDER BY c.name`,
     id,
@@ -37,9 +37,8 @@ r.get('/public/units/:id', (req, res) => {
 });
 
 r.get('/public/members/:code', (req, res) => {
-  // Link do perfil: /p/membro/@arroba (ou o código antigo).
-  const key = String(req.params.code);
-  const m = key.startsWith('@') ? memberProfile('handle', key.slice(1)) : memberProfile('code', key.toUpperCase()) || memberProfile('handle', key);
+  // Link do perfil: /p/membro/123456 (código do membro).
+  const m = memberProfile('code', String(req.params.code).trim());
   if (!m) fail(404, 'Membro não encontrado');
   delete m.id;
   res.json(m);

@@ -43,6 +43,14 @@ async function login(mode, username, password = 'dbv123') {
   return { actor, cookie, get: (u) => call('GET', u), post: (u, b = {}) => call('POST', u, b), put: (u, b = {}) => call('PUT', u, b), del: (u) => call('DELETE', u) };
 }
 
+// CPF válido (dígitos verificadores) a partir de um número de 9 dígitos.
+const cpf = (n) => {
+  const d = String(n).padStart(9, '0').split('').map(Number);
+  const dv = (a) => { const r = (a.reduce((s, x, i) => s + x * (a.length + 1 - i), 0) * 10) % 11; return r === 10 ? 0 : r; };
+  d.push(dv(d)); d.push(dv(d));
+  return d.join('');
+};
+
 const form = (obj) => {
   const fd = new FormData();
   for (const [k, v] of Object.entries(obj)) fd.append(k, v);
@@ -82,8 +90,10 @@ test('idade define o tipo de conta; liderança sem unidade vai para "Liderança"
   const aguias = await login('clube', 'aguias', 'aguias123');
   const d = new Date();
   const birth = (age) => `${d.getFullYear() - age - 1}-01-15`;
-  assert.equal((await aguias.post('/club/members', form({ name: 'Muito Novo', birth_date: birth(8), username: 'novo1', password: '123456' }))).status, 400);
-  const r = await aguias.post('/club/members', form({ name: 'Nova Líder', birth_date: birth(20), username: 'novalider', password: '123456' }));
+  assert.equal((await aguias.post('/club/members', form({ name: 'Muito Novo', birth_date: birth(8), cpf: cpf(900000001), password: '123456' }))).status, 400);
+  assert.equal((await aguias.post('/club/members', form({ name: 'Sem CPF', birth_date: birth(20), password: '123456' }))).status, 400, 'CPF é obrigatório');
+  const r = await aguias.post('/club/members', form({ name: 'Nova Líder', birth_date: birth(20), cpf: cpf(900000002), password: '123456' }));
+  assert.match(r.body.code, /^\d{6}$/, 'código de 6 números');
   assert.equal(r.status, 200);
   const m = (await aguias.get('/club/members/' + r.body.id)).body;
   assert.equal(m.kind, 'lideranca');
@@ -91,22 +101,22 @@ test('idade define o tipo de conta; liderança sem unidade vai para "Liderança"
   assert.equal(m.unit_id, units.find((u) => u.is_leadership).id);
   // Desbravador não pode entrar na unidade Liderança
   const lid = units.find((u) => u.is_leadership).id;
-  assert.equal((await aguias.post('/club/members', form({ name: 'Dbv', birth_date: birth(12), unit_id: lid, username: 'dbvx', password: '123456' }))).status, 400);
+  assert.equal((await aguias.post('/club/members', form({ name: 'Dbv', birth_date: birth(12), unit_id: lid, cpf: cpf(900000003), password: '123456' }))).status, 400);
   // Unidade de outro clube é rejeitada
   const leoes = await login('clube', 'leoes', 'leoes123');
   const leoesUnit = (await leoes.get('/club/units')).body.find((u) => !u.is_leadership).id;
-  assert.equal((await aguias.post('/club/members', form({ name: 'X', birth_date: birth(12), unit_id: leoesUnit, username: 'xx1', password: '123456' }))).status, 400);
+  assert.equal((await aguias.post('/club/members', form({ name: 'X', birth_date: birth(12), unit_id: leoesUnit, cpf: cpf(900000004), password: '123456' }))).status, 400);
 });
 
-test('liderança não tem requisitos; unidade vê requisitos do clube e gerais', async () => {
+test('requisitos de explorador não aparecem para tutor; grupo vê requisitos do clã e gerais', async () => {
   const marcos = await login('membros', 'marcos');
   assert.deepEqual((await marcos.get('/requirements/mine')).body, []);
   const unit = await login('clube', 'falcoes', 'falcoes123');
   const reqs = (await unit.get('/requirements/mine')).body;
   assert.ok(reqs.some((r) => r.origin === 'clube') && reqs.some((r) => r.origin === 'geral'));
   assert.ok(reqs.every((r) => r.audience === 'unit'));
-  // Unidade não cria requisitos
-  assert.equal((await unit.post('/requirements', { title: 'x' })).status, 403);
+  // Grupo só cria requisito válido (aqui, sem título)
+  assert.equal((await unit.post('/requirements', { title: '' })).status, 400);
   // Requisitos do outro clube não aparecem
   const tigres = await login('clube', 'tigres', 'tigres123');
   const titles = (await tigres.get('/requirements/mine')).body.map((r) => r.title);
@@ -185,10 +195,10 @@ test('chat: acesso por conversa, busca, bloqueio e denúncia', async () => {
   const unitConv = pedroConvs.find((c) => c.type === 'unidade');
   assert.equal((await sofia.get(`/chat/conversations/${unitConv.id}/messages`)).status, 404, 'outra unidade não lê o grupo');
 
-  // Nome só encontra no próprio clube; o @ encontra em qualquer clube.
+  // Nome só encontra no próprio clã; o código de 6 números encontra em qualquer clã.
   assert.equal((await pedro.get('/chat/search?q=Martins')).body.length, 0);
-  const byHandle = (await pedro.get('/chat/search?q=@' + sofia.actor.handle)).body;
-  assert.equal(byHandle[0]?.id, sofia.actor.id);
+  const byCode = (await pedro.get('/chat/search?q=' + sofia.actor.code)).body;
+  assert.equal(byCode[0]?.id, sofia.actor.id);
 
   const { body: direct } = await pedro.post('/chat/direct', { member_id: sofia.actor.id });
   const sent = await pedro.post(`/chat/conversations/${direct.id}/messages`, form({ body: 'Oi Sofia!' }));
@@ -278,16 +288,112 @@ test('site responde na página inicial e nas rotas do app', async () => {
   }
 });
 
-test('@ do membro: obrigatório no primeiro acesso, único e usado no link do perfil', async () => {
+test('código do membro: 6 números, entra com ele e é o link do perfil', async () => {
   const ana = await login('membros', 'ana');
-  assert.equal(ana.actor.handle, null);
-  assert.equal((await ana.put('/me/handle', { handle: 'A' })).status, 400, 'curto demais');
-  assert.equal((await ana.put('/me/handle', { handle: 'lucas.ferreira' })).status, 400, 'já em uso');
-  assert.equal((await ana.get('/me/handle/check?h=Ana.Souza')).body.ok, true);
-  assert.equal((await ana.put('/me/handle', { handle: '@Ana.Souza' })).body.handle, 'ana.souza');
-  const pub = await (await fetch(BASE + '/public/members/@ana.souza')).json();
+  assert.match(ana.actor.code, /^\d{6}$/);
+  const byCode = await login('membros', ana.actor.code);
+  assert.equal(byCode.actor.id, ana.actor.id);
+  const pub = await (await fetch(BASE + '/public/members/' + ana.actor.code)).json();
   assert.equal(pub.name, 'Ana Clara Souza');
-  assert.equal(pub.code, pub.code); // o código continua existindo internamente
+  assert.equal(pub.cpf, undefined, 'CPF nunca aparece no perfil público');
+});
+
+test('clã entra com código + senha; cada grupo com a senha de 4 números', async () => {
+  const admin = await login('membros', 'admin', 'admin123');
+  const district = (await admin.get('/admin/districts')).body[0].id;
+  assert.equal((await admin.post('/admin/clubs', { name: 'Clã Sem Diretor', district_id: district })).status, 400, 'diretor obrigatório');
+  const novo = await admin.post('/admin/clubs', { name: 'Clã Novo', district_id: district, director_name: 'Paulo Diretor' });
+  assert.equal(novo.status, 200);
+  assert.match(novo.body.code, /^\d{4}$/);
+  assert.match(novo.body.password, /^\d{6}$/);
+  const cla = await login('clube', novo.body.code, novo.body.password);
+  assert.equal(cla.actor.type, 'club');
+  const g = await cla.post('/club/units', form({ name: 'Grupo Teste' }));
+  assert.match(g.body.pin, /^\d{4}$/);
+  const grupo = await login('clube', novo.body.code, g.body.pin);
+  assert.equal(grupo.actor.type, 'unit');
+  assert.equal(grupo.actor.id, g.body.id);
+  // Nova senha: a antiga para de funcionar
+  const nova = (await cla.post(`/club/units/${g.body.id}/nova-senha`)).body.pin;
+  if (nova !== g.body.pin) {
+    const res = await fetch(BASE + '/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'clube', username: novo.body.code, password: g.body.pin }) });
+    assert.equal(res.status, 401);
+  }
+  // Diretor e história
+  await cla.put('/club/profile', form({ director_name: 'Paula Diretora', history: 'Fundado em 2026.' }));
+  const pub = await (await fetch(BASE + '/public/clubs/' + novo.body.id)).json();
+  assert.equal(pub.director_name, 'Paula Diretora');
+  assert.equal(pub.history, 'Fundado em 2026.');
+});
+
+test('inscrição pelo link: fica pendente até o clã aprovar; desativar tira o acesso', async () => {
+  const d = new Date();
+  const info = await (await fetch(BASE + '/public/inscricao/0001')).json();
+  assert.equal(info.name, 'Clã Águias do Vale');
+  const body = {
+    name: 'Joana Inscrita', birth_date: `${d.getFullYear() - 12}-03-10`, cpf: cpf(900000010), password: 'senha123',
+    responsavel_nome: 'Maria Mãe', responsavel_telefone: '11999999999', alergias: 'Amendoim',
+    termo_imagem: true, termo_responsabilidade: true, termo_dados: true,
+  };
+  const post = (b) => fetch(BASE + '/public/inscricao/0001', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) });
+  assert.equal((await post({ ...body, termo_imagem: false })).status, 400, 'termos obrigatórios');
+  const ok = await post(body);
+  assert.equal(ok.status, 200);
+  const { code } = await ok.json();
+  assert.equal((await post({ ...body, name: 'Outra Pessoa' })).status, 409, 'CPF único');
+  const tryLogin = () => fetch(BASE + '/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'membros', username: code, password: 'senha123' }) });
+  assert.equal((await tryLogin()).status, 403, 'pendente não entra');
+
+  const aguias = await login('clube', 'aguias', 'aguias123');
+  const joana = (await aguias.get('/club/members')).body.find((m) => m.code === code);
+  assert.equal(joana.status, 'pendente');
+  assert.equal((await aguias.get(`/club/members/${joana.id}/ficha`)).body.ficha.alergias, 'Amendoim');
+  const leoes = await login('clube', 'leoes', 'leoes123');
+  assert.equal((await leoes.get(`/club/members/${joana.id}/ficha`)).status, 404, 'outro clã não vê a ficha');
+  await aguias.post(`/club/members/${joana.id}/aprovar`, {});
+  assert.equal((await tryLogin()).status, 200);
+  await aguias.post(`/club/members/${joana.id}/desativar`);
+  assert.equal((await tryLogin()).status, 403, 'desativado não entra');
+  assert.equal((await aguias.del(`/club/members/${joana.id}`)).status, 404, 'ninguém é apagado');
+  await aguias.post(`/club/members/${joana.id}/reativar`);
+  assert.equal((await tryLogin()).status, 200);
+});
+
+test('transferência: clã novo pede, clã atual aceita, clã novo confirma', async () => {
+  const aguias = await login('clube', 'aguias', 'aguias123');
+  const leoes = await login('clube', 'leoes', 'leoes123');
+  const gabriel = (await aguias.get('/club/members')).body.find((m) => m.name === 'Gabriel Oliveira');
+  assert.equal((await leoes.post('/club/transfers', { name: 'Gabriel Errado', cpf: gabriel.cpf })).status, 404, 'nome e CPF precisam bater');
+  const t = await leoes.post('/club/transfers', { name: 'gabriel oliveira', cpf: gabriel.cpf });
+  assert.equal(t.status, 200);
+  assert.equal((await leoes.post(`/club/transfers/${t.body.id}/destino`, { accept: true })).status, 400, 'clã atual ainda não aceitou');
+  assert.equal((await leoes.post(`/club/transfers/${t.body.id}/origem`, { accept: true })).status, 400, 'só o clã atual aceita a saída');
+  await aguias.post(`/club/transfers/${t.body.id}/origem`, { accept: true });
+  assert.ok((await aguias.get('/club/members')).body.some((m) => m.id === gabriel.id), 'ainda no clã antigo');
+  await leoes.post(`/club/transfers/${t.body.id}/destino`, { accept: true });
+  assert.ok(!(await aguias.get('/club/members')).body.some((m) => m.id === gabriel.id));
+  assert.ok((await leoes.get('/club/members')).body.some((m) => m.id === gabriel.id), 'agora no clã novo');
+});
+
+test('grupo cria requisito para os próprios exploradores; requisito só para tutores', async () => {
+  const falcoes = await login('clube', 'falcoes', 'falcoes123');
+  const deadline = new Date(Date.now() + 864e5).toISOString();
+  const r = await falcoes.post('/requirements', form({ title: 'Nó do grupo', modes: 'texto', points: '10', late_points: '5', deadline }));
+  assert.equal(r.status, 200);
+  const pedro = await login('membros', 'pedro'); // Falcões
+  const ana = await login('membros', 'ana'); // Gaviões
+  const mine = (await pedro.get('/requirements/mine')).body.find((x) => x.id === r.body.id);
+  assert.equal(mine?.origin, 'grupo');
+  assert.ok(!(await ana.get('/requirements/mine')).body.some((x) => x.id === r.body.id), 'outro grupo não vê');
+  await pedro.post(`/requirements/${r.body.id}/submit`, form({ text: 'Fiz o nó' }));
+  const pend = (await falcoes.get('/reviews')).body;
+  assert.ok(pend.some((s) => s.requirement_id === r.body.id), 'grupo avalia');
+
+  const aguias = await login('clube', 'aguias', 'aguias123');
+  const t = await aguias.post('/requirements', form({ title: 'Só tutores', audience: 'member', member_kind: 'lideranca', modes: 'texto', points: '10', late_points: '0', deadline }));
+  const marcos = await login('membros', 'marcos'); // tutor
+  assert.ok((await marcos.get('/requirements/mine')).body.some((x) => x.id === t.body.id), 'tutor vê');
+  assert.ok(!(await pedro.get('/requirements/mine')).body.some((x) => x.id === t.body.id), 'explorador não vê');
 });
 
 test('chat: limpar só para mim, apagar mensagem para todos e apagar conversa', async () => {
@@ -465,6 +571,6 @@ test('anúncios por público e do clube; eventos do clube', async () => {
   assert.equal(p.body.added, 1, 'membro de outro clube não entra');
   assert.ok((await sofia.get('/events/upcoming')).body.some((e) => e.name === 'Acampamento local'));
   assert.ok(!(await pedro.get('/events/upcoming')).body.some((e) => e.name === 'Acampamento local'));
-  const prof = await (await fetch(BASE + '/public/members/@' + sofia.actor.handle)).json();
+  const prof = await (await fetch(BASE + '/public/members/' + sofia.actor.code)).json();
   assert.ok(prof.events.some((e) => e.name === 'Acampamento local'));
 });

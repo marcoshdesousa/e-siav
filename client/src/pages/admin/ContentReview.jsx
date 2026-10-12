@@ -66,7 +66,7 @@ function MemberDetail({ contentId, memberId, onBack }) {
           <button type="button" className="back-link" onClick={onBack}><ArrowLeft size={16} /> {d.content.name}</button>
           <div className="list-item" style={{ marginBottom: '.8rem' }}>
             <Avatar src={d.member.photo} name={d.member.name} size={48} />
-            <div className="grow"><div className="title">{d.member.name}</div><div className="sub">{d.member.handle ? '@' + d.member.handle + ' · ' : ''}{d.member.club_name}</div></div>
+            <div className="grow"><div className="title">{d.member.name}</div><div className="sub">{d.member.code ? d.member.code + ' · ' : ''}{d.member.club_name}</div></div>
             {(d.completed || doneMsg) && <Badge kind="yellow"><Award size={12} /> Concluída</Badge>}
           </div>
           {d.items.map((it, i) => (

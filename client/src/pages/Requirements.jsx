@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { ArrowLeft, CalendarClock, CheckCircle2, ChevronRight, ClipboardList, Globe2, Star, Timer, XCircle } from 'lucide-react';
+import { ArrowLeft, CalendarClock, CheckCircle2, ChevronRight, ClipboardList, Globe2, Star, Timer, Users, XCircle } from 'lucide-react';
 import { api, toForm } from '../api.js';
 import { useAuth } from '../auth.jsx';
-import { AUDIENCE_LABEL, fmtDateTime, isoToLocal, localToIso, timeLeft } from '../format.js';
+import { AUDIENCE_LABEL, MEMBER_KIND_LABEL, fmtDateTime, isoToLocal, localToIso, timeLeft } from '../format.js';
 import {
   Avatar, Badge, Button, Card, Confirm, Empty, Field, Gallery, ImagesInput, Loading, Modal, ModesPicker, QuizAnswer, QuizBuilder, StateBadge, Tabs,
   modesLabel, notify, useAsync, useLoad,
@@ -13,10 +13,13 @@ export function Lightbox({ src, onClose }) {
   return <div className="lightbox" onClick={onClose}><img src={src} alt="" /></div>;
 }
 
-/** Públicos dos requisitos, na ordem pedida: exploradores, grupos e clãs. */
-const AUDIENCES = [['member', 'Exploradores'], ['unit', 'Grupos'], ['club', 'Clãs']];
-/** O clã cria para os próprios grupos e para os próprios exploradores. */
-const CLUB_AUDIENCES = [['unit', 'Grupos'], ['member', 'Exploradores']];
+/** Públicos dos requisitos, na ordem pedida: membros, grupos e clãs. */
+const AUDIENCES = [['member', 'Membros'], ['unit', 'Grupos'], ['club', 'Clãs']];
+/** O clã cria para os próprios grupos e para os próprios membros. */
+const CLUB_AUDIENCES = [['unit', 'Grupos'], ['member', 'Membros']];
+/** O grupo cria só para os próprios exploradores. */
+const UNIT_AUDIENCES = [['member', 'Exploradores do grupo']];
+const audiencesFor = (type) => (type === 'admin' ? AUDIENCES : type === 'club' ? CLUB_AUDIENCES : UNIT_AUDIENCES);
 
 function RequirementCard({ r, onSubmit }) {
   const left = timeLeft(r.deadline);
@@ -101,7 +104,7 @@ function SubmitModal({ r, onClose, onDone }) {
  * Explorador e grupo veem duas abas: requisitos do App (gerais) e do meu clã.
  * O clã cumpre só os requisitos do App.
  */
-export function RequirementsTodo({ originTabs = false, clubLabel = 'Requisitos do meu clã' }) {
+export function RequirementsTodo({ originTabs = false, clubLabel = 'Do meu clã', groupTab = false }) {
   const state = useLoad(() => api.get('/requirements/mine'));
   const [sending, setSending] = useState(null);
   const [origin, setOrigin] = useState('geral');
@@ -117,7 +120,7 @@ export function RequirementsTodo({ originTabs = false, clubLabel = 'Requisitos d
         return (
           <>
             {originTabs && (
-              <Tabs tabs={[['geral', 'Requisitos do App', openCount('geral')], ['clube', clubLabel, openCount('clube')]]} value={origin} onChange={setOrigin} />
+              <Tabs tabs={[['geral', 'Do App', openCount('geral')], ['clube', clubLabel, openCount('clube')], ...(groupTab ? [['grupo', 'Do meu grupo', openCount('grupo')]] : [])]} value={origin} onChange={setOrigin} />
             )}
             <div className="seg" style={{ marginBottom: '.9rem' }}>
               {[['abertos', 'A cumprir', counts.abertos], ['enviados', 'Em avaliação', counts.enviados], ['aprovados', 'Aprovados']].map(([k, l, n]) => (
@@ -125,7 +128,7 @@ export function RequirementsTodo({ originTabs = false, clubLabel = 'Requisitos d
               ))}
             </div>
             {shown.length ? shown.map((r) => <RequirementCard key={r.id} r={r} onSubmit={setSending} />) : (
-              <Empty icon={CheckCircle2}>{originTabs && origin === 'clube' ? 'Nenhum requisito do seu clã por aqui.' : 'Nada por aqui.'}</Empty>
+              <Empty icon={CheckCircle2}>{originTabs && origin === 'clube' ? 'Nenhum requisito do seu clã por aqui.' : originTabs && origin === 'grupo' ? 'Nenhum requisito do seu grupo por aqui.' : 'Nada por aqui.'}</Empty>
             )}
             {sending && <SubmitModal r={sending} onClose={() => setSending(null)} onDone={() => { setSending(null); state.reload(); }} />}
           </>
@@ -143,7 +146,7 @@ export function RequirementForm({ audience: fixedAudience, onClose, onDone }) {
   due.setHours(23, 59, 0, 0);
   const [f, setF] = useState({
     title: '', description: '', points: 50, late_points: 20, deadline: isoToLocal(due.toISOString()),
-    audience: fixedAudience || 'member', scope: 'geral', district_id: meta.districts[0]?.id || '',
+    audience: fixedAudience || 'member', scope: 'geral', district_id: meta.districts[0]?.id || '', member_kind: 'desbravador',
   });
   const [modes, setModes] = useState(['texto']);
   const [images, setImages] = useState([]);
@@ -182,7 +185,14 @@ export function RequirementForm({ audience: fixedAudience, onClose, onDone }) {
               </Field>
             )}
           </div>
-        ) : <Badge kind="blue">{f.audience === 'member' ? 'Para os exploradores do seu clã' : 'Para os grupos do seu clã'}</Badge>}
+        ) : <Badge kind="blue">{actor.type === 'unit' ? 'Para os exploradores do seu grupo' : f.audience === 'member' ? 'Para os membros do seu clã' : 'Para os grupos do seu clã'}</Badge>}
+        {f.audience === 'member' && actor.type !== 'unit' && (
+          <Field label="Quem cumpre">
+            <select value={f.member_kind} onChange={set('member_kind')}>
+              {Object.entries(MEMBER_KIND_LABEL).map(([k, l]) => <option key={k} value={k}>{l}</option>)}
+            </select>
+          </Field>
+        )}
         <Field label="Título"><input value={f.title} onChange={set('title')} /></Field>
         <Field label="Como fazer" hint="Explique o requisito e o que deve ser enviado."><textarea value={f.description} onChange={set('description')} /></Field>
         <ImagesInput label="Fotos de exemplo (opcional)" urls={[]} onUrls={() => {}} files={images} onFiles={setImages} />
@@ -208,14 +218,14 @@ export function CreatedRequirements() {
   const { actor } = useAuth();
   const isAdmin = actor.type === 'admin';
   const state = useLoad(() => api.get('/requirements/created'));
-  const audiences = isAdmin ? AUDIENCES : CLUB_AUDIENCES;
-  const [audience, setAudience] = useState(isAdmin ? 'member' : 'unit');
+  const audiences = audiencesFor(actor.type);
+  const [audience, setAudience] = useState(audiences[0][0]);
   const [creating, setCreating] = useState(false);
   const [, run] = useAsync();
   return (
     <>
-      <Tabs tabs={audiences} value={audience} onChange={setAudience} />
-      <Button block onClick={() => setCreating(true)}>+ Novo requisito para {AUDIENCE_LABEL[audience].toLowerCase()}</Button>
+      {audiences.length > 1 && <Tabs tabs={audiences} value={audience} onChange={setAudience} />}
+      <Button block onClick={() => setCreating(true)}>+ Novo requisito{actor.type === 'unit' ? '' : ` para ${AUDIENCE_LABEL[audience].toLowerCase()}`}</Button>
       <div className="mt">
         <Loading data={state.data && state.data.filter((r) => r.audience === audience)} loading={state.loading} error={state.error} empty="Nenhum requisito criado ainda.">
           {(list) => list.map((r) => (
@@ -227,6 +237,7 @@ export function CreatedRequirements() {
                 <span className="req-points ico"><Star size={14} /> {r.points}/{r.late_points} pts</span>
                 <span className="ico"><CalendarClock size={14} /> {fmtDateTime(r.deadline)}</span>
                 {isAdmin && <span className="ico"><Globe2 size={14} /> {r.scope === 'geral' ? 'Geral' : r.district_name}</span>}
+                {r.audience === 'member' && actor.type !== 'unit' && <span className="ico"><Users size={14} /> {MEMBER_KIND_LABEL[r.member_kind || '']}</span>}
               </div>
               <div className="row between">
                 <span className="small muted">{r.submission_count} envios{r.pending_count ? ` · ${r.pending_count} para avaliar` : ''}</span>
@@ -300,8 +311,8 @@ function PersonReviews({ person, status, onBack }) {
  */
 export function ReviewsPanel() {
   const { actor } = useAuth();
-  const isAdmin = actor.type === 'admin';
-  const [audience, setAudience] = useState(isAdmin ? 'member' : 'unit');
+  const audiences = audiencesFor(actor.type);
+  const [audience, setAudience] = useState(audiences[0][0]);
   const [status, setStatus] = useState('enviado');
   const [person, setPerson] = useState(null);
   const state = useLoad(() => api.get(`/reviews/people?status=${status}&submitter_type=${audience}`), [status, audience, person]);
@@ -309,7 +320,7 @@ export function ReviewsPanel() {
   if (person) return <PersonReviews person={person} status={status} onBack={() => setPerson(null)} />;
   return (
     <>
-      <Tabs tabs={(isAdmin ? AUDIENCES : CLUB_AUDIENCES).map(([k, l]) => [k, l, pending[k]])} value={audience} onChange={setAudience} />
+      {audiences.length > 1 && <Tabs tabs={audiences.map(([k, l]) => [k, l, pending[k]])} value={audience} onChange={setAudience} />}
       <div className="row" style={{ marginBottom: '.8rem' }}>
         <div className="seg">
           {[['enviado', 'Para avaliar'], ['aprovado', 'Aprovados'], ['recusado', 'Recusados']].map(([k, l]) => (

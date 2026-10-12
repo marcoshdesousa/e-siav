@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { IDADE_MIN_DESBRAVADOR, IDADE_MAX_DESBRAVADOR } from './config.js';
+import { CARGOS_LIDERANCA, IDADE_MIN_DESBRAVADOR, IDADE_MAX_DESBRAVADOR } from './config.js';
 import { get } from './db.js';
 
 export class HttpError extends Error {
@@ -20,6 +20,12 @@ export function ageFrom(birthDate, ref = new Date()) {
   return age;
 }
 
+/** Papel mostrado no app: Explorador (10–15), ou Liderança/Tutor (16+) conforme o cargo. */
+export function roleOf(kind, cargo) {
+  if (kind === 'desbravador') return 'Explorador';
+  return CARGOS_LIDERANCA.includes(cargo) ? 'Liderança' : 'Tutor';
+}
+
 /** A idade define o tipo de conta: 10–15 explorador, 16+ tutor. */
 export function memberKind(birthDate) {
   const age = ageFrom(birthDate);
@@ -27,13 +33,42 @@ export function memberKind(birthDate) {
   return age <= IDADE_MAX_DESBRAVADOR ? 'desbravador' : 'lideranca';
 }
 
+/** Código do membro: 6 números, único em todo o app. */
 export function newMemberCode() {
-  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   for (;;) {
-    let code = 'DBV-';
-    for (let i = 0; i < 5; i++) code += alphabet[crypto.randomInt(alphabet.length)];
+    const code = String(crypto.randomInt(100000, 1000000));
     if (!get('SELECT 1 FROM members WHERE code = ?', code)) return code;
   }
+}
+
+/** Código do clã: 4 números em sequência (0001, 0002...). */
+export function newClubCode() {
+  const max = get('SELECT MAX(CAST(code AS INTEGER)) n FROM clubs').n || 0;
+  return String(max + 1).padStart(4, '0');
+}
+
+/** Senha do grupo: 4 números aleatórios, sem repetir dentro do clã. */
+export function newUnitPin(clubId) {
+  for (;;) {
+    const pin = String(crypto.randomInt(10000)).padStart(4, '0');
+    if (!get('SELECT 1 FROM units WHERE club_id = ? AND pin = ?', clubId, pin)) return pin;
+  }
+}
+
+/** Senha inicial do clã: 6 números aleatórios (pode ser trocada depois). */
+export const newClubPassword = () => String(crypto.randomInt(100000, 1000000));
+
+/** CPF: só números, com dígitos verificadores válidos. Retorna os 11 dígitos ou null. */
+export function cleanCpf(v) {
+  const d = String(v || '').replace(/\D/g, '');
+  if (d.length !== 11 || /^(\d)\1{10}$/.test(d)) return null;
+  const dv = (len) => {
+    let sum = 0;
+    for (let i = 0; i < len; i++) sum += Number(d[i]) * (len + 1 - i);
+    const r = (sum * 10) % 11;
+    return r === 10 ? 0 : r;
+  };
+  return dv(9) === Number(d[9]) && dv(10) === Number(d[10]) ? d : null;
 }
 
 export const str = (v, max = 500) => (v == null ? '' : String(v).trim().slice(0, max));

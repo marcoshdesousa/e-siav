@@ -30,13 +30,14 @@ function canSeeChat(actor, url) {
 
 function canSeeSubmission(actor, url) {
   const s = get(
-    `SELECT s.submitter_type, s.submitter_id, r.creator_type, r.club_id FROM submissions s JOIN requirements r ON r.id = s.requirement_id
+    `SELECT s.submitter_type, s.submitter_id, r.creator_type, r.club_id, r.unit_id FROM submissions s JOIN requirements r ON r.id = s.requirement_id
      WHERE s.photos LIKE ?`,
     `%"${url}"%`,
   );
   if (!s) return false;
   if (s.submitter_type === actor.type && s.submitter_id === actor.id) return true; // quem enviou
   if (s.creator_type === 'admin') return actor.type === 'admin'; // quem avalia
+  if (s.creator_type === 'unit') return actor.type === 'unit' && s.unit_id === actor.id;
   return actor.type === 'club' && s.club_id === actor.id;
 }
 

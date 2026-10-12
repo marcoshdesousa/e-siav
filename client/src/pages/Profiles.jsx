@@ -1,12 +1,11 @@
 import { Link, useParams } from 'react-router-dom';
 import { useState } from 'react';
-import { ArrowLeft, Award, CalendarDays, ChevronRight, Compass, Flag, MapPin, Pencil, Tent, Users } from 'lucide-react';
+import { ArrowLeft, Award, CalendarDays, ChevronRight, Compass, Flag, MapPin, Hash, Tent, Users } from 'lucide-react';
 import { Attachments } from './admin/Events.jsx';
 import { api } from '../api.js';
-import { AppIcon } from '../icons.jsx';
 import { fmtDate, plural } from '../format.js';
 import { useAuth, homeFor } from '../auth.jsx';
-import { Avatar, Button, ContentIcon, Empty, Loading, LogoHorizontal, MedalList, Modal, PositionBadge, RowSection, Section, ShareButton, useLoad } from '../ui.jsx';
+import { Avatar, Button, Card, ContentIcon, Empty, Loading, LogoHorizontal, MedalList, Modal, PositionBadge, RowSection, Section, ShareButton, useLoad } from '../ui.jsx';
 
 /** linkBase: "/p" (páginas públicas) ou "<app>/ver" (dentro do app). */
 const to = (linkBase, kind, id) => `${linkBase}/${kind}/${id}`;
@@ -64,9 +63,15 @@ export function ClubProfileView({ club: c, linkBase }) {
           <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.4rem' }}>
             {c.ranking && <PositionBadge position={c.ranking.position} points={c.ranking.points} label="no ranking de clãs" />}
           </div>
+          {c.director_name && <p className="small" style={{ margin: '.5rem 0 0' }}>Diretor(a): <b>{c.director_name}</b></p>}
           <div className="mt"><ShareButton path={`/p/clube/${c.id}`} title={c.name} /></div>
         </div>
       </div>
+      {c.history && (
+        <Section title="Nossa história">
+          <Card><p style={{ whiteSpace: 'pre-wrap', margin: 0 }}>{c.history}</p></Card>
+        </Section>
+      )}
       <Section title={`Grupos (${c.unit_count})`}>
         <div className="list">
           {c.units.map((u) => (
@@ -110,7 +115,7 @@ export function UnitProfileView({ unit: u, linkBase }) {
   );
 }
 
-export function MemberProfileView({ member: m, linkBase, photoAction, onEditHandle }) {
+export function MemberProfileView({ member: m, linkBase, photoAction }) {
   return (
     <>
       <div className="hero">
@@ -118,11 +123,11 @@ export function MemberProfileView({ member: m, linkBase, photoAction, onEditHand
           <Avatar src={m.photo} name={m.name} size={104} />
           {photoAction}
           <h1>{m.name}</h1>
-          {m.handle && <span className="handle-chip">@{m.handle}{onEditHandle && <button type="button" className="handle-edit" onClick={onEditHandle} aria-label="Alterar @"><Pencil size={13} /></button>}</span>}
+          <span className="handle-chip"><Hash size={14} /> {m.code}</span>
           <div className="chips">
             <span className="chip yellow">{m.cargo}</span>
             <span className="chip">{m.age} anos</span>
-            {m.cargo !== 'Explorador' && <span className="chip ico">{m.kind === 'desbravador' ? <><Compass size={14} /> Explorador</> : <><Award size={14} /> Tutor</>}</span>}
+            {m.cargo !== m.role && <span className="chip ico">{m.kind === 'desbravador' ? <Compass size={14} /> : <Award size={14} />} {m.role}</span>}
           </div>
           <div className="chips">
             <Link to={to(linkBase, 'clube', m.club_id)} className="chip ico"><Tent size={14} /> {m.club_name}</Link>
@@ -131,7 +136,7 @@ export function MemberProfileView({ member: m, linkBase, photoAction, onEditHand
           <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.4rem' }}>
             {m.ranking && <PositionBadge position={m.ranking.position} points={m.ranking.points} label="no ranking de membros" />}
           </div>
-          <div className="mt"><ShareButton path={`/p/membro/${m.handle ? '@' + m.handle : m.code}`} title={m.name} /></div>
+          <div className="mt"><ShareButton path={`/p/membro/${m.code}`} title={m.name} /></div>
         </div>
       </div>
 

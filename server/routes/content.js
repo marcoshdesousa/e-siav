@@ -272,7 +272,7 @@ r.get('/admin/content-review/:id', admin, (req, res) => {
   if (!c) fail(404, 'Conteúdo não encontrado');
   c.items_count = get('SELECT COUNT(*) n FROM content_items WHERE content_id = ?', c.id).n;
   c.members = all(
-    `SELECT m.id, m.name, m.photo, m.handle, cl.name AS club_name, u.name AS unit_name,
+    `SELECT m.id, m.name, m.photo, m.code, cl.name AS club_name, u.name AS unit_name,
             SUM(p.status = 'aprovado') AS approved, SUM(p.status = 'enviado') AS pending, MAX(p.submitted_at) AS last_at,
             EXISTS (SELECT 1 FROM achievements a WHERE a.member_id = m.id AND a.content_id = ?) AS completed
      FROM content_progress p JOIN content_items i ON i.id = p.item_id JOIN members m ON m.id = p.member_id
@@ -285,7 +285,7 @@ r.get('/admin/content-review/:id', admin, (req, res) => {
 
 r.get('/admin/content-review/:id/members/:memberId', admin, (req, res) => {
   const c = get('SELECT id, type, name, icon, image FROM content WHERE id = ?', int(req.params.id));
-  const m = get('SELECT m.id, m.name, m.photo, m.handle, cl.name AS club_name FROM members m JOIN clubs cl ON cl.id = m.club_id WHERE m.id = ?', int(req.params.memberId));
+  const m = get('SELECT m.id, m.name, m.photo, m.code, cl.name AS club_name FROM members m JOIN clubs cl ON cl.id = m.club_id WHERE m.id = ?', int(req.params.memberId));
   if (!c || !m) fail(404, 'Não encontrado');
   res.json({ content: c, member: m, completed: !!get('SELECT 1 FROM achievements WHERE member_id = ? AND content_id = ?', m.id, c.id), items: itemsFor(c.id, m.id, { withAnswers: true }) });
 });
@@ -307,7 +307,7 @@ r.post('/admin/content-review/:id/members/:memberId/items/:itemId', admin, (req,
 // ---------- Compras ----------
 r.get('/admin/purchases', admin, (_req, res) => {
   res.json(all(
-    `SELECT p.*, m.name AS member_name, m.handle AS member_handle, cl.name AS club_name, c.name AS content_name, c.type AS content_type, c.icon, c.image
+    `SELECT p.*, m.name AS member_name, m.code AS member_code, cl.name AS club_name, c.name AS content_name, c.type AS content_type, c.icon, c.image
      FROM purchases p JOIN members m ON m.id = p.member_id JOIN clubs cl ON cl.id = m.club_id JOIN content c ON c.id = p.content_id
      ORDER BY p.status = 'pendente' DESC, p.created_at DESC LIMIT 200`,
   ));
@@ -329,7 +329,7 @@ r.post('/admin/purchases/:id/cancel', admin, (req, res) => {
 // Acessos liberados (por compra ou pelo "Entregar conteúdo").
 r.get('/admin/access', admin, (_req, res) => {
   res.json(all(
-    `SELECT a.*, m.name AS member_name, m.handle AS member_handle, c.name AS content_name, c.icon, c.image FROM content_access a
+    `SELECT a.*, m.name AS member_name, m.code AS member_code, c.name AS content_name, c.icon, c.image FROM content_access a
      JOIN members m ON m.id = a.member_id JOIN content c ON c.id = a.content_id ORDER BY a.granted_at DESC LIMIT 200`,
   ));
 });

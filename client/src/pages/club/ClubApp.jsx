@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import {
-  Award, BadgeCheck, CalendarDays, Check, Megaphone, Plus, ChevronRight, ClipboardCheck, Compass, Flag, Inbox, Map, MapPin, Menu, MessageCircle, ShieldAlert, Tent, Trophy, Users,
+  ArrowLeftRight, Award, BadgeCheck, Copy, FileText, Hash, KeyRound, Link2, RotateCcw, Share2, UserPlus, CalendarDays, Check, Megaphone, Plus, ChevronRight, ClipboardCheck, Compass, Flag, Inbox, Map, MapPin, Menu, MessageCircle, ShieldAlert, Tent, Trophy, Users,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { useRealtime } from '../../realtime.jsx';
-import { KIND_LABEL, plural } from '../../format.js';
+import { KIND_LABEL, fmtCpf, fmtDate, plural } from '../../format.js';
+import FichaForm from '../Ficha.jsx';
+import TransfersPage from './Transfers.jsx';
 import {
-  Avatar, Badge, Button, Card, Confirm, Empty, Field, ImagePicker, Loading, MedalList, Modal, PageHeader, PositionBadge, Section, ShareButton, Stat, Tabs, useAsync, useLoad,
+  Avatar, Badge, Button, Card, Confirm, Empty, Field, ImagePicker, Loading, MedalList, Modal, PageHeader, PositionBadge, Section, ShareButton, Stat, Tabs, notify, useAsync, useLoad,
 } from '../../ui.jsx';
 import Shell, { MoreMenu } from '../Shell.jsx';
 import { EventsList, InAppProfile } from '../Profiles.jsx';
@@ -41,7 +43,8 @@ function ClubHome() {
             <div className="profile-head">
               <Avatar src={c.logo} name={c.name} size={88} square />
               <h1>{c.name}</h1>
-              <div className="chips"><span className="chip ico"><MapPin size={14} /> {c.district_name}</span><span className="chip">Usuário: {c.username}</span></div>
+              <div className="chips"><span className="chip ico"><MapPin size={14} /> {c.district_name}</span><span className="chip ico"><KeyRound size={14} /> Código do clã: <b>{c.code}</b></span></div>
+              {c.director_name && <p className="small" style={{ margin: '.2rem 0 .4rem' }}>Diretor(a): <b>{c.director_name}</b></p>}
               {c.ranking && <PositionBadge position={c.ranking.position} points={c.ranking.points} label="no ranking de clãs" />}
               <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.5rem' }}>
                 <ShareButton path={`/p/clube/${c.id}`} title={c.name} />
@@ -58,8 +61,13 @@ function ClubHome() {
               <Stat icon={BadgeCheck} value={c.pending_achievements} label="Cadernos e insígnias p/ aprovar" to={`${base}/aprovacoes`} accent={c.pending_achievements > 0} />
               <Stat icon={Inbox} value={c.pending_reviews} label="Envios p/ avaliar" to={`${base}/requisitos?aba=avaliar`} accent={c.pending_reviews > 0} />
               <Stat icon={Flag} value={c.open_reports} label="Denúncias abertas" to={`${base}/denuncias`} accent={c.open_reports > 0} />
+              <Stat icon={UserPlus} value={c.signup_pending} label="Inscrições p/ aprovar" to={`${base}/membros?aba=pendente`} accent={c.signup_pending > 0} />
+              <Stat icon={ArrowLeftRight} value={c.transfers_pending} label="Transferências" to={`${base}/transferencias`} accent={c.transfers_pending > 0} />
             </div>
           </Section>
+
+          <SignupLink code={c.code} />
+          <ClubInfoForm club={c} onDone={() => { state.reload(); refresh(); }} />
 
           <Section title="Foto e logo do clã">
             <Card>
@@ -81,12 +89,69 @@ function ClubHome() {
   );
 }
 
+/** Link de inscrição do clã: quem se inscreve por ele entra como pendente. */
+function SignupLink({ code }) {
+  const url = `${location.origin}/inscricao/${code}`;
+  const copy = async () => {
+    try { await navigator.clipboard.writeText(url); notify('Link copiado!'); } catch { notify('Não deu para copiar. Selecione o link e copie.', 'error'); }
+  };
+  const share = () => navigator.share?.({ title: 'Inscrição no clã', url }).catch(() => {});
+  return (
+    <Section title="Link de inscrição">
+      <Card>
+        <p className="small muted" style={{ marginTop: 0 }}>Envie este link para quem quer entrar no clã. A pessoa preenche a ficha de cadastro, a ficha médica e os termos, e você aprova em Membros.</p>
+        <div className="signup-link"><Link2 size={16} /> <span className="ellipsis">{url}</span></div>
+        <div className="row wrap mt">
+          <Button small onClick={copy}><Copy size={14} /> Copiar link</Button>
+          {navigator.share && <Button small variant="secondary" onClick={share}><Share2 size={14} /> Compartilhar</Button>}
+        </div>
+      </Card>
+    </Section>
+  );
+}
+
+/** Nome do diretor (troca a cada ano, se mudar) e a história do clã. */
+function ClubInfoForm({ club, onDone }) {
+  const [f, setF] = useState({ director_name: club.director_name || '', history: club.history || '' });
+  const [busy, run] = useAsync();
+  const save = async () => {
+    await run(() => api.put('/club/profile', toForm(f)), 'Salvo!');
+    onDone();
+  };
+  const changed = f.director_name !== (club.director_name || '') || f.history !== (club.history || '');
+  return (
+    <Section title="Diretor e história do clã">
+      <Card>
+        <div className="form">
+          <Field label="Diretor(a) do clã" hint="O responsável pelo clã. Troque quando mudar a diretoria."><input value={f.director_name} onChange={(e) => setF({ ...f, director_name: e.target.value })} /></Field>
+          <Field label="Nossa história" hint="Aparece no perfil público do clã."><textarea value={f.history} onChange={(e) => setF({ ...f, history: e.target.value })} placeholder="Como o clã começou, conquistas, acampamentos marcantes..." style={{ minHeight: 120 }} /></Field>
+          <div className="row" style={{ justifyContent: 'flex-end' }}><Button busy={busy} disabled={!changed} onClick={save}>Salvar</Button></div>
+        </div>
+      </Card>
+    </Section>
+  );
+}
+
+/** Cargos separados em Liderança e Tutores (16+); explorador tem um cargo só. */
+function CargoOptions({ kind }) {
+  const { meta } = useAuth();
+  if (kind !== 'lideranca') return (meta.cargos[kind] || []).map((c) => <option key={c}>{c}</option>);
+  const lid = meta.cargos_lideranca || [];
+  return (
+    <>
+      <optgroup label="Liderança">{lid.map((c) => <option key={c}>{c}</option>)}</optgroup>
+      <optgroup label="Tutores">{meta.cargos.lideranca.filter((c) => !lid.includes(c)).map((c) => <option key={c}>{c}</option>)}</optgroup>
+    </>
+  );
+}
+
+
 // ---------- Membros ----------
 function MemberForm({ member, units, onClose, onDone }) {
   const { meta } = useAuth();
   const [f, setF] = useState({
     name: member?.name || '', birth_date: member?.birth_date || '', cargo: member?.cargo || '', unit_id: member?.unit_id || '',
-    username: member?.username || '', password: '', photo: member?.photo || null,
+    cpf: fmtCpf(member?.cpf), password: '', photo: member?.photo || null,
   });
   const [busy, run] = useAsync();
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
@@ -96,8 +161,8 @@ function MemberForm({ member, units, onClose, onDone }) {
   const availableUnits = units.filter((u) => !(u.is_leadership && kind === 'desbravador'));
   const save = async () => {
     const body = { ...f, photo: f.photo instanceof File ? f.photo : undefined, unit_id: f.unit_id || '' };
-    await run(() => (member ? api.put('/club/members/' + member.id, toForm(body)) : api.post('/club/members', toForm(body))), member ? 'Membro atualizado!' : 'Membro cadastrado!');
-    onDone();
+    const r = await run(() => (member ? api.put('/club/members/' + member.id, toForm(body)) : api.post('/club/members', toForm(body))), member ? 'Membro atualizado!' : null);
+    onDone(member ? null : r.code);
   };
   return (
     <Modal title={member ? 'Editar membro' : 'Novo membro'} onClose={onClose} footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} onClick={save}>Salvar</Button></>}>
@@ -111,7 +176,7 @@ function MemberForm({ member, units, onClose, onDone }) {
           <Field label="Cargo">
             <select value={f.cargo} onChange={set('cargo')} disabled={!cargos.length}>
               <option value="">Padrão</option>
-              {cargos.map((c) => <option key={c}>{c}</option>)}
+              <CargoOptions kind={kind} />
             </select>
           </Field>
           <Field label="Grupo" hint={kind === 'lideranca' ? 'Sem escolha: entra no grupo Tutores' : 'Sem escolha: aparece como "Sem grupo"'}>
@@ -122,10 +187,10 @@ function MemberForm({ member, units, onClose, onDone }) {
           </Field>
         </div>
         <div className="grid2">
-          <Field label="Usuário de acesso"><input value={f.username} onChange={set('username')} autoCapitalize="none" /></Field>
+          <Field label="CPF" hint="Cada pessoa fica em um clã só"><input value={f.cpf} onChange={(e) => setF({ ...f, cpf: fmtCpf(e.target.value) })} inputMode="numeric" placeholder="000.000.000-00" /></Field>
           <Field label={member ? 'Nova senha' : 'Senha'} hint={member ? 'Deixe em branco para manter' : 'Mínimo 6 caracteres'}><input type="text" value={f.password} onChange={set('password')} /></Field>
         </div>
-        <p className="muted small">Não pedimos CPF. Guardamos só nome, data de nascimento, foto, cargo e grupo.</p>
+        <p className="muted small">{member ? <>Código de acesso: <b>{member.code}</b>. O membro entra com o código e a senha.</> : 'O app gera um código de 6 números para o membro entrar, junto com a senha.'}</p>
       </div>
     </Modal>
   );
@@ -222,7 +287,7 @@ function ApprovalsPage() {
             <Card key={g.member_id}>
               <div className="row">
                 <Avatar src={g.photo} name={g.name} size={44} />
-                <div className="grow"><b>{g.name}</b><div className="small muted">{g.unit_name || 'Sem grupo'}{g.handle ? ' · @' + g.handle : ''}</div></div>
+                <div className="grow"><b>{g.name}</b><div className="small muted">{g.unit_name || 'Sem grupo'}{g.code ? ' · ' + g.code : ''}</div></div>
                 <Badge kind={status === 'pendente' ? 'yellow' : status === 'aprovado' ? 'green' : 'red'}>{g.items.length}</Badge>
               </div>
               <div className="approve-list">
@@ -253,20 +318,87 @@ function ApprovalsPage() {
   );
 }
 
+/** Ficha de cadastro, ficha médica e termos do membro (o clã pode corrigir). */
+function FichaModal({ member, onClose }) {
+  const state = useLoad(() => api.get(`/club/members/${member.id}/ficha`));
+  const [f, setF] = useState(null);
+  const [busy, run] = useAsync();
+  const save = async () => {
+    await run(() => api.put(`/club/members/${member.id}/ficha`, f), 'Ficha salva!');
+    onClose();
+  };
+  return (
+    <Modal title={`Ficha · ${member.name}`} onClose={onClose} footer={f && <Button busy={busy} onClick={save}>Salvar ficha</Button>}>
+      <Loading {...state}>
+        {(d) => (
+          <>
+            <p className="small muted" style={{ marginTop: 0 }}>
+              Código <b>{d.member.code}</b> · CPF {fmtCpf(d.member.cpf) || '—'}
+              {d.ficha.terms_accepted_at ? <> · termos aceitos em {fmtDate(d.ficha.terms_accepted_at)}</> : ''}
+            </p>
+            {d.ficha.termo_imagem === false && <Badge kind="red">Sem autorização de uso de imagem</Badge>}
+            <FichaForm value={f || d.ficha} onChange={setF} minor={member.kind === 'desbravador'} />
+          </>
+        )}
+      </Loading>
+    </Modal>
+  );
+}
+
+/** Aprovar inscrição: escolhe o grupo e o cargo. */
+function ApproveModal({ member, units, onClose, onDone }) {
+  const [f, setF] = useState({ unit_id: '', cargo: '' });
+  const [busy, run] = useAsync();
+  const save = async () => {
+    await run(() => api.post(`/club/members/${member.id}/aprovar`, { ...f, unit_id: f.unit_id || '' }), `${member.name.split(' ')[0]} agora faz parte do clã!`);
+    onDone();
+  };
+  const available = units.filter((u) => !(u.is_leadership && member.kind === 'desbravador'));
+  return (
+    <Modal title={`Aprovar ${member.name}`} onClose={onClose} footer={<Button busy={busy} onClick={save}><Check size={16} /> Aprovar</Button>}>
+      <div className="form">
+        <p className="small muted" style={{ marginTop: 0 }}>{member.age} anos · {member.role}. Confira a ficha antes de aprovar.</p>
+        <div className="grid2">
+          <Field label="Grupo">
+            <select value={f.unit_id} onChange={(e) => setF({ ...f, unit_id: e.target.value })}>
+              <option value="">{member.kind === 'lideranca' ? 'Tutores (automático)' : 'Sem grupo'}</option>
+              {available.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
+            </select>
+          </Field>
+          <Field label="Cargo">
+            <select value={f.cargo} onChange={(e) => setF({ ...f, cargo: e.target.value })}>
+              <option value="">Padrão</option>
+              <CargoOptions kind={member.kind} />
+            </select>
+          </Field>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+const MEMBER_TABS = [['ativo', 'Ativos'], ['pendente', 'Inscrições'], ['inativo', 'Desativados']];
+
 function MembersPage() {
   const members = useLoad(() => api.get('/club/members'));
   const units = useLoad(() => api.get('/club/units'));
+  const [tab, setTab] = useState(new URLSearchParams(location.search).get('aba') || 'ativo');
   const [q, setQ] = useState('');
   const [unitFilter, setUnitFilter] = useState('');
   const [editing, setEditing] = useState(null);
   const [ach, setAch] = useState(null);
+  const [ficha, setFicha] = useState(null);
+  const [approving, setApproving] = useState(null);
+  const [newCode, setNewCode] = useState(null);
   const [, run] = useAsync();
-  const done = () => { setEditing(null); setAch(null); members.reload(); units.reload(); };
+  const done = (code) => { setEditing(null); setAch(null); setApproving(null); members.reload(); units.reload(); if (code) setNewCode(code); };
+  const counts = Object.fromEntries(MEMBER_TABS.map(([k]) => [k, (members.data || []).filter((m) => m.status === k).length]));
   return (
     <>
-      <PageHeader title="Membros" subtitle="Cadastre e atualize os membros do clã" action={<Button small onClick={() => setEditing('new')}>+ Novo</Button>} />
+      <PageHeader title="Membros" subtitle="Ninguém é apagado: quem sai do clã fica desativado" action={<Button small onClick={() => setEditing('new')}>+ Novo</Button>} />
+      <Tabs tabs={MEMBER_TABS.map(([k, l]) => [k, counts[k] ? `${l} (${counts[k]})` : l])} value={tab} onChange={setTab} />
       <div className="grid2">
-        <input placeholder="Buscar por nome" value={q} onChange={(e) => setQ(e.target.value)} />
+        <input placeholder="Buscar por nome ou código" value={q} onChange={(e) => setQ(e.target.value)} />
         <select value={unitFilter} onChange={(e) => setUnitFilter(e.target.value)}>
           <option value="">Todos os grupos</option>
           <option value="none">Sem grupo</option>
@@ -274,9 +406,11 @@ function MembersPage() {
         </select>
       </div>
       <div className="mt">
-        <Loading {...members} empty="Nenhum membro cadastrado ainda.">
+        <Loading {...members}>
           {(list) => {
-            const shown = list.filter((m) => m.name.toLowerCase().includes(q.toLowerCase()) && (!unitFilter || (unitFilter === 'none' ? !m.unit_id : String(m.unit_id) === unitFilter)));
+            const nq = q.toLowerCase();
+            const shown = list.filter((m) => m.status === tab && (m.name.toLowerCase().includes(nq) || m.code.includes(q.trim()))
+              && (!unitFilter || (unitFilter === 'none' ? !m.unit_id : String(m.unit_id) === unitFilter)));
             return (
               <div className="list">
                 {shown.map((m) => (
@@ -286,34 +420,59 @@ function MembersPage() {
                       <div className="title ico">{m.name}</div>
                       <div className="sub">{m.age} anos · {m.cargo} · {m.unit_name || 'Sem grupo'}</div>
                       <div className="row wrap" style={{ marginTop: '.35rem', gap: '.3rem' }}>
-                        <Badge kind={m.kind === 'desbravador' ? 'blue' : 'yellow'}>{KIND_LABEL[m.kind]}</Badge>
-                        {m.handle ? <Badge kind="blue">@{m.handle}</Badge> : <Badge>sem @ ainda</Badge>}
-                        <Badge>login: {m.username}</Badge>
+                        <Badge kind={m.kind === 'desbravador' ? 'blue' : 'yellow'}>{m.role}</Badge>
+                        <Badge><Hash size={11} /> {m.code}</Badge>
+                        {m.status === 'pendente' && <Badge kind="yellow">Inscrito em {fmtDate(m.created_at)}</Badge>}
                       </div>
                       <div className="row wrap" style={{ marginTop: '.5rem', gap: '.35rem' }}>
-                        <Button small variant="secondary" onClick={() => setEditing(m)}>Editar</Button>
-                        <Button small variant="secondary" onClick={() => setAch(m)}>Cadernos e insígnias</Button>
-                        <Link to={`${base}/ver/membro/${m.code}`}><Button small variant="ghost">Perfil</Button></Link>
-                        <Confirm text={`Remover ${m.name} do clã?`} onYes={() => run(() => api.del('/club/members/' + m.id), 'Membro removido').then(done)}>Remover</Confirm>
+                        {m.status === 'pendente' ? (
+                          <>
+                            <Button small variant="green" onClick={() => setApproving(m)}><Check size={14} /> Aprovar</Button>
+                            <Button small variant="secondary" onClick={() => setFicha(m)}><FileText size={14} /> Ver ficha</Button>
+                            <Confirm text={`Recusar a inscrição de ${m.name}?`} onYes={() => run(() => api.post(`/club/members/${m.id}/recusar`), 'Inscrição recusada').then(() => done())}>Recusar</Confirm>
+                          </>
+                        ) : m.status === 'inativo' ? (
+                          <>
+                            <Button small variant="green" onClick={() => run(() => api.post(`/club/members/${m.id}/reativar`), 'Membro reativado!').then(() => done())}><RotateCcw size={14} /> Reativar</Button>
+                            <Button small variant="secondary" onClick={() => setFicha(m)}><FileText size={14} /> Ficha</Button>
+                          </>
+                        ) : (
+                          <>
+                            <Button small variant="secondary" onClick={() => setEditing(m)}>Editar</Button>
+                            <Button small variant="secondary" onClick={() => setFicha(m)}><FileText size={14} /> Ficha</Button>
+                            <Button small variant="secondary" onClick={() => setAch(m)}>Cadernos e insígnias</Button>
+                            <Link to={`${base}/ver/membro/${m.code}`}><Button small variant="ghost">Perfil</Button></Link>
+                            <Confirm text={`Desativar ${m.name}? A pessoa sai das listas e do ranking, mas continua no sistema e pode ser reativada.`}
+                              onYes={() => run(() => api.post(`/club/members/${m.id}/desativar`), 'Membro desativado').then(() => done())}>Desativar</Confirm>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
                 ))}
-                {!shown.length && <Empty>Ninguém encontrado.</Empty>}
+                {!shown.length && <Empty>{tab === 'pendente' ? 'Nenhuma inscrição esperando. Compartilhe o link de inscrição na página inicial.' : tab === 'inativo' ? 'Ninguém desativado.' : 'Ninguém encontrado.'}</Empty>}
               </div>
             );
           }}
         </Loading>
       </div>
       {editing && <MemberForm member={editing === 'new' ? null : editing} units={units.data || []} onClose={() => setEditing(null)} onDone={done} />}
-      {ach && <AchievementsModal member={ach} onClose={() => setAch(null)} onDone={done} />}
+      {ach && <AchievementsModal member={ach} onClose={() => setAch(null)} onDone={() => done()} />}
+      {ficha && <FichaModal member={ficha} onClose={() => setFicha(null)} />}
+      {approving && <ApproveModal member={approving} units={units.data || []} onClose={() => setApproving(null)} onDone={() => done()} />}
+      {newCode && (
+        <Modal title="Membro cadastrado!" onClose={() => setNewCode(null)} footer={<Button onClick={() => setNewCode(null)}>Entendi</Button>}>
+          <p className="center">Passe este código para o membro. Ele entra com o código e a senha que você criou.</p>
+          <div className="code-big">{newCode}</div>
+        </Modal>
+      )}
     </>
   );
 }
 
 // ---------- Grupos ----------
 function UnitForm({ unit, onClose, onDone }) {
-  const [f, setF] = useState({ name: unit?.name || '', username: unit?.username || '', password: '', logo: unit?.logo || null });
+  const [f, setF] = useState({ name: unit?.name || '', logo: unit?.logo || null });
   const [busy, run] = useAsync();
   const save = async () => {
     const body = { ...f, logo: f.logo instanceof File ? f.logo : undefined };
@@ -325,17 +484,14 @@ function UnitForm({ unit, onClose, onDone }) {
       <div className="form">
         <ImagePicker label="Logo do grupo" value={f.logo} onChange={(logo) => setF({ ...f, logo })} round={false} name={f.name} />
         <Field label="Nome"><input value={f.name} disabled={unit?.is_leadership} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
-        <div className="grid2">
-          <Field label="Login do grupo"><input value={f.username} onChange={(e) => setF({ ...f, username: e.target.value })} autoCapitalize="none" /></Field>
-          <Field label={unit ? 'Nova senha' : 'Senha'} hint={unit ? 'Em branco mantém' : 'Mínimo 6 caracteres'}><input value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} /></Field>
-        </div>
-        <p className="muted small">O grupo entra pelo “Login Clã” com este usuário e senha para cumprir requisitos em grupo.</p>
+        {!unit && <p className="muted small">O app cria uma senha de 4 números para o grupo. O padrinho entra pelo Login Clã com o código do clã e essa senha.</p>}
       </div>
     </Modal>
   );
 }
 
 function UnitsPage() {
+  const { actor } = useAuth();
   const state = useLoad(() => api.get('/club/units'));
   const [editing, setEditing] = useState(null);
   const [, run] = useAsync();
@@ -343,17 +499,20 @@ function UnitsPage() {
   return (
     <>
       <PageHeader title="Grupos" subtitle="Cada membro pertence a um único grupo" action={<Button small onClick={() => setEditing('new')}>+ Novo</Button>} />
+      <Card className="small">Para entrar no Portal do Grupo: tela <b>Clã</b>, código do clã <b>{actor.code}</b> e a senha do grupo abaixo.</Card>
       <Loading {...state}>
         {(list) => (
-          <div className="list">
+          <div className="list mt">
             {list.map((u) => (
               <div key={u.id} className="list-item">
                 <Avatar src={u.logo} name={u.name} size={52} square />
                 <div className="grow">
-                  <div className="title">{u.name} {u.is_leadership ? <Badge kind="yellow">automática</Badge> : null}</div>
-                  <div className="sub">{plural(u.member_count, 'membro', 'membros')}{u.username ? ` · login @${u.username}` : ' · sem login'}</div>
+                  <div className="title">{u.name} {u.is_leadership ? <Badge kind="yellow">automático</Badge> : null}</div>
+                  <div className="sub">{plural(u.member_count, 'membro', 'membros')} · senha <span className="pin-box"><KeyRound size={13} />{u.pin}</span></div>
                   <div className="row wrap" style={{ marginTop: '.4rem', gap: '.35rem' }}>
                     <Button small variant="secondary" onClick={() => setEditing(u)}>Editar</Button>
+                    <Confirm text={`Gerar uma nova senha para o grupo ${u.name}? A senha atual para de funcionar.`}
+                      onYes={() => run(() => api.post(`/club/units/${u.id}/nova-senha`), 'Nova senha criada').then(done)}>Nova senha</Confirm>
                     <Link to={`${base}/ver/unidade/${u.id}`}><Button small variant="ghost">Perfil</Button></Link>
                     {!u.is_leadership && <Confirm text={`Excluir o grupo ${u.name}? Os membros ficarão sem grupo.`} onYes={() => run(() => api.del('/club/units/' + u.id), 'Grupo excluído').then(done)}>Excluir</Confirm>}
                   </div>
@@ -376,7 +535,7 @@ function RequirementsPage() {
       <PageHeader title="Requisitos" />
       <Tabs tabs={[['cumprir', 'Requisitos do App'], ['criados', 'Criados pelo clã'], ['avaliar', 'Avaliar']]} value={tab} onChange={setTab} />
       {tab === 'cumprir' && <><p className="muted small">Requisitos que a administração do app manda para o seu clã cumprir.</p><RequirementsTodo /></>}
-      {tab === 'criados' && <><p className="muted small">Crie requisitos com prazo e pontos para os grupos ou para os exploradores do seu clã. Eles contam no ranking do clã.</p><CreatedRequirements /></>}
+      {tab === 'criados' && <><p className="muted small">Crie requisitos com prazo e pontos para os grupos ou para os membros do seu clã (exploradores, tutores ou todos). Eles contam no ranking do clã.</p><CreatedRequirements /></>}
       {tab === 'avaliar' && <ReviewsPanel />}
     </>
   );
@@ -394,7 +553,8 @@ export default function ClubApp() {
   ];
   const more = [
     { to: `${base}/aprovacoes`, icon: BadgeCheck, label: 'Aprovações', hint: 'Cadernos guia e insígnias' },
-    { to: `${base}/unidades`, icon: Flag, label: 'Grupos', hint: 'Criar e editar' },
+    { to: `${base}/unidades`, icon: Flag, label: 'Grupos', hint: 'Criar e ver as senhas' },
+    { to: `${base}/transferencias`, icon: ArrowLeftRight, label: 'Transferências', hint: 'Trazer alguém de outro clã' },
     { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos', hint: 'Do seu clã' },
     { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: 'Para os seus membros' },
     { to: `${base}/ranking`, icon: Trophy, label: 'Ranking', hint: 'Grupos e clãs' },
@@ -413,6 +573,7 @@ export default function ClubApp() {
               <Route path="membros" element={<MembersPage />} />
               <Route path="unidades" element={<UnitsPage />} />
               <Route path="aprovacoes" element={<ApprovalsPage />} />
+              <Route path="transferencias" element={<TransfersPage />} />
               <Route path="eventos" element={<EventsAdmin />} />
               <Route path="anuncios" element={<AnnouncementsAdmin />} />
               <Route path="requisitos" element={<RequirementsPage />} />

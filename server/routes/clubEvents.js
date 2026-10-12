@@ -82,7 +82,7 @@ r.delete('/club/events/:id/participants/:type/:tid', (req, res) => {
 r.get('/club/directory', requireAuth('club'), (req, res) => {
   const c = get('SELECT c.id, c.name, c.logo, c.district_id, d.name AS district_name FROM clubs c JOIN districts d ON d.id = c.district_id WHERE c.id = ?', req.actor.id);
   c.units = all('SELECT id, name, logo, is_leadership FROM units WHERE club_id = ? ORDER BY is_leadership, name', c.id);
-  const members = all('SELECT id, name, photo, handle, cargo, unit_id, birth_date FROM members WHERE club_id = ? ORDER BY name', c.id);
+  const members = all(`SELECT id, name, photo, code, cargo, unit_id, birth_date FROM members WHERE club_id = ? AND status = 'ativo' ORDER BY name`, c.id);
   for (const m of members) { m.kind = memberKind(m.birth_date); delete m.birth_date; }
   for (const u of c.units) u.members = members.filter((m) => m.unit_id === u.id);
   c.no_unit = members.filter((m) => !m.unit_id);

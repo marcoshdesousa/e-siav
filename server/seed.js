@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { run, get, all, tx, resetDatabase, UPLOAD_DIR } from './db.js';
 import { hashPassword } from './auth.js';
-import { newMemberCode } from './util.js';
+import { cleanCpf, newClubCode, newMemberCode } from './util.js';
 import { NOME_UNIDADE_LIDERANCA } from './config.js';
 import { syncCatalog } from './catalog.js';
 
@@ -54,48 +54,57 @@ export function seed() {
     const clubs = {};
     const units = {};
     const clubDefs = [
-      { key: 'aguias', name: 'Clã Águias do Vale', color: '#0B3D91', icon: 'wing', user: 'aguias', units: [['falcoes', 'Falcões', '#D62828', 'wing'], ['gavioes', 'Gaviões', '#1F7A4D', 'mountain']] },
-      { key: 'leoes', name: 'Clã Leões de Judá', color: '#8A1C1C', icon: 'paw', user: 'leoes', units: [['panteras', 'Panteras', '#3A2E7A', 'paw'], ['tigres', 'Tigres', '#D9822B', 'flame']] },
+      { key: 'aguias', name: 'Clã Águias do Vale', director: 'Marcos Almeida', color: '#0B3D91', icon: 'wing', user: 'aguias', units: [['falcoes', 'Falcões', '#D62828', 'wing', '1111'], ['gavioes', 'Gaviões', '#1F7A4D', 'mountain', '2222']] },
+      { key: 'leoes', name: 'Clã Leões de Judá', director: 'Carlos Pereira', color: '#8A1C1C', icon: 'paw', user: 'leoes', units: [['panteras', 'Panteras', '#3A2E7A', 'paw', '3333'], ['tigres', 'Tigres', '#D9822B', 'flame', '4444']] },
     ];
     for (const c of clubDefs) {
-      const id = ins('INSERT INTO clubs (district_id, name, logo) VALUES (?,?,?)', palmares, c.name, makeLogo(`seed-club-${c.key}.svg`, c.color, c.icon));
+      const id = ins('INSERT INTO clubs (district_id, name, logo, code, director_name, history) VALUES (?,?,?,?,?,?)', palmares, c.name,
+        makeLogo(`seed-club-${c.key}.svg`, c.color, c.icon), newClubCode(), c.director, `O ${c.name} nasceu da vontade de levar aventura e fé aos jovens do bairro.`);
       login('club', id, c.user, c.user + '123');
       clubs[c.key] = id;
-      units[c.key + ':lideranca'] = ins('INSERT INTO units (club_id, name, logo, is_leadership) VALUES (?,?,?,1)', id, NOME_UNIDADE_LIDERANCA, makeLogo(`seed-lid-${c.key}.svg`, '#0B3D91', 'star', '#fff'));
-      for (const [ukey, uname, ucolor, uicon] of c.units) {
-        const uid = ins('INSERT INTO units (club_id, name, logo) VALUES (?,?,?)', id, uname, makeLogo(`seed-unit-${ukey}.svg`, ucolor, uicon));
+      units[c.key + ':lideranca'] = ins('INSERT INTO units (club_id, name, logo, is_leadership, pin) VALUES (?,?,?,1,?)', id, NOME_UNIDADE_LIDERANCA, makeLogo(`seed-lid-${c.key}.svg`, '#0B3D91', 'star', '#fff'), c.key === 'aguias' ? '9001' : '9002');
+      for (const [ukey, uname, ucolor, uicon, pin] of c.units) {
+        const uid = ins('INSERT INTO units (club_id, name, logo, pin) VALUES (?,?,?,?)', id, uname, makeLogo(`seed-unit-${ukey}.svg`, ucolor, uicon), pin);
         login('unit', uid, ukey, ukey + '123');
         units[ukey] = uid;
       }
     }
 
-    // ---------- Membros (sem CPF) ----------
+    // ---------- Membros ----------
     const members = {};
     const memberDefs = [
-      ['pedro', 'aguias', 'falcoes', 'Pedro Henrique Lima', 12, 'Capitão'],
-      ['ana', 'aguias', 'gavioes', 'Ana Clara Souza', 11, 'Secretário'],
+      ['pedro', 'aguias', 'falcoes', 'Pedro Henrique Lima', 12, 'Explorador'],
+      ['ana', 'aguias', 'gavioes', 'Ana Clara Souza', 11, 'Explorador'],
       ['lucas', 'aguias', 'falcoes', 'Lucas Ferreira', 14, 'Explorador'],
-      ['beatriz', 'aguias', 'gavioes', 'Beatriz Santos', 13, 'Capelão'],
+      ['beatriz', 'aguias', 'gavioes', 'Beatriz Santos', 13, 'Explorador'],
       ['gabriel', 'aguias', null, 'Gabriel Oliveira', 15, 'Explorador'],
-      ['marcos', 'aguias', 'aguias:lideranca', 'Marcos Almeida', 34, 'Diretor'],
-      ['juliana', 'aguias', 'falcoes', 'Juliana Costa', 22, 'Tutor'],
+      ['marcos', 'aguias', 'aguias:lideranca', 'Marcos Almeida', 34, 'Diretor Geral'],
+      ['juliana', 'aguias', 'falcoes', 'Juliana Costa', 22, 'Padrinho Líder'],
       ['davi', 'leoes', 'panteras', 'Davi Rodrigues', 10, 'Explorador'],
-      ['sofia', 'leoes', 'tigres', 'Sofia Martins', 13, 'Capitão'],
-      ['rafael', 'leoes', 'panteras', 'Rafael Gomes', 12, 'Tesoureiro'],
-      ['isabela', 'leoes', 'tigres', 'Isabela Ribeiro', 14, 'Padioleiro'],
-      ['carlos', 'leoes', 'leoes:lideranca', 'Carlos Pereira', 41, 'Diretor'],
-      ['fernanda', 'leoes', 'leoes:lideranca', 'Fernanda Dias', 19, 'Tutor de Insígnias'],
+      ['sofia', 'leoes', 'tigres', 'Sofia Martins', 13, 'Explorador'],
+      ['rafael', 'leoes', 'panteras', 'Rafael Gomes', 12, 'Explorador'],
+      ['isabela', 'leoes', 'tigres', 'Isabela Ribeiro', 14, 'Explorador'],
+      ['carlos', 'leoes', 'leoes:lideranca', 'Carlos Pereira', 41, 'Diretor Geral'],
+      ['fernanda', 'leoes', 'leoes:lideranca', 'Fernanda Dias', 19, 'Tutor de Especialidades'],
     ];
-    for (const [key, club, unit, name, age, cargo] of memberDefs) {
+    // CPFs fictícios (válidos só no formato), gerados a partir de um número base.
+    const fakeCpf = (n) => {
+      for (let base = n; ; base++) {
+        const d = String(base).padStart(9, '0').split('').map(Number);
+        const dv = (arr) => { const len = arr.length; const r = (arr.reduce((s, x, i) => s + x * (len + 1 - i), 0) * 10) % 11; return r === 10 ? 0 : r; };
+        d.push(dv(d)); d.push(dv(d));
+        const cpf = cleanCpf(d.join(''));
+        if (cpf) return cpf;
+      }
+    };
+    memberDefs.forEach(([key, club, unit, name, age, cargo], i) => {
       const id = ins(
-        'INSERT INTO members (club_id, unit_id, name, birth_date, cargo, code, excellence) VALUES (?,?,?,?,?,?,?)',
-        clubs[club], unit ? units[unit] : null, name, birthForAge(age, (key.length * 2) % 11), cargo, newMemberCode(), key === 'lucas' ? 1 : 0,
+        'INSERT INTO members (club_id, unit_id, name, birth_date, cargo, code, cpf) VALUES (?,?,?,?,?,?,?)',
+        clubs[club], unit ? units[unit] : null, name, birthForAge(age, (key.length * 2) % 11), cargo, newMemberCode(), fakeCpf(123456000 + i * 1000),
       );
       login('member', id, key, 'dbv123');
-      // Alguns ficam sem @ para mostrar a tela de primeiro acesso.
-      if (!['pedro', 'ana', 'marcos'].includes(key)) run('UPDATE members SET handle = ? WHERE id = ?', name.split(' ')[0].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') + '.' + name.split(' ').pop().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''), id);
       members[key] = id;
-    }
+    });
 
     // ---------- Conteúdo: cadernos guia, insígnias e cursos ----------
     const content = {};
@@ -155,9 +164,9 @@ export function seed() {
     // ---------- Requisitos ----------
     const req = (o) => {
       const id = ins(
-        `INSERT INTO requirements (creator_type, club_id, audience, scope, district_id, title, description, model, points, late_points, deadline, created_at)
-         VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`,
-        o.club ? 'club' : 'admin', o.club ? clubs[o.club] : null, o.audience, o.club ? 'clube' : o.scope || 'geral', o.scope === 'distrito' ? palmares : null,
+        `INSERT INTO requirements (creator_type, club_id, audience, member_kind, scope, district_id, title, description, model, points, late_points, deadline, created_at)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+        o.club ? 'club' : 'admin', o.club ? clubs[o.club] : null, o.audience, o.audience === 'member' ? 'desbravador' : null, o.club ? 'clube' : o.scope || 'geral', o.scope === 'distrito' ? palmares : null,
         o.title, o.description, o.model, o.points, o.late, o.deadline, iso(-25, 10, 0),
       );
       (o.quiz || []).forEach(([q, opts, correct], i) => run('INSERT INTO quiz_questions (requirement_id, ord, question, options, correct) VALUES (?,?,?,?,?)', id, i, q, JSON.stringify(opts), correct));

@@ -21,6 +21,8 @@ import fileRoutes from './routes/files.js';
 import announcementRoutes from './routes/announcements.js';
 import achievementRoutes from './routes/achievements.js';
 import clubEventRoutes from './routes/clubEvents.js';
+import signupRoutes from './routes/signup.js';
+import transferRoutes from './routes/transfers.js';
 import { syncCatalog } from './catalog.js';
 import { createInitialAdmin, seed } from './seed.js';
 
@@ -48,7 +50,7 @@ app.use(attachActor);
 
 const api = express.Router();
 api.get('/health', (_req, res) => res.json({ ok: true }));
-for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, chatRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes]) api.use(r);
+for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, chatRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, signupRoutes, transferRoutes]) api.use(r);
 api.use((_req, _res, next) => next(new HttpError(404, 'Rota não encontrada')));
 app.use('/api', api);
 

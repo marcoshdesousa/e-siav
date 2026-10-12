@@ -3,7 +3,7 @@ import { all, get, run, tx } from '../db.js';
 import { requireAuth, setLogin, getUsername } from '../auth.js';
 import { imageUpload, fileUrl, attachmentUpload } from '../uploads.js';
 import { NOME_UNIDADE_LIDERANCA } from '../config.js';
-import { fail, int, str, validDate, parseJson, memberKind } from '../util.js';
+import { fail, int, str, validDate, parseJson, memberKind, newClubCode, newClubPassword, newUnitPin } from '../util.js';
 
 // Painel do Administrador Geral.
 // Observação: não existe aqui nenhuma rota que altere nome ou dados de membros —
@@ -17,7 +17,7 @@ r.get('/admin/overview', (_req, res) => {
     districts: n('SELECT COUNT(*) n FROM districts'),
     clubs: n('SELECT COUNT(*) n FROM clubs'),
     units: n('SELECT COUNT(*) n FROM units WHERE is_leadership = 0'),
-    members: n('SELECT COUNT(*) n FROM members'),
+    members: n(`SELECT COUNT(*) n FROM members WHERE status = 'ativo'`),
     pending_reviews: n(`SELECT COUNT(*) n FROM submissions s JOIN requirements r ON r.id = s.requirement_id WHERE r.creator_type = 'admin' AND s.status = 'enviado'`),
     open_reports: n(`SELECT COUNT(*) n FROM reports WHERE status = 'aberta'`),
     pending_purchases: n(`SELECT COUNT(*) n FROM purchases WHERE status = 'pendente'`),
@@ -45,27 +45,34 @@ r.put('/admin/districts/:id', (req, res) => {
 // ---------- Clãs ----------
 r.get('/admin/clubs', (_req, res) => {
   const rows = all(
-    `SELECT c.id, c.name, c.logo, c.district_id, d.name AS district_name,
-            (SELECT COUNT(*) FROM members m WHERE m.club_id = c.id) AS member_count,
+    `SELECT c.id, c.name, c.logo, c.code, c.director_name, c.district_id, d.name AS district_name,
+            (SELECT COUNT(*) FROM members m WHERE m.club_id = c.id AND m.status = 'ativo') AS member_count,
             (SELECT COUNT(*) FROM units u WHERE u.club_id = c.id) AS unit_count
      FROM clubs c JOIN districts d ON d.id = c.district_id ORDER BY d.name, c.name`,
   );
-  rows.forEach((c) => (c.username = getUsername('club', c.id)));
   res.json(rows);
 });
 
+/**
+ * Novo clã: o app gera o código (0001, 0002...) e, se a senha ficar em branco,
+ * uma senha de 6 números. O login do clã é o código + a senha.
+ */
 r.post('/admin/clubs', (req, res) => {
   const name = str(req.body.name, 100);
   const districtId = int(req.body.district_id);
+  const director = str(req.body.director_name, 100);
   if (!name) fail(400, 'Informe o nome do clã');
+  if (!director) fail(400, 'Informe o nome do diretor do clã');
   if (!get('SELECT 1 FROM districts WHERE id = ?', districtId)) fail(400, 'Distrito inválido');
-  const id = tx(() => {
-    const id = Number(run('INSERT INTO clubs (district_id, name) VALUES (?, ?)', districtId, name).lastInsertRowid);
-    run('INSERT INTO units (club_id, name, is_leadership) VALUES (?, ?, 1)', id, NOME_UNIDADE_LIDERANCA);
-    setLogin('club', id, req.body.username, req.body.password);
-    return id;
+  const password = str(req.body.password, 100) || newClubPassword();
+  const out = tx(() => {
+    const code = newClubCode();
+    const id = Number(run('INSERT INTO clubs (district_id, name, code, director_name) VALUES (?,?,?,?)', districtId, name, code, director).lastInsertRowid);
+    run('INSERT INTO units (club_id, name, is_leadership, pin) VALUES (?, ?, 1, ?)', id, NOME_UNIDADE_LIDERANCA, newUnitPin(id));
+    setLogin('club', id, 'cla' + code, password);
+    return { id, code };
   });
-  res.json({ id });
+  res.json({ ...out, password });
 });
 
 r.put('/admin/clubs/:id', (req, res) => {
@@ -79,7 +86,12 @@ r.put('/admin/clubs/:id', (req, res) => {
       if (!get('SELECT 1 FROM districts WHERE id = ?', districtId)) fail(400, 'Distrito inválido');
       run('UPDATE clubs SET district_id = ? WHERE id = ?', districtId, id);
     }
-    if (req.body.username || req.body.password) setLogin('club', id, req.body.username, req.body.password);
+    if (req.body.director_name !== undefined) {
+      const director = str(req.body.director_name, 100);
+      if (!director) fail(400, 'Informe o nome do diretor do clã');
+      run('UPDATE clubs SET director_name = ? WHERE id = ?', director, id);
+    }
+    if (req.body.password) setLogin('club', id, null, req.body.password);
   });
   res.json({ ok: true });
 });
@@ -122,7 +134,7 @@ r.get('/admin/targets', (req, res) => {
     return res.json(all(`SELECT u.id, u.name, u.logo, c.name AS sub FROM units u JOIN clubs c ON c.id = u.club_id WHERE u.name LIKE ? OR c.name LIKE ? ORDER BY c.name, u.name LIMIT 30`, q, q));
   }
   if (type === 'member') {
-    return res.json(all(`SELECT m.id, m.name, m.photo, m.code, c.name || ' · ' || m.code AS sub FROM members m JOIN clubs c ON c.id = m.club_id WHERE m.name LIKE ? OR m.code LIKE ? ORDER BY m.name LIMIT 30`, q, q));
+    return res.json(all(`SELECT m.id, m.name, m.photo, m.code, c.name || ' · ' || m.code AS sub FROM members m JOIN clubs c ON c.id = m.club_id WHERE m.status = 'ativo' AND (m.name LIKE ? OR m.code LIKE ?) ORDER BY m.name LIMIT 30`, q, q));
   }
   fail(400, 'Tipo inválido');
 });
@@ -239,7 +251,7 @@ r.get('/admin/directory', (_req, res) => {
   const clubs = all('SELECT c.id, c.name, c.logo, c.district_id, d.name AS district_name FROM clubs c JOIN districts d ON d.id = c.district_id ORDER BY d.name, c.name');
   for (const c of clubs) {
     c.units = all('SELECT id, name, logo, is_leadership FROM units WHERE club_id = ? ORDER BY is_leadership, name', c.id);
-    const members = all('SELECT id, name, photo, handle, cargo, unit_id, birth_date FROM members WHERE club_id = ? ORDER BY name', c.id);
+    const members = all(`SELECT id, name, photo, code, cargo, unit_id, birth_date FROM members WHERE club_id = ? AND status = 'ativo' ORDER BY name`, c.id);
     for (const m of members) { m.kind = memberKind(m.birth_date); delete m.birth_date; }
     for (const u of c.units) u.members = members.filter((m) => m.unit_id === u.id);
     c.no_unit = members.filter((m) => !m.unit_id);

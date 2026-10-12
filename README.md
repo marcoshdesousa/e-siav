@@ -24,16 +24,20 @@ Desenvolvimento com recarga automática: `npm run dev` (API na porta 3000 e Vite
 
 Testes da API (permissões, privacidade, pontuação, ranking e chat): `npm test`.
 
-### Contas de demonstração (só com SEED_DEMO=1 / npm run seed)
+### Como cada conta entra
 
-| Tela de entrada | Conta | Usuário / senha |
+| Tela de entrada | Conta | Como entra |
 |---|---|---|
-| Login Membros | Administrador Geral | `admin` / `admin123` |
-| Login Clube | Clube Águias do Vale | `aguias` / `aguias123` |
-| Login Clube | Clube Leões de Judá | `leoes` / `leoes123` |
-| Login Clube | Unidades | `falcoes`, `gavioes`, `panteras`, `tigres` / nome + `123` (ex.: `falcoes123`) |
-| Login Membros | Desbravadores | `pedro`, `ana`, `lucas`, `beatriz`, `gabriel`, `davi`, `sofia`, `rafael`, `isabela` / `dbv123` (`pedro`, `ana` e `marcos` ainda não têm @: mostram a tela de primeiro acesso) |
-| Login Membros | Liderança | `marcos`, `juliana`, `carlos`, `fernanda` / `dbv123` |
+| Membros | Administrador Geral | usuário `admin` + senha (`ADMIN_PASSWORD`) |
+| Clã | Sistema do Clã | código do clã (4 números, ex.: `0001`) + senha do clã |
+| Clã | Portal do Grupo | código do clã + senha do grupo (4 números, gerada pelo app) |
+| Membros | Explorador / Tutor | código do membro (6 números) + senha |
+
+Novos membros entram pelo link de inscrição do clã (`/inscricao/0001`): ficha de cadastro, ficha médica e termos. A inscrição fica pendente até o clã aprovar. Ninguém é apagado: o clã desativa e pode reativar. Para mudar de clã, o clã novo pede a transferência (nome + CPF), o clã atual autoriza e o clã novo confirma.
+
+### Dados de exemplo (só com SEED_DEMO=1 / npm run seed)
+
+Admin `admin` / `admin123`. Clãs `0001` (Águias, senha `aguias123`) e `0002` (Leões, senha `leoes123`); grupos com as senhas `1111`, `2222`, `3333`, `4444`. Membros: `pedro`, `ana`, `lucas`, `marcos`... com a senha `dbv123` (ou o código de 6 números de cada um).
 
 ## O que tem
 

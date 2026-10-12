@@ -46,7 +46,7 @@ export default function PeoplePicker({ directory, value, onChange, allowClubs = 
         if (unitId && String(u.id) !== unitId) continue;
         for (const m of members) {
           if (kind && m.kind !== kind) continue;
-          if (q && !plain(m.name).includes(plain(q)) && !(m.handle || '').includes(plain(q).replace(/^@/, ''))) continue;
+          if (q && !plain(m.name).includes(plain(q)) && !(m.code || '').includes(q.trim())) continue;
           out.push({ ...m, club: c, unit: u });
         }
       }
@@ -130,7 +130,7 @@ export default function PeoplePicker({ directory, value, onChange, allowClubs = 
                   <label key={m.id} className={'pp-row pp-person' + (value.members.has(m.id) ? ' on' : '')}>
                     <Box state={value.members.has(m.id) ? 'on' : 'off'} label={m.name} onClick={() => toggleIn('members', m.id)} />
                     <Avatar src={m.photo} name={m.name} size={32} />
-                    <span className="grow"><b>{m.name}</b><small>{m.cargo}{m.handle ? ' · @' + m.handle : ''}</small></span>
+                    <span className="grow"><b>{m.name}</b><small>{m.cargo}{m.code ? ' · ' + m.code : ''}</small></span>
                   </label>
                 ))}
               </div>

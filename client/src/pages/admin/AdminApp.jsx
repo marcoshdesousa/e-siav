@@ -63,6 +63,42 @@ function AdminHome() {
 }
 
 // ---------- Distritos, clãs e administradores ----------
+/**
+ * Clã: nome, distrito e diretor. O código (0001, 0002...) é gerado pelo app;
+ * a senha também, se ficar em branco. O login do clã é o código + a senha.
+ */
+function ClubForm({ item, districts, onClose, onCreated, onSaved }) {
+  const [f, setF] = useState({ name: item?.name || '', district_id: item?.district_id || districts?.[0]?.id || '', director_name: item?.director_name || '', password: '' });
+  const [busy, run] = useAsync();
+  const save = async () => {
+    if (item) {
+      await run(() => api.put('/admin/clubs/' + item.id, f), 'Clã atualizado!');
+      onSaved();
+    } else {
+      const r = await run(() => api.post('/admin/clubs', f), null);
+      onCreated({ ...r, name: f.name });
+    }
+  };
+  return (
+    <Modal title={item ? `Editar clã ${item.code || ''}` : 'Novo clã'} onClose={onClose}
+      footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} disabled={!f.name.trim() || !f.director_name.trim()} onClick={save}>Salvar</Button></>}>
+      <div className="form">
+        <Field label="Nome do clã"><input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder="Clã ..." /></Field>
+        <Field label="Distrito">
+          <select value={f.district_id} onChange={(e) => setF({ ...f, district_id: e.target.value })}>
+            {districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
+          </select>
+        </Field>
+        <Field label="Diretor(a) do clã" hint="Responsável pelo clã. Dá para trocar todo ano."><input value={f.director_name} onChange={(e) => setF({ ...f, director_name: e.target.value })} /></Field>
+        <Field label={item ? 'Nova senha do clã' : 'Senha do clã'} hint={item ? 'Em branco mantém a atual' : 'Em branco: o app cria uma senha de 6 números'}>
+          <input value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} autoCapitalize="none" />
+        </Field>
+        {!item && <p className="muted small">O código do clã é criado automaticamente. Os grupos do clã entram com o mesmo código e a senha de cada grupo.</p>}
+      </div>
+    </Modal>
+  );
+}
+
 function NameLoginForm({ title, item, withDistrict, districts, onClose, onSave }) {
   const [f, setF] = useState({ name: item?.name || '', district_id: item?.district_id || districts?.[0]?.id || '', username: item?.username || '', password: '' });
   const [busy, run] = useAsync();
@@ -146,7 +182,7 @@ function ClubsAdmin() {
                   <div className="grow">
                     <div className="title">{c.name}</div>
                     <div className="sub">{c.district_name} · {plural(c.unit_count, 'grupo', 'grupos')} · {plural(c.member_count, 'membro', 'membros')}</div>
-                    <div className="sub">Login do Sistema do Clã: <b>@{c.username}</b></div>
+                    <div className="sub">Código <b>{c.code}</b>{c.director_name ? <> · Diretor(a): {c.director_name}</> : ''}</div>
                   </div>
                   <Button small variant="secondary" onClick={() => setModal({ kind: 'club', item: c })}>Editar</Button>
                 </div>
@@ -172,11 +208,22 @@ function ClubsAdmin() {
         </>
       )}
       {modal?.kind === 'club' && (
-        <NameLoginForm
-          title={modal.item ? 'Editar clã' : 'Novo clã'} item={modal.item} withDistrict districts={districts.data || []}
+        <ClubForm
+          item={modal.item} districts={districts.data || []}
           onClose={() => setModal(null)}
-          onSave={(f) => (modal.item ? api.put('/admin/clubs/' + modal.item.id, f) : api.post('/admin/clubs', f)).then(() => { clubs.reload(); districts.reload(); })}
+          onSaved={() => { setModal(null); clubs.reload(); districts.reload(); }}
+          onCreated={(r) => { setModal({ kind: 'created', ...r }); clubs.reload(); districts.reload(); }}
         />
+      )}
+      {modal?.kind === 'created' && (
+        <Modal title="Clã criado!" onClose={() => setModal(null)} footer={<Button onClick={() => setModal(null)}>Entendi</Button>}>
+          <p className="center">Passe estes dados para o <b>{modal.name}</b>. Ele entra na tela <b>Clã</b>.</p>
+          <p className="center muted small" style={{ marginBottom: 0 }}>Código do clã</p>
+          <div className="code-big">{modal.code}</div>
+          <p className="center muted small" style={{ marginBottom: 0 }}>Senha</p>
+          <div className="code-big" style={{ fontSize: '1.6rem' }}>{modal.password}</div>
+          <p className="muted small center">Anote a senha: por segurança ela não aparece de novo. Dá para trocar em Editar.</p>
+        </Modal>
       )}
       {modal?.kind === 'admin' && (
         <NameLoginForm

@@ -19,7 +19,7 @@ function ensureMemberConversations(m) {
 }
 
 function participants(c) {
-  if (c.type === 'unidade') return all('SELECT id FROM members WHERE unit_id = ?', c.unit_id).map((m) => ({ type: 'member', id: m.id }));
+  if (c.type === 'unidade') return all(`SELECT id FROM members WHERE unit_id = ? AND status = 'ativo'`, c.unit_id).map((m) => ({ type: 'member', id: m.id }));
   if (c.type === 'diretoria') return [{ type: 'member', id: c.member_a }, { type: 'club', id: c.club_id }];
   return [{ type: 'member', id: c.member_a }, { type: 'member', id: c.member_b }];
 }
@@ -68,7 +68,7 @@ const senderCache = () => {
     if (!cache.has(k)) {
       cache.set(k, type === 'club'
         ? (({ name, logo }) => ({ name: 'Diretoria · ' + name, photo: logo }))(get('SELECT name, logo FROM clubs WHERE id = ?', id) || { name: '?' })
-        : get('SELECT name, photo, handle FROM members WHERE id = ?', id) || { name: '(removido)' });
+        : get('SELECT name, photo, code FROM members WHERE id = ?', id) || { name: '(removido)' });
     }
     return cache.get(k);
   };
@@ -77,7 +77,7 @@ const senderCache = () => {
 function header(a, c) {
   if (c.type === 'unidade') {
     const u = get('SELECT name, logo FROM units WHERE id = ?', c.unit_id);
-    const n = get('SELECT COUNT(*) n FROM members WHERE unit_id = ?', c.unit_id).n;
+    const n = get(`SELECT COUNT(*) n FROM members WHERE unit_id = ? AND status = 'ativo'`, c.unit_id).n;
     return { title: 'Grupo ' + u.name, photo: u.logo, subtitle: `Conversa do grupo · ${n} membros` };
   }
   if (c.type === 'diretoria') {
@@ -85,12 +85,12 @@ function header(a, c) {
       const cl = get('SELECT name, logo FROM clubs WHERE id = ?', c.club_id);
       return { title: 'Diretoria', photo: cl.logo, subtitle: cl.name, peer: { type: 'club', id: c.club_id } };
     }
-    const m = get('SELECT m.name, m.photo, m.handle, u.name AS unit FROM members m LEFT JOIN units u ON u.id = m.unit_id WHERE m.id = ?', c.member_a);
-    return { title: m.name, photo: m.photo, subtitle: (m.unit ? 'Grupo ' + m.unit : 'Sem grupo') + (m.handle ? ' · @' + m.handle : ''), peer: { type: 'member', id: c.member_a } };
+    const m = get('SELECT m.name, m.photo, m.code, u.name AS unit FROM members m LEFT JOIN units u ON u.id = m.unit_id WHERE m.id = ?', c.member_a);
+    return { title: m.name, photo: m.photo, subtitle: (m.unit ? 'Grupo ' + m.unit : 'Sem grupo') + (m.code ? ' · ' + m.code : ''), peer: { type: 'member', id: c.member_a } };
   }
   const otherId = c.member_a === a.id ? c.member_b : c.member_a;
-  const o = get('SELECT m.name, m.photo, m.handle, cl.name AS club FROM members m JOIN clubs cl ON cl.id = m.club_id WHERE m.id = ?', otherId);
-  return { title: o.name, photo: o.photo, subtitle: (o.handle ? '@' + o.handle + ' · ' : '') + o.club, peer: { type: 'member', id: otherId } };
+  const o = get('SELECT m.name, m.photo, m.code, cl.name AS club FROM members m JOIN clubs cl ON cl.id = m.club_id WHERE m.id = ?', otherId);
+  return { title: o.name, photo: o.photo, subtitle: o.code + ' · ' + o.club, peer: { type: 'member', id: otherId } };
 }
 
 function lastRead(c, type, id) {
@@ -162,7 +162,7 @@ r.get('/chat/conversations/:id', chatUser, (req, res) => {
   const out = { id: c.id, type: c.type, ...header(req.actor, c) };
   if (c.type === 'unidade') {
     // Membros do mesmo grupo (mesmo clã) — usado para denunciar ou bloquear alguém.
-    out.members = all('SELECT id, name, photo, cargo FROM members WHERE unit_id = ? AND id <> ? ORDER BY name', c.unit_id, req.actor.id);
+    out.members = all(`SELECT id, name, photo, cargo FROM members WHERE unit_id = ? AND id <> ? AND status = 'ativo' ORDER BY name`, c.unit_id, req.actor.id);
   }
   if (out.peer) {
     out.i_blocked = blocked(req.actor.type, req.actor.id, out.peer.type, out.peer.id);
@@ -222,16 +222,16 @@ r.post('/chat/conversations/:id/read', chatUser, (req, res) => {
   res.json({ ok: true });
 });
 
-// Busca para conversa direta: pelo @ (qualquer clã) ou pelo nome (apenas no próprio clã).
+// Busca para conversa direta: pelo código de 6 números (qualquer clã) ou pelo nome (apenas no próprio clã).
 r.get('/chat/search', requireAuth('member'), (req, res) => {
-  const raw = str(req.query.q, 60);
-  const q = raw.replace(/^@/, '');
+  const q = str(req.query.q, 60);
   if (q.length < 2) return res.json([]);
+  const byCode = /^\d{6}$/.test(q);
   const rows = all(
-    `SELECT m.id, m.name, m.photo, m.handle, c.name AS club_name FROM members m JOIN clubs c ON c.id = m.club_id
-     WHERE m.id <> ? AND ((m.handle IS NOT NULL AND m.handle LIKE ? ESCAPE '\\') OR (? = 0 AND m.club_id = ? AND m.name LIKE ?))
-     ORDER BY (m.handle = ?) DESC, m.name LIMIT 20`,
-    req.actor.id, q.replace(/[%_\\]/g, '\\$&') + '%', raw.startsWith('@') ? 1 : 0, req.actor.club_id, '%' + q + '%', q,
+    `SELECT m.id, m.name, m.photo, m.code, c.name AS club_name FROM members m JOIN clubs c ON c.id = m.club_id
+     WHERE m.id <> ? AND m.status = 'ativo' AND (m.code = ? OR (? = 0 AND m.club_id = ? AND m.name LIKE ?))
+     ORDER BY (m.code = ?) DESC, m.name LIMIT 20`,
+    req.actor.id, q, byCode ? 1 : 0, req.actor.club_id, '%' + q + '%', q,
   );
   res.json(rows);
 });

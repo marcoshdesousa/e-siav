@@ -1,5 +1,5 @@
 import { all, get } from './db.js';
-import { ageFrom, memberKind } from './util.js';
+import { ageFrom, memberKind, roleOf } from './util.js';
 import { clubsRanking, unitsRanking, clubUnitsRanking, membersRanking, positionOf } from './rankings.js';
 
 export function medalsOf(type, id) {
@@ -25,14 +25,14 @@ const pos = (r) => (r ? { position: r.position, points: r.points } : null);
 /** Perfil público do clã: só a QUANTIDADE de membros, nunca os nomes. */
 export function clubProfile(id) {
   const c = get(
-    `SELECT c.id, c.name, c.photo, c.logo, c.district_id, d.name AS district_name
+    `SELECT c.id, c.name, c.photo, c.logo, c.code, c.director_name, c.history, c.district_id, d.name AS district_name
      FROM clubs c JOIN districts d ON d.id = c.district_id WHERE c.id = ?`,
     id,
   );
   if (!c) return null;
-  c.member_count = get('SELECT COUNT(*) AS n FROM members WHERE club_id = ?', id).n;
+  c.member_count = get(`SELECT COUNT(*) AS n FROM members WHERE club_id = ? AND status = 'ativo'`, id).n;
   c.units = all(
-    `SELECT u.id, u.name, u.logo, u.is_leadership, (SELECT COUNT(*) FROM members m WHERE m.unit_id = u.id) AS member_count
+    `SELECT u.id, u.name, u.logo, u.is_leadership, (SELECT COUNT(*) FROM members m WHERE m.unit_id = u.id AND m.status = 'ativo') AS member_count
      FROM units u WHERE u.club_id = ? ORDER BY u.is_leadership, u.name`,
     id,
   );
@@ -51,7 +51,7 @@ export function unitProfile(id) {
     id,
   );
   if (!u) return null;
-  u.member_count = get('SELECT COUNT(*) AS n FROM members WHERE unit_id = ?', id).n;
+  u.member_count = get(`SELECT COUNT(*) AS n FROM members WHERE unit_id = ? AND status = 'ativo'`, id).n;
   if (!u.is_leadership) {
     u.ranking_club = pos(positionOf(clubUnitsRanking(u.club_id), u.id));
     u.ranking_general = pos(positionOf(unitsRanking(), u.id));
@@ -62,15 +62,16 @@ export function unitProfile(id) {
 
 export function memberProfile(where, value) {
   const m = get(
-    `SELECT m.id, m.name, m.photo, m.code, m.handle, m.cargo, m.birth_date,
+    `SELECT m.id, m.name, m.photo, m.code, m.cargo, m.birth_date,
             m.club_id, c.name AS club_name, c.logo AS club_logo, m.unit_id, u.name AS unit_name
      FROM members m JOIN clubs c ON c.id = m.club_id LEFT JOIN units u ON u.id = m.unit_id
-     WHERE ${where === 'code' ? 'm.code = ?' : where === 'handle' ? 'm.handle = ? COLLATE NOCASE' : 'm.id = ?'}`,
+     WHERE m.status = 'ativo' AND ${where === 'code' ? 'm.code = ?' : 'm.id = ?'}`,
     value,
   );
   if (!m) return null;
   m.age = ageFrom(m.birth_date);
   m.kind = memberKind(m.birth_date);
+  m.role = roleOf(m.kind, m.cargo);
   delete m.birth_date; // data de nascimento não é exibida no perfil
   const ach = all(
     `SELECT ct.id, ct.type, ct.name, ct.icon, ct.image, ct.category, ct.leader, a.source, a.date

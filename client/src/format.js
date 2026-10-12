@@ -39,5 +39,7 @@ export const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 
 export const KIND_LABEL = { desbravador: 'Explorador', lideranca: 'Tutor' };
 export const MODEL_LABEL = { texto: 'Relatório', foto: 'Foto', quiz: 'Quiz', texto_foto: 'Relatório + foto', quiz_foto: 'Quiz + foto' };
-export const AUDIENCE_LABEL = { club: 'Clãs', unit: 'Grupos', member: 'Exploradores' };
+export const AUDIENCE_LABEL = { club: 'Clãs', unit: 'Grupos', member: 'Membros' };
+export const MEMBER_KIND_LABEL = { desbravador: 'Só exploradores', lideranca: 'Só liderança e tutores', '': 'Todos os membros' };
 export const STATE_LABEL = { pendente: 'Pendente', enviado: 'Enviado', aprovado: 'Aprovado', recusado: 'Recusado', fora_do_prazo: 'Fora do prazo' };
+export const fmtCpf = (v) => String(v || '').replace(/\D/g, '').slice(0, 11).replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');

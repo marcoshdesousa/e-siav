@@ -13,9 +13,12 @@ const r = Router();
 function applies(actor, req) {
   const audience = { club: 'club', unit: 'unit', member: 'member' }[actor.type];
   if (req.audience !== audience) return false;
-  if (actor.type === 'member' && actor.kind !== 'desbravador') return false; // tutor não tem requisitos
-  // Requisitos do clã: só para os grupos e os exploradores daquele clã.
+  // Requisito de membro pode ser só para exploradores ou só para tutores/liderança.
+  if (actor.type === 'member' && req.member_kind && req.member_kind !== actor.kind) return false;
+  // Requisitos do clã: só para os grupos e os membros daquele clã.
   if (req.creator_type === 'club') return req.club_id === actor.club_id && actor.type !== 'club';
+  // Requisitos do grupo: só para os membros daquele grupo.
+  if (req.creator_type === 'unit') return actor.type === 'member' && req.unit_id === actor.unit_id;
   return req.scope === 'geral' || req.district_id === actor.district_id;
 }
 
@@ -33,7 +36,7 @@ function decorate(req, sub) {
     ...req,
     modes,
     images: parseJson(req.images, []),
-    origin: req.creator_type === 'admin' ? 'geral' : 'clube',
+    origin: { admin: 'geral', club: 'clube', unit: 'grupo' }[req.creator_type],
     questions: modes.includes('quiz') ? publicQuestions(req.id) : [],
     state: stateOf(req, sub),
     submission: sub ? { ...sub, photos: JSON.parse(sub.photos), answers: parseJson(sub.answers, null) } : null,
@@ -92,8 +95,8 @@ r.post('/requirements/:id/submit', requireAuth('club', 'unit', 'member'), privat
   res.json({ status, points, late: !!late, quiz_correct: correct, quiz_total: total });
 });
 
-// ---------- Criação (Administrador Geral e Clã) ----------
-r.post('/requirements', requireAuth('admin', 'club'), imageUpload.array('images', 6), (req, res) => {
+// ---------- Criação (Administrador Geral, Clã e Grupo) ----------
+r.post('/requirements', requireAuth('admin', 'club', 'unit'), imageUpload.array('images', 6), (req, res) => {
   const a = req.actor;
   const b = req.body;
   const title = str(b.title, 150);
@@ -107,7 +110,8 @@ r.post('/requirements', requireAuth('admin', 'club'), imageUpload.array('images'
   if (latePoints < 0 || latePoints > points) fail(400, 'Pontos fora do prazo devem ser entre zero e os pontos no prazo');
   if (!b.deadline || Number.isNaN(Date.parse(b.deadline))) fail(400, 'Informe o prazo');
 
-  let audience, scope, districtId = null, clubId = null;
+  let audience, scope, districtId = null, clubId = null, unitId = null;
+  let memberKind = ['desbravador', 'lideranca'].includes(b.member_kind) ? b.member_kind : null;
   if (a.type === 'admin') {
     audience = b.audience;
     if (!['club', 'unit', 'member'].includes(audience)) fail(400, 'Escolha o público');
@@ -116,12 +120,20 @@ r.post('/requirements', requireAuth('admin', 'club'), imageUpload.array('images'
       districtId = int(b.district_id);
       if (!get('SELECT 1 FROM districts WHERE id = ?', districtId)) fail(400, 'Escolha o distrito');
     }
-  } else {
-    // Clã cria para os próprios grupos ou para os próprios exploradores.
+  } else if (a.type === 'club') {
+    // Clã cria para os próprios grupos ou para os próprios membros.
     audience = b.audience === 'member' ? 'member' : 'unit';
     scope = 'clube';
     clubId = a.id;
+  } else {
+    // Grupo cria só para os próprios exploradores.
+    audience = 'member';
+    scope = 'grupo';
+    clubId = a.club_id;
+    unitId = a.id;
+    memberKind = 'desbravador';
   }
+  if (audience !== 'member') memberKind = null;
 
   let questions = [];
   if (modes.includes('quiz')) {
@@ -140,9 +152,9 @@ r.post('/requirements', requireAuth('admin', 'club'), imageUpload.array('images'
 
   const id = tx(() => {
     const id = Number(run(
-      `INSERT INTO requirements (creator_type, club_id, audience, scope, district_id, title, description, model, modes, images, points, late_points, deadline)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
-      a.type, clubId, audience, scope, districtId, title, str(b.description, 3000), legacyModel(modes), modes.join(','),
+      `INSERT INTO requirements (creator_type, club_id, unit_id, member_kind, audience, scope, district_id, title, description, model, modes, images, points, late_points, deadline)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+      a.type, clubId, unitId, memberKind, audience, scope, districtId, title, str(b.description, 3000), legacyModel(modes), modes.join(','),
       JSON.stringify((req.files || []).map(fileUrl)), points, latePoints, new Date(b.deadline).toISOString(),
     ).lastInsertRowid);
     questions.forEach((qq, i) => run('INSERT INTO quiz_questions (requirement_id, ord, question, options, correct) VALUES (?,?,?,?,?)', id, i, qq.question, JSON.stringify(qq.options), qq.correct));
@@ -153,9 +165,11 @@ r.post('/requirements', requireAuth('admin', 'club'), imageUpload.array('images'
 
 /** Filtro SQL dos requisitos criados pela conta logada (t = alias da tabela). */
 const ownedFilter = (a, t = '') =>
-  a.type === 'admin' ? [`${t}creator_type = 'admin'`] : [`${t}creator_type = 'club' AND ${t}club_id = ?`, a.id];
+  a.type === 'admin' ? [`${t}creator_type = 'admin'`]
+    : a.type === 'club' ? [`${t}creator_type = 'club' AND ${t}club_id = ?`, a.id]
+      : [`${t}creator_type = 'unit' AND ${t}unit_id = ?`, a.id];
 
-r.get('/requirements/created', requireAuth('admin', 'club'), (req, res) => {
+r.get('/requirements/created', requireAuth('admin', 'club', 'unit'), (req, res) => {
   const [where, ...p] = ownedFilter(req.actor);
   const rows = all(
     `SELECT r.*, d.name AS district_name,
@@ -168,7 +182,7 @@ r.get('/requirements/created', requireAuth('admin', 'club'), (req, res) => {
   res.json(rows);
 });
 
-r.delete('/requirements/:id', requireAuth('admin', 'club'), (req, res) => {
+r.delete('/requirements/:id', requireAuth('admin', 'club', 'unit'), (req, res) => {
   const [where, ...p] = ownedFilter(req.actor);
   const { changes } = run(`DELETE FROM requirements WHERE id = ? AND ${where}`, int(req.params.id), ...p);
   if (!changes) fail(404, 'Requisito não encontrado');
@@ -182,7 +196,7 @@ function submitterInfo(type, id) {
 }
 
 // Envios para avaliar: quem criou o requisito avalia.
-r.get('/reviews', requireAuth('admin', 'club'), (req, res) => {
+r.get('/reviews', requireAuth('admin', 'club', 'unit'), (req, res) => {
   const [where, ...p] = ownedFilter(req.actor, 'r.');
   const status = ['enviado', 'aprovado', 'recusado'].includes(req.query.status) ? req.query.status : 'enviado';
   const extra = [];
@@ -205,7 +219,7 @@ r.get('/reviews', requireAuth('admin', 'club'), (req, res) => {
 });
 
 // Avaliação organizada por pessoa: quem tem envios (por público e situação).
-r.get('/reviews/people', requireAuth('admin', 'club'), (req, res) => {
+r.get('/reviews/people', requireAuth('admin', 'club', 'unit'), (req, res) => {
   const [where, ...p] = ownedFilter(req.actor, 'r.');
   const status = ['enviado', 'aprovado', 'recusado'].includes(req.query.status) ? req.query.status : 'enviado';
   const type = ['club', 'unit', 'member'].includes(req.query.submitter_type) ? req.query.submitter_type : null;
@@ -224,7 +238,7 @@ r.get('/reviews/people', requireAuth('admin', 'club'), (req, res) => {
   res.json({ people: rows, pending_by_type: counts });
 });
 
-r.post('/reviews/:id', requireAuth('admin', 'club'), (req, res) => {
+r.post('/reviews/:id', requireAuth('admin', 'club', 'unit'), (req, res) => {
   const [where, ...p] = ownedFilter(req.actor, 'r.');
   const s = get(
     `SELECT s.*, r.points AS rp, r.late_points AS rlp FROM submissions s JOIN requirements r ON r.id = s.requirement_id
@@ -243,7 +257,7 @@ r.post('/reviews/:id', requireAuth('admin', 'club'), (req, res) => {
 });
 
 // Quiz completo (com gabarito) só para quem criou.
-r.get('/requirements/:id/quiz', requireAuth('admin', 'club'), (req, res) => {
+r.get('/requirements/:id/quiz', requireAuth('admin', 'club', 'unit'), (req, res) => {
   const [where, ...p] = ownedFilter(req.actor);
   if (!get(`SELECT 1 FROM requirements WHERE id = ? AND ${where}`, int(req.params.id), ...p)) fail(404, 'Requisito não encontrado');
   res.json(all('SELECT * FROM quiz_questions WHERE requirement_id = ? ORDER BY ord', int(req.params.id)).map((q) => ({ ...q, options: JSON.parse(q.options) })));
