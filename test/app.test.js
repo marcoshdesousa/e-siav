@@ -492,6 +492,11 @@ test('grupo cria requisito para os próprios exploradores; requisito só para tu
   const mine = (await pedro.get('/requirements/mine')).body.find((x) => x.id === r.body.id);
   assert.equal(mine?.origin, 'grupo');
   assert.ok(!(await ana.get('/requirements/mine')).body.some((x) => x.id === r.body.id), 'outro grupo não vê');
+  const juliana = await login('membros', 'juliana'); // tutora, também no grupo Falcões
+  assert.ok(!(await juliana.get('/requirements/mine')).body.some((x) => x.id === r.body.id), 'tutor do grupo não recebe: só exploradores');
+  const sofia = await login('membros', 'sofia'); // outro clã
+  assert.ok(!(await sofia.get('/requirements/mine')).body.some((x) => x.id === r.body.id), 'outro clã não vê');
+  assert.notEqual((await ana.post(`/requirements/${r.body.id}/submit`, form({ text: 'tentando' }))).status, 200, 'outro grupo não consegue enviar');
   await pedro.post(`/requirements/${r.body.id}/submit`, form({ text: 'Fiz o nó' }));
   const pend = (await falcoes.get('/reviews')).body;
   assert.ok(pend.some((s) => s.requirement_id === r.body.id), 'grupo avalia');
