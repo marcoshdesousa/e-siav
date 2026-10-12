@@ -504,7 +504,9 @@ test('grupo cria requisito para os próprios exploradores; requisito só para tu
   const aguias = await login('clube', 'aguias', 'AG2026');
   const t = await aguias.post('/requirements', form({ title: 'Só tutores', audience: 'member', member_kind: 'lideranca', modes: 'texto', points: '10', late_points: '0', deadline }));
   const marcos = await login('membros', 'marcos'); // tutor
-  assert.ok((await marcos.get('/requirements/mine')).body.some((x) => x.id === t.body.id), 'tutor vê');
+  assert.ok((await marcos.get('/requirements/mine')).body.some((x) => x.id === t.body.id), 'diretor (liderança) vê');
+  const julianaT = await login('membros', 'juliana'); // tutora
+  assert.ok((await julianaT.get('/requirements/mine')).body.some((x) => x.id === t.body.id), 'tutor vê');
   assert.ok(!(await pedro.get('/requirements/mine')).body.some((x) => x.id === t.body.id), 'explorador não vê');
 });
 

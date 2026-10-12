@@ -37,7 +37,7 @@ export function isoToLocal(iso) {
 export const ordinal = (n) => `${n}º`;
 export const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 
-export const KIND_LABEL = { desbravador: 'Explorador', lideranca: 'Tutor' };
+export const KIND_LABEL = { desbravador: 'Explorador', lideranca: 'Liderança e tutores' };
 export const MODEL_LABEL = { texto: 'Relatório', foto: 'Foto', quiz: 'Quiz', texto_foto: 'Relatório + foto', quiz_foto: 'Quiz + foto' };
 export const AUDIENCE_LABEL = { club: 'Clãs', unit: 'Grupos', member: 'Membros' };
 export const MEMBER_KIND_LABEL = { desbravador: 'Só exploradores', lideranca: 'Só liderança e tutores', '': 'Todos os membros' };

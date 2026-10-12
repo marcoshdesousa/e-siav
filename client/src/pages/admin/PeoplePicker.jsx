@@ -99,7 +99,7 @@ export default function PeoplePicker({ directory, value, onChange, allowClubs = 
             <select value={kind} onChange={(e) => setKind(e.target.value)} aria-label="Tipo de membro">
               <option value="">Exploradores e tutores</option>
               <option value="desbravador">Só exploradores</option>
-              <option value="lideranca">Só tutores</option>
+              <option value="lideranca">Só liderança e tutores</option>
             </select>
           </div>
           <div className="cat-search"><Search size={18} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar por nome ou @" /></div>
