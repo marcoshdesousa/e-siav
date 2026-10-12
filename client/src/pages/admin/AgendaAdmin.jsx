@@ -43,12 +43,12 @@ export default function AgendaAdmin() {
       <PageHeader title="Agenda" subtitle="Datas do App que aparecem na agenda dos clãs" action={<Button small onClick={() => setEditing({ _extra: { scope: 'geral' } })}>+ Marcar</Button>} />
       <Loading {...state}>
         {(items) => (
-          <AgendaView items={items.map((a) => ({ ...a, title: a.scope === 'distrito' ? `${a.title} · ${a.district_name}` : a.scope === 'clube' ? `${a.title} · ${a.club_name}` : a.title }))}
-            canEdit={() => true} onEdit={null}
+          <AgendaView items={items} canEdit={() => true}
+            onEdit={(a) => setEditing({ ...a, _extra: { scope: a.scope, district_id: a.district_id || '', club_id: a.club_id || '' } })}
             onDelete={(a) => run(() => api.del('/admin/agenda/' + a.id), 'Apagado da agenda').then(state.reload)} />
         )}
       </Loading>
-      {editing && <AgendaForm item={editing} extra={extra} onClose={() => setEditing(null)} onSave={(f) => api.post('/admin/agenda', f).then(state.reload)} />}
+      {editing && <AgendaForm item={editing} extra={extra} onClose={() => setEditing(null)} onSave={(f) => (editing.id ? api.put('/admin/agenda/' + editing.id, f) : api.post('/admin/agenda', f)).then(state.reload)} />}
     </>
   );
 }

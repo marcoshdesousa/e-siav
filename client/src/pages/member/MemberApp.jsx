@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import {
-  Camera, ClipboardCheck, GraduationCap, Menu, Tent, Trophy, UserRound, Waypoints, Hourglass,
+  CalendarDays, Camera, ClipboardCheck, GraduationCap, Menu, Tent, Trophy, UserRound, Waypoints, Hourglass,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -12,6 +12,7 @@ import { ContentDetail, ContentList } from '../Content.jsx';
 import RankingHub from '../Ranking.jsx';
 import ClubsBrowser from '../Clubs.jsx';
 import MyAchievements from './MyAchievements.jsx';
+import { AgendaLeitura, ProximasDatas } from '../club/Folders.jsx';
 
 const base = '/membro';
 
@@ -39,6 +40,7 @@ function MyProfile() {
             </label>
           }
         />
+        <ProximasDatas to={`${base}/agenda`} />
         </>
       )}
     </Loading>
@@ -67,6 +69,7 @@ export default function MemberApp() {
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
+    { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas do clã e do App' },
     { to: `${base}/cursos`, icon: GraduationCap, label: 'Cursos', hint: 'Aulas' },
     { to: `${base}/clas`, icon: Tent, label: 'Clãs', hint: 'Por distrito' },
   ];
@@ -75,11 +78,12 @@ export default function MemberApp() {
       <Route
         path="*"
         element={
-          <Shell tabs={tabs} parentOf={(path) => (['cursos', 'clas'].includes(path.split('/')[2]) ? `${base}/mais` : base)}>
+          <Shell tabs={tabs} parentOf={(path) => (['cursos', 'clas', 'agenda'].includes(path.split('/')[2]) ? `${base}/mais` : base)}>
             {actor.waiting ? <Waiting text={actor.waiting} /> : <Routes>
               <Route index element={<MyProfile />} />
               <Route path="requisitos" element={<><PageHeader title="Requisitos" subtitle={isDbv ? 'Cumpra os requisitos e suba no ranking' : 'Requisitos para a liderança e os tutores'} /><RequirementsTodo originTabs groupTab={isDbv} /></>} />
               <Route path="especialidades" element={<MyAchievements key="e" type="especialidade" />} />
+              <Route path="agenda" element={<AgendaLeitura />} />
               <Route path="cursos" element={<ContentList type="curso" base={base} />} />
               <Route path="conteudo/:id" element={<ContentDetail />} />
               <Route path="ranking" element={<RankingHub base={base} />} />

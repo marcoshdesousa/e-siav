@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ClipboardCheck, ClipboardPlus, Flag, Trophy } from 'lucide-react';
+import { CalendarDays, ClipboardCheck, ClipboardPlus, Flag, Trophy } from 'lucide-react';
+import { AgendaLeitura, ProximasDatas } from '../club/Folders.jsx';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -35,7 +36,7 @@ function UnitProfile() {
     <Loading {...state}>
       {(u) => (
         <>
-          <UnitProfileView unit={u} linkBase={`${base}/ver`} hideBio extra={<BioForm bio={u.bio} onDone={state.reload} />} />
+          <UnitProfileView unit={u} linkBase={`${base}/ver`} hideBio extra={<><ProximasDatas to={`${base}/agenda`} /><BioForm bio={u.bio} onDone={state.reload} /></>} />
           <p className="muted small center mt">Nome, logo e membros do grupo são cadastrados pelo clã.</p>
         </>
       )}
@@ -71,6 +72,7 @@ export default function UnitApp() {
       { to: `${base}/exploradores`, icon: ClipboardPlus, label: 'Criar' },
     ]),
     { to: `${base}/ranking`, icon: Trophy, label: 'Ranking' },
+    { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda' },
   ];
   return (
     <Shell tabs={tabs}>
@@ -79,6 +81,7 @@ export default function UnitApp() {
         <Route path="requisitos" element={<><PageHeader title="Requisitos do grupo" subtitle="Cumpram juntos dentro do prazo e subam no ranking" /><RequirementsTodo originTabs clubLabel="Do clã" /></>} />
         <Route path="exploradores" element={<GroupRequirements />} />
         <Route path="ranking" element={<RankingHub base={base} />} />
+        <Route path="agenda" element={<AgendaLeitura />} />
         <Route path="perfil" element={<Navigate to={base} replace />} />
         <Route path="ver/:kind/:id" element={<InAppProfile base={base} />} />
         <Route path="*" element={<Navigate to={base} replace />} />

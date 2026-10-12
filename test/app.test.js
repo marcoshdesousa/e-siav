@@ -766,6 +766,18 @@ test('pastas do clã: agenda (clã + App), finanças, patrimônio, biblioteca, c
   assert.deepEqual([a1.date, a1.end_date, a1.dates.length], ['2027-01-15', '2027-01-17', 3]);
   assert.deepEqual(ag.find((a) => a.id === soltos.body.id).dates, ['2027-02-03', '2027-02-10', '2027-02-24'], 'dias soltos em ordem');
   assert.equal((await aguias.post('/club/agenda', { title: 'Sem dia', dates: [] })).status, 400);
+  // Cores e quem vê: exploradores e grupos do clã veem a agenda (só ver)
+  const cor = await aguias.post('/club/agenda', { title: 'Acampamento laranja', dates: ['2027-03-05'], color: 'laranja' });
+  const pedroAg = (await (await login('membros', 'pedro')).get('/agenda')).body;
+  assert.equal(pedroAg.find((a) => a.id === cor.body.id)?.color, 'laranja', 'explorador vê, com a cor');
+  const falcoesAg = (await (await login('clube', '4821', 'FA1111')).get('/agenda')).body;
+  assert.ok(falcoesAg.some((a) => a.id === cor.body.id), 'grupo vê');
+  assert.ok(!(await (await login('membros', 'sofia')).get('/agenda')).body.some((a) => a.id === cor.body.id), 'outro clã não vê');
+  await aguias.put('/club/agenda/' + cor.body.id, { title: 'Acampamento azul', dates: ['2027-03-05', '2027-03-06'], color: 'azul' });
+  const editado = (await aguias.get('/agenda')).body.find((a) => a.id === cor.body.id);
+  assert.deepEqual([editado.title, editado.color, editado.dates.length], ['Acampamento azul', 'azul', 2]);
+  assert.equal((await admin.put('/admin/agenda/' + todos.body.id, { title: 'Live editada', dates: [d], scope: 'geral', color: 'roxo' })).status, 200);
+  assert.equal((await leoes.get('/agenda')).body.find((a) => a.id === todos.body.id).title, 'Live editada', 'admin edita e aparece para os clãs');
   assert.equal((await aguias.del('/club/agenda/' + todos.body.id)).status, 404, 'clã não apaga a agenda do App');
   // Minhas finanças: só controle
   await aguias.post('/club/financas', { kind: 'entrada', description: 'Acampamento de inverno', amount: '500,00', date: d });

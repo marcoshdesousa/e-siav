@@ -789,3 +789,8 @@ input::-webkit-datetime-edit { padding: 0; }
 @media (max-width: 520px) {
   .form .grid2, .modal .grid2 { grid-template-columns: minmax(0, 1fr); }
 }
+.cor-picker { display: flex; align-items: center; gap: .55rem; flex-wrap: wrap; }
+.cor-picker button { width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--surface); box-shadow: 0 0 0 1.5px var(--line); cursor: pointer; }
+.cor-picker button.on { box-shadow: 0 0 0 3px var(--ink); }
+.cor-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; display: inline-block; }
+.cal-dots i { width: 6px; height: 6px; }

@@ -28,7 +28,12 @@ export function waLink(phone, text = '') {
 
 // ---------- Agenda ----------
 const ORIGEM = { clube: ['green', 'Do clã'], geral: ['yellow', 'Para todos os clãs'], distrito: ['blue', 'Do distrito'] };
-const origemDe = (a) => (a.creator_type === 'club' ? ORIGEM.clube : a.scope === 'distrito' ? ORIGEM.distrito : a.scope === 'clube' ? ['yellow', 'Do App para o clã'] : ORIGEM.geral);
+const origemDe = (a) => (a.creator_type === 'club' ? ORIGEM.clube
+  : a.scope === 'distrito' ? ['blue', a.district_name || 'Do distrito']
+    : a.scope === 'clube' ? ['yellow', a.club_name ? `App · ${a.club_name}` : 'Do App para o clã'] : ORIGEM.geral);
+/** As 6 cores para identificar cada coisa no calendário. */
+export const CORES = [['verde', 'Verde', '#18875A'], ['azul', 'Azul', '#2563EB'], ['laranja', 'Laranja', '#EA7A12'], ['vermelho', 'Vermelho', '#DC2626'], ['roxo', 'Roxo', '#7C3AED'], ['preto', 'Preto', '#1F2937']];
+const corDe = (a) => (CORES.find((c) => c[0] === a.color) || CORES[0])[2];
 const inDay = (a, d) => (a.dates ? a.dates.includes(d) : a.date <= d && (a.end_date || a.date) >= d);
 /** Todos os dias de um item (lista escolhida ou do dia tal ao dia tal). */
 const daysOf = (a) => {
@@ -70,7 +75,7 @@ function MonthCalendar({ year, month, items, selected, onSelect }) {
           <button type="button" key={iso} onClick={() => onSelect(selected === iso ? null : iso)}
             className={'cal-d' + (iso === today() ? ' today' : '') + (selected === iso ? ' sel' : '') + (has.length ? ' has' : '')}>
             {d}
-            {has.length > 0 && <span className="cal-dots">{has.slice(0, 3).map((a) => <i key={a.id} className={'dot-' + origemDe(a)[0]} />)}</span>}
+            {has.length > 0 && <span className="cal-dots">{has.slice(0, 3).map((a) => <i key={a.id} style={{ background: corDe(a) }} />)}</span>}
           </button>
         );
       })}
@@ -81,10 +86,10 @@ function MonthCalendar({ year, month, items, selected, onSelect }) {
 function AgendaItem({ a, onEdit, onDelete }) {
   const [kind, label] = origemDe(a);
   return (
-    <Card className="agenda-item">
+    <Card className="agenda-item" style={{ borderLeft: `6px solid ${corDe(a)}` }}>
       <div className="agenda-date"><b>{a.date.slice(8, 10)}</b><small>{MESES[Number(a.date.slice(5, 7)) - 1].slice(0, 3)}</small></div>
       <div className="grow">
-        <div className="row between" style={{ alignItems: 'flex-start' }}><b>{a.title}</b><Badge kind={kind}>{label}</Badge></div>
+        <div className="row between" style={{ alignItems: 'flex-start' }}><b className="ico"><i className="cor-dot" style={{ background: corDe(a) }} />{a.title}</b><Badge kind={kind}>{label}</Badge></div>
         <div className="small muted">
           {daysOf(a).length > 1 ? <span className="ico"><CalendarDays size={12} /> {daysOf(a).length} dias: {diasTexto(daysOf(a))}</span> : null}
           {a.time ? <span className="ico"><Clock size={12} /> {a.time}</span> : null}
@@ -150,7 +155,7 @@ function DayPicker({ value, onChange }) {
 /** Formulário de um item da agenda (clã ou admin). */
 export function AgendaForm({ item, onClose, onSave, extra = null }) {
   const [f, setF] = useState({
-    title: item?.title || '', dates: item?.date ? daysOf(item) : [today()], time: item?.time || '', location: item?.location || '', description: item?.description || '', ...(item?._extra || {}),
+    title: item?.title || '', dates: item?.date ? daysOf(item) : [today()], color: item?.color || 'verde', time: item?.time || '', location: item?.location || '', description: item?.description || '', ...(item?._extra || {}),
   });
   const [busy, run] = useAsync();
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
@@ -159,6 +164,14 @@ export function AgendaForm({ item, onClose, onSave, extra = null }) {
       footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} disabled={!f.title.trim() || !f.dates.length} onClick={() => run(() => onSave(f), 'Agenda salva!').then(onClose)}>Salvar</Button></>}>
       <div className="form">
         <Field label="O que vai acontecer"><input value={f.title} onChange={set('title')} placeholder="Ex.: Reunião, acampamento, ordem unida" /></Field>
+        <Field group label="Cor no calendário">
+          <div className="cor-picker">
+            {CORES.map(([k, nome, hex]) => (
+              <button type="button" key={k} title={nome} aria-label={nome} className={f.color === k ? 'on' : ''} style={{ background: hex }} onClick={() => setF({ ...f, color: k })} />
+            ))}
+            <span className="small muted">{CORES.find((c) => c[0] === f.color)?.[1]}</span>
+          </div>
+        </Field>
         <Field group label="Dias"><DayPicker value={f.dates} onChange={(dates) => setF({ ...f, dates })} /></Field>
         <div className="grid2">
           <Field label="Horário (opcional)"><input type="time" value={f.time} onChange={set('time')} /></Field>
@@ -217,6 +230,30 @@ export function AgendaPage() {
       </Loading>
       {editing && <AgendaForm item={editing} onClose={() => setEditing(null)} onSave={save} />}
     </>
+  );
+}
+
+/** Agenda só para ver (exploradores, liderança e grupos). */
+export function AgendaLeitura() {
+  const state = useLoad(() => api.get('/agenda'));
+  return (
+    <>
+      <PageHeader title="Agenda" subtitle="Datas do seu clã e do App" />
+      <Loading {...state}>{(items) => <AgendaView items={items} canEdit={() => false} />}</Loading>
+    </>
+  );
+}
+
+/** Próximas datas da agenda, para o painel do explorador e do grupo. */
+export function ProximasDatas({ to }) {
+  const state = useLoad(() => api.get('/agenda'));
+  const hoje = today();
+  const prox = (state.data || []).filter((a) => (a.end_date || a.date) >= hoje).slice(0, 3);
+  if (!prox.length) return null;
+  return (
+    <Section title="Próximas datas" action={<Link to={to} className="small ico">Ver agenda <ChevronRight size={14} /></Link>}>
+      {prox.map((a) => <AgendaItem key={a.id} a={a} />)}
+    </Section>
   );
 }
 

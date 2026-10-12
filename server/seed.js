@@ -349,14 +349,14 @@ export function seed({ production = false } = {}) {
     // ---------- Agenda, tesouraria, patrimônio e fichas para atualizar ----------
     const dia = (n) => new Date(Date.now() + n * day).toISOString().slice(0, 10);
     const agenda = (creator, scope, club, district, title, date, extra = {}) => run(
-      'INSERT INTO agenda_items (creator_type, club_id, scope, district_id, title, description, location, date, end_date, time) VALUES (?,?,?,?,?,?,?,?,?,?)',
-      creator, club, scope, district, title, extra.description || null, extra.location || null, date, extra.end || null, extra.time || null,
+      'INSERT INTO agenda_items (creator_type, club_id, scope, district_id, title, description, location, date, end_date, time, color) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
+      creator, club, scope, district, title, extra.description || null, extra.location || null, date, extra.end || null, extra.time || null, extra.color || 'verde',
     );
-    agenda('club', 'clube', clubs.aguias, null, 'Reunião do clã', dia(3), { time: '09:00', location: 'Igreja Central' });
-    agenda('club', 'clube', clubs.aguias, null, 'Acampamento de primavera', dia(24), { end: dia(26), location: 'Sítio Boa Vista', description: 'Levar barraca, lanterna e saco de dormir.' });
-    agenda('club', 'clube', clubs.leoes, null, 'Ordem unida', dia(5), { time: '15:00' });
-    agenda('admin', 'geral', null, null, 'Campori Exploradores do Brasil', dia(40), { end: dia(43), location: 'Parque Nacional', description: 'Evento para todos os clãs.' });
-    agenda('admin', 'distrito', null, palmares, 'Encontro do Distrito Palmares', dia(12), { time: '08:00' });
+    agenda('club', 'clube', clubs.aguias, null, 'Reunião do clã', dia(3), { time: '09:00', location: 'Igreja Central', color: 'azul' });
+    agenda('club', 'clube', clubs.aguias, null, 'Acampamento de primavera', dia(24), { end: dia(26), location: 'Sítio Boa Vista', description: 'Levar barraca, lanterna e saco de dormir.', color: 'laranja' });
+    agenda('club', 'clube', clubs.leoes, null, 'Ordem unida', dia(5), { time: '15:00', color: 'preto' });
+    agenda('admin', 'geral', null, null, 'Campori Exploradores do Brasil', dia(40), { end: dia(43), location: 'Parque Nacional', description: 'Evento para todos os clãs.', color: 'vermelho' });
+    agenda('admin', 'distrito', null, palmares, 'Encontro do Distrito Palmares', dia(12), { time: '08:00', color: 'roxo' });
     const fin = (c, kind, description, cents, n) => run('INSERT INTO club_finance (club_id, kind, description, amount_cents, date) VALUES (?,?,?,?,?)', c, kind, description, cents, dia(n));
     fin(clubs.aguias, 'entrada', 'Venda de pizza', 85000, -20);
     fin(clubs.aguias, 'saida', 'Lenços e distintivos', 32050, -15);

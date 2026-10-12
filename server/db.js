@@ -684,6 +684,7 @@ function migrate() {
   )`);
   // Dias escolhidos um a um (ex.: acampamento de sexta a domingo, ou dias soltos da semana).
   add('agenda_items', 'dates', 'TEXT');
+  add('agenda_items', 'color', 'TEXT'); // uma das 6 cores para identificar no calendário
   // Tesouraria: controle financeiro do próprio clã (entradas e saídas, só anotação).
   db.exec(`CREATE TABLE IF NOT EXISTS club_finance (
     id INTEGER PRIMARY KEY,
