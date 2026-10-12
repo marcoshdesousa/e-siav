@@ -26,13 +26,16 @@ r.get('/club/transfers', (req, res) => {
 });
 
 r.post('/club/transfers', (req, res) => {
-  const cpf = cleanCpf(req.body.cpf);
+  // Documento: CPF (11 números) ou o número da certidão de nascimento.
+  const doc = String(req.body.doc ?? req.body.cpf ?? '').trim();
+  const cpf = cleanCpf(doc);
+  const cert = doc.replace(/[^\dA-Za-z]/g, '');
   const name = str(req.body.name, 120);
-  if (!cpf) fail(400, 'Informe um CPF válido');
   if (!name) fail(400, 'Informe o nome completo');
-  const m = get('SELECT id, name, club_id FROM members WHERE cpf = ?', cpf);
-  // Nome e CPF precisam bater (sem diferenciar acentos e maiúsculas).
-  if (!m || norm(m.name) !== norm(name)) fail(404, 'Não achamos ninguém com esse nome e CPF');
+  if (!cpf && cert.length < 6) fail(400, 'Informe o CPF ou o número da certidão de nascimento');
+  const m = cpf ? get('SELECT id, name, club_id FROM members WHERE cpf = ?', cpf) : get('SELECT id, name, club_id FROM members WHERE birth_cert = ?', cert);
+  // Nome e documento precisam bater (sem diferenciar acentos e maiúsculas).
+  if (!m || norm(m.name) !== norm(name)) fail(404, 'Não achamos ninguém com esse nome e documento');
   if (m.club_id === req.actor.id) fail(400, 'Esta pessoa já é do seu clã');
   if (get(`SELECT 1 FROM transfers WHERE member_id = ? AND status IN ('pendente_origem','pendente_destino')`, m.id)) {
     fail(409, 'Já existe um pedido de transferência em andamento para esta pessoa');

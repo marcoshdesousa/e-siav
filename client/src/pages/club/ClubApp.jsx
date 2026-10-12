@@ -7,7 +7,7 @@ import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { useRealtime } from '../../realtime.jsx';
 import { KIND_LABEL, fmtCpf, fmtDate, plural } from '../../format.js';
-import FichaForm from '../Ficha.jsx';
+import FichaForm, { DocFields } from '../Ficha.jsx';
 import TransfersPage from './Transfers.jsx';
 import {
   Avatar, Badge, Button, Card, Confirm, Empty, Field, ImagePicker, Loading, MedalList, Modal, PageHeader, PositionBadge, Section, ShareButton, Stat, Tabs, notify, useAsync, useLoad,
@@ -151,7 +151,7 @@ function MemberForm({ member, units, onClose, onDone }) {
   const { meta } = useAuth();
   const [f, setF] = useState({
     name: member?.name || '', birth_date: member?.birth_date || '', cargo: member?.cargo || '', unit_id: member?.unit_id || '',
-    cpf: fmtCpf(member?.cpf), password: '', photo: member?.photo || null,
+    cpf: fmtCpf(member?.cpf), certidao: member?.birth_cert || '', doc_tipo: !member?.cpf && member?.birth_cert ? 'certidao' : 'rg_cpf', password: '', photo: member?.photo || null,
   });
   const [busy, run] = useAsync();
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
@@ -160,7 +160,8 @@ function MemberForm({ member, units, onClose, onDone }) {
   const cargos = kind && kind !== 'invalido' ? meta.cargos[kind] : [];
   const availableUnits = units.filter((u) => !(u.is_leadership && kind === 'desbravador'));
   const save = async () => {
-    const body = { ...f, photo: f.photo instanceof File ? f.photo : undefined, unit_id: f.unit_id || '' };
+    const body = { ...f, photo: f.photo instanceof File ? f.photo : undefined, unit_id: f.unit_id || '', certidao: f.doc_tipo === 'certidao' ? f.certidao : '', cpf: f.doc_tipo === 'certidao' ? '' : f.cpf };
+    delete body.doc_tipo;
     const r = await run(() => (member ? api.put('/club/members/' + member.id, toForm(body)) : api.post('/club/members', toForm(body))), member ? 'Membro atualizado!' : null);
     onDone(member ? null : r.code);
   };
@@ -186,10 +187,8 @@ function MemberForm({ member, units, onClose, onDone }) {
             </select>
           </Field>
         </div>
-        <div className="grid2">
-          <Field label="CPF" hint="Cada pessoa fica em um clã só"><input value={f.cpf} onChange={(e) => setF({ ...f, cpf: fmtCpf(e.target.value) })} inputMode="numeric" placeholder="000.000.000-00" /></Field>
-          <Field label={member ? 'Nova senha' : 'Senha'} hint={member ? 'Deixe em branco para manter' : 'Mínimo 6 caracteres'}><input type="text" value={f.password} onChange={set('password')} /></Field>
-        </div>
+        <DocFields value={f} onChange={setF} cpf={f.cpf} onCpf={(cpf) => setF({ ...f, cpf })} />
+        <Field label={member ? 'Nova senha' : 'Senha'} hint={member ? 'Deixe em branco para manter' : 'Mínimo 6 caracteres'}><input type="text" value={f.password} onChange={set('password')} /></Field>
         <p className="muted small">{member ? <>Código de acesso: <b>{member.code}</b>. O membro entra com o código e a senha.</> : 'O app gera um código de 6 números para o membro entrar, junto com a senha.'}</p>
       </div>
     </Modal>
@@ -333,11 +332,16 @@ function FichaModal({ member, onClose }) {
         {(d) => (
           <>
             <p className="small muted" style={{ marginTop: 0 }}>
-              Código <b>{d.member.code}</b> · CPF {fmtCpf(d.member.cpf) || '—'}
-              {d.ficha.terms_accepted_at ? <> · termos aceitos em {fmtDate(d.ficha.terms_accepted_at)}</> : ''}
+              Código <b>{d.member.code}</b> · {d.member.cpf ? <>CPF {fmtCpf(d.member.cpf)}</> : d.member.birth_cert ? <>Certidão {d.member.birth_cert}</> : 'sem documento'}
             </p>
             {d.ficha.termo_imagem === false && <Badge kind="red">Sem autorização de uso de imagem</Badge>}
-            <FichaForm value={f || d.ficha} onChange={setF} minor={member.kind === 'desbravador'} />
+            <FichaForm value={f || d.ficha} onChange={setF} age={member.age} />
+            {d.ficha.terms_accepted_at && (
+              <Card className="small mt">
+                <b>Termos aceitos</b> em {fmtDate(d.ficha.terms_accepted_at)}{d.ficha.local_inscricao ? ` · ${d.ficha.local_inscricao}` : ''}<br />
+                Assinado por <b>{d.ficha.assinatura_nome || '—'}</b>{d.ficha.assinatura_cpf ? ` · CPF ${fmtCpf(d.ficha.assinatura_cpf)}` : ''}
+              </Card>
+            )}
           </>
         )}
       </Loading>

@@ -332,11 +332,19 @@ test('inscrição pelo link: fica pendente até o clã aprovar; desativar tira o
   assert.equal(info.name, 'Clã Águias do Vale');
   const body = {
     name: 'Joana Inscrita', birth_date: `${d.getFullYear() - 12}-03-10`, cpf: cpf(900000010), password: 'senha123',
-    responsavel_nome: 'Maria Mãe', responsavel_telefone: '11999999999', alergias: 'Amendoim',
-    termo_imagem: true, termo_responsabilidade: true, termo_dados: true,
+    sexo: 'Feminino', whatsapp: '11999999999', endereco: 'Rua A', numero: '10', bairro: 'Centro', cidade: 'Palmares', uf: 'pe',
+    mae_nome: 'Maria Mãe', mae_whatsapp: '11999999999', alergias: 'Amendoim',
+    termo_imagem: true, termo_responsabilidade: true, termo_dados: true, assinatura_nome: 'Maria Mãe', assinatura_cpf: cpf(900000011),
   };
   const post = (b) => fetch(BASE + '/public/inscricao/0001', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) });
   assert.equal((await post({ ...body, termo_imagem: false })).status, 400, 'termos obrigatórios');
+  assert.equal((await post({ ...body, mae_nome: '', mae_whatsapp: '' })).status, 400, 'menor precisa de pai, mãe ou responsável');
+  assert.equal((await post({ ...body, sexo: 'Outro' })).status, 400, 'outro: precisa escrever');
+  // Adulto: sem pais nem responsável; documento pela certidão de nascimento
+  const adulto = { ...body, name: 'Carlos Adulto Teste', birth_date: `${d.getFullYear() - 30}-01-01`, cpf: '', doc_tipo: 'certidao', certidao: '123456 01 55 2010 1 00012 123 0001234-56',
+    mae_nome: '', mae_whatsapp: '', assinatura_nome: 'Carlos Adulto Teste', saude_profissional: true, saude_area: 'Médico' };
+  assert.equal((await post(adulto)).status, 200, 'adulto com certidão');
+  assert.equal((await post({ ...adulto, name: 'Outro Nome Qualquer' })).status, 409, 'certidão única');
   const ok = await post(body);
   assert.equal(ok.status, 200);
   const { code } = await ok.json();
@@ -347,7 +355,12 @@ test('inscrição pelo link: fica pendente até o clã aprovar; desativar tira o
   const aguias = await login('clube', 'aguias', 'aguias123');
   const joana = (await aguias.get('/club/members')).body.find((m) => m.code === code);
   assert.equal(joana.status, 'pendente');
-  assert.equal((await aguias.get(`/club/members/${joana.id}/ficha`)).body.ficha.alergias, 'Amendoim');
+  const ficha = (await aguias.get(`/club/members/${joana.id}/ficha`)).body.ficha;
+  assert.equal(ficha.alergias, 'Amendoim');
+  assert.equal(ficha.local_inscricao, 'Clã Águias do Vale — sistema online');
+  assert.equal(ficha.uf, 'PE');
+  const admin = await login('membros', 'admin', 'admin123');
+  assert.equal((await admin.get(`/club/members/${joana.id}/ficha`)).status, 403, 'a ficha fica só no Sistema do Clã');
   const leoes = await login('clube', 'leoes', 'leoes123');
   assert.equal((await leoes.get(`/club/members/${joana.id}/ficha`)).status, 404, 'outro clã não vê a ficha');
   await aguias.post(`/club/members/${joana.id}/aprovar`, {});

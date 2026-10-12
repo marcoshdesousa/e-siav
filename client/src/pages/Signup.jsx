@@ -2,9 +2,8 @@ import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { CheckCircle2, UserPlus } from 'lucide-react';
 import { api } from '../api.js';
-import { fmtCpf } from '../format.js';
 import { Avatar, Button, Card, Field, Loading, LogoHorizontal, useAsync, useLoad } from '../ui.jsx';
-import FichaForm, { TermosChecks, TERMOS } from './Ficha.jsx';
+import FichaForm, { DocFields, TermosAssinatura, TERMOS } from './Ficha.jsx';
 
 const ageOf = (d) => (d ? Math.floor((Date.now() - Date.parse(d + 'T12:00:00')) / 31557600000) : null);
 
@@ -16,15 +15,26 @@ export default function SignupPage() {
   const { code } = useParams();
   const club = useLoad(() => api.get('/public/inscricao/' + code), [code]);
   const [f, setF] = useState({ name: '', birth_date: '', cpf: '', password: '', password2: '' });
-  const [ficha, setFicha] = useState({});
+  const [ficha, setFicha] = useState({ doc_tipo: 'rg_cpf' });
   const [done, setDone] = useState(null);
   const [busy, run] = useAsync();
   const age = ageOf(f.birth_date);
   const minor = age != null && age < 18;
-  const termsOk = TERMOS.every(([k]) => ficha[k]);
-  const ready = f.name.trim().split(/\s+/).length >= 2 && age >= 10 && f.cpf.replace(/\D/g, '').length === 11
-    && f.password.length >= 6 && f.password === f.password2 && termsOk
-    && (!minor || (ficha.responsavel_nome && ficha.responsavel_telefone));
+  // O que falta preencher (o botão só libera quando estiver tudo certo).
+  const missing = [
+    f.name.trim().split(/\s+/).length < 2 && 'nome completo',
+    !(age >= 10) && 'data de nascimento',
+    (ficha.doc_tipo === 'certidao' ? (ficha.certidao || '').length < 6 : f.cpf.replace(/\D/g, '').length !== 11) && 'documento',
+    (!ficha.sexo || (ficha.sexo === 'Outro' && !ficha.sexo_outro)) && 'sexo',
+    !ficha.whatsapp && 'WhatsApp',
+    !(ficha.endereco && ficha.numero && ficha.bairro && ficha.cidade && ficha.uf) && 'endereço',
+    minor && !(ficha.pai_nome || ficha.mae_nome || ficha.responsavel_outro) && 'pai, mãe ou responsável',
+    minor && ((ficha.pai_nome && !ficha.pai_whatsapp) || (ficha.mae_nome && !ficha.mae_whatsapp) || (ficha.responsavel_outro && !(ficha.responsavel_nome && ficha.responsavel_whatsapp))) && 'WhatsApp dos pais/responsável',
+    !TERMOS.every(([k]) => ficha[k]) && 'termos',
+    !(ficha.assinatura_nome?.trim().split(/\s+/).length >= 2 && (ficha.assinatura_cpf || '').length === 11) && 'assinatura',
+    !(f.password.length >= 6 && f.password === f.password2) && 'senha',
+  ].filter(Boolean);
+  const ready = !missing.length;
   const send = async () => {
     const r = await run(() => api.post('/public/inscricao/' + code, { ...ficha, ...f }), null);
     setDone(r);
@@ -59,22 +69,21 @@ export default function SignupPage() {
                 <div className="form">
                   <h3 className="ficha-title">Dados pessoais</h3>
                   <Field label="Nome completo"><input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} autoComplete="name" /></Field>
-                  <div className="grid2">
-                    <Field label="Data de nascimento" hint={age != null ? (age < 10 ? 'É preciso ter pelo menos 10 anos' : `${age} anos`) : ''}>
-                      <input type="date" value={f.birth_date} onChange={(e) => setF({ ...f, birth_date: e.target.value })} />
-                    </Field>
-                    <Field label="CPF"><input value={f.cpf} onChange={(e) => setF({ ...f, cpf: fmtCpf(e.target.value) })} inputMode="numeric" placeholder="000.000.000-00" /></Field>
-                  </div>
+                  <Field label="Data de nascimento" hint={age != null ? (age < 10 ? 'É preciso ter pelo menos 10 anos' : `${age} anos`) : 'A ficha muda conforme a idade'}>
+                    <input type="date" value={f.birth_date} onChange={(e) => setF({ ...f, birth_date: e.target.value })} />
+                  </Field>
+                  <DocFields value={ficha} onChange={setFicha} cpf={f.cpf} onCpf={(cpf) => setF({ ...f, cpf })} />
                 </div>
-                <FichaForm value={ficha} onChange={setFicha} minor={minor} />
+                <FichaForm value={ficha} onChange={setFicha} age={age} />
+                <TermosAssinatura value={ficha} onChange={setFicha} minor={minor} />
                 <div className="form">
-                  <h3 className="ficha-title">Termos {minor ? '(o responsável aceita)' : ''}</h3>
-                  <TermosChecks value={ficha} onChange={setFicha} />
+                  <p className="small muted">Data: <b>{new Date().toLocaleDateString('pt-BR')}</b> · Local: <b>{c.name} — sistema online</b></p>
                   <h3 className="ficha-title">Senha de acesso</h3>
                   <div className="grid2">
                     <Field label="Crie uma senha" hint="Mínimo 6 caracteres"><input type="password" value={f.password} onChange={(e) => setF({ ...f, password: e.target.value })} autoComplete="new-password" /></Field>
                     <Field label="Repita a senha" hint={f.password2 && f.password !== f.password2 ? 'As senhas não são iguais' : ''}><input type="password" value={f.password2} onChange={(e) => setF({ ...f, password2: e.target.value })} autoComplete="new-password" /></Field>
                   </div>
+                  {!ready && <p className="small muted center">Falta: {missing.join(', ')}.</p>}
                   <Button block busy={busy} disabled={!ready} onClick={send}><UserPlus size={18} /> Enviar inscrição</Button>
                   <p className="muted small center">Cada pessoa pode estar em um clã só. Se você já é de outro clã, peça para este clã solicitar a sua transferência.</p>
                 </div>

@@ -526,6 +526,9 @@ function migrate() {
   add('members', 'cpf', 'TEXT');
   add('members', 'status', "TEXT NOT NULL DEFAULT 'ativo'");
   db.exec('CREATE UNIQUE INDEX IF NOT EXISTS ux_member_cpf ON members(cpf) WHERE cpf IS NOT NULL');
+  // Quem ainda não tem CPF se identifica pela certidão de nascimento.
+  add('members', 'birth_cert', 'TEXT');
+  db.exec('CREATE UNIQUE INDEX IF NOT EXISTS ux_member_birth_cert ON members(birth_cert) WHERE birth_cert IS NOT NULL');
   db.exec(`CREATE TABLE IF NOT EXISTS member_records (
     member_id INTEGER PRIMARY KEY REFERENCES members(id) ON DELETE CASCADE,
     data TEXT NOT NULL DEFAULT '{}',

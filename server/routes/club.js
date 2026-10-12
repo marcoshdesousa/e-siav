@@ -4,7 +4,7 @@ import { requireAuth, setLogin, deleteLogin } from '../auth.js';
 import { imageUpload, fileUrl } from '../uploads.js';
 import { CARGOS, CARGO_PADRAO } from '../config.js';
 import { fail, int, str, memberKind, roleOf, ageFrom, validDate, newMemberCode, newUnitPin, parseJson } from '../util.js';
-import { checkCpf, cleanFicha, getFicha, saveFicha } from '../ficha.js';
+import { checkIdentity, cleanFicha, getFicha, saveFicha } from '../ficha.js';
 import { clubProfile } from '../profiles.js';
 import { clubUnitsRanking } from '../rankings.js';
 
@@ -56,7 +56,7 @@ function ownMember(req) {
 
 r.get('/club/members', (req, res) => {
   const rows = all(
-    `SELECT m.id, m.name, m.photo, m.cargo, m.code, m.cpf, m.status, m.birth_date, m.unit_id, m.created_at, u.name AS unit_name
+    `SELECT m.id, m.name, m.photo, m.cargo, m.code, m.cpf, m.birth_cert, m.status, m.birth_date, m.unit_id, m.created_at, u.name AS unit_name
      FROM members m LEFT JOIN units u ON u.id = m.unit_id WHERE m.club_id = ? ORDER BY m.name`,
     req.actor.id,
   );
@@ -96,8 +96,10 @@ function memberFields(req, existing) {
   }
   // Tutor sem grupo entra automaticamente no grupo "Tutores".
   if (!unitId && kind === 'lideranca') unitId = leadershipUnit(req.actor.id);
-  const cpf = b.cpf === undefined && existing ? existing.cpf : checkCpf(b.cpf, existing?.id);
-  return { name, birth, cargo, unitId, cpf };
+  const ids = b.cpf === undefined && b.certidao === undefined && existing
+    ? { cpf: existing.cpf, certidao: existing.birth_cert }
+    : checkIdentity({ cpf: b.cpf, certidao: b.certidao }, existing?.id);
+  return { name, birth, cargo, unitId, cpf: ids.cpf, certidao: ids.certidao };
 }
 
 r.post('/club/members', imageUpload.single('photo'), (req, res) => {
@@ -106,8 +108,8 @@ r.post('/club/members', imageUpload.single('photo'), (req, res) => {
   const out = tx(() => {
     const code = newMemberCode();
     const id = Number(run(
-      'INSERT INTO members (club_id, unit_id, name, birth_date, photo, cargo, code, cpf) VALUES (?,?,?,?,?,?,?,?)',
-      req.actor.id, f.unitId, f.name, f.birth, fileUrl(req.file), f.cargo, code, f.cpf,
+      'INSERT INTO members (club_id, unit_id, name, birth_date, photo, cargo, code, cpf, birth_cert) VALUES (?,?,?,?,?,?,?,?,?)',
+      req.actor.id, f.unitId, f.name, f.birth, fileUrl(req.file), f.cargo, code, f.cpf, f.certidao,
     ).lastInsertRowid);
     setLogin('member', id, code, req.body.password);
     return { id, code };
@@ -119,8 +121,8 @@ r.put('/club/members/:id', imageUpload.single('photo'), (req, res) => {
   const m = ownMember(req);
   const f = memberFields(req, m);
   tx(() => {
-    run('UPDATE members SET name = ?, birth_date = ?, cargo = ?, unit_id = ?, cpf = ? WHERE id = ? AND club_id = ?',
-      f.name, f.birth, f.cargo, f.unitId, f.cpf, m.id, req.actor.id);
+    run('UPDATE members SET name = ?, birth_date = ?, cargo = ?, unit_id = ?, cpf = ?, birth_cert = ? WHERE id = ? AND club_id = ?',
+      f.name, f.birth, f.cargo, f.unitId, f.cpf, f.certidao, m.id, req.actor.id);
     if (req.file) run('UPDATE members SET photo = ? WHERE id = ?', fileUrl(req.file), m.id);
     if (req.body.password) setLogin('member', m.id, null, req.body.password);
   });
@@ -162,7 +164,7 @@ r.post('/club/members/:id/recusar', (req, res) => {
 // Ficha de cadastro, ficha médica e termos.
 r.get('/club/members/:id/ficha', (req, res) => {
   const m = ownMember(req);
-  res.json({ member: { id: m.id, name: m.name, cpf: m.cpf, birth_date: m.birth_date, code: m.code }, ficha: getFicha(m.id) });
+  res.json({ member: { id: m.id, name: m.name, cpf: m.cpf, birth_cert: m.birth_cert, birth_date: m.birth_date, code: m.code }, ficha: getFicha(m.id) });
 });
 r.put('/club/members/:id/ficha', (req, res) => {
   const m = ownMember(req);

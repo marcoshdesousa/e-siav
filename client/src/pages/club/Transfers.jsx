@@ -39,7 +39,7 @@ export default function TransfersPage() {
   const [f, setF] = useState({ name: '', cpf: '' });
   const [busy, run] = useAsync();
   const request = async () => {
-    const r = await run(() => api.post('/club/transfers', f), null);
+    const r = await run(() => api.post('/club/transfers', { name: f.name, doc: f.cpf }), null);
     setF({ name: '', cpf: '' });
     state.reload();
     setTab('enviados');
@@ -58,10 +58,10 @@ export default function TransfersPage() {
       {tab === 'pedir' && (
         <Card>
           <div className="form">
-            <p className="small muted" style={{ marginTop: 0 }}>Informe o <b>nome completo</b> e o <b>CPF</b> da pessoa. Não precisa saber de qual clã ela é: o app encontra e manda o pedido para o clã atual aceitar. Depois que ele aceitar, você confirma aqui.</p>
+            <p className="small muted" style={{ marginTop: 0 }}>Informe o <b>nome completo</b> e o <b>CPF</b> (ou o número da certidão de nascimento) da pessoa. Não precisa saber de qual clã ela é: o app encontra e manda o pedido para o clã atual aceitar. Depois que ele aceitar, você confirma aqui.</p>
             <Field label="Nome completo"><input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
-            <Field label="CPF"><input value={f.cpf} onChange={(e) => setF({ ...f, cpf: fmtCpf(e.target.value) })} inputMode="numeric" placeholder="000.000.000-00" /></Field>
-            <Button block busy={busy} disabled={f.name.trim().length < 5 || f.cpf.replace(/\D/g, '').length !== 11} onClick={request}><Search size={16} /> Pedir transferência</Button>
+            <Field label="CPF ou nº da certidão de nascimento"><input value={f.cpf} onChange={(e) => setF({ ...f, cpf: /^[\d.\-]*$/.test(e.target.value) && e.target.value.replace(/\D/g, '').length <= 11 ? fmtCpf(e.target.value) : e.target.value })} placeholder="000.000.000-00" /></Field>
+            <Button block busy={busy} disabled={f.name.trim().length < 5 || f.cpf.replace(/\D/g, '').length < 6} onClick={request}><Search size={16} /> Pedir transferência</Button>
           </div>
         </Card>
       )}

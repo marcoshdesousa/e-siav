@@ -6,7 +6,7 @@ import { get, run, tx } from '../db.js';
 import { setLogin } from '../auth.js';
 import { CARGO_PADRAO } from '../config.js';
 import { fail, str, validDate, memberKind, newMemberCode } from '../util.js';
-import { checkCpf, cleanFicha, saveFicha, TERMOS } from '../ficha.js';
+import { checkIdentity, cleanFicha, saveFicha, validateSignup } from '../ficha.js';
 
 const r = Router();
 
@@ -39,17 +39,20 @@ r.post('/public/inscricao/:code', (req, res) => {
   if (!validDate(b.birth_date)) fail(400, 'Informe a data de nascimento');
   const kind = memberKind(b.birth_date);
   if (!kind) fail(400, 'É preciso ter pelo menos 10 anos');
-  const cpf = checkCpf(b.cpf);
-  if (String(b.password || '').length < 6) fail(400, 'Crie uma senha com pelo menos 6 caracteres');
   const ficha = cleanFicha(b);
-  if (kind === 'desbravador' && (!ficha.responsavel_nome || !ficha.responsavel_telefone)) fail(400, 'Informe o nome e o telefone do responsável');
-  if (!TERMOS.every((t) => ficha[t])) fail(400, 'É preciso aceitar os termos');
+  const { cpf, certidao } = checkIdentity({ cpf: ficha.doc_tipo === 'certidao' ? b.cpf || null : b.cpf, certidao: ficha.doc_tipo === 'certidao' ? ficha.certidao : null });
+  if (ficha.doc_tipo !== 'certidao' && !cpf) fail(400, 'Informe o CPF');
+  validateSignup(ficha, b.birth_date);
+  if (String(b.password || '').length < 6) fail(400, 'Crie uma senha com pelo menos 6 caracteres');
+  // Data e local da ficha: o dia da inscrição e o clã, pelo sistema online.
+  ficha.data_inscricao = new Date().toISOString().slice(0, 10);
+  ficha.local_inscricao = `${c.name} — sistema online`;
 
   const out = tx(() => {
     const code = newMemberCode();
     const id = Number(run(
-      `INSERT INTO members (club_id, unit_id, name, birth_date, cargo, code, cpf, status) VALUES (?,?,?,?,?,?,?,'pendente')`,
-      c.id, null, name, b.birth_date, CARGO_PADRAO[kind], code, cpf,
+      `INSERT INTO members (club_id, unit_id, name, birth_date, cargo, code, cpf, birth_cert, status) VALUES (?,?,?,?,?,?,?,?,'pendente')`,
+      c.id, null, name, b.birth_date, CARGO_PADRAO[kind], code, cpf, certidao,
     ).lastInsertRowid);
     setLogin('member', id, code, b.password);
     saveFicha(id, ficha, { acceptTerms: true });
