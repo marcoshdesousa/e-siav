@@ -84,9 +84,9 @@ function memberFields(req, existing) {
   if (unitId) {
     const u = get('SELECT * FROM units WHERE id = ? AND club_id = ?', unitId, req.actor.id);
     if (!u) fail(400, 'Grupo inválido');
-    if (u.is_leadership && kind === 'desbravador') fail(400, 'Desbravadores não podem entrar no grupo Liderança');
+    if (u.is_leadership && kind === 'desbravador') fail(400, 'Exploradores não podem entrar no grupo Tutores');
   }
-  // Liderança sem grupo entra automaticamente no grupo "Liderança".
+  // Tutor sem grupo entra automaticamente no grupo "Tutores".
   if (!unitId && kind === 'lideranca') unitId = leadershipUnit(req.actor.id);
   const excellence = b.excellence === undefined ? existing?.excellence ?? 0 : bool(b.excellence) ? 1 : 0;
   return { name, birth, cargo, unitId, excellence };
@@ -186,7 +186,7 @@ r.put('/club/units/:id', imageUpload.single('logo'), (req, res) => {
 
 r.delete('/club/units/:id', (req, res) => {
   const u = ownUnit(req);
-  if (u.is_leadership) fail(400, 'O grupo Liderança não pode ser removido');
+  if (u.is_leadership) fail(400, 'O grupo Tutores não pode ser removido');
   tx(() => {
     const members = all('SELECT id, birth_date FROM members WHERE unit_id = ?', u.id);
     const lid = leadershipUnit(req.actor.id);

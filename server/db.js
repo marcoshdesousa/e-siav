@@ -2,6 +2,7 @@ import { DatabaseSync } from 'node:sqlite';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { CARGOS_RENOMEADOS, NOME_UNIDADE_LIDERANCA } from './config.js';
 
 /** Pasta raiz do projeto (independe da pasta onde o servidor foi iniciado). */
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -89,7 +90,7 @@ CREATE TABLE IF NOT EXISTS requirements (
   deadline TEXT NOT NULL,
   created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
   CHECK (late_points <= points),
-  -- Requisito de clã vale só para os grupos e os desbravadores daquele clã.
+  -- Requisito de clã vale só para os grupos e os exploradores daquele clã.
   CHECK (creator_type = 'admin' OR (audience IN ('unit','member') AND club_id IS NOT NULL AND scope = 'clube')),
   CHECK (creator_type = 'club' OR (club_id IS NULL AND scope IN ('geral','distrito'))),
   CHECK (scope <> 'distrito' OR district_id IS NOT NULL)
@@ -382,7 +383,7 @@ function migrate() {
       COMMIT; PRAGMA foreign_keys = ON;`);
   }
 
-  // Requisitos do clã também para os desbravadores do clã: amplia a regra antiga
+  // Requisitos do clã também para os exploradores do clã: amplia a regra antiga
   // (recria a tabela preservando tudo; os ids continuam os mesmos).
   const reqSql = db.prepare("SELECT sql FROM sqlite_master WHERE name = 'requirements'").get()?.sql || '';
   if (reqSql.includes("audience = 'unit' AND club_id IS NOT NULL")) {
@@ -475,6 +476,10 @@ function migrate() {
     db.exec(SCHEMA);
     db.exec(`INSERT INTO app_flags (key) VALUES ('trigger-names-cla')`);
   }
+
+  // Exploradores: grupo "Liderança" vira "Tutores" e cargos antigos ganham o nome novo.
+  db.prepare(`UPDATE units SET name = ? WHERE is_leadership = 1 AND name = 'Liderança'`).run(NOME_UNIDADE_LIDERANCA);
+  for (const [old, novo] of Object.entries(CARGOS_RENOMEADOS)) db.prepare('UPDATE members SET cargo = ? WHERE cargo = ?').run(novo, old);
 }
 
 /** Apaga tudo e recria o esquema (usado por "npm run seed"). */

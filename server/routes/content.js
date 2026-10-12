@@ -18,7 +18,7 @@ function hasAccess(memberId, c) {
   return !!c.is_free || !!get('SELECT 1 FROM content_access WHERE member_id = ? AND content_id = ?', memberId, c.id);
 }
 
-/** Desbravador não vê cadernos guia de líder; liderança vê regulares e de líder. */
+/** Explorador não vê cadernos guia de líder; tutor vê todos. */
 const visibleTo = (actor, c) => !(c.type === 'classe' && c.leader && actor.kind !== 'lideranca');
 
 const approvedCount = (contentId, memberId) =>

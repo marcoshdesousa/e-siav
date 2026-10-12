@@ -74,17 +74,17 @@ export function seed() {
     const memberDefs = [
       ['pedro', 'aguias', 'falcoes', 'Pedro Henrique Lima', 12, 'Capitão'],
       ['ana', 'aguias', 'gavioes', 'Ana Clara Souza', 11, 'Secretário'],
-      ['lucas', 'aguias', 'falcoes', 'Lucas Ferreira', 14, 'Desbravador'],
+      ['lucas', 'aguias', 'falcoes', 'Lucas Ferreira', 14, 'Explorador'],
       ['beatriz', 'aguias', 'gavioes', 'Beatriz Santos', 13, 'Capelão'],
-      ['gabriel', 'aguias', null, 'Gabriel Oliveira', 15, 'Desbravador'],
+      ['gabriel', 'aguias', null, 'Gabriel Oliveira', 15, 'Explorador'],
       ['marcos', 'aguias', 'aguias:lideranca', 'Marcos Almeida', 34, 'Diretor'],
-      ['juliana', 'aguias', 'falcoes', 'Juliana Costa', 22, 'Conselheiro'],
-      ['davi', 'leoes', 'panteras', 'Davi Rodrigues', 10, 'Desbravador'],
+      ['juliana', 'aguias', 'falcoes', 'Juliana Costa', 22, 'Tutor'],
+      ['davi', 'leoes', 'panteras', 'Davi Rodrigues', 10, 'Explorador'],
       ['sofia', 'leoes', 'tigres', 'Sofia Martins', 13, 'Capitão'],
       ['rafael', 'leoes', 'panteras', 'Rafael Gomes', 12, 'Tesoureiro'],
       ['isabela', 'leoes', 'tigres', 'Isabela Ribeiro', 14, 'Padioleiro'],
       ['carlos', 'leoes', 'leoes:lideranca', 'Carlos Pereira', 41, 'Diretor'],
-      ['fernanda', 'leoes', 'leoes:lideranca', 'Fernanda Dias', 19, 'Instrutor'],
+      ['fernanda', 'leoes', 'leoes:lideranca', 'Fernanda Dias', 19, 'Tutor de Insígnias'],
     ];
     for (const [key, club, unit, name, age, cargo] of memberDefs) {
       const id = ins(
@@ -123,7 +123,7 @@ export function seed() {
       ['Aula 3 — Fogo e cozinha', 'Regras para fogueiras, fogareiros e higiene dos alimentos.'],
       ['Aula 4 — Natureza', 'Deixe o lugar melhor do que encontrou: lixo, trilhas e animais.'],
     ]);
-    addContent('curso_biblia', 'curso', 'Bíblia para Desbravadores', { icon: 'scroll', description: 'Conheça os livros da Bíblia de um jeito prático.' }, [
+    addContent('curso_biblia', 'curso', 'Bíblia para Exploradores', { icon: 'scroll', description: 'Conheça os livros da Bíblia de um jeito prático.' }, [
       ['Aula 1 — Como a Bíblia é organizada', 'Antigo e Novo Testamento, livros, capítulos e versículos.'],
       ['Aula 2 — Grandes histórias', 'De Gênesis a Apocalipse em 10 histórias.'],
       ['Aula 3 — Devocional diário', 'Como criar o hábito da devoção matinal.'],
@@ -164,10 +164,10 @@ export function seed() {
       return id;
     };
     const quizLei = [
-      ['Qual é o lema dos Desbravadores?', ['O amor de Cristo me motiva', 'Sempre alerta', 'Servir é viver', 'Unidos venceremos'], 0],
+      ['Qual é o lema dos Exploradores?', ['O amor de Cristo me motiva', 'Sempre alerta', 'Servir é viver', 'Unidos venceremos'], 0],
       ['Complete o Voto: "Pela graça de Deus, serei puro, bondoso e ___"', ['forte', 'leal', 'sábio', 'alegre'], 1],
-      ['Qual destes itens faz parte da Lei do Desbravador?', ['Ter sempre um cântico no coração', 'Vencer todas as competições', 'Acampar todo mês', 'Ser o primeiro a chegar'], 0],
-      ['Qual é o alvo dos Desbravadores?', ['A mensagem do advento a todo o mundo em minha geração', 'Ganhar todos os camporis', 'Ter o maior clã do distrito', 'Conhecer todas as insígnias'], 0],
+      ['Qual destes itens faz parte da Lei do Explorador?', ['Ter sempre um cântico no coração', 'Vencer todas as competições', 'Acampar todo mês', 'Ser o primeiro a chegar'], 0],
+      ['Qual é o alvo dos Exploradores?', ['A mensagem do advento a todo o mundo em minha geração', 'Ganhar todos os camporis', 'Ter o maior clã do distrito', 'Conhecer todas as insígnias'], 0],
     ];
     const quizNos = [
       ['Qual nó une duas cordas de mesma espessura?', ['Nó direito', 'Lais de guia', 'Volta do fiel', 'Nó de escota'], 0],
@@ -180,12 +180,12 @@ export function seed() {
     ];
 
     const R = {
-      clubRelatorio: req({ audience: 'club', title: 'Relatório do Dia Mundial dos Desbravadores', description: 'Conte como foi a programação do seu clã no Dia Mundial dos Desbravadores.', model: 'texto', points: 100, late: 50, deadline: iso(20) }),
+      clubRelatorio: req({ audience: 'club', title: 'Relatório do Dia Mundial dos Exploradores', description: 'Conte como foi a programação do seu clã no Dia Mundial dos Exploradores.', model: 'texto', points: 100, late: 50, deadline: iso(20) }),
       clubFotos: req({ audience: 'club', title: 'Fotos da ação solidária', description: 'Envie fotos da ação solidária realizada pelo clã neste trimestre.', model: 'foto', points: 80, late: 40, deadline: iso(-3) }),
-      clubQuiz: req({ audience: 'club', scope: 'distrito', title: 'Quiz da secretaria', description: 'Perguntas rápidas sobre o ideal dos Desbravadores para a secretaria do clã.', model: 'quiz', points: 60, late: 30, deadline: iso(15), quiz: quizLei }),
+      clubQuiz: req({ audience: 'club', scope: 'distrito', title: 'Quiz da secretaria', description: 'Perguntas rápidas sobre o ideal dos Exploradores para a secretaria do clã.', model: 'quiz', points: 60, late: 30, deadline: iso(15), quiz: quizLei }),
       unitGrito: req({ audience: 'unit', title: 'Grito de guerra do grupo', description: 'Escreva o grito de guerra do grupo e envie uma foto do grupo reunido.', model: 'texto_foto', points: 60, late: 30, deadline: iso(10) }),
       unitNos: req({ audience: 'unit', title: 'Quiz de nós e amarras', description: 'Respondam juntos, em grupo!', model: 'quiz', points: 50, late: 20, deadline: iso(15), quiz: quizNos }),
-      memLei: req({ audience: 'member', title: 'Quiz: Lei e Voto do Desbravador', description: 'Mostre que você conhece o ideal desbravador.', model: 'quiz', points: 40, late: 20, deadline: iso(30), quiz: quizLei }),
+      memLei: req({ audience: 'member', title: 'Quiz: Lei e Voto do Explorador', description: 'Mostre que você conhece o ideal explorador.', model: 'quiz', points: 40, late: 20, deadline: iso(30), quiz: quizLei }),
       memLeitura: req({ audience: 'member', title: 'Relatório de leitura bíblica', description: 'Leia o livro de Jonas e escreva o que mais chamou a sua atenção.', model: 'texto', points: 30, late: 15, deadline: iso(7) }),
       memFoto: req({ audience: 'member', title: 'Foto com o uniforme de gala', description: 'Envie uma foto sua com o uniforme completo.', model: 'foto', points: 20, late: 10, deadline: iso(-2) }),
       memSocorros: req({ audience: 'member', scope: 'distrito', title: 'Primeiros socorros na prática', description: 'Responda ao quiz e envie uma foto montando um kit de primeiros socorros.', model: 'quiz_foto', points: 50, late: 25, deadline: iso(12), quiz: quizSocorros }),
@@ -216,11 +216,11 @@ export function seed() {
     sub(R.aguiasCantinho, 'unit', units.gavioes, { text: 'Estudamos o caderno Mirins e planejamos o bandeirim.', status: 'aprovado', points: 10, late: true, at: 0 });
     sub(R.aguiasBandeirim, 'unit', units.gavioes, { photos: [], status: 'enviado', at: -1 });
     sub(R.leoesCantinho, 'unit', units.tigres, { text: 'Montamos o cantinho com as insígnias do grupo.', photos: [], status: 'aprovado', points: 50, at: -2 });
-    // Desbravadores (requisito do clã Águias)
+    // Exploradores (requisito do clã Águias)
     sub(R.aguiasLeitura, 'member', members.lucas, { text: 'Provérbios 3:5 — confie no Senhor de todo o coração.', status: 'aprovado', points: 20, at: -2 });
     sub(R.aguiasLeitura, 'member', members.beatriz, { text: 'Provérbios 17:17 — o amigo ama em todos os momentos.', status: 'aprovado', points: 20, at: -1 });
     sub(R.aguiasLeitura, 'member', members.gabriel, { text: 'Provérbios 22:6.', status: 'enviado', at: 0 });
-    // Membros (desbravadores)
+    // Membros (exploradores)
     sub(R.memLei, 'member', members.pedro, { answers: [0, 1, 0, 0], correct: 4, total: 4, points: 40, at: -9 });
     sub(R.memLei, 'member', members.sofia, { answers: [0, 1, 0, 0], correct: 4, total: 4, points: 40, at: -8 });
     sub(R.memLei, 'member', members.lucas, { answers: [0, 1, 0, 1], correct: 3, total: 4, points: 30, at: -8 });
@@ -238,7 +238,7 @@ export function seed() {
     const acampTrophy = medal('trofeu', 'Melhor do acampamento', 'trophy', 'Destaque geral no acampamento do distrito.');
     const anoTrophy = medal('trofeu', 'Melhor clã do ano de 2027', 'trophy', 'Troféu anual do distrito (será entregue no fim de 2027).');
     const unitMedal = medal('medalha', 'Grupo nota 10', 'star', 'Grupo exemplar em organização e espírito de equipe.');
-    const destaque = medal('medalha', 'Desbravador destaque', 'award', 'Reconhecimento por dedicação e bom exemplo.');
+    const destaque = medal('medalha', 'Explorador destaque', 'award', 'Reconhecimento por dedicação e bom exemplo.');
     void anoTrophy;
     award(mesMedal, 'club', clubs.aguias, 'Setembro de 2026');
     award(acampTrophy, 'club', clubs.leoes, 'Acampamento do Distrito Palmares');
@@ -248,7 +248,7 @@ export function seed() {
     award(destaque, 'member', members.sofia, null);
 
     const ev1 = ins('INSERT INTO events (name, description, date, location, district_id) VALUES (?,?,?,?,?)', 'Acampamento do Distrito Palmares', 'Três dias de atividades, insígnias e muita comunhão.', dateOnly(-30), 'Sítio Recanto Verde', palmares);
-    const ev2 = ins('INSERT INTO events (name, description, date, location, district_id) VALUES (?,?,?,?,?)', 'Dia Mundial dos Desbravadores', 'Desfile e programação especial nas igrejas do distrito.', dateOnly(-14), 'Praça Central de Palmares', palmares);
+    const ev2 = ins('INSERT INTO events (name, description, date, location, district_id) VALUES (?,?,?,?,?)', 'Dia Mundial dos Exploradores', 'Desfile e programação especial nas igrejas do distrito.', dateOnly(-14), 'Praça Central de Palmares', palmares);
     ins('INSERT INTO events (name, description, date, location, district_id, promote) VALUES (?,?,?,?,?,1)', 'Campori do Distrito Palmares',
       'Quatro dias de acampamento com todos os grupos do distrito: insígnias, gincanas, ordem unida e programação espiritual. Evento gratuito — confirme a inscrição com a diretoria do seu clã.',
       dateOnly(40), 'Parque Ecológico de Palmares', palmares);

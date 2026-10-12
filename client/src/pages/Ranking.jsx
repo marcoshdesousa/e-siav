@@ -67,8 +67,8 @@ function DistrictFilter({ value, onChange, withClub }) {
 }
 
 const SUBTITLE = {
-  clube: 'Desbravadores do seu clã · requisitos do clã',
-  membros: 'Desbravadores · requisitos do App',
+  clube: 'Exploradores do seu clã · requisitos do clã',
+  membros: 'Exploradores · requisitos do App',
   unidades: 'Grupos de todos os clãs · requisitos gerais',
   clubes: 'Clãs · requisitos gerais de clã',
 };
@@ -119,7 +119,7 @@ function SummaryCard({ icon, title, pos, onClick, gold }) {
 
 /**
  * Aba Ranking. O membro vê de uma vez a sua posição, a do seu grupo e a do seu clã,
- * e pode abrir cada tabela completa. Não existe ranking de liderança.
+ * e pode abrir cada tabela completa. Não existe ranking de tutores.
  */
 export default function RankingHub({ base }) {
   const { actor } = useAuth();
@@ -148,7 +148,7 @@ export default function RankingHub({ base }) {
                 <SummaryCard gold icon={<Compass size={16} />} title="Eu no meu clã" pos={summary.data.member_club} onClick={() => setTab('membros')} />
                 <SummaryCard gold icon={<Globe2 size={16} />} title="Eu no App" pos={summary.data.member} onClick={() => setTab('membros')} />
               </>
-              : <div className="pos-card muted small">A liderança não participa do ranking individual.</div>
+              : <div className="pos-card muted small">Os tutores não participam do ranking individual.</div>
           )}
           {summary.data.unit && <SummaryCard icon={<Flag size={16} />} title={`${summary.data.unit.name} no clã`} pos={summary.data.unit.club} onClick={() => setTab('clube')} />}
           {summary.data.unit && <SummaryCard icon={<Globe2 size={16} />} title={`${summary.data.unit.name} no geral`} pos={summary.data.unit.general} onClick={() => setTab('unidades')} />}

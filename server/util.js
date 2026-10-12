@@ -20,7 +20,7 @@ export function ageFrom(birthDate, ref = new Date()) {
   return age;
 }
 
-/** A idade define o tipo de conta: 10–15 desbravador, 16+ liderança. */
+/** A idade define o tipo de conta: 10–15 explorador, 16+ tutor. */
 export function memberKind(birthDate) {
   const age = ageFrom(birthDate);
   if (age < IDADE_MIN_DESBRAVADOR) return null;

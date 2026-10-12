@@ -21,7 +21,7 @@ const scoreJoin = (type, idCol, reqFilter) => `
     GROUP BY s.submitter_id
   ) sc ON sc.submitter_id = ${idCol}`;
 
-/** Ranking de membros: só desbravadores, requisitos gerais de membro. */
+/** Ranking de membros: só exploradores, requisitos gerais de membro. */
 export function membersRanking(districtId = null) {
   const rows = all(
     `SELECT m.id, m.name, m.photo, m.code, m.handle, m.birth_date, c.id AS club_id, c.name AS club_name,
@@ -35,7 +35,7 @@ export function membersRanking(districtId = null) {
   return rank(rows);
 }
 
-/** Ranking de membros do clã: desbravadores do clã, requisitos criados pelo próprio clã. */
+/** Ranking de membros do clã: exploradores do clã, requisitos criados pelo próprio clã. */
 export function clubMembersRanking(clubId) {
   const rows = all(
     `SELECT m.id, m.name, m.photo, m.code, m.handle, m.birth_date, c.id AS club_id, u.name AS unit_name,

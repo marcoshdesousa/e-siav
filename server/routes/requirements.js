@@ -13,8 +13,8 @@ const r = Router();
 function applies(actor, req) {
   const audience = { club: 'club', unit: 'unit', member: 'member' }[actor.type];
   if (req.audience !== audience) return false;
-  if (actor.type === 'member' && actor.kind !== 'desbravador') return false; // liderança não tem requisitos
-  // Requisitos do clã: só para os grupos e os desbravadores daquele clã.
+  if (actor.type === 'member' && actor.kind !== 'desbravador') return false; // tutor não tem requisitos
+  // Requisitos do clã: só para os grupos e os exploradores daquele clã.
   if (req.creator_type === 'club') return req.club_id === actor.club_id && actor.type !== 'club';
   return req.scope === 'geral' || req.district_id === actor.district_id;
 }
@@ -40,7 +40,7 @@ function decorate(req, sub) {
   };
 }
 
-// Requisitos que a conta logada precisa cumprir (clã, grupo ou desbravador).
+// Requisitos que a conta logada precisa cumprir (clã, grupo ou explorador).
 r.get('/requirements/mine', requireAuth('club', 'unit', 'member'), (req, res) => {
   const a = req.actor;
   const rows = all('SELECT * FROM requirements ORDER BY deadline').filter((q) => applies(a, q));
@@ -117,7 +117,7 @@ r.post('/requirements', requireAuth('admin', 'club'), imageUpload.array('images'
       if (!get('SELECT 1 FROM districts WHERE id = ?', districtId)) fail(400, 'Escolha o distrito');
     }
   } else {
-    // Clã cria para as próprios grupos ou para os próprios desbravadores.
+    // Clã cria para os próprios grupos ou para os próprios exploradores.
     audience = b.audience === 'member' ? 'member' : 'unit';
     scope = 'clube';
     clubId = a.id;

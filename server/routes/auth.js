@@ -31,7 +31,7 @@ setInterval(() => {
 }, JANELA_MS).unref();
 
 // Login Clã: conta do clã e contas de grupo.
-// Login Membros: desbravadores, liderança e Administrador Geral.
+// Login Membros: exploradores, tutores e Administrador Geral.
 r.post('/auth/login', (req, res) => {
   const { mode, username, password } = req.body || {};
   const allowed = mode === 'clube' ? ['club', 'unit'] : ['member', 'admin'];

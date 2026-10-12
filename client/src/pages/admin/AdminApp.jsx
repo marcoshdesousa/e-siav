@@ -189,12 +189,12 @@ function ClubsAdmin() {
   );
 }
 
-/** Requisitos: criados e avaliação (separados por desbravadores, grupos e clãs) e análise das cadernos guia/insígnias. */
+/** Requisitos: criados e avaliação (separados por exploradores, grupos e clãs) e análise das cadernos guia/insígnias. */
 function RequirementsAdmin() {
   const [tab, setTab] = useState(new URLSearchParams(location.search).get('aba') || 'criados');
   return (
     <>
-      <PageHeader title="Requisitos" subtitle="Desbravadores, grupos e clãs" />
+      <PageHeader title="Requisitos" subtitle="Exploradores, grupos e clãs" />
       <Tabs tabs={[['criados', 'Criados'], ['avaliar', 'Avaliar envios'], ['cursos', 'Aulas dos cursos']]} value={tab} onChange={setTab} />
       {tab === 'criados' && <CreatedRequirements />}
       {tab === 'avaliar' && <ReviewsPanel />}

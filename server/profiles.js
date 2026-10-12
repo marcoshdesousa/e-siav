@@ -62,7 +62,7 @@ export function unitProfile(id) {
 
 export function memberProfile(where, value) {
   const m = get(
-    `SELECT m.id, m.name, m.photo, m.code, m.handle, m.cargo, m.birth_date, m.excellence,
+    `SELECT m.id, m.name, m.photo, m.code, m.handle, m.cargo, m.birth_date,
             m.club_id, c.name AS club_name, c.logo AS club_logo, m.unit_id, u.name AS unit_name
      FROM members m JOIN clubs c ON c.id = m.club_id LEFT JOIN units u ON u.id = m.unit_id
      WHERE ${where === 'code' ? 'm.code = ?' : where === 'handle' ? 'm.handle = ? COLLATE NOCASE' : 'm.id = ?'}`,

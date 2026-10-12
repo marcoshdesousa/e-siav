@@ -13,10 +13,10 @@ export function Lightbox({ src, onClose }) {
   return <div className="lightbox" onClick={onClose}><img src={src} alt="" /></div>;
 }
 
-/** Públicos dos requisitos, na ordem pedida: desbravadores, grupos e clãs. */
-const AUDIENCES = [['member', 'Desbravadores'], ['unit', 'Grupos'], ['club', 'Clãs']];
-/** O clã cria para os próprios grupos e para os próprios desbravadores. */
-const CLUB_AUDIENCES = [['unit', 'Grupos'], ['member', 'Desbravadores']];
+/** Públicos dos requisitos, na ordem pedida: exploradores, grupos e clãs. */
+const AUDIENCES = [['member', 'Exploradores'], ['unit', 'Grupos'], ['club', 'Clãs']];
+/** O clã cria para os próprios grupos e para os próprios exploradores. */
+const CLUB_AUDIENCES = [['unit', 'Grupos'], ['member', 'Exploradores']];
 
 function RequirementCard({ r, onSubmit }) {
   const left = timeLeft(r.deadline);
@@ -98,7 +98,7 @@ function SubmitModal({ r, onClose, onDone }) {
 
 /**
  * Requisitos para a conta logada cumprir.
- * Desbravador e grupo veem duas abas: requisitos do App (gerais) e do meu clã.
+ * Explorador e grupo veem duas abas: requisitos do App (gerais) e do meu clã.
  * O clã cumpre só os requisitos do App.
  */
 export function RequirementsTodo({ originTabs = false, clubLabel = 'Requisitos do meu clã' }) {
@@ -182,7 +182,7 @@ export function RequirementForm({ audience: fixedAudience, onClose, onDone }) {
               </Field>
             )}
           </div>
-        ) : <Badge kind="blue">{f.audience === 'member' ? 'Para os desbravadores do seu clã' : 'Para os grupos do seu clã'}</Badge>}
+        ) : <Badge kind="blue">{f.audience === 'member' ? 'Para os exploradores do seu clã' : 'Para os grupos do seu clã'}</Badge>}
         <Field label="Título"><input value={f.title} onChange={set('title')} /></Field>
         <Field label="Como fazer" hint="Explique o requisito e o que deve ser enviado."><textarea value={f.description} onChange={set('description')} /></Field>
         <ImagesInput label="Fotos de exemplo (opcional)" urls={[]} onUrls={() => {}} files={images} onFiles={setImages} />
@@ -295,7 +295,7 @@ function PersonReviews({ person, status, onBack }) {
 }
 
 /**
- * Avaliar envios: separado por público (desbravadores, grupos, clãs) e por pessoa.
+ * Avaliar envios: separado por público (exploradores, grupos, clãs) e por pessoa.
  * Toque em alguém para ver só os envios dela.
  */
 export function ReviewsPanel() {

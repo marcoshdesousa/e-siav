@@ -10,7 +10,7 @@ import { ResponseFields } from './Requirements.jsx';
 const TITLES = {
   especialidade: ['Insígnias', 'Faça insígnias online, cumprindo os requisitos no app'],
   classe: ['Cadernos guia', 'Requisitos de cada caderno guia'],
-  curso: ['Cursos', 'Cursos em aulas para desbravadores e liderança'],
+  curso: ['Cursos', 'Cursos em aulas para exploradores e tutores'],
 };
 
 function StatusTag({ c }) {

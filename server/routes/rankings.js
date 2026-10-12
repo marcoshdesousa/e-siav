@@ -22,7 +22,7 @@ r.get('/rankings/club/:clubId/units', (req, res) => {
   res.json({ club, rows: clubUnitsRanking(clubId) });
 });
 
-// Ranking de desbravadores do clã (requisitos criados pelo clã).
+// Ranking de exploradores do clã (requisitos criados pelo clã).
 r.get('/rankings/club/:clubId/members', (req, res) => {
   const clubId = int(req.params.clubId);
   if (req.actor.type !== 'admin' && req.actor.club_id !== clubId) fail(403, 'Ranking de outro clã');

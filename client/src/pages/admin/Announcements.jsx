@@ -63,7 +63,7 @@ function AnnouncementForm({ initial, isClub, onClose, onDone }) {
           <input value={f.link || ''} onChange={(e) => setF({ ...f, link: e.target.value })} placeholder="www.site.com.br/inscricao" inputMode="url" autoCapitalize="none" />
         </Field>
         {isClub ? (
-          <p className="muted small">Este anúncio aparece só para os desbravadores, a liderança e os grupos do seu clã.</p>
+          <p className="muted small">Este anúncio aparece só para os exploradores, os tutores e os grupos do seu clã.</p>
         ) : (
           <Field group label="Quem vai ver">
             <div className="seg">

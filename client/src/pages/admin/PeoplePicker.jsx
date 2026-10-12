@@ -97,9 +97,9 @@ export default function PeoplePicker({ directory, value, onChange, allowClubs = 
               {club && <option value="none">Sem grupo</option>}
             </select>
             <select value={kind} onChange={(e) => setKind(e.target.value)} aria-label="Tipo de membro">
-              <option value="">Desbravadores e liderança</option>
-              <option value="desbravador">Só desbravadores</option>
-              <option value="lideranca">Só liderança</option>
+              <option value="">Exploradores e tutores</option>
+              <option value="desbravador">Só exploradores</option>
+              <option value="lideranca">Só tutores</option>
             </select>
           </div>
           <div className="cat-search"><Search size={18} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar por nome ou @" /></div>

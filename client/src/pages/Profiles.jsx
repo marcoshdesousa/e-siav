@@ -122,7 +122,7 @@ export function MemberProfileView({ member: m, linkBase, photoAction, onEditHand
           <div className="chips">
             <span className="chip yellow">{m.cargo}</span>
             <span className="chip">{m.age} anos</span>
-            {m.cargo !== 'Desbravador' && <span className="chip ico">{m.kind === 'desbravador' ? <><Compass size={14} /> Desbravador</> : <><Award size={14} /> Liderança</>}</span>}
+            {m.cargo !== 'Explorador' && <span className="chip ico">{m.kind === 'desbravador' ? <><Compass size={14} /> Explorador</> : <><Award size={14} /> Tutor</>}</span>}
           </div>
           <div className="chips">
             <Link to={to(linkBase, 'clube', m.club_id)} className="chip ico"><Tent size={14} /> {m.club_name}</Link>
@@ -134,13 +134,6 @@ export function MemberProfileView({ member: m, linkBase, photoAction, onEditHand
           <div className="mt"><ShareButton path={`/p/membro/${m.handle ? '@' + m.handle : m.code}`} title={m.name} /></div>
         </div>
       </div>
-
-      {m.excellence ? (
-        <div className="summary-card gold mt">
-          <span className="trophy-bg"><AppIcon name="sparkles" size={22} /></span>
-          <div><b>Insígnia de Excelência</b><div className="muted small">Conquistada pelo membro</div></div>
-        </div>
-      ) : null}
 
       <ChipRow title="Cadernos guia concluídos" items={m.classes} empty="Nenhum caderno guia concluído ainda." emptyIcon="compass" />
       <ChipRow title="Insígnias" items={m.specialties} empty="Nenhuma insígnia ainda." emptyIcon="knot" />

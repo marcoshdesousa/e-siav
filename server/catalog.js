@@ -1,4 +1,4 @@
-// Catálogo de cadernos guia e insígnias dos Desbravadores.
+// Catálogo de cadernos guia e insígnias dos Exploradores.
 // Cadernos guia e insígnias não são vendidas nem feitas online: o membro informa
 // as que já tem e a diretoria do clã aprova. Os cadernos guia são sincronizadas ao
 // iniciar o servidor; as insígnias são cadastradas pelo administrador
@@ -17,7 +17,7 @@ export const CLASSES = [
   ['Líder', null, 1, 'award'],
 ];
 
-/** Cadernos guia antigas (Desbravadores), tiradas uma vez do catálogo se ninguém as tiver. */
+/** Classes antigas (do sistema anterior), tiradas uma vez do catálogo se ninguém as tiver. */
 const OLD_CLASSES = ['Amigo', 'Amigo da Natureza', 'Companheiro', 'Companheiro de Excursionismo', 'Pesquisador', 'Pesquisador de Campo e Bosque',
   'Pioneiro', 'Pioneiro de Novas Fronteiras', 'Excursionista', 'Excursionista na Mata', 'Guia', 'Guia de Exploração', 'Líder Master', 'Líder Master Avançado'];
 
