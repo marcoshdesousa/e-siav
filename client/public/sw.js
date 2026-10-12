@@ -1,6 +1,6 @@
 // Service worker do Exploradores do Brasil: app instalável e tela inicial disponível offline.
-const CACHE = 'dbv-v11';
-const SHELL = ['/', '/manifest.webmanifest', '/favicon.ico', '/marca/logo.png', '/marca/favicon.png', '/marca/icon-192.png', '/marca/icon-512.png'];
+const CACHE = 'dbv-v12';
+const SHELL = ['/', '/atualizando.html', '/manifest.webmanifest', '/favicon.ico', '/marca/logo.png', '/marca/favicon.png', '/marca/icon-192.png', '/marca/icon-512.png'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -22,7 +22,10 @@ self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET' || url.origin !== location.origin) return;
   if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/ws')) return; // dados sempre da rede
   if (e.request.mode === 'navigate') {
-    e.respondWith(fetch(e.request).catch(() => caches.match('/')));
+    // Servidor fora do ar (atualização ou erro: 502, 503, 504): mostra "Sistema em atualização".
+    const atualizando = () => caches.match('/atualizando.html').then((hit) => hit || Response.redirect('/atualizando.html', 302));
+    e.respondWith(fetch(e.request).then((res) => ([502, 503, 504].includes(res.status) && url.pathname !== '/atualizando.html' ? atualizando() : res))
+      .catch(() => caches.match('/')));
     return;
   }
   // Arquivos do build têm nome único: podem vir direto do cache.
@@ -32,6 +35,7 @@ self.addEventListener('fetch', (e) => {
   }
   // Logo, ícones e manifesto: sempre a versão mais nova; o cache só vale sem internet.
   if (url.pathname.startsWith('/marca/') || url.pathname === '/manifest.webmanifest' || url.pathname === '/favicon.ico') {
-    e.respondWith(fetch(e.request).then((res) => save(e.request, res)).catch(() => caches.match(e.request)));
+    e.respondWith(fetch(e.request).then((res) => (res.ok ? save(e.request, res) : caches.match(e.request).then((hit) => hit || res)))
+      .catch(() => caches.match(e.request)));
   }
 });

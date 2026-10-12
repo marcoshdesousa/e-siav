@@ -60,6 +60,20 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(attachActor);
 
+// Modo manutenção: com MANUTENCAO=1 no Render, todo mundo vê "Sistema em atualização".
+const MANUTENCAO = process.env.MANUTENCAO === '1';
+if (MANUTENCAO) {
+  console.log('Modo manutenção ligado (MANUTENCAO=1)');
+  const page = path.join(ROOT, 'dist', 'atualizando.html');
+  app.use((req, res, next) => {
+    // A página de atualização e a logo continuam abrindo.
+    if (req.path === '/atualizando.html' || req.path.startsWith('/marca/') || req.path === '/favicon.ico' || req.path === '/sw.js') return next();
+    res.set('Retry-After', '600');
+    if (req.path.startsWith('/api/')) return res.status(503).json({ error: 'Sistema em atualização. Volte em alguns minutos.' });
+    res.status(503).sendFile(page);
+  });
+}
+
 const api = express.Router();
 api.get('/health', (_req, res) => res.json({ ok: true }));
 for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, signupRoutes, transferRoutes, clanApplicationRoutes, termRoutes, feeRoutes]) api.use(r);
