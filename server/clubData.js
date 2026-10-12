@@ -16,7 +16,11 @@ export function listMembers(clubId) {
     m.kind = memberKind(m.birth_date);
     m.role = roleOf(m.kind, m.cargo);
     // Sem a ficha completa (cadastro + saúde) o membro aparece com "dados incompletos".
-    m.incomplete = !fichaCompleta(getFicha(m.id), m.birth_date) || !(m.cpf || m.birth_cert);
+    const ficha = getFicha(m.id);
+    m.incomplete = !fichaCompleta(ficha, m.birth_date) || !(m.cpf || m.birth_cert);
+    // A ficha (principalmente a de saúde) precisa ser atualizada todo ano.
+    m.ficha_updated_at = ficha.updated_at;
+    m.outdated = m.status !== 'inativo' && (!ficha.updated_at || Number(ficha.updated_at.slice(0, 4)) < new Date().getFullYear());
     // Pendente: esperando a assinatura do termo, a aprovação da inscrição ou com dados faltando.
     m.pending_reason = m.status === 'inativo' ? null : m.status === 'pendente' ? pendingReason(m) || 'aprovacao' : m.incomplete ? 'dados' : null;
   }

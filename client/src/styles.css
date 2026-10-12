@@ -709,3 +709,63 @@ label.btn { cursor: pointer; }
 @media (max-width: 900px) {
   input:not([type='checkbox']):not([type='radio']):not([type='file']), select, textarea { font-size: 16px !important; }
 }
+
+/* ---------- Pastas do clã ---------- */
+.search-box { display: flex; align-items: center; gap: .5rem; padding: 0 .9rem; border: 1.5px solid var(--line); border-radius: 14px; background: var(--surface-2); color: var(--muted); }
+.search-box input { border: 0; background: none; box-shadow: none !important; padding: .75rem 0; }
+.icon-btn.light { color: var(--link); }
+.cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: .25rem; text-align: center; }
+.cal-h { font-size: .72rem; font-weight: 800; color: var(--muted); padding: .2rem 0; }
+.cal-d { position: relative; aspect-ratio: 1; border: 0; border-radius: 12px; background: var(--surface-2); color: var(--ink); font: inherit; font-weight: 700; font-size: .85rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.cal-d.has { background: var(--blue-soft); color: var(--blue-ink); }
+.cal-d.today { box-shadow: inset 0 0 0 2px var(--link); }
+.cal-d.sel { background: var(--primary); color: var(--on-primary); }
+.cal-dots { display: flex; gap: 2px; }
+.cal-dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
+.cal-dots i.dot-yellow { background: #D9A400; }
+.cal-dots i.dot-blue { background: var(--link); }
+.agenda-item { display: flex; gap: .8rem; align-items: flex-start; }
+.agenda-item .small.muted { display: flex; flex-wrap: wrap; gap: .2rem .7rem; }
+.agenda-date { flex: none; width: 46px; border-radius: 12px; background: var(--surface-3); color: var(--navy); display: flex; flex-direction: column; align-items: center; padding: .3rem 0; line-height: 1.05; }
+.agenda-date b { font-size: 1.15rem; font-family: var(--font-title); }
+.agenda-date small { font-size: .68rem; font-weight: 800; text-transform: uppercase; }
+.fin-ico { width: 36px; height: 36px; border-radius: 12px; display: grid; place-items: center; flex: none; }
+.fin-ico.entrada { background: var(--green-soft); color: var(--green-ink); }
+.fin-ico.saida { background: var(--red-soft); color: var(--red-ink); }
+.fin-in { color: var(--green-ink); white-space: nowrap; }
+.fin-out { color: var(--red-ink); white-space: nowrap; }
+.asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .6rem; }
+.asset-card { border: 1px solid var(--line); background: var(--surface); border-radius: 16px; padding: .9rem .6rem; display: flex; flex-direction: column; align-items: center; gap: .35rem; cursor: pointer; font: inherit; color: var(--ink); text-align: center; }
+.asset-card small { color: var(--muted); }
+.people-pick { max-height: 52vh; overflow: auto; }
+.list-item.bday-today { box-shadow: inset 0 0 0 2px #D9A400; }
+button.list-item { width: 100%; text-align: left; font: inherit; color: inherit; cursor: pointer; }
+button.list-item:disabled { cursor: default; opacity: .75; }
+
+/* Certificado (imprimir ou salvar em PDF) */
+.cert-page { min-height: 100vh; background: var(--bg); padding: 16px; }
+.cert-tools { display: flex; justify-content: space-between; gap: .5rem; max-width: 900px; margin: 0 auto 1rem; }
+.cert { max-width: 900px; margin: 0 auto; aspect-ratio: 1.414; background: #fff; color: #142219; border: 10px solid #1B4D2B; outline: 3px solid #F2DE2A; outline-offset: -18px; border-radius: 8px; padding: 6% 8%; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .3rem; }
+.cert-logos { display: flex; gap: 1rem; justify-content: center; }
+.cert-logos img { width: 64px; height: 64px; border-radius: 14px; object-fit: cover; }
+.cert-kicker { margin: .5rem 0 0; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; font-size: .75rem; color: #2A6B34; }
+.cert h1 { font-size: clamp(1.8rem, 6vw, 3rem); margin: .2rem 0 .4rem; color: #1B4D2B; letter-spacing: .04em; }
+.cert-text { margin: 0; font-size: clamp(.85rem, 2.4vw, 1.05rem); }
+.cert-name { margin: .2rem 0; font-family: var(--font-title); font-weight: 800; font-size: clamp(1.3rem, 5vw, 2.2rem); border-bottom: 2px solid #1B4D2B; padding: 0 1rem .2rem; }
+.cert-item { margin: .3rem 0; font-weight: 800; font-size: clamp(1rem, 3.5vw, 1.5rem); display: inline-flex; align-items: center; gap: .5rem; }
+.cert-sign { margin-top: 1.4rem; display: flex; justify-content: center; }
+.cert-sign div { display: flex; flex-direction: column; align-items: center; font-weight: 700; font-size: .9rem; }
+.cert-sign span { width: 220px; border-top: 1.5px solid #142219; margin-bottom: .3rem; }
+.cert-sign small { font-weight: 500; color: #5D6D60; }
+@media print {
+  .no-print { display: none !important; }
+  .cert-page { padding: 0; background: #fff; }
+  .cert { max-width: none; border-radius: 0; }
+  @page { size: A4 landscape; margin: 8mm; }
+}
+.contact-lines { display: flex; flex-direction: column; gap: .35rem; margin-top: .45rem; }
+.contact-line { display: flex; align-items: center; gap: .55rem; padding: .45rem .7rem; border-radius: 12px; background: var(--green-soft); color: var(--green-ink); font-weight: 800; font-size: .9rem; text-decoration: none; min-width: 0; }
+.contact-line span { display: flex; flex-direction: column; line-height: 1.15; min-width: 0; }
+.contact-line small { font-weight: 600; font-size: .72rem; opacity: .85; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.contact-line.resp { background: var(--blue-soft); color: var(--blue-ink); }
+.contact-line.off { background: var(--surface-3); color: var(--muted); }

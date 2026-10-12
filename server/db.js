@@ -667,6 +667,44 @@ function migrate() {
     canceled_at TEXT
   )`);
 
+  // Agenda: o clã marca as suas datas; o admin marca para todos, um distrito ou um clã.
+  db.exec(`CREATE TABLE IF NOT EXISTS agenda_items (
+    id INTEGER PRIMARY KEY,
+    creator_type TEXT NOT NULL CHECK (creator_type IN ('admin','club')),
+    club_id INTEGER REFERENCES clubs(id) ON DELETE CASCADE,
+    scope TEXT NOT NULL CHECK (scope IN ('geral','distrito','clube')),
+    district_id INTEGER REFERENCES districts(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    description TEXT,
+    location TEXT,
+    date TEXT NOT NULL,
+    end_date TEXT,
+    time TEXT,
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+  )`);
+  // Tesouraria: controle financeiro do próprio clã (entradas e saídas, só anotação).
+  db.exec(`CREATE TABLE IF NOT EXISTS club_finance (
+    id INTEGER PRIMARY KEY,
+    club_id INTEGER NOT NULL REFERENCES clubs(id) ON DELETE CASCADE,
+    kind TEXT NOT NULL CHECK (kind IN ('entrada','saida')),
+    description TEXT NOT NULL,
+    amount_cents INTEGER NOT NULL,
+    date TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+  )`);
+  // Patrimônio do clã: foto, nome e quanto custou.
+  db.exec(`CREATE TABLE IF NOT EXISTS club_assets (
+    id INTEGER PRIMARY KEY,
+    club_id INTEGER NOT NULL REFERENCES clubs(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    photo TEXT,
+    price_cents INTEGER,
+    acquired_at TEXT,
+    notes TEXT,
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+  )`);
+  db.prepare(`INSERT OR IGNORE INTO settings (key, value) VALUES ('support_whatsapp', '')`).run();
+
   // Biografia do grupo (o próprio grupo escreve no Portal do Grupo).
   add('units', 'bio', 'TEXT');
 

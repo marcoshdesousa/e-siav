@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import {
-  ArrowLeft, ArrowLeftRight, Award, BadgeCheck, Copy, KeyRound, Link2, Share2, UserPlus, CalendarDays, Check, Megaphone, Plus, ChevronRight, ClipboardCheck, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet,
+  ArrowLeft, ArrowLeftRight, Award, BadgeCheck, KeyRound, UserPlus, CalendarDays, Check, Megaphone, Plus, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, FolderOpen, Receipt, BookOpen, Package, Wrench, LifeBuoy,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -11,12 +11,15 @@ import { AccessInfo, CadastroFlow } from '../Signup.jsx';
 import TransfersPage from './Transfers.jsx';
 import { ClubPayments } from '../Payments.jsx';
 import {
-  Avatar, Badge, Button, Card, Confirm, Field, ImagePicker, Loading, MedalList, Modal, PageHeader, PositionBadge, Section, ShareButton, Stat, Tabs, notify, useAsync, useLoad,
+  AgendaPage, BibliotecaPage, CertificadoPage, FerramentasPage, FinancasPage, MatriculasPage, MembrosPorGrupo, PatrimonioPage, SuportePage,
+} from './Folders.jsx';
+import {
+  Avatar, Badge, Button, Card, Confirm, Field, ImagePicker, Loading, MedalList, Modal, PageHeader, PositionBadge, Section, ShareButton, Stat, Tabs, useAsync, useLoad,
 } from '../../ui.jsx';
 import Shell, { MoreMenu } from '../Shell.jsx';
 import { EventsList, InAppProfile } from '../Profiles.jsx';
 import { CreatedRequirements, RequirementsTodo, ReviewsPanel } from '../Requirements.jsx';
-import RankingHub, { RankingTable } from '../Ranking.jsx';
+import RankingHub, { ClubUnitsRanking, RankingTable } from '../Ranking.jsx';
 import ClubsBrowser from '../Clubs.jsx';
 import CatalogPicker, { CatalogBadge } from '../Catalog.jsx';
 import EventsAdmin from '../admin/Events.jsx';
@@ -57,14 +60,13 @@ function ClubHome() {
               <Stat icon={Compass} value={c.desbravadores} label="Exploradores" to={`${base}/membros`} />
               <Stat icon={Award} value={c.lideranca} label="Tutores" to={`${base}/membros`} />
               <Stat icon={Flag} value={c.unit_count} label="Grupos" to={`${base}/grupos`} />
-              <Stat icon={BadgeCheck} value={c.pending_achievements} label="Insígnias p/ aprovar" to={`${base}/aprovacoes`} accent={c.pending_achievements > 0} />
-              <Stat icon={Inbox} value={c.pending_reviews} label="Envios p/ avaliar" to={`${base}/requisitos?aba=avaliar`} accent={c.pending_reviews > 0} />
+              <Stat icon={BadgeCheck} value={c.pending_achievements} label="Insígnias p/ aprovar" to={`${base}/biblioteca`} accent={c.pending_achievements > 0} />
+              <Stat icon={Inbox} value={c.pending_reviews} label="Envios p/ avaliar" to={`${base}/ranking?aba=corrigir`} accent={c.pending_reviews > 0} />
               <Stat icon={UserPlus} value={c.signup_pending} label="Inscrições p/ aprovar" to={`${base}/membros?aba=pendente`} accent={c.signup_pending > 0} />
               <Stat icon={ArrowLeftRight} value={c.transfers_pending} label="Transferências" to={`${base}/transferencias`} accent={c.transfers_pending > 0} />
             </div>
           </Section>
 
-          <SignupLink code={c.code} />
           <ClubInfoForm club={c} onDone={() => { state.reload(); refresh(); }} />
 
           <Section title="Logo do clã">
@@ -83,34 +85,6 @@ function ClubHome() {
         </>
       )}
     </Loading>
-  );
-}
-
-function LinkBox({ title, text, url }) {
-  const copy = async () => {
-    try { await navigator.clipboard.writeText(url); notify('Link copiado!'); } catch { notify('Não deu para copiar. Selecione o link e copie.', 'error'); }
-  };
-  const share = () => navigator.share?.({ title, url }).catch(() => {});
-  return (
-    <Card>
-      <b>{title}</b>
-      <p className="small muted" style={{ margin: '.2rem 0 .5rem' }}>{text}</p>
-      <div className="signup-link"><Link2 size={16} /> <span className="ellipsis">{url}</span></div>
-      <div className="row wrap mt">
-        <Button small onClick={copy}><Copy size={14} /> Copiar</Button>
-        {navigator.share && <Button small variant="secondary" onClick={share}><Share2 size={14} /> Compartilhar</Button>}
-      </div>
-    </Card>
-  );
-}
-
-/** Cada clã tem dois links: o do perfil do clã e o de cadastro (inscrição). */
-function SignupLink({ code }) {
-  return (
-    <Section title="Links do clã">
-      <LinkBox title="Link do clã" text="Perfil público do clã: história, grupos, medalhas e ranking. Cada grupo tem o seu: o link do clã + / + o número do grupo." url={`${location.origin}/cla/${code}`} />
-      <LinkBox title="Link de cadastro" text="Para quem quer entrar no clã: ficha de cadastro, ficha de saúde e termos. Você aprova em Membros → Inscrições." url={`${location.origin}/inscricao/${code}`} />
-    </Section>
   );
 }
 
@@ -425,7 +399,7 @@ function UnitForm({ unit, onClose, onDone }) {
   );
 }
 
-function UnitsPage() {
+function UnitsPage({ embedded = false }) {
   const { actor } = useAuth();
   const state = useLoad(() => api.get('/club/units'));
   const [editing, setEditing] = useState(null);
@@ -433,8 +407,10 @@ function UnitsPage() {
   const done = () => { setEditing(null); state.reload(); };
   return (
     <>
-      <PageHeader title="Grupos" subtitle="Cada membro pertence a um único grupo · até 10 grupos, numerados de 1 a 10" action={<Button small onClick={() => setEditing('new')}>+ Novo</Button>} />
-      <Card className="small">Para entrar no Portal do Grupo: tela <b>Clã</b>, código do clã <b>{actor.code}</b> e a senha do grupo abaixo. As senhas são criadas pelo app e <b>não podem ser trocadas</b>: guarde bem.</Card>
+      {embedded
+        ? <Button block onClick={() => setEditing('new')}>+ Novo grupo</Button>
+        : <PageHeader title="Grupos" subtitle="Cada membro pertence a um único grupo · até 10 grupos, numerados de 1 a 10" action={<Button small onClick={() => setEditing('new')}>+ Novo</Button>} />}
+      <Card className="small mt">Até 10 grupos, numerados de 1 a 10. Para entrar no Portal do Grupo: tela <b>Clã</b>, código do clã <b>{actor.code}</b> e a senha do grupo abaixo. As senhas são criadas pelo app e <b>não podem ser trocadas</b>: guarde bem.</Card>
       <Loading {...state}>
         {(list) => (
           <div className="list mt">
@@ -461,59 +437,105 @@ function UnitsPage() {
   );
 }
 
-function RequirementsPage() {
+/** Pasta Ranking: cumprir (requisitos do App), criar (para os membros) e corrigir os envios. */
+function RankingFolder() {
   const initial = new URLSearchParams(location.search).get('aba') || 'cumprir';
   const [tab, setTab] = useState(initial);
   return (
     <>
-      <PageHeader title="Requisitos" />
-      <Tabs tabs={[['cumprir', 'Requisitos do App'], ['criados', 'Criados pelo clã'], ['avaliar', 'Avaliar']]} value={tab} onChange={setTab} />
-      {tab === 'cumprir' && <><p className="muted small">Requisitos que a administração do app manda para o seu clã cumprir.</p><RequirementsTodo /></>}
-      {tab === 'criados' && <><p className="muted small">Crie requisitos com prazo e pontos para os grupos ou para os membros do seu clã (exploradores, tutores ou todos). Eles contam no ranking do clã.</p><CreatedRequirements /></>}
-      {tab === 'avaliar' && <ReviewsPanel />}
+      <PageHeader title="Ranking" subtitle="Cumprir, criar e corrigir requisitos" />
+      <Tabs tabs={[['cumprir', 'Cumprir'], ['criar', 'Criar'], ['corrigir', 'Corrigir'], ['classificacao', 'Classificação']]} value={tab} onChange={setTab} />
+      {tab === 'cumprir' && <><p className="muted small">Requisitos que o App manda para o seu clã cumprir.</p><RequirementsTodo /></>}
+      {tab === 'criar' && <><p className="muted small">Requisitos com prazo e pontos para os membros do clã: exploradores, liderança e tutores, ou todos. Contam no ranking do clã. Para os grupos, use a pasta <b>Grupos → Ranking</b>.</p><CreatedRequirements only="member" /></>}
+      {tab === 'corrigir' && <ReviewsPanel />}
+      {tab === 'classificacao' && <RankingHub base={base} />}
     </>
   );
 }
 
-/** Sistema do Clã. */
+/** Pasta Grupos: os grupos, o ranking dos grupos (criar requisitos para eles) e os membros de cada grupo. */
+function GruposFolder() {
+  const { actor } = useAuth();
+  const [tab, setTab] = useState(new URLSearchParams(location.search).get('aba') || 'grupos');
+  return (
+    <>
+      <PageHeader title="Grupos" subtitle="Cada membro pertence a um único grupo" />
+      <Tabs tabs={[['grupos', 'Grupos'], ['ranking', 'Ranking'], ['membros', 'Membros']]} value={tab} onChange={setTab} />
+      {tab === 'grupos' && <UnitsPage embedded />}
+      {tab === 'ranking' && (
+        <>
+          <p className="muted small">Crie requisitos para os grupos do clã cumprirem juntos. Eles contam no ranking dos grupos (o grupo Tutores não entra).</p>
+          <CreatedRequirements only="unit" />
+          <Section title="Ranking dos grupos"><ClubUnitsRanking clubId={actor.id} base={base} /></Section>
+        </>
+      )}
+      {tab === 'membros' && <MembrosPorGrupo base={base} />}
+    </>
+  );
+}
+
+const pasta = (title, subtitle, items) => <><PageHeader title={title} subtitle={subtitle} /><MoreMenu items={items} /></>;
+
+/** Sistema do Clã, dividido em pastas. */
 export default function ClubApp() {
   const tabs = [
-    { to: base, icon: Tent, label: 'Início', end: true },
-    { to: `${base}/membros`, icon: Users, label: 'Membros' },
-    { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },
+    { to: base, icon: Tent, label: 'Painel', end: true },
+    { to: `${base}/secretaria`, icon: FolderOpen, label: 'Secretaria' },
+    { to: `${base}/ranking`, icon: Trophy, label: 'Ranking' },
     { to: `${base}/grupos`, icon: Flag, label: 'Grupos' },
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
+  const secretaria = [
+    { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Reuniões, acampamentos e datas do App' },
+    { to: `${base}/matriculas`, icon: UserPlus, label: 'Matrículas', hint: 'Links de inscrição e do clã' },
+    { to: `${base}/membros`, icon: Users, label: 'Membros', hint: 'Ativos, pendentes e desatualizados' },
+    { to: `${base}/transferencias`, icon: ArrowLeftRight, label: 'Transferências', hint: 'Que foram, que vieram e pendentes' },
+  ];
+  const tesouraria = [
+    { to: `${base}/pagamentos`, icon: Receipt, label: 'A pagar', hint: 'Plano do clã e inscrições (Pix)' },
+    { to: `${base}/financas`, icon: Wallet, label: 'Minhas finanças', hint: 'Entradas e saídas do clã' },
+  ];
   const more = [
-    { to: `${base}/aprovacoes`, icon: BadgeCheck, label: 'Aprovações', hint: 'Insígnias dos membros' },
-    { to: `${base}/pagamentos`, icon: Wallet, label: 'Pagamentos', hint: 'Plano do clã e inscrição dos membros' },
-    { to: `${base}/transferencias`, icon: ArrowLeftRight, label: 'Transferências', hint: 'Trazer alguém de outro clã' },
-    { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos', hint: 'Do seu clã' },
+    { to: `${base}/tesouraria`, icon: Wallet, label: 'Tesouraria', hint: 'A pagar e minhas finanças' },
+    { to: `${base}/biblioteca`, icon: BookOpen, label: 'Biblioteca', hint: 'Insígnias e guias' },
+    { to: `${base}/patrimonio`, icon: Package, label: 'Patrimônio', hint: 'Meus patrimônios' },
+    { to: `${base}/ferramentas`, icon: Wrench, label: 'Ferramentas', hint: 'Aniversariantes e contatos' },
+    { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },
+    { to: `${base}/eventos`, icon: Award, label: 'Eventos', hint: 'Participantes e medalhas' },
     { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: 'Para os seus membros' },
-    { to: `${base}/ranking`, icon: Trophy, label: 'Ranking', hint: 'Grupos e clãs' },
     { to: `${base}/clas`, icon: Map, label: 'Clãs', hint: 'Por distrito' },
   ];
   return (
     <Routes>
+      <Route path="certificado/:mid/:cid" element={<CertificadoPage />} />
       <Route
         path="*"
         element={
           <Shell tabs={tabs}>
             <Routes>
               <Route index element={<ClubHome />} />
+              <Route path="secretaria" element={pasta('Secretaria', 'Agenda, matrículas, membros e transferências', secretaria)} />
+              <Route path="agenda" element={<AgendaPage />} />
+              <Route path="matriculas" element={<MatriculasPage />} />
               <Route path="membros" element={<MembersPage />} />
               <Route path="membros/novo" element={<NewMemberPage />} />
-              <Route path="grupos" element={<UnitsPage />} />
-              <Route path="aprovacoes" element={<ApprovalsPage />} />
               <Route path="transferencias" element={<TransfersPage />} />
+              <Route path="ranking" element={<RankingFolder />} />
+              <Route path="requisitos" element={<Navigate to={`${base}/ranking`} replace />} />
+              <Route path="grupos" element={<GruposFolder />} />
+              <Route path="tesouraria" element={pasta('Tesouraria', 'O que pagar e o controle do dinheiro do clã', tesouraria)} />
               <Route path="pagamentos" element={<ClubPayments />} />
+              <Route path="financas" element={<FinancasPage />} />
+              <Route path="biblioteca" element={<BibliotecaPage approvals={<ApprovalsPage />} />} />
+              <Route path="aprovacoes" element={<Navigate to={`${base}/biblioteca`} replace />} />
+              <Route path="patrimonio" element={<PatrimonioPage />} />
+              <Route path="ferramentas" element={<FerramentasPage />} />
+              <Route path="suporte" element={<SuportePage />} />
               <Route path="eventos" element={<EventsAdmin />} />
               <Route path="anuncios" element={<AnnouncementsAdmin />} />
-              <Route path="requisitos" element={<RequirementsPage />} />
-              <Route path="ranking" element={<RankingHub base={base} />} />
               <Route path="clas" element={<ClubsBrowser base={base} />} />
               <Route path="ver/:kind/:id" element={<InAppProfile base={base} />} />
-              <Route path="mais" element={<><PageHeader title="Mais" /><MoreMenu items={more} /></>} />
+              <Route path="mais" element={pasta('Mais', null, more)} />
               <Route path="*" element={<Navigate to={base} replace />} />
             </Routes>
           </Shell>

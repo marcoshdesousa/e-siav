@@ -50,11 +50,11 @@ export function FichaModal({ member, url, onClose, readOnly = false }) {
   const [f, setF] = useState(null);
   const [busy, run] = useAsync();
   const save = async () => {
-    await run(() => api.put(url, f), 'Ficha salva!');
+    await run(() => api.put(url, f || initial(state.data)), 'Ficha salva!');
     onClose();
   };
   return (
-    <Modal title={`Ficha · ${member.name}`} onClose={onClose} footer={!readOnly && f && <Button busy={busy} onClick={save}>Salvar ficha</Button>}>
+    <Modal title={`Ficha · ${member.name}`} onClose={onClose} footer={!readOnly && state.data && <Button busy={busy} onClick={save}>{member.outdated && !f ? 'Confirmar ficha atualizada' : 'Salvar ficha'}</Button>}>
       <Loading {...state}>
         {(d) => (
           <>
@@ -127,13 +127,14 @@ export function MembersBrowser({ list, units, actions, initialTab = 'ativo' }) {
   const nq = q.trim().toLowerCase();
   const shown = list.filter((m) => {
     const g = memberGroup(m);
-    const inTab = tab === 'todos' ? g !== 'inativo' : g === tab;
+    const inTab = tab === 'todos' ? g !== 'inativo' : tab === 'desatualizado' ? m.outdated : g === tab;
     return inTab && (!nq || m.name.toLowerCase().includes(nq) || m.code.includes(nq))
       && (!unitFilter || (unitFilter === 'none' ? !m.unit_id : String(m.unit_id) === unitFilter));
   });
   return (
     <>
-      <Tabs tabs={[['ativo', 'Ativos', count('ativo')], ['pendente', 'Pendentes', count('pendente')], ['todos', `Todos (${total})`], ['inativo', 'Inativos']]} value={tab} onChange={setTab} />
+      <Tabs tabs={[['ativo', 'Ativos', count('ativo')], ['pendente', 'Pendentes', count('pendente')], ['desatualizado', 'Desatualizados', list.filter((m) => m.outdated).length], ['todos', `Todos (${total})`], ['inativo', 'Inativos']]} value={tab} onChange={setTab} />
+      {tab === 'desatualizado' && <p className="small muted">A ficha (principalmente a de saúde) precisa ser conferida todo ano. Toque em <b>Atualizar ficha</b>, confira com a pessoa e salve.</p>}
       <div className="grid2">
         <input placeholder="Buscar por nome ou código" value={q} onChange={(e) => setQ(e.target.value)} />
         <select value={unitFilter} onChange={(e) => setUnitFilter(e.target.value)}>
@@ -154,13 +155,14 @@ export function MembersBrowser({ list, units, actions, initialTab = 'ativo' }) {
                 <Badge><Hash size={11} /> {m.code}</Badge>
                 {m.pending_reason && <Badge kind={REASON[m.pending_reason][0]}>{REASON[m.pending_reason][1]}</Badge>}
                 {m.status === 'inativo' && <Badge>Inativo</Badge>}
+                {m.outdated && <Badge kind="red">Ficha desatualizada</Badge>}
                 {m.status === 'pendente' && <Badge>Desde {fmtDate(m.created_at)}</Badge>}
               </div>
               {actions && <div className="row wrap" style={{ marginTop: '.5rem', gap: '.35rem' }}>{actions(m)}</div>}
             </div>
           </div>
         ))}
-        {!shown.length && <Empty>{tab === 'pendente' ? 'Ninguém pendente.' : tab === 'inativo' ? 'Ninguém inativo.' : 'Ninguém encontrado.'}</Empty>}
+        {!shown.length && <Empty>{tab === 'pendente' ? 'Ninguém pendente.' : tab === 'inativo' ? 'Ninguém inativo.' : tab === 'desatualizado' ? 'Todas as fichas estão em dia.' : 'Ninguém encontrado.'}</Empty>}
       </div>
     </>
   );
@@ -188,6 +190,7 @@ export function memberActions({ base, run, done, setFicha, setEditing, setAch, s
     }
     return (
       <>
+        {m.outdated && <Button small variant="yellow" onClick={() => setFicha(m)}><FileText size={14} /> Atualizar ficha</Button>}
         {m.pending_reason === 'termo' && <Button small variant="yellow" onClick={() => setTermFor(m)}><Link2 size={14} /> Link do termo</Button>}
         {['inscricao', 'renovacao'].includes(m.pending_reason) && <Link to={`${base}/pagamentos?aba=membros`}><Button small variant="yellow">Pagar inscrição</Button></Link>}
         <Button small variant="secondary" onClick={() => setEditing(m)}>Editar</Button>

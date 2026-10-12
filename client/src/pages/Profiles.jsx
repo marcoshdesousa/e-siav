@@ -148,6 +148,7 @@ export function MemberProfileView({ member: m, linkBase, photoAction }) {
       </div>
 
       <ChipRow title="Insígnias" items={m.specialties} empty="Nenhuma insígnia ainda." emptyIcon="knot" />
+      {m.classes?.length ? <ChipRow title="Guias" items={m.classes} /> : null}
       {m.courses?.length ? <ChipRow title="Cursos concluídos" items={m.courses} /> : null}
       <MedalList medals={m.medals} />
       <EventsList events={m.events} />

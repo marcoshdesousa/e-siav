@@ -42,7 +42,7 @@ export default function TransfersPage() {
     const r = await run(() => api.post('/club/transfers', { name: f.name, doc: f.cpf }), null);
     setF({ name: '', cpf: '' });
     state.reload();
-    setTab('enviados');
+    setTab('pendentes');
     return r;
   };
   const act = (t, side, accept, msg) => run(() => api.post(`/club/transfers/${t.id}/${side}`, { accept }), msg).then(state.reload);
@@ -52,7 +52,7 @@ export default function TransfersPage() {
   return (
     <>
       <PageHeader title="Transferências" subtitle="Cada pessoa está em um clã só. Para trazer alguém, peça a transferência." />
-      <Tabs tabs={[['pedir', 'Pedir'], ['recebidos', `Recebidos${received.some((t) => t.status === 'pendente_origem') ? ' •' : ''}`], ['enviados', `Enviados${sent.some((t) => t.status === 'pendente_destino') ? ' •' : ''}`]]} value={tab} onChange={setTab} />
+      <Tabs tabs={[['pedir', 'Pedir'], ['pendentes', 'Pendentes', waitingMe], ['vieram', 'Que vieram'], ['foram', 'Que foram'], ['pedidos', 'Pedidos']]} value={tab} onChange={setTab} />
       {waitingMe > 0 && tab === 'pedir' && <Card className="small"><b>{waitingMe}</b> pedido{waitingMe > 1 ? 's' : ''} esperando o seu clã.</Card>}
 
       {tab === 'pedir' && (
@@ -66,41 +66,39 @@ export default function TransfersPage() {
         </Card>
       )}
 
-      {tab === 'recebidos' && (
+      {tab !== 'pedir' && (
         <Loading {...state}>
-          {() => (
-            <Section title="Pessoas do seu clã pedidas por outro clã">
-              {received.length ? received.map((t) => (
-                <Row key={t.id} t={t}>
-                  {t.status === 'pendente_origem' && (
-                    <>
-                      <Button small variant="green" onClick={() => act(t, 'origem', true, 'Transferência autorizada. Falta o outro clã confirmar.')}><Check size={14} /> Autorizar</Button>
-                      <Confirm text={`Recusar a transferência de ${t.member_name}?`} onYes={() => act(t, 'origem', false, 'Pedido recusado')}><X size={14} /> Recusar</Confirm>
-                    </>
-                  )}
-                </Row>
-              )) : <Empty icon={ArrowLeftRight}>Nenhum pedido recebido.</Empty>}
-            </Section>
-          )}
-        </Loading>
-      )}
-
-      {tab === 'enviados' && (
-        <Loading {...state}>
-          {() => (
-            <Section title="Pedidos do seu clã">
-              {sent.length ? sent.map((t) => (
-                <Row key={t.id} t={t}>
-                  {t.status === 'pendente_destino' && (
-                    <Button small variant="green" onClick={() => act(t, 'destino', true, `${t.member_name.split(' ')[0]} agora é do seu clã!`)}><Check size={14} /> Confirmar entrada</Button>
-                  )}
-                  {['pendente_origem', 'pendente_destino'].includes(t.status) && (
-                    <Confirm text="Cancelar este pedido?" onYes={() => act(t, 'destino', false, 'Pedido cancelado')}>Cancelar</Confirm>
-                  )}
-                </Row>
-              )) : <Empty icon={ArrowLeftRight}>Nenhum pedido enviado.</Empty>}
-            </Section>
-          )}
+          {() => {
+            const pend = (t) => ['pendente_origem', 'pendente_destino'].includes(t.status);
+            const lists = {
+              pendentes: [...received.filter(pend).map((t) => ({ t, side: 'origem' })), ...sent.filter(pend).map((t) => ({ t, side: 'destino' }))],
+              vieram: sent.filter((t) => t.status === 'concluida').map((t) => ({ t, side: 'destino' })),
+              foram: received.filter((t) => t.status === 'concluida').map((t) => ({ t, side: 'origem' })),
+              pedidos: sent.map((t) => ({ t, side: 'destino' })),
+            };
+            const titles = { pendentes: 'Esperando alguém', vieram: 'Pessoas que vieram para o seu clã', foram: 'Pessoas que foram para outro clã', pedidos: 'Tudo o que o seu clã pediu' };
+            const list = lists[tab];
+            return (
+              <Section title={titles[tab]}>
+                {list.length ? list.map(({ t, side }) => (
+                  <Row key={t.id} t={t}>
+                    {side === 'origem' && t.status === 'pendente_origem' && (
+                      <>
+                        <Button small variant="green" onClick={() => act(t, 'origem', true, 'Transferência autorizada. Falta o outro clã confirmar.')}><Check size={14} /> Autorizar saída</Button>
+                        <Confirm text={`Recusar a transferência de ${t.member_name}?`} onYes={() => act(t, 'origem', false, 'Pedido recusado')}><X size={14} /> Recusar</Confirm>
+                      </>
+                    )}
+                    {side === 'destino' && t.status === 'pendente_destino' && (
+                      <Button small variant="green" onClick={() => act(t, 'destino', true, `${t.member_name.split(' ')[0]} agora é do seu clã!`)}><Check size={14} /> Confirmar entrada</Button>
+                    )}
+                    {side === 'destino' && pend(t) && (
+                      <Confirm text="Cancelar este pedido?" onYes={() => act(t, 'destino', false, 'Pedido cancelado')}>Cancelar</Confirm>
+                    )}
+                  </Row>
+                )) : <Empty icon={ArrowLeftRight}>Nada por aqui.</Empty>}
+              </Section>
+            );
+          }}
         </Loading>
       )}
     </>

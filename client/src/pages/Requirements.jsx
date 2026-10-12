@@ -214,11 +214,12 @@ export function RequirementForm({ audience: fixedAudience, onClose, onDone }) {
   );
 }
 
-export function CreatedRequirements() {
+/** only: mostra só um público (ex.: 'member' na pasta Ranking, 'unit' na pasta Grupos). */
+export function CreatedRequirements({ only = null } = {}) {
   const { actor } = useAuth();
   const isAdmin = actor.type === 'admin';
   const state = useLoad(() => api.get('/requirements/created'));
-  const audiences = audiencesFor(actor.type);
+  const audiences = audiencesFor(actor.type).filter((a) => !only || a[0] === only);
   const [audience, setAudience] = useState(audiences[0][0]);
   const [creating, setCreating] = useState(false);
   const [, run] = useAsync();

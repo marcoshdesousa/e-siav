@@ -345,6 +345,29 @@ export function seed({ production = false } = {}) {
     msg(direct, 'member', members.lucas, 'Bora treinar o lais de guia amanhã?', 60);
     const tigres = conv('unidade', { unit: units.tigres, club: clubs.leoes });
     msg(tigres, 'member', members.sofia, 'Tigres, conseguimos o 1º lugar no cantinho!', 90);
+
+    // ---------- Agenda, tesouraria, patrimônio e fichas para atualizar ----------
+    const dia = (n) => new Date(Date.now() + n * day).toISOString().slice(0, 10);
+    const agenda = (creator, scope, club, district, title, date, extra = {}) => run(
+      'INSERT INTO agenda_items (creator_type, club_id, scope, district_id, title, description, location, date, end_date, time) VALUES (?,?,?,?,?,?,?,?,?,?)',
+      creator, club, scope, district, title, extra.description || null, extra.location || null, date, extra.end || null, extra.time || null,
+    );
+    agenda('club', 'clube', clubs.aguias, null, 'Reunião do clã', dia(3), { time: '09:00', location: 'Igreja Central' });
+    agenda('club', 'clube', clubs.aguias, null, 'Acampamento de primavera', dia(24), { end: dia(26), location: 'Sítio Boa Vista', description: 'Levar barraca, lanterna e saco de dormir.' });
+    agenda('club', 'clube', clubs.leoes, null, 'Ordem unida', dia(5), { time: '15:00' });
+    agenda('admin', 'geral', null, null, 'Campori Exploradores do Brasil', dia(40), { end: dia(43), location: 'Parque Nacional', description: 'Evento para todos os clãs.' });
+    agenda('admin', 'distrito', null, palmares, 'Encontro do Distrito Palmares', dia(12), { time: '08:00' });
+    const fin = (c, kind, description, cents, n) => run('INSERT INTO club_finance (club_id, kind, description, amount_cents, date) VALUES (?,?,?,?,?)', c, kind, description, cents, dia(n));
+    fin(clubs.aguias, 'entrada', 'Venda de pizza', 85000, -20);
+    fin(clubs.aguias, 'saida', 'Lenços e distintivos', 32050, -15);
+    fin(clubs.aguias, 'entrada', 'Inscrições do acampamento', 120000, -5);
+    const bem = (c, name, cents, notes) => run('INSERT INTO club_assets (club_id, name, price_cents, acquired_at, notes) VALUES (?,?,?,?,?)', c, name, cents, dia(-90), notes);
+    bem(clubs.aguias, 'Barraca 6 pessoas', 45990, '2 unidades');
+    bem(clubs.aguias, 'Bandeira do clã', 18000, null);
+    bem(clubs.aguias, 'Caixa de primeiros socorros', 12500, 'Revisar validade dos remédios');
+    // Fichas do ano passado: aparecem como "desatualizadas" para o clã atualizar.
+    const anoPassado = `${new Date().getFullYear() - 1}-08-15T12:00:00.000Z`;
+    for (const k of ['ana', 'sofia']) run('UPDATE member_records SET updated_at = ? WHERE member_id = ?', anoPassado, members[k]);
   });
 }
 

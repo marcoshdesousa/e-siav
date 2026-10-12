@@ -20,6 +20,7 @@ import AnnouncementsAdmin from './Announcements.jsx';
 import CatalogAdmin from './CatalogAdmin.jsx';
 import ClanApplications, { CreateClanLink } from './ClanApplications.jsx';
 import ClanView from './ClanView.jsx';
+import AgendaAdmin from './AgendaAdmin.jsx';
 import { AdminClubPayments, AdminPayments } from '../Payments.jsx';
 
 const base = '/admin';
@@ -54,6 +55,7 @@ function AdminHome() {
       <Section title="Atalhos">
         <MoreMenu items={[
           { to: `${base}/pagamentos`, icon: Wallet, label: 'Pagamentos', hint: 'Taxas e chave Pix' },
+    { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas para todos, distrito ou clã' },
     { to: `${base}/inscricoes-cla`, icon: UserPlus, label: 'Inscrição clã', hint: 'Pedidos para criar clã' },
     { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo' },
           { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial' },
@@ -291,6 +293,7 @@ export default function AdminApp() {
         <Route path="clas/:id" element={<ClanView base={base} />} />
         <Route path="inscricoes-cla" element={<ClanApplications />} />
         <Route path="pagamentos" element={<AdminPayments base={base} />} />
+        <Route path="agenda" element={<AgendaAdmin />} />
         <Route path="pagamentos/:id" element={<AdminClubPayments base={base} />} />
         <Route path="requisitos" element={<RequirementsAdmin />} />
         <Route path="conteudo" element={<ContentAdmin />} />

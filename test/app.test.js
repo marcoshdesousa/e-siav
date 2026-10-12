@@ -742,3 +742,58 @@ test('ranking da liderança e tutores: no clã e no App, separado dos explorador
   assert.ok(!(await aguias.get(`/rankings/club/${aguias.actor.id}/units`)).body.rows.some((u) => u.name === 'Tutores'));
   assert.equal((await tutores.post('/requirements', form({ title: 'x', modes: 'texto', points: '1', late_points: '0', deadline }))).status, 403);
 });
+
+test('pastas do clã: agenda (clã + App), finanças, patrimônio, biblioteca, contatos e fichas desatualizadas', async () => {
+  const aguias = await login('clube', 'aguias', 'AG2026');
+  const leoes = await login('clube', 'leoes', 'LE2026');
+  const admin = await login('membros', 'admin', 'admin123');
+  const d = new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10);
+  // Agenda: o clã marca as suas datas; o admin marca para todos, um distrito ou um clã
+  const meu = await aguias.post('/club/agenda', { title: 'Reunião extra', date: d, time: '19:00' });
+  assert.equal(meu.status, 200);
+  const soAguias = await admin.post('/admin/agenda', { title: 'Visita do App', date: d, scope: 'clube', club_id: aguias.actor.id });
+  const todos = await admin.post('/admin/agenda', { title: 'Live para todos', date: d, scope: 'geral' });
+  const agA = (await aguias.get('/agenda')).body.map((a) => a.id);
+  const agL = (await leoes.get('/agenda')).body.map((a) => a.id);
+  assert.ok(agA.includes(meu.body.id) && agA.includes(soAguias.body.id) && agA.includes(todos.body.id));
+  assert.ok(!agL.includes(meu.body.id) && !agL.includes(soAguias.body.id) && agL.includes(todos.body.id), 'outro clã só vê o que é para ele');
+  assert.equal((await leoes.del('/club/agenda/' + meu.body.id)).status, 404, 'não apaga a agenda de outro clã');
+  assert.equal((await aguias.del('/club/agenda/' + todos.body.id)).status, 404, 'clã não apaga a agenda do App');
+  // Minhas finanças: só controle
+  await aguias.post('/club/financas', { kind: 'entrada', description: 'Acampamento de inverno', amount: '500,00', date: d });
+  await aguias.post('/club/financas', { kind: 'saida', description: 'Gás', amount: '120', date: d });
+  const fin = (await aguias.get('/club/financas')).body;
+  assert.ok(fin.rows.some((x) => x.description === 'Acampamento de inverno' && x.amount_cents === 50000));
+  assert.equal(fin.saldo, fin.entradas - fin.saidas);
+  assert.ok(!(await leoes.get('/club/financas')).body.rows.some((x) => x.description === 'Acampamento de inverno'), 'finanças são só do clã');
+  // Patrimônio
+  const bem = await aguias.post('/club/patrimonio', form({ name: 'Lona grande', price: '250,00' }));
+  assert.ok((await aguias.get('/club/patrimonio')).body.rows.some((x) => x.id === bem.body.id && x.price_cents === 25000));
+  // Biblioteca: várias insígnias para várias pessoas de uma vez
+  const cat = (await aguias.get('/catalog?type=especialidade')).body.slice(0, 2).map((c) => c.id);
+  const guia = (await aguias.get('/catalog?type=classe')).body[0].id;
+  const lista = (await aguias.get('/club/biblioteca')).body;
+  const ids = lista.filter((p) => ['Ana Clara Souza', 'Beatriz Santos'].includes(p.name)).map((p) => p.id);
+  const ent = await aguias.post('/club/biblioteca/entregar', { member_ids: ids, content_ids: [...cat, guia] });
+  assert.equal(ent.status, 200);
+  const depois = (await aguias.get('/club/biblioteca')).body.find((p) => p.id === ids[0]);
+  assert.ok(cat.every((id) => depois.insignias.some((c) => c.id === id)) && depois.guias.some((c) => c.id === guia));
+  const cert = await aguias.get(`/club/certificado/${ids[0]}/${cat[0]}`);
+  assert.equal(cert.body.member_name, depois.name);
+  assert.equal((await leoes.get(`/club/certificado/${ids[0]}/${cat[0]}`)).status, 404, 'certificado só do próprio clã');
+  assert.equal((await leoes.post('/club/biblioteca/entregar', { member_ids: ids, content_ids: cat })).status, 400, 'não entrega para membro de outro clã');
+  // Contatos: WhatsApp do membro e do responsável
+  const contatos = (await aguias.get('/club/contatos')).body;
+  const pedro = contatos.find((c) => c.name.startsWith('Pedro'));
+  assert.ok(pedro.whatsapp && pedro.responsavel_whatsapp);
+  // Fichas desatualizadas (do ano passado) e atualizar
+  const membros = (await aguias.get('/club/members')).body;
+  const ana = membros.find((m) => m.name === 'Ana Clara Souza');
+  assert.equal(ana.outdated, true);
+  const ficha = (await aguias.get(`/club/members/${ana.id}/ficha`)).body.ficha;
+  await aguias.put(`/club/members/${ana.id}/ficha`, ficha);
+  assert.equal((await aguias.get('/club/members')).body.find((m) => m.id === ana.id).outdated, false, 'atualizou a ficha do ano');
+  // Suporte
+  await admin.put('/admin/pagamentos/config', { fee_member_year: '2,50', fee_club_month: '30,85', club_installments: 12, pix_key: 'pix@exploradores.com', support_whatsapp: '81999990000' });
+  assert.equal((await aguias.get('/club/suporte')).body.whatsapp, '81999990000');
+});

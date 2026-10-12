@@ -24,6 +24,7 @@ import transferRoutes from './routes/transfers.js';
 import clanApplicationRoutes from './routes/clanApplications.js';
 import termRoutes from './routes/terms.js';
 import feeRoutes from './routes/fees.js';
+import clubToolRoutes from './routes/clubTools.js';
 import { ensureInstallments } from './fees.js';
 import { expireYear } from './memberStatus.js';
 import { syncCatalog } from './catalog.js';
@@ -76,7 +77,7 @@ if (MANUTENCAO) {
 
 const api = express.Router();
 api.get('/health', (_req, res) => res.json({ ok: true }));
-for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, signupRoutes, transferRoutes, clanApplicationRoutes, termRoutes, feeRoutes]) api.use(r);
+for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, signupRoutes, transferRoutes, clanApplicationRoutes, termRoutes, feeRoutes, clubToolRoutes]) api.use(r);
 api.use((_req, _res, next) => next(new HttpError(404, 'Rota não encontrada')));
 app.use('/api', api);
 

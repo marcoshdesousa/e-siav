@@ -187,7 +187,7 @@ export function AdminPayments({ base }) {
       <PageHeader title="Pagamentos" subtitle="Taxas dos clãs e dos membros (Pix)" />
       <Loading {...state}>
         {({ config, clubs }) => {
-          const v = f || { fee_member_year: cents(config.fee_member_year_cents), fee_club_month: cents(config.fee_club_month_cents), club_installments: config.club_installments, pix_key: config.pix_key };
+          const v = f || { fee_member_year: cents(config.fee_member_year_cents), fee_club_month: cents(config.fee_club_month_cents), club_installments: config.club_installments, pix_key: config.pix_key, support_whatsapp: config.support_whatsapp || '' };
           return (
             <>
               <PendingOrders onDone={state.reload} />
@@ -200,6 +200,7 @@ export function AdminPayments({ base }) {
                     </div>
                     <Field label="Inscrição anual por membro (R$)"><input inputMode="decimal" value={v.fee_member_year} onChange={(e) => setF({ ...v, fee_member_year: e.target.value })} /></Field>
                     <Field label="Chave Pix" hint="Aparece para os clãs na tela de pagamentos"><input value={v.pix_key} onChange={(e) => setF({ ...v, pix_key: e.target.value })} /></Field>
+                    <Field label="WhatsApp do suporte" hint="Aparece para os clãs em Mais → Suporte"><input inputMode="tel" value={v.support_whatsapp} onChange={(e) => setF({ ...v, support_whatsapp: e.target.value })} placeholder="(81) 99999-9999" /></Field>
                     <p className="small muted">Os valores novos valem para os clãs criados daqui pra frente. Para mudar as parcelas em aberto de um clã, abra o clã abaixo.</p>
                     <Button busy={busy} disabled={!f} onClick={() => run(() => api.put('/admin/pagamentos/config', v), 'Valores salvos!').then(() => { setF(null); state.reload(); })}>Salvar</Button>
                   </div>

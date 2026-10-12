@@ -50,6 +50,7 @@ r.put('/admin/pagamentos/config', admin, (req, res) => {
   setSetting('fee_club_month_cents', month);
   setSetting('club_installments', n);
   setSetting('pix_key', str(req.body.pix_key, 120));
+  if (req.body.support_whatsapp !== undefined) setSetting('support_whatsapp', str(req.body.support_whatsapp, 30));
   res.json(feeConfig());
 });
 

@@ -12,6 +12,7 @@ export const feeConfig = () => ({
   fee_club_month_cents: Number(setting('fee_club_month_cents')),
   club_installments: Number(setting('club_installments')),
   pix_key: setting('pix_key') || '',
+  support_whatsapp: setting('support_whatsapp') || '',
 });
 
 /** Cria as parcelas do clã (se ainda não existirem): a 1ª vence 30 dias depois da criação. */
