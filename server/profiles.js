@@ -46,7 +46,7 @@ export function clubProfile(id) {
 
 export function unitProfile(id) {
   const u = get(
-    `SELECT u.id, u.name, u.logo, u.is_leadership, u.number, u.club_id, c.code AS club_code, c.name AS club_name, c.logo AS club_logo, c.district_id
+    `SELECT u.id, u.name, u.logo, u.bio, u.is_leadership, u.number, u.club_id, c.code AS club_code, c.name AS club_name, c.logo AS club_logo, c.district_id
      FROM units u JOIN clubs c ON c.id = u.club_id WHERE u.id = ?`,
     id,
   );

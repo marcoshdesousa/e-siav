@@ -1,15 +1,32 @@
 import { useState } from 'react';
-import { ClipboardCheck, ClipboardPlus, Flag, Tent, Trophy } from 'lucide-react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { ClipboardCheck, ClipboardPlus, Flag, Trophy } from 'lucide-react';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { api } from '../../api.js';
-import { Loading, PageHeader, Tabs, useLoad } from '../../ui.jsx';
+import { Button, Card, Loading, PageHeader, Section, Tabs, useAsync, useLoad } from '../../ui.jsx';
 import Shell from '../Shell.jsx';
 import { InAppProfile, UnitProfileView } from '../Profiles.jsx';
 import { CreatedRequirements, RequirementsTodo, ReviewsPanel } from '../Requirements.jsx';
 import RankingHub from '../Ranking.jsx';
-import ClubsBrowser from '../Clubs.jsx';
 
 const base = '/grupo';
+
+/** Perfil do grupo: o grupo escreve a biografia; nome, logo e membros são do clã. */
+function BioForm({ bio, onDone }) {
+  const [text, setText] = useState(bio || '');
+  const [busy, run] = useAsync();
+  return (
+    <Section title="Sobre o grupo">
+      <Card>
+        <div className="form">
+          <textarea value={text} onChange={(e) => setText(e.target.value)} maxLength={1000} placeholder="Conte quem é o grupo: grito de guerra, conquistas, o que vocês gostam de fazer..." />
+          <div className="row" style={{ justifyContent: 'flex-end' }}>
+            <Button busy={busy} disabled={text === (bio || '')} onClick={() => run(() => api.put('/me/bio', { bio: text }), 'Biografia salva!').then(onDone)}>Salvar</Button>
+          </div>
+        </div>
+      </Card>
+    </Section>
+  );
+}
 
 function UnitProfile() {
   const state = useLoad(() => api.get('/me/profile'));
@@ -17,7 +34,7 @@ function UnitProfile() {
     <Loading {...state}>
       {(u) => (
         <>
-          <UnitProfileView unit={u} linkBase={`${base}/ver`} />
+          <UnitProfileView unit={u} linkBase={`${base}/ver`} hideBio extra={<BioForm bio={u.bio} onDone={state.reload} />} />
           <p className="muted small center mt">Nome, logo e membros do grupo são cadastrados pelo clã.</p>
         </>
       )}
@@ -37,23 +54,26 @@ function GroupRequirements() {
   );
 }
 
-/** Portal do Grupo: cumpre requisitos em grupo e cria requisitos para os exploradores do grupo. */
+/** Portal do Grupo: abre no perfil; cumpre requisitos em grupo e cria requisitos para os exploradores do grupo. */
 export default function UnitApp() {
+  const { pathname } = useLocation();
+  // Bolinha com o número de requisitos em aberto (atualiza a cada troca de tela).
+  const reqs = useLoad(() => api.get('/requirements/mine'), [pathname]);
+  const abertos = (reqs.data || []).filter((r) => ['pendente', 'fora_do_prazo', 'recusado'].includes(r.state)).length;
   const tabs = [
-    { to: base, icon: ClipboardCheck, label: 'Requisitos', end: true },
+    { to: base, icon: Flag, label: 'Perfil', end: true },
+    { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos', badge: abertos },
     { to: `${base}/exploradores`, icon: ClipboardPlus, label: 'Criar' },
     { to: `${base}/ranking`, icon: Trophy, label: 'Ranking' },
-    { to: `${base}/perfil`, icon: Flag, label: 'Perfil' },
-    { to: `${base}/clas`, icon: Tent, label: 'Clãs' },
   ];
   return (
     <Shell tabs={tabs}>
       <Routes>
-        <Route index element={<><PageHeader title="Requisitos do grupo" subtitle="Cumpram juntos dentro do prazo e subam no ranking" /><RequirementsTodo originTabs clubLabel="Do clã" /></>} />
+        <Route index element={<UnitProfile />} />
+        <Route path="requisitos" element={<><PageHeader title="Requisitos do grupo" subtitle="Cumpram juntos dentro do prazo e subam no ranking" /><RequirementsTodo originTabs clubLabel="Do clã" /></>} />
         <Route path="exploradores" element={<GroupRequirements />} />
         <Route path="ranking" element={<RankingHub base={base} />} />
-        <Route path="perfil" element={<UnitProfile />} />
-        <Route path="clas" element={<ClubsBrowser base={base} />} />
+        <Route path="perfil" element={<Navigate to={base} replace />} />
         <Route path="ver/:kind/:id" element={<InAppProfile base={base} />} />
         <Route path="*" element={<Navigate to={base} replace />} />
       </Routes>

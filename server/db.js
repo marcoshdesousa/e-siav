@@ -667,6 +667,9 @@ function migrate() {
     canceled_at TEXT
   )`);
 
+  // Biografia do grupo (o próprio grupo escreve no Portal do Grupo).
+  add('units', 'bio', 'TEXT');
+
   // Número do grupo dentro do clã (1 a 10), usado no link: /cla/CÓDIGO/NÚMERO.
   add('units', 'number', 'INTEGER');
   for (const u of db.prepare('SELECT id, club_id FROM units WHERE number IS NULL AND is_leadership = 0 ORDER BY id').all()) {

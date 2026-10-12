@@ -96,7 +96,7 @@ export function ClubProfileView({ club: c, linkBase }) {
   );
 }
 
-export function UnitProfileView({ unit: u, linkBase }) {
+export function UnitProfileView({ unit: u, linkBase, hideBio = false, extra = null }) {
   return (
     <>
       <div className="hero">
@@ -114,6 +114,8 @@ export function UnitProfileView({ unit: u, linkBase }) {
           <div className="mt"><ShareButton path={groupLink(u.club_code, u.number, u.is_leadership)} title={'Grupo ' + u.name} /></div>
         </div>
       </div>
+      {u.bio && !hideBio && <Section title="Sobre o grupo"><Card><p style={{ margin: 0, whiteSpace: 'pre-line' }}>{u.bio}</p></Card></Section>}
+      {extra}
       <MedalList medals={u.medals} />
     </>
   );
