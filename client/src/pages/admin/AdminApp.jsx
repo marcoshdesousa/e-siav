@@ -286,7 +286,11 @@ export default function AdminApp() {
     { to: `${base}/explorar`, icon: Map, label: 'Explorar clãs', hint: 'Perfis públicos' },
   ];
   return (
-    <Shell tabs={tabs}>
+    <Shell tabs={tabs} parentOf={(path) => {
+      const [, , seg, sub] = path.split('/');
+      if (sub && ['clas', 'pagamentos'].includes(seg)) return `${base}/${seg}`;
+      return ['clas', 'requisitos', 'conteudo', 'ver'].includes(seg) ? base : `${base}/mais`;
+    }}>
       <Routes>
         <Route index element={<AdminHome />} />
         <Route path="clas" element={<ClubsAdmin />} />

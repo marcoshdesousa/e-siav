@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, Eye, FileText, KeyRound, MapPin } from 'lucide-react';
+import { useParams } from 'react-router-dom';
+import {
+  Eye, FileText, KeyRound, MapPin,
+} from 'lucide-react';
 import { api } from '../../api.js';
 import { plural } from '../../format.js';
 import { Avatar, Badge, Button, Card, Loading, Tabs, useLoad } from '../../ui.jsx';
@@ -17,7 +19,6 @@ export default function ClanView({ base }) {
   const [ficha, setFicha] = useState(null);
   return (
     <>
-      <Link to={`${base}/clas`} className="back-link"><ArrowLeft size={16} /> Clãs</Link>
       <Loading {...state}>
         {({ club: c, members, units }) => (
           <>

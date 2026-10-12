@@ -75,7 +75,7 @@ export default function MemberApp() {
       <Route
         path="*"
         element={
-          <Shell tabs={tabs}>
+          <Shell tabs={tabs} parentOf={(path) => (['cursos', 'clas'].includes(path.split('/')[2]) ? `${base}/mais` : base)}>
             {actor.waiting ? <Waiting text={actor.waiting} /> : <Routes>
               <Route index element={<MyProfile />} />
               <Route path="requisitos" element={<><PageHeader title="Requisitos" subtitle={isDbv ? 'Cumpra os requisitos e suba no ranking' : 'Requisitos para a liderança e os tutores'} /><RequirementsTodo originTabs groupTab={isDbv} /></>} />

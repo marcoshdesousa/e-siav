@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import {
-  ArrowLeft, ArrowLeftRight, Award, BadgeCheck, KeyRound, UserPlus, CalendarDays, Check, Megaphone, Plus, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, FolderOpen, Receipt, BookOpen, Package, Wrench, LifeBuoy,
+  ArrowLeftRight, Award, BadgeCheck, KeyRound, UserPlus, CalendarDays, Check, Megaphone, Plus, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, FolderOpen, Receipt, BookOpen, Package, Wrench, LifeBuoy,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -364,7 +364,6 @@ function NewMemberPage() {
   };
   return (
     <>
-      <button type="button" className="back-link" onClick={() => nav(`${base}/membros`)}><ArrowLeft size={16} /> Membros</button>
       <PageHeader title="Novo membro" subtitle="Preencha todos os dados. Depois, envie o link do termo para o responsável assinar." />
       <CadastroFlow mode="cla" local={`${actor.name} — cadastro pelo clã`} submitLabel="Cadastrar membro" busy={busy} onSubmit={send} />
       {created && (
@@ -476,6 +475,18 @@ function GruposFolder() {
 
 const pasta = (title, subtitle, items) => <><PageHeader title={title} subtitle={subtitle} /><MoreMenu items={items} /></>;
 
+/** Pasta de cima de cada tela do clã (para o botão Voltar). */
+const PARENT = {
+  agenda: 'secretaria', matriculas: 'secretaria', membros: 'secretaria', transferencias: 'secretaria',
+  pagamentos: 'tesouraria', financas: 'tesouraria',
+  tesouraria: 'mais', biblioteca: 'mais', patrimonio: 'mais', ferramentas: 'mais', suporte: 'mais', eventos: 'mais', anuncios: 'mais', clas: 'mais',
+};
+const clubParent = (path) => {
+  if (path === `${base}/membros/novo`) return `${base}/membros`;
+  const seg = path.split('/')[2];
+  return PARENT[seg] ? `${base}/${PARENT[seg]}` : base;
+};
+
 /** Sistema do Clã, dividido em pastas. */
 export default function ClubApp() {
   const tabs = [
@@ -511,7 +522,7 @@ export default function ClubApp() {
       <Route
         path="*"
         element={
-          <Shell tabs={tabs}>
+          <Shell tabs={tabs} parentOf={clubParent}>
             <Routes>
               <Route index element={<ClubHome />} />
               <Route path="secretaria" element={pasta('Secretaria', 'Agenda, matrículas, membros e transferências', secretaria)} />

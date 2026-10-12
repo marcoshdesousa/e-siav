@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { api, toForm } from '../api.js';
 import {
-  BackButton, Badge, Button, ContentIcon, Gallery, Loading, Modal, PageHeader, Section, modesLabel, notify, useAsync, useLoad,
+  Badge, Button, ContentIcon, Gallery, Loading, Modal, PageHeader, Section, modesLabel, notify, useAsync, useLoad,
 } from '../ui.jsx';
 import { ResponseFields } from './Requirements.jsx';
 
@@ -97,7 +97,6 @@ export function ContentDetail() {
     <Loading {...state}>
       {(c) => (
         <>
-          <BackButton fallback={location.pathname.split('/').slice(0, 2).join('/') || '/'} />
           <div className="hero">
             <div className="row" style={{ position: 'relative', zIndex: 1 }}>
               <span className="content-icon" style={{ background: 'rgba(255,255,255,.95)', width: 64, height: 64 }}><ContentIcon c={c} size={30} /></span>

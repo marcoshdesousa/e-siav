@@ -7,7 +7,7 @@ import { Attachments } from './admin/Events.jsx';
 import { api } from '../api.js';
 import { fmtDate, plural } from '../format.js';
 import { useAuth, homeFor } from '../auth.jsx';
-import { Avatar, BackButton, Button, Card, ContentIcon, Empty, Loading, LogoHorizontal, MedalList, Modal, PositionBadge, RowSection, Section, ShareButton, useLoad } from '../ui.jsx';
+import { Avatar, Button, Card, ContentIcon, Empty, Loading, LogoHorizontal, MedalList, Modal, PositionBadge, RowSection, Section, ShareButton, useLoad } from '../ui.jsx';
 
 /** linkBase: "/p" (páginas públicas) ou "<app>/ver" (dentro do app). */
 // Links públicos: /cla/CÓDIGO (clã), /cla/CÓDIGO/Nº (grupo) e /CÓDIGO-DO-MEMBRO.
@@ -183,7 +183,6 @@ export function InAppProfile({ base }) {
   if (!KIND_URL[kind]) return <Empty>Perfil não encontrado.</Empty>;
   return (
     <>
-      <BackButton fallback={base} className="back-link btn-ghost" style={{ border: 0, background: 'none', cursor: 'pointer', padding: 0 }} />
       <ProfileByKind kind={kind} id={id} linkBase={`${base}/ver`} />
     </>
   );

@@ -1,15 +1,21 @@
-import { NavLink, useNavigate, Link } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../auth.jsx';
 import { LogOut } from 'lucide-react';
-import { Avatar, LogoHorizontal } from '../ui.jsx';
+import { Avatar, BackButton, LogoHorizontal } from '../ui.jsx';
 import AnnouncementPopup from './Announcement.jsx';
 
 const TYPE_LABEL = { admin: 'Administrador Geral', club: 'Sistema do Clã', unit: 'Portal do Grupo', member: '' };
 
-/** Estrutura de app: cabeçalho azul + abas na parte de baixo. */
-export default function Shell({ tabs, children, hideNav = false }) {
+/**
+ * Estrutura de app: cabeçalho + abas na parte de baixo. Fora das abas principais,
+ * aparece o botão Voltar (volta para a tela anterior; sem tela anterior, vai para a pasta de cima).
+ * parentOf(caminho) diz qual é a pasta de cima de cada tela.
+ */
+export default function Shell({ tabs, children, hideNav = false, parentOf = null }) {
   const { actor, logout } = useAuth();
   const nav = useNavigate();
+  const { pathname } = useLocation();
+  const path = pathname.replace(/\/+$/, '') || '/';
   const base = { admin: '/admin', club: '/cla', unit: '/grupo', member: '/membro' }[actor.type];
   const subtitle = actor.type === 'member' ? actor.club_name : actor.type === 'unit' ? actor.club_name : TYPE_LABEL[actor.type];
 
@@ -24,7 +30,10 @@ export default function Shell({ tabs, children, hideNav = false }) {
         <Avatar src={actor.photo || actor.logo} name={actor.name} size={34} />
         <button className="icon-btn" title="Sair" aria-label="Sair" onClick={async () => { await logout(); nav('/'); }}><LogOut size={20} /></button>
       </header>
-      <main className={'main' + (hideNav ? ' no-nav' : '')}>{children}</main>
+      <main className={'main' + (hideNav ? ' no-nav' : '')}>
+        {!tabs.some((t) => t.to === path) && <BackButton fallback={(parentOf && parentOf(path)) || base} />}
+        {children}
+      </main>
       {!hideNav && (
         <nav className="bottom-nav" aria-label="Navegação principal">
           <div className="bottom-nav-inner">

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, CheckCircle2, Copy, QrCode, Receipt, Users } from 'lucide-react';
+import {
+  CheckCircle2, Copy, QrCode, Receipt, Users,
+} from 'lucide-react';
 import { api } from '../api.js';
 import { fmtDate, fmtMoney } from '../format.js';
 import { Badge, Button, Card, Confirm, Field, Loading, Modal, PageHeader, Section, Tabs, notify, useAsync, useLoad } from '../ui.jsx';
@@ -238,7 +240,6 @@ export function AdminClubPayments({ base }) {
   const mark = (ids, paid) => run(() => api.post('/admin/pagamentos/membros', { member_ids: ids, paid, year: state.data.member_fee.year }), paid ? 'Marcado como pago' : 'Desfeito').then(state.reload);
   return (
     <>
-      <Link to={`${base}/pagamentos`} className="back-link"><ArrowLeft size={16} /> Pagamentos</Link>
       <Loading {...state}>
         {(p) => (
           <>
