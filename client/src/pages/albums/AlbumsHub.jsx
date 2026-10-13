@@ -425,7 +425,6 @@ export function AlbumPage() {
       {(a) => {
         const stuck = Object.values(a.stickers).filter((x) => x.stuck).length;
         const pg = data.pages[page];
-        const waiting = a.orders.filter((o) => o.status === 'aberto' || o.status === 'aguardando');
         const off = !online || a.offline;
         return (
           <div className={sel ? 'album-pasting' : ''}>
@@ -450,7 +449,6 @@ export function AlbumPage() {
               </div>
             </div>
             {off && <Card className="small offline-note">Sem internet: dá para ver o álbum e colar as figurinhas que você já tem. Abrir pacotinhos e comprar precisam de internet. O que você colar agora é salvo quando a internet voltar.</Card>}
-            {!off && waiting.length > 0 && <Card className="small">Pedido{waiting.length > 1 ? 's' : ''} esperando o pagamento: {waiting.map((o) => `${o.packs} pacotinho${o.packs > 1 ? 's' : ''}`).join(', ')}. Assim que cair, aparece aqui.</Card>}
 
             {toPaste.length > 0 && (
               <Section title={`Para colar (${toPaste.length})`}>
