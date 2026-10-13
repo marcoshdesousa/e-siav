@@ -1,0 +1,27 @@
+.morris { width: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: .5rem; padding: .4rem 0; user-select: none; -webkit-user-select: none; }
+.morris-status { font-family: var(--font-title); font-weight: 700; font-size: 1rem; color: var(--ink); padding: .45rem 1rem; border-radius: 999px; background: var(--blue-soft); text-align: center; }
+.morris-status-win { background: var(--green-soft); }
+.morris-status-lose { background: var(--red-soft); }
+.morris-status-draw, .morris-status-mill { background: var(--yellow-soft); }
+.morris-hands { display: flex; flex-wrap: wrap; justify-content: center; gap: .3rem 1rem; color: var(--muted); font-size: .82rem; }
+.morris-hand { display: flex; align-items: center; gap: .35rem; }
+.morris-mini { display: inline-block; width: 13px; height: 13px; border-radius: 50%; }
+.morris-mini.morris-p { background: #2B54B0; }
+.morris-mini.morris-c { background: #E92A2F; }
+.morris-board { width: min(100%, 420px); height: auto; display: block; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.morris-busy { cursor: wait; }
+.morris-bg { fill: #0E2A6B; }
+.morris-line { stroke: #7FB2FF; stroke-width: 5; stroke-linecap: round; opacity: .75; }
+.morris-hit { cursor: pointer; }
+.morris-dot { fill: #7FB2FF; }
+.morris-pt { stroke: #fff; stroke-width: 3; transition: r .15s; }
+circle.morris-p { fill: #2B54B0; }
+circle.morris-c { fill: #E92A2F; }
+.morris-inmill { stroke: #F9C71D; stroke-width: 5; }
+.morris-last { stroke: #5BD38A; stroke-width: 5; }
+.morris-sel { stroke: #5BD38A; stroke-width: 7; }
+.morris-rem { stroke: #F9C71D; stroke-width: 6; animation: morris-blink .5s ease-in-out infinite alternate; }
+.morris-target { fill: #5BD38A; opacity: .9; pointer-events: none; }
+.morris-can { fill: none; stroke: rgba(255, 255, 255, .5); stroke-width: 2; stroke-dasharray: 5 5; pointer-events: none; }
+.morris-legend { color: var(--muted); font-size: .85rem; }
+@keyframes morris-blink { from { opacity: 1; } to { opacity: .45; } }

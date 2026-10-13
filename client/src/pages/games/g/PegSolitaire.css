@@ -1,0 +1,15 @@
+.pegsolitaire { width: 100%; max-width: 480px; margin: 0 auto; background: #0B1430; color: #fff; border-radius: 14px; padding: 10px; box-sizing: border-box; user-select: none; -webkit-user-select: none; }
+.pegsolitaire-top { display: flex; justify-content: space-between; font-size: 15px; padding: 0 4px 8px; }
+.pegsolitaire-top b { color: #F9C71D; font-variant-numeric: tabular-nums; }
+.pegsolitaire-board { width: min(100%, 400px); margin: 0 auto; aspect-ratio: 1; display: grid; grid-template-columns: repeat(7, 1fr); grid-template-rows: repeat(7, 1fr); gap: 4px; padding: 10px; box-sizing: border-box; border-radius: 22%; background: radial-gradient(circle at 40% 35%, #B8813E, #7A4B1E 75%); box-shadow: inset 0 -6px 0 rgba(0, 0, 0, .25), 0 6px 18px rgba(0, 0, 0, .45); }
+.pegsolitaire-hole { position: relative; border: 0; padding: 0; margin: 10%; border-radius: 50%; background: radial-gradient(circle at 50% 40%, #3D2410, #5E3818); box-shadow: inset 0 3px 4px rgba(0, 0, 0, .55); cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; display: grid; place-items: center; }
+.pegsolitaire-center { outline: 2px dashed rgba(249, 199, 29, .45); outline-offset: 3px; }
+.pegsolitaire-hole i { width: 128%; height: 128%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #FF8A8D, #E92A2F 45%, #9B1C1F); box-shadow: 0 3px 4px rgba(0, 0, 0, .5); transition: transform .12s; }
+.pegsolitaire-sel i { background: radial-gradient(circle at 35% 30%, #FFF3B0, #F9C71D 45%, #B88A00); transform: translateY(-3px) scale(1.06); box-shadow: 0 6px 8px rgba(0, 0, 0, .5); }
+.pegsolitaire-target { background: radial-gradient(circle, #5BD38A 0 30%, #2B5E3A 31%); animation: pegsolitaire-pulse .7s ease-in-out infinite alternate; }
+.pegsolitaire-landed i { animation: pegsolitaire-land .25s ease-out; }
+.pegsolitaire-msg { text-align: center; font-size: 14px; opacity: .85; margin-top: 10px; min-height: 1.4em; }
+.pegsolitaire-msg-win { color: #F9C71D; font-weight: 800; font-size: 17px; opacity: 1; }
+.pegsolitaire-msg-lose { color: #FFB3B5; font-weight: 800; font-size: 16px; opacity: 1; }
+@keyframes pegsolitaire-pulse { from { transform: scale(.92); } to { transform: scale(1.06); } }
+@keyframes pegsolitaire-land { from { transform: scale(1.35); } to { transform: scale(1); } }

@@ -1,0 +1,33 @@
+.anagram { position: relative; width: 100%; max-width: 480px; margin: 0 auto; padding: 14px; box-sizing: border-box;
+  background: var(--surface, #fff); color: var(--ink, #101831); border: 1px solid var(--line, #e2e7f0);
+  border-radius: var(--r, 16px); user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+.anagram-hud { display: flex; justify-content: space-between; align-items: center; font: 700 1rem var(--font-title, sans-serif); }
+.anagram-score { color: #2B54B0; }
+.anagram-low { color: #E92A2F; animation: anagram-pulse .6s infinite alternate; }
+.anagram-bar { height: 8px; background: var(--line, #e2e7f0); border-radius: 99px; overflow: hidden; margin: 10px 0; }
+.anagram-bar i { display: block; height: 100%; background: linear-gradient(90deg, #18875A, #F9C71D); transition: width .1s linear; }
+.anagram-hint { position: relative; text-align: center; background: var(--yellow-soft, #fff4d1); border-radius: 999px; padding: .4rem .8rem; font-size: .92rem; }
+.anagram-delta { position: absolute; right: 10px; top: 4px; font-weight: 800; animation: anagram-float .8s ease-out forwards; }
+.anagram-good { color: #18875A; }
+.anagram-bad { color: #E92A2F; }
+.anagram-slots { display: flex; justify-content: center; gap: 4px; margin: 18px 0 6px; flex-wrap: nowrap; }
+.anagram-slot { flex: 0 1 40px; min-width: 0; height: 46px; border: 0; border-bottom: 3px solid var(--muted, #5e6a84); background: var(--surface-2, #f6f8fc);
+  border-radius: 8px 8px 4px 4px; color: var(--ink, #101831); font: 800 clamp(1rem, 5.5vw, 1.5rem) var(--font-title, sans-serif); padding: 0; cursor: pointer; }
+.anagram-filled { background: var(--blue-soft, #eaf0fb); border-bottom-color: #2B54B0; animation: anagram-pop .15s ease-out; }
+.anagram-win .anagram-slot { background: #18875A; color: #fff; border-bottom-color: #0c5338; }
+.anagram-shake { animation: anagram-shake .35s; }
+.anagram-shake .anagram-slot { background: var(--red-soft, #fdecec); border-bottom-color: #E92A2F; }
+.anagram-answer { min-height: 1.6rem; text-align: center; font: 800 1.05rem var(--font-title, sans-serif); }
+.anagram-tiles { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 10px 0 14px; min-height: 120px; align-content: flex-start; }
+.anagram-tile { width: 52px; height: 56px; border: 0; border-radius: 12px; cursor: pointer; background: #2B54B0; color: #fff;
+  font: 800 1.6rem var(--font-title, sans-serif); box-shadow: 0 4px 0 #0E2A6B; transition: transform .08s, opacity .15s; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.anagram-tile:active { transform: translateY(2px); box-shadow: 0 2px 0 #0E2A6B; }
+.anagram-tile:disabled { opacity: .18; cursor: default; box-shadow: none; }
+.anagram-actions { display: flex; gap: 10px; }
+.anagram-btn { flex: 1; min-height: 44px; border: 0; border-radius: 12px; background: var(--surface-3, #e8edf6); color: var(--ink, #101831); font: 700 .95rem var(--font-title, sans-serif); cursor: pointer; }
+.anagram-btn-skip { background: var(--yellow-soft, #fff4d1); }
+.anagram-over { position: absolute; left: 14%; right: 14%; top: 40%; padding: .7rem; border-radius: 14px; text-align: center; background: #E92A2F; color: #fff; font: 800 1.2rem var(--font-title, sans-serif); box-shadow: 0 6px 18px rgba(0,0,0,.3); }
+@keyframes anagram-pulse { to { opacity: .55; } }
+@keyframes anagram-float { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-16px); } }
+@keyframes anagram-pop { from { transform: scale(.7); } to { transform: scale(1); } }
+@keyframes anagram-shake { 0%,100% { translate: 0 } 25% { translate: -6px 0 } 75% { translate: 6px 0 } }

@@ -1,0 +1,28 @@
+.verse { width: 100%; max-width: 480px; margin: 0 auto; padding: 12px; box-sizing: border-box;
+  background: var(--surface, #fff); color: var(--ink, #101831); border: 1px solid var(--line, #e2e7f0);
+  border-radius: var(--r, 16px); user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+.verse-hud { display: flex; justify-content: space-between; align-items: center; font: 700 1rem var(--font-title, sans-serif); }
+.verse-lives b { color: #E92A2F; margin-right: 2px; transition: opacity .2s; }
+.verse-lives b.verse-lost { opacity: .2; filter: grayscale(1); }
+.verse-bonus { font-size: .8rem; color: var(--muted, #5e6a84); }
+.verse-score { color: #2B54B0; }
+.verse-ref { margin: 10px 0 6px; text-align: center; font: 800 1.15rem var(--font-title, sans-serif); color: var(--blue-ink, #1C3F8C); }
+.verse-text { position: relative; min-height: 96px; padding: 10px 12px; border-radius: 12px; background: var(--blue-soft, #eaf0fb);
+  font-size: 1.05rem; line-height: 1.45; font-weight: 700; transition: background .2s; }
+.verse-text em { color: var(--muted, #5e6a84); font-weight: 600; }
+.verse-in { animation: verse-in .2s ease-out; }
+.verse-ok { background: var(--green-soft, #e3f5ec); }
+.verse-fail { background: var(--red-soft, #fdecec); }
+.verse-missing { color: #E92A2F; }
+.verse-gain { position: absolute; right: 10px; bottom: -12px; background: #18875A; color: #fff; border-radius: 999px; padding: .15rem .7rem;
+  font: 800 .9rem var(--font-title, sans-serif); animation: verse-in .25s ease-out; }
+.verse-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 7px; margin-top: 18px; }
+.verse-chip { border: 0; border-radius: 10px; padding: .5rem .7rem; min-height: 40px; cursor: pointer; background: #2B54B0; color: #fff;
+  font: 700 1rem var(--font, sans-serif); box-shadow: 0 3px 0 #0E2A6B; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: opacity .15s, transform .08s; }
+.verse-chip:active { transform: translateY(2px); box-shadow: 0 1px 0 #0E2A6B; }
+.verse-used { opacity: .15; box-shadow: none; }
+.verse-chip:disabled { cursor: default; }
+.verse-shake { background: #E92A2F; box-shadow: 0 3px 0 #8f1418; animation: verse-shake .35s; }
+.verse-over { margin-top: 12px; text-align: center; font-weight: 800; color: #E92A2F; }
+@keyframes verse-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@keyframes verse-shake { 0%,100% { translate: 0 } 25% { translate: -6px 0 } 75% { translate: 6px 0 } }

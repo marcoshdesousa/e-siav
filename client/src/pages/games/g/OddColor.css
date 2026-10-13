@@ -1,0 +1,25 @@
+.oddcolor { width: 100%; max-width: 480px; margin: 0 auto; padding: 14px; box-sizing: border-box;
+  background: var(--surface-2, #141B30); color: var(--ink, #fff); border-radius: var(--r, 16px);
+  border: 1px solid var(--line, transparent); user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+.oddcolor-hud { display: flex; justify-content: space-between; align-items: center; font: 600 .95rem var(--font-title, sans-serif); color: var(--muted, #c9d3ee); }
+.oddcolor-hud b { color: var(--ink, #fff); }
+.oddcolor-hud span { position: relative; }
+.oddcolor-low b { color: #E92A2F; }
+.oddcolor-pen { position: absolute; left: 50%; top: -2px; color: #E92A2F; font-style: normal; font-weight: 800; pointer-events: none;
+  animation: oddcolor-float .8s ease-out forwards; }
+.oddcolor-bar { height: 8px; background: var(--surface-3, #26304A); border-radius: 99px; overflow: hidden; margin: 10px 0 12px; }
+.oddcolor-bar i { display: block; height: 100%; width: 100%; transform-origin: left; transition: transform .1s linear;
+  background: linear-gradient(90deg, #E92A2F, #F9C71D 35%, #18875A); }
+.oddcolor-grid { display: grid; width: 100%; max-width: 420px; aspect-ratio: 1; margin: 0 auto; }
+.oddcolor-ok { animation: oddcolor-pop .18s ease-out; }
+.oddcolor-cell { border: 0; padding: 0; margin: 0; width: 100%; height: 100%; cursor: pointer; min-width: 0; min-height: 0;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: transform .08s; }
+.oddcolor-cell:active { transform: scale(.94); }
+.oddcolor-cell:disabled { cursor: default; }
+.oddcolor-wrong { animation: oddcolor-shake .35s; box-shadow: 0 0 0 3px #E92A2F; }
+.oddcolor-reveal { box-shadow: 0 0 0 4px #F9C71D, 0 0 18px #F9C71D; animation: oddcolor-blink .5s ease-in-out infinite alternate; z-index: 1; }
+.oddcolor-tip { margin: 12px 0 0; text-align: center; font-size: .88rem; color: var(--muted, #b9c6e8); }
+@keyframes oddcolor-shake { 0%,100% { translate: 0 } 25% { translate: -5px 0 } 75% { translate: 5px 0 } }
+@keyframes oddcolor-pop { from { transform: scale(.96); } to { transform: scale(1); } }
+@keyframes oddcolor-blink { from { transform: scale(1); } to { transform: scale(1.08); } }
+@keyframes oddcolor-float { from { opacity: 1; transform: translate(-50%, 0); } to { opacity: 0; transform: translate(-50%, -18px); } }

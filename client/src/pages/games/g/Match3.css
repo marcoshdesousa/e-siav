@@ -1,0 +1,29 @@
+.match3 { width: 100%; margin: 0 auto; background: #0B1430; color: #fff; border-radius: 16px; padding: 10px; box-sizing: border-box; user-select: none; -webkit-user-select: none; }
+.match3-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 15px; }
+.match3-top b { color: #F9C71D; }
+.match3-warn b { color: #E92A2F; }
+.match3-board { position: relative; width: min(100%, 420px); aspect-ratio: 1; margin: 10px auto 0; background: repeating-conic-gradient(#12204A 0 25%, #172A5C 0 50%) 0 0 / 25% 25%; border: 3px solid #0E2A6B; border-radius: 12px; overflow: hidden; touch-action: none; cursor: pointer; box-sizing: content-box; }
+.match3-slot { position: absolute; width: 12.5%; height: 12.5%; transition: left .18s ease-out, top .3s cubic-bezier(.3, 0, .6, 1.3); z-index: 1; }
+.match3-gem { position: absolute; inset: 9%; transition: transform .2s, opacity .2s; }
+.match3-gem span { position: absolute; inset: 0; display: block; }
+.match3-new { animation: match3-drop .32s cubic-bezier(.3, 0, .6, 1.2) both; }
+@keyframes match3-drop { from { transform: translateY(calc(var(--from) * 112%)); } to { transform: translateY(0); } }
+.match3-sel { animation: match3-pulse .7s ease-in-out infinite; }
+.match3-sel span { filter: brightness(1.3) drop-shadow(0 0 6px #fff); }
+@keyframes match3-pulse { 50% { transform: scale(1.12); } }
+.match3-gem.match3-dying { animation: match3-die .22s ease-in both; }
+@keyframes match3-die { to { transform: scale(0) rotate(45deg); opacity: 0; } }
+.match3-cur { position: absolute; width: 12.5%; height: 12.5%; box-sizing: border-box; border: 2px solid rgba(127, 178, 255, .5); border-radius: 8px; pointer-events: none; transition: left .1s, top .1s; }
+/* Formas e cores das joias */
+.match3-t0 span { background: radial-gradient(circle at 35% 30%, #FFB3B3, #E92A2F 55%, #8E1015); border-radius: 50%; }
+.match3-t1 span { background: linear-gradient(135deg, #FFF2B0, #F9C71D 50%, #C99400); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+.match3-t2 span { background: linear-gradient(135deg, #B9F5CF, #3CC46E 50%, #127245); clip-path: polygon(25% 3%, 75% 3%, 100% 50%, 75% 97%, 25% 97%, 0 50%); }
+.match3-t3 span { background: linear-gradient(135deg, #CFE0FF, #2F7BFF 50%, #143E9C); border-radius: 22%; inset: 6%; }
+.match3-t4 span { background: linear-gradient(180deg, #E8CCFF, #A66CE0 55%, #5B2A8E); clip-path: polygon(50% 2%, 100% 92%, 0 92%); }
+.match3-t5 span { background: linear-gradient(135deg, #FFD9B8, #F58A3A 50%, #A84A0A); clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 92%, 50% 71%, 21% 92%, 32% 57%, 2% 35%, 39% 35%); }
+.match3-pop { position: absolute; left: 50%; top: 40%; z-index: 4; transform: translate(-50%, -50%); font-size: 24px; font-weight: 800; color: #F9C71D; text-shadow: 0 2px 6px rgba(0, 0, 0, .7); pointer-events: none; white-space: nowrap; animation: match3-float .9s ease-out both; }
+@keyframes match3-float { 0% { opacity: 0; transform: translate(-50%, -30%) scale(.7); } 20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); } 100% { opacity: 0; transform: translate(-50%, -120%) scale(1); } }
+.match3-msg { position: absolute; inset: 0; z-index: 5; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background: rgba(11, 20, 48, .72); font-size: 22px; text-align: center; padding: 10px; animation: match3-in .25s ease-out; }
+.match3-msg span { font-size: 16px; color: #5BD38A; font-weight: 700; }
+@keyframes match3-in { from { opacity: 0; } to { opacity: 1; } }
+.match3-hint { text-align: center; font-size: 12px; opacity: .7; margin: 8px 0 0; }

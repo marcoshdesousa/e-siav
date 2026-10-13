@@ -1,0 +1,14 @@
+.flow { width: 100%; margin: 0 auto; background: #0B1430; color: #fff; border-radius: 16px; padding: 10px; box-sizing: border-box; user-select: none; -webkit-user-select: none; }
+.flow-top, .flow-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; flex-wrap: wrap; }
+.flow-foot { justify-content: center; min-height: 22px; }
+.flow-top b, .flow-foot b { color: #F9C71D; }
+.flow-warn b { color: #E92A2F; }
+.flow-hint-on { color: #5BD38A; font-weight: 700; }
+.flow-wrap { width: min(100%, 400px); margin: 10px auto; }
+.flow-board { position: relative; width: 100%; aspect-ratio: 1; background: #0F1B3D; border: 3px solid #0E2A6B; border-radius: 12px; overflow: hidden; touch-action: none; cursor: pointer; box-sizing: border-box; }
+.flow-svg { width: 100%; height: 100%; display: block; }
+.flow-solved { animation: flow-glow .7s ease-out; }
+@keyframes flow-glow { 0% { box-shadow: 0 0 0 rgba(91, 211, 138, 0); } 50% { box-shadow: 0 0 30px rgba(91, 211, 138, .9); } 100% { box-shadow: 0 0 0 rgba(91, 211, 138, 0); } }
+.flow-msg { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background: rgba(11, 20, 48, .6); font-size: 22px; text-align: center; padding: 10px; animation: flow-in .25s ease-out; }
+.flow-msg span { font-size: 15px; color: #5BD38A; font-weight: 700; }
+@keyframes flow-in { from { opacity: 0; } to { opacity: 1; } }

@@ -1,0 +1,29 @@
+.compassgame { width: 100%; max-width: 480px; margin: 0 auto; padding: 12px; box-sizing: border-box;
+  background: var(--surface, #fff); color: var(--ink, #101831); border: 1px solid var(--line, #e2e7f0);
+  border-radius: var(--r, 16px); user-select: none; -webkit-user-select: none; }
+.compassgame-hud { display: flex; justify-content: space-between; align-items: center; font: 700 1rem var(--font-title, sans-serif); }
+.compassgame-score { color: #2B54B0; }
+.compassgame-bar { height: 8px; background: var(--line, #e2e7f0); border-radius: 99px; overflow: hidden; margin: 8px 0; }
+.compassgame-bar i { display: block; height: 100%; background: linear-gradient(90deg, #E92A2F, #F9C71D, #18875A); }
+.compassgame-ask { position: relative; text-align: center; padding: .5rem; border-radius: 999px; background: var(--blue-soft, #eaf0fb);
+  font: 700 1.15rem var(--font-title, sans-serif); }
+.compassgame-ask b { color: #E92A2F; letter-spacing: .04em; }
+.compassgame-ask-bad { background: var(--red-soft, #fdecec); color: var(--red-ink, #C0111A); }
+.compassgame-gain { position: absolute; right: 14px; top: 8px; color: #18875A; font-weight: 800; animation: compassgame-float .7s ease-out forwards; }
+.compassgame-svg { display: block; width: min(100%, 360px); height: auto; margin: 10px auto 0; touch-action: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.compassgame-ring { fill: #0E2A6B; }
+.compassgame-ring2 { fill: #13357F; stroke: #F9C71D; stroke-width: 1.5; }
+.compassgame-rose { transition: transform .35s cubic-bezier(.3, .8, .4, 1); }
+.compassgame-tick { stroke: rgba(255, 255, 255, .45); stroke-width: 1.2; }
+.compassgame-a1 { fill: #F2F4F9; }
+.compassgame-a2 { fill: #A9B6D3; }
+.compassgame-n1 { fill: #E92A2F; }
+.compassgame-n2 { fill: #A3161B; }
+.compassgame-right .compassgame-a1, .compassgame-right .compassgame-n1 { fill: #5BD38A; }
+.compassgame-right .compassgame-a2, .compassgame-right .compassgame-n2 { fill: #18875A; }
+.compassgame-wrong .compassgame-a1, .compassgame-wrong .compassgame-n1 { fill: #FF8A8D; }
+.compassgame-wrong .compassgame-a2, .compassgame-wrong .compassgame-n2 { fill: #E92A2F; }
+.compassgame-nlabel { fill: #fff; stroke: #A3161B; stroke-width: 3px; paint-order: stroke; font: 800 15px var(--font-title, sans-serif); text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
+.compassgame-hub { fill: #F9C71D; stroke: #0E2A6B; stroke-width: 2; }
+.compassgame-help { text-align: center; color: var(--muted, #5e6a84); font-size: .82rem; margin: 8px 0 0; }
+@keyframes compassgame-float { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-16px); } }

@@ -1,0 +1,31 @@
+.battleship { width: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: .45rem; padding: .3rem 0; user-select: none; -webkit-user-select: none; }
+.battleship-status { font-family: var(--font-title); font-weight: 700; font-size: 1rem; color: var(--ink); padding: .4rem 1rem; border-radius: 999px; background: var(--blue-soft); text-align: center; }
+.battleship-status-win { background: var(--green-soft); }
+.battleship-status-lose { background: var(--red-soft); }
+.battleship-info { display: flex; gap: 1rem; font-size: .85rem; color: var(--muted); }
+.battleship-info b { color: var(--ink); }
+.battleship-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; padding: 5px; border-radius: 12px; background: #0E2A6B; box-sizing: border-box; }
+.battleship-enemy { width: min(100%, 310px); aspect-ratio: 1; box-shadow: 0 6px 18px rgba(14, 42, 107, .3); }
+.battleship-mine { width: 124px; height: 124px; flex: none; gap: 1px; padding: 4px; border-radius: 8px; }
+.battleship-cell { border: 0; padding: 0; margin: 0; min-width: 0; min-height: 0; border-radius: 3px; background: #2B54B0; color: #fff; display: grid; place-items: center; font-size: 1rem; line-height: 1; font-weight: 800; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+button.battleship-cell { cursor: pointer; }
+button.battleship-cell:not(.battleship-hit):not(.battleship-miss):hover { background: #3d6ad0; box-shadow: inset 0 0 0 2px #F9C71D; }
+.battleship-busy button.battleship-cell { cursor: wait; }
+.battleship-mine .battleship-cell { font-size: .6rem; border-radius: 2px; }
+.battleship-miss { background: #1d3c82; color: #7FB2FF; }
+.battleship-ship { background: #8A94AA; }
+.battleship-hit { background: #E92A2F; color: #F9C71D; animation: battleship-boom .35s ease-out; }
+.battleship-sunk { background: #101831; color: #E92A2F; }
+.battleship-reveal { background: #8A94AA; }
+.battleship-lastshot { box-shadow: inset 0 0 0 2px #F9C71D; }
+.battleship-note { min-height: 1.2em; font-size: .85rem; color: var(--muted); text-align: center; }
+.battleship-bottom { display: flex; gap: .9rem; align-items: center; width: min(100%, 310px); }
+.battleship-side { flex: 1; display: flex; flex-direction: column; gap: .45rem; min-width: 0; }
+.battleship-fleet { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.battleship-fleet small { width: 100%; font-size: .72rem; color: var(--muted); }
+.battleship-pill { display: inline-block; height: 9px; border-radius: 5px; background: #E92A2F; }
+.battleship-pill-me { background: #2B54B0; }
+.battleship-pill-sunk { background: var(--line); opacity: .6; }
+.battleship-reroll { border: 0; border-radius: 999px; padding: .45rem .7rem; background: #F9C71D; color: #101831; font-weight: 700; font-size: .82rem; cursor: pointer; touch-action: manipulation; }
+.battleship-reroll:active { transform: scale(.96); }
+@keyframes battleship-boom { from { transform: scale(1.35); } to { transform: scale(1); } }

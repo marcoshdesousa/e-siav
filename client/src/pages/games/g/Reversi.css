@@ -1,0 +1,19 @@
+.reversi { width: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: .55rem; padding: .4rem 0; user-select: none; -webkit-user-select: none; }
+.reversi-status { font-family: var(--font-title); font-weight: 700; font-size: 1rem; color: var(--ink); padding: .45rem 1rem; border-radius: 999px; background: var(--blue-soft); text-align: center; }
+.reversi-status-win { background: var(--green-soft); }
+.reversi-status-lose { background: var(--red-soft); }
+.reversi-status-draw { background: var(--yellow-soft); }
+.reversi-board { width: min(100%, 440px); aspect-ratio: 1; display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr); gap: 2px; padding: 6px; background: #0E2A6B; border-radius: 12px; box-shadow: 0 6px 18px rgba(14, 42, 107, .3); }
+.reversi-sq { position: relative; border: 0; padding: 0; margin: 0; background: #18875A; border-radius: 3px; display: grid; place-items: center; cursor: pointer; min-width: 0; min-height: 0; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.reversi-busy .reversi-sq { cursor: wait; }
+.reversi-last { background: #22A06C; }
+.reversi-disc { width: 82%; height: 82%; border-radius: 50%; box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .25), 0 2px 3px rgba(0, 0, 0, .35); }
+.reversi-p { background: radial-gradient(circle at 35% 30%, #4a5677, #101831 70%); }
+.reversi-c { background: radial-gradient(circle at 35% 30%, #fff, #dfe4ee 70%); }
+.reversi-flip { animation: reversi-flip .35s ease-out; }
+.reversi-hint { width: 26%; height: 26%; border-radius: 50%; background: rgba(249, 199, 29, .85); box-shadow: 0 0 6px rgba(249, 199, 29, .8); pointer-events: none; }
+.reversi-legend { display: flex; gap: 1.2rem; color: var(--muted); font-size: .9rem; align-items: center; }
+.reversi-legend span { display: flex; align-items: center; gap: .35rem; }
+.reversi-mini { display: inline-block; width: 14px; height: 14px; border-radius: 50%; border: 1px solid var(--line); }
+.reversi-note { min-height: 1.2em; font-size: .85rem; color: var(--muted); text-align: center; }
+@keyframes reversi-flip { 0% { transform: scaleX(1); } 50% { transform: scaleX(0); } 100% { transform: scaleX(1); } }

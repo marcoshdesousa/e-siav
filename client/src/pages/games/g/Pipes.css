@@ -1,0 +1,27 @@
+.pipes { width: 100%; margin: 0 auto; background: #0B1430; color: #fff; border-radius: 16px; padding: 10px; box-sizing: border-box; user-select: none; -webkit-user-select: none; }
+.pipes-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; flex-wrap: wrap; }
+.pipes-top b { color: #F9C71D; }
+.pipes-warn b { color: #E92A2F; }
+.pipes-wrap { display: grid; grid-template-columns: 26px 1fr 26px; margin: 10px auto 0; width: min(100%, 430px); }
+.pipes-side { position: relative; }
+.pipes-tap, .pipes-drain { position: absolute; transform: translateY(-50%); display: flex; align-items: center; width: 100%; }
+.pipes-tap span, .pipes-drain span { font-size: 16px; line-height: 1; }
+.pipes-stub { flex: 1; height: 10px; background: #3A4A70; border-radius: 3px; transition: background .3s .2s; }
+.pipes-stub.pipes-wet { background: #3FA9F5; }
+.pipes-board { position: relative; display: grid; gap: 3px; aspect-ratio: 1; background: #0E2A6B; border-radius: 12px; padding: 4px; box-sizing: border-box; }
+.pipes-cell { position: relative; border: 0; padding: 0; border-radius: 8px; background: #16224A; cursor: pointer; overflow: hidden; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.pipes-cell:active { background: #1E2E5E; }
+.pipes-cur { outline: 2px solid rgba(127, 178, 255, .8); outline-offset: -2px; }
+.pipes-rot { position: absolute; inset: 0; transition: transform .16s ease-out; }
+.pipes-svg { width: 100%; height: 100%; display: block; }
+.pipes-out { stroke: #070D22; stroke-width: 30; fill: none; stroke-linecap: butt; }
+.pipes-in { stroke: #7A86A6; stroke-width: 18; fill: none; stroke-linecap: butt; transition: stroke .2s; }
+.pipes-joint { fill: #7A86A6; stroke: #070D22; stroke-width: 6; transition: fill .2s; }
+.pipes-wet .pipes-in { stroke: #3FA9F5; }
+.pipes-wet .pipes-joint { fill: #3FA9F5; }
+.pipes-solved .pipes-wet .pipes-in, .pipes-solved .pipes-wet .pipes-joint { animation: pipes-water .6s ease-out var(--d) both; }
+@keyframes pipes-water { 0% { stroke: #7A86A6; fill: #7A86A6; } 50% { stroke: #B8E4FF; fill: #B8E4FF; } 100% { stroke: #3FA9F5; fill: #3FA9F5; } }
+.pipes-msg { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background: rgba(11, 20, 48, .6); border-radius: 12px; font-size: 22px; text-align: center; padding: 10px; animation: pipes-in .3s ease-out .5s both; pointer-events: none; }
+.pipes-msg span { font-size: 15px; color: #5BD38A; font-weight: 700; }
+@keyframes pipes-in { from { opacity: 0; } to { opacity: 1; } }
+.pipes-hint { text-align: center; font-size: 12px; opacity: .7; margin: 8px 0 0; }

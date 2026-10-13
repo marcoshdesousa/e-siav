@@ -1,0 +1,22 @@
+.checkers { width: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: .6rem; padding: .4rem 0; user-select: none; -webkit-user-select: none; }
+.checkers-status { font-family: var(--font-title); font-weight: 700; font-size: 1rem; color: var(--ink); padding: .45rem 1rem; border-radius: 999px; background: var(--blue-soft); text-align: center; }
+.checkers-status-win { background: var(--green-soft); }
+.checkers-status-lose, .checkers-status-cap { background: var(--red-soft); }
+.checkers-status-draw { background: var(--yellow-soft); }
+.checkers-board { width: min(100%, 440px); aspect-ratio: 1; display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr); border: 6px solid #0E2A6B; border-radius: 10px; overflow: hidden; box-shadow: 0 6px 18px rgba(14, 42, 107, .3); }
+.checkers-sq { position: relative; border: 0; padding: 0; margin: 0; display: grid; place-items: center; min-width: 0; min-height: 0; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.checkers-light { background: #E9EEF8; }
+.checkers-dark { background: #3C5A99; cursor: pointer; }
+.checkers-busy .checkers-dark { cursor: wait; }
+.checkers-last { background: #56709F; }
+.checkers-sel { background: #18875A; }
+.checkers-target::after { content: ''; position: absolute; width: 30%; height: 30%; border-radius: 50%; background: #5BD38A; box-shadow: 0 0 8px #5BD38A; pointer-events: none; }
+.checkers-must { box-shadow: inset 0 0 0 3px #F9C71D; }
+.checkers-pc { width: 78%; height: 78%; border-radius: 50%; display: grid; place-items: center; pointer-events: none; transition: opacity .2s; }
+.checkers-w { background: radial-gradient(circle at 35% 30%, #fff, #dfe4ee 60%, #b8c1d4); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .18), 0 2px 3px rgba(0, 0, 0, .35); }
+.checkers-b { background: radial-gradient(circle at 35% 30%, #ff6b6f, #E92A2F 60%, #a8161a); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .25), 0 2px 3px rgba(0, 0, 0, .35); }
+.checkers-pc b { font-size: clamp(.9rem, 5vw, 1.5rem); line-height: 1; color: #F9C71D; text-shadow: 0 1px 1px rgba(0, 0, 0, .6); font-family: 'Segoe UI Symbol', 'DejaVu Sans', serif; }
+.checkers-ghost { opacity: .35; }
+.checkers-legend { display: flex; gap: 1.2rem; color: var(--muted); font-size: .9rem; align-items: center; }
+.checkers-legend span { display: flex; align-items: center; gap: .35rem; }
+.checkers-mini { display: inline-block; width: 14px; height: 14px; border-radius: 50%; }
