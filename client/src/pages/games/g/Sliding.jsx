@@ -1,6 +1,7 @@
 // Quebra-cabeça 15: deslize as peças até ordenar de 1 a 15.
 import { useEffect, useReducer, useRef } from 'react';
 import { rand, useKeys, useSwipe } from '../kit.js';
+import { sfx } from '../audio.js';
 import './Sliding.css';
 
 const N = 4;
@@ -64,7 +65,9 @@ export default function Game({ onScore, onEnd }) {
     let cur = e;
     while (cur !== i) { b[cur] = b[cur + step]; cur += step; s.moves += 1; }
     b[i] = 0;
+    sfx('move');
     if (isSolved(b)) {
+      sfx('point');
       s.over = true; s.won = true;
       s.secs = Math.floor((Date.now() - s.start) / 1000);
       const final = calcScore(s.moves, s.secs);

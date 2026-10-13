@@ -1,6 +1,7 @@
 // Empilhar: solte o bloco em cima da torre. O que sobrar para fora cai.
 import { useRef } from 'react';
 import { COLORS, useKeys, useRaf, useCanvas } from '../kit.js';
+import { sfx } from '../audio.js';
 import './Stack.css';
 
 const W = 300; const H = 440;
@@ -37,6 +38,7 @@ export default function Game({ onScore, onEnd }) {
     if (overlap <= 0) {
       s.debris.push({ x: c.x, w: c.w, level, vy: 0, dy: 0, rot: 0, vr: (c.x < prev.x ? -1 : 1) * 1.5, color: colorOf(level) });
       s.over = true;
+      sfx('hit');
       s.endT = 1.1;
       s.msg = 'Errou!'; s.msgT = 1.5;
       return;
@@ -44,6 +46,7 @@ export default function Game({ onScore, onEnd }) {
     let nb;
     if (Math.abs(c.x - prev.x) <= 3) {
       s.combo += 1;
+      sfx('point');
       let w = prev.w;
       if (s.combo >= 3) w = Math.min(BASE_W, w + 6);
       nb = { x: prev.x - (w - prev.w) / 2, w };
@@ -52,6 +55,7 @@ export default function Game({ onScore, onEnd }) {
       s.flash = 0.25;
     } else {
       s.combo = 0;
+      sfx('tap');
       nb = { x: left, w: overlap };
       const cutX = c.x < prev.x ? c.x : right;
       const cutW = c.w - overlap;

@@ -1,6 +1,7 @@
 // Dominó contra o computador (duplo-seis, 7 pedras cada, o resto vai para o monte).
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { rand, shuffle } from '../kit.js';
+import { sfx } from '../audio.js';
 import './Domino.css';
 
 const PIPS = { 0: [], 1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8] };
@@ -91,6 +92,7 @@ export default function Game({ onScore, onEnd }) {
   useEffect(() => {
     if (!over) return undefined;
     cb.current.onScore?.(over.pts);
+    sfx(over.pts === 3 ? 'win' : over.pts === 0 ? 'lose' : 'tap');
     const t = setTimeout(() => {
       if (ended.current) return;
       ended.current = true;
@@ -98,6 +100,9 @@ export default function Game({ onScore, onEnd }) {
     }, 2200);
     return () => clearTimeout(t);
   }, [over]);
+
+  // Som a cada pedra colocada na mesa (jogador ou computador).
+  useEffect(() => { if (s.chain.length) sfx('tap'); }, [s.chain.length]);
 
   // Vez do computador: uma ação por vez (jogar, comprar ou passar).
   useEffect(() => {
@@ -144,6 +149,7 @@ export default function Game({ onScore, onEnd }) {
   };
   const buy = () => {
     if (!myTurn || playable.length || !s.monte.length) return;
+    sfx('flip');
     setS((st) => ({ ...st, hand: [...st.hand, st.monte[0]], monte: st.monte.slice(1), note: 'Você comprou uma pedra.' }));
   };
   const pass = () => {

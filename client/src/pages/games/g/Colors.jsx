@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { rand, shuffle } from '../kit.js';
+import { sfx } from '../audio.js';
 import './Colors.css';
 
 const COLS = [
@@ -36,6 +37,7 @@ export default function Game({ onScore, onEnd }) {
     const s = st.current;
     if (s.over) return;
     s.over = true;
+    sfx('error');
     clearTimeout(timer.current);
     setOver({ picked, why });
     cb.current.onEnd(Math.max(0, s.score));
@@ -65,6 +67,7 @@ export default function Game({ onScore, onEnd }) {
     const frac = Math.max(0, 1 - (Date.now() - s.start) / q.limit);
     const bonus = Math.round(frac * 10);
     s.score += 10 + bonus;
+    sfx('point');
     s.n += 1;
     setScore(s.score);
     setPop({ id: s.n, text: bonus >= 7 ? `+${10 + bonus} Rápido!` : `+${10 + bonus}` });

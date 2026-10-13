@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronsDown, RotateCw } from 'lucide-react';
 import { COLORS, shuffle, useKeys, useRaf, useCanvas } from '../kit.js';
+import { sfx } from '../audio.js';
 import './Tetris.css';
 
 const COLS = 10; const ROWS = 20; const CELL = 20;
@@ -97,7 +98,8 @@ export default function Game({ onScore, onEnd }) {
       s.lines += cleared;
       s.level = 1 + Math.floor(s.lines / 10);
       s.flash = 0.15;
-    }
+      sfx('point');
+    } else sfx('tap');
     s.acc = 0; s.lockT = 0; s.resets = 0;
     spawn(s);
   };
@@ -117,13 +119,13 @@ export default function Game({ onScore, onEnd }) {
     const p = s.piece;
     if (a === 'left' || a === 'right') {
       const dx = a === 'left' ? -1 : 1;
-      if (!collides(s, p.m, p.x + dx, p.y)) { p.x += dx; resetLock(s); }
+      if (!collides(s, p.m, p.x + dx, p.y)) { p.x += dx; resetLock(s); sfx('move'); }
     } else if (a === 'rotate') {
       if (p.type === 'O') return;
       const m = rotate(p.m);
       const kicks = p.type === 'I' ? [[0, 0], [-1, 0], [1, 0], [-2, 0], [2, 0], [0, -1]] : [[0, 0], [-1, 0], [1, 0], [0, -1], [-1, -1], [1, -1]];
       for (const [kx, ky] of kicks) {
-        if (!collides(s, m, p.x + kx, p.y + ky)) { p.m = m; p.x += kx; p.y += ky; resetLock(s); break; }
+        if (!collides(s, m, p.x + kx, p.y + ky)) { p.m = m; p.x += kx; p.y += ky; resetLock(s); sfx('move'); break; }
       }
     } else if (a === 'down') {
       s.acc = 0;

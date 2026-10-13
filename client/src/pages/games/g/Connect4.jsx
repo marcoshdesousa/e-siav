@@ -1,6 +1,7 @@
 // Lig 4 contra o computador (7 colunas x 6 linhas): uma partida por montagem.
 import { useEffect, useRef, useState } from 'react';
 import { pick, rand } from '../kit.js';
+import { sfx } from '../audio.js';
 import './Connect4.css';
 
 const W = 7; const H = 6;
@@ -121,6 +122,7 @@ export default function Game({ onScore, onEnd }) {
     if (!outcome) return undefined;
     const pts = outcome === 'win' ? 3 : outcome === 'draw' ? 1 : 0;
     cb.current.onScore?.(pts);
+    sfx(outcome === 'win' ? 'win' : outcome === 'lose' ? 'lose' : 'tap');
     const t = setTimeout(() => {
       if (ended.current) return;
       ended.current = true;
@@ -134,6 +136,7 @@ export default function Game({ onScore, onEnd }) {
     const t = setTimeout(() => {
       const c = cpuMove(board);
       const r = dropRow(board, c);
+      sfx('move');
       setBoard(place(board, c, C));
       setLast([r, c]);
       setTurn(P);
@@ -145,6 +148,7 @@ export default function Game({ onScore, onEnd }) {
     if (turn !== P || outcome || ended.current) return;
     const r = dropRow(board, c);
     if (r < 0) return;
+    sfx('tap');
     setBoard(place(board, c, P));
     setLast([r, c]);
     setTurn(C);

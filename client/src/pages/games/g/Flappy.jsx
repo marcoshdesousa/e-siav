@@ -1,6 +1,7 @@
 // Voo do pássaro: toque para bater as asas e passe entre os canos.
 import { useEffect, useRef, useState } from 'react';
 import { COLORS, useCanvas, useKeys, useRaf } from '../kit.js';
+import { sfx } from '../audio.js';
 
 const W = 360;
 const H = 480;
@@ -38,6 +39,7 @@ export default function Game({ onScore, onEnd }) {
     if (ended.current) return;
     if (!s.started) { s.started = true; s.nextPipe = 120; }
     s.vy = FLAP;
+    sfx('jump');
   };
 
   useKeys((k, down) => { if (down && (k === 'action' || k === 'up')) flap(); });
@@ -78,14 +80,15 @@ export default function Game({ onScore, onEnd }) {
       if (!p.scored && p.x + PIPE_W < BIRD_X - R) {
         p.scored = true;
         s.passed += 1;
+        sfx('point');
         onScore?.(s.passed);
       }
       // círculo x retângulos (com uma pequena folga para ser justo)
       const rr = R - 2;
       if (hit(BIRD_X, s.y, rr, p.x - 2, -1000, PIPE_W + 4, p.top + 1000)
-        || hit(BIRD_X, s.y, rr, p.x - 2, p.top + p.gap, PIPE_W + 4, 1000)) return finish();
+        || hit(BIRD_X, s.y, rr, p.x - 2, p.top + p.gap, PIPE_W + 4, 1000)) { sfx('hit'); return finish(); }
     }
-    if (s.y + R >= GROUND) { s.y = GROUND - R; return finish(); }
+    if (s.y + R >= GROUND) { s.y = GROUND - R; sfx('hit'); return finish(); }
     return undefined;
   };
 

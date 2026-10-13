@@ -1,6 +1,7 @@
 // Quiz bíblico e dos Desbravadores: 15 s por pergunta, três erros e acabou.
 import { useEffect, useRef, useState } from 'react';
 import { shuffle, useInterval } from '../kit.js';
+import { sfx } from '../audio.js';
 import './Quiz.css';
 
 // [pergunta, resposta certa, errada, errada, errada]
@@ -128,10 +129,12 @@ export default function Game({ onScore, onEnd }) {
     setPickd(opt);
     if (opt === cur.ok) {
       const g = 10 + Math.min(TIME, secs);
+      sfx('point');
       setGain(g);
       setScore((s) => s + g);
     } else {
       setGain(0);
+      sfx('error');
       setLives((l) => l - 1);
     }
   };

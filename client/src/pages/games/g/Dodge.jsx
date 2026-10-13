@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { COLORS, clamp, pointerPos, useCanvas, useKeys, useRaf } from '../kit.js';
+import { sfx } from '../audio.js';
 import './Dodge.css';
 
 const W = 360;
@@ -157,6 +158,7 @@ export default function Game({ onScore, onEnd }) {
       e.stars = e.stars.filter((s) => {
         if (Math.hypot(s.x - e.x, s.y - PY) < PR + 13) {
           e.starPts += 50;
+          sfx('coin');
           e.fx.push({ x: s.x, y: s.y, age: 0 });
           return false;
         }
@@ -166,6 +168,7 @@ export default function Game({ onScore, onEnd }) {
       if (score !== e.score) { e.score = score; cb.current.onScore(score); }
       if (e.rocks.some((r) => Math.hypot(r.x - e.x, r.y - PY) < r.r * 0.82 + PR * 0.8)) {
         e.over = true;
+        sfx('hit');
         cb.current.onEnd(Math.max(0, e.score));
       }
     }

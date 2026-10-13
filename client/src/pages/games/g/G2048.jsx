@@ -1,6 +1,7 @@
 // 2048: deslize (ou use as setas) para juntar números iguais.
 import { useEffect, useReducer, useRef } from 'react';
 import { rand, useKeys, useSwipe } from '../kit.js';
+import { sfx } from '../audio.js';
 import './G2048.css';
 
 const N = 4;
@@ -90,6 +91,7 @@ export default function Game({ onScore, onEnd }) {
     const res = slide(s.tiles, dir);
     if (!res.moved) return;
     s.tiles = addRandom(res.tiles);
+    sfx(res.gained ? 'point' : 'move');
     s.best = Math.max(s.best, ...s.tiles.map((t) => t.v));
     if (res.gained) { s.score += res.gained; cbs.current.onScore(s.score); }
     render();

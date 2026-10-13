@@ -1,0 +1,24 @@
+.hanoi { width: 100%; margin: 0 auto; background: #0B1430; color: #fff; border-radius: 16px; padding: 10px; box-sizing: border-box; user-select: none; -webkit-user-select: none; }
+.hanoi-top, .hanoi-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; flex-wrap: wrap; }
+.hanoi-top b, .hanoi-foot b { color: #F9C71D; }
+.hanoi-top small { opacity: .7; }
+.hanoi-board { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 10px 0; height: 250px; padding: 8px 4px; background: linear-gradient(#13245a, #0E2A6B); border-radius: 12px; }
+.hanoi-tower { position: relative; border: 0; background: transparent; padding: 0; cursor: pointer; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; border-radius: 10px; -webkit-tap-highlight-color: transparent; touch-action: manipulation; transition: background .15s; }
+.hanoi-tower:hover { background: rgba(255, 255, 255, .05); }
+.hanoi-cur { box-shadow: inset 0 0 0 2px rgba(127, 178, 255, .35); }
+.hanoi-sel { background: rgba(249, 199, 29, .12); }
+.hanoi-bad { animation: hanoi-shake .3s; background: rgba(233, 42, 47, .18); }
+.hanoi-goal .hanoi-base { background: #18875A; }
+.hanoi-pole { position: absolute; bottom: 10px; left: 50%; width: 8px; margin-left: -4px; height: 82%; background: #C9A15B; border-radius: 4px 4px 0 0; }
+.hanoi-stack { position: relative; z-index: 1; width: 100%; display: flex; flex-direction: column-reverse; align-items: center; gap: 2px; margin-bottom: 2px; }
+.hanoi-disk { height: 22px; border-radius: 11px; box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .22), inset 0 3px 0 rgba(255, 255, 255, .25); transition: transform .15s ease-out; }
+.hanoi-lift { transform: translateY(-26px); box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .22), 0 6px 10px rgba(0, 0, 0, .4); }
+.hanoi-drop { animation: hanoi-drop .18s ease-out; }
+.hanoi-base { width: 100%; height: 10px; border-radius: 5px; background: #8A6A35; }
+.hanoi-flag { position: absolute; top: 2px; right: 4px; font-size: 16px; }
+.hanoi-msg { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background: rgba(11, 20, 48, .7); border-radius: 12px; font-size: 20px; text-align: center; animation: hanoi-fade .25s; }
+.hanoi-msg span { color: #5BD38A; font-weight: 800; }
+.hanoi-hint { font-size: 12px; opacity: .7; }
+@keyframes hanoi-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+@keyframes hanoi-drop { from { transform: translateY(-14px); } to { transform: translateY(0); } }
+@keyframes hanoi-fade { from { opacity: 0; } to { opacity: 1; } }

@@ -1,6 +1,7 @@
 // Jogo da velha contra o computador: uma partida por montagem.
 import { useEffect, useRef, useState } from 'react';
 import { pick, rand } from '../kit.js';
+import { sfx } from '../audio.js';
 import './TicTacToe.css';
 
 const LINES = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
@@ -56,6 +57,7 @@ export default function Game({ onScore, onEnd }) {
     if (!outcome) return undefined;
     const pts = outcome === 'X' ? 3 : outcome === 'draw' ? 1 : 0;
     cb.current.onScore?.(pts);
+    sfx(outcome === 'X' ? 'win' : outcome === 'O' ? 'lose' : 'tap');
     const t = setTimeout(() => {
       if (ended.current) return;
       ended.current = true;
@@ -68,6 +70,7 @@ export default function Game({ onScore, onEnd }) {
   useEffect(() => {
     if (turn !== 'O' || outcome) return undefined;
     const t = setTimeout(() => {
+      sfx('move');
       setBoard((b) => {
         if (winner(b)) return b;
         const i = cpuMove(b);
@@ -82,6 +85,7 @@ export default function Game({ onScore, onEnd }) {
   const play = (i) => {
     if (turn !== 'X' || board[i] || w || ended.current) return;
     const nb = [...board]; nb[i] = 'X';
+    sfx('tap');
     setBoard(nb);
     setTurn('O');
   };

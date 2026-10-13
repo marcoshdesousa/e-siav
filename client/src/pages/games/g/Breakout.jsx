@@ -1,6 +1,7 @@
 // Quebra-tijolos: rebata a bola com a barra e quebre todos os tijolos. Cada fase a bola fica mais rápida.
 import { useEffect, useRef, useState } from 'react';
 import { COLORS, clamp, pointerPos, useCanvas, useKeys, useRaf } from '../kit.js';
+import { sfx } from '../audio.js';
 
 const W = 360;
 const H = 460;
@@ -105,6 +106,7 @@ export default function Game({ onScore, onEnd }) {
       b.vx = Math.cos(a) * b.speed;
       b.vy = Math.sin(a) * b.speed;
       b.y = PAD_Y - BALL_R;
+      sfx('tap');
     }
     // tijolos (no máximo um por passo, para a bola não atravessar tudo)
     for (const br of s.bricks) {
@@ -118,6 +120,7 @@ export default function Game({ onScore, onEnd }) {
       if (overX < overY) b.vx = b.x < br.x + BW / 2 ? -Math.abs(b.vx) : Math.abs(b.vx);
       else b.vy = b.y < br.y + BH / 2 ? -Math.abs(b.vy) : Math.abs(b.vy);
       br.hp -= 1;
+      sfx(br.hp <= 0 ? 'pop' : 'tap');
       if (br.hp <= 0) {
         br.alive = false;
         s.score += 10;
@@ -151,12 +154,14 @@ export default function Game({ onScore, onEnd }) {
     for (let i = 0; i < steps; i++) physics(dt / steps);
     if (s.ball.y - BALL_R > H) {
       s.lives -= 1;
+      sfx('hit');
       if (s.lives <= 0) { finish(); return; }
       resetBall();
       return;
     }
     if (s.bricks.every((br) => !br.alive)) {
       s.level += 1;
+      sfx('win');
       s.bricks = buildBricks(s.level);
       s.padW = padWidth(s.level);
       s.padX = clamp(s.padX, s.padW / 2, W - s.padW / 2);

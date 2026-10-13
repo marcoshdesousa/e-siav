@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { COLORS, rand } from '../kit.js';
+import { isMuted } from '../audio.js';
 import './Simon.css';
 
 const PADS = [
@@ -43,6 +44,7 @@ export default function Game({ onScore, onEnd }) {
     return a;
   };
   const beep = (freq, ms, type = 'sine') => {
+    if (isMuted()) return;
     const a = getAudio(false);
     if (!a) return;
     try {

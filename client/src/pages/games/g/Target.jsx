@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { COLORS, pointerPos, useCanvas, useRaf } from '../kit.js';
+import { sfx } from '../audio.js';
 import './Target.css';
 
 const W = 360;
@@ -129,11 +130,13 @@ export default function Game({ onScore, onEnd }) {
       const t = e.targets[best];
       const pts = frac < 1 / 3 ? 10 : frac < 2 / 3 ? 5 : 2;
       e.score += pts;
+      sfx(pts === 10 ? 'coin' : 'pop');
       e.targets.splice(best, 1);
       e.fx.push({ x: t.x, y: t.y, text: '+' + pts, color: pts === 10 ? COLORS.yellow : pts === 5 ? COLORS.lime : COLORS.sky, age: 0 });
       cb.current.onScore(e.score);
     } else {
       e.fx.push({ x, y, text: '−1', color: COLORS.red, age: 0 });
+      sfx('error');
       if (e.score > 0) { e.score -= 1; cb.current.onScore(e.score); }
     }
   };

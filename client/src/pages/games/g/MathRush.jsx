@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { pick, shuffle } from '../kit.js';
+import { sfx } from '../audio.js';
 import './MathRush.css';
 
 const START = 30000;
@@ -81,6 +82,7 @@ export default function Game({ onScore, onEnd }) {
     s.lock = true;
     if (ok) {
       s.correct += 1;
+      sfx('point');
       s.score += 10 + (q.level - 1) * 2;
       s.left += BONUS;
       setScore(s.score);
@@ -88,6 +90,7 @@ export default function Game({ onScore, onEnd }) {
       setDelta({ id: Date.now(), text: '+3s', ok: true });
     } else {
       s.left -= PENALTY;
+      sfx('error');
       setDelta({ id: Date.now(), text: '−5s', ok: false });
     }
     setLeft(Math.max(0, s.left));

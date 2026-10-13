@@ -1,6 +1,7 @@
 // Jogo da memória: 8 pares de emojis de acampamento, natureza e Bíblia.
 import { useEffect, useReducer, useRef } from 'react';
 import { shuffle } from '../kit.js';
+import { sfx } from '../audio.js';
 import './Memory.css';
 
 const POOL = ['⛺', '🔥', '🧭', '🌲', '🏕️', '📖', '⭐', '🐦', '🌄', '🍃', '🕊️', '🐑', '🌈', '🔦', '🛶', '🦉', '🐟'];
@@ -37,6 +38,7 @@ export default function Game({ onScore, onEnd }) {
     if (s.over || s.busy || card.up || card.done) return;
     if (!s.start) s.start = Date.now();
     card.up = true;
+    sfx('flip');
     s.open.push(card);
     if (s.open.length === 2) {
       s.moves += 1;
@@ -45,6 +47,7 @@ export default function Game({ onScore, onEnd }) {
         a.done = true; b.done = true;
         s.open = [];
         s.pairs += 1;
+        sfx('point');
         if (s.pairs === 8) {
           s.over = true;
           s.secs = Math.floor((Date.now() - s.start) / 1000);
@@ -54,6 +57,7 @@ export default function Game({ onScore, onEnd }) {
         }
       } else {
         s.busy = true;
+        later(() => sfx('error'), 150);
         later(() => {
           a.up = false; b.up = false;
           s.open = [];

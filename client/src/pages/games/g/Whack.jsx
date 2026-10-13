@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { pick } from '../kit.js';
+import { sfx } from '../audio.js';
 import './Whack.css';
 
 const DUR = 45000;
@@ -83,10 +84,12 @@ export default function Game({ onScore, onEnd }) {
       const pts = 10 + Math.min(e.combo, 10) * 2;
       e.combo += 1;
       e.score += pts;
+      sfx('pop');
       h.state = 'hit'; h.pts = pts; h.until = now + 320;
       cb.current.onScore(e.score);
     } else {
       h.state = 'boom'; h.until = now + 550;
+      sfx('hit');
       e.combo = 0;
       e.lives -= 1;
       if (e.lives <= 0) { finish(); return; }

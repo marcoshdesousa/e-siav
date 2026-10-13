@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { COLORS, clamp, rand, useCanvas, useKeys, useRaf } from '../kit.js';
 import DPad from '../DPad.jsx';
+import { sfx } from '../audio.js';
 
 const W = 360;
 const H = 400;
@@ -115,6 +116,7 @@ export default function Game({ onScore, onEnd }) {
   const loseLife = (fell, from) => {
     const s = st.current;
     s.lives -= 1;
+    sfx('hit');
     if (s.lives <= 0) { finish(); return; }
     s.inv = 2;
     s.msg = fell ? 'Caiu! -1 vida' : 'Ai! -1 vida';
@@ -157,6 +159,7 @@ export default function Game({ onScore, onEnd }) {
       p.onGround = false;
       p.groundT = 0;
       s.jumpBuf = 0;
+      sfx('jump');
     }
     p.vy = Math.min(p.vy + GRAV * dt, 900);
 
@@ -194,7 +197,7 @@ export default function Game({ onScore, onEnd }) {
 
     // moedas
     for (const c of s.coinsList) {
-      if (!c.taken && overlap(p, { x: c.x - 8, y: c.y - 8, w: 16, h: 16 })) { c.taken = true; s.coins += 1; }
+      if (!c.taken && overlap(p, { x: c.x - 8, y: c.y - 8, w: 16, h: 16 })) { c.taken = true; s.coins += 1; sfx('coin'); }
     }
     // inimigos
     for (const e of s.enemies) {
@@ -206,6 +209,7 @@ export default function Game({ onScore, onEnd }) {
       if (p.vy > 0 && prevBottom <= e.y + 10) {
         e.alive = false;
         s.stomps += 1;
+        sfx('pop');
         p.vy = s.jumpHeld ? -JUMP * 0.9 : -420;
         p.y = e.y - p.h;
       } else if (s.inv <= 0) {

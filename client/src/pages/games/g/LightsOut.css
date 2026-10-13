@@ -1,0 +1,15 @@
+.lightsout { width: 100%; margin: 0 auto; background: #0B1430; color: #fff; border-radius: 16px; padding: 10px; box-sizing: border-box; user-select: none; -webkit-user-select: none; }
+.lightsout-top, .lightsout-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; flex-wrap: wrap; }
+.lightsout-top b, .lightsout-foot b { color: #F9C71D; }
+.lightsout-warn b { color: #E92A2F; }
+.lightsout-board { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 10px auto; padding: 10px; width: min(100%, 380px); aspect-ratio: 1; box-sizing: border-box; background: #0E2A6B; border-radius: 14px; }
+.lightsout-cell { border: 0; border-radius: 12px; padding: 0; cursor: pointer; background: #1A2550; box-shadow: inset 0 -4px 0 rgba(0, 0, 0, .3); transition: background .15s, box-shadow .15s, transform .1s; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.lightsout-cell:active { transform: scale(.94); }
+.lightsout-on { background: radial-gradient(circle at 40% 35%, #FFF6C8, #F9C71D 55%, #E0A800); box-shadow: 0 0 16px rgba(249, 199, 29, .65), inset 0 -4px 0 rgba(0, 0, 0, .15); }
+.lightsout-cur { outline: 2px solid rgba(127, 178, 255, .7); outline-offset: 1px; }
+.lightsout-clear { animation: lightsout-glow .6s ease-out; }
+.lightsout-msg { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background: rgba(11, 20, 48, .72); border-radius: 14px; font-size: 22px; text-align: center; padding: 10px; }
+.lightsout-msg span { font-size: 15px; color: #5BD38A; font-weight: 700; }
+.lightsout-btn { border: 0; border-radius: 10px; padding: 8px 12px; font-weight: 700; font-size: 14px; cursor: pointer; background: #2B54B0; color: #fff; }
+.lightsout-btn:disabled { opacity: .5; cursor: default; }
+@keyframes lightsout-glow { 0% { box-shadow: 0 0 0 rgba(91, 211, 138, 0); } 50% { box-shadow: 0 0 30px rgba(91, 211, 138, .8); } 100% { box-shadow: 0 0 0 rgba(91, 211, 138, 0); } }

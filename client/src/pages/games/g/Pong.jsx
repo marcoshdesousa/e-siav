@@ -1,6 +1,7 @@
 // Pingue-pongue contra o computador. Você joga embaixo; o computador melhora a cada ponto seu.
 import { useEffect, useRef, useState } from 'react';
 import { COLORS, clamp, pointerPos, useCanvas, useKeys, useRaf } from '../kit.js';
+import { sfx } from '../audio.js';
 
 const W = 360;
 const H = 480;
@@ -79,6 +80,7 @@ export default function Game({ onScore, onEnd }) {
 
   const point = (mine) => {
     const s = st.current;
+    sfx(mine ? 'point' : 'error');
     if (mine) { s.my += 1; onScore?.(s.my); s.flash = 'Ponto seu!'; s.serveDir = -1; } else { s.their += 1; s.flash = 'Ponto do computador'; s.serveDir = 1; }
     s.flashT = 1.1;
     s.ball.vx = 0; s.ball.vy = 0;
@@ -97,12 +99,14 @@ export default function Game({ onScore, onEnd }) {
     if (b.vy > 0 && b.y + R >= ME_Y && b.y + R <= ME_Y + PH + 10 && Math.abs(b.x - s.me) <= PW / 2 + R) {
       b.y = ME_Y - R;
       bounce(b, s.me, -1);
+      sfx('tap');
       // quanto mais rápida a bola, mais o computador erra a previsão
       s.err = (Math.random() - 0.5) * 2 * errAmp(s) * (b.speed / 300);
     }
     if (b.vy < 0 && b.y - R <= CPU_Y + PH && b.y - R >= CPU_Y - 10 && Math.abs(b.x - s.cpu) <= PW / 2 + R) {
       b.y = CPU_Y + PH + R;
       bounce(b, s.cpu, 1);
+      sfx('move');
     }
     if (b.y > H + R) point(false);
     else if (b.y < -R) point(true);

@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { COLORS, rand, useCanvas, useKeys, useRaf, useSwipe } from '../kit.js';
 import DPad from '../DPad.jsx';
+import { sfx } from '../audio.js';
 
 const N = 18;
 const CELL = 20;
@@ -68,15 +69,16 @@ export default function Game({ onScore, onEnd }) {
     const [dx, dy] = VEC[s.dir];
     const head = s.snake[0];
     const nx = head.x + dx; const ny = head.y + dy;
-    if (nx < 0 || ny < 0 || nx >= N || ny >= N) return finish();
+    if (nx < 0 || ny < 0 || nx >= N || ny >= N) { sfx('hit'); return finish(); }
     const eating = s.fruit && nx === s.fruit.x && ny === s.fruit.y;
     // A ponta da cauda sai do lugar neste passo (se não estiver crescendo), então pode ocupar.
     const body = s.grow > 0 || eating ? s.snake : s.snake.slice(0, -1);
-    if (body.some((p) => p.x === nx && p.y === ny)) return finish();
+    if (body.some((p) => p.x === nx && p.y === ny)) { sfx('hit'); return finish(); }
     s.snake.unshift({ x: nx, y: ny });
     if (eating) {
       s.eaten += 1;
       s.grow += 1;
+      sfx('coin');
       onScore?.(s.eaten * 10);
       if (!placeFruit(s)) return finish();
     }

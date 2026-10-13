@@ -1,6 +1,7 @@
 // Forca: palavras da Bíblia, natureza, acampamento e Desbravadores. Perdeu uma palavra, acabou.
 import { useEffect, useRef, useState } from 'react';
 import { shuffle } from '../kit.js';
+import { sfx } from '../audio.js';
 import './Hangman.css';
 
 const BIB = 'Personagem bíblico';
@@ -60,6 +61,7 @@ export default function Game({ onScore, onEnd }) {
     if (phase !== 'play') return;
     if (solved) {
       setPhase('won');
+      sfx('win');
       setScore((s) => s + 10 + lives * 5);
     } else if (errors >= MAX) {
       setPhase('lost');
@@ -88,6 +90,7 @@ export default function Game({ onScore, onEnd }) {
 
   const guess = (l) => {
     if (phase !== 'play' || ended.current || guessed.has(l)) return;
+    sfx(letters.has(l) ? 'point' : 'error');
     setGuessed((g) => new Set(g).add(l));
   };
 

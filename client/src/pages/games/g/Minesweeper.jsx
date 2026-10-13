@@ -1,6 +1,7 @@
 // Campo minado 9x9 com 10 bombas. O primeiro toque nunca é bomba.
 import { useEffect, useReducer, useRef } from 'react';
 import { rand } from '../kit.js';
+import { sfx } from '../audio.js';
 import './Minesweeper.css';
 
 const N = 9; const MINES = 10;
@@ -96,8 +97,8 @@ export default function Game({ onScore, onEnd }) {
     } else {
       hit = openCell(s, i);
     }
-    if (hit) finish(s, false);
-    else {
+    if (hit) { sfx('hit'); finish(s, false); } else {
+      sfx('tap');
       cbs.current.onScore(s.opened);
       if (s.opened === SAFE) finish(s, true);
     }
@@ -110,6 +111,7 @@ export default function Game({ onScore, onEnd }) {
     const cell = s.cells[i];
     if (cell.open) return;
     cell.flag = !cell.flag;
+    sfx('flip');
     if (navigator.vibrate) { try { navigator.vibrate(25); } catch { /* sem vibração */ } }
     render();
   };

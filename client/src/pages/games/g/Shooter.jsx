@@ -1,6 +1,7 @@
 // Nave espacial: a nave atira sozinha; mova para desviar e destruir as ondas de invasores.
 import { useEffect, useRef, useState } from 'react';
 import { COLORS, clamp, pointerPos, rand, useCanvas, useKeys, useRaf } from '../kit.js';
+import { sfx } from '../audio.js';
 
 const W = 360;
 const H = 480;
@@ -74,6 +75,7 @@ export default function Game({ onScore, onEnd }) {
     const s = st.current;
     if (s.hurtT > 0) return;
     s.lives -= 1;
+    sfx('hit');
     boom(s.x, SHIP_Y + 8, COLORS.yellow);
     if (s.lives <= 0) { finish(); return; }
     s.hurtT = 2;
@@ -96,6 +98,9 @@ export default function Game({ onScore, onEnd }) {
     if (s.fireT <= 0) {
       s.fireT = Math.max(0.2, 0.34 - s.wave * 0.01);
       s.shots.push({ x: s.x, y: SHIP_Y - 6 });
+      // tiro automático é contínuo: som só a cada dois disparos
+      s.shotN = (s.shotN || 0) + 1;
+      if (s.shotN % 2) sfx('shoot');
     }
     s.shots.forEach((p) => { p.y -= 520 * dt; });
     s.shots = s.shots.filter((p) => p.y > -10);
@@ -151,6 +156,7 @@ export default function Game({ onScore, onEnd }) {
         if (v.alive && hitBox(p.x - 2, p.y - 6, 4, 12, v.x, v.y, INV_W, INV_H)) {
           v.alive = false;
           p.y = -100;
+          sfx('pop');
           s.score += ROW_POINTS[v.type] + (s.wave - 1) * 5;
           onScore?.(s.score);
           boom(v.x + INV_W / 2, v.y + INV_H / 2, ROW_COLORS[v.type]);
@@ -168,6 +174,7 @@ export default function Game({ onScore, onEnd }) {
     if (s.inv.every((v) => !v.alive)) {
       s.wave += 1;
       s.score += 100;
+      sfx('win');
       onScore?.(s.score);
       s.inv = buildWave(s.wave);
       s.dir = 1;
