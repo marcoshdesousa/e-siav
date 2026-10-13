@@ -1,0 +1,378 @@
+/* =========================================================
+   Álbum Bíblico — figurinhas, verso, flip e pacotinho
+   Tudo com prefixo stk-. Tamanho da figurinha vem de --stk-size.
+   ========================================================= */
+
+.stk-card {
+  --stk-size: 110px;
+  --stk-r: calc(var(--stk-size) * .1);
+  --stk-pad: calc(var(--stk-size) * .055);
+  --stk-frame: linear-gradient(150deg, #EEF3FA 0%, #BFD0E8 45%, #8FA7CB 100%);
+  --stk-frame-ink: #2C4A7A;
+  position: relative;
+  display: inline-block;
+  flex: none;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: calc(var(--stk-size) * .028) solid #fff;
+  border-radius: var(--stk-r);
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(16, 24, 49, .18), 0 6px 16px rgba(14, 42, 107, .16);
+  font-family: var(--font-title, 'Poppins', system-ui, sans-serif);
+  color: #fff;
+  text-align: left;
+  vertical-align: top;
+  overflow: visible;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+button.stk-card { cursor: pointer; font: inherit; font-family: var(--font-title, 'Poppins', system-ui, sans-serif); appearance: none; }
+.stk-card.is-clickable { transition: transform .16s ease, box-shadow .2s ease; }
+.stk-card.is-clickable:hover { transform: translateY(-2px) rotate(-.6deg); box-shadow: 0 2px 4px rgba(16, 24, 49, .18), 0 12px 24px rgba(14, 42, 107, .22); }
+.stk-card.is-clickable:active { transform: scale(.97); }
+.stk-card:focus-visible { outline: 3px solid var(--yellow, #F9C71D); outline-offset: 3px; }
+
+/* raridades */
+.stk-r-rara {
+  --stk-frame: linear-gradient(150deg, #E9D9FF 0%, #B48CF5 45%, #6E35D6 100%);
+  --stk-frame-ink: #4B1FA3;
+}
+.stk-r-lendaria {
+  --stk-frame: linear-gradient(135deg, #FFF4B8 0%, #F9D34A 22%, #E0A512 48%, #FFE786 66%, #C98A00 100%);
+  --stk-frame-ink: #7A4D00;
+  box-shadow: 0 1px 2px rgba(16, 24, 49, .2), 0 6px 18px rgba(224, 165, 18, .45);
+}
+
+.stk-frame {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--stk-pad) var(--stk-pad) 0;
+  border-radius: calc(var(--stk-r) * .8);
+  background: var(--stk-frame);
+  overflow: hidden;
+}
+.stk-r-lendaria .stk-frame { background-size: 220% 220%; animation: stk-gold 4s ease-in-out infinite; }
+
+.stk-art {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  border-radius: calc(var(--stk-r) * .55);
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .12);
+}
+.stk-art .stk-svg { display: block; width: 100%; height: 100%; }
+.stk-art::after { /* brilho de "papel adesivo" */
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .28) 0%, rgba(255, 255, 255, 0) 38%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .35);
+  pointer-events: none;
+}
+
+.stk-ribbon {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  height: calc(var(--stk-size) * .17);
+  margin: calc(var(--stk-size) * -.04) calc(var(--stk-pad) * -.35) 0;
+  display: grid;
+  place-items: center;
+}
+.stk-ribbon::before {
+  content: '';
+  position: absolute;
+  inset: 12% 0 22%;
+  background: var(--stk-frame-ink);
+  clip-path: polygon(0 0, 100% 0, 96% 50%, 100% 100%, 0 100%, 4% 50%);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, .2);
+}
+.stk-ribbon span {
+  position: relative;
+  max-width: 88%;
+  margin-top: -9%;
+  font-size: calc(var(--stk-size) * .084);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: .01em;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .35);
+}
+
+.stk-num {
+  position: absolute;
+  z-index: 2;
+  top: calc(var(--stk-pad) * .5);
+  left: calc(var(--stk-pad) * .5);
+  min-width: calc(var(--stk-size) * .22);
+  padding: calc(var(--stk-size) * .012) calc(var(--stk-size) * .035);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--stk-frame-ink);
+  font-size: calc(var(--stk-size) * .085);
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .25), inset 0 0 0 1.5px var(--stk-frame-ink);
+}
+
+.stk-badge {
+  position: absolute;
+  z-index: 3;
+  top: calc(var(--stk-size) * -.05);
+  right: calc(var(--stk-size) * -.05);
+  padding: calc(var(--stk-size) * .016) calc(var(--stk-size) * .05);
+  border-radius: 999px;
+  border: 2px solid #fff;
+  background: var(--navy, #0E2A6B);
+  color: var(--yellow, #F9C71D);
+  font-family: var(--font-title, 'Poppins', system-ui, sans-serif);
+  font-size: max(9px, calc(var(--stk-size) * .075));
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
+}
+.stk-badge-new { background: var(--red, #E92A2F); color: #fff; animation: stk-pop .5s cubic-bezier(.3, 1.6, .5, 1) both; }
+.stk-badge-dup { background: var(--navy, #0E2A6B); color: var(--yellow, #F9C71D); }
+
+/* brilho que passa nas lendárias */
+.stk-shine {
+  position: absolute;
+  inset: -20%;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, .0) 42%, rgba(255, 255, 255, .7) 50%, rgba(255, 255, 255, 0) 58%, transparent 62%);
+  transform: translateX(-70%);
+  animation: stk-sweep 3.2s ease-in-out infinite;
+  mix-blend-mode: soft-light;
+}
+.stk-r-lendaria .stk-frame::after { /* faíscas */
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 86% 14%, #fff 0 1.2px, transparent 2.5px),
+    radial-gradient(circle at 12% 62%, #fff 0 1px, transparent 2.2px),
+    radial-gradient(circle at 80% 70%, #fff 0 1px, transparent 2.2px);
+  animation: stk-twinkle 2.4s ease-in-out infinite;
+}
+
+/* espaço vazio no álbum */
+.stk-state-empty {
+  border: 2px dashed var(--line, #E2E7F0);
+  background: var(--surface-2, #F6F8FC);
+  box-shadow: none;
+  color: var(--muted, #5E6A84);
+}
+.stk-state-empty.is-clickable:hover { box-shadow: none; border-color: var(--muted, #5E6A84); }
+.stk-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--stk-size) * .04);
+  padding: calc(var(--stk-size) * .06);
+  text-align: center;
+}
+.stk-empty-num {
+  font-size: calc(var(--stk-size) * .34);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--muted, #5E6A84);
+  opacity: .45;
+}
+.stk-empty-name {
+  font-family: var(--font, 'Nunito', system-ui, sans-serif);
+  font-size: calc(var(--stk-size) * .095);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--muted, #5E6A84);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* verso da figurinha */
+.stk-state-back { background: #0E2A6B; }
+.stk-back-inner {
+  position: absolute;
+  inset: 0;
+  border-radius: calc(var(--stk-r) * .8);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--stk-size) * .05);
+  background:
+    radial-gradient(circle at 50% 42%, rgba(43, 84, 176, .9) 0, rgba(14, 42, 107, 0) 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Cpath d='M11 4l1.6 4.4L17 10l-4.4 1.6L11 16l-1.6-4.4L5 10l4.4-1.6z' fill='%23F9C71D' fill-opacity='.22'/%3E%3C/svg%3E") 0 0 / calc(var(--stk-size) * .2) auto,
+    linear-gradient(160deg, #1C3F8C 0%, #0E2A6B 60%, #0A1F52 100%);
+  box-shadow: inset 0 0 0 calc(var(--stk-size) * .03) rgba(249, 199, 29, .85), inset 0 0 0 calc(var(--stk-size) * .045) #0E2A6B;
+}
+.stk-back-emblem { width: 52%; height: auto; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .35)); }
+.stk-back-title {
+  font-size: calc(var(--stk-size) * .085);
+  font-weight: 800;
+  color: #F9C71D;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .4);
+}
+
+/* ---------- flip (abertura de pacote) ----------
+   <div class="stk-flip" style="width:..;height:..">
+     <div class="stk-flip-inner is-flipped">
+       <div class="stk-flip-front"> verso da figurinha (state="back") </div>
+       <div class="stk-flip-back">  figurinha revelada </div>
+     </div>
+   </div>                                                   */
+.stk-flip { position: relative; perspective: 900px; display: inline-block; }
+.stk-flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform .75s cubic-bezier(.3, 1.3, .5, 1);
+}
+.stk-flip-inner.is-flipped { transform: rotateY(180deg); }
+.stk-flip-front,
+.stk-flip-back {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.stk-flip-back { transform: rotateY(180deg); }
+
+/* ---------- pacotinho lacrado ---------- */
+.stk-pack {
+  --pack-w: 180px;
+  position: relative;
+  display: inline-block;
+  width: var(--pack-w);
+  aspect-ratio: 5 / 7;
+  border-radius: calc(var(--pack-w) * .06);
+  background:
+    linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, .55) 45%, rgba(255, 255, 255, 0) 55%) -150% 0 / 250% 100% no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Ccircle cx='30' cy='30' r='26' fill='%230E2A6B' stroke='%23F9C71D' stroke-width='3'/%3E%3Cpath d='M30 13l4.6 11.2 12 .9-9.2 7.8 2.9 11.7L30 38.3l-10.3 6.3 2.9-11.7-9.2-7.8 12-.9z' fill='%23F9C71D'/%3E%3C/svg%3E") 50% 36% / 46% auto no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Cpath d='M11 4l1.6 4.4L17 10l-4.4 1.6L11 16l-1.6-4.4L5 10l4.4-1.6z' fill='%23fff' fill-opacity='.12'/%3E%3C/svg%3E") 0 0 / 18px auto,
+    linear-gradient(180deg, transparent 0 66%, #F9C71D 66% 69%, #E92A2F 69% 100%),
+    linear-gradient(150deg, #2B54B0 0%, #1C3F8C 35%, #0E2A6B 70%);
+  box-shadow: 0 10px 28px rgba(14, 42, 107, .35), inset 0 0 0 1px rgba(255, 255, 255, .25);
+  overflow: hidden;
+  animation: stk-pack-shine 2.8s ease-in-out infinite;
+  font-family: var(--font-title, 'Poppins', system-ui, sans-serif);
+  color: #fff;
+}
+/* faixas serrilhadas do lacre (topo = tira que rasga) */
+.stk-pack::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 9%;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .35) 0 2px, rgba(0, 0, 0, .12) 2px 5px),
+    linear-gradient(180deg, #C9CFD9, #8C96A8);
+  border-bottom: 1px dashed rgba(255, 255, 255, .7);
+  z-index: 2;
+}
+.stk-pack::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 6%;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .35) 0 2px, rgba(0, 0, 0, .12) 2px 5px),
+    linear-gradient(180deg, #8C96A8, #C9CFD9);
+  z-index: 2;
+}
+/* Pacote vazio (<div class="stk-pack" />) recebe o título automaticamente */
+.stk-pack:empty::after {
+  content: 'Álbum Bíblico App';
+  display: grid;
+  place-items: center;
+  top: auto;
+  height: 31%;
+  padding: 0 8% 6%;
+  background: none;
+  box-sizing: border-box;
+  font-size: calc(var(--pack-w) * .1);
+  font-weight: 800;
+  line-height: 1.05;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, .3);
+  border-bottom: calc(var(--pack-w) * .045) solid #A9B2C2;
+}
+/* Quem quiser escrever o título por conta própria: <span class="stk-pack-text">…</span> */
+.stk-pack .stk-pack-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8%;
+  padding: 0 8%;
+  font-size: calc(var(--pack-w) * .1);
+  font-weight: 800;
+  line-height: 1.05;
+  text-align: center;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, .3);
+  z-index: 1;
+}
+.stk-pack.is-clickable, button.stk-pack { cursor: pointer; border: 0; padding: 0; }
+.stk-pack:focus-visible { outline: 3px solid var(--yellow, #F9C71D); outline-offset: 4px; }
+
+.stk-pack.is-opening { animation: stk-shake .9s cubic-bezier(.36, .07, .19, .97) both; }
+.stk-pack.is-opening::before { animation: stk-tear .9s ease-in forwards; transform-origin: 0 100%; }
+
+/* ---------- animações ---------- */
+@keyframes stk-gold { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+@keyframes stk-sweep { 0% { transform: translateX(-70%); } 55%, 100% { transform: translateX(70%); } }
+@keyframes stk-twinkle { 0%, 100% { opacity: .2; } 50% { opacity: 1; } }
+@keyframes stk-pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+@keyframes stk-pack-shine { 0%, 30% { background-position: -150% 0, 50% 36%, 0 0, 0 0, 0 0; } 70%, 100% { background-position: 250% 0, 50% 36%, 0 0, 0 0, 0 0; } }
+@keyframes stk-shake {
+  0% { transform: none; }
+  10%, 50% { transform: translateX(-4px) rotate(-3deg); }
+  20%, 60% { transform: translateX(4px) rotate(3deg); }
+  30%, 70% { transform: translateX(-3px) rotate(-2deg); }
+  40%, 80% { transform: translateX(3px) rotate(2deg); }
+  90% { transform: scale(1.05); }
+  100% { transform: scale(1.08); filter: brightness(1.25); }
+}
+@keyframes stk-tear {
+  0%, 35% { transform: none; opacity: 1; }
+  100% { transform: translate(60%, -160%) rotate(28deg); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stk-r-lendaria .stk-frame,
+  .stk-shine,
+  .stk-r-lendaria .stk-frame::after,
+  .stk-pack,
+  .stk-badge-new { animation: none; }
+  .stk-pack.is-opening { animation-duration: .01s; }
+  .stk-flip-inner { transition-duration: .01s; }
+}

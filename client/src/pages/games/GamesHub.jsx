@@ -250,23 +250,3 @@ export function GamePage({ base }) {
     </>
   );
 }
-
-/** Álbuns de figurinhas: por enquanto só o Palmares 27, em breve. */
-export function AlbumsPage() {
-  return (
-    <>
-      <PageHeader title="Álbuns de figurinhas" subtitle="Colecione as figurinhas dos desbravadores" />
-      <div className="album-card">
-        <div className="album-cover">
-          <span className="album-year">27</span>
-          <b>Palmares</b>
-        </div>
-        <div className="album-info">
-          <h2>Álbum Palmares 27</h2>
-          <span className="badge badge-yellow">Em breve</span>
-          <p className="small">Figurinhas digitais com a foto dos membros. Você gira, ganha uma figurinha aleatória e ela vale no app e no álbum físico. Cada página completa vale um requisito.</p>
-        </div>
-      </div>
-    </>
-  );
-}

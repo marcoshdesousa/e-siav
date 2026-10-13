@@ -728,3 +728,43 @@ test('criar clube: o nome sempre vira "Clube X", sem repetir "Clube"/"Club"', as
   }
   assert.equal((await admin.post('/admin/clubs', { name: 'Clube', district_id: district, director_name: 'Fulano' })).status, 400);
 });
+
+test('álbum bíblico: Pix, confirmação da equipe, abrir, colar, trocar repetidas e completar', async () => {
+  const admin = await login('membros', 'admin', 'admin123');
+  const pedro = await login('membros', 'pedro');
+  // Sem chave Pix a compra fica desligada
+  assert.equal((await pedro.post('/albuns/biblico/pedidos', { packs: 10 })).status, 400);
+  await admin.put('/admin/figurinhas/pix', { key: 'pix@appdodbv.com', name: 'App do DBV', city: 'Palmares' });
+  assert.equal((await pedro.post('/albuns/biblico/pedidos', { packs: 3 })).status, 400, 'só 1, 10, 20 ou 50');
+  const o = (await pedro.post('/albuns/biblico/pedidos', { packs: 10 })).body;
+  assert.equal(o.amount_cents, 1850);
+  assert.match(o.pix, /^000201.*br\.gov\.bcb\.pix.*5405?18\.50.*6304[0-9A-F]{4}$/);
+  assert.ok(o.qr.startsWith('data:image/svg+xml'));
+  assert.equal((await pedro.post('/albuns/biblico/abrir')).status, 400, 'sem pacotinho antes de confirmar');
+  await pedro.post(`/albuns/pedidos/${o.id}/paguei`);
+  assert.ok((await admin.get('/admin/figurinhas/pedidos?status=aguardando')).body.rows.some((x) => x.id === o.id));
+  await admin.post(`/admin/figurinhas/pedidos/${o.id}/confirmar`);
+  assert.equal((await pedro.get('/albuns/biblico')).body.packs_unopened, 10);
+  // 5 primeiros pacotinhos: nada repetido
+  const seen = new Set();
+  for (let i = 0; i < 5; i++) for (const c of (await pedro.post('/albuns/biblico/abrir')).body.cards) { assert.ok(c.isNew && !seen.has(c.id)); seen.add(c.id); }
+  assert.equal(seen.size, 20);
+  await pedro.post('/albuns/biblico/colar', {});
+  let st = (await pedro.get('/albuns/biblico')).body;
+  assert.equal(Object.values(st.stickers).filter((x) => x.stuck).length, 20);
+  // Completa o álbum com pacotinhos de presente, trocando repetidas no caminho
+  let opened = 5;
+  for (let guard = 0; guard < 600; guard++) {
+    st = (await pedro.get('/albuns/biblico')).body;
+    if (st.completed_at) break;
+    if (st.repeats >= 20) { assert.equal((await pedro.post('/albuns/biblico/trocar')).status, 200); continue; }
+    if (!st.packs_unopened) await admin.post('/admin/figurinhas/presente', { code: '100001', packs: 50, album: 'biblico' });
+    await pedro.post('/albuns/biblico/abrir'); opened++;
+    await pedro.post('/albuns/biblico/colar', {});
+  }
+  assert.ok(st.completed_at, 'completou');
+  assert.ok(opened > 40, `não pode ser fácil (abriu ${opened})`);
+  const done = (await admin.get('/admin/figurinhas/completos')).body;
+  assert.ok(done.some((x) => x.code === '100001' && x.club_name && x.album === 'biblico'));
+  assert.equal((await pedro.get('/admin/figurinhas/completos')).status, 403);
+});

@@ -746,6 +746,46 @@ function migrate() {
     PRIMARY KEY (member_id, game)
   )`);
 
+  // Álbuns de figurinhas: pedidos de pacotinhos (Pix), progresso, figurinhas e aberturas.
+  db.exec(`CREATE TABLE IF NOT EXISTS sticker_orders (
+    id INTEGER PRIMARY KEY,
+    member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    album TEXT NOT NULL,
+    packs INTEGER NOT NULL,
+    amount_cents INTEGER NOT NULL,
+    txid TEXT NOT NULL UNIQUE,
+    status TEXT NOT NULL DEFAULT 'aberto' CHECK (status IN ('aberto','aguardando','pago','cancelado','recusado')),
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+    notified_at TEXT,
+    paid_at TEXT
+  )`);
+  db.exec(`CREATE TABLE IF NOT EXISTS album_progress (
+    member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    album TEXT NOT NULL,
+    packs_unopened INTEGER NOT NULL DEFAULT 0,
+    packs_opened INTEGER NOT NULL DEFAULT 0,
+    free_packs INTEGER NOT NULL DEFAULT 0,
+    completed_at TEXT,
+    PRIMARY KEY (member_id, album)
+  )`);
+  db.exec(`CREATE TABLE IF NOT EXISTS album_stickers (
+    member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    album TEXT NOT NULL,
+    sticker INTEGER NOT NULL,
+    qty INTEGER NOT NULL DEFAULT 1,
+    stuck INTEGER NOT NULL DEFAULT 0,
+    first_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+    PRIMARY KEY (member_id, album, sticker)
+  )`);
+  db.exec(`CREATE TABLE IF NOT EXISTS album_openings (
+    id INTEGER PRIMARY KEY,
+    member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    album TEXT NOT NULL,
+    stickers TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+  )`);
+  for (const k of ['pix_key', 'pix_name', 'pix_city']) db.prepare('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)').run(k, '');
+
   // Volta para os Desbravadores: "Nº Clã X" vira "Nº Clube X" e a medalha de grupo vira de unidade.
   if (!flag('nomes-dbv-v1')) {
     db.exec(`UPDATE clubs SET name = replace(name, 'º Clã ', 'º Clube ') WHERE name LIKE '%º Clã %'`);

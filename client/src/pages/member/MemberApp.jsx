@@ -14,7 +14,8 @@ import ClubsBrowser from '../Clubs.jsx';
 import MyAchievements from './MyAchievements.jsx';
 import { AgendaLeitura, ProximasDatas } from '../club/Folders.jsx';
 import { EmbeddedSite, SupportChat } from '../Shared.jsx';
-import { AlbumsPage, GamePage, GamesHub } from '../games/GamesHub.jsx';
+import { GamePage, GamesHub } from '../games/GamesHub.jsx';
+import { AlbumPage, AlbumsPage } from '../albums/AlbumsHub.jsx';
 
 const base = '/membro';
 
@@ -73,7 +74,7 @@ export default function MemberApp() {
   ];
   const more = [
     { to: `${base}/especialidades`, icon: Waypoints, label: 'Especialidades', hint: 'As suas especialidades' },
-    { to: `${base}/albuns`, icon: BookImage, label: 'Álbuns de figurinhas', hint: 'Palmares 27 · em breve' },
+    { to: `${base}/albuns`, icon: BookImage, label: 'Álbuns de figurinhas', hint: 'Álbum Bíblico App' },
     { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas do clube e do App' },
     { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },
     { to: `${base}/cursos`, icon: GraduationCap, label: 'Cursos', hint: 'Aulas' },
@@ -84,7 +85,7 @@ export default function MemberApp() {
       <Route
         path="*"
         element={
-          <Shell tabs={tabs} parentOf={(path) => (((seg, sub) => (seg === 'jogos' && sub ? `${base}/jogos` : ['cursos', 'clubes', 'agenda', 'suporte', 'especialidades', 'albuns'].includes(seg) ? `${base}/mais` : base))(...path.split('/').slice(2)))}>
+          <Shell tabs={tabs} parentOf={(path) => (((seg, sub) => ((seg === 'jogos' || seg === 'albuns') && sub ? `${base}/${seg}` : ['cursos', 'clubes', 'agenda', 'suporte', 'especialidades', 'albuns'].includes(seg) ? `${base}/mais` : base))(...path.split('/').slice(2)))}>
             {actor.waiting ? <Waiting text={actor.waiting} /> : <Routes>
               <Route index element={<MyProfile />} />
               <Route path="requisitos" element={<><PageHeader title="Requisitos" subtitle={isDbv ? 'Cumpra os requisitos e suba no ranking' : 'Requisitos para a liderança'} /><RequirementsTodo originTabs groupTab={isDbv} /></>} />
@@ -94,7 +95,8 @@ export default function MemberApp() {
               <Route path="suporte" element={<SupportChat />} />
               <Route path="jogos" element={<GamesHub base={base} />} />
               <Route path="jogos/:id" element={<GamePage base={base} />} />
-              <Route path="albuns" element={<AlbumsPage />} />
+              <Route path="albuns" element={<AlbumsPage base={base} />} />
+              <Route path="albuns/:id" element={<AlbumPage />} />
               <Route path="cursos" element={<ContentList type="curso" base={base} />} />
               <Route path="conteudo/:id" element={<ContentDetail />} />
               <Route path="ranking" element={<RankingHub base={base} />} />

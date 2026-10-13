@@ -25,6 +25,7 @@
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^1.52.0",
     "multer": "^2.4.0",
+    "qrcode": "^1.5.4",
     "ws": "^8.22.0"
   },
   "devDependencies": {

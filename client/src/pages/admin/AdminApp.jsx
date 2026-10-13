@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import {
-  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, Tent, Trophy, Users, Globe, MessageCircle,
+  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, Tent, Trophy, Users, Globe, MessageCircle, BookImage,
 } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -21,6 +21,7 @@ import CatalogAdmin from './CatalogAdmin.jsx';
 import ClanView from './ClanView.jsx';
 import AgendaAdmin from './AgendaAdmin.jsx';
 import SupportAdmin, { LinksAdmin } from './SupportAdmin.jsx';
+import StickersAdmin from './StickersAdmin.jsx';
 
 const base = '/admin';
 
@@ -53,6 +54,7 @@ function AdminHome() {
       <Section title="Atalhos">
         <MoreMenu items={[
           { to: `${base}/suporte`, icon: MessageCircle, label: 'Suporte', hint: 'Responder os clubes e membros' },
+          { to: `${base}/figurinhas`, icon: BookImage, label: 'Figurinhas', hint: 'Pagamentos e álbuns completos' },
           { to: `${base}/links`, icon: Globe, label: 'Links dos sites', hint: 'SGC, Cantinho e Cartão DBV' },
     { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas para todos, distrito ou clube' },
     { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo' },
@@ -276,6 +278,7 @@ export default function AdminApp() {
   ];
   const more = [
     { to: `${base}/suporte`, icon: MessageCircle, label: 'Suporte', hint: 'Responder os clubes e membros' },
+    { to: `${base}/figurinhas`, icon: BookImage, label: 'Figurinhas', hint: 'Pagamentos e álbuns completos' },
     { to: `${base}/links`, icon: Globe, label: 'Links dos sites', hint: 'SGC, Cantinho e Cartão DBV' },
     { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo', hint: 'Medalhas, troféus e cursos' },
     { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial', hint: 'Especialidades' },
@@ -296,6 +299,7 @@ export default function AdminApp() {
         <Route path="clubes/:id" element={<ClanView base={base} />} />
         <Route path="suporte" element={<SupportAdmin />} />
         <Route path="links" element={<LinksAdmin />} />
+        <Route path="figurinhas" element={<StickersAdmin />} />
         <Route path="agenda" element={<AgendaAdmin />} />
         <Route path="requisitos" element={<RequirementsAdmin />} />
         <Route path="conteudo" element={<ContentAdmin />} />

@@ -1,0 +1,2208 @@
+{
+  "id": "biblico",
+  "name": "Álbum Bíblico App",
+  "pages": [
+    {
+      "title": "No princípio",
+      "stickers": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "title": "Os patriarcas",
+      "stickers": [
+        6,
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "title": "A família de Jacó",
+      "stickers": [
+        11,
+        12,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "title": "José no Egito",
+      "stickers": [
+        16,
+        17,
+        18,
+        19,
+        20
+      ]
+    },
+    {
+      "title": "Libertação do Egito",
+      "stickers": [
+        21,
+        22,
+        23,
+        24,
+        25
+      ]
+    },
+    {
+      "title": "A terra prometida",
+      "stickers": [
+        26,
+        27,
+        28,
+        29,
+        30
+      ]
+    },
+    {
+      "title": "No tempo dos juízes",
+      "stickers": [
+        31,
+        32,
+        33,
+        34,
+        35
+      ]
+    },
+    {
+      "title": "Samuel e o primeiro rei",
+      "stickers": [
+        36,
+        37,
+        38,
+        39,
+        40
+      ]
+    },
+    {
+      "title": "O rei Davi",
+      "stickers": [
+        41,
+        42,
+        43,
+        44,
+        45
+      ]
+    },
+    {
+      "title": "Reis e profetas",
+      "stickers": [
+        46,
+        47,
+        48,
+        49,
+        50
+      ]
+    },
+    {
+      "title": "Reformas e reconstrução",
+      "stickers": [
+        51,
+        52,
+        53,
+        54,
+        55
+      ]
+    },
+    {
+      "title": "Coragem e esperança",
+      "stickers": [
+        56,
+        57,
+        58,
+        59,
+        60
+      ]
+    },
+    {
+      "title": "Fiéis em terra estrangeira",
+      "stickers": [
+        61,
+        62,
+        63,
+        64,
+        65
+      ]
+    },
+    {
+      "title": "O nascimento de Jesus",
+      "stickers": [
+        66,
+        67,
+        68,
+        69,
+        70
+      ]
+    },
+    {
+      "title": "Os primeiros a crer",
+      "stickers": [
+        71,
+        72,
+        73,
+        74,
+        75
+      ]
+    },
+    {
+      "title": "Os discípulos",
+      "stickers": [
+        76,
+        77,
+        78,
+        79,
+        80
+      ]
+    },
+    {
+      "title": "Encontros com Jesus",
+      "stickers": [
+        81,
+        82,
+        83,
+        84,
+        85
+      ]
+    },
+    {
+      "title": "Amigos de Jesus",
+      "stickers": [
+        86,
+        87,
+        88,
+        89,
+        90
+      ]
+    },
+    {
+      "title": "A igreja primitiva",
+      "stickers": [
+        91,
+        92,
+        93,
+        94,
+        95
+      ]
+    },
+    {
+      "title": "Até os confins da terra",
+      "stickers": [
+        96,
+        97,
+        98,
+        99,
+        100
+      ]
+    }
+  ],
+  "stickers": [
+    {
+      "id": 1,
+      "name": "Adão",
+      "ref": "Gênesis 1–3",
+      "rarity": "comum",
+      "story": "Adão foi o primeiro homem, formado por Deus do pó da terra. Deus o colocou no jardim do Éden para cuidar dele e lhe deu a tarefa de dar nome aos animais. Mesmo depois do pecado, Deus prometeu enviar um Salvador.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "none",
+        "robe": "#7A4E2D",
+        "robe2": "#E9C46A",
+        "item": "tree",
+        "bg": "#BDE0A8"
+      }
+    },
+    {
+      "id": 2,
+      "name": "Eva",
+      "ref": "Gênesis 2–3",
+      "rarity": "comum",
+      "story": "Eva foi a primeira mulher, criada por Deus para ser companheira de Adão. Ela é chamada de mãe de todos os viventes. Depois do pecado, Deus prometeu que da sua descendência viria Aquele que venceria a serpente.",
+      "look": {
+        "gender": "f",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "long",
+        "beard": "none",
+        "head": "none",
+        "robe": "#8FB339",
+        "robe2": "#F4A261",
+        "item": "flower",
+        "bg": "#FDE2E4"
+      }
+    },
+    {
+      "id": 3,
+      "name": "Abel",
+      "ref": "Gênesis 4; Hebreus 11:4",
+      "rarity": "comum",
+      "story": "Abel era pastor de ovelhas e filho de Adão e Eva. Ele ofereceu a Deus as primeiras e melhores ovelhas do seu rebanho, e Deus se agradou da sua oferta. A Bíblia lembra Abel como um exemplo de fé.",
+      "look": {
+        "gender": "m",
+        "age": "young",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "curly",
+        "beard": "none",
+        "head": "none",
+        "robe": "#E9C46A",
+        "robe2": "#8D5524",
+        "item": "lamb",
+        "bg": "#D8F3DC"
+      }
+    },
+    {
+      "id": 4,
+      "name": "Enoque",
+      "ref": "Gênesis 5:21–24; Hebreus 11:5",
+      "rarity": "comum",
+      "story": "Enoque andou com Deus durante trezentos anos. Ele tinha uma amizade tão próxima com Deus que não passou pela morte: Deus o levou para Si. Ele é um exemplo de vida em comunhão diária com o Criador.",
+      "look": {
+        "gender": "m",
+        "age": "old",
+        "skin": "tan",
+        "hair": "white",
+        "hairStyle": "long",
+        "beard": "long",
+        "head": "none",
+        "robe": "#F1FAEE",
+        "robe2": "#A8DADC",
+        "item": "staff",
+        "bg": "#E0F2FE"
+      }
+    },
+    {
+      "id": 5,
+      "name": "Noé",
+      "ref": "Gênesis 6–9",
+      "rarity": "lendaria",
+      "story": "Noé era um homem justo que andava com Deus. Obedecendo à ordem divina, construiu uma grande arca e salvou sua família e os animais do dilúvio. Depois, Deus colocou o arco-íris nas nuvens como sinal da Sua promessa.",
+      "look": {
+        "gender": "m",
+        "age": "old",
+        "skin": "tan",
+        "hair": "white",
+        "hairStyle": "long",
+        "beard": "long",
+        "head": "none",
+        "robe": "#5E8C61",
+        "robe2": "#D4A373",
+        "item": "ark",
+        "bg": "#CDEAFE"
+      }
+    },
+    {
+      "id": 6,
+      "name": "Abraão",
+      "ref": "Gênesis 12–22",
+      "rarity": "lendaria",
+      "story": "Abraão obedeceu ao chamado de Deus e deixou sua terra sem saber para onde ia. Deus prometeu que sua descendência seria tão numerosa quanto as estrelas do céu. Por sua fé, ele é chamado de pai dos que creem e amigo de Deus.",
+      "look": {
+        "gender": "m",
+        "age": "old",
+        "skin": "tan",
+        "hair": "gray",
+        "hairStyle": "long",
+        "beard": "long",
+        "head": "turban",
+        "robe": "#8E3B46",
+        "robe2": "#F2CC8F",
+        "item": "star",
+        "bg": "#E8E3F7"
+      }
+    },
+    {
+      "id": 7,
+      "name": "Sara",
+      "ref": "Gênesis 17–21",
+      "rarity": "comum",
+      "story": "Sara era esposa de Abraão e viajou com ele para a terra que Deus prometeu. Já idosa, riu ao ouvir que teria um filho, mas Deus cumpriu a promessa. Aos noventa anos, deu à luz Isaque, cujo nome significa \"riso\".",
+      "look": {
+        "gender": "f",
+        "age": "old",
+        "skin": "tan",
+        "hair": "gray",
+        "hairStyle": "covered",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#B56576",
+        "robe2": "#F6E7CB",
+        "item": "tent",
+        "bg": "#FFE5D9"
+      }
+    },
+    {
+      "id": 8,
+      "name": "Ló",
+      "ref": "Gênesis 13; 19",
+      "rarity": "comum",
+      "story": "Ló era sobrinho de Abraão e viajou com ele até Canaã. Quando os rebanhos cresceram, Abraão deixou Ló escolher primeiro onde morar. Antes da destruição de Sodoma, Deus enviou anjos para tirar Ló e sua família da cidade.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "turban",
+        "robe": "#457B9D",
+        "robe2": "#F1C453",
+        "item": "camel",
+        "bg": "#FFF3C4"
+      }
+    },
+    {
+      "id": 9,
+      "name": "Melquisedeque",
+      "ref": "Gênesis 14; Hebreus 7",
+      "rarity": "comum",
+      "story": "Melquisedeque era rei de Salém e sacerdote do Deus Altíssimo. Ele trouxe pão e vinho para Abraão e o abençoou. A Bíblia o apresenta como uma figura que aponta para Jesus, nosso Sumo Sacerdote.",
+      "look": {
+        "gender": "m",
+        "age": "old",
+        "skin": "brown",
+        "hair": "white",
+        "hairStyle": "short",
+        "beard": "long",
+        "head": "crown",
+        "robe": "#6A4C93",
+        "robe2": "#FFD166",
+        "item": "bread",
+        "bg": "#EDE7F6"
+      }
+    },
+    {
+      "id": 10,
+      "name": "Isaque",
+      "ref": "Gênesis 21–26",
+      "rarity": "comum",
+      "story": "Isaque foi o filho da promessa, nascido quando Abraão e Sara já eram idosos. No monte Moriá, Deus providenciou um carneiro para ser oferecido no lugar dele. Isaque foi um homem pacífico, que cavou poços e confiou nas promessas de Deus.",
+      "look": {
+        "gender": "m",
+        "age": "young",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "short",
+        "beard": "none",
+        "head": "none",
+        "robe": "#2A9D8F",
+        "robe2": "#E9C46A",
+        "item": "ram",
+        "bg": "#E3F6F5"
+      }
+    },
+    {
+      "id": 11,
+      "name": "Rebeca",
+      "ref": "Gênesis 24",
+      "rarity": "comum",
+      "story": "Rebeca foi bondosa com o servo de Abraão: deu água para ele e também para todos os seus camelos. Por meio disso, Deus mostrou que ela seria a esposa de Isaque. Ela aceitou deixar sua família e partir para uma nova terra.",
+      "look": {
+        "gender": "f",
+        "age": "young",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "braid",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#E76F51",
+        "robe2": "#F4E1C1",
+        "item": "jar",
+        "bg": "#FFF1E6"
+      }
+    },
+    {
+      "id": 12,
+      "name": "Esaú",
+      "ref": "Gênesis 25–33",
+      "rarity": "comum",
+      "story": "Esaú era o filho mais velho de Isaque, um caçador habilidoso. Depois de muitos anos separado do irmão Jacó, correu ao seu encontro, o abraçou e o beijou. A reconciliação dos dois irmãos mostra o poder do perdão.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "red",
+        "hairStyle": "curly",
+        "beard": "long",
+        "head": "none",
+        "robe": "#9C6644",
+        "robe2": "#606C38",
+        "item": "bow",
+        "bg": "#F0EAD2"
+      }
+    },
+    {
+      "id": 13,
+      "name": "Jacó",
+      "ref": "Gênesis 28–35",
+      "rarity": "rara",
+      "story": "Jacó viu em sonho uma escada que ligava a terra ao céu, com anjos subindo e descendo. Deus prometeu estar com ele aonde quer que fosse. Mais tarde, Deus mudou seu nome para Israel, e seus doze filhos deram origem às doze tribos.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "short",
+        "beard": "long",
+        "head": "headband",
+        "robe": "#3D5A80",
+        "robe2": "#E0C097",
+        "item": "ladder",
+        "bg": "#DCEBFF"
+      }
+    },
+    {
+      "id": 14,
+      "name": "Lia",
+      "ref": "Gênesis 29–35",
+      "rarity": "comum",
+      "story": "Lia era a filha mais velha de Labão e esposa de Jacó. Quando nasceu seu filho Judá, ela disse: \"Desta vez louvarei o Senhor\". Da descendência de Judá viriam o rei Davi e, depois, Jesus.",
+      "look": {
+        "gender": "f",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "covered",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#6D597A",
+        "robe2": "#EAAC8B",
+        "item": "flower",
+        "bg": "#F3E8FF"
+      }
+    },
+    {
+      "id": 15,
+      "name": "Raquel",
+      "ref": "Gênesis 29–35",
+      "rarity": "comum",
+      "story": "Raquel era pastora e cuidava das ovelhas de seu pai, Labão. Jacó a amou tanto que trabalhou sete anos por ela, e esses anos lhe pareceram poucos dias. Ela foi a mãe de José e de Benjamim.",
+      "look": {
+        "gender": "f",
+        "age": "young",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "long",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#F28482",
+        "robe2": "#84A59D",
+        "item": "lamb",
+        "bg": "#FCE4EC"
+      }
+    },
+    {
+      "id": 16,
+      "name": "José",
+      "ref": "Gênesis 37–50",
+      "rarity": "rara",
+      "story": "José ganhou do pai uma túnica especial, mas foi vendido como escravo pelos irmãos. No Egito, permaneceu fiel a Deus e chegou a governador de todo o país. Quando reencontrou os irmãos, perdoou-os e salvou sua família da fome.",
+      "look": {
+        "gender": "m",
+        "age": "young",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "short",
+        "beard": "none",
+        "head": "headband",
+        "robe": "#E63946",
+        "robe2": "#FFB703",
+        "item": "coat",
+        "bg": "#FFF8D6"
+      }
+    },
+    {
+      "id": 17,
+      "name": "Rúben",
+      "ref": "Gênesis 37; 42",
+      "rarity": "comum",
+      "story": "Rúben era o filho mais velho de Jacó. Quando os irmãos quiseram matar José, Rúben os convenceu a lançá-lo numa cisterna, pois planejava devolvê-lo ao pai. Ele tentou proteger o irmão mais novo.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "none",
+        "robe": "#588157",
+        "robe2": "#DDA15E",
+        "item": "rope",
+        "bg": "#E9F5DB"
+      }
+    },
+    {
+      "id": 18,
+      "name": "Judá",
+      "ref": "Gênesis 43–44; 49",
+      "rarity": "comum",
+      "story": "Judá prometeu ao pai, Jacó, que cuidaria de Benjamim na viagem ao Egito. Quando Benjamim estava em perigo, Judá se ofereceu para ficar como escravo no lugar dele. Da tribo de Judá viriam o rei Davi e Jesus.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "brown",
+        "hair": "black",
+        "hairStyle": "curly",
+        "beard": "short",
+        "head": "headband",
+        "robe": "#BC4749",
+        "robe2": "#F2E8CF",
+        "item": "crown",
+        "bg": "#FDEBD3"
+      }
+    },
+    {
+      "id": 19,
+      "name": "Benjamim",
+      "ref": "Gênesis 35; 42–45",
+      "rarity": "comum",
+      "story": "Benjamim era o filho mais novo de Jacó e irmão de José. No Egito, José mandou colocar sua taça de prata na bagagem de Benjamim para testar os irmãos. Quando se revelou, José abraçou Benjamim e chorou de alegria.",
+      "look": {
+        "gender": "m",
+        "age": "young",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "curly",
+        "beard": "none",
+        "head": "none",
+        "robe": "#4EA8DE",
+        "robe2": "#F9C74F",
+        "item": "cup",
+        "bg": "#E0F7FA"
+      }
+    },
+    {
+      "id": 20,
+      "name": "Efraim",
+      "ref": "Gênesis 41; 48",
+      "rarity": "comum",
+      "story": "Efraim era filho de José e nasceu no Egito. José lhe deu esse nome dizendo: \"Deus me fez frutífero na terra da minha aflição\". Seu avô Jacó o abençoou colocando a mão direita sobre sua cabeça.",
+      "look": {
+        "gender": "m",
+        "age": "child",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "short",
+        "beard": "none",
+        "head": "none",
+        "robe": "#F4A261",
+        "robe2": "#FFFFFF",
+        "item": "sun",
+        "bg": "#FFF4D6"
+      }
+    },
+    {
+      "id": 21,
+      "name": "Joquebede",
+      "ref": "Êxodo 2; 6:20",
+      "rarity": "comum",
+      "story": "Joquebede era a mãe de Moisés, Arão e Miriã. Quando o faraó mandou matar os meninos hebreus, ela escondeu seu bebê por três meses e depois o colocou num cesto às margens do rio Nilo. Deus cuidou do menino, e ela pôde até criá-lo.",
+      "look": {
+        "gender": "f",
+        "age": "adult",
+        "skin": "brown",
+        "hair": "black",
+        "hairStyle": "covered",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#43AA8B",
+        "robe2": "#F9DCC4",
+        "item": "baby",
+        "bg": "#D9F2E6"
+      }
+    },
+    {
+      "id": 22,
+      "name": "Miriã",
+      "ref": "Êxodo 2; 15",
+      "rarity": "rara",
+      "story": "Ainda menina, Miriã vigiou o cesto de seu irmão Moisés no rio e ofereceu à filha do faraó uma ama: a própria mãe dele! Depois da travessia do mar Vermelho, ela tomou um tamborim e conduziu as mulheres em cânticos de louvor a Deus.",
+      "look": {
+        "gender": "f",
+        "age": "young",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "braid",
+        "beard": "none",
+        "head": "headband",
+        "robe": "#F15BB5",
+        "robe2": "#FEE440",
+        "item": "harp",
+        "bg": "#FFE3F1"
+      }
+    },
+    {
+      "id": 23,
+      "name": "Moisés",
+      "ref": "Êxodo 3–20",
+      "rarity": "lendaria",
+      "story": "Deus falou com Moisés numa sarça ardente e o enviou para libertar Seu povo do Egito. Pelo poder de Deus, Moisés estendeu a vara e o mar Vermelho se abriu. No monte Sinai, recebeu de Deus as tábuas com os Dez Mandamentos.",
+      "look": {
+        "gender": "m",
+        "age": "old",
+        "skin": "tan",
+        "hair": "white",
+        "hairStyle": "long",
+        "beard": "long",
+        "head": "none",
+        "robe": "#A23E48",
+        "robe2": "#F6F4D2",
+        "item": "tablets",
+        "bg": "#FFEFD5"
+      }
+    },
+    {
+      "id": 24,
+      "name": "Zípora",
+      "ref": "Êxodo 2; 18",
+      "rarity": "comum",
+      "story": "Zípora era filha de Jetro, sacerdote de Midiã, e cuidava dos rebanhos com as irmãs. Moisés as defendeu de alguns pastores junto a um poço e deu de beber ao rebanho delas. Ela se casou com Moisés e foi mãe de Gérson e Eliézer.",
+      "look": {
+        "gender": "f",
+        "age": "young",
+        "skin": "brown",
+        "hair": "black",
+        "hairStyle": "long",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#FF9F1C",
+        "robe2": "#2EC4B6",
+        "item": "water",
+        "bg": "#E0FBFC"
+      }
+    },
+    {
+      "id": 25,
+      "name": "Arão",
+      "ref": "Êxodo 4; 28; Números 17",
+      "rarity": "rara",
+      "story": "Arão era irmão de Moisés e falava ao povo em nome dele. Deus o escolheu como o primeiro sumo sacerdote de Israel. Sua vara floresceu e produziu amêndoas, mostrando que Deus o havia escolhido.",
+      "look": {
+        "gender": "m",
+        "age": "old",
+        "skin": "tan",
+        "hair": "gray",
+        "hairStyle": "short",
+        "beard": "long",
+        "head": "turban",
+        "robe": "#1D3557",
+        "robe2": "#E9C46A",
+        "item": "staff",
+        "bg": "#E7ECFF"
+      }
+    },
+    {
+      "id": 26,
+      "name": "Jetro",
+      "ref": "Êxodo 18",
+      "rarity": "comum",
+      "story": "Jetro era sacerdote de Midiã e sogro de Moisés. Ao ver Moisés cansado de julgar o povo sozinho, aconselhou-o a escolher homens capazes para ajudá-lo. Ele também se alegrou com tudo o que Deus fez por Israel.",
+      "look": {
+        "gender": "m",
+        "age": "old",
+        "skin": "brown",
+        "hair": "white",
+        "hairStyle": "short",
+        "beard": "long",
+        "head": "turban",
+        "robe": "#CB997E",
+        "robe2": "#6B705C",
+        "item": "tent",
+        "bg": "#F5EBE0"
+      }
+    },
+    {
+      "id": 27,
+      "name": "Josué",
+      "ref": "Josué 1–6",
+      "rarity": "rara",
+      "story": "Josué foi auxiliar de Moisés e o sucedeu como líder de Israel. Deus lhe disse: \"Seja forte e corajoso\". Pela fé, conduziu o povo na travessia do rio Jordão e viu os muros de Jericó caírem.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "helmet",
+        "robe": "#9D0208",
+        "robe2": "#FFBA08",
+        "item": "sword",
+        "bg": "#FFE8D6"
+      }
+    },
+    {
+      "id": 28,
+      "name": "Calebe",
+      "ref": "Números 13–14; Josué 14",
+      "rarity": "comum",
+      "story": "Calebe foi um dos doze espias enviados a Canaã. Enquanto outros tiveram medo, ele confiou em Deus e disse que o povo podia conquistar a terra. Aos 85 anos, ainda forte, pediu como herança a região montanhosa de Hebrom.",
+      "look": {
+        "gender": "m",
+        "age": "old",
+        "skin": "tan",
+        "hair": "gray",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "helmet",
+        "robe": "#386641",
+        "robe2": "#A7C957",
+        "item": "shield",
+        "bg": "#EEF6D8"
+      }
+    },
+    {
+      "id": 29,
+      "name": "Raabe",
+      "ref": "Josué 2; 6; Hebreus 11:31",
+      "rarity": "rara",
+      "story": "Raabe morava em Jericó e escondeu dois espias israelitas em sua casa. Ela creu que o Deus de Israel é Deus em cima nos céus e embaixo na terra. Um cordão vermelho na janela marcou sua casa, e toda a sua família foi salva.",
+      "look": {
+        "gender": "f",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "long",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#D62828",
+        "robe2": "#F77F00",
+        "item": "rope",
+        "bg": "#FFE5E5"
+      }
+    },
+    {
+      "id": 30,
+      "name": "Débora",
+      "ref": "Juízes 4–5",
+      "rarity": "rara",
+      "story": "Débora era profetisa e juíza de Israel e atendia o povo debaixo de uma palmeira. Ela encorajou Baraque a enfrentar o exército de Sísera, garantindo que Deus daria a vitória. Depois, os dois cantaram juntos um cântico de louvor.",
+      "look": {
+        "gender": "f",
+        "age": "adult",
+        "skin": "brown",
+        "hair": "black",
+        "hairStyle": "braid",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#7209B7",
+        "robe2": "#F9C74F",
+        "item": "tree",
+        "bg": "#EDE4FF"
+      }
+    },
+    {
+      "id": 31,
+      "name": "Baraque",
+      "ref": "Juízes 4–5; Hebreus 11:32",
+      "rarity": "comum",
+      "story": "Baraque foi chamado por Deus, por meio de Débora, para libertar Israel. Ele reuniu dez mil homens no monte Tabor e venceu o exército de Sísera. Hebreus 11 cita Baraque entre os heróis da fé.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "helmet",
+        "robe": "#6C757D",
+        "robe2": "#E85D04",
+        "item": "shield",
+        "bg": "#FFE8CC"
+      }
+    },
+    {
+      "id": 32,
+      "name": "Gideão",
+      "ref": "Juízes 6–7",
+      "rarity": "rara",
+      "story": "Gideão se achava o menor da sua família, mas Deus o chamou de \"homem valente\". Com apenas trezentos homens, armados de trombetas, cântaros e tochas, venceu os midianitas. A vitória mostrou que o poder vem de Deus, e não do número de soldados.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "none",
+        "robe": "#E9C46A",
+        "robe2": "#264653",
+        "item": "trumpet",
+        "bg": "#FFF9DB"
+      }
+    },
+    {
+      "id": 33,
+      "name": "Sansão",
+      "ref": "Juízes 13–16",
+      "rarity": "rara",
+      "story": "Sansão foi consagrado a Deus desde antes de nascer, e seu cabelo nunca devia ser cortado. Com a força dada por Deus, venceu um leão com as próprias mãos. No fim da vida, clamou ao Senhor, que lhe devolveu a força uma última vez.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "brown",
+        "hair": "black",
+        "hairStyle": "long",
+        "beard": "long",
+        "head": "none",
+        "robe": "#BB3E03",
+        "robe2": "#EE9B00",
+        "item": "none",
+        "bg": "#FFEDD8"
+      }
+    },
+    {
+      "id": 34,
+      "name": "Noemi",
+      "ref": "Rute 1–4",
+      "rarity": "comum",
+      "story": "Noemi perdeu o marido e os dois filhos na terra de Moabe e voltou triste para Belém. Sua nora Rute não a abandonou e cuidou dela. No fim, Deus transformou sua tristeza em alegria, e ela segurou no colo o netinho Obede.",
+      "look": {
+        "gender": "f",
+        "age": "old",
+        "skin": "tan",
+        "hair": "gray",
+        "hairStyle": "covered",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#6B9080",
+        "robe2": "#EAE7DC",
+        "item": "bread",
+        "bg": "#E8F3EE"
+      }
+    },
+    {
+      "id": 35,
+      "name": "Rute",
+      "ref": "Rute 1–4",
+      "rarity": "rara",
+      "story": "Rute, uma moabita, disse à sogra Noemi: \"O teu povo é o meu povo, e o teu Deus é o meu Deus\". Ela trabalhou recolhendo espigas nos campos de Boaz para sustentar as duas. Rute se casou com Boaz e se tornou bisavó do rei Davi.",
+      "look": {
+        "gender": "f",
+        "age": "young",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "braid",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#F4A261",
+        "robe2": "#FEFAE0",
+        "item": "wheat",
+        "bg": "#FFF7D6"
+      }
+    },
+    {
+      "id": 36,
+      "name": "Boaz",
+      "ref": "Rute 2–4",
+      "rarity": "comum",
+      "story": "Boaz era um homem generoso de Belém, dono de campos de cevada. Ele protegeu Rute e mandou seus trabalhadores deixarem espigas a mais para ela. Como resgatador da família, casou-se com Rute e foi bisavô do rei Davi.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "short",
+        "beard": "long",
+        "head": "turban",
+        "robe": "#283618",
+        "robe2": "#DDA15E",
+        "item": "sandals",
+        "bg": "#F1F7E1"
+      }
+    },
+    {
+      "id": 37,
+      "name": "Ana",
+      "ref": "1 Samuel 1–2",
+      "rarity": "comum",
+      "story": "Ana orou de todo o coração pedindo um filho a Deus. O Senhor ouviu sua oração e lhe deu Samuel, que ela dedicou ao serviço de Deus. Todo ano, ela levava ao filho uma pequena túnica feita por ela mesma.",
+      "look": {
+        "gender": "f",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "covered",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#0081A7",
+        "robe2": "#FDFCDC",
+        "item": "coat",
+        "bg": "#DFF6FF"
+      }
+    },
+    {
+      "id": 38,
+      "name": "Samuel",
+      "ref": "1 Samuel 3; 7; 16",
+      "rarity": "rara",
+      "story": "Ainda menino, Samuel servia no santuário e ouviu Deus chamá-lo durante a noite. Ele respondeu: \"Fala, porque o teu servo ouve\". Samuel se tornou profeta e juiz de Israel e ungiu Saul e Davi como reis.",
+      "look": {
+        "gender": "m",
+        "age": "child",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "short",
+        "beard": "none",
+        "head": "none",
+        "robe": "#FFFFFF",
+        "robe2": "#00AFB9",
+        "item": "lamp",
+        "bg": "#FFF5CC"
+      }
+    },
+    {
+      "id": 39,
+      "name": "Saul",
+      "ref": "1 Samuel 9–10",
+      "rarity": "comum",
+      "story": "Saul era um jovem alto e de boa aparência, da tribo de Benjamim. Enquanto procurava as jumentas perdidas do pai, encontrou o profeta Samuel, que o ungiu como o primeiro rei de Israel. No início, Deus lhe deu um novo coração.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "crown",
+        "robe": "#540B0E",
+        "robe2": "#E09F3E",
+        "item": "spear",
+        "bg": "#FBE9E7"
+      }
+    },
+    {
+      "id": 40,
+      "name": "Jônatas",
+      "ref": "1 Samuel 14; 18–20",
+      "rarity": "comum",
+      "story": "Jônatas era filho do rei Saul e um guerreiro corajoso que confiava em Deus. Ele fez uma aliança de amizade com Davi e lhe deu sua capa, sua espada e seu arco. Jônatas é um grande exemplo de amizade leal.",
+      "look": {
+        "gender": "m",
+        "age": "young",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "headband",
+        "robe": "#2B9348",
+        "robe2": "#FFD60A",
+        "item": "bow",
+        "bg": "#E9FCE9"
+      }
+    },
+    {
+      "id": 41,
+      "name": "Davi",
+      "ref": "1 Samuel 16–17; 2 Samuel 5",
+      "rarity": "lendaria",
+      "story": "Davi era um jovem pastor que tocava harpa e confiava em Deus. Com uma funda e uma pedra, venceu o gigante Golias, dizendo que a batalha pertence ao Senhor. Mais tarde se tornou rei de Israel e escreveu muitos salmos.",
+      "look": {
+        "gender": "m",
+        "age": "young",
+        "skin": "tan",
+        "hair": "red",
+        "hairStyle": "curly",
+        "beard": "none",
+        "head": "none",
+        "robe": "#3A86FF",
+        "robe2": "#FFBE0B",
+        "item": "sling",
+        "bg": "#DDEEFF"
+      }
+    },
+    {
+      "id": 42,
+      "name": "Abigail",
+      "ref": "1 Samuel 25",
+      "rarity": "comum",
+      "story": "Abigail era uma mulher sábia e de bom senso. Quando Davi e seus homens estavam irados com Nabal, o marido dela, ela foi ao encontro deles levando alimentos e palavras humildes. Sua atitude evitou uma tragédia, e Davi agradeceu a Deus por ela.",
+      "look": {
+        "gender": "f",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "long",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#9B5DE5",
+        "robe2": "#F7D6E0",
+        "item": "basket",
+        "bg": "#F3E5FF"
+      }
+    },
+    {
+      "id": 43,
+      "name": "Mefibosete",
+      "ref": "2 Samuel 9",
+      "rarity": "comum",
+      "story": "Mefibosete era filho de Jônatas e tinha os dois pés aleijados. Por causa da amizade com Jônatas, o rei Davi o chamou ao palácio e lhe devolveu as terras da família. Mefibosete passou a comer sempre à mesa do rei, como um dos filhos de Davi.",
+      "look": {
+        "gender": "m",
+        "age": "young",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "none",
+        "robe": "#A9DEF9",
+        "robe2": "#E4C1F9",
+        "item": "staff",
+        "bg": "#EAF7FF"
+      }
+    },
+    {
+      "id": 44,
+      "name": "Natã",
+      "ref": "2 Samuel 7; 12",
+      "rarity": "comum",
+      "story": "Natã era profeta na corte do rei Davi. Ele levou a Davi a promessa de Deus de que seu reino seria estabelecido para sempre. Com coragem e sabedoria, contou uma parábola que ajudou Davi a reconhecer seu pecado e se arrepender.",
+      "look": {
+        "gender": "m",
+        "age": "old",
+        "skin": "brown",
+        "hair": "gray",
+        "hairStyle": "short",
+        "beard": "long",
+        "head": "turban",
+        "robe": "#5F0F40",
+        "robe2": "#FB8B24",
+        "item": "staff",
+        "bg": "#FCE8D8"
+      }
+    },
+    {
+      "id": 45,
+      "name": "Salomão",
+      "ref": "1 Reis 3–10",
+      "rarity": "rara",
+      "story": "Quando Deus lhe ofereceu o que quisesse, o jovem rei Salomão pediu sabedoria para governar bem o povo. Deus lhe deu sabedoria e também riquezas e honra. Salomão construiu o templo de Jerusalém e escreveu muitos provérbios.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "crown",
+        "robe": "#7B2CBF",
+        "robe2": "#FFD000",
+        "item": "book",
+        "bg": "#F5EBFF"
+      }
+    },
+    {
+      "id": 46,
+      "name": "Rainha de Sabá",
+      "ref": "1 Reis 10; Mateus 12:42",
+      "rarity": "comum",
+      "story": "A rainha de Sabá ouviu falar da fama de Salomão e viajou de muito longe para testá-lo com perguntas difíceis. Admirada com a sabedoria que Deus deu a ele, ela louvou o Senhor. Jesus mencionou essa rainha como exemplo de quem buscou a sabedoria.",
+      "look": {
+        "gender": "f",
+        "age": "adult",
+        "skin": "dark",
+        "hair": "black",
+        "hairStyle": "braid",
+        "beard": "none",
+        "head": "crown",
+        "robe": "#FFB703",
+        "robe2": "#023047",
+        "item": "camel",
+        "bg": "#FFF3D1"
+      }
+    },
+    {
+      "id": 47,
+      "name": "Elias",
+      "ref": "1 Reis 17–18; 2 Reis 2",
+      "rarity": "lendaria",
+      "story": "Elias foi um profeta corajoso em tempos de idolatria. No monte Carmelo, orou e Deus enviou fogo do céu, mostrando que só o Senhor é Deus. No fim de sua missão, foi levado ao céu num redemoinho, com um carro de fogo.",
+      "look": {
+        "gender": "m",
+        "age": "old",
+        "skin": "tan",
+        "hair": "gray",
+        "hairStyle": "long",
+        "beard": "long",
+        "head": "none",
+        "robe": "#8C5E3C",
+        "robe2": "#E85D04",
+        "item": "fire",
+        "bg": "#FFE4CC"
+      }
+    },
+    {
+      "id": 48,
+      "name": "Viúva de Sarepta",
+      "ref": "1 Reis 17",
+      "rarity": "comum",
+      "story": "A viúva de Sarepta tinha apenas um punhado de farinha e um pouco de azeite. Mesmo assim, preparou primeiro um pão para o profeta Elias. Deus fez com que a farinha e o azeite não acabassem até o fim da seca.",
+      "look": {
+        "gender": "f",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "covered",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#577590",
+        "robe2": "#F9C74F",
+        "item": "oil",
+        "bg": "#E6EEF5"
+      }
+    },
+    {
+      "id": 49,
+      "name": "Eliseu",
+      "ref": "2 Reis 2–6",
+      "rarity": "rara",
+      "story": "Eliseu foi discípulo de Elias, pediu porção dobrada do seu espírito e recebeu o manto do mestre. Deus realizou por meio dele muitos milagres, como multiplicar o azeite de uma viúva e purificar as águas de Jericó. Ele mostrou o cuidado de Deus com pessoas simples.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "bald",
+        "beard": "short",
+        "head": "none",
+        "robe": "#4D908E",
+        "robe2": "#F9844A",
+        "item": "coat",
+        "bg": "#E2F4F3"
+      }
+    },
+    {
+      "id": 50,
+      "name": "Serva de Naamã",
+      "ref": "2 Reis 5",
+      "rarity": "comum",
+      "story": "Ela era uma menina israelita levada como cativa para a Síria, onde servia a esposa de Naamã. Mesmo longe de casa, falou com fé sobre o profeta de Deus que poderia curar seu senhor. Sua coragem e bondade levaram Naamã a conhecer o verdadeiro Deus.",
+      "look": {
+        "gender": "f",
+        "age": "child",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "braid",
+        "beard": "none",
+        "head": "headband",
+        "robe": "#FF8FAB",
+        "robe2": "#FFE5EC",
+        "item": "flower",
+        "bg": "#FFF0F5"
+      }
+    },
+    {
+      "id": 51,
+      "name": "Naamã",
+      "ref": "2 Reis 5",
+      "rarity": "comum",
+      "story": "Naamã era comandante do exército da Síria, mas sofria de lepra. Seguindo a orientação do profeta Eliseu, mergulhou sete vezes no rio Jordão e foi curado. Então declarou: \"Agora sei que em toda a terra não há Deus, senão em Israel\".",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "light",
+        "hair": "black",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "helmet",
+        "robe": "#C1121F",
+        "robe2": "#669BBC",
+        "item": "water",
+        "bg": "#E3F2FD"
+      }
+    },
+    {
+      "id": 52,
+      "name": "Ezequias",
+      "ref": "2 Reis 18–20",
+      "rarity": "comum",
+      "story": "Ezequias foi um rei de Judá que confiou no Senhor e destruiu os ídolos. Quando os assírios ameaçaram Jerusalém, ele orou, e Deus livrou a cidade. Quando ficou doente, Deus ouviu sua oração e lhe deu mais quinze anos de vida.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "short",
+        "beard": "long",
+        "head": "crown",
+        "robe": "#0077B6",
+        "robe2": "#FFD166",
+        "item": "sun",
+        "bg": "#FFF8DC"
+      }
+    },
+    {
+      "id": 53,
+      "name": "Josias",
+      "ref": "2 Reis 22–23",
+      "rarity": "comum",
+      "story": "Josias se tornou rei de Judá com apenas oito anos de idade. Quando o livro da Lei foi encontrado no templo, ele o leu para o povo e renovou a aliança com Deus. Josias fez o que era reto aos olhos do Senhor.",
+      "look": {
+        "gender": "m",
+        "age": "child",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "short",
+        "beard": "none",
+        "head": "crown",
+        "robe": "#06D6A0",
+        "robe2": "#FFD166",
+        "item": "scroll",
+        "bg": "#E6FFF6"
+      }
+    },
+    {
+      "id": 54,
+      "name": "Esdras",
+      "ref": "Esdras 7–8; Neemias 8",
+      "rarity": "comum",
+      "story": "Esdras era sacerdote e escriba, dedicado a estudar a Lei de Deus, praticá-la e ensiná-la. Ele liderou um grupo de judeus na volta da Babilônia para Jerusalém. Diante do povo reunido, leu o livro da Lei desde a manhã até o meio-dia.",
+      "look": {
+        "gender": "m",
+        "age": "old",
+        "skin": "tan",
+        "hair": "white",
+        "hairStyle": "short",
+        "beard": "long",
+        "head": "turban",
+        "robe": "#3C6E71",
+        "robe2": "#D9D9D9",
+        "item": "pen",
+        "bg": "#E8F1F2"
+      }
+    },
+    {
+      "id": 55,
+      "name": "Neemias",
+      "ref": "Neemias 1–6",
+      "rarity": "comum",
+      "story": "Neemias era copeiro do rei da Pérsia e ficou triste ao saber que os muros de Jerusalém estavam destruídos. Depois de orar, pediu permissão ao rei para reconstruí-los. Com o povo trabalhando unido, o muro foi concluído em apenas 52 dias.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "turban",
+        "robe": "#B08968",
+        "robe2": "#7F5539",
+        "item": "wall",
+        "bg": "#F6EEE3"
+      }
+    },
+    {
+      "id": 56,
+      "name": "Ester",
+      "ref": "Ester 2–8",
+      "rarity": "rara",
+      "story": "Ester era uma jovem judia órfã, criada por seu primo Mardoqueu, que se tornou rainha da Pérsia. Quando seu povo foi ameaçado, ela jejuou e foi falar com o rei, dizendo: \"Se perecer, pereci\". Deus usou sua coragem para salvar os judeus.",
+      "look": {
+        "gender": "f",
+        "age": "young",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "long",
+        "beard": "none",
+        "head": "crown",
+        "robe": "#C9184A",
+        "robe2": "#FFD6A5",
+        "item": "scroll",
+        "bg": "#FFE0EA"
+      }
+    },
+    {
+      "id": 57,
+      "name": "Jó",
+      "ref": "Jó 1–2; 42",
+      "rarity": "comum",
+      "story": "Jó era um homem íntegro que temia a Deus. Ele perdeu seus bens, seus filhos e a saúde, mas não deixou de confiar no Senhor. No final, Deus restaurou sua vida e lhe deu o dobro de tudo o que tinha antes.",
+      "look": {
+        "gender": "m",
+        "age": "old",
+        "skin": "brown",
+        "hair": "white",
+        "hairStyle": "short",
+        "beard": "long",
+        "head": "none",
+        "robe": "#A68A64",
+        "robe2": "#656D4A",
+        "item": "none",
+        "bg": "#F2EDE4"
+      }
+    },
+    {
+      "id": 58,
+      "name": "Isaías",
+      "ref": "Isaías 6; 9; 53",
+      "rarity": "rara",
+      "story": "Isaías viu o Senhor em Seu trono e, quando Deus perguntou quem enviaria, respondeu: \"Eis-me aqui, envia-me a mim\". Ele profetizou o nascimento de um menino chamado Maravilhoso Conselheiro e Príncipe da Paz. Também anunciou o Servo que levaria sobre si as nossas dores.",
+      "look": {
+        "gender": "m",
+        "age": "old",
+        "skin": "tan",
+        "hair": "gray",
+        "hairStyle": "short",
+        "beard": "long",
+        "head": "none",
+        "robe": "#1B4965",
+        "robe2": "#BEE9E8",
+        "item": "scroll",
+        "bg": "#E1F1FA"
+      }
+    },
+    {
+      "id": 59,
+      "name": "Jeremias",
+      "ref": "Jeremias 1; 18; 31",
+      "rarity": "comum",
+      "story": "Deus chamou Jeremias para ser profeta quando ele ainda era jovem e lhe disse: \"Não tenha medo, pois Eu estou com você\". Mesmo enfrentando oposição, ele anunciou fielmente a mensagem de Deus. Jeremias falou da nova aliança, em que Deus escreveria Sua lei no coração do povo.",
+      "look": {
+        "gender": "m",
+        "age": "young",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "curly",
+        "beard": "short",
+        "head": "none",
+        "robe": "#4F772D",
+        "robe2": "#ECF39E",
+        "item": "jar",
+        "bg": "#EFF7DF"
+      }
+    },
+    {
+      "id": 60,
+      "name": "Ezequiel",
+      "ref": "Ezequiel 1–3; 37",
+      "rarity": "comum",
+      "story": "Ezequiel era sacerdote e profeta entre os judeus exilados na Babilônia. Em uma visão, Deus lhe mostrou um vale de ossos secos que voltaram a viver. Sua mensagem era de esperança: Deus daria ao Seu povo um coração novo e um espírito novo.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "brown",
+        "hair": "black",
+        "hairStyle": "short",
+        "beard": "long",
+        "head": "turban",
+        "robe": "#335C67",
+        "robe2": "#E09F3E",
+        "item": "scroll",
+        "bg": "#E6F0F2"
+      }
+    },
+    {
+      "id": 61,
+      "name": "Daniel",
+      "ref": "Daniel 1; 6",
+      "rarity": "rara",
+      "story": "Daniel foi levado jovem para a Babilônia e decidiu não se contaminar com a comida do rei. Ele orava a Deus três vezes por dia, mesmo quando isso foi proibido. Lançado na cova dos leões, foi protegido por Deus, que fechou a boca dos leões.",
+      "look": {
+        "gender": "m",
+        "age": "young",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "short",
+        "beard": "none",
+        "head": "turban",
+        "robe": "#0096C7",
+        "robe2": "#FFB703",
+        "item": "lion",
+        "bg": "#E0F4FF"
+      }
+    },
+    {
+      "id": 62,
+      "name": "Sadraque",
+      "ref": "Daniel 1–3",
+      "rarity": "comum",
+      "story": "Sadraque era um dos três jovens hebreus amigos de Daniel na Babilônia. Ele se recusou a adorar a estátua de ouro do rei Nabucodonosor. Lançado na fornalha ardente, foi protegido por Deus e saiu sem nenhuma queimadura.",
+      "look": {
+        "gender": "m",
+        "age": "young",
+        "skin": "brown",
+        "hair": "black",
+        "hairStyle": "curly",
+        "beard": "none",
+        "head": "turban",
+        "robe": "#E36414",
+        "robe2": "#FFD166",
+        "item": "fire",
+        "bg": "#FFEFE0"
+      }
+    },
+    {
+      "id": 63,
+      "name": "Mesaque",
+      "ref": "Daniel 1–3",
+      "rarity": "comum",
+      "story": "Mesaque e seus amigos preferiram comer legumes e beber água em vez das iguarias do rei, e ficaram mais saudáveis que os outros jovens. Diante da estátua de ouro, ele permaneceu fiel ao verdadeiro Deus. Na fornalha, um quarto homem apareceu andando com eles no meio do fogo.",
+      "look": {
+        "gender": "m",
+        "age": "young",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "short",
+        "beard": "none",
+        "head": "turban",
+        "robe": "#2A9D8F",
+        "robe2": "#F4A261",
+        "item": "water",
+        "bg": "#E3F8F5"
+      }
+    },
+    {
+      "id": 64,
+      "name": "Abede-Nego",
+      "ref": "Daniel 3",
+      "rarity": "comum",
+      "story": "Abede-Nego disse ao rei, junto com seus amigos, que o Deus deles podia livrá-los e que, mesmo assim, não adorariam a estátua. Eles foram amarrados e lançados na fornalha, mas logo foram vistos soltos, andando no meio do fogo. O rei reconheceu o poder do Deus deles.",
+      "look": {
+        "gender": "m",
+        "age": "young",
+        "skin": "brown",
+        "hair": "black",
+        "hairStyle": "short",
+        "beard": "none",
+        "head": "turban",
+        "robe": "#8338EC",
+        "robe2": "#FFBE0B",
+        "item": "rope",
+        "bg": "#EFE6FF"
+      }
+    },
+    {
+      "id": 65,
+      "name": "Jonas",
+      "ref": "Jonas 1–3",
+      "rarity": "rara",
+      "story": "Jonas tentou fugir quando Deus o mandou pregar em Nínive e embarcou num navio na direção contrária. Durante uma tempestade, foi lançado ao mar e engolido por um grande peixe, de onde orou a Deus. Depois de três dias, obedeceu, e a cidade inteira se arrependeu.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "curly",
+        "beard": "short",
+        "head": "none",
+        "robe": "#219EBC",
+        "robe2": "#FB8500",
+        "item": "whale",
+        "bg": "#D6F1FF"
+      }
+    },
+    {
+      "id": 66,
+      "name": "Zacarias",
+      "ref": "Lucas 1",
+      "rarity": "comum",
+      "story": "Zacarias era um sacerdote idoso que servia no templo. O anjo Gabriel anunciou que ele e sua esposa Isabel teriam um filho, mas ele duvidou e ficou mudo. Quando o menino nasceu, escreveu \"Seu nome é João\", voltou a falar e louvou a Deus.",
+      "look": {
+        "gender": "m",
+        "age": "old",
+        "skin": "tan",
+        "hair": "white",
+        "hairStyle": "short",
+        "beard": "long",
+        "head": "turban",
+        "robe": "#F8F9FA",
+        "robe2": "#4361EE",
+        "item": "pen",
+        "bg": "#E7EBFF"
+      }
+    },
+    {
+      "id": 67,
+      "name": "Isabel",
+      "ref": "Lucas 1",
+      "rarity": "comum",
+      "story": "Isabel era esposa de Zacarias e já era idosa quando Deus lhe deu um filho, João Batista. Quando Maria a visitou, o bebê pulou de alegria em seu ventre, e Isabel, cheia do Espírito Santo, abençoou Maria. Ela mostra que para Deus nada é impossível.",
+      "look": {
+        "gender": "f",
+        "age": "old",
+        "skin": "tan",
+        "hair": "gray",
+        "hairStyle": "covered",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#E07A5F",
+        "robe2": "#F2CC8F",
+        "item": "flower",
+        "bg": "#FDECE6"
+      }
+    },
+    {
+      "id": 68,
+      "name": "Maria",
+      "ref": "Lucas 1–2",
+      "rarity": "lendaria",
+      "story": "Maria era uma jovem de Nazaré que recebeu do anjo Gabriel a notícia de que seria mãe do Filho de Deus. Ela respondeu com fé: \"Aqui está a serva do Senhor\". Em Belém, deu à luz Jesus e O colocou numa manjedoura.",
+      "look": {
+        "gender": "f",
+        "age": "young",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "covered",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#4895EF",
+        "robe2": "#FFFFFF",
+        "item": "baby",
+        "bg": "#E3EEFF"
+      }
+    },
+    {
+      "id": 69,
+      "name": "José de Nazaré",
+      "ref": "Mateus 1–2",
+      "rarity": "comum",
+      "story": "José era um carpinteiro de Nazaré, noivo de Maria, e a Bíblia o chama de homem justo. Obedecendo às orientações de Deus em sonhos, cuidou de Maria e do menino Jesus e os levou ao Egito para protegê-los. Depois, foram morar em Nazaré.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "none",
+        "robe": "#A47148",
+        "robe2": "#D4E09B",
+        "item": "staff",
+        "bg": "#F4EFE6"
+      }
+    },
+    {
+      "id": 70,
+      "name": "Jesus",
+      "ref": "Mateus 1–28; Lucas 2; João 3:16",
+      "rarity": "lendaria",
+      "story": "Jesus é o Filho de Deus, que nasceu em Belém e crescia em sabedoria e graça. Ele curou os doentes, ensinou sobre o amor do Pai e deu Sua vida na cruz para nos salvar. Ressuscitou ao terceiro dia e prometeu voltar para buscar os Seus.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "long",
+        "beard": "short",
+        "head": "none",
+        "robe": "#FFFFFF",
+        "robe2": "#C1121F",
+        "item": "lamb",
+        "bg": "#FFF6D5"
+      }
+    },
+    {
+      "id": 71,
+      "name": "Simeão",
+      "ref": "Lucas 2:25–35",
+      "rarity": "comum",
+      "story": "Simeão era um homem justo e piedoso de Jerusalém que esperava o Salvador. O Espírito Santo lhe revelou que ele não morreria antes de ver o Cristo. Ao tomar o menino Jesus nos braços no templo, louvou a Deus porque seus olhos tinham visto a salvação.",
+      "look": {
+        "gender": "m",
+        "age": "old",
+        "skin": "tan",
+        "hair": "white",
+        "hairStyle": "short",
+        "beard": "long",
+        "head": "none",
+        "robe": "#90A955",
+        "robe2": "#ECF39E",
+        "item": "baby",
+        "bg": "#F0F7E0"
+      }
+    },
+    {
+      "id": 72,
+      "name": "Ana, a profetisa",
+      "ref": "Lucas 2:36–38",
+      "rarity": "comum",
+      "story": "Ana era uma profetisa muito idosa que não saía do templo, servindo a Deus dia e noite com jejuns e orações. Quando viu o menino Jesus, deu graças a Deus. Depois, falava dEle a todos que esperavam a redenção de Jerusalém.",
+      "look": {
+        "gender": "f",
+        "age": "old",
+        "skin": "brown",
+        "hair": "white",
+        "hairStyle": "covered",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#9D4EDD",
+        "robe2": "#E0AAFF",
+        "item": "lamp",
+        "bg": "#F5EAFF"
+      }
+    },
+    {
+      "id": 73,
+      "name": "João Batista",
+      "ref": "Mateus 3; João 1",
+      "rarity": "rara",
+      "story": "João Batista foi o mensageiro que preparou o caminho para Jesus. Ele pregava no deserto, chamava o povo ao arrependimento e batizava no rio Jordão. Ao ver Jesus, disse: \"Eis o Cordeiro de Deus, que tira o pecado do mundo!\"",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "brown",
+        "hair": "black",
+        "hairStyle": "long",
+        "beard": "long",
+        "head": "none",
+        "robe": "#7F5539",
+        "robe2": "#DDB892",
+        "item": "dove",
+        "bg": "#E6F4FF"
+      }
+    },
+    {
+      "id": 74,
+      "name": "André",
+      "ref": "João 1; 6",
+      "rarity": "comum",
+      "story": "André era pescador e foi um dos primeiros a seguir Jesus. Logo que conheceu o Mestre, foi chamar o irmão, Simão Pedro, dizendo: \"Achamos o Messias!\". Foi ele também quem levou a Jesus o menino que tinha cinco pães e dois peixes.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "curly",
+        "beard": "short",
+        "head": "none",
+        "robe": "#F77F00",
+        "robe2": "#003049",
+        "item": "fish",
+        "bg": "#FFF0DB"
+      }
+    },
+    {
+      "id": 75,
+      "name": "Pedro",
+      "ref": "Mateus 4; 14; 16; Atos 2",
+      "rarity": "rara",
+      "story": "Pedro era um pescador que deixou suas redes para seguir Jesus. Ele andou sobre as águas e declarou: \"Tu és o Cristo, o Filho do Deus vivo\". Mesmo depois de negar Jesus, foi perdoado e pregou com poder no dia de Pentecostes.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "gray",
+        "hairStyle": "curly",
+        "beard": "long",
+        "head": "none",
+        "robe": "#1D4E89",
+        "robe2": "#F2C14E",
+        "item": "net",
+        "bg": "#DCEFFF"
+      }
+    },
+    {
+      "id": 76,
+      "name": "Tiago",
+      "ref": "Marcos 1; 9",
+      "rarity": "comum",
+      "story": "Tiago era pescador, filho de Zebedeu e irmão de João. Ele deixou o barco e o pai para seguir Jesus. Tiago esteve com Jesus em momentos especiais, como a transfiguração no monte.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "none",
+        "robe": "#D00000",
+        "robe2": "#FFBA08",
+        "item": "boat",
+        "bg": "#FFE3E3"
+      }
+    },
+    {
+      "id": 77,
+      "name": "João",
+      "ref": "João 13; 19; Apocalipse 1",
+      "rarity": "rara",
+      "story": "João, irmão de Tiago, era chamado de discípulo amado. Ao pé da cruz, Jesus confiou a ele o cuidado de Sua mãe, Maria. Na ilha de Patmos, recebeu as visões do Apocalipse, cheias de esperança na volta de Jesus.",
+      "look": {
+        "gender": "m",
+        "age": "young",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "long",
+        "beard": "none",
+        "head": "none",
+        "robe": "#00B4D8",
+        "robe2": "#FFFFFF",
+        "item": "book",
+        "bg": "#E0FBFF"
+      }
+    },
+    {
+      "id": 78,
+      "name": "Mateus",
+      "ref": "Mateus 9:9–13",
+      "rarity": "comum",
+      "story": "Mateus era cobrador de impostos e estava sentado na coletoria quando Jesus lhe disse: \"Segue-Me\". Ele se levantou e O seguiu. Depois, Jesus esteve em sua casa, à mesa com muitos cobradores de impostos, e Mateus se tornou um dos doze apóstolos.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "turban",
+        "robe": "#2D6A4F",
+        "robe2": "#FFD166",
+        "item": "coins",
+        "bg": "#E5F5EC"
+      }
+    },
+    {
+      "id": 79,
+      "name": "Natanael",
+      "ref": "João 1:45–51",
+      "rarity": "comum",
+      "story": "Filipe chamou Natanael para conhecer Jesus, mas ele duvidou que algo bom pudesse vir de Nazaré. Jesus disse que o tinha visto debaixo da figueira e o chamou de verdadeiro israelita, em quem não há falsidade. Então Natanael declarou: \"Tu és o Filho de Deus!\"",
+      "look": {
+        "gender": "m",
+        "age": "young",
+        "skin": "brown",
+        "hair": "black",
+        "hairStyle": "curly",
+        "beard": "short",
+        "head": "none",
+        "robe": "#F28F3B",
+        "robe2": "#588B8B",
+        "item": "tree",
+        "bg": "#FFF2E2"
+      }
+    },
+    {
+      "id": 80,
+      "name": "Tomé",
+      "ref": "João 11:16; 20:24–29",
+      "rarity": "comum",
+      "story": "Tomé foi um dos doze apóstolos. Ele não estava presente quando Jesus ressuscitado apareceu aos discípulos e disse que só creria se visse. Quando Jesus apareceu novamente, Tomé exclamou: \"Senhor meu e Deus meu!\"",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "brown",
+        "hair": "brown",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "none",
+        "robe": "#5A189A",
+        "robe2": "#C77DFF",
+        "item": "none",
+        "bg": "#F1E6FF"
+      }
+    },
+    {
+      "id": 81,
+      "name": "Bartimeu",
+      "ref": "Marcos 10:46–52",
+      "rarity": "comum",
+      "story": "Bartimeu era um mendigo cego que ficava à beira do caminho em Jericó. Ao ouvir que Jesus passava, gritou: \"Jesus, Filho de Davi, tem misericórdia de mim!\". Jesus o curou, e ele passou a seguir Jesus pelo caminho.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "brown",
+        "hair": "black",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "none",
+        "robe": "#8A817C",
+        "robe2": "#F4A259",
+        "item": "staff",
+        "bg": "#F3EFEA"
+      }
+    },
+    {
+      "id": 82,
+      "name": "Zaqueu",
+      "ref": "Lucas 19:1–10",
+      "rarity": "comum",
+      "story": "Zaqueu era chefe dos cobradores de impostos, muito rico e de baixa estatura. Ele subiu numa árvore para ver Jesus passar, e Jesus disse que ficaria em sua casa. Zaqueu mudou de vida e prometeu devolver quatro vezes mais a quem tinha prejudicado.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "turban",
+        "robe": "#06A77D",
+        "robe2": "#F1A208",
+        "item": "tree",
+        "bg": "#E0F8EE"
+      }
+    },
+    {
+      "id": 83,
+      "name": "Nicodemos",
+      "ref": "João 3; 19:39",
+      "rarity": "comum",
+      "story": "Nicodemos era fariseu e líder dos judeus e foi conversar com Jesus à noite. Jesus lhe explicou que é preciso nascer de novo e disse: \"Deus amou o mundo de tal maneira que deu o Seu Filho unigênito\". Depois da crucifixão, ele ajudou a sepultar Jesus.",
+      "look": {
+        "gender": "m",
+        "age": "old",
+        "skin": "tan",
+        "hair": "gray",
+        "hairStyle": "short",
+        "beard": "long",
+        "head": "turban",
+        "robe": "#14213D",
+        "robe2": "#FCA311",
+        "item": "lamp",
+        "bg": "#E5E8F0"
+      }
+    },
+    {
+      "id": 84,
+      "name": "A samaritana",
+      "ref": "João 4",
+      "rarity": "comum",
+      "story": "Ela foi buscar água no poço e encontrou Jesus, que lhe pediu de beber. Jesus lhe falou da água viva, que mata a sede para sempre, e revelou que era o Messias. Ela deixou o cântaro e foi contar a toda a cidade.",
+      "look": {
+        "gender": "f",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "covered",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#EF476F",
+        "robe2": "#FFD166",
+        "item": "jar",
+        "bg": "#FFE6EC"
+      }
+    },
+    {
+      "id": 85,
+      "name": "O menino dos pães",
+      "ref": "João 6:1–14",
+      "rarity": "comum",
+      "story": "Um menino tinha cinco pães de cevada e dois peixinhos. André o levou até Jesus, que deu graças e multiplicou o alimento. Cerca de cinco mil homens comeram, e ainda sobraram doze cestos!",
+      "look": {
+        "gender": "m",
+        "age": "child",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "curly",
+        "beard": "none",
+        "head": "none",
+        "robe": "#FFD166",
+        "robe2": "#118AB2",
+        "item": "bread",
+        "bg": "#FFF8E1"
+      }
+    },
+    {
+      "id": 86,
+      "name": "Marta",
+      "ref": "Lucas 10:38–42; João 11",
+      "rarity": "comum",
+      "story": "Marta recebeu Jesus em sua casa em Betânia e se ocupava em servi-Lo. Quando seu irmão Lázaro morreu, ela declarou com fé: \"Eu creio que Tu és o Cristo, o Filho de Deus\". Jesus amava Marta, sua irmã Maria e Lázaro.",
+      "look": {
+        "gender": "f",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "covered",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#F3722C",
+        "robe2": "#FFF3B0",
+        "item": "bread",
+        "bg": "#FFEBDD"
+      }
+    },
+    {
+      "id": 87,
+      "name": "Maria de Betânia",
+      "ref": "Lucas 10:38–42; João 12:1–8",
+      "rarity": "comum",
+      "story": "Maria, irmã de Marta, sentou-se aos pés de Jesus para ouvir Seus ensinamentos, e Jesus disse que ela escolheu a boa parte. Antes da crucifixão, ungiu os pés de Jesus com um perfume muito caro. A casa inteira se encheu com a fragrância.",
+      "look": {
+        "gender": "f",
+        "age": "young",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "long",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#577590",
+        "robe2": "#F9C74F",
+        "item": "oil",
+        "bg": "#E9F0F7"
+      }
+    },
+    {
+      "id": 88,
+      "name": "Lázaro",
+      "ref": "João 11",
+      "rarity": "comum",
+      "story": "Lázaro era amigo de Jesus e morava em Betânia com suas irmãs. Quando ele já estava no túmulo havia quatro dias, Jesus chorou e depois o chamou: \"Lázaro, vem para fora!\". Lázaro saiu vivo, e muitos creram em Jesus.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "none",
+        "robe": "#F1FAEE",
+        "robe2": "#90BE6D",
+        "item": "none",
+        "bg": "#EAF7E4"
+      }
+    },
+    {
+      "id": 89,
+      "name": "José de Arimateia",
+      "ref": "Mateus 27:57–60; Lucas 23:50–53",
+      "rarity": "comum",
+      "story": "José de Arimateia era um homem rico e membro do conselho, que esperava o Reino de Deus. Ele teve coragem de pedir a Pilatos o corpo de Jesus. Envolveu-o num lençol limpo e o colocou em seu próprio túmulo novo, aberto na rocha.",
+      "look": {
+        "gender": "m",
+        "age": "old",
+        "skin": "tan",
+        "hair": "gray",
+        "hairStyle": "short",
+        "beard": "long",
+        "head": "turban",
+        "robe": "#3F37C9",
+        "robe2": "#E9ECEF",
+        "item": "stone",
+        "bg": "#E8E7FA"
+      }
+    },
+    {
+      "id": 90,
+      "name": "Maria Madalena",
+      "ref": "Lucas 8:1–3; João 20",
+      "rarity": "rara",
+      "story": "Maria Madalena foi libertada por Jesus e passou a segui-Lo e servi-Lo. Ela esteve junto à cruz e foi bem cedo ao túmulo no domingo. Foi a primeira pessoa a ver Jesus ressuscitado e a anunciar: \"Vi o Senhor!\"",
+      "look": {
+        "gender": "f",
+        "age": "young",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "long",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#D81159",
+        "robe2": "#FFBC42",
+        "item": "sun",
+        "bg": "#FFE8F0"
+      }
+    },
+    {
+      "id": 91,
+      "name": "Barnabé",
+      "ref": "Atos 4:36–37; 9:27; 11:22–26",
+      "rarity": "comum",
+      "story": "Barnabé, cujo nome significa \"filho da consolação\", vendeu um campo e entregou o dinheiro aos apóstolos para ajudar os necessitados. Ele acolheu Saulo quando os outros ainda tinham medo dele. Era um homem bom, cheio do Espírito Santo e de fé.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "curly",
+        "beard": "long",
+        "head": "none",
+        "robe": "#43AA8B",
+        "robe2": "#F8961E",
+        "item": "coins",
+        "bg": "#E4F6EF"
+      }
+    },
+    {
+      "id": 92,
+      "name": "Estêvão",
+      "ref": "Atos 6–7",
+      "rarity": "rara",
+      "story": "Estêvão era cheio de fé e do Espírito Santo e foi escolhido para servir os necessitados da igreja. Ele falou de Jesus com coragem, e seu rosto parecia o de um anjo. Enquanto era apedrejado, orou pedindo que Deus perdoasse seus perseguidores.",
+      "look": {
+        "gender": "m",
+        "age": "young",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "none",
+        "robe": "#FFFFFF",
+        "robe2": "#E63946",
+        "item": "bread",
+        "bg": "#FFF0F0"
+      }
+    },
+    {
+      "id": 93,
+      "name": "Filipe",
+      "ref": "Atos 6; 8",
+      "rarity": "comum",
+      "story": "Filipe, um dos sete escolhidos para servir na igreja, pregou o evangelho em Samaria. Guiado por um anjo, encontrou um oficial etíope que lia o livro de Isaías em sua carruagem. Filipe explicou que a profecia falava de Jesus e batizou o oficial.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "none",
+        "robe": "#FB8500",
+        "robe2": "#8ECAE6",
+        "item": "chariot",
+        "bg": "#FFF1DE"
+      }
+    },
+    {
+      "id": 94,
+      "name": "Paulo",
+      "ref": "Atos 9; 13–28; 2 Timóteo 4:7",
+      "rarity": "lendaria",
+      "story": "Saulo perseguia os cristãos até encontrar Jesus numa luz brilhante no caminho de Damasco. Transformado, Paulo viajou por muitos lugares anunciando o evangelho e fundando igrejas. Escreveu muitas cartas do Novo Testamento e disse: \"Combati o bom combate, completei a carreira, guardei a fé\".",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "bald",
+        "beard": "long",
+        "head": "none",
+        "robe": "#9B2226",
+        "robe2": "#E9D8A6",
+        "item": "scroll",
+        "bg": "#FDF0D5"
+      }
+    },
+    {
+      "id": 95,
+      "name": "Dorcas",
+      "ref": "Atos 9:36–42",
+      "rarity": "comum",
+      "story": "Dorcas, também chamada Tabita, morava em Jope e era conhecida por suas boas obras e por ajudar os pobres. Ela fazia túnicas e roupas para as viúvas. Quando ela morreu, Pedro orou, e Deus a trouxe de volta à vida.",
+      "look": {
+        "gender": "f",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "covered",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#F78C6B",
+        "robe2": "#FFFFFF",
+        "item": "coat",
+        "bg": "#FFEDE6"
+      }
+    },
+    {
+      "id": 96,
+      "name": "Cornélio",
+      "ref": "Atos 10",
+      "rarity": "comum",
+      "story": "Cornélio era um centurião romano que temia a Deus, orava sempre e ajudava os pobres. Um anjo lhe disse para chamar Pedro, que foi até sua casa e falou de Jesus. Cornélio e sua família receberam o Espírito Santo e foram batizados.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "light",
+        "hair": "brown",
+        "hairStyle": "short",
+        "beard": "none",
+        "head": "helmet",
+        "robe": "#AE2012",
+        "robe2": "#CA6702",
+        "item": "shield",
+        "bg": "#FDE8E4"
+      }
+    },
+    {
+      "id": 97,
+      "name": "Silas",
+      "ref": "Atos 15–16",
+      "rarity": "comum",
+      "story": "Silas acompanhou Paulo em sua segunda viagem missionária. Presos em Filipos, ele e Paulo oravam e cantavam hinos a Deus à meia-noite. Houve um terremoto, as portas se abriram, e o carcereiro e sua família creram em Jesus.",
+      "look": {
+        "gender": "m",
+        "age": "adult",
+        "skin": "brown",
+        "hair": "black",
+        "hairStyle": "short",
+        "beard": "short",
+        "head": "none",
+        "robe": "#0A9396",
+        "robe2": "#EE9B00",
+        "item": "key",
+        "bg": "#E0F5F5"
+      }
+    },
+    {
+      "id": 98,
+      "name": "Timóteo",
+      "ref": "Atos 16:1–3; 1 Timóteo 4:12; 2 Timóteo 1:5; 3:15",
+      "rarity": "comum",
+      "story": "Timóteo conheceu as Sagradas Escrituras desde criança, com a fé de sua avó Loide e de sua mãe Eunice. Ainda jovem, tornou-se companheiro de viagem e auxiliar de Paulo. Paulo o aconselhou: \"Ninguém despreze a tua mocidade; pelo contrário, sê o exemplo dos fiéis\".",
+      "look": {
+        "gender": "m",
+        "age": "young",
+        "skin": "light",
+        "hair": "brown",
+        "hairStyle": "short",
+        "beard": "none",
+        "head": "none",
+        "robe": "#4CC9F0",
+        "robe2": "#F72585",
+        "item": "book",
+        "bg": "#E3F8FF"
+      }
+    },
+    {
+      "id": 99,
+      "name": "Lídia",
+      "ref": "Atos 16:13–15",
+      "rarity": "comum",
+      "story": "Lídia era vendedora de tecidos de púrpura e adorava a Deus. Enquanto ouvia Paulo junto ao rio, em Filipos, o Senhor abriu seu coração. Ela foi batizada com sua família e recebeu os missionários em sua casa.",
+      "look": {
+        "gender": "f",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "black",
+        "hairStyle": "long",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#7B2CBF",
+        "robe2": "#E0AAFF",
+        "item": "none",
+        "bg": "#F3E8FF"
+      }
+    },
+    {
+      "id": 100,
+      "name": "Priscila",
+      "ref": "Atos 18; Romanos 16:3",
+      "rarity": "comum",
+      "story": "Priscila e seu marido, Áquila, faziam tendas, como Paulo, e o receberam em sua casa em Corinto. Juntos, explicaram com mais exatidão o caminho de Deus ao pregador Apolo. Paulo os chamou de seus cooperadores em Cristo Jesus.",
+      "look": {
+        "gender": "f",
+        "age": "adult",
+        "skin": "tan",
+        "hair": "brown",
+        "hairStyle": "braid",
+        "beard": "none",
+        "head": "veil",
+        "robe": "#2EC4B6",
+        "robe2": "#FF9F1C",
+        "item": "tent",
+        "bg": "#E0FAF7"
+      }
+    }
+  ]
+}
