@@ -789,6 +789,32 @@ function migrate() {
   add('sticker_orders', 'pix_code', 'TEXT');
   add('sticker_orders', 'payer', 'TEXT');
   add('sticker_orders', 'checked_at', 'INTEGER');
+  // Pagamentos do site todo (figurinhas hoje; cursos e outras vendas depois): Pix pela SyncPay
+  // (automático) ou Pix manual confirmado pela equipe. purpose diz o que foi comprado e ref os detalhes.
+  db.exec(`CREATE TABLE IF NOT EXISTS payments (
+    id INTEGER PRIMARY KEY,
+    member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    purpose TEXT NOT NULL,
+    ref TEXT NOT NULL DEFAULT '{}',
+    title TEXT NOT NULL,
+    amount_cents INTEGER NOT NULL,
+    txid TEXT NOT NULL UNIQUE,
+    identifier TEXT,
+    pix_code TEXT,
+    status TEXT NOT NULL DEFAULT 'aberto' CHECK (status IN ('aberto','aguardando','pago','cancelado','recusado')),
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+    notified_at TEXT,
+    paid_at TEXT,
+    checked_at INTEGER
+  )`);
+  db.exec('CREATE INDEX IF NOT EXISTS idx_payments_member ON payments(member_id, purpose, id)');
+  if (!flag('pagamentos-v1')) {
+    db.exec(`INSERT OR IGNORE INTO payments (id, member_id, purpose, ref, title, amount_cents, txid, identifier, pix_code, status, created_at, notified_at, paid_at, checked_at)
+      SELECT id, member_id, 'figurinhas', json_object('album', album, 'packs', packs),
+        packs || CASE WHEN packs > 1 THEN ' pacotinhos' ELSE ' pacotinho' END || ' de figurinhas',
+        amount_cents, txid, identifier, pix_code, status, created_at, notified_at, paid_at, checked_at FROM sticker_orders`);
+    setFlag('pagamentos-v1');
+  }
   for (const k of ['pix_key', 'pix_name', 'pix_city']) db.prepare('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)').run(k, '');
 
   // Volta para os Desbravadores: "Nº Clã X" vira "Nº Clube X" e a medalha de grupo vira de unidade.

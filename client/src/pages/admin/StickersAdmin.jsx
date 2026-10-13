@@ -1,56 +1,10 @@
-// Equipe: pagamentos dos pacotinhos de figurinhas (Pix), quem completou os álbuns,
-// pacotinhos de presente e a chave Pix que recebe os pagamentos.
+// Equipe: quem completou os álbuns (para entregar o trunfo) e pacotinhos de presente.
+// Os pagamentos ficam em Admin → Pagamentos.
 import { useState } from 'react';
-import { Check, Gift, Trophy, X } from 'lucide-react';
+import { Gift, Trophy } from 'lucide-react';
 import { api } from '../../api.js';
-import { fmtDate, fmtDateTime } from '../../format.js';
-import { Badge, Button, Card, Confirm, Field, Loading, PageHeader, Section, Tabs, useAsync, useLoad } from '../../ui.jsx';
-
-const money = (c) => (c / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-const STATUS = [['aguardando', 'Avisaram que pagaram'], ['aberto', 'Esperando Pix'], ['pago', 'Pagos'], ['recusado', 'Recusados']];
-
-function Orders() {
-  const [status, setStatus] = useState('aguardando');
-  const state = useLoad(() => api.get('/admin/figurinhas/pedidos?status=' + status), [status]);
-  const [busy, run] = useAsync();
-  const act = (o, acao) => run(() => api.post(`/admin/figurinhas/pedidos/${o.id}/${acao}`), acao === 'confirmar' ? 'Pagamento confirmado! Os pacotinhos já estão com o membro.' : 'Pedido recusado').then(state.reload);
-  return (
-    <Loading {...state}>
-      {(d) => (
-        <>
-          <p className="small muted">Confira no extrato do banco o valor e o código do pedido (aparece na descrição do Pix) antes de confirmar. Total já recebido: <b>{money(d.total_paid_cents)}</b>.</p>
-          <div className="seg" role="tablist" style={{ marginBottom: '.7rem', flexWrap: 'wrap' }}>
-            {STATUS.map(([k, label]) => (
-              <button key={k} type="button" className={status === k ? 'active' : ''} onClick={() => setStatus(k)}>{label}{d.counts[k] ? ` (${d.counts[k]})` : ''}</button>
-            ))}
-          </div>
-          <div className="list">
-            {d.rows.length === 0 && <p className="muted center">Nenhum pedido aqui.</p>}
-            {d.rows.map((o) => (
-              <Card key={o.id}>
-                <div className="row between" style={{ alignItems: 'flex-start' }}>
-                  <div>
-                    <b>{o.member_name}</b> <span className="muted small">#{o.member_code}</span>
-                    <div className="small muted">{o.club_name}{o.unit_name ? ` · ${o.unit_name}` : ''}</div>
-                    <div className="small">{o.packs} pacotinho{o.packs > 1 ? 's' : ''} · <b>{money(o.amount_cents)}</b> · {o.identifier ? <>SyncPay <b>{o.identifier}</b></> : <>código <b>{o.txid}</b></>}</div>
-                    <div className="small muted">Pedido em {fmtDateTime(o.created_at)}{o.notified_at ? ` · avisou em ${fmtDateTime(o.notified_at)}` : ''}{o.paid_at ? ` · confirmado em ${fmtDateTime(o.paid_at)}` : ''}</div>
-                  </div>
-                  {o.status === 'pago' && <Badge kind="green">Pago</Badge>}
-                </div>
-                {['aberto', 'aguardando'].includes(o.status) && (
-                  <div className="row wrap mt" style={{ gap: '.4rem' }}>
-                    <Button small variant="green" busy={busy} onClick={() => act(o, 'confirmar')}><Check size={14} /> Confirmar pagamento</Button>
-                    <Confirm text="Recusar este pedido (o Pix não caiu)?" onYes={() => act(o, 'recusar')}><X size={14} /> Recusar</Confirm>
-                  </div>
-                )}
-              </Card>
-            ))}
-          </div>
-        </>
-      )}
-    </Loading>
-  );
-}
+import { fmtDate } from '../../format.js';
+import { Button, Card, Field, Loading, PageHeader, Section, Tabs, useAsync, useLoad } from '../../ui.jsx';
 
 function Completed() {
   const state = useLoad(() => api.get('/admin/figurinhas/completos'));
@@ -93,71 +47,15 @@ function Gift_() {
   );
 }
 
-function PixConfig() {
-  const state = useLoad(() => api.get('/admin/figurinhas/pix'));
-  const [f, setF] = useState(null);
-  const [busy, run] = useAsync();
-  return (
-    <Loading {...state}>
-      {(cfg) => {
-        const v = f || cfg;
-        return (
-          <>
-          <Card className="small" style={{ background: cfg.syncpay ? 'var(--green-soft)' : 'var(--yellow-soft)' }}>
-            {cfg.syncpay
-              ? <><b>SyncPay conectada:</b> o Pix é gerado pela SyncPay e os pacotinhos são liberados sozinhos quando o pagamento cai. A chave abaixo não é usada.</>
-              : <><b>SyncPay não conectada.</b> Para o pagamento automático, coloque SYNCPAY_CLIENT_ID e SYNCPAY_CLIENT_SECRET no Render. Enquanto isso, vale a chave Pix abaixo e a equipe confirma cada pagamento.</>}
-          </Card>
-          <DefaultPayer payer={cfg.payer} onSaved={state.reload} />
-          <Card>
-            <div className="form">
-              <p className="small muted" style={{ margin: 0 }}>Pix manual (sem a SyncPay): os membros pagam para esta chave e a equipe confirma. Vazia e sem SyncPay, a compra fica desligada.</p>
-              <Field label="Chave Pix" hint="CPF, CNPJ, e-mail, telefone (+55...) ou chave aleatória"><input value={v.key} onChange={(e) => setF({ ...v, key: e.target.value })} autoCapitalize="none" /></Field>
-              <Field label="Nome de quem recebe" hint="Como aparece no banco (até 25 letras)"><input value={v.name} onChange={(e) => setF({ ...v, name: e.target.value })} /></Field>
-              <Field label="Cidade"><input value={v.city} onChange={(e) => setF({ ...v, city: e.target.value })} placeholder="Palmares" /></Field>
-              <Button busy={busy} disabled={!f} onClick={() => run(() => api.put('/admin/figurinhas/pix', v), 'Pix salvo!').then(() => { setF(null); state.reload(); })}>Salvar</Button>
-            </div>
-          </Card>
-          </>
-        );
-      }}
-    </Loading>
-  );
-}
-
-const fmtCpf = (v) => String(v || '').replace(/\D/g, '').slice(0, 11).replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-
-/** Dados padrão que vão na cobrança da SyncPay: o membro não precisa informar nada. */
-function DefaultPayer({ payer, onSaved }) {
-  const [f, setF] = useState(null);
-  const [busy, run] = useAsync();
-  const v = f || { ...payer, cpf: fmtCpf(payer.cpf) };
-  return (
-    <Card>
-      <div className="form">
-        <b>Dados padrão do Pix (SyncPay)</b>
-        <p className="small muted" style={{ margin: 0 }}>A SyncPay pede um "cliente" em cada cobrança. Para não pedir CPF nem outros dados aos membros (muitos são menores), o app usa estes dados em todas as cobranças. Use os dados da organização ou de um responsável. Quem paga de verdade é quem lê o QR Code no banco.</p>
-        <Field label="Nome completo"><input value={v.name} onChange={(e) => setF({ ...v, name: e.target.value })} /></Field>
-        <Field label="CPF"><input inputMode="numeric" value={v.cpf} onChange={(e) => setF({ ...v, cpf: fmtCpf(e.target.value) })} placeholder="000.000.000-00" /></Field>
-        <Field label="E-mail"><input type="email" value={v.email} onChange={(e) => setF({ ...v, email: e.target.value })} autoCapitalize="none" /></Field>
-        <Field label="Celular (com DDD)"><input inputMode="tel" value={v.phone} onChange={(e) => setF({ ...v, phone: e.target.value })} /></Field>
-        <Button busy={busy} disabled={!f} onClick={() => run(() => api.put('/admin/figurinhas/pagador', v), 'Dados salvos!').then(() => { setF(null); onSaved(); })}>Salvar</Button>
-      </div>
-    </Card>
-  );
-}
-
 export default function StickersAdmin() {
-  const [tab, setTab] = useState('pagamentos');
+  const [tab, setTab] = useState('completos');
   return (
     <>
-      <PageHeader title="Figurinhas" subtitle="Pagamentos dos pacotinhos e álbuns completos" />
-      <Tabs tabs={[['pagamentos', 'Pagamentos'], ['completos', 'Completaram'], ['presente', 'Presentear'], ['pix', 'Pix']]} value={tab} onChange={setTab} />
+      <PageHeader title="Figurinhas" subtitle="Quem completou os álbuns e pacotinhos de presente" />
+      <Tabs tabs={[['completos', 'Completaram'], ['presente', 'Presentear']]} value={tab} onChange={setTab} />
       <Section>
-        {tab === 'pagamentos' && <Orders />}
         {tab === 'completos' && <Completed />}
         {tab === 'presente' && <Gift_ />}
-        {tab === 'pix' && <PixConfig />}
       </Section>
     </>
   );

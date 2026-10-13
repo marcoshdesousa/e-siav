@@ -59,23 +59,23 @@ async function login(mode, username, password) {
 
 test('SyncPay: sem pedir dados ao membro, gera o Pix e libera sozinho quando cai', async () => {
   const admin = await login('membros', 'admin', 'admin123');
-  assert.equal((await admin.put('/admin/figurinhas/pagador', { name: 'App do DBV', cpf: '111' })).status, 400, 'CPF inválido');
-  assert.equal((await admin.put('/admin/figurinhas/pagador', { name: 'Equipe App do DBV', cpf: '529.982.247-25', email: 'pix@appdodbv.com', phone: '81999990000' })).status, 200);
-  assert.equal((await admin.get('/admin/figurinhas/pix')).body.payer.cpf, '52998224725');
+  assert.equal((await admin.put('/admin/pagamentos-config/pagador', { name: 'App do DBV', cpf: '111' })).status, 400, 'CPF inválido');
+  assert.equal((await admin.put('/admin/pagamentos-config/pagador', { name: 'Equipe App do DBV', cpf: '529.982.247-25', email: 'pix@appdodbv.com', phone: '81999990000' })).status, 200);
+  assert.equal((await admin.get('/admin/pagamentos-config')).body.payer.cpf, '52998224725');
   const pedro = await login('membros', 'pedro');
   let st = (await pedro.get('/albuns/biblico')).body;
   assert.equal(st.pay_mode, 'syncpay');
   const before = st.packs_unopened;
   const o = (await pedro.post('/albuns/biblico/pedidos', { packs: 10 })).body;
   assert.ok(o.auto && o.pix.startsWith('00020126') && o.qr, 'Pix gerado sem dados do membro');
-  assert.equal((await pedro.get(`/albuns/pedidos/${o.id}`)).body.status, 'aberto');
-  await pedro.post(`/albuns/pedidos/${o.id}/_simular`);
+  assert.equal((await pedro.get(`/pagamentos/${o.id}`)).body.status, 'aberto');
+  await pedro.post(`/pagamentos/${o.id}/_simular`);
   await new Promise((r) => setTimeout(r, 4100)); // a consulta é no máximo a cada 4 s
-  assert.equal((await pedro.get(`/albuns/pedidos/${o.id}`)).body.status, 'pago');
+  assert.equal((await pedro.get(`/pagamentos/${o.id}`)).body.status, 'pago');
   assert.equal((await pedro.get('/albuns/biblico')).body.packs_unopened, before + 10, 'liberou os pacotinhos');
   // Conferir de novo não libera de novo
   await new Promise((r) => setTimeout(r, 4100));
-  await pedro.get(`/albuns/pedidos/${o.id}`);
+  await pedro.get(`/pagamentos/${o.id}`);
   assert.equal((await pedro.get('/albuns/biblico')).body.packs_unopened, before + 10);
   // Aviso (webhook) público só faz conferir
   const r = await fetch(BASE + '/albuns/pix/aviso', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ data: { id: 'x' } }) });

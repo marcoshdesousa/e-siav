@@ -133,10 +133,14 @@ A arte da logo fica em `assets/logo-exploradores.jpg` (quadrada). O comando `npm
 
 As telas mostradas no celular da página de entrada ficam em `client/public/showcase/` e podem ser refeitas com o servidor rodando: `node scripts/showcase.mjs http://localhost:3000`.
 
+## Pagamentos (Pix) do site todo
+
+- `server/payments.js`: qualquer venda (figurinhas hoje; cursos depois, com `purpose: 'curso'`) cria um pagamento com `createPayment(...)` e registra o que liberar em `onPaid(purpose, fn)`. Admin → Pagamentos mostra tudo e configura o Pix.
+
 ## Figurinhas: Pix automático pela SyncPay
 
-- Pacotinho do Álbum Bíblico App: R$ 1,85 (4 figurinhas). Compra de 1, 10, 20 ou 50.
-- Com `SYNCPAY_CLIENT_ID` e `SYNCPAY_CLIENT_SECRET` no Render (Environment), o app **não pede nenhum dado ao membro**: a cobrança vai com os dados padrão que a equipe cadastra em Admin → Figurinhas → Pix (nome, CPF, e-mail e celular da organização ou de um responsável). Gera o Pix na SyncPay (`/api/partner/v1/cash-in`) e **pergunta para a SyncPay** se foi pago (`/api/partner/v2/transactions/{id}`): a cada 4 s com a tela do Pix aberta e numa varredura a cada 2 min. Pago: os pacotinhos aparecem sozinhos. Mesmo jeito da Acolia e da Eduvia (`server/syncpay.js`).
-- O aviso da SyncPay (webhook) vai para `https://appdodbv.onrender.com/api/albuns/pix/aviso` e só faz o app conferir na hora. Se o endereço do site mudar, defina `SITE_URL`.
+- Pacotinho do Álbum Bíblico: R$ 1,85 (6 figurinhas; no mínimo 100 pacotinhos abertos para completar; 25 repetidas = 1 pacotinho). Compra de 1, 10, 20 ou 50.
+- Com `SYNCPAY_CLIENT_ID` e `SYNCPAY_CLIENT_SECRET` no Render (Environment), o app **não pede nenhum dado ao membro**: a cobrança vai com os dados padrão que a equipe cadastra em Admin → Pagamentos → Configurar Pix (nome, CPF, e-mail e celular da organização ou de um responsável). Gera o Pix na SyncPay (`/api/partner/v1/cash-in`) e **pergunta para a SyncPay** se foi pago (`/api/partner/v2/transactions/{id}`): a cada 4 s com a tela do Pix aberta e numa varredura a cada 2 min. Pago: os pacotinhos aparecem sozinhos. Mesmo jeito da Acolia e da Eduvia (`server/syncpay.js`).
+- O aviso da SyncPay (webhook) vai para `https://appdodbv.onrender.com/api/pagamentos/aviso` e só faz o app conferir na hora. Se o endereço do site mudar, defina `SITE_URL`.
 - No painel da SyncPay, autorize os IPs de saída do Render (Render → Connect → Outbound).
-- Sem as chaves da SyncPay, vale o Pix manual (chave Pix em Admin → Figurinhas → Pix) e a equipe confirma cada pagamento.
+- Sem as chaves da SyncPay, vale o Pix manual (chave Pix em Admin → Pagamentos → Configurar Pix) e a equipe confirma cada pagamento.

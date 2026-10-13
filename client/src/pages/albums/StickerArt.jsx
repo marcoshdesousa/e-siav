@@ -1,4 +1,5 @@
 import { useId } from 'react';
+import { BibleEmblem } from './AlbumCover.jsx';
 import './stickers.css';
 
 /* =========================================================
@@ -1101,12 +1102,8 @@ export function StickerArt({ look, size = 120 }) {
 function CardBack() {
   return (
     <div className="stk-back-inner">
-      <svg viewBox="0 0 60 60" className="stk-back-emblem" aria-hidden="true" focusable="false">
-        <circle cx="30" cy="30" r="27" fill="#0E2A6B" stroke="#F9C71D" strokeWidth="3" />
-        <circle cx="30" cy="30" r="21" fill="none" stroke="#F9C71D" strokeWidth="1" strokeDasharray="2 2.5" />
-        <path d={starPath(30, 30, 15, 6.2)} fill="#F9C71D" />
-        <path d={starPath(30, 30, 6, 2.6, 4, 0)} fill="#fff" opacity=".9" />
-      </svg>
+      <span className="stk-back-frame" aria-hidden="true" />
+      <span className="stk-back-emblem" aria-hidden="true"><BibleEmblem size="100%" /></span>
       <span className="stk-back-title">Álbum Bíblico</span>
     </div>
   );

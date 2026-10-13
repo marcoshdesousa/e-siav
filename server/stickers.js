@@ -1,4 +1,4 @@
-// Álbuns de figurinhas. O Álbum Bíblico App funciona com pacotinhos pagos no Pix
+// Álbuns de figurinhas. O Álbum Bíblico funciona com pacotinhos pagos no Pix
 // (R$ 1,85 por pacotinho com 4 figurinhas). O Palmares 27 ainda está em breve.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -10,20 +10,23 @@ const biblico = JSON.parse(fs.readFileSync(path.join(here, '..', 'client', 'src'
 
 export const ALBUMS = {
   biblico: {
-    id: 'biblico', name: biblico.name || 'Álbum Bíblico App', active: true,
-    total: biblico.stickers.length, pack_size: 4, price_cents: 185,
+    id: 'biblico', name: biblico.name || 'Álbum Bíblico', active: true,
+    total: biblico.stickers.length, pack_size: 6, price_cents: 185,
     rarity: Object.fromEntries(biblico.stickers.map((s) => [s.id, s.rarity])),
   },
   palmares27: { id: 'palmares27', name: 'Palmares 27', active: false },
 };
 export const PACK_OPTIONS = [1, 10, 20, 50];
-export const REPEATS_PER_FREE_PACK = 20;
+export const REPEATS_PER_FREE_PACK = 25;
+// Ninguém completa o álbum antes de abrir 100 pacotinhos (a última figurinha só sai do 100º em diante).
+export const MIN_PACKS_TO_COMPLETE = 100;
 
 // ---------- Sorteio ----------
-// Os 5 primeiros pacotinhos não têm repetidas. Depois, a chance de vir figurinha nova cai
-// conforme o álbum vai ficando completo, e alguns pacotinhos vêm só com repetidas.
-// Em média, completar o álbum leva ~160 pacotinhos. Figurinhas raras e lendárias saem menos.
-export const ODDS = { freshPacks: 5, base: 0.03, extra: 0.55, curve: 1.3, allRepeatsPack: 0.15 };
+// Pacotinho com 6 figurinhas. Os 5 primeiros não têm repetidas. Depois, a chance de vir figurinha
+// nova cai conforme o álbum vai ficando completo, e alguns pacotinhos vêm só com repetidas.
+// A última figurinha só sai a partir do 100º pacotinho aberto. Em média, completa por volta do
+// 127º aberto (~100 comprados; o resto vem das trocas de repetidas). Raras e lendárias saem menos.
+export const ODDS = { freshPacks: 5, base: 0.03, extra: 0.45, curve: 1.2, allRepeatsPack: 0.15 };
 const WEIGHT = { comum: 10, rara: 4, lendaria: 1.5 };
 
 function randomFloat() { return crypto.randomInt(0, 1_000_000_000) / 1_000_000_000; }
@@ -45,10 +48,12 @@ export function drawPack(album, owned, packsOpened) {
   const allRepeats = !fresh && owned.size > 0 && randomFloat() < ODDS.allRepeatsPack;
   const have = new Set(owned);
   const out = [];
+  const thisPack = packsOpened + 1;
   for (let k = 0; k < a.pack_size; k++) {
     const missing = ids.filter((i) => !have.has(i));
-    const pNew = fresh ? 1 : allRepeats ? 0 : ODDS.base + ODDS.extra * (missing.length / ids.length) ** ODDS.curve;
-    if (missing.length && (have.size === 0 || randomFloat() < pNew)) {
+    const gated = missing.length === 1 && thisPack < MIN_PACKS_TO_COMPLETE;
+    const pNew = fresh ? 1 : allRepeats || gated ? 0 : ODDS.base + ODDS.extra * (missing.length / ids.length) ** ODDS.curve;
+    if (missing.length && !gated && (have.size === 0 || randomFloat() < pNew)) {
       const id = weightedPick(missing.map((i) => [i, WEIGHT[a.rarity[i]] || 10]));
       have.add(id);
       out.push({ id, isNew: true });

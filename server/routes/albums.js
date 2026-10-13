@@ -1,14 +1,11 @@
 // Álbuns de figurinhas dos membros: comprar pacotinhos no Pix, abrir, colar e trocar repetidas.
-// A equipe (admin) confirma os pagamentos e vê quem completou o álbum para entregar o troféu.
-import crypto from 'node:crypto';
+// O pagamento é o do site todo (server/payments.js). A equipe vê quem completou o álbum para entregar o trunfo.
 import { Router } from 'express';
-import QRCode from 'qrcode';
 import { all, get, run, tx } from '../db.js';
 import { requireAuth } from '../auth.js';
-import { cleanCpf, fail, int, str } from '../util.js';
-import { setting, setSetting } from '../fees.js';
-import { ALBUMS, PACK_OPTIONS, REPEATS_PER_FREE_PACK, drawPack, pixCode } from '../stickers.js';
-import { createPix, fakePay, idsInWebhook, pixStatus, syncpayOn } from '../syncpay.js';
+import { fail, int } from '../util.js';
+import { ALBUMS, MIN_PACKS_TO_COMPLETE, PACK_OPTIONS, REPEATS_PER_FREE_PACK, drawPack } from '../stickers.js';
+import { createPayment, onPaid, payMode, paymentOut } from '../payments.js';
 
 const r = Router();
 const member = requireAuth('member');
@@ -25,54 +22,11 @@ function progress(memberId, album) {
   return get('SELECT * FROM album_progress WHERE member_id = ? AND album = ?', memberId, album);
 }
 const repeatsOf = (memberId, album) => get('SELECT COALESCE(SUM(qty - 1), 0) n FROM album_stickers WHERE member_id = ? AND album = ? AND qty > 1', memberId, album).n;
-const pixConfig = () => ({ key: setting('pix_key') || '', name: setting('pix_name') || '', city: setting('pix_city') || '' });
-/** Dados padrão do "cliente" das cobranças na SyncPay (cadastrados pela equipe). */
-const defaultPayer = () => {
-  const p = { name: setting('payer_name') || '', cpf: setting('payer_cpf') || '', email: setting('payer_email') || '', phone: setting('payer_phone') || '' };
-  return p.name && p.cpf ? p : null;
-};
-// Como o Pix é pago: 'syncpay' (automático), 'manual' (chave Pix + equipe confirma) ou 'off'.
-const payMode = () => (syncpayOn() ? 'syncpay' : pixConfig().key ? 'manual' : 'off');
-
-/** Pagamento confirmado: libera os pacotinhos uma vez só. */
-function creditOrder(o) {
-  return tx(() => {
-    const changed = run(`UPDATE sticker_orders SET status = 'pago', paid_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id = ? AND status IN ('aberto','aguardando')`, o.id).changes;
-    if (changed) {
-      progress(o.member_id, o.album);
-      run('UPDATE album_progress SET packs_unopened = packs_unopened + ? WHERE member_id = ? AND album = ?', o.packs, o.member_id, o.album);
-    }
-    return !!changed;
-  });
-}
-/** Confere na SyncPay (no máximo a cada 4 s por pedido) e libera se foi pago. */
-async function checkOrder(o, { force = false } = {}) {
-  if (!o?.identifier || !['aberto', 'aguardando'].includes(o.status)) return o;
-  if (!force && o.checked_at && Date.now() - o.checked_at < 4000) return o;
-  run('UPDATE sticker_orders SET checked_at = ? WHERE id = ?', Date.now(), o.id);
-  let st;
-  try { st = await pixStatus(o.identifier); } catch (e) { console.warn('[syncpay] consulta falhou:', e.message); return o; }
-  if (st === 'pago') creditOrder(o);
-  else if (st === 'recusado' || st === 'reembolsado') run(`UPDATE sticker_orders SET status = 'recusado' WHERE id = ? AND status IN ('aberto','aguardando')`, o.id);
-  return get('SELECT * FROM sticker_orders WHERE id = ?', o.id);
-}
-/** Varredura (a cada 2 min): pedidos com Pix automático das últimas 48 h. */
-export function startPixSweep() {
-  const t = setInterval(async () => {
-    if (!syncpayOn()) return;
-    for (const o of all(`SELECT * FROM sticker_orders WHERE identifier IS NOT NULL AND status IN ('aberto','aguardando') AND created_at >= datetime('now', '-2 days')`)) await checkOrder(o);
-  }, 120e3);
-  t.unref?.();
-}
-
-const orderOut = async (o) => {
-  const cfg = pixConfig();
-  const code = o.pix_code || (cfg.key ? pixCode({ key: cfg.key, name: cfg.name, city: cfg.city, amountCents: o.amount_cents, txid: o.txid }) : '');
-  const qr = code ? await QRCode.toString(code, { type: 'svg', margin: 1, errorCorrectionLevel: 'M' }) : '';
-  const { payer, identifier, pix_code, ...rest } = o;
-  void payer; void identifier; void pix_code;
-  return { ...rest, auto: !!o.identifier, pix: code, qr: qr ? 'data:image/svg+xml;base64,' + Buffer.from(qr).toString('base64') : '', receiver: o.identifier ? '' : cfg.name };
-};
+// Pacotinhos pagos: entram no álbum quando o Pix é confirmado (automático ou pela equipe).
+onPaid('figurinhas', (p, ref) => {
+  progress(p.member_id, ref.album);
+  run('UPDATE album_progress SET packs_unopened = packs_unopened + ? WHERE member_id = ? AND album = ?', int(ref.packs), p.member_id, ref.album);
+});
 
 // ---------- Membro ----------
 r.get('/albuns', member, (req, res) => {
@@ -88,12 +42,12 @@ r.get('/albuns/:id', member, (req, res) => {
   const a = activeAlbum(req.params.id);
   const p = progress(req.actor.id, a.id);
   const rows = all('SELECT sticker, qty, stuck FROM album_stickers WHERE member_id = ? AND album = ?', req.actor.id, a.id);
-  const orders = all(`SELECT id, packs, amount_cents, status, created_at, paid_at FROM sticker_orders
-    WHERE member_id = ? AND album = ? AND (status IN ('aberto','aguardando') OR created_at > datetime('now', '-30 days')) ORDER BY id DESC LIMIT 10`, req.actor.id, a.id);
+  const orders = all(`SELECT id, ref, amount_cents, status, created_at, paid_at FROM payments
+    WHERE member_id = ? AND purpose = 'figurinhas' AND json_extract(ref, '$.album') = ? AND (status IN ('aberto','aguardando') OR created_at > datetime('now', '-30 days'))
+    ORDER BY id DESC LIMIT 10`, req.actor.id, a.id).map(({ ref, ...o }) => ({ ...o, packs: JSON.parse(ref).packs }));
   res.json({
     id: a.id, name: a.name, total: a.total, price_cents: a.price_cents, pack_size: a.pack_size, options: PACK_OPTIONS,
-    repeats_per_free_pack: REPEATS_PER_FREE_PACK, pay_mode: payMode(), pix_ready: payMode() !== 'off',
-    district_name: get('SELECT d.name FROM members m JOIN clubs c ON c.id = m.club_id JOIN districts d ON d.id = c.district_id WHERE m.id = ?', req.actor.id)?.name || '',
+    repeats_per_free_pack: REPEATS_PER_FREE_PACK, min_packs: MIN_PACKS_TO_COMPLETE, pay_mode: payMode(), pix_ready: payMode() !== 'off',
     packs_unopened: p.packs_unopened, packs_opened: p.packs_opened, completed_at: p.completed_at,
     stickers: Object.fromEntries(rows.map((x) => [x.sticker, { qty: x.qty, stuck: !!x.stuck }])),
     repeats: repeatsOf(req.actor.id, a.id),
@@ -105,56 +59,11 @@ r.post('/albuns/:id/pedidos', member, async (req, res) => {
   const a = activeAlbum(req.params.id);
   const packs = int(req.body.packs);
   if (!PACK_OPTIONS.includes(packs)) fail(400, 'Escolha 1, 10, 20 ou 50 pacotinhos');
-  const mode = payMode();
-  if (mode === 'off') fail(400, 'O pagamento por Pix ainda não foi configurado pela equipe. Tente mais tarde.');
-  const open = get(`SELECT COUNT(*) n FROM sticker_orders WHERE member_id = ? AND status IN ('aberto','aguardando')`, req.actor.id).n;
-  if (open >= 3) fail(400, 'Você já tem pedidos esperando pagamento. Pague ou cancele um deles antes.');
-  const txid = 'DBV' + crypto.randomBytes(8).toString('hex').toUpperCase().slice(0, 16);
-  const amount = packs * a.price_cents;
-  let pix = null;
-  if (mode === 'syncpay') {
-    // Nada é pedido ao membro (muitos são menores): a cobrança vai com os dados padrão que a
-    // equipe cadastrou no painel. Quem paga de verdade é quem lê o QR Code no banco.
-    const m = get('SELECT name, code FROM members WHERE id = ?', req.actor.id);
-    pix = await createPix({ amountCents: amount, description: `App do DBV - ${packs} pacotinho${packs > 1 ? 's' : ''} de figurinhas (membro ${m.code})`, payer: defaultPayer() });
-  }
-  const id = Number(run('INSERT INTO sticker_orders (member_id, album, packs, amount_cents, txid, identifier, pix_code, payer) VALUES (?,?,?,?,?,?,?,?)',
-    req.actor.id, a.id, packs, amount, txid, pix?.identifier || null, pix?.pix_code || null, null).lastInsertRowid);
-  res.json(await orderOut(get('SELECT * FROM sticker_orders WHERE id = ?', id)));
-});
-
-const myOrder = (req) => {
-  const o = get('SELECT * FROM sticker_orders WHERE id = ? AND member_id = ?', int(req.params.oid), req.actor.id);
-  if (!o) fail(404, 'Pedido não encontrado');
-  return o;
-};
-r.get('/albuns/pedidos/:oid', member, async (req, res) => res.json(await orderOut(await checkOrder(myOrder(req)))));
-
-// Aviso da SyncPay: responde na hora e só usa o aviso para conferir os pedidos citados.
-r.post('/albuns/pix/aviso', (req, res) => {
-  res.json({ ok: true });
-  (async () => {
-    for (const id of idsInWebhook(req.body)) {
-      const o = get('SELECT * FROM sticker_orders WHERE lower(identifier) = ?', id);
-      if (o) await checkOrder(o, { force: true });
-    }
-  })().catch((e) => console.warn('[syncpay] aviso:', e.message));
-});
-// Só nos testes automáticos (SYNCPAY_FAKE=1): marca a cobrança como paga.
-if (process.env.SYNCPAY_FAKE === '1') {
-  r.post('/albuns/pedidos/:oid/_simular', member, (req, res) => { fakePay(myOrder(req).identifier); res.json({ ok: true }); });
-}
-r.post('/albuns/pedidos/:oid/paguei', member, (req, res) => {
-  const o = myOrder(req);
-  if (o.status !== 'aberto') fail(400, 'Este pedido não está esperando pagamento');
-  run(`UPDATE sticker_orders SET status = 'aguardando', notified_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id = ?`, o.id);
-  res.json({ ok: true });
-});
-r.post('/albuns/pedidos/:oid/cancelar', member, (req, res) => {
-  const o = myOrder(req);
-  if (o.status !== 'aberto') fail(400, 'Só dá para cancelar pedidos que ainda não foram pagos');
-  run(`UPDATE sticker_orders SET status = 'cancelado' WHERE id = ?`, o.id);
-  res.json({ ok: true });
+  const p = await createPayment({
+    memberId: req.actor.id, purpose: 'figurinhas', ref: { album: a.id, packs },
+    title: `${packs} pacotinho${packs > 1 ? 's' : ''} de figurinhas`, amountCents: packs * a.price_cents,
+  });
+  res.json(await paymentOut(p));
 });
 
 // Abre um pacotinho: as novas ficam para colar e as repetidas vão para o monte de repetidas.
@@ -195,7 +104,7 @@ r.post('/albuns/:id/colar', member, (req, res) => {
   res.json(result);
 });
 
-// Troca 20 repetidas por 1 pacotinho grátis (tira primeiro das que têm mais cópias).
+// Troca 25 repetidas por 1 pacotinho grátis (tira primeiro das que têm mais cópias).
 r.post('/albuns/:id/trocar', member, (req, res) => {
   const a = activeAlbum(req.params.id);
   tx(() => {
@@ -214,26 +123,6 @@ r.post('/albuns/:id/trocar', member, (req, res) => {
 });
 
 // ---------- Equipe ----------
-const ORDER_SQL = `SELECT o.*, m.name AS member_name, m.code AS member_code, c.name AS club_name, u.name AS unit_name
-  FROM sticker_orders o JOIN members m ON m.id = o.member_id JOIN clubs c ON c.id = m.club_id LEFT JOIN units u ON u.id = m.unit_id`;
-r.get('/admin/figurinhas/pedidos', admin, (req, res) => {
-  const status = ['aberto', 'aguardando', 'pago', 'recusado', 'cancelado'].includes(req.query.status) ? req.query.status : 'aguardando';
-  res.json({
-    rows: all(`${ORDER_SQL} WHERE o.status = ? ORDER BY o.id DESC LIMIT 200`, status),
-    counts: Object.fromEntries(all('SELECT status, COUNT(*) n FROM sticker_orders GROUP BY status').map((x) => [x.status, x.n])),
-    total_paid_cents: get(`SELECT COALESCE(SUM(amount_cents), 0) n FROM sticker_orders WHERE status = 'pago'`).n,
-  });
-});
-r.post('/admin/figurinhas/pedidos/:id/:acao', admin, (req, res) => {
-  const o = get('SELECT * FROM sticker_orders WHERE id = ?', int(req.params.id));
-  if (!o) fail(404, 'Pedido não encontrado');
-  if (!['aberto', 'aguardando'].includes(o.status)) fail(400, 'Este pedido já foi resolvido');
-  if (req.params.acao === 'confirmar') creditOrder(o);
-  else if (req.params.acao === 'recusar') {
-    run(`UPDATE sticker_orders SET status = 'recusado' WHERE id = ?`, o.id);
-  } else fail(404, 'Ação inválida');
-  res.json({ ok: true });
-});
 // Presente da equipe (promoções e testes): pacotinhos grátis para um membro, pelo código.
 r.post('/admin/figurinhas/presente', admin, (req, res) => {
   const a = activeAlbum(String(req.body.album || 'biblico'));
@@ -250,24 +139,4 @@ r.get('/admin/figurinhas/completos', admin, (_req, res) => {
     FROM album_progress p JOIN members m ON m.id = p.member_id JOIN clubs c ON c.id = m.club_id LEFT JOIN units u ON u.id = m.unit_id
     WHERE p.completed_at IS NOT NULL ORDER BY p.completed_at`).map((x) => ({ ...x, album_name: ALBUMS[x.album]?.name || x.album })));
 });
-r.get('/admin/figurinhas/pix', admin, (_req, res) => res.json({ ...pixConfig(), syncpay: syncpayOn(), payer: defaultPayer() || { name: '', cpf: '', email: '', phone: '' } }));
-r.put('/admin/figurinhas/pagador', admin, (req, res) => {
-  const b = req.body || {};
-  const name = str(b.name, 80);
-  const cpf = b.cpf ? cleanCpf(b.cpf) : '';
-  const email = str(b.email, 120).toLowerCase();
-  const phone = String(b.phone || '').replace(/\D/g, '');
-  if (b.cpf && !cpf) fail(400, 'CPF inválido');
-  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) fail(400, 'E-mail inválido');
-  if (phone && !/^\d{10,13}$/.test(phone)) fail(400, 'Celular inválido (com DDD)');
-  setSetting('payer_name', name); setSetting('payer_cpf', cpf || ''); setSetting('payer_email', email); setSetting('payer_phone', phone);
-  res.json({ ok: true });
-});
-r.put('/admin/figurinhas/pix', admin, (req, res) => {
-  setSetting('pix_key', str(req.body.key, 120) || '');
-  setSetting('pix_name', str(req.body.name, 60) || '');
-  setSetting('pix_city', str(req.body.city, 40) || '');
-  res.json({ ok: true });
-});
-
 export default r;

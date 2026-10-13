@@ -208,32 +208,80 @@ button.stk-card { cursor: pointer; font: inherit; font-family: var(--font-title,
   overflow: hidden;
 }
 
-/* verso da figurinha */
-.stk-state-back { background: #0E2A6B; }
+/* verso da figurinha — couro azul-marinho com filetes dourados (combina com a capa) */
+.stk-state-back {
+  background: #0A1C4A;
+  border-color: #0A1C4A;
+  box-shadow: 0 1px 2px rgba(6, 14, 40, .3), 0 6px 16px rgba(14, 42, 107, .22);
+}
 .stk-back-inner {
   position: absolute;
   inset: 0;
   border-radius: calc(var(--stk-r) * .8);
   overflow: hidden;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: calc(var(--stk-size) * .05);
   background:
-    radial-gradient(circle at 50% 42%, rgba(43, 84, 176, .9) 0, rgba(14, 42, 107, 0) 60%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22'%3E%3Cpath d='M11 4l1.6 4.4L17 10l-4.4 1.6L11 16l-1.6-4.4L5 10l4.4-1.6z' fill='%23F9C71D' fill-opacity='.22'/%3E%3C/svg%3E") 0 0 / calc(var(--stk-size) * .2) auto,
-    linear-gradient(160deg, #1C3F8C 0%, #0E2A6B 60%, #0A1F52 100%);
-  box-shadow: inset 0 0 0 calc(var(--stk-size) * .03) rgba(249, 199, 29, .85), inset 0 0 0 calc(var(--stk-size) * .045) #0E2A6B;
+    linear-gradient(115deg, rgba(255, 255, 255, .1) 0%, rgba(255, 255, 255, 0) 32%),
+    radial-gradient(ellipse 80% 60% at 50% 44%, rgba(64, 108, 210, .55) 0, rgba(14, 42, 107, 0) 70%),
+    radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, .45) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpath d='M8 0L16 8L8 16L0 8Z' fill='none' stroke='%23F9C71D' stroke-opacity='.13' stroke-width='.7'/%3E%3Cpath d='M8 6.6L9.4 8L8 9.4L6.6 8Z' fill='%23F9C71D' fill-opacity='.22'/%3E%3C/svg%3E") 50% 50% / calc(var(--stk-size) * .16) auto,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E") 0 0 / 120px 120px,
+    linear-gradient(160deg, #1D428F 0%, #0E2A6B 55%, #081A45 100%);
 }
-.stk-back-emblem { width: 52%; height: auto; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .35)); }
+/* filete dourado duplo + cantoneiras */
+.stk-back-frame {
+  position: absolute;
+  inset: calc(var(--stk-size) * .045);
+  border: max(1px, calc(var(--stk-size) * .013)) solid #E2B33A;
+  border-radius: calc(var(--stk-r) * .45);
+  box-shadow:
+    inset 0 0 0 calc(var(--stk-size) * .02) rgba(10, 28, 74, .9),
+    inset 0 0 0 max(1.5px, calc(var(--stk-size) * .027)) rgba(249, 199, 29, .55),
+    0 0 0 1px rgba(0, 0, 0, .25);
+  pointer-events: none;
+}
+.stk-back-frame::before,
+.stk-back-frame::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  width: calc(var(--stk-size) * .075);
+  height: calc(var(--stk-size) * .075);
+  background: linear-gradient(135deg, #FFF3BF, #F9C71D 45%, #B9800F);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.stk-back-frame::before { top: 0; }
+.stk-back-frame::after { top: 100%; }
+.stk-back-emblem {
+  position: relative;
+  display: block;
+  width: 68%;
+  aspect-ratio: 1;
+  margin-top: calc(var(--stk-size) * -.12);
+  filter: drop-shadow(0 calc(var(--stk-size) * .025) calc(var(--stk-size) * .04) rgba(0, 0, 0, .5));
+}
+.stk-back-emblem > svg { width: 100%; height: 100%; }
 .stk-back-title {
-  font-size: calc(var(--stk-size) * .085);
-  font-weight: 800;
-  color: #F9C71D;
-  letter-spacing: .04em;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--stk-size) * .11);
+  font-family: var(--cov-font-serif, 'Cinzel', 'Cormorant Garamond', Georgia, 'Times New Roman', serif);
+  font-size: calc(var(--stk-size) * .08);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: .06em;
+  text-align: center;
   text-transform: uppercase;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, .4);
+  white-space: nowrap;
+  color: #F9C71D;
+  background: linear-gradient(180deg, #FFF3BF 0%, #F9C71D 45%, #C48A12 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .55));
 }
 
 /* ---------- flip (abertura de pacote) ----------
@@ -311,7 +359,7 @@ button.stk-card { cursor: pointer; font: inherit; font-family: var(--font-title,
 }
 /* Pacote vazio (<div class="stk-pack" />) recebe o título automaticamente */
 .stk-pack:empty::after {
-  content: 'Álbum Bíblico App';
+  content: 'Álbum Bíblico';
   display: grid;
   place-items: center;
   top: auto;

@@ -1,18 +1,19 @@
-// Álbuns de figurinhas: lista, o Álbum Bíblico App (comprar, abrir, colar, trocar repetidas)
+// Álbuns de figurinhas: lista, o Álbum Bíblico (comprar, abrir, colar, trocar repetidas)
 // e o Palmares 27 (em breve).
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Copy, Gift, Heart, Package, Repeat, ShoppingCart, Sparkles, Trophy } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Gift, Heart, Package, Repeat, ShoppingCart, Sparkles, Trophy } from 'lucide-react';
 import { api } from '../../api.js';
 import { fmtDate } from '../../format.js';
 import { Badge, Button, Card, Loading, Modal, PageHeader, Section, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
 import { sfx, unlockAudio } from '../games/audio.js';
 import { StickerCard } from './StickerArt.jsx';
+import { PixCheckout, money } from '../Payment.jsx';
+import { AlbumCover, BibleEmblem } from './AlbumCover.jsx';
 import data from './biblico.json';
 import './albums.css';
 
 const BY_ID = Object.fromEntries(data.stickers.map((s) => [s.id, s]));
-const money = (c) => (c / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const RARITY = { comum: 'Comum', rara: 'Rara', lendaria: 'Lendária' };
 
 /** Lista de álbuns. */
@@ -26,7 +27,7 @@ export function AlbumsPage({ base }) {
           <div className="album-list">
             {list.map((a) => (a.active ? (
               <Link key={a.id} to={`${base}/albuns/${a.id}`} className="album-card">
-                <div className="album-cover album-cover-biblico"><Sparkles size={28} /><b>Bíblico</b><span>App</span></div>
+                <div className="album-cover-art"><AlbumCover variant="biblico" width={92} /></div>
                 <div className="album-info">
                   <h2>{a.name}</h2>
                   <div className="album-bar"><span style={{ width: `${(a.stuck / a.total) * 100}%` }} /></div>
@@ -36,7 +37,7 @@ export function AlbumsPage({ base }) {
               </Link>
             ) : (
               <div key={a.id} className="album-card is-soon">
-                <div className="album-cover"><span className="album-year">27</span><b>Palmares</b></div>
+                <div className="album-cover-art"><AlbumCover variant="palmares27" width={92} /></div>
                 <div className="album-info">
                   <h2>{a.name}</h2>
                   <span className="badge badge-yellow">Em breve</span>
@@ -65,12 +66,12 @@ function StickerModal({ sticker, onClose }) {
   );
 }
 
-/** Recado na compra: o dinheiro ajuda o app e o distrito. */
-function SupportNote({ district }) {
+/** Recado na compra: o dinheiro ajuda o app a se manter (não vai para distrito nem clube). */
+function SupportNote() {
   return (
     <div className="support-note">
       <Heart size={18} />
-      <span>Além da diversão e da nostalgia, você ajuda o <b>App do DBV</b> e o seu distrito{district ? <> (<b>{district}</b>)</> : ''}. Quem completa o álbum ganha um <b>trunfo especial físico</b>!</span>
+      <span>Além da diversão e da nostalgia, você ajuda o <b>App do DBV</b> a se manter e a ganhar novas atualizações. Quem completa o álbum ganha um <b>trunfo especial físico</b>!</span>
     </div>
   );
 }
@@ -81,37 +82,20 @@ function SupportNote({ district }) {
  * dados). Com a SyncPay ligada, libera sozinho quando o Pix cai.
  */
 function BuyModal({ album, onClose, onDone, onOpen }) {
-    const [order, setOrder] = useState(null);
+  const [order, setOrder] = useState(null);
+  const [paid, setPaid] = useState(null);
   const [busy, run] = useAsync();
   const create = async (n) => {
     const o = await run(() => api.post(`/albuns/${album.id}/pedidos`, { packs: n }), null);
     if (o) setOrder(o);
   };
-  // Pix automático: confere a cada 4 s se o pagamento caiu.
-  useEffect(() => {
-    if (!order?.auto || order.status === 'pago') return undefined;
-    const t = setInterval(async () => {
-      try {
-        const o = await api.get('/albuns/pedidos/' + order.id);
-        if (o.status !== order.status) { setOrder((cur) => ({ ...cur, status: o.status })); if (o.status === 'pago') { sfx('win'); onDone(); } }
-      } catch { /* tenta de novo */ }
-    }, 4000);
-    return () => clearInterval(t);
-  }, [order?.id, order?.status, order?.auto, onDone]);
-  const copy = async () => {
-    try { await navigator.clipboard.writeText(order.pix); notify('Código Pix copiado! Cole no app do seu banco.'); } catch { notify('Não deu para copiar. Selecione o código e copie.', 'error'); }
-  };
-  const paid = async () => {
-    await run(() => api.post(`/albuns/pedidos/${order.id}/paguei`), 'Recebemos o seu aviso! Assim que o pagamento for confirmado, os pacotinhos aparecem aqui.');
-    onDone(); onClose();
-  };
-  const title = order ? (order.status === 'pago' ? 'Pagamento confirmado!' : 'Pague com Pix') : 'Comprar pacotinhos';
+  const title = paid ? 'Pagamento confirmado!' : order ? 'Pague com Pix' : 'Comprar pacotinhos';
   return (
     <Modal title={title} onClose={onClose}>
       {!order && (
         <>
           <p className="small muted" style={{ marginTop: 0 }}>Cada pacotinho tem {album.pack_size} figurinhas e custa {money(album.price_cents)}.</p>
-          <SupportNote district={album.district_name} />
+          <SupportNote />
           {!album.pix_ready && <Card className="small">O pagamento ainda não foi liberado pela equipe. Tente mais tarde.</Card>}
           <div className="buy-grid">
             {album.options.map((n) => (
@@ -125,30 +109,17 @@ function BuyModal({ album, onClose, onDone, onOpen }) {
           </div>
         </>
       )}
-      {order && order.status === 'pago' && (
+      {order && !paid && (
+        <PixCheckout payment={order} onPaid={(o) => { sfx('win'); setPaid(o); onDone(); }} onNotified={() => { onDone(); onClose(); }}>
+          <SupportNote />
+        </PixCheckout>
+      )}
+      {paid && (
         <div className="pix-box center">
           <Sparkles size={44} style={{ color: 'var(--yellow)', margin: '0 auto' }} />
-          <p><b>{order.packs} pacotinho{order.packs > 1 ? 's' : ''}</b> já estão no seu álbum.</p>
+          <p><b>{paid.ref.packs} pacotinho{paid.ref.packs > 1 ? 's' : ''}</b> já estão no seu álbum.</p>
           <Button block onClick={() => { onClose(); onOpen(); }}><Package size={16} /> Abrir agora</Button>
           <Button block variant="secondary" onClick={onClose}>Depois</Button>
-        </div>
-      )}
-      {order && order.status !== 'pago' && (
-        <div className="pix-box">
-          <p className="center" style={{ margin: 0 }}><b>{order.packs} pacotinho{order.packs > 1 ? 's' : ''}</b> · <b>{money(order.amount_cents)}</b></p>
-          <SupportNote district={album.district_name} />
-          {order.qr && <img src={order.qr} alt="QR Code do Pix" className="pix-qr" />}
-          <p className="small muted center">Copie o código abaixo e cole no app do seu banco, em <b>Pix copia e cola</b>.{order.receiver ? <> Recebedor: <b>{order.receiver}</b>.</> : null}</p>
-          <div className="pix-code">{order.pix}</div>
-          <Button block onClick={copy}><Copy size={16} /> Copiar código Pix</Button>
-          {order.auto
-            ? <p className="small center pix-wait"><span className="spinner-inline" /> Esperando o pagamento... assim que cair, os pacotinhos aparecem sozinhos.</p>
-            : (
-              <>
-                <Button block variant="green" busy={busy} onClick={paid}>Já paguei</Button>
-                <p className="small muted center" style={{ margin: 0 }}>Depois que o pagamento for confirmado, os pacotinhos aparecem no topo do álbum.</p>
-              </>
-            )}
         </div>
       )}
     </Modal>
@@ -158,20 +129,23 @@ function BuyModal({ album, onClose, onDone, onOpen }) {
 const PAGE_OF = Object.fromEntries(data.pages.flatMap((p, i) => p.stickers.map((sid) => [sid, i])));
 
 /**
- * Abrir pacotinho, do jeito de antigamente: a pessoa RASGA o pacote arrastando o dedo na borda de
- * cima, as figurinhas saem num montinho e ela vai passando uma por uma.
+ * Abrir pacotinho: a pessoa RASGA o pacote arrastando o dedo na borda de cima; as 6 figurinhas
+ * saem voando e ficam viradas para baixo. Ela vira uma por uma (as raras brilham pelo verso).
  */
 function OpenPack({ album, onClose, onChanged, onGoPaste }) {
   const [left, setLeft] = useState(album.packs_unopened);
-  const [phase, setPhase] = useState('sealed'); // sealed → torn → stack → done
+  const [phase, setPhase] = useState('sealed'); // sealed → torn → cards
   const [tear, setTear] = useState(0);
   const [cards, setCards] = useState([]);
-  const [idx, setIdx] = useState(0);
-  const [flying, setFlying] = useState(null);
+  const [flipped, setFlipped] = useState([]);
+  const flippedRef = useRef([]);
   const [detail, setDetail] = useState(null);
   const req = useRef(null);
   const drag = useRef(null);
   const lastTick = useRef(0);
+  const timers = useRef([]);
+  useEffect(() => () => timers.current.forEach(clearTimeout), []);
+  const later = (fn, ms) => timers.current.push(setTimeout(fn, ms));
 
   const request = () => {
     if (!req.current) req.current = api.post(`/albuns/${album.id}/abrir`);
@@ -183,13 +157,8 @@ function OpenPack({ album, onClose, onChanged, onGoPaste }) {
       const r = await request();
       setLeft(r.packs_unopened);
       onChanged();
-      setTimeout(() => { setCards(r.cards); setIdx(0); setPhase('stack'); reveal(r.cards[0]); }, 750);
+      later(() => { flippedRef.current = r.cards.map(() => false); setCards(r.cards); setFlipped(flippedRef.current); setPhase('cards'); sfx('shoot'); }, 650);
     } catch (e) { notify(e.message, 'error'); onClose(); }
-  };
-  const reveal = (c) => {
-    if (!c) return;
-    const s = BY_ID[c.id];
-    sfx(c.isNew ? (s.rarity === 'lendaria' ? 'record' : 'coin') : 'flip');
   };
   const onDown = (e) => {
     if (phase !== 'sealed') return;
@@ -209,26 +178,23 @@ function OpenPack({ album, onClose, onChanged, onGoPaste }) {
     drag.current = null; lastTick.current = 0;
     if (tear >= 0.55) finishTear(); else setTear(0);
   };
-  const next = (dir = 1) => {
-    if (flying) return;
-    setFlying(dir);
-    setTimeout(() => {
-      setFlying(null);
-      const n = idx + 1;
-      setIdx(n);
-      if (n >= cards.length) setPhase('done'); else reveal(cards[n]);
-    }, 380);
+  const flip = (i) => {
+    if (flippedRef.current[i]) return;
+    flippedRef.current = flippedRef.current.map((v, k) => v || k === i);
+    setFlipped(flippedRef.current);
+    const c = cards[i];
+    later(() => sfx(c.isNew ? (BY_ID[c.id].rarity === 'lendaria' ? 'record' : 'coin') : 'flip'), 260);
   };
-  const again = () => { req.current = null; setCards([]); setIdx(0); setTear(0); setPhase('sealed'); };
+  const flipAll = () => cards.forEach((_, i) => later(() => flip(i), i * 260));
+  const again = () => { req.current = null; flippedRef.current = []; setCards([]); setFlipped([]); setTear(0); setPhase('sealed'); };
+  const allFlipped = cards.length > 0 && flipped.every(Boolean);
   const newOnes = cards.filter((c) => c.isNew);
-  const cur = cards[idx];
-  const curSticker = cur && BY_ID[cur.id];
 
   return (
     <div className="pack-overlay" role="dialog" aria-modal="true">
       <button type="button" className="pack-close" onClick={onClose} aria-label="Fechar">✕</button>
       <div className="pack-stage">
-        {(phase === 'sealed' || phase === 'torn') && (
+        {phase !== 'cards' && (
           <>
             <p className="pack-hint">{phase === 'sealed' ? 'Arraste o dedo na borda de cima para rasgar' : 'Rasgou!'}</p>
             <div className={'op-pack' + (phase === 'torn' ? ' is-torn' : '')}>
@@ -240,48 +206,44 @@ function OpenPack({ album, onClose, onChanged, onGoPaste }) {
                 <span className="op-pack-cut" style={{ width: `${tear * 100}%` }} />
               </div>
               <div className="op-pack-body">
-                <span className="op-pack-star">★</span>
+                <BibleEmblem size={86} />
                 <b>{data.name}</b>
                 <small>{album.pack_size} figurinhas</small>
               </div>
-              {phase === 'torn' && <div className="op-pack-peek" />}
+              {phase === 'torn' && <div className="op-pack-burst" />}
             </div>
             {phase === 'sealed' && <button type="button" className="op-link" onClick={() => { unlockAudio(); request(); finishTear(); }}>ou toque aqui para rasgar</button>}
             <p className="pack-hint small">{left} pacotinho{left !== 1 ? 's' : ''} para abrir</p>
           </>
         )}
 
-        {phase === 'stack' && cur && (
+        {phase === 'cards' && (
           <>
-            <p className="pack-hint">{cur.isNew ? (curSticker.rarity === 'lendaria' ? 'LENDÁRIA!' : 'Nova!') : 'Repetida'}</p>
-            <div className="op-stack" onClick={() => next(1)}>
-              {cards.slice(idx + 1).map((c, k) => (
-                <div key={k} className="op-under" style={{ transform: `translate(${(k + 1) * 5}px, ${(k + 1) * 6}px) rotate(${(k + 1) * 2.5}deg)` }}>
-                  <StickerCard sticker={BY_ID[c.id]} size={190} state="back" />
-                </div>
-              ))}
-              <div key={idx} className={'op-top' + (cur.isNew ? ' is-new' : ' is-rep') + (curSticker.rarity === 'lendaria' ? ' is-legend' : '') + (flying ? ' fly' : '')}>
-                {cur.isNew && <span className="op-rays" />}
-                <StickerCard sticker={curSticker} size={190} />
-                {!cur.isNew && <span className="op-stamp">REPETIDA</span>}
-                {cur.isNew && <span className="op-ribbon">NOVA</span>}
-              </div>
-            </div>
-            <p className="pack-hint small">{curSticker.name} · {idx + 1} de {cards.length} — toque para ver a próxima</p>
-          </>
-        )}
-
-        {phase === 'done' && (
-          <>
-            <p className="pack-hint">{newOnes.length ? `${newOnes.length} nova${newOnes.length > 1 ? 's' : ''} para colar!` : 'Só repetidas desta vez...'}</p>
-            <div className="pack-cards">
-              {cards.map((c, i) => <StickerCard key={i} sticker={BY_ID[c.id]} size={120} badge={c.isNew ? 'NOVA' : 'REPETIDA'} onClick={() => setDetail(BY_ID[c.id])} />)}
+            <p className="pack-hint">{allFlipped ? (newOnes.length ? `${newOnes.length} nova${newOnes.length > 1 ? 's' : ''} para colar!` : 'Só repetidas desta vez...') : 'Toque nas figurinhas para virar'}</p>
+            <div className="op-grid">
+              {cards.map((c, i) => {
+                const st = BY_ID[c.id];
+                return (
+                  <div key={i} className={`op-slot op-r-${st.rarity}` + (flipped[i] ? ' is-open' : '') + (flipped[i] && c.isNew ? ' is-new' : '') + (flipped[i] && !c.isNew ? ' is-rep' : '')}
+                    style={{ '--i': i }} onClick={() => (flipped[i] ? setDetail(st) : flip(i))}>
+                    <div className="stk-flip" style={{ width: 100, height: 136 }}>
+                      <div className={'stk-flip-inner' + (flipped[i] ? ' is-flipped' : '')}>
+                        <div className="stk-flip-front"><StickerCard sticker={st} size={100} state="back" /></div>
+                        <div className="stk-flip-back"><StickerCard sticker={st} size={100} /></div>
+                      </div>
+                    </div>
+                    {flipped[i] && c.isNew && <><span className="op-burst" /><span className="op-tag new">NOVA</span></>}
+                    {flipped[i] && !c.isNew && <span className="op-tag rep">REPETIDA</span>}
+                  </div>
+                );
+              })}
             </div>
             <div className="pack-actions">
-              {newOnes.length > 0 && <Button onClick={() => onGoPaste(newOnes[0].id)}><Sparkles size={16} /> Colar no álbum</Button>}
-              {left > 0 && <Button variant="secondary" onClick={again}><Package size={16} /> Abrir outro ({left})</Button>}
-              <Button variant="secondary" onClick={onClose}>Fechar</Button>
-              <p className="small pack-note">As repetidas foram para o monte de repetidas. Junte {REPEATS_FREE} e troque por um pacotinho.</p>
+              {!allFlipped && <Button variant="secondary" onClick={flipAll}>Virar todas</Button>}
+              {allFlipped && newOnes.length > 0 && <Button onClick={() => onGoPaste(newOnes[0].id)}><Sparkles size={16} /> Colar no álbum</Button>}
+              {allFlipped && left > 0 && <Button variant="secondary" onClick={again}><Package size={16} /> Abrir outro ({left})</Button>}
+              {allFlipped && <Button variant="secondary" onClick={onClose}>Fechar</Button>}
+              {allFlipped && <p className="small pack-note">As repetidas foram para o monte. Junte {album.repeats_per_free_pack} e troque por um pacotinho.</p>}
             </div>
           </>
         )}
@@ -351,9 +313,7 @@ function PasteBar({ sid, peeled, onPeel, onCancel, onGoPage, onDropAt, page }) {
   );
 }
 
-const REPEATS_FREE = 20;
-
-/** O Álbum Bíblico App. */
+/** O Álbum Bíblico. */
 export function AlbumPage() {
   const { id } = useParams();
   const state = useLoad(() => api.get('/albuns/' + id), [id]);
@@ -365,6 +325,10 @@ export function AlbumPage() {
   const [sel, setSel] = useState(null);
   const [peeled, setPeeled] = useState(false);
   const [justStuck, setJustStuck] = useState(null);
+  const [bookOpen, setBookOpen] = useState(false);
+  const [opening2, setOpening2] = useState(false);
+  const [turn, setTurn] = useState('');
+  const swipe = useRef(null);
   const [busy, run] = useAsync();
   const toPaste = useMemo(() => Object.entries(state.data?.stickers || {}).filter(([, v]) => !v.stuck).map(([k]) => Number(k)).sort((a, b) => a - b), [state.data]);
   // Colando: a barra de abas some e o álbum fica à vista, acima da figurinha na mão.
@@ -379,7 +343,22 @@ export function AlbumPage() {
   }, [sel, peeled, page]);
   if (id !== 'biblico') return <Navigate to=".." replace />;
 
-  const pick = (sid) => { unlockAudio(); setSel(sid); setPeeled(false); setTab('album'); sfx('tap'); };
+  const pick = (sid) => { unlockAudio(); setSel(sid); setPeeled(false); setTab('album'); setBookOpen(true); sfx('tap'); };
+  const goPage = (n) => {
+    if (n < 0 || n >= data.pages.length || n === page) return;
+    setTurn(n > page ? 'next' : 'prev');
+    setPage(n);
+    sfx('flip');
+  };
+  const openBook = () => { unlockAudio(); setOpening2(true); sfx('flip'); setTimeout(() => { setBookOpen(true); setOpening2(false); }, 750); };
+  const closeBook = () => { setBookOpen(false); setTurn(''); sfx('flip'); };
+  const swipeStart = (e) => { swipe.current = { x: e.clientX, y: e.clientY }; };
+  const swipeEnd = (e) => {
+    const s0 = swipe.current; swipe.current = null;
+    if (!s0) return;
+    const dx = e.clientX - s0.x; const dy = e.clientY - s0.y;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) goPage(page + (dx < 0 ? 1 : -1));
+  };
   const peel = () => { sfx('flip'); setPeeled(true); };
   const pasteOne = async (sid) => {
     setSel(null); setPeeled(false);
@@ -450,37 +429,54 @@ export function AlbumPage() {
             )}
 
             <Tabs tabs={[['album', 'Álbum'], ['repetidas', `Repetidas (${a.repeats})`], ['pedidos', 'Pedidos']]} value={tab} onChange={setTab} />
-            {tab === 'album' && (
-              <div className="album-page" key={page}>
-                <div className="album-page-head">
-                  <button type="button" className="icon-btn" disabled={page === 0} onClick={() => { setPage(page - 1); sfx('flip'); }} aria-label="Página anterior"><ChevronLeft /></button>
-                  <div className="center"><small className="muted">Página {page + 1} de {data.pages.length}</small><b>{pg.title}</b></div>
-                  <button type="button" className="icon-btn" disabled={page === data.pages.length - 1} onClick={() => { setPage(page + 1); sfx('flip'); }} aria-label="Próxima página"><ChevronRight /></button>
+            {tab === 'album' && !bookOpen && (
+              <div className="book-closed">
+                <button type="button" className={'book-cover-btn' + (opening2 ? ' is-opening' : '')} onClick={openBook} aria-label="Abrir o álbum">
+                  <AlbumCover variant="biblico" width={240} />
+                </button>
+                <p className="small muted center">{opening2 ? 'Abrindo...' : 'Toque na capa para abrir o álbum'}</p>
+              </div>
+            )}
+            {tab === 'album' && bookOpen && (
+              <div className="book">
+                <div className="book-bar">
+                  <button type="button" className="book-close" onClick={closeBook}><BibleEmblem size={22} /> Fechar álbum</button>
+                  <span className="small muted">{stuck}/{a.total}</span>
                 </div>
-                <div className="album-slots">
-                  {pg.stickers.map((sid) => {
-                    const s = BY_ID[sid];
-                    const mine = a.stickers[sid];
-                    if (mine?.stuck) {
-                      return (
-                        <div key={sid} className={'slot-wrap' + (justStuck === sid ? ' just-stuck' : '')}>
-                          <StickerCard sticker={s} size={104} onClick={() => setDetail(s)} />
-                          {justStuck === sid && <span className="stuck-shine" />}
-                        </div>
-                      );
-                    }
-                    return (
-                      <div key={sid} data-slot={sid} className={'slot-wrap slot-empty' + (sel === sid && peeled ? ' is-target' : '')}
-                        onClick={() => sel && peeled && dropAt(sid, document.querySelector(`[data-slot="${sid}"]`))}>
-                        <StickerCard sticker={s} size={104} state="empty" />
-                      </div>
-                    );
-                  })}
+                <div className="book-stage" onPointerDown={swipeStart} onPointerUp={swipeEnd}>
+                  <div className={'album-page' + (turn ? ` turn-${turn}` : '')} key={page}>
+                    <div className="album-page-head">
+                      <button type="button" className="icon-btn" disabled={page === 0} onClick={() => goPage(page - 1)} aria-label="Página anterior"><ChevronLeft /></button>
+                      <div className="center"><small>Página {page + 1} de {data.pages.length}</small><b>{pg.title}</b></div>
+                      <button type="button" className="icon-btn" disabled={page === data.pages.length - 1} onClick={() => goPage(page + 1)} aria-label="Próxima página"><ChevronRight /></button>
+                    </div>
+                    <div className="album-slots">
+                      {pg.stickers.map((sid) => {
+                        const st = BY_ID[sid];
+                        const mine = a.stickers[sid];
+                        if (mine?.stuck) {
+                          return (
+                            <div key={sid} className={'slot-wrap' + (justStuck === sid ? ' just-stuck' : '')}>
+                              <StickerCard sticker={st} size={100} onClick={() => setDetail(st)} />
+                              {justStuck === sid && <span className="stuck-shine" />}
+                            </div>
+                          );
+                        }
+                        return (
+                          <div key={sid} data-slot={sid} className={'slot-wrap slot-empty' + (sel === sid && peeled ? ' is-target' : '')}
+                            onClick={() => sel && peeled && dropAt(sid, document.querySelector(`[data-slot="${sid}"]`))}>
+                            <StickerCard sticker={st} size={100} state="empty" />
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <span className="page-num">{page + 1}</span>
+                  </div>
                 </div>
                 <div className="album-dots">
                   {data.pages.map((p, i) => {
                     const done = p.stickers.every((sid) => a.stickers[sid]?.stuck);
-                    return <button key={i} type="button" className={(i === page ? 'on ' : '') + (done ? 'done' : '')} onClick={() => { setPage(i); sfx('flip'); }} aria-label={`Página ${i + 1}`} />;
+                    return <button key={i} type="button" className={(i === page ? 'on ' : '') + (done ? 'done' : '')} onClick={() => goPage(i)} aria-label={`Página ${i + 1}`} />;
                   })}
                 </div>
               </div>
@@ -509,7 +505,7 @@ export function AlbumPage() {
                     <Badge kind={{ pago: 'green', aguardando: 'yellow', aberto: 'blue', recusado: 'red' }[o.status] || ''}>
                       {{ pago: 'Pago', aguardando: 'Confirmando', aberto: 'Esperando Pix', recusado: 'Recusado', cancelado: 'Cancelado' }[o.status]}
                     </Badge>
-                    {o.status === 'aberto' && <Button small variant="secondary" onClick={() => run(() => api.post(`/albuns/pedidos/${o.id}/cancelar`), 'Pedido cancelado').then(state.reload)}>Cancelar</Button>}
+                    {o.status === 'aberto' && <Button small variant="secondary" onClick={() => run(() => api.post(`/pagamentos/${o.id}/cancelar`), 'Pedido cancelado').then(state.reload)}>Cancelar</Button>}
                   </div>
                 ))}
               </div>
@@ -517,7 +513,7 @@ export function AlbumPage() {
 
             {sel && a.stickers[sel] && !a.stickers[sel].stuck && (
               <PasteBar sid={sel} peeled={peeled} page={page} onPeel={peel} onCancel={() => { setSel(null); setPeeled(false); }}
-                onGoPage={() => { setPage(PAGE_OF[sel]); sfx('flip'); }} onDropAt={dropAt} />
+                onGoPage={() => goPage(PAGE_OF[sel])} onDropAt={dropAt} />
             )}
             {buy && <BuyModal album={a} onClose={() => setBuy(false)} onDone={state.reload} onOpen={() => setOpening(true)} />}
             {opening && <OpenPack album={a} onClose={() => { setOpening(false); state.reload(); }} onChanged={state.reload}

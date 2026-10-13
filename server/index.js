@@ -23,7 +23,9 @@ import transferRoutes from './routes/transfers.js';
 import clubToolRoutes from './routes/clubTools.js';
 import supportRoutes from './routes/support.js';
 import gameRoutes from './routes/games.js';
-import albumRoutes, { startPixSweep } from './routes/albums.js';
+import albumRoutes from './routes/albums.js';
+import paymentRoutes from './routes/payments.js';
+import { startPaymentSweep } from './payments.js';
 import { syncCatalog } from './catalog.js';
 import { createInitialAdmin, resetClubsForDbvOnce, resetToDemoClubsOnce, resetToTestClubsOnce, giftTestPacksOnce, seed } from './seed.js';
 
@@ -47,7 +49,7 @@ giftTestPacksOnce();
 // Sem cobranças por enquanto: nada de parcelas, inscrição anual ou bloqueio na virada do ano.
 
 syncCatalog();
-startPixSweep();
+startPaymentSweep();
 
 const app = express();
 app.disable('x-powered-by');
@@ -74,7 +76,7 @@ if (MANUTENCAO) {
 
 const api = express.Router();
 api.get('/health', (_req, res) => res.json({ ok: true }));
-for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, transferRoutes, clubToolRoutes, supportRoutes, gameRoutes, albumRoutes]) api.use(r);
+for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, transferRoutes, clubToolRoutes, supportRoutes, gameRoutes, albumRoutes, paymentRoutes]) api.use(r);
 api.use((_req, _res, next) => next(new HttpError(404, 'Rota não encontrada')));
 app.use('/api', api);
 
