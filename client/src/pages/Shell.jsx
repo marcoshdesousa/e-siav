@@ -1,7 +1,8 @@
 import { NavLink, useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../auth.jsx';
-import { LogOut } from 'lucide-react';
-import { Avatar, BackButton, LogoHorizontal } from '../ui.jsx';
+import { BookImage, Gamepad2, LogOut, WifiOff } from 'lucide-react';
+import { Avatar, BackButton, Button, LogoHorizontal } from '../ui.jsx';
+import { useOnline } from '../offline.js';
 import AnnouncementPopup from './Announcement.jsx';
 
 const TYPE_LABEL = { admin: 'Administrador Geral', club: 'Sistema do Clube', unit: 'Portal da Unidade', member: '' };
@@ -11,8 +12,30 @@ const TYPE_LABEL = { admin: 'Administrador Geral', club: 'Sistema do Clube', uni
  * aparece o botão Voltar (volta para a tela anterior; sem tela anterior, vai para a pasta de cima).
  * parentOf(caminho) diz qual é a pasta de cima de cada tela.
  */
-export default function Shell({ tabs, children, hideNav = false, parentOf = null }) {
+/** Tela "precisa de internet" (sem internet, só os jogos e colar figurinhas funcionam). */
+function OfflineNotice({ base, member }) {
+  return (
+    <div className="offline-screen">
+      <span className="offline-ico"><WifiOff size={40} /></span>
+      <h1>Sem internet</h1>
+      <p className="muted">Esta parte do app precisa de internet.{member ? ' Enquanto isso, dá para jogar os mini jogos e colar as figurinhas que você já tem.' : ''}</p>
+      {member && (
+        <div className="offline-actions">
+          <Link to={`${base}/jogos`}><Button block><Gamepad2 size={18} /> Jogar</Button></Link>
+          <Link to={`${base}/albuns/biblico`}><Button block variant="secondary"><BookImage size={18} /> Meu álbum</Button></Link>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * offlineOk(caminho): telas que funcionam sem internet (as outras mostram "Sem internet").
+ */
+export default function Shell({ tabs, children, hideNav = false, parentOf = null, offlineOk = null }) {
   const { actor, logout } = useAuth();
+  const online = useOnline();
+  const offline = !online || !!actor.offline;
   const nav = useNavigate();
   const { pathname } = useLocation();
   const path = pathname.replace(/\/+$/, '') || '/';
@@ -30,9 +53,15 @@ export default function Shell({ tabs, children, hideNav = false, parentOf = null
         <Avatar src={actor.photo || actor.logo} name={actor.name} size={34} />
         <button className="icon-btn" title="Sair" aria-label="Sair" onClick={async () => { await logout(); nav('/'); }}><LogOut size={20} /></button>
       </header>
+      {offline && online && actor.offline ? (
+        <div className="offline-bar back">
+          A internet voltou: entre de novo para salvar o que você fez.
+          <button type="button" onClick={async () => { await logout(); nav('/'); }}>Entrar</button>
+        </div>
+      ) : offline && <div className="offline-bar"><WifiOff size={15} /> Sem internet: {actor.type === 'member' ? 'dá para jogar e colar figurinhas.' : 'conecte-se para continuar.'}</div>}
       <main className={'main' + (hideNav ? ' no-nav' : '')}>
         {!tabs.some((t) => t.to === path) && <BackButton fallback={(parentOf && parentOf(path)) || base} />}
-        {children}
+        {offline && !(offlineOk && offlineOk(path)) ? <OfflineNotice base={base} member={actor.type === 'member'} /> : children}
       </main>
       {!hideNav && (
         <nav className="bottom-nav" aria-label="Navegação principal">
@@ -47,7 +76,7 @@ export default function Shell({ tabs, children, hideNav = false, parentOf = null
           </div>
         </nav>
       )}
-      {actor.type !== 'admin' && <AnnouncementPopup />}
+      {actor.type !== 'admin' && !offline && <AnnouncementPopup />}
     </div>
   );
 }

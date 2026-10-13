@@ -204,3 +204,4 @@
 .op-tag.rep { background: #fff; color: #E92A2F; border: 2px solid #E92A2F; }
 @keyframes op-tag-in { from { transform: translateX(-50%) scale(0); } }
 @media (min-width: 560px) { .op-grid { grid-template-columns: repeat(6, 100px); } }
+.offline-note { background: var(--yellow-soft) !important; color: var(--yellow-ink); font-weight: 700; margin-bottom: 1rem; }

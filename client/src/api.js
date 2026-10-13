@@ -6,7 +6,15 @@ async function request(method, url, body) {
     opts.headers['Content-Type'] = 'application/json';
     opts.body = JSON.stringify(body);
   }
-  const res = await fetch('/api' + url, opts);
+  let res;
+  try {
+    res = await fetch('/api' + url, opts);
+  } catch {
+    // Sem internet (ou servidor inalcançável).
+    const err = new Error('Sem internet. Conecte-se para usar esta parte do app.');
+    err.offline = true;
+    throw err;
+  }
   // Servidor fora do ar (atualização ou erro): vai para a tela "Sistema em atualização".
   if ([502, 503, 504].includes(res.status)) {
     location.replace('/atualizando.html?volta=' + encodeURIComponent(location.pathname + location.search));

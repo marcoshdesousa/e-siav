@@ -8,6 +8,7 @@ import { Button, Card, Loading, PageHeader, Section, Spinner, Tabs, useLoad } fr
 import { RankingTable } from '../Ranking.jsx';
 import { GAMES, gameById, gameComponent } from './games.js';
 import { isMuted, onMuteChange, setMuted, sfx, startMusic, stopMusic, unlockAudio } from './audio.js';
+import { useOnline } from '../../offline.js';
 import './games.css';
 
 const valueLabel = (g) => (g.mode === 'sum' ? 'Total de pontos' : 'Recorde');
@@ -39,6 +40,7 @@ export function GamesHub({ base }) {
   const [rankGame, setRankGame] = useState(GAMES[0].id);
   const mine = useLoad(() => api.get('/jogos/meus'));
   const my = mine.data || {};
+  const online = useOnline();
   return (
     <>
       <PageHeader title="Mini jogos" subtitle={`${GAMES.length} jogos para jogar, fazer pontos e subir no ranking de cada um. Sem anúncios!`} />
@@ -59,7 +61,7 @@ export function GamesHub({ base }) {
             {GAMES.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
           </select>
           <p className="small muted">{gameById(rankGame).mode === 'sum' ? 'Os pontos de todas as partidas vão somando.' : 'Vale a melhor partida de cada um.'} Ranking geral de todos os membros.</p>
-          <GameRanking key={rankGame} game={gameById(rankGame)} base={base} />
+          {online ? <GameRanking key={rankGame} game={gameById(rankGame)} base={base} /> : <Card className="small center">Os rankings precisam de internet. Sem internet, dá para jogar, mas as partidas não entram no ranking.</Card>}
         </>
       )}
     </>
@@ -136,6 +138,7 @@ export function GamePage({ base }) {
   // Partida em andamento: pontos e fim de partidas antigas (ou repetidos) são ignorados.
   const live = useRef(0);
   const scoreRef = useRef(0);
+  const online = useOnline();
   const rankRef = useRef(null);
   const stageRef = useRef(null);
   const fitW = useFitToScreen(stageRef, phase !== 'intro');
@@ -177,7 +180,7 @@ export function GamePage({ base }) {
     sfx(pts > 0 ? 'win' : 'lose');
     api.post(`/jogos/${game.id}/pontos`, { score: pts })
       .then((r) => { setResult(r); setRankKey((k) => k + 1); if (r.record) sfx('record'); })
-      .catch(() => setResult({ error: true }));
+      .catch((e) => setResult({ error: true, offline: !!e.offline }));
   };
   const seeRanking = () => {
     setPhase('intro');
@@ -198,7 +201,9 @@ export function GamePage({ base }) {
       {phase === 'intro' && (
         <Card className="game-intro">
           <p>{game.how}</p>
-          <p className="small muted">{game.mode === 'sum' ? 'Cada partida soma pontos no seu total.' : 'Vale a sua melhor partida no ranking.'} Se desistir, os pontos que você fez contam.</p>
+          {online
+            ? <p className="small muted">{game.mode === 'sum' ? 'Cada partida soma pontos no seu total.' : 'Vale a sua melhor partida no ranking.'} Se desistir, os pontos que você fez contam.</p>
+            : <p className="small offline-note">Sem internet: dá para jogar, mas a partida não entra no ranking.</p>}
           <Button block onClick={start}><Play size={18} /> Jogar</Button>
         </Card>
       )}
@@ -223,7 +228,7 @@ export function GamePage({ base }) {
                 <Trophy size={36} />
                 <h2>{score} pontos</h2>
                 {!result && <p className="small muted">Salvando...</p>}
-                {result?.error && <p className="small">Não deu para salvar a pontuação. Confira a internet.</p>}
+                {result?.error && <p className="small">{result.offline ? 'Sem internet: esta partida não entra no ranking.' : 'Não deu para salvar a pontuação. Confira a internet.'}</p>}
                 {result && !result.error && (
                   <p className="small">
                     {result.record ? <b>Novo recorde! </b> : null}
@@ -240,7 +245,7 @@ export function GamePage({ base }) {
         </div>
       )}
 
-      {phase === 'intro' && (
+      {phase === 'intro' && online && (
         <div ref={rankRef}>
           <Section title={`Ranking · ${valueLabel(game)}`}>
             <GameRanking key={rankKey} game={game} base={base} limit={20} />

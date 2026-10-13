@@ -827,3 +827,13 @@ input::-webkit-datetime-edit { padding: 0; }
 .bottom-nav-inner:has(> a:nth-child(6)) a { font-size: .6rem; letter-spacing: -.01em; }
 .bottom-nav-inner:has(> a:nth-child(6)) .nav-ico { width: 40px; }
 .embed-open { display: block; margin-top: 1rem; }
+
+/* Sem internet */
+.offline-bar { position: sticky; top: 0; z-index: 25; display: flex; gap: .45rem; align-items: center; justify-content: center; background: #3A2E0A; color: #FFD666; font: 700 .82rem var(--font); padding: .45rem .8rem; }
+.offline-screen { text-align: center; padding: 2.5rem 1rem; display: flex; flex-direction: column; align-items: center; gap: .5rem; }
+.offline-screen h1 { margin: .3rem 0 0; }
+.offline-screen p { max-width: 340px; }
+.offline-ico { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; background: var(--yellow-soft); color: var(--yellow-ink); }
+.offline-actions { display: flex; flex-direction: column; gap: .5rem; width: min(100%, 280px); margin-top: .6rem; }
+.offline-bar.back { background: #12452F; color: #B9F3D3; gap: .6rem; }
+.offline-bar.back button { border: 0; border-radius: 999px; background: #B9F3D3; color: #12452F; font: 800 .8rem var(--font); padding: .25rem .8rem; cursor: pointer; }

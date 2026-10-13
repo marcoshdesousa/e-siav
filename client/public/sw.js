@@ -1,9 +1,19 @@
-// Service worker do App do DBV: app instalável e tela inicial disponível offline.
-const CACHE = 'dbv-v36';
+// Service worker do App do DBV: app instalável e que abre sem internet.
+// Sem internet funcionam: entrar (quem já entrou antes neste aparelho), os mini jogos e colar
+// figurinhas. O resto precisa de internet. A lista de arquivos do app é colocada no build.
+const BUILD = '__BUILD__';
+const CACHE = 'dbv-' + BUILD;
+const PRECACHE = self.__PRECACHE__ || [];
 const SHELL = ['/', '/atualizando.html', '/manifest.webmanifest', '/favicon.ico', '/marca/logo.png', '/marca/favicon.png', '/marca/icon-192.png', '/marca/icon-512.png'];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  e.waitUntil((async () => {
+    const c = await caches.open(CACHE);
+    await c.addAll(SHELL).catch(() => {});
+    // Um por um: se algum falhar, o resto continua.
+    await Promise.all(PRECACHE.map((u) => c.add(u).catch(() => {})));
+    await self.skipWaiting();
+  })());
 });
 
 self.addEventListener('activate', (e) => {
@@ -23,13 +33,15 @@ self.addEventListener('fetch', (e) => {
   if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/ws')) return; // dados sempre da rede
   if (e.request.mode === 'navigate') {
     // Servidor fora do ar (atualização ou erro: 502, 503, 504): mostra "Sistema em atualização".
+    // Sem internet: abre o app guardado no aparelho.
     const atualizando = () => caches.match('/atualizando.html').then((hit) => hit || Response.redirect('/atualizando.html', 302));
-    e.respondWith(fetch(e.request).then((res) => ([502, 503, 504].includes(res.status) && url.pathname !== '/atualizando.html' ? atualizando() : res))
+    e.respondWith(fetch(e.request)
+      .then((res) => ([502, 503, 504].includes(res.status) && url.pathname !== '/atualizando.html' ? atualizando() : (url.pathname === '/' && res.ok ? save('/', res) : res)))
       .catch(() => caches.match('/')));
     return;
   }
-  // Arquivos do build têm nome único: podem vir direto do cache.
-  if (url.pathname.startsWith('/assets/') || url.pathname.startsWith('/uploads/')) {
+  // Arquivos do build e imagens do app têm nome fixo por versão: vêm do cache.
+  if (url.pathname.startsWith('/assets/') || url.pathname.startsWith('/uploads/') || url.pathname.startsWith('/img/')) {
     e.respondWith(caches.match(e.request).then((hit) => hit || fetch(e.request).then((res) => save(e.request, res))));
     return;
   }

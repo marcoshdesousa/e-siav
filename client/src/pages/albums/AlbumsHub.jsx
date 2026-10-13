@@ -4,11 +4,13 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Gift, Heart, Package, Repeat, ShoppingCart, Sparkles, Trophy } from 'lucide-react';
 import { api } from '../../api.js';
+import { useAuth } from '../../auth.jsx';
 import { fmtDate } from '../../format.js';
 import { Badge, Button, Card, Loading, Modal, PageHeader, Section, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
 import { sfx, unlockAudio } from '../games/audio.js';
 import { StickerCard } from './StickerArt.jsx';
 import { PixCheckout, money } from '../Payment.jsx';
+import { clearPasteQueue, pasteQueue, queuePaste, saveAlbum, savedAlbum, useOnline } from '../../offline.js';
 import { AlbumCover, BibleEmblem } from './AlbumCover.jsx';
 import data from './biblico.json';
 import './albums.css';
@@ -315,9 +317,36 @@ function PasteBar({ sid, peeled, onPeel, onCancel, onGoPage, onDropAt, page }) {
 }
 
 /** O Álbum Bíblico. */
+/**
+ * Carrega o álbum: com internet, primeiro envia o que foi colado sem internet e guarda uma cópia
+ * no aparelho; sem internet, usa a cópia guardada.
+ */
+async function loadAlbum(id, offlineSession) {
+  if (offlineSession) {
+    // Entrou sem internet: até entrar de verdade de novo, usa só a cópia guardada.
+    const saved = savedAlbum(id);
+    if (saved) return { ...saved, offline: true };
+  }
+  try {
+    const q = pasteQueue(id);
+    if (q.length) { await api.post(`/albuns/${id}/colar`, { ids: q }); clearPasteQueue(id); }
+    const d = await api.get('/albuns/' + id);
+    saveAlbum(id, d);
+    return d;
+  } catch (e) {
+    const saved = e.offline && savedAlbum(id);
+    if (saved) return { ...saved, offline: true };
+    if (e.offline) throw new Error('Sem internet. Abra o álbum uma vez com internet para poder usar sem internet depois.');
+    throw e;
+  }
+}
+
 export function AlbumPage() {
   const { id } = useParams();
-  const state = useLoad(() => api.get('/albuns/' + id), [id]);
+  const online = useOnline();
+  const { actor } = useAuth();
+  const offlineSession = !!actor?.offline;
+  const state = useLoad(() => loadAlbum(id, offlineSession), [id, online, offlineSession]);
   const [page, setPage] = useState(0);
   const [tab, setTab] = useState('album');
   const [buy, setBuy] = useState(false);
@@ -367,6 +396,8 @@ export function AlbumPage() {
     sfx('pop');
     state.setData((d) => ({ ...d, stickers: { ...d.stickers, [sid]: { ...d.stickers[sid], stuck: true } } }));
     setTimeout(() => setJustStuck(null), 1200);
+    // Sem internet: cola aqui e envia quando a internet voltar.
+    if (!online || state.data?.offline) { queuePaste(id, sid); return; }
     try {
       const r = await api.post(`/albuns/${id}/colar`, { ids: [sid] });
       if (r.completed) { sfx('record'); notify('Parabéns! Você completou o álbum! Seu trunfo especial está garantido.'); state.reload(); }
@@ -374,7 +405,10 @@ export function AlbumPage() {
         const pg = data.pages[PAGE_OF[sid]];
         if (pg.stickers.every((x) => x === sid || state.data?.stickers[x]?.stuck)) { setTimeout(() => sfx('win'), 350); notify(`Página "${pg.title}" completa!`); }
       }
-    } catch (e) { notify(e.message, 'error'); state.reload(); }
+    } catch (e) {
+      if (e.offline) queuePaste(id, sid);
+      else { notify(e.message, 'error'); state.reload(); }
+    }
   };
   const dropAt = (slotId, el) => {
     if (slotId === sel) { pasteOne(sel); return; }
@@ -392,6 +426,7 @@ export function AlbumPage() {
         const stuck = Object.values(a.stickers).filter((x) => x.stuck).length;
         const pg = data.pages[page];
         const waiting = a.orders.filter((o) => o.status === 'aberto' || o.status === 'aguardando');
+        const off = !online || a.offline;
         return (
           <div className={sel ? 'album-pasting' : ''}>
             <PageHeader title={a.name} subtitle={`${stuck} de ${a.total} figurinhas coladas`} />
@@ -401,20 +436,21 @@ export function AlbumPage() {
               : <Card className="album-prize"><Trophy size={22} /><span>Complete o álbum e ganhe um <b>trunfo especial físico</b>, entregue pela equipe distrital ao diretor do seu clube.</span></Card>}
 
             <div className="album-top">
-              <button type="button" className={'album-packs' + (a.packs_unopened ? ' has' : '')} disabled={!a.packs_unopened} onClick={() => setOpening(true)}>
+              <button type="button" className={'album-packs' + (a.packs_unopened && !off ? ' has' : '')} disabled={!a.packs_unopened || off} onClick={() => setOpening(true)}>
                 <Package size={30} />
                 <span><b>{a.packs_unopened}</b> pacotinho{a.packs_unopened !== 1 ? 's' : ''}</span>
-                <small>{a.packs_unopened ? 'Toque para abrir' : 'Nenhum para abrir'}</small>
+                <small>{off ? 'Abrir precisa de internet' : a.packs_unopened ? 'Toque para abrir' : 'Nenhum para abrir'}</small>
               </button>
               <div className="album-side">
-                <Button block onClick={() => setBuy(true)}><ShoppingCart size={16} /> Comprar</Button>
-                <Button block variant="secondary" disabled={a.repeats < a.repeats_per_free_pack || busy} onClick={trade}>
+                <Button block disabled={off} onClick={() => setBuy(true)}><ShoppingCart size={16} /> Comprar</Button>
+                <Button block variant="secondary" disabled={off || a.repeats < a.repeats_per_free_pack || busy} onClick={trade}>
                   <Gift size={16} /> Trocar {a.repeats_per_free_pack} repetidas
                 </Button>
                 <span className="small muted center"><Repeat size={12} /> {a.repeats} repetida{a.repeats !== 1 ? 's' : ''}</span>
               </div>
             </div>
-            {waiting.length > 0 && <Card className="small">Pedido{waiting.length > 1 ? 's' : ''} esperando o pagamento: {waiting.map((o) => `${o.packs} pacotinho${o.packs > 1 ? 's' : ''}`).join(', ')}. Assim que cair, aparece aqui.</Card>}
+            {off && <Card className="small offline-note">Sem internet: dá para ver o álbum e colar as figurinhas que você já tem. Abrir pacotinhos e comprar precisam de internet. O que você colar agora é salvo quando a internet voltar.</Card>}
+            {!off && waiting.length > 0 && <Card className="small">Pedido{waiting.length > 1 ? 's' : ''} esperando o pagamento: {waiting.map((o) => `${o.packs} pacotinho${o.packs > 1 ? 's' : ''}`).join(', ')}. Assim que cair, aparece aqui.</Card>}
 
             {toPaste.length > 0 && (
               <Section title={`Para colar (${toPaste.length})`}>

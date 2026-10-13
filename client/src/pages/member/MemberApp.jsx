@@ -85,7 +85,7 @@ export default function MemberApp() {
       <Route
         path="*"
         element={
-          <Shell tabs={tabs} parentOf={(path) => (((seg, sub) => ((seg === 'jogos' || seg === 'albuns') && sub ? `${base}/${seg}` : ['cursos', 'clubes', 'agenda', 'suporte', 'especialidades', 'albuns'].includes(seg) ? `${base}/mais` : base))(...path.split('/').slice(2)))}>
+          <Shell tabs={tabs} offlineOk={(path) => ['jogos', 'albuns', 'mais'].includes(path.split('/')[2])} parentOf={(path) => (((seg, sub) => ((seg === 'jogos' || seg === 'albuns') && sub ? `${base}/${seg}` : ['cursos', 'clubes', 'agenda', 'suporte', 'especialidades', 'albuns'].includes(seg) ? `${base}/mais` : base))(...path.split('/').slice(2)))}>
             {actor.waiting ? <Waiting text={actor.waiting} /> : <Routes>
               <Route index element={<MyProfile />} />
               <Route path="requisitos" element={<><PageHeader title="Requisitos" subtitle={isDbv ? 'Cumpra os requisitos e suba no ranking' : 'Requisitos para a liderança'} /><RequirementsTodo originTabs groupTab={isDbv} /></>} />
