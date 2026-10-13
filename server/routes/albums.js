@@ -88,6 +88,7 @@ r.get('/albuns/:id', member, (req, res) => {
   res.json({
     id: a.id, name: a.name, total: a.total, price_cents: a.price_cents, pack_size: a.pack_size, options: PACK_OPTIONS,
     repeats_per_free_pack: REPEATS_PER_FREE_PACK, pay_mode: payMode(), pix_ready: payMode() !== 'off',
+    district_name: get('SELECT d.name FROM members m JOIN clubs c ON c.id = m.club_id JOIN districts d ON d.id = c.district_id WHERE m.id = ?', req.actor.id)?.name || '',
     last_payer: JSON.parse(get('SELECT payer FROM sticker_orders WHERE member_id = ? AND payer IS NOT NULL ORDER BY id DESC LIMIT 1', req.actor.id)?.payer || 'null'),
     packs_unopened: p.packs_unopened, packs_opened: p.packs_opened, completed_at: p.completed_at,
     stickers: Object.fromEntries(rows.map((x) => [x.sticker, { qty: x.qty, stuck: !!x.stuck }])),

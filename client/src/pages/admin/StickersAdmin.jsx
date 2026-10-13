@@ -58,7 +58,7 @@ function Completed() {
     <Loading {...state}>
       {(rows) => (
         <>
-          <p className="small muted">Quem completou o álbum ganha o troféu, entregue pela equipe distrital ao diretor do clube.</p>
+          <p className="small muted">Quem completou o álbum ganha o trunfo especial físico, entregue pela equipe distrital ao diretor do clube.</p>
           <div className="list">
             {rows.length === 0 && <p className="muted center">Ninguém completou ainda.</p>}
             {rows.map((x) => (
