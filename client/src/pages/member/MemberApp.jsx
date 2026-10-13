@@ -68,10 +68,10 @@ export default function MemberApp() {
     { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },
     { to: `${base}/ranking`, icon: Trophy, label: 'Ranking' },
     { to: `${base}/jogos`, icon: Gamepad2, label: 'Jogos' },
+    { to: `${base}/cartao`, icon: IdCard, label: 'Cartão' },
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
-    { to: `${base}/cartao`, icon: IdCard, label: 'Cartão DBV', hint: 'O seu cartão de desbravador' },
     { to: `${base}/especialidades`, icon: Waypoints, label: 'Especialidades', hint: 'As suas especialidades' },
     { to: `${base}/albuns`, icon: BookImage, label: 'Álbuns de figurinhas', hint: 'Palmares 27 · em breve' },
     { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas do clube e do App' },
@@ -84,7 +84,7 @@ export default function MemberApp() {
       <Route
         path="*"
         element={
-          <Shell tabs={tabs} parentOf={(path) => (((seg, sub) => (seg === 'jogos' && sub ? `${base}/jogos` : ['cursos', 'clubes', 'agenda', 'cartao', 'suporte', 'especialidades', 'albuns'].includes(seg) ? `${base}/mais` : base))(...path.split('/').slice(2)))}>
+          <Shell tabs={tabs} parentOf={(path) => (((seg, sub) => (seg === 'jogos' && sub ? `${base}/jogos` : ['cursos', 'clubes', 'agenda', 'suporte', 'especialidades', 'albuns'].includes(seg) ? `${base}/mais` : base))(...path.split('/').slice(2)))}>
             {actor.waiting ? <Waiting text={actor.waiting} /> : <Routes>
               <Route index element={<MyProfile />} />
               <Route path="requisitos" element={<><PageHeader title="Requisitos" subtitle={isDbv ? 'Cumpra os requisitos e suba no ranking' : 'Requisitos para a liderança'} /><RequirementsTodo originTabs groupTab={isDbv} /></>} />
