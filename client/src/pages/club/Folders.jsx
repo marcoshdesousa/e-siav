@@ -298,7 +298,7 @@ export function FinancasPage() {
   };
   return (
     <>
-      <PageHeader title="Minhas finanças" subtitle="Controle do dinheiro do clube. É só anotação: não cobra nem paga nada." action={<Button small onClick={() => setF({ kind: 'entrada', description: '', amount: '', date: today() })}>+ Lançar</Button>} />
+      <PageHeader title="Tesouraria" subtitle="Balancete do clube. É só anotação: não cobra nem paga nada." action={<Button small onClick={() => setF({ kind: 'entrada', description: '', amount: '', date: today() })}>+ Lançar</Button>} />
       <Loading {...state}>
         {(d) => (
           <>

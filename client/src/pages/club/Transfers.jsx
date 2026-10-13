@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ArrowLeftRight, ArrowRight, Check, Search, X } from 'lucide-react';
 import { api } from '../../api.js';
-import { fmtCpf, fmtDate } from '../../format.js';
+import { fmtDate } from '../../format.js';
 import { Avatar, Badge, Button, Card, Confirm, Empty, Field, Loading, PageHeader, Section, Tabs, useAsync, useLoad } from '../../ui.jsx';
 
 const STATUS = {
@@ -30,7 +30,7 @@ function Row({ t, children }) {
 }
 
 /**
- * Transferências: o clube novo pede com nome completo + CPF; o clube atual aceita;
+ * Transferências: o clube novo pede com nome completo + código do membro; o clube atual aceita;
  * o clube novo confirma. Os dados e conquistas vão junto com a pessoa.
  */
 export default function TransfersPage() {
@@ -58,10 +58,10 @@ export default function TransfersPage() {
       {tab === 'pedir' && (
         <Card>
           <div className="form">
-            <p className="small muted" style={{ marginTop: 0 }}>Informe o <b>nome completo</b> e o <b>CPF</b> (ou o número da certidão de nascimento) da pessoa. Não precisa saber de qual clube ela é: o app encontra e manda o pedido para o clube atual aceitar. Depois que ele aceitar, você confirma aqui.</p>
+            <p className="small muted" style={{ marginTop: 0 }}>Informe o <b>nome completo</b> e o <b>código do membro</b> (6 números) da pessoa. Não precisa saber de qual clube ela é: o app encontra e manda o pedido para o clube atual aceitar. Depois que ele aceitar, você confirma aqui.</p>
             <Field label="Nome completo"><input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
-            <Field label="CPF ou nº da certidão de nascimento"><input value={f.cpf} onChange={(e) => setF({ ...f, cpf: /^[\d.\-]*$/.test(e.target.value) && e.target.value.replace(/\D/g, '').length <= 11 ? fmtCpf(e.target.value) : e.target.value })} placeholder="000.000.000-00" /></Field>
-            <Button block busy={busy} disabled={f.name.trim().length < 5 || f.cpf.replace(/\D/g, '').length < 6} onClick={request}><Search size={16} /> Pedir transferência</Button>
+            <Field label="Código do membro (6 números)"><input inputMode="numeric" value={f.cpf} onChange={(e) => setF({ ...f, cpf: e.target.value.replace(/\D/g, '').slice(0, 6) })} placeholder="000000" /></Field>
+            <Button block busy={busy} disabled={f.name.trim().length < 5 || f.cpf.length !== 6} onClick={request}><Search size={16} /> Pedir transferência</Button>
           </div>
         </Card>
       )}

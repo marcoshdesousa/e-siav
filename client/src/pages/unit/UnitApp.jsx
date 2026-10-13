@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { CalendarDays, ClipboardCheck, ClipboardPlus, Flag, Trophy } from 'lucide-react';
+import { CalendarDays, ClipboardCheck, ClipboardPlus, Flag, LifeBuoy, Menu, Tent, Trophy } from 'lucide-react';
+import { EmbeddedSite, SupportChat } from '../Shared.jsx';
 import { AgendaLeitura, ProximasDatas } from '../club/Folders.jsx';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Button, Card, Loading, PageHeader, Section, Tabs, useAsync, useLoad } from '../../ui.jsx';
-import Shell from '../Shell.jsx';
+import Shell, { MoreMenu } from '../Shell.jsx';
 import { InAppProfile, UnitProfileView } from '../Profiles.jsx';
 import { CreatedRequirements, RequirementsTodo, ReviewsPanel } from '../Requirements.jsx';
 import RankingHub from '../Ranking.jsx';
@@ -67,16 +68,22 @@ export default function UnitApp() {
   const abertos = (reqs.data || []).filter((r) => ['pendente', 'fora_do_prazo', 'recusado'].includes(r.state)).length;
   const tabs = [
     { to: base, icon: Flag, label: 'Perfil', end: true },
-    ...(lid ? [] : [
-      { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos', badge: abertos },
-      { to: `${base}/exploradores`, icon: ClipboardPlus, label: 'Criar' },
-    ]),
+    ...(lid ? [] : [{ to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos', badge: abertos }]),
     { to: `${base}/ranking`, icon: Trophy, label: 'Ranking' },
-    { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda' },
+    { to: `${base}/cantinho`, icon: Tent, label: 'Cantinho' },
+    { to: `${base}/mais`, icon: Menu, label: 'Mais' },
+  ];
+  const more = [
+    ...(lid ? [] : [{ to: `${base}/exploradores`, icon: ClipboardPlus, label: 'Criar requisitos', hint: 'Para os desbravadores da unidade' }]),
+    { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas do clube e do App' },
+    { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },
   ];
   return (
-    <Shell tabs={tabs}>
+    <Shell tabs={tabs} parentOf={(path) => (['exploradores', 'agenda', 'suporte'].includes(path.split('/')[2]) ? `${base}/mais` : base)}>
       <Routes>
+        <Route path="cantinho" element={<EmbeddedSite title="Cantinho da Unidade" linkKey="link_cantinho" subtitle="Relatórios e atividades da unidade" />} />
+        <Route path="suporte" element={<SupportChat />} />
+        <Route path="mais" element={<><PageHeader title="Mais" /><MoreMenu items={more} /></>} />
         <Route index element={<UnitProfile />} />
         <Route path="requisitos" element={<><PageHeader title="Requisitos da unidade" subtitle="Cumpram juntos dentro do prazo e subam no ranking" /><RequirementsTodo originTabs clubLabel="Do clube" /></>} />
         <Route path="exploradores" element={<GroupRequirements />} />

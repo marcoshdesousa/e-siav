@@ -19,16 +19,13 @@ import fileRoutes from './routes/files.js';
 import announcementRoutes from './routes/announcements.js';
 import achievementRoutes from './routes/achievements.js';
 import clubEventRoutes from './routes/clubEvents.js';
-import signupRoutes from './routes/signup.js';
 import transferRoutes from './routes/transfers.js';
 import clanApplicationRoutes from './routes/clanApplications.js';
-import termRoutes from './routes/terms.js';
 import feeRoutes from './routes/fees.js';
 import clubToolRoutes from './routes/clubTools.js';
-import { ensureInstallments } from './fees.js';
-import { expireYear } from './memberStatus.js';
+import supportRoutes from './routes/support.js';
 import { syncCatalog } from './catalog.js';
-import { createInitialAdmin, resetToDemoClubsOnce, seed } from './seed.js';
+import { createInitialAdmin, resetClubsForDbvOnce, resetToDemoClubsOnce, seed } from './seed.js';
 
 // Banco vazio: cria só o administrador. Os dados de exemplo completos só entram com
 // SEED_DEMO=1 (testes e desenvolvimento). Nada que já existe é apagado na inicialização,
@@ -44,11 +41,8 @@ if (!get('SELECT 1 FROM admins LIMIT 1')) {
   }
 }
 resetToDemoClubsOnce({ justSeeded });
-// Todo clube tem as suas parcelas (criadas a partir da data de criação do clube).
-for (const c of all('SELECT id, created_at FROM clubs')) ensureInstallments(c.id, c.created_at);
-// Virada do ano: quem não teve a inscrição renovada pelo clube fica esperando (confere de hora em hora).
-expireYear();
-setInterval(expireYear, 60 * 60 * 1000).unref();
+resetClubsForDbvOnce({ justSeeded });
+// Sem cobranças por enquanto: nada de parcelas, inscrição anual ou bloqueio na virada do ano.
 
 syncCatalog();
 
@@ -77,7 +71,7 @@ if (MANUTENCAO) {
 
 const api = express.Router();
 api.get('/health', (_req, res) => res.json({ ok: true }));
-for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, signupRoutes, transferRoutes, clanApplicationRoutes, termRoutes, feeRoutes, clubToolRoutes]) api.use(r);
+for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, transferRoutes, clanApplicationRoutes, feeRoutes, clubToolRoutes, supportRoutes]) api.use(r);
 api.use((_req, _res, next) => next(new HttpError(404, 'Rota não encontrada')));
 app.use('/api', api);
 

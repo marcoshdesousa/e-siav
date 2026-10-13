@@ -1,22 +1,21 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
-  Eye, FileText, KeyRound, MapPin,
+  Eye, KeyRound, MapPin,
 } from 'lucide-react';
 import { api } from '../../api.js';
 import { plural } from '../../format.js';
-import { Avatar, Badge, Button, Card, Loading, Tabs, useLoad } from '../../ui.jsx';
-import { FichaModal, MembersBrowser } from '../club/Members.jsx';
+import { Avatar, Badge, Card, Loading, Tabs, useLoad } from '../../ui.jsx';
+import { MembersBrowser } from '../club/Members.jsx';
 
 /**
- * O Administrador Geral vê o clube por dentro: membros (com as fichas), unidades e
+ * O Administrador Geral vê o clube por dentro: membros, unidades e
  * senhas das unidades. Tudo só para visualizar — nada pode ser editado daqui.
  */
 export default function ClanView({ base }) {
   const { id } = useParams();
   const state = useLoad(() => api.get(`/admin/clubs/${id}/view`), [id]);
   const [tab, setTab] = useState('membros');
-  const [ficha, setFicha] = useState(null);
   return (
     <>
       <Loading {...state}>
@@ -36,8 +35,7 @@ export default function ClanView({ base }) {
             <Card className="small"><Eye size={14} style={{ verticalAlign: '-2px' }} /> Você está vendo o clube por dentro. <b>Nada pode ser editado daqui</b>: só o próprio clube altera os dados.</Card>
             <Tabs tabs={[['membros', `Membros (${members.filter((m) => m.status !== 'inativo').length})`], ['grupos', `Unidades (${units.length})`]]} value={tab} onChange={setTab} />
             {tab === 'membros' ? (
-              <MembersBrowser list={members} units={units}
-                actions={(m) => <Button small variant="secondary" onClick={() => setFicha(m)}><FileText size={14} /> Ver ficha</Button>} />
+              <MembersBrowser list={members} units={units} />
             ) : (
               <div className="list">
                 {units.map((u) => (
@@ -51,7 +49,6 @@ export default function ClanView({ base }) {
                 ))}
               </div>
             )}
-            {ficha && <FichaModal member={ficha} url={`/admin/clubs/${id}/members/${ficha.id}/ficha`} readOnly onClose={() => setFicha(null)} />}
           </>
         )}
       </Loading>

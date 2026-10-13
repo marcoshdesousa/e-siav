@@ -1,21 +1,16 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, Copy, FileText, Hash, Link2, MessageCircle, RotateCcw } from 'lucide-react';
+import {
+  Copy, Hash, Link2, MessageCircle, RotateCcw,
+} from 'lucide-react';
 import { api } from '../../api.js';
 import { fmtCpf, fmtDate } from '../../format.js';
 import { Avatar, Badge, Button, Card, Confirm, Empty, Field, Loading, Modal, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
 import FichaForm, { DocFields, SaudeLista, SexoField } from '../Ficha.jsx';
 
 /** Em que lista o membro aparece: ativo, pendente (termo, aprovação ou dados) ou inativo. */
-export const memberGroup = (m) => (m.status === 'inativo' ? 'inativo' : m.pending_reason ? 'pendente' : 'ativo');
+export const memberGroup = (m) => (m.status === 'inativo' ? 'inativo' : 'ativo');
 
-const REASON = {
-  termo: ['yellow', 'Esperando o termo'],
-  aprovacao: ['blue', 'Inscrição para aprovar'],
-  inscricao: ['yellow', 'Falta pagar a inscrição do ano'],
-  renovacao: ['yellow', 'Falta renovar a inscrição do ano'],
-  dados: ['red', 'Dados incompletos'],
-};
 
 const ageOf = (birth) => (birth ? Math.floor((Date.now() - Date.parse(birth + 'T12:00:00')) / 31557600000) : null);
 
@@ -127,14 +122,13 @@ export function MembersBrowser({ list, units, actions, initialTab = 'ativo' }) {
   const nq = q.trim().toLowerCase();
   const shown = list.filter((m) => {
     const g = memberGroup(m);
-    const inTab = tab === 'todos' ? g !== 'inativo' : tab === 'desatualizado' ? m.outdated : g === tab;
+    const inTab = tab === 'todos' ? g !== 'inativo' : tab === 'ativo' ? g !== 'inativo' : g === tab;
     return inTab && (!nq || m.name.toLowerCase().includes(nq) || m.code.includes(nq))
       && (!unitFilter || (unitFilter === 'none' ? !m.unit_id : String(m.unit_id) === unitFilter));
   });
   return (
     <>
-      <Tabs tabs={[['ativo', 'Ativos', count('ativo')], ['pendente', 'Pendentes', count('pendente')], ['desatualizado', 'Desatualizados', list.filter((m) => m.outdated).length], ['todos', `Todos (${total})`], ['inativo', 'Inativos']]} value={tab} onChange={setTab} />
-      {tab === 'desatualizado' && <p className="small muted">A ficha (principalmente a de saúde) precisa ser conferida todo ano. Toque em <b>Atualizar ficha</b>, confira com a pessoa e salve.</p>}
+      <Tabs tabs={[['ativo', 'Ativos', count('ativo')], ['todos', `Todos (${total})`], ['inativo', 'Inativos']]} value={tab} onChange={setTab} />
       <div className="grid2">
         <input placeholder="Buscar por nome ou código" value={q} onChange={(e) => setQ(e.target.value)} />
         <select value={unitFilter} onChange={(e) => setUnitFilter(e.target.value)}>
@@ -153,54 +147,29 @@ export function MembersBrowser({ list, units, actions, initialTab = 'ativo' }) {
               <div className="row wrap" style={{ marginTop: '.35rem', gap: '.3rem' }}>
                 <Badge kind={m.kind === 'desbravador' ? 'blue' : 'yellow'}>{m.role}</Badge>
                 <Badge><Hash size={11} /> {m.code}</Badge>
-                {m.pending_reason && <Badge kind={REASON[m.pending_reason][0]}>{REASON[m.pending_reason][1]}</Badge>}
                 {m.status === 'inativo' && <Badge>Inativo</Badge>}
-                {m.outdated && <Badge kind="red">Ficha desatualizada</Badge>}
-                {m.status === 'pendente' && <Badge>Desde {fmtDate(m.created_at)}</Badge>}
               </div>
               {actions && <div className="row wrap" style={{ marginTop: '.5rem', gap: '.35rem' }}>{actions(m)}</div>}
             </div>
           </div>
         ))}
-        {!shown.length && <Empty>{tab === 'pendente' ? 'Ninguém pendente.' : tab === 'inativo' ? 'Ninguém inativo.' : tab === 'desatualizado' ? 'Todas as fichas estão em dia.' : 'Ninguém encontrado.'}</Empty>}
+        {!shown.length && <Empty>{tab === 'inativo' ? 'Ninguém inativo.' : 'Ninguém encontrado.'}</Empty>}
       </div>
     </>
   );
 }
 
 /** Botões do Sistema do Clube para cada membro, conforme a situação. */
-export function memberActions({ base, run, done, setFicha, setEditing, setAch, setApproving, setTermFor }) {
+export function memberActions({ base, run, done, setEditing, setAch }) {
   return (m) => {
     if (m.status === 'inativo') {
-      return (
-        <>
-          <Button small variant="green" onClick={() => run(() => api.post(`/club/members/${m.id}/reativar`), 'Membro ativado!').then(() => done())}><RotateCcw size={14} /> Ativar</Button>
-          <Button small variant="secondary" onClick={() => setFicha(m)}><FileText size={14} /> Ficha</Button>
-        </>
-      );
-    }
-    if (m.pending_reason === 'aprovacao') {
-      return (
-        <>
-          <Button small variant="green" onClick={() => setApproving(m)}><Check size={14} /> Aprovar</Button>
-          <Button small variant="secondary" onClick={() => setFicha(m)}><FileText size={14} /> Ver ficha</Button>
-          <Confirm text={`Recusar a inscrição de ${m.name}?`} onYes={() => run(() => api.post(`/club/members/${m.id}/recusar`), 'Inscrição recusada').then(() => done())}>Recusar</Confirm>
-        </>
-      );
+      return <Button small variant="green" onClick={() => run(() => api.post(`/club/members/${m.id}/reativar`), 'Membro ativado!').then(() => done())}><RotateCcw size={14} /> Ativar</Button>;
     }
     return (
       <>
-        {m.outdated && <Button small variant="yellow" onClick={() => setFicha(m)}><FileText size={14} /> Atualizar ficha</Button>}
-        {m.pending_reason === 'termo' && <Button small variant="yellow" onClick={() => setTermFor(m)}><Link2 size={14} /> Link do termo</Button>}
-        {['inscricao', 'renovacao'].includes(m.pending_reason) && <Link to={`${base}/pagamentos?aba=membros`}><Button small variant="yellow">Pagar inscrição</Button></Link>}
         <Button small variant="secondary" onClick={() => setEditing(m)}>Editar</Button>
-        <Button small variant="secondary" onClick={() => setFicha(m)}><FileText size={14} /> Ficha</Button>
-        {m.status === 'ativo' && (
-          <>
-            <Button small variant="secondary" onClick={() => setAch(m)}>Especialidades</Button>
-            <Link to={`${base}/ver/membro/${m.code}`}><Button small variant="ghost">Perfil</Button></Link>
-          </>
-        )}
+        <Button small variant="secondary" onClick={() => setAch(m)}>Especialidades</Button>
+        <Link to={`${base}/ver/membro/${m.code}`}><Button small variant="ghost">Perfil</Button></Link>
         <Confirm text={`Inativar ${m.name}? A pessoa sai das listas e do ranking, mas continua no sistema e pode ser ativada de novo.`}
           onYes={() => run(() => api.post(`/club/members/${m.id}/desativar`), 'Membro inativado').then(() => done())}>Inativar</Confirm>
       </>

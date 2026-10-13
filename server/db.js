@@ -708,6 +708,33 @@ function migrate() {
   )`);
   db.prepare(`INSERT OR IGNORE INTO settings (key, value) VALUES ('support_whatsapp', '')`).run();
 
+  // App secundário ao SGC: sem inscrição pelo link, ficha, termo ou taxas. Quem estava
+  // pendente (esperando termo, aprovação ou pagamento) fica ativo.
+  if (!flag('sem-inscricao-v1')) {
+    db.exec(`UPDATE members SET status = 'ativo', terms_token = NULL, approved_at = COALESCE(approved_at, strftime('%Y-%m-%dT%H:%M:%fZ','now')) WHERE status = 'pendente'`);
+    setFlag('sem-inscricao-v1');
+  }
+  // Links dos sites que abrem dentro do app (o admin cadastra): SGC (clube),
+  // Cantinho da Unidade (unidade) e Cartão DBV (membro).
+  for (const k of ['link_sgc', 'link_cantinho', 'link_cartao']) db.prepare('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)').run(k, '');
+  // Chat de suporte: cada conta (clube, unidade, membro) conversa com a equipe.
+  db.exec(`CREATE TABLE IF NOT EXISTS support_threads (
+    id INTEGER PRIMARY KEY,
+    actor_type TEXT NOT NULL CHECK (actor_type IN ('club','unit','member')),
+    actor_id INTEGER NOT NULL,
+    last_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+    admin_unread INTEGER NOT NULL DEFAULT 0,
+    user_unread INTEGER NOT NULL DEFAULT 0,
+    UNIQUE (actor_type, actor_id)
+  )`);
+  db.exec(`CREATE TABLE IF NOT EXISTS support_messages (
+    id INTEGER PRIMARY KEY,
+    thread_id INTEGER NOT NULL REFERENCES support_threads(id) ON DELETE CASCADE,
+    sender TEXT NOT NULL CHECK (sender IN ('user','admin')),
+    text TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+  )`);
+
   // Volta para os Desbravadores: "Nº Clã X" vira "Nº Clube X" e a medalha de grupo vira de unidade.
   if (!flag('nomes-dbv-v1')) {
     db.exec(`UPDATE clubs SET name = replace(name, 'º Clã ', 'º Clube ') WHERE name LIKE '%º Clã %'`);
@@ -715,6 +742,8 @@ function migrate() {
     db.exec(`UPDATE medals SET name = 'Desbravador destaque' WHERE name = 'Explorador destaque'`);
     setFlag('nomes-dbv-v1');
   }
+  // Clube sem número no nome: "1º Clube X" vira "Clube X".
+  db.exec(`UPDATE clubs SET name = substr(name, instr(name, 'Clube ')) WHERE name GLOB '[0-9]*º Clube *'`);
 
   // Biografia da unidade (a própria unidade escreve no Portal da Unidade).
   add('units', 'bio', 'TEXT');

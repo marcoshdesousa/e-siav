@@ -55,7 +55,7 @@ function demoFicha(name, age, club) {
     termo_imagem: true, termo_responsabilidade: true, termo_dados: true, assinatura_nome: resp, assinatura_cpf: '11144477735',
     doencas: ['Catapora'], doencas_ok: true, sangue_tipo: 'O', sangue_rh: 'Positivo', plano_saude: '', cartao_sus: '',
     termo_medico: true, med_assinatura_nome: resp, med_assinatura_cpf: '11144477735',
-    data_inscricao: new Date().toISOString().slice(0, 10), local_inscricao: `${club === 'aguias' ? '1º Clube Águias do Vale' : '2º Clube Leões de Judá'} — dados de teste`,
+    data_inscricao: new Date().toISOString().slice(0, 10), local_inscricao: `${club === 'aguias' ? 'Clube Águias do Vale' : 'Clube Leões de Judá'} — dados de teste`,
   };
   for (const k of ['cardiaco', 'alergia_medicamento', 'lactose', 'deficiencia', 'transfusao', 'alergia_pele', 'convulsao', 'psicologico', 'alergia', 'diabetes', 'ferimento', 'fratura', 'cirurgia', 'internacao']) f['q_' + k] = 'nao';
   if (age >= 16) f.estado_civil = 'Solteiro';
@@ -84,9 +84,9 @@ export function seed({ production = false } = {}) {
     const clubs = {};
     const units = {};
     const clubDefs = [
-      { key: 'aguias', number: 1, code: '4821', password: 'AG2026', name: '1º Clube Águias do Vale', director: 'Marcos Almeida', associates: 'Juliana Costa', color: '#0B3D91', icon: 'wing', user: 'aguias', lid: 'TU9001',
+      { key: 'aguias', number: 1, code: '4821', password: 'AG2026', name: 'Clube Águias do Vale', director: 'Marcos Almeida', associates: 'Juliana Costa', color: '#0B3D91', icon: 'wing', user: 'aguias', lid: 'TU9001',
         units: [['falcoes', 'Falcões', '#D62828', 'wing', 'FA1111'], ['gavioes', 'Gaviões', '#1F7A4D', 'mountain', 'GA2222']] },
-      { key: 'leoes', number: 2, code: '7350', password: 'LE2026', name: '2º Clube Leões de Judá', director: 'Carlos Pereira', color: '#8A1C1C', icon: 'paw', user: 'leoes', lid: 'TU9002',
+      { key: 'leoes', number: 2, code: '7350', password: 'LE2026', name: 'Clube Leões de Judá', director: 'Carlos Pereira', color: '#8A1C1C', icon: 'paw', user: 'leoes', lid: 'TU9002',
         units: [['panteras', 'Panteras', '#3A2E7A', 'paw', 'PA3333'], ['tigres', 'Tigres', '#D9822B', 'flame', 'TI4444']] },
     ];
     for (const c of clubDefs) {
@@ -142,12 +142,12 @@ export function seed({ production = false } = {}) {
       if (!['gabriel', 'davi'].includes(key)) saveFicha(id, demoFicha(name, age, club), { acceptTerms: true });
     });
     // Uma inscrição esperando aprovação (feita pelo link de cadastro).
-    const pend = ins(`INSERT INTO members (club_id, unit_id, name, birth_date, cargo, code, cpf, status) VALUES (?,?,?,?,?,?,?,'pendente')`,
+    const pend = ins(`INSERT INTO members (club_id, unit_id, name, birth_date, cargo, code, cpf, status, approved_at, cleared_year) VALUES (?,?,?,?,?,?,?,'ativo',strftime('%Y-%m-%dT%H:%M:%fZ','now'),2026)`,
       clubs.aguias, null, 'Bruna Inscrita Teste', birthForAge(11, 2), 'Desbravador', '100099', fakeCpf(123999000));
     login('member', pend, 'bruna', 'dbv123');
     saveFicha(pend, demoFicha('Bruna Inscrita Teste', 11, 'aguias'), { acceptTerms: true });
     // Um cadastro feito pelo clube, com termo assinado, esperando o clube pagar a inscrição do ano.
-    const pag = ins(`INSERT INTO members (club_id, unit_id, name, birth_date, cargo, code, cpf, status, approved_at) VALUES (?,?,?,?,?,?,?,'pendente',strftime('%Y-%m-%dT%H:%M:%fZ','now'))`,
+    const pag = ins(`INSERT INTO members (club_id, unit_id, name, birth_date, cargo, code, cpf, status, approved_at, cleared_year) VALUES (?,?,?,?,?,?,?,'ativo',strftime('%Y-%m-%dT%H:%M:%fZ','now'),2026)`,
       clubs.aguias, units.gavioes, 'Rafaela Nunes Teste', birthForAge(12, 4), 'Desbravador', '100098', fakeCpf(123998000));
     login('member', pag, 'rafaela', 'dbv123');
     saveFicha(pag, demoFicha('Rafaela Nunes Teste', 12, 'aguias'), { acceptTerms: true });
@@ -412,10 +412,35 @@ export function wipeClubs() {
     run(`DELETE FROM blocks`);
     run(`DELETE FROM conversations`);
     run(`DELETE FROM logins WHERE account_type IN ('club','unit','member')`);
+    run(`DELETE FROM requirements WHERE creator_type IN ('club','unit')`);
     run(`DELETE FROM members`);
     run(`DELETE FROM units`);
     run(`DELETE FROM clubs`);
   });
+}
+
+/**
+ * Uma vez (pedido do dono do app): apaga os clubes que existiam para criar de novo e
+ * deixa só o Distrito Palmares. O administrador e o catálogo continuam.
+ * Com os dados de exemplo recém-criados (SEED_DEMO=1), só marca como feito.
+ */
+export function resetClubsForDbvOnce({ justSeeded = false } = {}) {
+  const KEY = 'reset-dbv-v1';
+  if (get('SELECT 1 FROM app_flags WHERE key = ?', KEY)) return;
+  if (!justSeeded) {
+    wipeClubs();
+    tx(() => {
+      run(`DELETE FROM support_messages`);
+      run(`DELETE FROM support_threads`);
+      run(`DELETE FROM agenda_items WHERE creator_type = 'club' OR scope = 'clube'`);
+      const pal = get(`SELECT id FROM districts WHERE name = 'Distrito Palmares'`)?.id || Number(run(`INSERT INTO districts (name) VALUES ('Distrito Palmares')`).lastInsertRowid);
+      run('UPDATE requirements SET district_id = ? WHERE district_id IS NOT NULL AND district_id <> ?', pal, pal);
+      run('UPDATE agenda_items SET district_id = ? WHERE district_id IS NOT NULL AND district_id <> ?', pal, pal);
+      run('DELETE FROM districts WHERE id <> ?', pal);
+    });
+    console.log('Clubes apagados para criar de novo; só o Distrito Palmares ficou.');
+  }
+  run('INSERT OR IGNORE INTO app_flags (key) VALUES (?)', KEY);
 }
 
 /**
@@ -426,10 +451,7 @@ export function wipeClubs() {
 export function resetToDemoClubsOnce({ justSeeded = false } = {}) {
   const KEY = 'demo-clubs-v1';
   if (get('SELECT 1 FROM app_flags WHERE key = ?', KEY)) return;
-  if (!justSeeded && get('SELECT 1 FROM admins LIMIT 1')) {
-    wipeClubs();
-    seed({ production: true });
-    console.log('Clubes antigos apagados; clubes de teste criados.');
-  }
+  // Não cria mais clubes de teste no ar (os clubes são criados pelo administrador).
+  void justSeeded;
   run('INSERT OR IGNORE INTO app_flags (key) VALUES (?)', KEY);
 }

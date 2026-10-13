@@ -1,4 +1,3 @@
-import crypto from 'node:crypto';
 import { Router } from 'express';
 import { all, get, run, tx } from '../db.js';
 import { requireAuth, deleteLogin, checkAccountPassword } from '../auth.js';
@@ -6,7 +5,7 @@ import { imageUpload, fileUrl } from '../uploads.js';
 import { CARGOS, CARGOS_18, CARGO_PADRAO, IDADE_MIN_DIRETOR, MAX_GRUPOS } from '../config.js';
 import { createMemberLogin, memberPassword, refreshStatus } from '../memberStatus.js';
 import { fail, int, str, memberKind, ageFrom, validDate, newMemberCode, newUnitPin, parseJson } from '../util.js';
-import { checkIdentity, cleanFicha, saveFicha, validateSignup } from '../ficha.js';
+import { checkIdentity, cleanFicha, saveFicha } from '../ficha.js';
 import { listMembers, listUnits, memberFicha } from '../clubData.js';
 import { clubProfile } from '../profiles.js';
 import { clubUnitsRanking } from '../rankings.js';
@@ -85,35 +84,28 @@ function memberFields(req, existing) {
   }
   // Conselheiro sem unidade entra automaticamente na unidade "Liderança".
   if (!unitId && kind === 'lideranca') unitId = leadershipUnit(req.actor.id);
-  const ids = b.cpf === undefined && b.certidao === undefined && existing
-    ? { cpf: existing.cpf, certidao: existing.birth_cert }
+  // CPF/certidão são opcionais (o cadastro completo fica no SGC).
+  const ids = !b.cpf && !b.certidao
+    ? { cpf: existing?.cpf || null, certidao: existing?.birth_cert || null }
     : checkIdentity({ cpf: b.cpf, certidao: b.certidao }, existing?.id);
   return { name, birth, cargo, unitId, cpf: ids.cpf, certidao: ids.certidao };
 }
 
-// Cadastro feito pelo clube: todos os dados da ficha. As assinaturas e os termos ficam
-// com o responsável, que recebe um link só desse membro. Assinou, o membro fica ativo.
+// Cadastro feito pelo clube: nome completo, data de nascimento, unidade e cargo.
+// O cadastro completo (ficha, termos) fica no SGC. O membro já entra ativo.
+// Login: código de 6 números + ano de nascimento.
 r.post('/club/members', imageUpload.single('photo'), (req, res) => {
-  const ficha = cleanFicha(req.body);
-  if (ficha.doc_tipo === 'certidao') req.body.cpf = req.body.cpf || '';
-  else req.body.certidao = '';
-  const f = memberFields(req);
-  if (ficha.doc_tipo !== 'certidao' && !f.cpf) fail(400, 'Informe o CPF');
   if (str(req.body.name, 120).split(/\s+/).length < 2) fail(400, 'Informe o nome completo');
-  validateSignup(ficha, f.birth, { signed: false });
-  for (const k of ['assinatura_nome', 'assinatura_cpf', 'med_assinatura_nome', 'med_assinatura_cpf', 'termo_medico', 'termo_imagem', 'termo_responsabilidade', 'termo_dados']) delete ficha[k];
-  ficha.data_inscricao = new Date().toISOString().slice(0, 10);
-  ficha.local_inscricao = `${get('SELECT name FROM clubs WHERE id = ?', req.actor.id).name} — cadastro pelo clube`;
-  const token = crypto.randomBytes(18).toString('base64url');
+  const f = memberFields(req);
   const out = tx(() => {
     const code = newMemberCode();
     const id = Number(run(
-      `INSERT INTO members (club_id, unit_id, name, birth_date, photo, cargo, code, cpf, birth_cert, status, terms_token, approved_at) VALUES (?,?,?,?,?,?,?,?,?,'pendente',?,strftime('%Y-%m-%dT%H:%M:%fZ','now'))`,
-      req.actor.id, f.unitId, f.name, f.birth, fileUrl(req.file), f.cargo, code, f.cpf, f.certidao, token,
+      `INSERT INTO members (club_id, unit_id, name, birth_date, photo, cargo, code, cpf, birth_cert, status, approved_at, cleared_year)
+       VALUES (?,?,?,?,?,?,?,?,?,'ativo',strftime('%Y-%m-%dT%H:%M:%fZ','now'),?)`,
+      req.actor.id, f.unitId, f.name, f.birth, fileUrl(req.file), f.cargo, code, f.cpf, f.certidao, new Date().getFullYear(),
     ).lastInsertRowid);
     createMemberLogin(id, code);
-    saveFicha(id, ficha);
-    return { id, code, password: memberPassword(f.birth), terms_token: token };
+    return { id, code, password: memberPassword(f.birth) };
   });
   res.json(out);
 });

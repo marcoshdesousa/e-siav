@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import {
-  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, Tent, Trophy, UserPlus, Users, Wallet,
+  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, Tent, Trophy, UserPlus, Users, Globe, MessageCircle,
 } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -21,7 +21,7 @@ import CatalogAdmin from './CatalogAdmin.jsx';
 import ClanApplications, { CreateClanLink } from './ClanApplications.jsx';
 import ClanView from './ClanView.jsx';
 import AgendaAdmin from './AgendaAdmin.jsx';
-import { AdminClubPayments, AdminPayments } from '../Payments.jsx';
+import SupportAdmin, { LinksAdmin } from './SupportAdmin.jsx';
 
 const base = '/admin';
 
@@ -54,7 +54,8 @@ function AdminHome() {
       </Loading>
       <Section title="Atalhos">
         <MoreMenu items={[
-          { to: `${base}/pagamentos`, icon: Wallet, label: 'Pagamentos', hint: 'Taxas e chave Pix' },
+          { to: `${base}/suporte`, icon: MessageCircle, label: 'Suporte', hint: 'Responder os clubes e membros' },
+          { to: `${base}/links`, icon: Globe, label: 'Links dos sites', hint: 'SGC, Cantinho e Cartão DBV' },
     { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas para todos, distrito ou clube' },
     { to: `${base}/inscricoes-cla`, icon: UserPlus, label: 'Inscrição clube', hint: 'Pedidos para criar clube' },
     { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo' },
@@ -70,8 +71,8 @@ function AdminHome() {
 
 // ---------- Distritos, clubes e administradores ----------
 /**
- * Clube: o admin escreve só o nome, o distrito e o diretor. O app coloca o número
- * na frente (1º, 2º...), cria o código (4 números) e a senha (2 letras + 4 números).
+ * Clube: o admin escreve só o nome, o distrito e o diretor. O app coloca "Clube" na
+ * frente do nome, cria o código (4 números) e a senha (2 letras + 4 números).
  */
 const baseName = (n) => String(n || '').replace(/^\d+º\s*/, '').replace(/^(clube|cl[ãa])\s+/i, '');
 function ClubForm({ item, nextNumber, districts, onClose, onCreated, onSaved }) {
@@ -90,7 +91,7 @@ function ClubForm({ item, nextNumber, districts, onClose, onCreated, onSaved }) 
     <Modal title={item ? `Editar ${item.name}` : 'Criar clube'} onClose={onClose}
       footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} disabled={!f.name.trim() || !f.director_name.trim()} onClick={save}>Salvar</Button></>}>
       <div className="form">
-        <Field label="Nome do clube" hint={f.name.trim() ? `Vai ficar: ${item?.number ?? nextNumber}º Clube ${baseName(f.name)}` : 'O número entra sozinho na frente do nome'}>
+        <Field label="Nome do clube" hint={f.name.trim() ? `Vai ficar: Clube ${baseName(f.name)}` : 'O app coloca “Clube” na frente do nome (ex.: Titânio → Clube Titânio)'}>
           <input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder="Ex.: Águias do Vale" />
         </Field>
         <Field label="Distrito">
@@ -192,7 +193,7 @@ function ClubsAdmin() {
                   <div className="grow">
                     <div className="title">{c.name}</div>
                     <div className="sub">{c.district_name} · {plural(c.unit_count, 'unidade', 'unidades')} · {plural(c.member_count, 'membro', 'membros')}</div>
-                    <div className="sub">Nº {c.number} · Código <b>{c.code}</b>{c.director_name ? <> · Diretor(a): {c.director_name}</> : ''}{c.associate_directors ? <> · Associados: {c.associate_directors.split('\n').join(', ')}</> : ''}</div>
+                    <div className="sub">Código <b>{c.code}</b>{c.director_name ? <> · Diretor(a): {c.director_name}</> : ''}{c.associate_directors ? <> · Associados: {c.associate_directors.split('\n').join(', ')}</> : ''}</div>
                   </div>
                   <div className="stack" style={{ gap: '.35rem' }}>
                     <Link to={`${base}/clubes/${c.id}`}><Button small>Ver por dentro</Button></Link>
@@ -232,8 +233,6 @@ function ClubsAdmin() {
       {modal?.kind === 'created' && (
         <Modal title="Clube criado!" onClose={() => setModal(null)} footer={<Button onClick={() => setModal(null)}>Entendi</Button>}>
           <p className="center">Passe estes dados para o <b>{modal.name}</b>. Ele entra na tela <b>Clube</b>.</p>
-          <p className="center muted small" style={{ marginBottom: 0 }}>Número do clube</p>
-          <div className="code-big" style={{ fontSize: '1.6rem' }}>{modal.number}º</div>
           <p className="center muted small" style={{ marginBottom: 0 }}>Código do clube</p>
           <div className="code-big">{modal.code}</div>
           <p className="center muted small" style={{ marginBottom: 0 }}>Senha</p>
@@ -276,7 +275,8 @@ export default function AdminApp() {
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
-    { to: `${base}/pagamentos`, icon: Wallet, label: 'Pagamentos', hint: 'Taxas e chave Pix' },
+    { to: `${base}/suporte`, icon: MessageCircle, label: 'Suporte', hint: 'Responder os clubes e membros' },
+    { to: `${base}/links`, icon: Globe, label: 'Links dos sites', hint: 'SGC, Cantinho e Cartão DBV' },
     { to: `${base}/inscricoes-cla`, icon: UserPlus, label: 'Inscrição clube', hint: 'Pedidos para criar clube' },
     { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo', hint: 'Medalhas, troféus e cursos' },
     { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial', hint: 'Especialidades' },
@@ -288,7 +288,7 @@ export default function AdminApp() {
   return (
     <Shell tabs={tabs} parentOf={(path) => {
       const [, , seg, sub] = path.split('/');
-      if (sub && ['clubes', 'pagamentos'].includes(seg)) return `${base}/${seg}`;
+      if (sub && ['clubes'].includes(seg)) return `${base}/${seg}`;
       return ['clubes', 'requisitos', 'conteudo', 'ver'].includes(seg) ? base : `${base}/mais`;
     }}>
       <Routes>
@@ -296,9 +296,9 @@ export default function AdminApp() {
         <Route path="clubes" element={<ClubsAdmin />} />
         <Route path="clubes/:id" element={<ClanView base={base} />} />
         <Route path="inscricoes-cla" element={<ClanApplications />} />
-        <Route path="pagamentos" element={<AdminPayments base={base} />} />
+        <Route path="suporte" element={<SupportAdmin />} />
+        <Route path="links" element={<LinksAdmin />} />
         <Route path="agenda" element={<AgendaAdmin />} />
-        <Route path="pagamentos/:id" element={<AdminClubPayments base={base} />} />
         <Route path="requisitos" element={<RequirementsAdmin />} />
         <Route path="conteudo" element={<ContentAdmin />} />
         <Route path="catalogo" element={<CatalogAdmin />} />

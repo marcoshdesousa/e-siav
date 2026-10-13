@@ -2,8 +2,7 @@
 // (pode editar) e pelo Administrador Geral (só visualiza).
 import { all, get } from './db.js';
 import { ageFrom, memberKind, roleOf } from './util.js';
-import { fichaCompleta, getFicha } from './ficha.js';
-import { pendingReason } from './memberStatus.js';
+import { getFicha } from './ficha.js';
 
 export function listMembers(clubId) {
   const rows = all(
@@ -15,14 +14,9 @@ export function listMembers(clubId) {
     m.age = ageFrom(m.birth_date);
     m.kind = memberKind(m.birth_date);
     m.role = roleOf(m.kind, m.cargo);
-    // Sem a ficha completa (cadastro + saúde) o membro aparece com "dados incompletos".
-    const ficha = getFicha(m.id);
-    m.incomplete = !fichaCompleta(ficha, m.birth_date) || !(m.cpf || m.birth_cert);
-    // A ficha (principalmente a de saúde) precisa ser atualizada todo ano.
-    m.ficha_updated_at = ficha.updated_at;
-    m.outdated = m.status !== 'inativo' && (!ficha.updated_at || Number(ficha.updated_at.slice(0, 4)) < new Date().getFullYear());
-    // Pendente: esperando a assinatura do termo, a aprovação da inscrição ou com dados faltando.
-    m.pending_reason = m.status === 'inativo' ? null : m.status === 'pendente' ? pendingReason(m) || 'aprovacao' : m.incomplete ? 'dados' : null;
+    // Sem ficha nem inscrição (o cadastro completo fica no SGC).
+    m.pending_reason = null;
+    m.outdated = false;
   }
   return rows;
 }

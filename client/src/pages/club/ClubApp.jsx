@@ -1,18 +1,18 @@
 import { useState } from 'react';
 import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import {
-  ArrowLeftRight, Award, BadgeCheck, KeyRound, UserPlus, CalendarDays, Check, Megaphone, Plus, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, FolderOpen, Receipt, BookOpen, Package, Wrench, LifeBuoy,
+  ArrowLeftRight, Award, BadgeCheck, KeyRound, UserPlus, CalendarDays, Check, Megaphone, Plus, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, ClipboardCheck, Globe, FolderOpen, BookOpen, Wrench, LifeBuoy,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { KIND_LABEL, plural } from '../../format.js';
-import { FichaModal, MembersBrowser, TermLinkInline, TermLinkModal, memberActions } from './Members.jsx';
-import { AccessInfo, CadastroFlow } from '../Signup.jsx';
+import { MembersBrowser, memberActions } from './Members.jsx';
+import { AccessInfo } from '../Signup.jsx';
 import TransfersPage from './Transfers.jsx';
-import { ClubPayments } from '../Payments.jsx';
 import {
-  AgendaPage, BibliotecaPage, CertificadoPage, FerramentasPage, FinancasPage, MatriculasPage, MembrosPorGrupo, PatrimonioPage, SuportePage,
+  AgendaPage, BibliotecaPage, CertificadoPage, FerramentasPage, FinancasPage, MembrosPorGrupo,
 } from './Folders.jsx';
+import { EmbeddedSite, SupportChat } from '../Shared.jsx';
 import {
   Avatar, Badge, Button, Card, Confirm, Field, ImagePicker, Loading, MedalList, Modal, PageHeader, PositionBadge, Section, ShareButton, Stat, Tabs, useAsync, useLoad,
 } from '../../ui.jsx';
@@ -61,8 +61,7 @@ function ClubHome() {
               <Stat icon={Award} value={c.lideranca} label="Liderança" to={`${base}/membros`} />
               <Stat icon={Flag} value={c.unit_count} label="Unidades" to={`${base}/unidades`} />
               <Stat icon={BadgeCheck} value={c.pending_achievements} label="Especialidades p/ aprovar" to={`${base}/biblioteca`} accent={c.pending_achievements > 0} />
-              <Stat icon={Inbox} value={c.pending_reviews} label="Envios p/ avaliar" to={`${base}/ranking?aba=corrigir`} accent={c.pending_reviews > 0} />
-              <Stat icon={UserPlus} value={c.signup_pending} label="Inscrições p/ aprovar" to={`${base}/membros?aba=pendente`} accent={c.signup_pending > 0} />
+              <Stat icon={Inbox} value={c.pending_reviews} label="Envios p/ avaliar" to={`${base}/requisitos?aba=corrigir`} accent={c.pending_reviews > 0} />
               <Stat icon={ArrowLeftRight} value={c.transfers_pending} label="Transferências" to={`${base}/transferencias`} accent={c.transfers_pending > 0} />
             </div>
           </Section>
@@ -291,87 +290,77 @@ function ApprovalsPage() {
   );
 }
 
-/** Aprovar inscrição: escolhe a unidade e o cargo. */
-function ApproveModal({ member, units, onClose, onDone }) {
-  const [f, setF] = useState({ unit_id: '', cargo: '' });
-  const [busy, run] = useAsync();
-  const save = async () => {
-    await run(() => api.post(`/club/members/${member.id}/aprovar`, { ...f, unit_id: f.unit_id || '' }), `${member.name.split(' ')[0]} agora faz parte do clube!`);
-    onDone();
-  };
-  const available = units.filter((u) => !(u.is_leadership && member.kind === 'desbravador'));
-  return (
-    <Modal title={`Aprovar ${member.name}`} onClose={onClose} footer={<Button busy={busy} onClick={save}><Check size={16} /> Aprovar</Button>}>
-      <div className="form">
-        <p className="small muted" style={{ marginTop: 0 }}>{member.age} anos · {member.role}. Confira a ficha antes de aprovar.</p>
-        <div className="grid2">
-          <Field label="Unidade">
-            <select value={f.unit_id} onChange={(e) => setF({ ...f, unit_id: e.target.value })}>
-              <option value="">{member.kind === 'lideranca' ? 'Liderança (automático)' : 'Sem unidade'}</option>
-              {available.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
-            </select>
-          </Field>
-          <Field label="Cargo">
-            <select value={f.cargo} onChange={(e) => setF({ ...f, cargo: e.target.value })}>
-              <option value="">Padrão</option>
-              <CargoOptions kind={member.kind} age={member.age} />
-            </select>
-          </Field>
-        </div>
-      </div>
-    </Modal>
-  );
-}
 
 function MembersPage() {
   const members = useLoad(() => api.get('/club/members'));
   const units = useLoad(() => api.get('/club/units'));
   const [editing, setEditing] = useState(null);
   const [ach, setAch] = useState(null);
-  const [ficha, setFicha] = useState(null);
-  const [approving, setApproving] = useState(null);
-  const [termFor, setTermFor] = useState(null);
   const [, run] = useAsync();
-  const done = () => { setEditing(null); setAch(null); setApproving(null); members.reload(); units.reload(); };
-  const tab = new URLSearchParams(location.search).get('aba');
+  const done = () => { setEditing(null); setAch(null); members.reload(); units.reload(); };
   return (
     <>
       <PageHeader title="Membros" subtitle="Ninguém é apagado: quem sai do clube fica inativo" action={<Link to={`${base}/membros/novo`}><Button small>+ Novo</Button></Link>} />
       <Loading {...members}>
-        {(list) => (
-          <MembersBrowser list={list} units={units.data || []} initialTab={tab || 'ativo'}
-            actions={memberActions({ base, run, done, setFicha, setEditing, setAch, setApproving, setTermFor })} />
-        )}
+        {(list) => <MembersBrowser list={list} units={units.data || []} actions={memberActions({ base, run, done, setEditing, setAch })} />}
       </Loading>
       {editing && <MemberForm member={editing} units={units.data || []} onClose={() => setEditing(null)} onDone={done} />}
       {ach && <AchievementsModal member={ach} onClose={() => setAch(null)} onDone={() => done()} />}
-      {ficha && <FichaModal member={ficha} url={`/club/members/${ficha.id}/ficha`} onClose={() => { setFicha(null); members.reload(); }} />}
-      {approving && <ApproveModal member={approving} units={units.data || []} onClose={() => setApproving(null)} onDone={() => done()} />}
-      {termFor && <TermLinkModal member={termFor} onClose={() => setTermFor(null)} />}
     </>
   );
 }
 
-/** Cadastro feito pelo clube: precisa de todos os dados, igual à inscrição pelo link. */
+const ageOf = (birth) => (birth ? Math.floor((Date.now() - Date.parse(birth + 'T12:00:00')) / 31557600000) : null);
+
+/**
+ * Cadastro do membro pelo clube: nome completo, data de nascimento, unidade e cargo.
+ * O cargo só libera depois da data de nascimento (10 a 15 anos: cargos de desbravador; 16+: liderança).
+ * O cadastro completo (ficha, termos) fica no SGC.
+ */
 function NewMemberPage() {
-  const { actor } = useAuth();
   const nav = useNavigate();
+  const units = useLoad(() => api.get('/club/units'));
+  const [f, setF] = useState({ name: '', birth_date: '', unit_id: '', cargo: '' });
   const [created, setCreated] = useState(null);
   const [busy, run] = useAsync();
-  const send = async (body) => {
-    const r = await run(() => api.post('/club/members', body), null);
-    setCreated({ ...r, name: body.name, kind: (Date.now() - Date.parse(body.birth_date)) / 31557600000 < 16 ? 'desbravador' : 'lideranca' });
+  const age = ageOf(f.birth_date);
+  const kind = age == null ? null : age < 10 ? 'invalido' : age <= 15 ? 'desbravador' : 'lideranca';
+  const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
+  const setBirth = (e) => setF({ ...f, birth_date: e.target.value, cargo: '' });
+  const ok = f.name.trim().split(/\s+/).length >= 2 && kind && kind !== 'invalido' && f.cargo;
+  const send = async () => {
+    const r = await run(() => api.post('/club/members', { ...f, unit_id: f.unit_id || '' }), null);
+    setCreated({ ...r, name: f.name });
   };
+  const available = (units.data || []).filter((u) => !(u.is_leadership && kind === 'desbravador'));
   return (
     <>
-      <PageHeader title="Novo membro" subtitle="Preencha todos os dados. Depois, envie o link do termo para o responsável assinar." />
-      <CadastroFlow mode="cla" local={`${actor.name} — cadastro pelo clube`} submitLabel="Cadastrar membro" busy={busy} onSubmit={send} />
+      <PageHeader title="Novo membro" subtitle="O cadastro completo (ficha, documentos) fica no SGC. Aqui é só o básico." />
+      <Card>
+        <div className="form">
+          <Field label="Nome completo"><input value={f.name} onChange={set('name')} autoComplete="off" /></Field>
+          <Field label="Data de nascimento" hint={kind === 'invalido' ? 'É preciso ter pelo menos 10 anos.' : age != null ? `${age} anos · ${kind === 'desbravador' ? 'Desbravador (10 a 15 anos)' : 'Liderança (16 anos ou mais)'}` : 'A idade define os cargos que aparecem.'}>
+            <input type="date" value={f.birth_date} onChange={setBirth} />
+          </Field>
+          <Field label="Unidade" hint={kind === 'lideranca' ? 'Sem escolha: entra na unidade Liderança' : 'Sem escolha: aparece como "Sem unidade"'}>
+            <select value={f.unit_id} onChange={set('unit_id')}>
+              <option value="">{kind === 'lideranca' ? 'Liderança (automático)' : 'Sem unidade'}</option>
+              {available.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
+            </select>
+          </Field>
+          <Field label="Cargo (função)" hint={!kind || kind === 'invalido' ? 'Coloque a data de nascimento para escolher o cargo.' : ''}>
+            <select value={f.cargo} onChange={set('cargo')} disabled={!kind || kind === 'invalido'}>
+              <option value="">{!kind || kind === 'invalido' ? 'Primeiro a data de nascimento' : 'Escolha o cargo'}</option>
+              {kind && kind !== 'invalido' && <CargoOptions kind={kind} age={age} />}
+            </select>
+          </Field>
+          <Button block busy={busy} disabled={!ok} onClick={send}><UserPlus size={18} /> Cadastrar membro</Button>
+        </div>
+      </Card>
       {created && (
-        <Modal title="Membro cadastrado!" onClose={() => nav(`${base}/membros?aba=pendente`)} footer={<Button onClick={() => nav(`${base}/membros?aba=pendente`)}>Entendi</Button>}>
-          <p className="center">Acesso do membro na tela Membros:</p>
+        <Modal title="Membro cadastrado!" onClose={() => nav(`${base}/membros`)} footer={<Button onClick={() => nav(`${base}/membros`)}>Entendi</Button>}>
+          <p className="center">Acesso de <b>{created.name}</b> na tela Membros:</p>
           <AccessInfo code={created.code} password={created.password} />
-          <p className="center small">É um <b>pré-cadastro</b>: o membro entra no app, mas só usa depois que assinarem o termo e o clube pagar a inscrição do ano (em Pagamentos). Envie o link do termo:</p>
-          <TermLinkInline member={{ name: created.name, terms_token: created.terms_token, kind: created.kind }} />
         </Modal>
       )}
     </>
@@ -442,12 +431,11 @@ function RankingFolder() {
   const [tab, setTab] = useState(initial);
   return (
     <>
-      <PageHeader title="Ranking" subtitle="Cumprir, criar e corrigir requisitos" />
-      <Tabs tabs={[['cumprir', 'Cumprir'], ['criar', 'Criar'], ['corrigir', 'Corrigir'], ['classificacao', 'Classificação']]} value={tab} onChange={setTab} />
+      <PageHeader title="Requisitos" subtitle="Cumprir, criar e corrigir requisitos" />
+      <Tabs tabs={[['cumprir', 'Cumprir'], ['criar', 'Criar'], ['corrigir', 'Corrigir']]} value={tab} onChange={setTab} />
       {tab === 'cumprir' && <><p className="muted small">Requisitos que o App manda para o seu clube cumprir.</p><RequirementsTodo /></>}
       {tab === 'criar' && <><p className="muted small">Requisitos com prazo e pontos para os membros do clube: desbravadores, liderança, ou todos. Contam no ranking do clube. Para as unidades, use a pasta <b>Unidades → Ranking</b>.</p><CreatedRequirements only="member" /></>}
       {tab === 'corrigir' && <ReviewsPanel />}
-      {tab === 'classificacao' && <RankingHub base={base} />}
     </>
   );
 }
@@ -477,9 +465,8 @@ const pasta = (title, subtitle, items) => <><PageHeader title={title} subtitle={
 
 /** Pasta de cima de cada tela do clube (para o botão Voltar). */
 const PARENT = {
-  agenda: 'secretaria', matriculas: 'secretaria', membros: 'secretaria', transferencias: 'secretaria',
-  pagamentos: 'tesouraria', financas: 'tesouraria',
-  tesouraria: 'mais', biblioteca: 'mais', patrimonio: 'mais', ferramentas: 'mais', suporte: 'mais', eventos: 'mais', anuncios: 'mais', clubes: 'mais',
+  agenda: 'secretaria', membros: 'secretaria', transferencias: 'secretaria',
+  secretaria: 'mais', unidades: 'mais', financas: 'mais', biblioteca: 'mais', ferramentas: 'mais', suporte: 'mais', eventos: 'mais', anuncios: 'mais', clubes: 'mais',
 };
 const clubParent = (path) => {
   if (path === `${base}/membros/novo`) return `${base}/membros`;
@@ -487,32 +474,28 @@ const clubParent = (path) => {
   return PARENT[seg] ? `${base}/${PARENT[seg]}` : base;
 };
 
-/** Sistema do Clube, dividido em pastas. */
+/** Sistema do Clube: Perfil, Requisitos, Ranking, SGC e o resto em Mais. */
 export default function ClubApp() {
   const tabs = [
-    { to: base, icon: Tent, label: 'Painel', end: true },
-    { to: `${base}/secretaria`, icon: FolderOpen, label: 'Secretaria' },
+    { to: base, icon: Tent, label: 'Perfil', end: true },
+    { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },
     { to: `${base}/ranking`, icon: Trophy, label: 'Ranking' },
-    { to: `${base}/unidades`, icon: Flag, label: 'Unidades' },
+    { to: `${base}/sgc`, icon: Globe, label: 'SGC' },
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const secretaria = [
     { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Reuniões, acampamentos e datas do App' },
-    { to: `${base}/matriculas`, icon: UserPlus, label: 'Matrículas', hint: 'Links de inscrição e do clube' },
-    { to: `${base}/membros`, icon: Users, label: 'Membros', hint: 'Ativos, pendentes e desatualizados' },
+    { to: `${base}/membros`, icon: Users, label: 'Membros', hint: 'Cadastrar e ver os membros' },
     { to: `${base}/transferencias`, icon: ArrowLeftRight, label: 'Transferências', hint: 'Que foram, que vieram e pendentes' },
   ];
-  const tesouraria = [
-    { to: `${base}/pagamentos`, icon: Receipt, label: 'A pagar', hint: 'Plano do clube e inscrições (Pix)' },
-    { to: `${base}/financas`, icon: Wallet, label: 'Minhas finanças', hint: 'Entradas e saídas do clube' },
-  ];
   const more = [
-    { to: `${base}/tesouraria`, icon: Wallet, label: 'Tesouraria', hint: 'A pagar e minhas finanças' },
+    { to: `${base}/secretaria`, icon: FolderOpen, label: 'Secretaria', hint: 'Agenda, membros e transferências' },
+    { to: `${base}/unidades`, icon: Flag, label: 'Unidades', hint: 'Unidades, ranking e membros' },
+    { to: `${base}/financas`, icon: Wallet, label: 'Tesouraria', hint: 'Balancete do clube' },
     { to: `${base}/biblioteca`, icon: BookOpen, label: 'Biblioteca', hint: 'Especialidades e classes' },
-    { to: `${base}/patrimonio`, icon: Package, label: 'Patrimônio', hint: 'Meus patrimônios' },
     { to: `${base}/ferramentas`, icon: Wrench, label: 'Ferramentas', hint: 'Aniversariantes e contatos' },
     { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },
-    { to: `${base}/eventos`, icon: Award, label: 'Eventos', hint: 'Participantes e medalhas' },
+    { to: `${base}/eventos`, icon: Award, label: 'Eventos e medalhas', hint: 'Participantes e medalhas' },
     { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: 'Para os seus membros' },
     { to: `${base}/clubes`, icon: Map, label: 'Clubes', hint: 'Por distrito' },
   ];
@@ -525,24 +508,22 @@ export default function ClubApp() {
           <Shell tabs={tabs} parentOf={clubParent}>
             <Routes>
               <Route index element={<ClubHome />} />
-              <Route path="secretaria" element={pasta('Secretaria', 'Agenda, matrículas, membros e transferências', secretaria)} />
+              <Route path="secretaria" element={pasta('Secretaria', 'Agenda, membros e transferências', secretaria)} />
               <Route path="agenda" element={<AgendaPage />} />
-              <Route path="matriculas" element={<MatriculasPage />} />
               <Route path="membros" element={<MembersPage />} />
               <Route path="membros/novo" element={<NewMemberPage />} />
               <Route path="transferencias" element={<TransfersPage />} />
-              <Route path="ranking" element={<RankingFolder />} />
-              <Route path="requisitos" element={<Navigate to={`${base}/ranking`} replace />} />
+              <Route path="requisitos" element={<RankingFolder />} />
+              <Route path="ranking" element={<RankingHub base={base} />} />
+              <Route path="sgc" element={<EmbeddedSite title="SGC" linkKey="link_sgc" subtitle="Sistema de Gestão de Clubes" />} />
               <Route path="unidades" element={<GruposFolder />} />
               <Route path="grupos" element={<Navigate to={`${base}/unidades`} replace />} />
-              <Route path="tesouraria" element={pasta('Tesouraria', 'O que pagar e o controle do dinheiro do clube', tesouraria)} />
-              <Route path="pagamentos" element={<ClubPayments />} />
               <Route path="financas" element={<FinancasPage />} />
+              <Route path="tesouraria" element={<Navigate to={`${base}/financas`} replace />} />
               <Route path="biblioteca" element={<BibliotecaPage approvals={<ApprovalsPage />} />} />
               <Route path="aprovacoes" element={<Navigate to={`${base}/biblioteca`} replace />} />
-              <Route path="patrimonio" element={<PatrimonioPage />} />
               <Route path="ferramentas" element={<FerramentasPage />} />
-              <Route path="suporte" element={<SuportePage />} />
+              <Route path="suporte" element={<SupportChat />} />
               <Route path="eventos" element={<EventsAdmin />} />
               <Route path="anuncios" element={<AnnouncementsAdmin />} />
               <Route path="clubes" element={<ClubsBrowser base={base} />} />

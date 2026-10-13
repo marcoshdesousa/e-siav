@@ -26,16 +26,18 @@ r.get('/club/transfers', (req, res) => {
 });
 
 r.post('/club/transfers', (req, res) => {
-  // Documento: CPF (11 números) ou o número da certidão de nascimento.
-  const doc = String(req.body.doc ?? req.body.cpf ?? '').trim();
-  const cpf = cleanCpf(doc);
-  const cert = doc.replace(/[^\dA-Za-z]/g, '');
+  // Nome completo + código do membro (6 números). Também aceita CPF ou certidão, se o membro tiver.
+  const doc = String(req.body.doc ?? req.body.code ?? req.body.cpf ?? '').trim();
   const name = str(req.body.name, 120);
   if (!name) fail(400, 'Informe o nome completo');
-  if (!cpf && cert.length < 6) fail(400, 'Informe o CPF ou o número da certidão de nascimento');
-  const m = cpf ? get('SELECT id, name, club_id FROM members WHERE cpf = ?', cpf) : get('SELECT id, name, club_id FROM members WHERE birth_cert = ?', cert);
-  // Nome e documento precisam bater (sem diferenciar acentos e maiúsculas).
-  if (!m || norm(m.name) !== norm(name)) fail(404, 'Não achamos ninguém com esse nome e documento');
+  const digits = doc.replace(/\D/g, '');
+  let m = null;
+  if (/^\d{6}$/.test(digits) && digits === doc.replace(/\s/g, '')) m = get('SELECT id, name, club_id FROM members WHERE code = ?', digits);
+  if (!m && cleanCpf(doc)) m = get('SELECT id, name, club_id FROM members WHERE cpf = ?', cleanCpf(doc));
+  if (!m && doc.replace(/[^\dA-Za-z]/g, '').length >= 6) m = get('SELECT id, name, club_id FROM members WHERE birth_cert = ?', doc.replace(/[^\dA-Za-z]/g, ''));
+  if (!doc) fail(400, 'Informe o código do membro (6 números)');
+  // Nome e código precisam bater (sem diferenciar acentos e maiúsculas).
+  if (!m || norm(m.name) !== norm(name)) fail(404, 'Não achamos ninguém com esse nome e código');
   if (m.club_id === req.actor.id) fail(400, 'Esta pessoa já é do seu clube');
   if (get(`SELECT 1 FROM transfers WHERE member_id = ? AND status IN ('pendente_origem','pendente_destino')`, m.id)) {
     fail(409, 'Já existe um pedido de transferência em andamento para esta pessoa');

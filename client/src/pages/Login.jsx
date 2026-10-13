@@ -162,7 +162,7 @@ export default function Login() {
           </form>
 
           <div className="ig-card ig-signup">
-            Não tem uma conta? <b>Peça ao seu clube o link de inscrição.</b>
+            Não tem uma conta? <b>Peça ao seu clube para te cadastrar.</b>
           </div>
 
           <InstallSection />

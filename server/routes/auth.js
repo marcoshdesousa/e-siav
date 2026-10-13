@@ -100,11 +100,11 @@ r.get('/auth/me', requireLogin, (req, res) => {
 
 // IMPROVISO PARA TESTES (tirar depois): contas de exemplo para a tela de entrada.
 // Só aparecem se a conta de exemplo existir com os dados do exemplo. Desligar com QUICK_LOGIN=0.
-const DEMO_CLAS = [['4821', 'AG2026', '1º Clube Águias do Vale'], ['7350', 'LE2026', '2º Clube Leões de Judá']];
+const DEMO_CLAS = [['4821', 'AG2026', 'Clube Águias do Vale'], ['7350', 'LE2026', 'Clube Leões de Judá']];
 const DEMO_GRUPOS = [['4821', 'FA1111', 'Unidade Falcões (Águias)']];
 const DEMO_MEMBROS = [
   ['100001', 'Pedro Henrique Lima', 'Desbravador'], ['100006', 'Marcos Almeida', 'Liderança (diretor)'],
-  ['100007', 'Juliana Costa', 'Conselheira'], ['100098', 'Rafaela Nunes Teste', 'Esperando aprovação'],
+  ['100007', 'Juliana Costa', 'Conselheira'],
 ];
 r.get('/auth/contas-teste', (_req, res) => {
   if (process.env.QUICK_LOGIN === '0') return res.json({ clube: [], membros: [] });

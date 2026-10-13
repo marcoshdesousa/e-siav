@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import {
-  CalendarDays, Camera, ClipboardCheck, GraduationCap, Menu, Tent, Trophy, UserRound, Waypoints, Hourglass,
+  CalendarDays, Camera, ClipboardCheck, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, Waypoints, Hourglass,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -13,6 +13,7 @@ import RankingHub from '../Ranking.jsx';
 import ClubsBrowser from '../Clubs.jsx';
 import MyAchievements from './MyAchievements.jsx';
 import { AgendaLeitura, ProximasDatas } from '../club/Folders.jsx';
+import { EmbeddedSite, SupportChat } from '../Shared.jsx';
 
 const base = '/membro';
 
@@ -69,7 +70,9 @@ export default function MemberApp() {
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
+    { to: `${base}/cartao`, icon: IdCard, label: 'Cartão DBV', hint: 'O seu cartão de desbravador' },
     { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas do clube e do App' },
+    { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },
     { to: `${base}/cursos`, icon: GraduationCap, label: 'Cursos', hint: 'Aulas' },
     { to: `${base}/clubes`, icon: Tent, label: 'Clubes', hint: 'Por distrito' },
   ];
@@ -78,12 +81,14 @@ export default function MemberApp() {
       <Route
         path="*"
         element={
-          <Shell tabs={tabs} parentOf={(path) => (['cursos', 'clubes', 'agenda'].includes(path.split('/')[2]) ? `${base}/mais` : base)}>
+          <Shell tabs={tabs} parentOf={(path) => (['cursos', 'clubes', 'agenda', 'cartao', 'suporte'].includes(path.split('/')[2]) ? `${base}/mais` : base)}>
             {actor.waiting ? <Waiting text={actor.waiting} /> : <Routes>
               <Route index element={<MyProfile />} />
               <Route path="requisitos" element={<><PageHeader title="Requisitos" subtitle={isDbv ? 'Cumpra os requisitos e suba no ranking' : 'Requisitos para a liderança'} /><RequirementsTodo originTabs groupTab={isDbv} /></>} />
               <Route path="especialidades" element={<MyAchievements key="e" type="especialidade" />} />
               <Route path="agenda" element={<AgendaLeitura />} />
+              <Route path="cartao" element={<EmbeddedSite title="Cartão DBV" linkKey="link_cartao" subtitle="Entre com o código e a senha que o seu clube passar" />} />
+              <Route path="suporte" element={<SupportChat />} />
               <Route path="cursos" element={<ContentList type="curso" base={base} />} />
               <Route path="conteudo/:id" element={<ContentDetail />} />
               <Route path="ranking" element={<RankingHub base={base} />} />
