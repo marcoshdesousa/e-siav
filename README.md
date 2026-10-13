@@ -136,7 +136,7 @@ As telas mostradas no celular da página de entrada ficam em `client/public/show
 ## Figurinhas: Pix automático pela SyncPay
 
 - Pacotinho do Álbum Bíblico App: R$ 1,85 (4 figurinhas). Compra de 1, 10, 20 ou 50.
-- Com `SYNCPAY_CLIENT_ID` e `SYNCPAY_CLIENT_SECRET` no Render (Environment), o app pede os dados de quem paga (nome, CPF, e-mail e celular — pode ser o responsável), gera o Pix na SyncPay (`/api/partner/v1/cash-in`) e **pergunta para a SyncPay** se foi pago (`/api/partner/v2/transactions/{id}`): a cada 4 s com a tela do Pix aberta e numa varredura a cada 2 min. Pago: os pacotinhos aparecem sozinhos. Mesmo jeito da Acolia e da Eduvia (`server/syncpay.js`).
+- Com `SYNCPAY_CLIENT_ID` e `SYNCPAY_CLIENT_SECRET` no Render (Environment), o app **não pede nenhum dado ao membro**: a cobrança vai com os dados padrão que a equipe cadastra em Admin → Figurinhas → Pix (nome, CPF, e-mail e celular da organização ou de um responsável). Gera o Pix na SyncPay (`/api/partner/v1/cash-in`) e **pergunta para a SyncPay** se foi pago (`/api/partner/v2/transactions/{id}`): a cada 4 s com a tela do Pix aberta e numa varredura a cada 2 min. Pago: os pacotinhos aparecem sozinhos. Mesmo jeito da Acolia e da Eduvia (`server/syncpay.js`).
 - O aviso da SyncPay (webhook) vai para `https://appdodbv.onrender.com/api/albuns/pix/aviso` e só faz o app conferir na hora. Se o endereço do site mudar, defina `SITE_URL`.
 - No painel da SyncPay, autorize os IPs de saída do Render (Render → Connect → Outbound).
 - Sem as chaves da SyncPay, vale o Pix manual (chave Pix em Admin → Figurinhas → Pix) e a equipe confirma cada pagamento.

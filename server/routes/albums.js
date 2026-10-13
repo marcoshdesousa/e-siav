@@ -26,6 +26,11 @@ function progress(memberId, album) {
 }
 const repeatsOf = (memberId, album) => get('SELECT COALESCE(SUM(qty - 1), 0) n FROM album_stickers WHERE member_id = ? AND album = ? AND qty > 1', memberId, album).n;
 const pixConfig = () => ({ key: setting('pix_key') || '', name: setting('pix_name') || '', city: setting('pix_city') || '' });
+/** Dados padrão do "cliente" das cobranças na SyncPay (cadastrados pela equipe). */
+const defaultPayer = () => {
+  const p = { name: setting('payer_name') || '', cpf: setting('payer_cpf') || '', email: setting('payer_email') || '', phone: setting('payer_phone') || '' };
+  return p.name && p.cpf ? p : null;
+};
 // Como o Pix é pago: 'syncpay' (automático), 'manual' (chave Pix + equipe confirma) ou 'off'.
 const payMode = () => (syncpayOn() ? 'syncpay' : pixConfig().key ? 'manual' : 'off');
 
@@ -89,7 +94,6 @@ r.get('/albuns/:id', member, (req, res) => {
     id: a.id, name: a.name, total: a.total, price_cents: a.price_cents, pack_size: a.pack_size, options: PACK_OPTIONS,
     repeats_per_free_pack: REPEATS_PER_FREE_PACK, pay_mode: payMode(), pix_ready: payMode() !== 'off',
     district_name: get('SELECT d.name FROM members m JOIN clubs c ON c.id = m.club_id JOIN districts d ON d.id = c.district_id WHERE m.id = ?', req.actor.id)?.name || '',
-    last_payer: JSON.parse(get('SELECT payer FROM sticker_orders WHERE member_id = ? AND payer IS NOT NULL ORDER BY id DESC LIMIT 1', req.actor.id)?.payer || 'null'),
     packs_unopened: p.packs_unopened, packs_opened: p.packs_opened, completed_at: p.completed_at,
     stickers: Object.fromEntries(rows.map((x) => [x.sticker, { qty: x.qty, stuck: !!x.stuck }])),
     repeats: repeatsOf(req.actor.id, a.id),
@@ -108,19 +112,14 @@ r.post('/albuns/:id/pedidos', member, async (req, res) => {
   const txid = 'DBV' + crypto.randomBytes(8).toString('hex').toUpperCase().slice(0, 16);
   const amount = packs * a.price_cents;
   let pix = null;
-  let payer = null;
   if (mode === 'syncpay') {
-    // A SyncPay pede os dados de quem paga (pode ser o responsável).
-    const b = req.body.payer || {};
-    payer = { name: str(b.name, 80), cpf: cleanCpf(b.cpf), email: str(b.email, 120).toLowerCase(), phone: String(b.phone || '').replace(/\D/g, '') };
-    if (payer.name.split(/\s+/).length < 2) fail(400, 'Informe o nome completo de quem vai pagar');
-    if (!payer.cpf) fail(400, 'CPF inválido');
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payer.email)) fail(400, 'E-mail inválido');
-    if (!/^\d{10,13}$/.test(payer.phone)) fail(400, 'Celular inválido (com DDD)');
-    pix = await createPix({ amountCents: amount, description: `App do DBV - ${packs} pacotinho${packs > 1 ? 's' : ''} de figurinhas`, payer });
+    // Nada é pedido ao membro (muitos são menores): a cobrança vai com os dados padrão que a
+    // equipe cadastrou no painel. Quem paga de verdade é quem lê o QR Code no banco.
+    const m = get('SELECT name, code FROM members WHERE id = ?', req.actor.id);
+    pix = await createPix({ amountCents: amount, description: `App do DBV - ${packs} pacotinho${packs > 1 ? 's' : ''} de figurinhas (membro ${m.code})`, payer: defaultPayer() });
   }
   const id = Number(run('INSERT INTO sticker_orders (member_id, album, packs, amount_cents, txid, identifier, pix_code, payer) VALUES (?,?,?,?,?,?,?,?)',
-    req.actor.id, a.id, packs, amount, txid, pix?.identifier || null, pix?.pix_code || null, payer ? JSON.stringify(payer) : null).lastInsertRowid);
+    req.actor.id, a.id, packs, amount, txid, pix?.identifier || null, pix?.pix_code || null, null).lastInsertRowid);
   res.json(await orderOut(get('SELECT * FROM sticker_orders WHERE id = ?', id)));
 });
 
@@ -251,7 +250,19 @@ r.get('/admin/figurinhas/completos', admin, (_req, res) => {
     FROM album_progress p JOIN members m ON m.id = p.member_id JOIN clubs c ON c.id = m.club_id LEFT JOIN units u ON u.id = m.unit_id
     WHERE p.completed_at IS NOT NULL ORDER BY p.completed_at`).map((x) => ({ ...x, album_name: ALBUMS[x.album]?.name || x.album })));
 });
-r.get('/admin/figurinhas/pix', admin, (_req, res) => res.json({ ...pixConfig(), syncpay: syncpayOn() }));
+r.get('/admin/figurinhas/pix', admin, (_req, res) => res.json({ ...pixConfig(), syncpay: syncpayOn(), payer: defaultPayer() || { name: '', cpf: '', email: '', phone: '' } }));
+r.put('/admin/figurinhas/pagador', admin, (req, res) => {
+  const b = req.body || {};
+  const name = str(b.name, 80);
+  const cpf = b.cpf ? cleanCpf(b.cpf) : '';
+  const email = str(b.email, 120).toLowerCase();
+  const phone = String(b.phone || '').replace(/\D/g, '');
+  if (b.cpf && !cpf) fail(400, 'CPF inválido');
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) fail(400, 'E-mail inválido');
+  if (phone && !/^\d{10,13}$/.test(phone)) fail(400, 'Celular inválido (com DDD)');
+  setSetting('payer_name', name); setSetting('payer_cpf', cpf || ''); setSetting('payer_email', email); setSetting('payer_phone', phone);
+  res.json({ ok: true });
+});
 r.put('/admin/figurinhas/pix', admin, (req, res) => {
   setSetting('pix_key', str(req.body.key, 120) || '');
   setSetting('pix_name', str(req.body.name, 60) || '');

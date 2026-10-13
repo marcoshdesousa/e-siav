@@ -40,20 +40,19 @@ async function call(method, path, body) {
 const FAKE = new Map();
 export const fakePay = (identifier, status = 'completed') => { if (FAKE.has(identifier)) FAKE.get(identifier).status = status; };
 
-/** Cria a cobrança Pix. payer: { name, cpf, email, phone }. Retorna { identifier, pix_code }. */
+/** Cria a cobrança Pix. payer (opcional): { name, cpf, email, phone }. Retorna { identifier, pix_code }. */
 export async function createPix({ amountCents, description, payer }) {
   if (fake()) {
     const identifier = crypto.randomUUID();
     FAKE.set(identifier, { status: 'pending' });
     return { identifier, pix_code: `00020126FAKEPIX${identifier.replace(/-/g, '').slice(0, 20)}` };
   }
-  const phone = String(payer.phone || '').replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, '');
-  const r = await call('POST', '/api/partner/v1/cash-in', {
-    amount: Math.round(amountCents) / 100,
-    description,
-    webhook_url: `${siteUrl()}/api/albuns/pix/aviso`,
-    client: { name: payer.name, cpf: String(payer.cpf).replace(/\D/g, ''), email: payer.email, phone },
-  });
+  const body = { amount: Math.round(amountCents) / 100, description, webhook_url: `${siteUrl()}/api/albuns/pix/aviso` };
+  if (payer) {
+    const phone = String(payer.phone || '').replace(/\D/g, '').replace(/^55(?=\d{10,11}$)/, '');
+    body.client = { name: payer.name, cpf: String(payer.cpf).replace(/\D/g, ''), email: payer.email, phone };
+  }
+  const r = await call('POST', '/api/partner/v1/cash-in', body);
   if (r.status >= 300 || !r.data.pix_code || !r.data.identifier) {
     console.warn('[syncpay] cash-in recusado', r.status, r.data?.message);
     throw unavailable();

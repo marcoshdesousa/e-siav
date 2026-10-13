@@ -57,24 +57,22 @@ async function login(mode, username, password) {
   return { actor, cookie, get: (u) => call('GET', u), post: (u, b = {}) => call('POST', u, b), put: (u, b = {}) => call('PUT', u, b), del: (u) => call('DELETE', u) };
 }
 
-test('SyncPay: pede os dados de quem paga, gera o Pix e libera sozinho quando cai', async () => {
+test('SyncPay: sem pedir dados ao membro, gera o Pix e libera sozinho quando cai', async () => {
+  const admin = await login('membros', 'admin', 'admin123');
+  assert.equal((await admin.put('/admin/figurinhas/pagador', { name: 'App do DBV', cpf: '111' })).status, 400, 'CPF inválido');
+  assert.equal((await admin.put('/admin/figurinhas/pagador', { name: 'Equipe App do DBV', cpf: '529.982.247-25', email: 'pix@appdodbv.com', phone: '81999990000' })).status, 200);
+  assert.equal((await admin.get('/admin/figurinhas/pix')).body.payer.cpf, '52998224725');
   const pedro = await login('membros', 'pedro');
   let st = (await pedro.get('/albuns/biblico')).body;
   assert.equal(st.pay_mode, 'syncpay');
   const before = st.packs_unopened;
-  const payer = { name: 'Maria Lima', cpf: '529.982.247-25', email: 'maria@exemplo.com', phone: '(81) 99999-0000' };
-  assert.equal((await pedro.post('/albuns/biblico/pedidos', { packs: 10, payer: { ...payer, cpf: '111' } })).status, 400, 'CPF inválido');
-  assert.equal((await pedro.post('/albuns/biblico/pedidos', { packs: 10, payer: { ...payer, name: 'Maria' } })).status, 400, 'nome completo');
-  const o = (await pedro.post('/albuns/biblico/pedidos', { packs: 10, payer })).body;
-  assert.ok(o.auto && o.pix.startsWith('00020126') && o.qr);
-  assert.equal(o.payer, undefined, 'não devolve os dados de quem paga');
+  const o = (await pedro.post('/albuns/biblico/pedidos', { packs: 10 })).body;
+  assert.ok(o.auto && o.pix.startsWith('00020126') && o.qr, 'Pix gerado sem dados do membro');
   assert.equal((await pedro.get(`/albuns/pedidos/${o.id}`)).body.status, 'aberto');
   await pedro.post(`/albuns/pedidos/${o.id}/_simular`);
   await new Promise((r) => setTimeout(r, 4100)); // a consulta é no máximo a cada 4 s
   assert.equal((await pedro.get(`/albuns/pedidos/${o.id}`)).body.status, 'pago');
-  st = (await pedro.get('/albuns/biblico')).body;
-  assert.equal(st.packs_unopened, before + 10, 'liberou os pacotinhos');
-  assert.equal(st.last_payer.cpf, '52998224725', 'lembra quem pagou da última vez');
+  assert.equal((await pedro.get('/albuns/biblico')).body.packs_unopened, before + 10, 'liberou os pacotinhos');
   // Conferir de novo não libera de novo
   await new Promise((r) => setTimeout(r, 4100));
   await pedro.get(`/albuns/pedidos/${o.id}`);

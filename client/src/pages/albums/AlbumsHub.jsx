@@ -5,7 +5,7 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Copy, Gift, Heart, Package, Repeat, ShoppingCart, Sparkles, Trophy } from 'lucide-react';
 import { api } from '../../api.js';
 import { fmtDate } from '../../format.js';
-import { Badge, Button, Card, Field, Loading, Modal, PageHeader, Section, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
+import { Badge, Button, Card, Loading, Modal, PageHeader, Section, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
 import { sfx, unlockAudio } from '../games/audio.js';
 import { StickerCard } from './StickerArt.jsx';
 import data from './biblico.json';
@@ -75,25 +75,18 @@ function SupportNote({ district }) {
   );
 }
 
-const fmtCpf = (v) => v.replace(/\D/g, '').slice(0, 11).replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-const fmtPhone = (v) => v.replace(/\D/g, '').slice(0, 11).replace(/^(\d{2})(\d)/, '($1) $2').replace(/(\d{5})(\d{1,4})$/, '$1-$2');
 
 /**
- * Comprar pacotinhos: escolhe a quantidade e paga no Pix sem sair do app. Com a SyncPay ligada,
- * pede os dados de quem paga (pode ser o responsável) e libera sozinho quando o Pix cai.
+ * Comprar pacotinhos: escolhe a quantidade e paga no Pix sem sair do app (nada de CPF ou outros
+ * dados). Com a SyncPay ligada, libera sozinho quando o Pix cai.
  */
 function BuyModal({ album, onClose, onDone, onOpen }) {
-  const auto = album.pay_mode === 'syncpay';
-  const [packs, setPacks] = useState(null);
-  const lp = album.last_payer || {};
-  const [payer, setPayer] = useState({ name: lp.name || '', cpf: lp.cpf ? fmtCpf(lp.cpf) : '', email: lp.email || '', phone: lp.phone ? fmtPhone(lp.phone) : '' });
-  const [order, setOrder] = useState(null);
+    const [order, setOrder] = useState(null);
   const [busy, run] = useAsync();
   const create = async (n) => {
-    const o = await run(() => api.post(`/albuns/${album.id}/pedidos`, auto ? { packs: n, payer } : { packs: n }), null);
+    const o = await run(() => api.post(`/albuns/${album.id}/pedidos`, { packs: n }), null);
     if (o) setOrder(o);
   };
-  const choose = (n) => (auto ? setPacks(n) : create(n));
   // Pix automático: confere a cada 4 s se o pagamento caiu.
   useEffect(() => {
     if (!order?.auto || order.status === 'pago') return undefined;
@@ -112,18 +105,17 @@ function BuyModal({ album, onClose, onDone, onOpen }) {
     await run(() => api.post(`/albuns/pedidos/${order.id}/paguei`), 'Recebemos o seu aviso! Assim que o pagamento for confirmado, os pacotinhos aparecem aqui.');
     onDone(); onClose();
   };
-  const okPayer = payer.name.trim().split(/\s+/).length >= 2 && payer.cpf.replace(/\D/g, '').length === 11 && /\S+@\S+\.\S+/.test(payer.email) && payer.phone.replace(/\D/g, '').length >= 10;
-  const title = order ? (order.status === 'pago' ? 'Pagamento confirmado!' : 'Pague com Pix') : packs ? 'Quem vai pagar?' : 'Comprar pacotinhos';
+  const title = order ? (order.status === 'pago' ? 'Pagamento confirmado!' : 'Pague com Pix') : 'Comprar pacotinhos';
   return (
     <Modal title={title} onClose={onClose}>
-      {!order && !packs && (
+      {!order && (
         <>
           <p className="small muted" style={{ marginTop: 0 }}>Cada pacotinho tem {album.pack_size} figurinhas e custa {money(album.price_cents)}.</p>
           <SupportNote district={album.district_name} />
           {!album.pix_ready && <Card className="small">O pagamento ainda não foi liberado pela equipe. Tente mais tarde.</Card>}
           <div className="buy-grid">
             {album.options.map((n) => (
-              <button key={n} type="button" className="buy-option" disabled={busy || !album.pix_ready} onClick={() => choose(n)}>
+              <button key={n} type="button" className="buy-option" disabled={busy || !album.pix_ready} onClick={() => create(n)}>
                 <Package size={26} />
                 <b>{n} pacotinho{n > 1 ? 's' : ''}</b>
                 <small>{n * album.pack_size} figurinhas</small>
@@ -132,17 +124,6 @@ function BuyModal({ album, onClose, onDone, onOpen }) {
             ))}
           </div>
         </>
-      )}
-      {!order && packs && (
-        <div className="form">
-          <p className="small muted" style={{ margin: 0 }}><b>{packs} pacotinho{packs > 1 ? 's' : ''} · {money(packs * album.price_cents)}</b>. O Pix pede os dados de quem paga (pode ser o pai, a mãe ou o responsável).</p>
-          <Field label="Nome completo"><input value={payer.name} onChange={(e) => setPayer({ ...payer, name: e.target.value })} autoComplete="name" /></Field>
-          <Field label="CPF"><input inputMode="numeric" value={payer.cpf} onChange={(e) => setPayer({ ...payer, cpf: fmtCpf(e.target.value) })} placeholder="000.000.000-00" /></Field>
-          <Field label="E-mail"><input type="email" value={payer.email} onChange={(e) => setPayer({ ...payer, email: e.target.value })} autoCapitalize="none" autoComplete="email" /></Field>
-          <Field label="Celular (com DDD)"><input inputMode="tel" value={payer.phone} onChange={(e) => setPayer({ ...payer, phone: fmtPhone(e.target.value) })} placeholder="(81) 99999-0000" /></Field>
-          <Button block busy={busy} disabled={!okPayer} onClick={() => create(packs)}>Gerar Pix</Button>
-          <Button block variant="secondary" onClick={() => setPacks(null)}>Voltar</Button>
-        </div>
       )}
       {order && order.status === 'pago' && (
         <div className="pix-box center">

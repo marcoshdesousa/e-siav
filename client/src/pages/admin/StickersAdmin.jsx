@@ -108,6 +108,7 @@ function PixConfig() {
               ? <><b>SyncPay conectada:</b> o Pix é gerado pela SyncPay e os pacotinhos são liberados sozinhos quando o pagamento cai. A chave abaixo não é usada.</>
               : <><b>SyncPay não conectada.</b> Para o pagamento automático, coloque SYNCPAY_CLIENT_ID e SYNCPAY_CLIENT_SECRET no Render. Enquanto isso, vale a chave Pix abaixo e a equipe confirma cada pagamento.</>}
           </Card>
+          <DefaultPayer payer={cfg.payer} onSaved={state.reload} />
           <Card>
             <div className="form">
               <p className="small muted" style={{ margin: 0 }}>Pix manual (sem a SyncPay): os membros pagam para esta chave e a equipe confirma. Vazia e sem SyncPay, a compra fica desligada.</p>
@@ -121,6 +122,28 @@ function PixConfig() {
         );
       }}
     </Loading>
+  );
+}
+
+const fmtCpf = (v) => String(v || '').replace(/\D/g, '').slice(0, 11).replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+
+/** Dados padrão que vão na cobrança da SyncPay: o membro não precisa informar nada. */
+function DefaultPayer({ payer, onSaved }) {
+  const [f, setF] = useState(null);
+  const [busy, run] = useAsync();
+  const v = f || { ...payer, cpf: fmtCpf(payer.cpf) };
+  return (
+    <Card>
+      <div className="form">
+        <b>Dados padrão do Pix (SyncPay)</b>
+        <p className="small muted" style={{ margin: 0 }}>A SyncPay pede um "cliente" em cada cobrança. Para não pedir CPF nem outros dados aos membros (muitos são menores), o app usa estes dados em todas as cobranças. Use os dados da organização ou de um responsável. Quem paga de verdade é quem lê o QR Code no banco.</p>
+        <Field label="Nome completo"><input value={v.name} onChange={(e) => setF({ ...v, name: e.target.value })} /></Field>
+        <Field label="CPF"><input inputMode="numeric" value={v.cpf} onChange={(e) => setF({ ...v, cpf: fmtCpf(e.target.value) })} placeholder="000.000.000-00" /></Field>
+        <Field label="E-mail"><input type="email" value={v.email} onChange={(e) => setF({ ...v, email: e.target.value })} autoCapitalize="none" /></Field>
+        <Field label="Celular (com DDD)"><input inputMode="tel" value={v.phone} onChange={(e) => setF({ ...v, phone: e.target.value })} /></Field>
+        <Button busy={busy} disabled={!f} onClick={() => run(() => api.put('/admin/figurinhas/pagador', v), 'Dados salvos!').then(() => { setF(null); onSaved(); })}>Salvar</Button>
+      </div>
+    </Card>
   );
 }
 
