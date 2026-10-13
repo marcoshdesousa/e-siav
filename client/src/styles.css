@@ -121,7 +121,7 @@ img { max-width: 100%; }
 /* ---------- Marca ---------- */
 .logo-icon { display: block; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, .22)); }
 .logo-h { display: inline-flex; align-items: center; gap: .55rem; }
-.logo-text { display: flex; flex-direction: column; line-height: .95; font-family: var(--font-title); color: var(--navy); }
+.logo-text { display: flex; flex-direction: column; line-height: .95; font-family: var(--font-title); color: var(--blue-ink); }
 .logo-text small { font-size: .72rem; font-weight: 600; }
 .logo-text b { font-size: 1.35rem; font-weight: 800; letter-spacing: .06em; }
 .logo-h.light .logo-text { color: #fff; }
@@ -659,12 +659,12 @@ label.btn { cursor: pointer; }
 .ann-thumb { aspect-ratio: 4 / 5; height: auto; width: 56px; }
 
 /* Ficha de inscrição e link do clã */
-.ficha-title { font-size: .95rem; margin: .8rem 0 .1rem; color: var(--navy); }
+.ficha-title { font-size: .95rem; margin: .8rem 0 .1rem; color: var(--blue-ink); }
 .check.termo { align-items: flex-start; line-height: 1.35; font-size: .88rem; background: var(--surface-2); border-radius: 12px; padding: .6rem .7rem; }
 .check.termo input { margin-top: .2rem; }
 .signup-link { display: flex; align-items: center; gap: .45rem; background: var(--surface-2); border: 1px dashed var(--line); border-radius: 12px; padding: .6rem .75rem; font-size: .85rem; min-width: 0; }
 .pin-box { display: inline-flex; align-items: center; gap: .35rem; font-family: var(--font-title); font-weight: 800; letter-spacing: .18em; background: var(--yellow-soft); color: var(--yellow-ink); border-radius: 10px; padding: .15rem .55rem; }
-.code-big { font-family: var(--font-title); font-size: 2.2rem; font-weight: 800; letter-spacing: .2em; text-align: center; color: var(--navy); margin: .4rem 0; }
+.code-big { font-family: var(--font-title); font-size: 2.2rem; font-weight: 800; letter-spacing: .2em; text-align: center; color: var(--blue-ink); margin: .4rem 0; }
 .access-info { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem .8rem; text-align: center; background: var(--surface-3); border-radius: 14px; padding: .8rem; margin: .6rem 0; }
 .access-info small { color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
 .access-info .code-big { font-size: 1.7rem; letter-spacing: .12em; margin: .1rem 0; }
@@ -676,27 +676,27 @@ label.btn { cursor: pointer; }
 
 /* Ficha de saúde em formato de quiz */
 .quiz { display: flex; flex-direction: column; gap: .6rem; }
-.quiz-top { display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--navy); }
+.quiz-top { display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--blue-ink); }
 .quiz-step { animation: pop .2s; min-height: 220px; }
 .quiz-q h3 { font-size: 1.15rem; margin: .4rem 0 .7rem; }
 .quiz-yn { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-bottom: .8rem; }
 .quiz-yn button { height: 56px; border-radius: 16px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); font: 800 1.05rem var(--font-title); display: flex; align-items: center; justify-content: center; gap: .4rem; cursor: pointer; }
 .quiz-yn button.on.yes { background: var(--navy); border-color: var(--navy); color: #fff; }
-.quiz-yn button.on.no { background: var(--surface-3); border-color: var(--navy-3); color: var(--navy); }
+.quiz-yn button.on.no { background: var(--surface-3); border-color: var(--navy-3); color: var(--blue-ink); }
 .quiz-chips { display: flex; flex-wrap: wrap; gap: .45rem; }
 .quiz-chips button { border: 2px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: .5rem .9rem; font: 700 .9rem var(--font); cursor: pointer; }
 .quiz-chips button.on { background: var(--navy); border-color: var(--navy); color: #fff; }
 .quiz-none { margin-top: .7rem; width: 100%; border: 2px dashed var(--line); background: none; border-radius: 14px; padding: .65rem; font: 700 .9rem var(--font); color: var(--muted); cursor: pointer; }
-.quiz-none.on { border-style: solid; border-color: var(--navy-3); color: var(--navy); background: var(--surface-3); }
+.quiz-none.on { border-style: solid; border-color: var(--navy-3); color: var(--blue-ink); background: var(--surface-3); }
 .steps-head { display: flex; gap: .5rem; margin: 0 0 .8rem; }
 .steps-head span { flex: 1; text-align: center; font-size: .78rem; font-weight: 800; padding: .45rem; border-radius: 999px; background: var(--surface-3); color: var(--muted); }
 .steps-head span.on { background: var(--navy); color: #fff; }
 .app-counts { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .5rem; }
 .app-counts span { display: inline-flex; align-items: center; gap: .3rem; background: var(--surface-2); border-radius: 10px; padding: .25rem .55rem; font-size: .8rem; }
 .plain-fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
-.pay-n { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-3); color: var(--navy); font-weight: 800; flex: none; }
+.pay-n { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-3); color: var(--blue-ink); font-weight: 800; flex: none; }
 .pay-n.ok { background: var(--green-soft); color: var(--green-ink); }
-.waiting-screen { text-align: center; padding: 3.5rem 1.2rem; color: var(--navy); display: flex; flex-direction: column; align-items: center; gap: .4rem; }
+.waiting-screen { text-align: center; padding: 3.5rem 1.2rem; color: var(--blue-ink); display: flex; flex-direction: column; align-items: center; gap: .4rem; }
 .waiting-screen h1 { font-size: 1.45rem; margin: .6rem 0 0; color: var(--ink); }
 .waiting-screen p { max-width: 320px; margin: .2rem auto 0; }
 .check-all { gap: .5rem; font-size: .9rem; font-weight: 600; margin: .4rem 0 .6rem; cursor: pointer; }
@@ -725,7 +725,7 @@ label.btn { cursor: pointer; }
 .cal-dots i.dot-blue { background: var(--link); }
 .agenda-item { display: flex; gap: .8rem; align-items: flex-start; }
 .agenda-item .small.muted { display: flex; flex-wrap: wrap; gap: .2rem .7rem; }
-.agenda-date { flex: none; width: 46px; border-radius: 12px; background: var(--surface-3); color: var(--navy); display: flex; flex-direction: column; align-items: center; padding: .3rem 0; line-height: 1.05; }
+.agenda-date { flex: none; width: 46px; border-radius: 12px; background: var(--surface-3); color: var(--blue-ink); display: flex; flex-direction: column; align-items: center; padding: .3rem 0; line-height: 1.05; }
 .agenda-date b { font-size: 1.15rem; font-family: var(--font-title); }
 .agenda-date small { font-size: .68rem; font-weight: 800; text-transform: uppercase; }
 .fin-ico { width: 36px; height: 36px; border-radius: 12px; display: grid; place-items: center; flex: none; }
@@ -826,3 +826,4 @@ input::-webkit-datetime-edit { padding: 0; }
 .bottom-nav a { min-width: 0; }
 .bottom-nav-inner:has(> a:nth-child(6)) a { font-size: .6rem; letter-spacing: -.01em; }
 .bottom-nav-inner:has(> a:nth-child(6)) .nav-ico { width: 40px; }
+.embed-open { display: block; margin-top: 1rem; }

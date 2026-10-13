@@ -45,3 +45,7 @@
 .album-info h2 { margin: 0 0 .3rem; font-size: 1.1rem; }
 .album-info p { margin: .5rem 0 0; color: var(--muted); }
 @media (max-width: 380px) { .album-card { flex-direction: column; text-align: center; } }
+/* Durante a partida a barra de baixo some, para o jogo caber inteiro na tela. */
+.game-playing .bottom-nav { display: none; }
+.game-playing .main { padding-bottom: 1rem; padding-top: .8rem; }
+.game-playing .game-head { margin-bottom: .5rem; }

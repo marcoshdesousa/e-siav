@@ -6,13 +6,21 @@ import { api } from '../api.js';
 import { fmtDateTime } from '../format.js';
 import { Button, Card, Loading, PageHeader, useAsync, useLoad } from '../ui.jsx';
 
-/** Site de fora aberto dentro do app. Sem link cadastrado, mostra "em breve". */
+/**
+ * Site de fora aberto dentro do app. Sem link cadastrado, mostra "em breve". Se o site não
+ * deixa ser aberto dentro de outro (muitos sites com login bloqueiam), mostra um botão para abrir.
+ */
 export function EmbeddedSite({ title, linkKey, subtitle }) {
-  const state = useLoad(() => api.get('/links'));
+  const state = useLoad(async () => {
+    const links = await api.get('/links');
+    const url = links[linkKey];
+    if (!url) return { url: '' };
+    const check = await api.get('/links/abre-dentro?key=' + linkKey).catch(() => ({ ok: true }));
+    return { url, inside: check.ok };
+  });
   return (
     <Loading {...state}>
-      {(links) => {
-        const url = links[linkKey];
+      {({ url, inside }) => {
         if (!url) {
           return (
             <>
@@ -25,6 +33,19 @@ export function EmbeddedSite({ title, linkKey, subtitle }) {
             </>
           );
         }
+        if (!inside) {
+          return (
+            <>
+              <PageHeader title={title} subtitle={subtitle} />
+              <Card className="center embed-soon">
+                <Globe size={44} />
+                <h2>{title}</h2>
+                <p className="muted">Este site abre numa janela própria. Quando terminar, é só voltar para o app.</p>
+                <a href={url} target="_blank" rel="noreferrer" className="embed-open"><Button block><ExternalLink size={18} /> Abrir {title}</Button></a>
+              </Card>
+            </>
+          );
+        }
         return (
           <div className="embed">
             <div className="embed-bar">
@@ -32,7 +53,7 @@ export function EmbeddedSite({ title, linkKey, subtitle }) {
               <a href={url} target="_blank" rel="noreferrer"><Button small variant="secondary"><ExternalLink size={14} /> Abrir fora</Button></a>
             </div>
             <iframe src={url} title={title} className="embed-frame" allow="clipboard-write; camera; geolocation; fullscreen" referrerPolicy="no-referrer-when-downgrade" />
-            <p className="small muted center embed-hint">Se a página não aparecer, toque em <b>Abrir fora</b>: alguns sites não deixam abrir dentro de outro.</p>
+            <p className="small muted center embed-hint">Se a página não aparecer, toque em <b>Abrir fora</b>.</p>
           </div>
         );
       }}

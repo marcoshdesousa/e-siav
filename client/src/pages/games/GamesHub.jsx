@@ -1,5 +1,5 @@
 // Mini jogos dos membros: lista de jogos, tela de cada jogo e ranking geral de cada um.
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Flag, Play, RotateCcw, Trophy, Volume2, VolumeX } from 'lucide-react';
 import { api } from '../../api.js';
@@ -88,6 +88,40 @@ function SoundButton() {
   );
 }
 
+/**
+ * Deixa o jogo inteiro (com os botões) dentro da tela, sem precisar rolar: se ficar mais alto
+ * que o espaço livre, o jogo fica mais estreito (e, junto, mais baixo) até caber.
+ */
+function useFitToScreen(ref, active) {
+  const [maxW, setMaxW] = useState(null);
+  useLayoutEffect(() => {
+    if (!active) { setMaxW(null); return undefined; }
+    const el = ref.current;
+    if (!el) return undefined;
+    let frame = 0;
+    const fit = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        const r = el.getBoundingClientRect();
+        if (!r.height || !r.width) return;
+        // Espaço do topo do jogo (na página) até o fim da tela.
+        const free = window.innerHeight - (r.top + window.scrollY) - 10;
+        const parent = el.parentElement?.clientWidth || r.width;
+        const full = Math.min(480, parent);
+        let next = r.width * (free / r.height);
+        next = Math.max(240, Math.min(full, next));
+        setMaxW((cur) => (cur && Math.abs(cur - next) < 4 ? cur : Math.round(next)));
+      });
+    };
+    fit();
+    const ro = new window.ResizeObserver(fit);
+    ro.observe(el);
+    window.addEventListener('resize', fit);
+    return () => { window.cancelAnimationFrame(frame); ro.disconnect(); window.removeEventListener('resize', fit); };
+  }, [active, ref]);
+  return maxW;
+}
+
 /** Tela de um jogo: instruções, partida (com Desistir) e resultado. */
 export function GamePage({ base }) {
   const { id } = useParams();
@@ -103,6 +137,8 @@ export function GamePage({ base }) {
   const live = useRef(0);
   const scoreRef = useRef(0);
   const rankRef = useRef(null);
+  const stageRef = useRef(null);
+  const fitW = useFitToScreen(stageRef, phase !== 'intro');
 
   // Saiu da tela (Voltar, outra aba do app) ou fechou o app no meio: os pontos contam.
   useEffect(() => {
@@ -128,6 +164,7 @@ export function GamePage({ base }) {
     setScore(0); setResult(null);
     live.current = round + 1; setRound(round + 1);
     setPhase('playing');
+    window.scrollTo({ top: 0 });
     startMusic(game.id);
   };
   const end = (final) => {
@@ -167,7 +204,7 @@ export function GamePage({ base }) {
       )}
 
       {phase !== 'intro' && (
-        <div className="game-stage">
+        <div className="game-stage" ref={stageRef} style={fitW ? { maxWidth: fitW } : undefined}>
           <Suspense fallback={<Spinner />}>
             <Comp
               key={round}
