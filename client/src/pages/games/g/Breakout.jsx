@@ -100,7 +100,7 @@ export default function Game({ onScore, onEnd }) {
     if (b.vy > 0 && b.y + BALL_R >= PAD_Y && b.y + BALL_R <= PAD_Y + PAD_H + 8
       && b.x >= s.padX - s.padW / 2 - BALL_R && b.x <= s.padX + s.padW / 2 + BALL_R) {
       const rel = clamp((b.x - s.padX) / (s.padW / 2), -1, 1);
-      const a = -Math.PI / 2 + rel * 1.05;
+      const a = -Math.PI / 2 + rel * 1.05 + (Math.random() - 0.5) * 0.08;
       b.speed = Math.min(b.speed * 1.01, baseSpeed(s.level) + 200);
       b.vx = Math.cos(a) * b.speed;
       b.vy = Math.sin(a) * b.speed;

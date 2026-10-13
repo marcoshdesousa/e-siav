@@ -71,7 +71,7 @@ export default function Game({ onScore, onEnd }) {
 
   const bounce = (b, padX, dir) => {
     const rel = clamp((b.x - padX) / (PW / 2 + R), -1, 1);
-    const a = rel * 1.0;
+    const a = rel * 1.0 + (Math.random() - 0.5) * 0.08;
     b.speed = Math.min(620, b.speed * 1.05);
     b.vx = Math.sin(a) * b.speed;
     b.vy = Math.cos(a) * b.speed * dir;
@@ -97,7 +97,8 @@ export default function Game({ onScore, onEnd }) {
     if (b.vy > 0 && b.y + R >= ME_Y && b.y + R <= ME_Y + PH + 10 && Math.abs(b.x - s.me) <= PW / 2 + R) {
       b.y = ME_Y - R;
       bounce(b, s.me, -1);
-      s.err = (Math.random() - 0.5) * 2 * errAmp(s);
+      // quanto mais rápida a bola, mais o computador erra a previsão
+      s.err = (Math.random() - 0.5) * 2 * errAmp(s) * (b.speed / 300);
     }
     if (b.vy < 0 && b.y - R <= CPU_Y + PH && b.y - R >= CPU_Y - 10 && Math.abs(b.x - s.cpu) <= PW / 2 + R) {
       b.y = CPU_Y + PH + R;

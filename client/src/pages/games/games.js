@@ -8,7 +8,7 @@ import {
 // mode: 'best' = vale o recorde de uma partida; 'sum' = os pontos das partidas vão somando.
 const ALL = [
   { id: 'cobrinha', name: 'Cobrinha', icon: Apple, mode: 'best', file: 'Snake', how: 'Coma as frutas para crescer. Não bata nas paredes nem no próprio corpo. Setas, deslize o dedo ou use os botões.' },
-  { id: 'aventura', name: 'Aventura do Desbravador', icon: Gamepad2, mode: 'best', file: 'Platformer', how: 'Corra, pule nos inimigos, pegue as moedas e chegue à bandeira. Setas/espaço ou os botões na tela.' },
+  { id: 'aventura', name: 'Aventura do Desbravador', icon: Gamepad2, mode: 'best', file: 'Platformer', how: 'Corra, pule nos inimigos, pegue as moedas e vá o mais longe que conseguir. Setas/espaço ou os botões na tela.' },
   { id: 'velha', name: 'Jogo da velha', icon: Grid3x3, mode: 'sum', file: 'TicTacToe', how: 'Faça uma linha de 3 antes do computador. Vitória vale 3 pontos e empate 1.' },
   { id: 'domino', name: 'Dominó', icon: Dices, mode: 'sum', file: 'Domino', how: 'Encaixe as pedras pelas pontas. Quem bater primeiro ganha. Vitória vale 3 pontos.' },
   { id: '2048', name: '2048', icon: LayoutGrid, mode: 'best', file: 'G2048', how: 'Deslize para juntar números iguais e chegar ao 2048.' },
