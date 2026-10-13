@@ -473,3 +473,20 @@ export function resetToTestClubsOnce({ justSeeded = false } = {}) {
   }
   run('INSERT OR IGNORE INTO app_flags (key) VALUES (?)', KEY);
 }
+
+/**
+ * Uma vez (pedido do dono do app): muitos pacotinhos do Álbum Bíblico para as contas de teste
+ * (membros dos clubes de teste), para ver a dinâmica de abrir e colar. Ficam presos ao membro:
+ * quando as contas de teste forem apagadas, os pacotinhos somem junto.
+ */
+export function giftTestPacksOnce(packs = 500) {
+  const KEY = 'pacotinhos-teste-v1';
+  if (get('SELECT 1 FROM app_flags WHERE key = ?', KEY)) return;
+  tx(() => {
+    for (const m of all(`SELECT m.id FROM members m JOIN clubs c ON c.id = m.club_id WHERE c.code IN ('4821','7350')`)) {
+      run('INSERT OR IGNORE INTO album_progress (member_id, album) VALUES (?, ?)', m.id, 'biblico');
+      run('UPDATE album_progress SET packs_unopened = packs_unopened + ? WHERE member_id = ? AND album = ?', packs, m.id, 'biblico');
+    }
+    run('INSERT OR IGNORE INTO app_flags (key) VALUES (?)', KEY);
+  });
+}

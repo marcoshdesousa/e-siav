@@ -65,3 +65,6 @@
 .pack-note { opacity: .75; margin: 0; }
 .stk-detail { display: flex; flex-direction: column; align-items: center; gap: .6rem; }
 .stk-detail p { line-height: 1.5; }
+.pix-wait { display: flex; gap: .5rem; align-items: center; justify-content: center; background: var(--yellow-soft); color: var(--yellow-ink); border-radius: 10px; padding: .6rem; margin: 0; font-weight: 700; }
+.spinner-inline { width: 16px; height: 16px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: spin .8s linear infinite; flex: none; }
+@keyframes spin { to { transform: rotate(360deg); } }

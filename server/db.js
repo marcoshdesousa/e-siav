@@ -784,6 +784,11 @@ function migrate() {
     stickers TEXT NOT NULL,
     created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
   )`);
+  // Pix automático (SyncPay): identificador da cobrança, código e quem pagou.
+  add('sticker_orders', 'identifier', 'TEXT');
+  add('sticker_orders', 'pix_code', 'TEXT');
+  add('sticker_orders', 'payer', 'TEXT');
+  add('sticker_orders', 'checked_at', 'INTEGER');
   for (const k of ['pix_key', 'pix_name', 'pix_city']) db.prepare('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)').run(k, '');
 
   // Volta para os Desbravadores: "Nº Clã X" vira "Nº Clube X" e a medalha de grupo vira de unidade.

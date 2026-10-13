@@ -32,7 +32,7 @@ function Orders() {
                   <div>
                     <b>{o.member_name}</b> <span className="muted small">#{o.member_code}</span>
                     <div className="small muted">{o.club_name}{o.unit_name ? ` · ${o.unit_name}` : ''}</div>
-                    <div className="small">{o.packs} pacotinho{o.packs > 1 ? 's' : ''} · <b>{money(o.amount_cents)}</b> · código <b>{o.txid}</b></div>
+                    <div className="small">{o.packs} pacotinho{o.packs > 1 ? 's' : ''} · <b>{money(o.amount_cents)}</b> · {o.identifier ? <>SyncPay <b>{o.identifier}</b></> : <>código <b>{o.txid}</b></>}</div>
                     <div className="small muted">Pedido em {fmtDateTime(o.created_at)}{o.notified_at ? ` · avisou em ${fmtDateTime(o.notified_at)}` : ''}{o.paid_at ? ` · confirmado em ${fmtDateTime(o.paid_at)}` : ''}</div>
                   </div>
                   {o.status === 'pago' && <Badge kind="green">Pago</Badge>}
@@ -102,15 +102,22 @@ function PixConfig() {
       {(cfg) => {
         const v = f || cfg;
         return (
+          <>
+          <Card className="small" style={{ background: cfg.syncpay ? 'var(--green-soft)' : 'var(--yellow-soft)' }}>
+            {cfg.syncpay
+              ? <><b>SyncPay conectada:</b> o Pix é gerado pela SyncPay e os pacotinhos são liberados sozinhos quando o pagamento cai. A chave abaixo não é usada.</>
+              : <><b>SyncPay não conectada.</b> Para o pagamento automático, coloque SYNCPAY_CLIENT_ID e SYNCPAY_CLIENT_SECRET no Render. Enquanto isso, vale a chave Pix abaixo e a equipe confirma cada pagamento.</>}
+          </Card>
           <Card>
             <div className="form">
-              <p className="small muted" style={{ margin: 0 }}>Os membros pagam os pacotinhos para esta chave Pix. Enquanto estiver vazia, a compra fica desligada.</p>
+              <p className="small muted" style={{ margin: 0 }}>Pix manual (sem a SyncPay): os membros pagam para esta chave e a equipe confirma. Vazia e sem SyncPay, a compra fica desligada.</p>
               <Field label="Chave Pix" hint="CPF, CNPJ, e-mail, telefone (+55...) ou chave aleatória"><input value={v.key} onChange={(e) => setF({ ...v, key: e.target.value })} autoCapitalize="none" /></Field>
               <Field label="Nome de quem recebe" hint="Como aparece no banco (até 25 letras)"><input value={v.name} onChange={(e) => setF({ ...v, name: e.target.value })} /></Field>
               <Field label="Cidade"><input value={v.city} onChange={(e) => setF({ ...v, city: e.target.value })} placeholder="Palmares" /></Field>
               <Button busy={busy} disabled={!f} onClick={() => run(() => api.put('/admin/figurinhas/pix', v), 'Pix salvo!').then(() => { setF(null); state.reload(); })}>Salvar</Button>
             </div>
           </Card>
+          </>
         );
       }}
     </Loading>

@@ -1,11 +1,11 @@
 // Álbuns de figurinhas: lista, o Álbum Bíblico App (comprar, abrir, colar, trocar repetidas)
 // e o Palmares 27 (em breve).
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Copy, Gift, Package, Repeat, ShoppingCart, Sparkles, Trophy } from 'lucide-react';
 import { api } from '../../api.js';
 import { fmtDate } from '../../format.js';
-import { Badge, Button, Card, Loading, Modal, PageHeader, Section, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
+import { Badge, Button, Card, Field, Loading, Modal, PageHeader, Section, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
 import { sfx, unlockAudio } from '../games/audio.js';
 import { StickerCard } from './StickerArt.jsx';
 import data from './biblico.json';
@@ -65,11 +65,36 @@ function StickerModal({ sticker, onClose }) {
   );
 }
 
-/** Comprar pacotinhos: escolhe a quantidade e paga no Pix sem sair do app. */
-function BuyModal({ album, onClose, onDone }) {
+const fmtCpf = (v) => v.replace(/\D/g, '').slice(0, 11).replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+const fmtPhone = (v) => v.replace(/\D/g, '').slice(0, 11).replace(/^(\d{2})(\d)/, '($1) $2').replace(/(\d{5})(\d{1,4})$/, '$1-$2');
+
+/**
+ * Comprar pacotinhos: escolhe a quantidade e paga no Pix sem sair do app. Com a SyncPay ligada,
+ * pede os dados de quem paga (pode ser o responsável) e libera sozinho quando o Pix cai.
+ */
+function BuyModal({ album, onClose, onDone, onOpen }) {
+  const auto = album.pay_mode === 'syncpay';
+  const [packs, setPacks] = useState(null);
+  const lp = album.last_payer || {};
+  const [payer, setPayer] = useState({ name: lp.name || '', cpf: lp.cpf ? fmtCpf(lp.cpf) : '', email: lp.email || '', phone: lp.phone ? fmtPhone(lp.phone) : '' });
   const [order, setOrder] = useState(null);
   const [busy, run] = useAsync();
-  const buy = async (packs) => setOrder(await run(() => api.post(`/albuns/${album.id}/pedidos`, { packs }), null));
+  const create = async (n) => {
+    const o = await run(() => api.post(`/albuns/${album.id}/pedidos`, auto ? { packs: n, payer } : { packs: n }), null);
+    if (o) setOrder(o);
+  };
+  const choose = (n) => (auto ? setPacks(n) : create(n));
+  // Pix automático: confere a cada 4 s se o pagamento caiu.
+  useEffect(() => {
+    if (!order?.auto || order.status === 'pago') return undefined;
+    const t = setInterval(async () => {
+      try {
+        const o = await api.get('/albuns/pedidos/' + order.id);
+        if (o.status !== order.status) { setOrder((cur) => ({ ...cur, status: o.status })); if (o.status === 'pago') { sfx('win'); onDone(); } }
+      } catch { /* tenta de novo */ }
+    }, 4000);
+    return () => clearInterval(t);
+  }, [order?.id, order?.status, order?.auto, onDone]);
   const copy = async () => {
     try { await navigator.clipboard.writeText(order.pix); notify('Código Pix copiado! Cole no app do seu banco.'); } catch { notify('Não deu para copiar. Selecione o código e copie.', 'error'); }
   };
@@ -77,15 +102,17 @@ function BuyModal({ album, onClose, onDone }) {
     await run(() => api.post(`/albuns/pedidos/${order.id}/paguei`), 'Recebemos o seu aviso! Assim que o pagamento for confirmado, os pacotinhos aparecem aqui.');
     onDone(); onClose();
   };
+  const okPayer = payer.name.trim().split(/\s+/).length >= 2 && payer.cpf.replace(/\D/g, '').length === 11 && /\S+@\S+\.\S+/.test(payer.email) && payer.phone.replace(/\D/g, '').length >= 10;
+  const title = order ? (order.status === 'pago' ? 'Pagamento confirmado!' : 'Pague com Pix') : packs ? 'Quem vai pagar?' : 'Comprar pacotinhos';
   return (
-    <Modal title={order ? 'Pague com Pix' : 'Comprar pacotinhos'} onClose={onClose}>
-      {!order ? (
+    <Modal title={title} onClose={onClose}>
+      {!order && !packs && (
         <>
           <p className="small muted" style={{ marginTop: 0 }}>Cada pacotinho tem {album.pack_size} figurinhas e custa {money(album.price_cents)}.</p>
           {!album.pix_ready && <Card className="small">O pagamento ainda não foi liberado pela equipe. Tente mais tarde.</Card>}
           <div className="buy-grid">
             {album.options.map((n) => (
-              <button key={n} type="button" className="buy-option" disabled={busy || !album.pix_ready} onClick={() => buy(n)}>
+              <button key={n} type="button" className="buy-option" disabled={busy || !album.pix_ready} onClick={() => choose(n)}>
                 <Package size={26} />
                 <b>{n} pacotinho{n > 1 ? 's' : ''}</b>
                 <small>{n * album.pack_size} figurinhas</small>
@@ -94,15 +121,41 @@ function BuyModal({ album, onClose, onDone }) {
             ))}
           </div>
         </>
-      ) : (
+      )}
+      {!order && packs && (
+        <div className="form">
+          <p className="small muted" style={{ margin: 0 }}><b>{packs} pacotinho{packs > 1 ? 's' : ''} · {money(packs * album.price_cents)}</b>. O Pix pede os dados de quem paga (pode ser o pai, a mãe ou o responsável).</p>
+          <Field label="Nome completo"><input value={payer.name} onChange={(e) => setPayer({ ...payer, name: e.target.value })} autoComplete="name" /></Field>
+          <Field label="CPF"><input inputMode="numeric" value={payer.cpf} onChange={(e) => setPayer({ ...payer, cpf: fmtCpf(e.target.value) })} placeholder="000.000.000-00" /></Field>
+          <Field label="E-mail"><input type="email" value={payer.email} onChange={(e) => setPayer({ ...payer, email: e.target.value })} autoCapitalize="none" autoComplete="email" /></Field>
+          <Field label="Celular (com DDD)"><input inputMode="tel" value={payer.phone} onChange={(e) => setPayer({ ...payer, phone: fmtPhone(e.target.value) })} placeholder="(81) 99999-0000" /></Field>
+          <Button block busy={busy} disabled={!okPayer} onClick={() => create(packs)}>Gerar Pix</Button>
+          <Button block variant="secondary" onClick={() => setPacks(null)}>Voltar</Button>
+        </div>
+      )}
+      {order && order.status === 'pago' && (
+        <div className="pix-box center">
+          <Sparkles size={44} style={{ color: 'var(--yellow)', margin: '0 auto' }} />
+          <p><b>{order.packs} pacotinho{order.packs > 1 ? 's' : ''}</b> já estão no seu álbum.</p>
+          <Button block onClick={() => { onClose(); onOpen(); }}><Package size={16} /> Abrir agora</Button>
+          <Button block variant="secondary" onClick={onClose}>Depois</Button>
+        </div>
+      )}
+      {order && order.status !== 'pago' && (
         <div className="pix-box">
           <p className="center" style={{ margin: 0 }}><b>{order.packs} pacotinho{order.packs > 1 ? 's' : ''}</b> · <b>{money(order.amount_cents)}</b></p>
           {order.qr && <img src={order.qr} alt="QR Code do Pix" className="pix-qr" />}
           <p className="small muted center">Copie o código abaixo e cole no app do seu banco, em <b>Pix copia e cola</b>.{order.receiver ? <> Recebedor: <b>{order.receiver}</b>.</> : null}</p>
           <div className="pix-code">{order.pix}</div>
           <Button block onClick={copy}><Copy size={16} /> Copiar código Pix</Button>
-          <Button block variant="green" busy={busy} onClick={paid}>Já paguei</Button>
-          <p className="small muted center" style={{ margin: 0 }}>Depois que o pagamento for confirmado, os pacotinhos aparecem no topo do álbum.</p>
+          {order.auto
+            ? <p className="small center pix-wait"><span className="spinner-inline" /> Esperando o pagamento... assim que cair, os pacotinhos aparecem sozinhos.</p>
+            : (
+              <>
+                <Button block variant="green" busy={busy} onClick={paid}>Já paguei</Button>
+                <p className="small muted center" style={{ margin: 0 }}>Depois que o pagamento for confirmado, os pacotinhos aparecem no topo do álbum.</p>
+              </>
+            )}
         </div>
       )}
     </Modal>
@@ -293,7 +346,7 @@ export function AlbumPage() {
               </div>
             )}
 
-            {buy && <BuyModal album={a} onClose={() => setBuy(false)} onDone={state.reload} />}
+            {buy && <BuyModal album={a} onClose={() => setBuy(false)} onDone={state.reload} onOpen={() => setOpening(true)} />}
             {opening && <OpenPack album={a} onClose={() => { setOpening(false); state.reload(); }} onChanged={state.reload} />}
             {detail && <StickerModal sticker={detail} onClose={() => setDetail(null)} />}
           </>

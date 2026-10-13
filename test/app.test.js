@@ -740,11 +740,13 @@ test('álbum bíblico: Pix, confirmação da equipe, abrir, colar, trocar repeti
   assert.equal(o.amount_cents, 1850);
   assert.match(o.pix, /^000201.*br\.gov\.bcb\.pix.*5405?18\.50.*6304[0-9A-F]{4}$/);
   assert.ok(o.qr.startsWith('data:image/svg+xml'));
-  assert.equal((await pedro.post('/albuns/biblico/abrir')).status, 400, 'sem pacotinho antes de confirmar');
+  const base = (await pedro.get('/albuns/biblico')).body.packs_unopened;
+  assert.ok(base >= 500, 'contas de teste ganham muitos pacotinhos');
   await pedro.post(`/albuns/pedidos/${o.id}/paguei`);
   assert.ok((await admin.get('/admin/figurinhas/pedidos?status=aguardando')).body.rows.some((x) => x.id === o.id));
   await admin.post(`/admin/figurinhas/pedidos/${o.id}/confirmar`);
-  assert.equal((await pedro.get('/albuns/biblico')).body.packs_unopened, 10);
+  assert.equal((await pedro.get('/albuns/biblico')).body.packs_unopened, base + 10);
+  assert.equal((await admin.post(`/admin/figurinhas/pedidos/${o.id}/confirmar`)).status, 400, 'não libera duas vezes');
   // 5 primeiros pacotinhos: nada repetido
   const seen = new Set();
   for (let i = 0; i < 5; i++) for (const c of (await pedro.post('/albuns/biblico/abrir')).body.cards) { assert.ok(c.isNew && !seen.has(c.id)); seen.add(c.id); }

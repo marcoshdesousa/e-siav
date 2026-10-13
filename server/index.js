@@ -23,9 +23,9 @@ import transferRoutes from './routes/transfers.js';
 import clubToolRoutes from './routes/clubTools.js';
 import supportRoutes from './routes/support.js';
 import gameRoutes from './routes/games.js';
-import albumRoutes from './routes/albums.js';
+import albumRoutes, { startPixSweep } from './routes/albums.js';
 import { syncCatalog } from './catalog.js';
-import { createInitialAdmin, resetClubsForDbvOnce, resetToDemoClubsOnce, resetToTestClubsOnce, seed } from './seed.js';
+import { createInitialAdmin, resetClubsForDbvOnce, resetToDemoClubsOnce, resetToTestClubsOnce, giftTestPacksOnce, seed } from './seed.js';
 
 // Banco vazio: cria só o administrador. Os dados de exemplo completos só entram com
 // SEED_DEMO=1 (testes e desenvolvimento). Nada que já existe é apagado na inicialização,
@@ -43,9 +43,11 @@ if (!get('SELECT 1 FROM admins LIMIT 1')) {
 resetToDemoClubsOnce({ justSeeded });
 resetClubsForDbvOnce({ justSeeded });
 resetToTestClubsOnce({ justSeeded });
+giftTestPacksOnce();
 // Sem cobranças por enquanto: nada de parcelas, inscrição anual ou bloqueio na virada do ano.
 
 syncCatalog();
+startPixSweep();
 
 const app = express();
 app.disable('x-powered-by');
