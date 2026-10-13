@@ -364,16 +364,22 @@ export function AlbumCover({ variant = 'biblico', width = 260, logo }) {
           </g>
         ) : (
           <g>
-            {/* medalhão: logo do distrito (ou emblema provisório) */}
-            <circle cx="166" cy="140" r="61" fill={url('gold')} />
-            <circle cx="166" cy="140" r="56" fill="#0A1C4A" />
-            <circle cx="166" cy="140" r="56" fill="none" stroke={url('gold')} strokeWidth="1" strokeDasharray="1.5 3" />
-            <circle cx="166" cy="140" r="51.5" fill={url('gold')} />
-            <circle cx="166" cy="140" r="50" fill={logo ? '#fff' : url('medalBg')} />
             {logo ? (
-              <image href={logo} x="116" y="90" width="100" height="100" preserveAspectRatio="xMidYMid slice" clipPath={url('medal')} />
+              <g>
+                {/* logo do distrito inteiro, com um brilho dourado atrás */}
+                <circle cx="166" cy="134" r="70" fill={url('gold')} opacity=".22" />
+                <image href={logo} x="91" y="58" width="150" height="150" preserveAspectRatio="xMidYMid meet" />
+              </g>
             ) : (
-              <g transform="translate(0 -8)"><PathfinderMark uid={uid} /></g>
+              <g>
+                {/* medalhão provisório (sem logo) */}
+                <circle cx="166" cy="140" r="61" fill={url('gold')} />
+                <circle cx="166" cy="140" r="56" fill="#0A1C4A" />
+                <circle cx="166" cy="140" r="56" fill="none" stroke={url('gold')} strokeWidth="1" strokeDasharray="1.5 3" />
+                <circle cx="166" cy="140" r="51.5" fill={url('gold')} />
+                <circle cx="166" cy="140" r="50" fill={url('medalBg')} />
+                <g transform="translate(0 -8)"><PathfinderMark uid={uid} /></g>
+              </g>
             )}
             <FoilText y={228} size={19} spacing={8} fill={url('goldV')} weight={600}>PALMARES</FoilText>
             <g fill={url('gold')} transform="translate(0 -2)">

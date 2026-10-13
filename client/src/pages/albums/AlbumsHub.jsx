@@ -13,6 +13,7 @@ import { AlbumCover, BibleEmblem } from './AlbumCover.jsx';
 import data from './biblico.json';
 import './albums.css';
 
+const PALMARES_LOGO = '/img/distrito-palmares.png';
 const BY_ID = Object.fromEntries(data.stickers.map((s) => [s.id, s]));
 const RARITY = { comum: 'Comum', rara: 'Rara', lendaria: 'Lendária' };
 
@@ -27,7 +28,7 @@ export function AlbumsPage({ base }) {
           <div className="album-list">
             {list.map((a) => (a.active ? (
               <Link key={a.id} to={`${base}/albuns/${a.id}`} className="album-card">
-                <div className="album-cover-art"><AlbumCover variant="biblico" width={92} /></div>
+                <div className="album-cover-art"><AlbumCover variant="biblico" width={110} /></div>
                 <div className="album-info">
                   <h2>{a.name}</h2>
                   <div className="album-bar"><span style={{ width: `${(a.stuck / a.total) * 100}%` }} /></div>
@@ -37,7 +38,7 @@ export function AlbumsPage({ base }) {
               </Link>
             ) : (
               <div key={a.id} className="album-card is-soon">
-                <div className="album-cover-art"><AlbumCover variant="palmares27" width={92} /></div>
+                <div className="album-cover-art"><AlbumCover variant="palmares27" width={110} logo={PALMARES_LOGO} /></div>
                 <div className="album-info">
                   <h2>{a.name}</h2>
                   <span className="badge badge-yellow">Em breve</span>
