@@ -1,7 +1,7 @@
 // Situação do cadastro do membro. Ele fica ativo (aparece no sistema e usa o app) quando
-// o termo está assinado, o clã aprovou e a inscrição do ano foi paga pelo clã.
-// O membro nunca vê nada de pagamento: só "Esperando a aprovação do clã" ou, na virada
-// do ano, "Esperando o seu clã atualizar o sistema".
+// o termo está assinado, o clube aprovou e a inscrição do ano foi paga pelo clube.
+// O membro nunca vê nada de pagamento: só "Esperando a aprovação do clube" ou, na virada
+// do ano, "Esperando o seu clube atualizar o sistema".
 import crypto from 'node:crypto';
 import { get, run } from './db.js';
 import { setLogin } from './auth.js';
@@ -11,9 +11,9 @@ export const currentYear = () => new Date().getFullYear();
 /**
  * Por que o membro está pendente:
  * - 'termo': esperando a assinatura do termo pelo link
- * - 'aprovacao': inscrição pelo link esperando o clã aprovar (grupo e cargo)
- * - 'inscricao': aprovado, falta o clã pagar a inscrição do ano
- * - 'renovacao': já era do clã, falta o clã renovar a inscrição do ano novo
+ * - 'aprovacao': inscrição pelo link esperando o clube aprovar (unidade e cargo)
+ * - 'inscricao': aprovado, falta o clube pagar a inscrição do ano
+ * - 'renovacao': já era do clube, falta o clube renovar a inscrição do ano novo
  */
 export function pendingReason(m) {
   if (m.status !== 'pendente') return null;
@@ -24,7 +24,7 @@ export function pendingReason(m) {
 }
 
 /** O que o membro vê em todas as abas enquanto espera. */
-export const waitingMessage = (reason) => (reason === 'renovacao' ? 'Esperando o seu clã atualizar o sistema' : 'Esperando a aprovação do clã');
+export const waitingMessage = (reason) => (reason === 'renovacao' ? 'Esperando o seu clube atualizar o sistema' : 'Esperando a aprovação do clube');
 
 /** Passa o membro para ativo quando não falta mais nada. */
 export function refreshStatus(memberId) {
@@ -38,7 +38,7 @@ export function clearYear(memberId, year) {
   refreshStatus(memberId);
 }
 
-/** Virada do ano: quem não teve a inscrição renovada volta a esperar o clã atualizar. */
+/** Virada do ano: quem não teve a inscrição renovada volta a esperar o clube atualizar. */
 export function expireYear() {
   run(`UPDATE members SET status = 'pendente' WHERE status = 'ativo' AND (cleared_year IS NULL OR cleared_year < ?)`, currentYear());
 }

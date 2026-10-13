@@ -1,6 +1,6 @@
-// Inscrição pelo link do clã (/inscricao/CODIGO): a própria pessoa (ou o responsável)
+// Inscrição pelo link do clube (/inscricao/CODIGO): a própria pessoa (ou o responsável)
 // preenche a ficha de cadastro, a ficha médica e aceita os termos. O membro entra
-// como "pendente" e só acessa o app depois que o clã aprovar.
+// como "pendente" e só acessa o app depois que o clube aprovar.
 import { Router } from 'express';
 import { get, run, tx } from '../db.js';
 import { createMemberLogin, memberPassword } from '../memberStatus.js';
@@ -22,13 +22,13 @@ setInterval(() => janela.clear(), 60 * 60 * 1000).unref();
 
 r.get('/public/inscricao/:code', (req, res) => {
   const c = clubByCode(req.params.code);
-  if (!c) fail(404, 'Clã não encontrado. Confira o link com a diretoria.');
+  if (!c) fail(404, 'Clube não encontrado. Confira o link com a diretoria.');
   res.json(c);
 });
 
 r.post('/public/inscricao/:code', (req, res) => {
   const c = clubByCode(req.params.code);
-  if (!c) fail(404, 'Clã não encontrado. Confira o link com a diretoria.');
+  if (!c) fail(404, 'Clube não encontrado. Confira o link com a diretoria.');
   const n = (janela.get(req.ip) || 0) + 1;
   janela.set(req.ip, n);
   if (n > LIMITE) fail(429, 'Muitas inscrições seguidas. Tente de novo mais tarde.');
@@ -43,7 +43,7 @@ r.post('/public/inscricao/:code', (req, res) => {
   const { cpf, certidao } = checkIdentity({ cpf: ficha.doc_tipo === 'certidao' ? b.cpf || null : b.cpf, certidao: ficha.doc_tipo === 'certidao' ? ficha.certidao : null });
   if (ficha.doc_tipo !== 'certidao' && !cpf) fail(400, 'Informe o CPF');
   validateSignup(ficha, b.birth_date);
-  // Data e local da ficha: o dia da inscrição e o clã, pelo sistema online.
+  // Data e local da ficha: o dia da inscrição e o clube, pelo sistema online.
   ficha.data_inscricao = new Date().toISOString().slice(0, 10);
   ficha.local_inscricao = `${c.name} — sistema online`;
 

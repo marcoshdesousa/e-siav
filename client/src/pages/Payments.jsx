@@ -15,7 +15,7 @@ function PixCard({ pixKey }) {
   };
   return (
     <Card>
-      <div className="row"><span className="trophy-bg"><QrCode size={20} /></span><div className="grow"><b>Pagamento só no Pix</b><div className="small muted">Pague pelo Pix. A equipe do Exploradores do Brasil confirma o recebimento.</div></div></div>
+      <div className="row"><span className="trophy-bg"><QrCode size={20} /></span><div className="grow"><b>Pagamento só no Pix</b><div className="small muted">Pague pelo Pix. A equipe do App do DBV confirma o recebimento.</div></div></div>
       {pixKey ? (
         <div className="row mt"><div className="signup-link grow"><span className="ellipsis">{pixKey}</span></div><Button small onClick={copy}><Copy size={14} /> Copiar</Button></div>
       ) : <p className="small muted">A chave Pix aparece aqui quando a equipe cadastrar.</p>}
@@ -64,7 +64,7 @@ const feeBadge = (m) => (m.paid_at ? <Badge kind="green">Pago</Badge>
     : m.needs_approval ? <Badge>Aprove a inscrição primeiro</Badge>
       : <Badge kind="yellow">{m.renewal ? 'Falta renovar' : 'Falta pagar'}</Badge>);
 
-/** Inscrição do ano: o clã marca uma ou várias pessoas e paga tudo de uma vez no Pix. */
+/** Inscrição do ano: o clube marca uma ou várias pessoas e paga tudo de uma vez no Pix. */
 function ClubMemberFees({ p, onDone }) {
   const fee = p.member_fee;
   const payable = fee.members.filter((m) => !m.paid_at && !m.order_id && !m.needs_approval);
@@ -123,21 +123,21 @@ function ClubMemberFees({ p, onDone }) {
   );
 }
 
-/** Sistema do Clã: parcelas mensais do clã e inscrição anual dos membros. */
+/** Sistema do Clube: parcelas mensais do clube e inscrição anual dos membros. */
 export function ClubPayments() {
   const state = useLoad(() => api.get('/club/pagamentos'));
   const [tab, setTab] = useState(new URLSearchParams(location.search).get('aba') === 'membros' ? 'membros' : 'cla');
   return (
     <>
-      <PageHeader title="Pagamentos" subtitle="Plano do clã e inscrição dos membros no Exploradores do Brasil" />
+      <PageHeader title="Pagamentos" subtitle="Plano do clube e inscrição dos membros no App do DBV" />
       <Loading {...state}>
         {(p) => (
           <>
             <div className="stats">
-              <div className="stat"><span className="stat-icon"><Receipt size={20} /></span><b>{fmtMoney(p.installments_open_cents)}</b><span>Em aberto do clã</span></div>
+              <div className="stat"><span className="stat-icon"><Receipt size={20} /></span><b>{fmtMoney(p.installments_open_cents)}</b><span>Em aberto do clube</span></div>
               <div className="stat"><span className="stat-icon"><Users size={20} /></span><b>{fmtMoney(p.member_fee.due_cents)}</b><span>Inscrições de {p.member_fee.year}</span></div>
             </div>
-            <Tabs tabs={[['cla', 'Plano do clã'], ['membros', 'Inscrição dos membros']]} value={tab} onChange={setTab} />
+            <Tabs tabs={[['cla', 'Plano do clube'], ['membros', 'Inscrição dos membros']]} value={tab} onChange={setTab} />
             {tab === 'cla' ? (
               <>
                 <PixCard pixKey={p.pix_key} />
@@ -152,7 +152,7 @@ export function ClubPayments() {
   );
 }
 
-/** Equipe: pagamentos de inscrição enviados pelos clãs, esperando a confirmação do Pix. */
+/** Equipe: pagamentos de inscrição enviados pelos clubes, esperando a confirmação do Pix. */
 function PendingOrders({ onDone }) {
   const state = useLoad(() => api.get('/admin/pagamentos/inscricoes'));
   const [busy, run] = useAsync();
@@ -178,7 +178,7 @@ function PendingOrders({ onDone }) {
   );
 }
 
-/** Administrador: valores, chave Pix e situação de cada clã. */
+/** Administrador: valores, chave Pix e situação de cada clube. */
 export function AdminPayments({ base }) {
   const state = useLoad(() => api.get('/admin/pagamentos'));
   const [f, setF] = useState(null);
@@ -186,7 +186,7 @@ export function AdminPayments({ base }) {
   const cents = (c) => (c / 100).toFixed(2).replace('.', ',');
   return (
     <>
-      <PageHeader title="Pagamentos" subtitle="Taxas dos clãs e dos membros (Pix)" />
+      <PageHeader title="Pagamentos" subtitle="Taxas dos clubes e dos membros (Pix)" />
       <Loading {...state}>
         {({ config, clubs }) => {
           const v = f || { fee_member_year: cents(config.fee_member_year_cents), fee_club_month: cents(config.fee_club_month_cents), club_installments: config.club_installments, pix_key: config.pix_key, support_whatsapp: config.support_whatsapp || '' };
@@ -197,18 +197,18 @@ export function AdminPayments({ base }) {
                 <Card>
                   <div className="form">
                     <div className="grid2">
-                      <Field label="Plano mensal do clã (R$)"><input inputMode="decimal" value={v.fee_club_month} onChange={(e) => setF({ ...v, fee_club_month: e.target.value })} /></Field>
+                      <Field label="Plano mensal do clube (R$)"><input inputMode="decimal" value={v.fee_club_month} onChange={(e) => setF({ ...v, fee_club_month: e.target.value })} /></Field>
                       <Field label="Nº de parcelas"><input type="number" min="1" value={v.club_installments} onChange={(e) => setF({ ...v, club_installments: e.target.value })} /></Field>
                     </div>
                     <Field label="Inscrição anual por membro (R$)"><input inputMode="decimal" value={v.fee_member_year} onChange={(e) => setF({ ...v, fee_member_year: e.target.value })} /></Field>
-                    <Field label="Chave Pix" hint="Aparece para os clãs na tela de pagamentos"><input value={v.pix_key} onChange={(e) => setF({ ...v, pix_key: e.target.value })} /></Field>
-                    <Field label="WhatsApp do suporte" hint="Aparece para os clãs em Mais → Suporte"><input inputMode="tel" value={v.support_whatsapp} onChange={(e) => setF({ ...v, support_whatsapp: e.target.value })} placeholder="(81) 99999-9999" /></Field>
-                    <p className="small muted">Os valores novos valem para os clãs criados daqui pra frente. Para mudar as parcelas em aberto de um clã, abra o clã abaixo.</p>
+                    <Field label="Chave Pix" hint="Aparece para os clubes na tela de pagamentos"><input value={v.pix_key} onChange={(e) => setF({ ...v, pix_key: e.target.value })} /></Field>
+                    <Field label="WhatsApp do suporte" hint="Aparece para os clubes em Mais → Suporte"><input inputMode="tel" value={v.support_whatsapp} onChange={(e) => setF({ ...v, support_whatsapp: e.target.value })} placeholder="(81) 99999-9999" /></Field>
+                    <p className="small muted">Os valores novos valem para os clubes criados daqui pra frente. Para mudar as parcelas em aberto de um clube, abra o clube abaixo.</p>
                     <Button busy={busy} disabled={!f} onClick={() => run(() => api.put('/admin/pagamentos/config', v), 'Valores salvos!').then(() => { setF(null); state.reload(); })}>Salvar</Button>
                   </div>
                 </Card>
               </Section>
-              <Section title="Clãs">
+              <Section title="Clubes">
                 <div className="list">
                   {clubs.map((c) => (
                     <Link key={c.id} to={`${base}/pagamentos/${c.id}`} className="list-item">
@@ -229,7 +229,7 @@ export function AdminPayments({ base }) {
   );
 }
 
-/** Administrador: parcelas e taxa dos membros de um clã. */
+/** Administrador: parcelas e taxa dos membros de um clube. */
 export function AdminClubPayments({ base }) {
   const { id } = useParams();
   const state = useLoad(() => api.get(`/admin/pagamentos/${id}`), [id]);
@@ -244,7 +244,7 @@ export function AdminClubPayments({ base }) {
         {(p) => (
           <>
             <PageHeader title={p.club.name} subtitle={`Código ${p.club.code} · em aberto ${fmtMoney(p.installments_open_cents)}`} />
-            <Tabs tabs={[['cla', 'Plano do clã'], ['membros', 'Inscrição dos membros']]} value={tab} onChange={setTab} />
+            <Tabs tabs={[['cla', 'Plano do clube'], ['membros', 'Inscrição dos membros']]} value={tab} onChange={setTab} />
             {tab === 'cla' ? (
               <>
                 <div className="row wrap" style={{ marginBottom: '.7rem' }}>

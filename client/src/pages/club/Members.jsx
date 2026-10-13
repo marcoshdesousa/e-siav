@@ -42,7 +42,7 @@ function DadosPessoais({ value: f, onChange }) {
 
 /**
  * Ficha do membro em duas partes: ficha de cadastro e ficha médica.
- * O clã pode corrigir; o Administrador Geral só visualiza (readOnly).
+ * O clube pode corrigir; o Administrador Geral só visualiza (readOnly).
  */
 export function FichaModal({ member, url, onClose, readOnly = false }) {
   const state = useLoad(() => api.get(url));
@@ -88,7 +88,7 @@ export function FichaModal({ member, url, onClose, readOnly = false }) {
 export function TermLinkInline({ member }) {
   const url = `${location.origin}/termo/${member.terms_token}`;
   const first = member.name.split(' ')[0];
-  const text = `Olá! Para ${first} participar das atividades do clã, assine os termos por este link: ${url}`;
+  const text = `Olá! Para ${first} participar das atividades do clube, assine os termos por este link: ${url}`;
   const copy = async () => {
     try { await navigator.clipboard.writeText(url); notify('Link copiado!'); } catch { notify('Não deu para copiar. Selecione o link e copie.', 'error'); }
   };
@@ -116,7 +116,7 @@ export function TermLinkModal({ member, onClose }) {
 /**
  * Lista de membros com as abas Ativos, Pendentes e Todos (os inativos só aparecem
  * no filtro "Inativos" e não entram no total).
- * actions: botões de cada membro (Sistema do Clã); sem actions = só visualização.
+ * actions: botões de cada membro (Sistema do Clube); sem actions = só visualização.
  */
 export function MembersBrowser({ list, units, actions, initialTab = 'ativo' }) {
   const [tab, setTab] = useState(initialTab);
@@ -138,8 +138,8 @@ export function MembersBrowser({ list, units, actions, initialTab = 'ativo' }) {
       <div className="grid2">
         <input placeholder="Buscar por nome ou código" value={q} onChange={(e) => setQ(e.target.value)} />
         <select value={unitFilter} onChange={(e) => setUnitFilter(e.target.value)}>
-          <option value="">Todos os grupos</option>
-          <option value="none">Sem grupo</option>
+          <option value="">Todos as unidades</option>
+          <option value="none">Sem unidade</option>
           {units.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
         </select>
       </div>
@@ -149,7 +149,7 @@ export function MembersBrowser({ list, units, actions, initialTab = 'ativo' }) {
             <Avatar src={m.photo} name={m.name} size={48} />
             <div className="grow">
               <div className="title ico">{m.name}</div>
-              <div className="sub">{m.age} anos · {m.cargo} · {m.unit_name || 'Sem grupo'}</div>
+              <div className="sub">{m.age} anos · {m.cargo} · {m.unit_name || 'Sem unidade'}</div>
               <div className="row wrap" style={{ marginTop: '.35rem', gap: '.3rem' }}>
                 <Badge kind={m.kind === 'desbravador' ? 'blue' : 'yellow'}>{m.role}</Badge>
                 <Badge><Hash size={11} /> {m.code}</Badge>
@@ -168,7 +168,7 @@ export function MembersBrowser({ list, units, actions, initialTab = 'ativo' }) {
   );
 }
 
-/** Botões do Sistema do Clã para cada membro, conforme a situação. */
+/** Botões do Sistema do Clube para cada membro, conforme a situação. */
 export function memberActions({ base, run, done, setFicha, setEditing, setAch, setApproving, setTermFor }) {
   return (m) => {
     if (m.status === 'inativo') {
@@ -197,7 +197,7 @@ export function memberActions({ base, run, done, setFicha, setEditing, setAch, s
         <Button small variant="secondary" onClick={() => setFicha(m)}><FileText size={14} /> Ficha</Button>
         {m.status === 'ativo' && (
           <>
-            <Button small variant="secondary" onClick={() => setAch(m)}>Insígnias</Button>
+            <Button small variant="secondary" onClick={() => setAch(m)}>Especialidades</Button>
             <Link to={`${base}/ver/membro/${m.code}`}><Button small variant="ghost">Perfil</Button></Link>
           </>
         )}

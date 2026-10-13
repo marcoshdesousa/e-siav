@@ -9,8 +9,8 @@ import { Avatar, Badge, Button, Card, Loading, Tabs, useLoad } from '../../ui.js
 import { FichaModal, MembersBrowser } from '../club/Members.jsx';
 
 /**
- * O Administrador Geral vê o clã por dentro: membros (com as fichas), grupos e
- * senhas dos grupos. Tudo só para visualizar — nada pode ser editado daqui.
+ * O Administrador Geral vê o clube por dentro: membros (com as fichas), unidades e
+ * senhas das unidades. Tudo só para visualizar — nada pode ser editado daqui.
  */
 export default function ClanView({ base }) {
   const { id } = useParams();
@@ -33,8 +33,8 @@ export default function ClanView({ base }) {
                 {c.director_name && <p className="small" style={{ margin: '.3rem 0 0' }}>Diretor(a): <b>{c.director_name}</b>{c.associate_directors ? <><br />Diretores associados: <b>{c.associate_directors.split('\n').join(', ')}</b></> : ''}</p>}
               </div>
             </div>
-            <Card className="small"><Eye size={14} style={{ verticalAlign: '-2px' }} /> Você está vendo o clã por dentro. <b>Nada pode ser editado daqui</b>: só o próprio clã altera os dados.</Card>
-            <Tabs tabs={[['membros', `Membros (${members.filter((m) => m.status !== 'inativo').length})`], ['grupos', `Grupos (${units.length})`]]} value={tab} onChange={setTab} />
+            <Card className="small"><Eye size={14} style={{ verticalAlign: '-2px' }} /> Você está vendo o clube por dentro. <b>Nada pode ser editado daqui</b>: só o próprio clube altera os dados.</Card>
+            <Tabs tabs={[['membros', `Membros (${members.filter((m) => m.status !== 'inativo').length})`], ['grupos', `Unidades (${units.length})`]]} value={tab} onChange={setTab} />
             {tab === 'membros' ? (
               <MembersBrowser list={members} units={units}
                 actions={(m) => <Button small variant="secondary" onClick={() => setFicha(m)}><FileText size={14} /> Ver ficha</Button>} />

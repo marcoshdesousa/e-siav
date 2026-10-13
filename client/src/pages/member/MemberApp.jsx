@@ -20,7 +20,7 @@ function MyProfile() {
   const { refresh } = useAuth();
   const state = useLoad(() => api.get('/me/profile'));
   const [busy, run] = useAsync();
-  // O membro só troca a própria foto; os demais dados são editados pelo clã.
+  // O membro só troca a própria foto; os demais dados são editados pelo clube.
   const changePhoto = async (file) => {
     await run(() => api.put('/me/photo', toForm({ photo: file })), 'Foto atualizada!');
     state.reload();
@@ -47,13 +47,13 @@ function MyProfile() {
   );
 }
 
-/** Membro ainda não liberado pelo clã: qualquer aba mostra só esta mensagem. */
+/** Membro ainda não liberado pelo clube: qualquer aba mostra só esta mensagem. */
 function Waiting({ text }) {
   return (
     <div className="waiting-screen">
       <Hourglass size={48} />
       <h1>{text}</h1>
-      <p className="muted">Quando o seu clã liberar, tudo aparece aqui. Não precisa fazer nada.</p>
+      <p className="muted">Quando o seu clube liberar, tudo aparece aqui. Não precisa fazer nada.</p>
     </div>
   );
 }
@@ -65,29 +65,29 @@ export default function MemberApp() {
     { to: base, icon: UserRound, label: 'Perfil', end: true },
     { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },
     { to: `${base}/ranking`, icon: Trophy, label: 'Ranking' },
-    { to: `${base}/especialidades`, icon: Waypoints, label: 'Insígnias' },
+    { to: `${base}/especialidades`, icon: Waypoints, label: 'Especialidades' },
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
-    { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas do clã e do App' },
+    { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas do clube e do App' },
     { to: `${base}/cursos`, icon: GraduationCap, label: 'Cursos', hint: 'Aulas' },
-    { to: `${base}/clas`, icon: Tent, label: 'Clãs', hint: 'Por distrito' },
+    { to: `${base}/clubes`, icon: Tent, label: 'Clubes', hint: 'Por distrito' },
   ];
   return (
     <Routes>
       <Route
         path="*"
         element={
-          <Shell tabs={tabs} parentOf={(path) => (['cursos', 'clas', 'agenda'].includes(path.split('/')[2]) ? `${base}/mais` : base)}>
+          <Shell tabs={tabs} parentOf={(path) => (['cursos', 'clubes', 'agenda'].includes(path.split('/')[2]) ? `${base}/mais` : base)}>
             {actor.waiting ? <Waiting text={actor.waiting} /> : <Routes>
               <Route index element={<MyProfile />} />
-              <Route path="requisitos" element={<><PageHeader title="Requisitos" subtitle={isDbv ? 'Cumpra os requisitos e suba no ranking' : 'Requisitos para a liderança e os tutores'} /><RequirementsTodo originTabs groupTab={isDbv} /></>} />
+              <Route path="requisitos" element={<><PageHeader title="Requisitos" subtitle={isDbv ? 'Cumpra os requisitos e suba no ranking' : 'Requisitos para a liderança'} /><RequirementsTodo originTabs groupTab={isDbv} /></>} />
               <Route path="especialidades" element={<MyAchievements key="e" type="especialidade" />} />
               <Route path="agenda" element={<AgendaLeitura />} />
               <Route path="cursos" element={<ContentList type="curso" base={base} />} />
               <Route path="conteudo/:id" element={<ContentDetail />} />
               <Route path="ranking" element={<RankingHub base={base} />} />
-              <Route path="clas" element={<ClubsBrowser base={base} />} />
+              <Route path="clubes" element={<ClubsBrowser base={base} />} />
               <Route path="ver/:kind/:id" element={<InAppProfile base={base} />} />
               <Route path="mais" element={<><PageHeader title="Mais" /><MoreMenu items={more} /></>} />
               <Route path="*" element={<Navigate to={base} replace />} />

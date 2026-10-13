@@ -10,7 +10,7 @@ const r = Router();
 
 const NAME = /^[a-f0-9]{24,32}\.[a-z0-9]{2,4}$/;
 
-/** Clã ou administrador pode ver a mídia de uma mensagem que foi denunciada a ele. */
+/** Clube ou administrador pode ver a mídia de uma mensagem que foi denunciada a ele. */
 function reportedTo(actor, messageId) {
   if (actor.type === 'admin') return !!get('SELECT 1 FROM reports WHERE message_id = ?', messageId);
   if (actor.type === 'club') return !!get('SELECT 1 FROM reports WHERE message_id = ? AND (club_id = ? OR reported_club_id = ?)', messageId, actor.id, actor.id);

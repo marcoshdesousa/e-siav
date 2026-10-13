@@ -22,7 +22,7 @@ export function eventsOf(type, id) {
 
 const pos = (r) => (r ? { position: r.position, points: r.points } : null);
 
-/** Perfil público do clã: só a QUANTIDADE de membros, nunca os nomes. */
+/** Perfil público do clube: só a QUANTIDADE de membros, nunca os nomes. */
 export function clubProfile(id) {
   const c = get(
     `SELECT c.id, c.name, c.number, c.logo, c.code, c.director_name, c.associate_directors, c.history, c.district_id, d.name AS district_name
@@ -81,7 +81,7 @@ export function memberProfile(where, value) {
   m.classes = ach.filter((a) => a.type === 'classe');
   m.specialties = ach.filter((a) => a.type === 'especialidade');
   m.courses = ach.filter((a) => a.type === 'curso');
-  // Exploradores e liderança/tutores têm rankings separados.
+  // Desbravadores e liderança têm rankings separados.
   m.ranking = pos(positionOf(m.kind === 'desbravador' ? membersRanking() : leadersRanking(), m.id));
   m.events = eventsOf('member', m.id);
   m.medals = medalsOf('member', m.id);

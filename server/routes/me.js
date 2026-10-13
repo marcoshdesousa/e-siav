@@ -18,7 +18,7 @@ r.put('/me/photo', requireAuth('member'), imageUpload.single('photo'), (req, res
   res.json({ photo: fileUrl(req.file) });
 });
 
-// O grupo escreve a própria biografia (aparece no perfil do grupo).
+// A unidade escreve a própria biografia (aparece no perfil da unidade).
 r.put('/me/bio', requireAuth('unit'), (req, res) => {
   run('UPDATE units SET bio = ? WHERE id = ?', str(req.body.bio, 1000) || null, req.actor.id);
   res.json({ ok: true });

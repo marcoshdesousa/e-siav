@@ -7,7 +7,7 @@ import PeoplePicker, { emptySelection } from './PeoplePicker.jsx';
 const KIND_TABS = [['medal', 'Medalhas e troféus'], ['curso', 'Cursos']];
 
 /**
- * Entregar conteúdo: escolhe o item, depois o clã, o grupo e as pessoas
+ * Entregar conteúdo: escolhe o item, depois o clube, a unidade e as pessoas
  * (com "selecionar todos"), e confirma de uma vez.
  */
 export default function Deliver() {

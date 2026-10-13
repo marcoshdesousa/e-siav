@@ -5,8 +5,8 @@ import { attachmentUpload } from '../uploads.js';
 import { fail, int, parseJson, memberKind } from '../util.js';
 import { eventFields, attachmentsOf } from './admin.js';
 
-// Eventos do clã (ex.: acampamento local): só a diretoria daquele clã cria,
-// marca participantes do próprio clã e o aviso aparece só para os membros dele.
+// Eventos do clube (ex.: acampamento local): só a diretoria daquele clube cria,
+// marca participantes do próprio clube e o aviso aparece só para os membros dele.
 const r = Router();
 r.use('/club/events', requireAuth('club'));
 
@@ -32,7 +32,7 @@ r.get('/club/events', (req, res) => {
 
 r.post('/club/events', attachmentUpload.array('files', 10), (req, res) => {
   const f = eventFields(req.body);
-  f[4] = get('SELECT district_id FROM clubs WHERE id = ?', req.actor.id).district_id; // distrito do próprio clã
+  f[4] = get('SELECT district_id FROM clubs WHERE id = ?', req.actor.id).district_id; // distrito do próprio clube
   const id = tx(() => {
     const id = Number(run('INSERT INTO events (name, description, date, location, district_id, promote, attachments, club_id) VALUES (?,?,?,?,?,?,?,?)', ...f, attachmentsOf(req), req.actor.id).lastInsertRowid);
     run(`INSERT INTO event_participants (event_id, target_type, target_id) VALUES (?, 'club', ?)`, id, req.actor.id);
@@ -56,7 +56,7 @@ r.delete('/club/events/:id', (req, res) => {
   res.json({ ok: true });
 });
 
-// Participantes: só membros do próprio clã (e o próprio clã).
+// Participantes: só membros do próprio clube (e o próprio clube).
 r.post('/club/events/:id/participants', (req, res) => {
   const e = ownEvent(req);
   let added = 0;
@@ -78,7 +78,7 @@ r.delete('/club/events/:id/participants/:type/:tid', (req, res) => {
   res.json({ ok: true });
 });
 
-// Diretório do próprio clã (grupos → pessoas), no mesmo formato do admin.
+// Diretório do próprio clube (unidades → pessoas), no mesmo formato do admin.
 r.get('/club/directory', requireAuth('club'), (req, res) => {
   const c = get('SELECT c.id, c.name, c.logo, c.district_id, d.name AS district_name FROM clubs c JOIN districts d ON d.id = c.district_id WHERE c.id = ?', req.actor.id);
   c.units = all('SELECT id, name, logo, is_leadership FROM units WHERE club_id = ? ORDER BY is_leadership, name', c.id);

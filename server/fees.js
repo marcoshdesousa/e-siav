@@ -1,4 +1,4 @@
-// Taxas do app: cada clã paga parcelas mensais (12 de R$ 30,85, valor que o admin
+// Taxas do app: cada clube paga parcelas mensais (12 de R$ 30,85, valor que o admin
 // pode mudar) a partir de 30 dias da criação; cada membro paga R$ 2,50 por ano.
 // O pagamento é só no Pix; por enquanto o admin marca o que foi pago.
 import { all, get, run, tx } from './db.js';
@@ -15,7 +15,7 @@ export const feeConfig = () => ({
   support_whatsapp: setting('support_whatsapp') || '',
 });
 
-/** Cria as parcelas do clã (se ainda não existirem): a 1ª vence 30 dias depois da criação. */
+/** Cria as parcelas do clube (se ainda não existirem): a 1ª vence 30 dias depois da criação. */
 export function ensureInstallments(clubId, start) {
   if (get('SELECT 1 FROM club_installments WHERE club_id = ?', clubId)) return;
   const cfg = feeConfig();
@@ -26,7 +26,7 @@ export function ensureInstallments(clubId, start) {
   }
 }
 
-/** Resumo de pagamentos de um clã (parcelas + taxa anual dos membros). */
+/** Resumo de pagamentos de um clube (parcelas + taxa anual dos membros). */
 export function clubPayments(clubId, year = new Date().getFullYear()) {
   const cfg = feeConfig();
   const today = new Date().toISOString().slice(0, 10);
@@ -43,7 +43,7 @@ export function clubPayments(clubId, year = new Date().getFullYear()) {
   ).map(({ terms_token, approved_at, cleared_year, ...m }) => ({
     ...m,
     order_id: m.paid_at ? null : inOrder.get(m.id) || null,
-    // Inscrição pelo link: o clã aprova (grupo e cargo) antes de pagar.
+    // Inscrição pelo link: o clube aprova (unidade e cargo) antes de pagar.
     needs_approval: m.status === 'pendente' && !terms_token && !approved_at,
     renewal: !!cleared_year && cleared_year < year,
   }));
@@ -77,7 +77,7 @@ export function payMemberFees(ids, year, cents) {
   }
 }
 
-/** A equipe confirmou o Pix de um pedido do clã: todos os membros do pedido são liberados. */
+/** A equipe confirmou o Pix de um pedido do clube: todos os membros do pedido são liberados. */
 export function confirmOrder(orderId) {
   const o = get('SELECT * FROM fee_orders WHERE id = ? AND confirmed_at IS NULL AND canceled_at IS NULL', orderId);
   if (!o) return false;

@@ -21,7 +21,7 @@ const scoreJoin = (type, idCol, reqFilter) => `
     GROUP BY s.submitter_id
   ) sc ON sc.submitter_id = ${idCol}`;
 
-/** Ranking de membros: só exploradores, requisitos gerais de membro. */
+/** Ranking de membros: só desbravadores, requisitos gerais de membro. */
 export function membersRanking(districtId = null) {
   const rows = all(
     `SELECT m.id, m.name, m.photo, m.code, m.birth_date, c.id AS club_id, c.name AS club_name,
@@ -35,7 +35,7 @@ export function membersRanking(districtId = null) {
   return rank(rows);
 }
 
-/** Ranking de membros do clã: exploradores do clã, requisitos criados pelo próprio clã e pelos grupos dele. */
+/** Ranking de membros do clube: desbravadores do clube, requisitos criados pelo próprio clube e pelas unidades dele. */
 export function clubMembersRanking(clubId) {
   const rows = all(
     `SELECT m.id, m.name, m.photo, m.code, m.birth_date, c.id AS club_id, u.name AS unit_name,
@@ -45,13 +45,13 @@ export function clubMembersRanking(clubId) {
      WHERE m.club_id = ? AND m.status = 'ativo'`,
     clubId,
   ).filter((r) => memberKind(r.birth_date) === 'desbravador');
-  rows.forEach((r) => { delete r.birth_date; r.club_name = r.unit_name ? 'Grupo ' + r.unit_name : 'Sem grupo'; });
+  rows.forEach((r) => { delete r.birth_date; r.club_name = r.unit_name ? 'Unidade ' + r.unit_name : 'Sem unidade'; });
   return rank(rows);
 }
 
 /**
- * Ranking da liderança e dos tutores (16+), separado do dos exploradores.
- * No App: requisitos de membro criados pelo App. Entre todos os clãs.
+ * Ranking da liderança (16+), separado do dos desbravadores.
+ * No App: requisitos de membro criados pelo App. Entre todos os clubes.
  */
 export function leadersRanking(districtId = null) {
   const rows = all(
@@ -66,7 +66,7 @@ export function leadersRanking(districtId = null) {
   return rank(rows);
 }
 
-/** Melhor da liderança e dos tutores do clã: requisitos de membro criados pelo próprio clã. */
+/** Melhor da liderança do clube: requisitos de membro criados pelo próprio clube. */
 export function clubLeadersRanking(clubId) {
   const rows = all(
     `SELECT m.id, m.name, m.photo, m.code, m.cargo, m.birth_date, c.id AS club_id,
@@ -80,7 +80,7 @@ export function clubLeadersRanking(clubId) {
   return rank(rows);
 }
 
-/** Ranking de clãs: requisitos gerais de clã. */
+/** Ranking de clubes: requisitos gerais de clube. */
 export function clubsRanking(districtId = null) {
   return rank(all(
     `SELECT c.id, c.name, c.logo, c.district_id, d.name AS district_name,
@@ -92,7 +92,7 @@ export function clubsRanking(districtId = null) {
   ));
 }
 
-/** Ranking geral de grupos: requisitos gerais de grupo (todos os grupos de todos os clãs). */
+/** Ranking geral de unidades: requisitos gerais de unidade (todos as unidades de todos os clubes). */
 export function unitsRanking(districtId = null) {
   return rank(all(
     `SELECT u.id, u.name, u.logo, c.id AS club_id, c.name AS club_name,
@@ -104,7 +104,7 @@ export function unitsRanking(districtId = null) {
   ));
 }
 
-/** Ranking de grupos do clã: requisitos criados pelo próprio clã. */
+/** Ranking de unidades do clube: requisitos criados pelo próprio clube. */
 export function clubUnitsRanking(clubId) {
   return rank(all(
     `SELECT u.id, u.name, u.logo, u.club_id,

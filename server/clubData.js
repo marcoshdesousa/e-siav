@@ -1,4 +1,4 @@
-// Dados internos de um clã (membros, grupos e fichas). Usado pelo Sistema do Clã
+// Dados internos de um clube (membros, unidades e fichas). Usado pelo Sistema do Clube
 // (pode editar) e pelo Administrador Geral (só visualiza).
 import { all, get } from './db.js';
 import { ageFrom, memberKind, roleOf } from './util.js';

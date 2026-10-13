@@ -5,7 +5,7 @@ import { plural } from '../format.js';
 import { ChevronRight, Search, Trophy } from 'lucide-react';
 import { Avatar, Field, Loading, PageHeader, useLoad } from '../ui.jsx';
 
-/** Busca de clã pelo número (1º, 2º...), pelo código (4 números) ou pelo nome. */
+/** Busca de clube pelo número (1º, 2º...), pelo código (4 números) ou pelo nome. */
 function ClanSearch({ base }) {
   const [q, setQ] = useState('');
   const [results, setResults] = useState(null);
@@ -16,24 +16,24 @@ function ClanSearch({ base }) {
   }, [q]);
   return (
     <>
-      <div className="cat-search"><Search size={18} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Pesquisar clã: número, código ou nome" /></div>
+      <div className="cat-search"><Search size={18} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Pesquisar clube: número, código ou nome" /></div>
       {results && (
         <div className="list mt">
           {results.map((c) => (
-            <Link key={c.id} to={`${base}/ver/cla/${c.id}`} className="list-item">
+            <Link key={c.id} to={`${base}/ver/clube/${c.id}`} className="list-item">
               <Avatar src={c.logo} name={c.name} size={48} square />
               <div className="grow"><div className="title">{c.name}</div><div className="sub">Código {c.code} · {c.district_name}</div></div>
               <ChevronRight className="chev" size={20} />
             </Link>
           ))}
-          {!results.length && <p className="muted small center">Nenhum clã encontrado.</p>}
+          {!results.length && <p className="muted small center">Nenhum clube encontrado.</p>}
         </div>
       )}
     </>
   );
 }
 
-/** Aba Clãs: pesquisa ou escolhe o distrito e abre o perfil de um clã. */
+/** Aba Clubes: pesquisa ou escolhe o distrito e abre o perfil de um clube. */
 export default function ClubsBrowser({ base }) {
   const districts = useLoad(() => api.get('/public/districts'));
   const [district, setDistrict] = useState(null);
@@ -44,7 +44,7 @@ export default function ClubsBrowser({ base }) {
 
   return (
     <>
-      <PageHeader title="Clãs" subtitle="Pesquise pelo número, pelo código ou pelo nome" />
+      <PageHeader title="Clubes" subtitle="Pesquise pelo número, pelo código ou pelo nome" />
       <ClanSearch base={base} />
       <h2 className="mt" style={{ marginBottom: '.5rem' }}>Por distrito</h2>
       <Loading {...districts}>
@@ -57,15 +57,15 @@ export default function ClubsBrowser({ base }) {
         )}
       </Loading>
       <div className="mt">
-        <Loading {...clubs} empty="Nenhum clã neste distrito.">
+        <Loading {...clubs} empty="Nenhum clube neste distrito.">
           {(list) => (
             <div className="list">
               {list.map((c) => (
-                <Link key={c.id} to={`${base}/ver/cla/${c.id}`} className="list-item">
+                <Link key={c.id} to={`${base}/ver/clube/${c.id}`} className="list-item">
                   <Avatar src={c.logo} name={c.name} size={52} square />
                   <div className="grow">
                     <div className="title">{c.name}</div>
-                    <div className="sub">{plural(c.unit_count, 'grupo', 'grupos')} · {plural(c.member_count, 'membro', 'membros')}</div>
+                    <div className="sub">{plural(c.unit_count, 'unidade', 'unidades')} · {plural(c.member_count, 'membro', 'membros')}</div>
                   </div>
                   {c.position && <span className="badge badge-yellow ico"><Trophy size={13} /> {c.position}º</span>}
                   <ChevronRight className="chev" size={20} />

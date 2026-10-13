@@ -38,4 +38,4 @@ export function AuthProvider({ children }) {
 
 export const useAuth = () => useContext(AuthCtx);
 
-export const homeFor = (actor) => ({ admin: '/admin', club: '/cla', unit: '/grupo', member: '/membro' })[actor?.type] || '/entrar';
+export const homeFor = (actor) => ({ admin: '/admin', club: '/clube', unit: '/unidade', member: '/membro' })[actor?.type] || '/entrar';

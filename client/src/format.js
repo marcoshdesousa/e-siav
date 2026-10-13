@@ -37,9 +37,9 @@ export function isoToLocal(iso) {
 export const ordinal = (n) => `${n}º`;
 export const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 
-export const KIND_LABEL = { desbravador: 'Explorador', lideranca: 'Liderança e tutores' };
+export const KIND_LABEL = { desbravador: 'Desbravador', lideranca: 'Liderança' };
 export const MODEL_LABEL = { texto: 'Relatório', foto: 'Foto', quiz: 'Quiz', texto_foto: 'Relatório + foto', quiz_foto: 'Quiz + foto' };
-export const AUDIENCE_LABEL = { club: 'Clãs', unit: 'Grupos', member: 'Membros' };
-export const MEMBER_KIND_LABEL = { desbravador: 'Só exploradores', lideranca: 'Só liderança e tutores', '': 'Todos os membros' };
+export const AUDIENCE_LABEL = { club: 'Clubes', unit: 'Unidades', member: 'Membros' };
+export const MEMBER_KIND_LABEL = { desbravador: 'Só desbravadores', lideranca: 'Só liderança', '': 'Todos os membros' };
 export const STATE_LABEL = { pendente: 'Pendente', enviado: 'Enviado', aprovado: 'Aprovado', recusado: 'Recusado', fora_do_prazo: 'Fora do prazo' };
 export const fmtCpf = (v) => String(v || '').replace(/\D/g, '').slice(0, 11).replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');

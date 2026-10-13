@@ -1,4 +1,4 @@
-// Pedido para criar um clã: a pessoa preenche a página pública /criar-cla e a
+// Pedido para criar um clube: a pessoa preenche a página pública /criar-clube e a
 // equipe do app recebe no painel (não visualizados / visualizados) para chamar no WhatsApp.
 import { Router } from 'express';
 import { all, get, run } from '../db.js';

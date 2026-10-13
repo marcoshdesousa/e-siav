@@ -111,12 +111,12 @@ function ContentMembers({ contentId, onBack, onPick }) {
   );
 }
 
-/** Análise de cadernos guia ou insígnias: caderno guia → pessoas → requisitos de cada pessoa. */
+/** Análise de classes ou especialidades: classe → pessoas → requisitos de cada pessoa. */
 export default function ContentReview({ type, embedded = false }) {
   const [contentId, setContentId] = useState(null);
   const [memberId, setMemberId] = useState(null);
   const list = useLoad(() => api.get('/admin/content-review?type=' + type), [type, contentId, memberId]);
-  const title = { classe: 'Cadernos guia', especialidade: 'Insígnias', curso: 'Cursos' }[type];
+  const title = { classe: 'Classes', especialidade: 'Especialidades', curso: 'Cursos' }[type];
 
   let body;
   if (contentId && memberId) body = <MemberDetail contentId={contentId} memberId={memberId} onBack={() => setMemberId(null)} />;

@@ -20,13 +20,13 @@ export function ageFrom(birthDate, ref = new Date()) {
   return age;
 }
 
-/** Papel mostrado no app: Explorador (10–15), ou Liderança/Tutor (16+) conforme o cargo. */
+/** Papel mostrado no app: Desbravador (10–15), ou Diretoria / Conselheiro (16+) conforme o cargo. */
 export function roleOf(kind, cargo) {
-  if (kind === 'desbravador') return 'Explorador';
-  return CARGOS_LIDERANCA.includes(cargo) ? 'Liderança' : 'Tutor';
+  if (kind === 'desbravador') return 'Desbravador';
+  return CARGOS_LIDERANCA.includes(cargo) ? 'Diretoria' : 'Conselheiro';
 }
 
-/** A idade define o tipo de conta: 10–15 explorador, 16+ tutor. */
+/** A idade define o tipo de conta: 10–15 desbravador, 16+ liderança. */
 export function memberKind(birthDate) {
   const age = ageFrom(birthDate);
   if (age < IDADE_MIN_DESBRAVADOR) return null;
@@ -41,7 +41,7 @@ export function newMemberCode() {
   }
 }
 
-/** Código do clã: 4 números aleatórios, único (é o login do clã e dos grupos). */
+/** Código do clube: 4 números aleatórios, único (é o login do clube e das unidades). */
 export function newClubCode() {
   for (;;) {
     const code = String(crypto.randomInt(1000, 10000));
@@ -49,16 +49,16 @@ export function newClubCode() {
   }
 }
 
-/** Número do clã: a ordem de criação (1º, 2º, 3º...). */
+/** Número do clube: a ordem de criação (1º, 2º, 3º...). */
 export const newClubNumber = () => (get('SELECT MAX(number) n FROM clubs').n || 0) + 1;
 
-/** Nome mostrado no app: "1º Clã Águias" (o número vem na frente, sozinho). */
+/** Nome mostrado no app: "1º Clube Águias" (o número vem na frente, sozinho). */
 export function clubDisplayName(number, raw) {
-  const base = String(raw || '').trim().replace(/^\d+\s*º\s*/, '').replace(/^cl[ãa]\s+/i, '').trim();
-  return `${number}º Clã ${base}`;
+  const base = String(raw || '').trim().replace(/^\d+\s*º\s*/, '').replace(/^(clube|cl[ãa])\s+/i, '').trim();
+  return `${number}º Clube ${base}`;
 }
 
-// Senhas de clã e de grupo: 2 letras + 4 números (ex.: KR4827), geradas pelo app
+// Senhas de clube e de unidade: 2 letras + 4 números (ex.: KR4827), geradas pelo app
 // e que não podem ser trocadas. Sem I e O para não confundir com 1 e 0.
 const LETRAS = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
 const novaSenha = () => LETRAS[crypto.randomInt(LETRAS.length)] + LETRAS[crypto.randomInt(LETRAS.length)] + String(crypto.randomInt(10000)).padStart(4, '0');
@@ -66,7 +66,7 @@ export const SENHA_RE = /^[A-Z]{2}\d{4}$/;
 
 export const newClubPassword = novaSenha;
 
-/** Senha do grupo: única dentro do clã e diferente da senha do clã. */
+/** Senha da unidade: única dentro do clube e diferente da senha do clube. */
 export function newUnitPin(clubId, isClubPassword = () => false) {
   for (;;) {
     const pin = novaSenha();

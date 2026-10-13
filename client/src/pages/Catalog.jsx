@@ -2,11 +2,11 @@ import { useMemo, useState } from 'react';
 import { Check, Search } from 'lucide-react';
 import { ContentIcon } from '../ui.jsx';
 
-/** Agrupa cadernos guia (todos juntos) ou insígnias (por área). */
+/** Agrupa classes (todos juntos) ou especialidades (por área). */
 export function groupCatalog(type, items) {
   const groups = new Map();
   for (const c of items) {
-    const g = type === 'classe' ? 'Cadernos guia' : c.category || 'Outras';
+    const g = type === 'classe' ? 'Classes' : c.category || 'Outras';
     if (!groups.has(g)) groups.set(g, []);
     groups.get(g).push(c);
   }
@@ -39,7 +39,7 @@ export default function CatalogPicker({ type, items, selected, onChange, locked 
     .filter(([, list]) => list.length);
   return (
     <div className="cat-picker">
-      <div className="cat-search"><Search size={18} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder={type === 'classe' ? 'Buscar caderno guia' : 'Buscar insígnia ou código'} /></div>
+      <div className="cat-search"><Search size={18} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder={type === 'classe' ? 'Buscar classe' : 'Buscar especialidade ou código'} /></div>
       {type === 'especialidade' && (
         <div className="cat-areas">
           <button type="button" className={!area ? 'on' : ''} onClick={() => setArea('')}>Todas</button>

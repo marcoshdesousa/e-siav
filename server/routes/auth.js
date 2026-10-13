@@ -7,7 +7,7 @@ import { checkMemberPassword } from '../memberStatus.js';
 
 const r = Router();
 
-// Limite de tentativas erradas de senha: 8 por usuário e 30 por IP (um clã
+// Limite de tentativas erradas de senha: 8 por usuário e 30 por IP (um clube
 // inteiro pode entrar pela mesma rede da igreja) a cada 15 minutos.
 const LIMITE = { user: 8, ip: 30 };
 const JANELA_MS = 15 * 60 * 1000;
@@ -33,8 +33,8 @@ setInterval(() => {
 
 /**
  * Descobre a conta pelo que foi digitado:
- * - Login Clã: código do clã (4 números) + senha. A senha do clã abre o Sistema do Clã;
- *   a senha de um grupo (4 números) abre o Portal daquele grupo.
+ * - Login Clube: código do clube (4 números) + senha. A senha do clube abre o Sistema do Clube;
+ *   a senha de uma unidade (4 números) abre o Portal daquela unidade.
  * - Login Membros: código do membro (6 números) + ano de nascimento, ou usuário (administrador e contas antigas).
  */
 function findAccount(mode, username, password) {
@@ -64,8 +64,8 @@ function findAccount(mode, username, password) {
   return checkLogin(user, pw, ['admin']);
 }
 
-// Login Clã: conta do clã e contas de grupo.
-// Login Membros: exploradores, tutores e Administrador Geral.
+// Login Clube: conta do clube e contas de unidade.
+// Login Membros: desbravadores, conselheiros e Administrador Geral.
 r.post('/auth/login', (req, res) => {
   const { mode, username, password } = req.body || {};
   const keys = ['ip:' + req.ip, 'user:' + String(username || '').trim().toLowerCase()];
@@ -73,12 +73,12 @@ r.post('/auth/login', (req, res) => {
   const login = findAccount(mode === 'clube' ? 'clube' : 'membros', username, password);
   if (!login) {
     keys.forEach(registrarFalha);
-    fail(401, mode === 'clube' ? 'Código do clã ou senha incorretos' : 'Código ou senha incorretos');
+    fail(401, mode === 'clube' ? 'Código do clube ou senha incorretos' : 'Código ou senha incorretos');
   }
   falhas.delete(keys[1]);
   if (login.account_type === 'member') {
     const m = get('SELECT * FROM members WHERE id = ?', login.account_id);
-    if (m.status === 'inativo') fail(403, 'Sua conta está desativada. Fale com a diretoria do seu clã.');
+    if (m.status === 'inativo') fail(403, 'Sua conta está desativada. Fale com a diretoria do seu clube.');
   }
   const actor = loadActor(login.account_type, login.account_id);
   if (!actor) fail(401, 'Conta não encontrada');
@@ -100,21 +100,21 @@ r.get('/auth/me', requireLogin, (req, res) => {
 
 // IMPROVISO PARA TESTES (tirar depois): contas de exemplo para a tela de entrada.
 // Só aparecem se a conta de exemplo existir com os dados do exemplo. Desligar com QUICK_LOGIN=0.
-const DEMO_CLAS = [['4821', 'AG2026', '1º Clã Águias do Vale'], ['7350', 'LE2026', '2º Clã Leões de Judá']];
-const DEMO_GRUPOS = [['4821', 'FA1111', 'Grupo Falcões (Águias)']];
+const DEMO_CLAS = [['4821', 'AG2026', '1º Clube Águias do Vale'], ['7350', 'LE2026', '2º Clube Leões de Judá']];
+const DEMO_GRUPOS = [['4821', 'FA1111', 'Unidade Falcões (Águias)']];
 const DEMO_MEMBROS = [
-  ['100001', 'Pedro Henrique Lima', 'Explorador'], ['100006', 'Marcos Almeida', 'Liderança (diretor)'],
-  ['100007', 'Juliana Costa', 'Tutor'], ['100098', 'Rafaela Nunes Teste', 'Esperando aprovação'],
+  ['100001', 'Pedro Henrique Lima', 'Desbravador'], ['100006', 'Marcos Almeida', 'Liderança (diretor)'],
+  ['100007', 'Juliana Costa', 'Conselheira'], ['100098', 'Rafaela Nunes Teste', 'Esperando aprovação'],
 ];
 r.get('/auth/contas-teste', (_req, res) => {
   if (process.env.QUICK_LOGIN === '0') return res.json({ clube: [], membros: [] });
   const clube = [];
   for (const [code, pw, label] of DEMO_CLAS) {
     const c = get('SELECT id FROM clubs WHERE code = ?', code);
-    if (c && checkAccountPassword('club', c.id, pw)) clube.push({ label, sub: 'Sistema do Clã', username: code, password: pw });
+    if (c && checkAccountPassword('club', c.id, pw)) clube.push({ label, sub: 'Sistema do Clube', username: code, password: pw });
   }
   for (const [code, pin, label] of DEMO_GRUPOS) {
-    if (get('SELECT 1 FROM units u JOIN clubs c ON c.id = u.club_id WHERE c.code = ? AND u.pin = ?', code, pin)) clube.push({ label, sub: 'Portal do Grupo', username: code, password: pin });
+    if (get('SELECT 1 FROM units u JOIN clubs c ON c.id = u.club_id WHERE c.code = ? AND u.pin = ?', code, pin)) clube.push({ label, sub: 'Portal da Unidade', username: code, password: pin });
   }
   const membros = [];
   for (const [code, name, label] of DEMO_MEMBROS) {

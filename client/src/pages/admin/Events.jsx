@@ -6,7 +6,7 @@ import { fmtDate } from '../../format.js';
 import { Badge, Button, Card, Confirm, Empty, Field, Loading, Modal, PageHeader, Section, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
 import PeoplePicker, { emptySelection } from './PeoplePicker.jsx';
 
-/** Admin: eventos do App. Clã: eventos só do clã (ex.: acampamento local). */
+/** Admin: eventos do App. Clube: eventos só do clube (ex.: acampamento local). */
 const useEventsApi = () => {
   const { actor } = useAuth();
   const isClub = actor.type === 'club';
@@ -76,7 +76,7 @@ function EventForm({ initial, onDone, onCancel }) {
           </label>
         </div>
       </Field>
-      <label className="check"><input type="checkbox" checked={!!f.promote} onChange={(e) => setF({ ...f, promote: e.target.checked })} /> Mostrar na tela {ev.isClub ? 'dos membros do clã' : 'de todos'} ao abrir o app, até a data do evento</label>
+      <label className="check"><input type="checkbox" checked={!!f.promote} onChange={(e) => setF({ ...f, promote: e.target.checked })} /> Mostrar na tela {ev.isClub ? 'dos membros do clube' : 'de todos'} ao abrir o app, até a data do evento</label>
       <p className="muted small" style={{ marginTop: '-.4rem' }}>A primeira foto dos anexos vira a capa do aviso.</p>
       <div className="row" style={{ justifyContent: 'flex-end' }}>
         {onCancel && <Button variant="secondary" onClick={onCancel}>Cancelar</Button>}
@@ -108,8 +108,8 @@ function ParticipantsModal({ event, onClose, onChanged }) {
         <PeoplePicker directory={directory.data} value={sel} onChange={setSel} allowClubs />
       ) : (
         <>
-          <Section title={`Clãs (${clubs.length})`}>
-            {clubs.length ? clubs.map((p) => <ParticipantRow key={'c' + p.target_id} p={p} event={event} onChanged={onChanged} />) : <Empty icon={Tent}>Nenhum clã marcado.</Empty>}
+          <Section title={`Clubes (${clubs.length})`}>
+            {clubs.length ? clubs.map((p) => <ParticipantRow key={'c' + p.target_id} p={p} event={event} onChanged={onChanged} />) : <Empty icon={Tent}>Nenhum clube marcado.</Empty>}
           </Section>
           <Section title={`Membros (${members.length})`}>
             {members.length ? members.map((p) => <ParticipantRow key={'m' + p.target_id} p={p} event={event} onChanged={onChanged} />) : <Empty icon={Users}>Nenhum membro marcado.</Empty>}
@@ -143,7 +143,7 @@ export default function EventsAdmin() {
   const current = partsOf && state.data?.find((e) => e.id === partsOf);
   return (
     <>
-      <PageHeader title="Eventos" subtitle={ev.isClub ? 'Eventos do seu clã (ex.: acampamento local) — só os membros do clã veem' : 'Crie eventos e marque quem participou'} />
+      <PageHeader title="Eventos" subtitle={ev.isClub ? 'Eventos do seu clube (ex.: acampamento local) — só os membros do clube veem' : 'Crie eventos e marque quem participou'} />
       <Tabs tabs={[['criar', 'Criar evento'], ['criados', 'Eventos criados']]} value={tab} onChange={setTab} />
       {tab === 'criar' && (
         <Card><EventForm key={state.data?.length} initial={blank(meta.districts[0]?.id)} onDone={() => { state.reload(); setTab('criados'); }} /></Card>
@@ -163,7 +163,7 @@ export default function EventsAdmin() {
                 <p className="small muted ico"><MapPin size={14} /> {e.location || 'Local a definir'}{e.district_name ? ' · ' + e.district_name : ''}</p>
                 {e.description && <p className="small">{e.description}</p>}
                 <Attachments list={e.attachments} />
-                <p className="small"><b>{nClubs}</b> clãs · <b>{nMembers}</b> membros</p>
+                <p className="small"><b>{nClubs}</b> clubes · <b>{nMembers}</b> membros</p>
                 <div className="row wrap">
                   <Button small variant="yellow" onClick={() => setPartsOf(e.id)}><Users size={14} /> Participantes</Button>
                   <Button small variant="secondary" onClick={() => setEditing(e)}><Pencil size={14} /> Editar</Button>

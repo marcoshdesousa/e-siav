@@ -1,7 +1,7 @@
-// Transferência de membro entre clãs.
-// 1) O clã novo pede, informando o nome completo e o CPF da pessoa.
-// 2) O clã atual aceita ou recusa.
-// 3) O clã novo confirma. Só então o membro muda de clã, levando todo o histórico.
+// Transferência de membro entre clubes.
+// 1) O clube novo pede, informando o nome completo e o CPF da pessoa.
+// 2) O clube atual aceita ou recusa.
+// 3) O clube novo confirma. Só então o membro muda de clube, levando todo o histórico.
 import { Router } from 'express';
 import { all, get, run, tx } from '../db.js';
 import { requireAuth } from '../auth.js';
@@ -36,7 +36,7 @@ r.post('/club/transfers', (req, res) => {
   const m = cpf ? get('SELECT id, name, club_id FROM members WHERE cpf = ?', cpf) : get('SELECT id, name, club_id FROM members WHERE birth_cert = ?', cert);
   // Nome e documento precisam bater (sem diferenciar acentos e maiúsculas).
   if (!m || norm(m.name) !== norm(name)) fail(404, 'Não achamos ninguém com esse nome e documento');
-  if (m.club_id === req.actor.id) fail(400, 'Esta pessoa já é do seu clã');
+  if (m.club_id === req.actor.id) fail(400, 'Esta pessoa já é do seu clube');
   if (get(`SELECT 1 FROM transfers WHERE member_id = ? AND status IN ('pendente_origem','pendente_destino')`, m.id)) {
     fail(409, 'Já existe um pedido de transferência em andamento para esta pessoa');
   }
@@ -51,27 +51,27 @@ function load(req) {
 }
 const setStatus = (t, status) => run(`UPDATE transfers SET status = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id = ?`, status, t.id);
 
-// Clã atual: aceita ou recusa a saída do membro.
+// Clube atual: aceita ou recusa a saída do membro.
 r.post('/club/transfers/:id/origem', (req, res) => {
   const t = load(req);
-  if (t.from_club_id !== req.actor.id || t.status !== 'pendente_origem') fail(400, 'Este pedido não está esperando o seu clã');
+  if (t.from_club_id !== req.actor.id || t.status !== 'pendente_origem') fail(400, 'Este pedido não está esperando o seu clube');
   setStatus(t, req.body.accept ? 'pendente_destino' : 'recusada');
   res.json({ ok: true });
 });
 
-// Clã novo: confirma (o membro muda de clã) ou desiste.
+// Clube novo: confirma (o membro muda de clube) ou desiste.
 r.post('/club/transfers/:id/destino', (req, res) => {
   const t = load(req);
-  if (t.to_club_id !== req.actor.id) fail(403, 'Só o clã que pediu pode confirmar');
+  if (t.to_club_id !== req.actor.id) fail(403, 'Só o clube que pediu pode confirmar');
   if (!req.body.accept) {
     if (!['pendente_origem', 'pendente_destino'].includes(t.status)) fail(400, 'Este pedido já foi encerrado');
     setStatus(t, 'cancelada');
     return res.json({ ok: true });
   }
-  if (t.status !== 'pendente_destino') fail(400, 'O clã atual ainda não aceitou');
+  if (t.status !== 'pendente_destino') fail(400, 'O clube atual ainda não aceitou');
   tx(() => {
     setStatus(t, 'concluida');
-    // No clã novo, explorador fica sem grupo e tutor vai para o grupo "Tutores".
+    // No clube novo, desbravador fica sem unidade e a liderança vai para a unidade "Liderança".
     // Tudo o que o membro conquistou continua com ele.
     const m = get('SELECT birth_date FROM members WHERE id = ?', t.member_id);
     const unit = memberKind(m.birth_date) === 'lideranca' ? get('SELECT id FROM units WHERE club_id = ? AND is_leadership = 1', t.to_club_id)?.id ?? null : null;

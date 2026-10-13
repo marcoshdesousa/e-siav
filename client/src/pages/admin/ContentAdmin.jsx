@@ -8,7 +8,7 @@ import {
   modesLabel, useAsync, useLoad,
 } from '../../ui.jsx';
 
-const TYPE_LABEL = { especialidade: 'Insígnia', classe: 'Caderno guia', curso: 'Curso' };
+const TYPE_LABEL = { especialidade: 'Especialidade', classe: 'Classe', curso: 'Curso' };
 const newItem = () => ({ title: '', body: '', modes: [], images: [], files: [], questions: [{ question: '', options: ['', ''], correct: 0 }], open: true });
 
 function ItemEditor({ it, i, label, update, remove, move, count }) {
@@ -81,7 +81,7 @@ function ContentForm({ id, type, onClose, onDone }) {
     <Modal title={(id ? 'Editar ' : 'Nova ') + TYPE_LABEL[f.type].toLowerCase()} onClose={onClose} footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} onClick={save}>Salvar</Button></>}>
       <div className="form">
         <Field label="Nome"><input value={f.name} onChange={set('name')} /></Field>
-        <Field group label={f.type === 'classe' ? 'Insígnia do caderno guia' : 'Imagem'} hint="Envie a imagem oficial (PNG com fundo transparente fica melhor). Sem imagem, usa o ícone abaixo.">
+        <Field group label={f.type === 'classe' ? 'Especialidade da classe' : 'Imagem'} hint="Envie a imagem oficial (PNG com fundo transparente fica melhor). Sem imagem, usa o ícone abaixo.">
           <div className="row">
             <span className="content-icon" style={{ width: 72, height: 72 }}>{preview ? <img src={preview} alt="" className="content-img" /> : <ContentIcon c={{ icon: f.icon }} size={30} />}</span>
             <label className="btn btn-secondary btn-sm"><ImageUp size={15} /> Enviar imagem
@@ -95,7 +95,7 @@ function ContentForm({ id, type, onClose, onDone }) {
         {f.type === 'especialidade' && <Field label="Categoria"><input value={f.category} onChange={set('category')} /></Field>}
         {f.type === 'classe' && (
           <div className="grid2">
-            <label className="check"><input type="checkbox" checked={f.leader} onChange={set('leader')} /> Caderno guia de líder</label>
+            <label className="check"><input type="checkbox" checked={f.leader} onChange={set('leader')} /> Classe de líder</label>
             {!f.leader && <Field label="Idade"><input type="number" min="10" max="15" value={f.age} onChange={set('age')} /></Field>}
           </div>
         )}
@@ -180,7 +180,7 @@ function MedalsList() {
         <Modal title="Nova medalha ou troféu" onClose={() => setCreating(false)} footer={<Button busy={busy} onClick={create}>Criar</Button>}>
           <div className="form">
             <Tabs tabs={[['medalha', 'Medalha'], ['trofeu', 'Troféu']]} value={f.kind} onChange={(kind) => setF({ ...f, kind, icon: kind === 'trofeu' ? 'trophy' : 'medal' })} />
-            <Field label="Nome" hint="Ex.: Melhor clã do mês"><input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
+            <Field label="Nome" hint="Ex.: Melhor clube do mês"><input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
             <Field label="Descrição"><textarea value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })} /></Field>
             <Field group label="Ícone"><IconPicker keys={MEDAL_ICON_KEYS} value={f.icon_file ? null : f.icon} onChange={(icon) => setF({ ...f, icon, icon_file: null })} /></Field>
             <Field label="ou envie uma imagem"><input type="file" accept="image/*" onChange={(e) => setF({ ...f, icon_file: e.target.files[0] || null })} /></Field>

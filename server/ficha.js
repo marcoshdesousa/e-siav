@@ -1,6 +1,6 @@
 // Ficha do membro (modelo do Registro de Membro): cadastro, documentos, pais e
 // responsável, profissional de saúde, ficha médica e termos assinados.
-// Fica guardada só no Sistema do Clã: o Administrador Geral não tem acesso.
+// Fica guardada só no Sistema do Clube: o Administrador Geral não tem acesso.
 import { get, run } from './db.js';
 import { str, bool, cleanCpf, fail, ageFrom } from './util.js';
 
@@ -157,7 +157,7 @@ export function getFicha(memberId) {
 export function saveFicha(memberId, data, { acceptTerms = false } = {}) {
   const now = new Date().toISOString();
   const prev = get('SELECT data, terms_accepted_at FROM member_records WHERE member_id = ?', memberId);
-  // Data, local e assinatura da inscrição não mudam quando o clã corrige a ficha.
+  // Data, local e assinatura da inscrição não mudam quando o clube corrige a ficha.
   const kept = prev ? JSON.parse(prev.data) : {};
   for (const k of ['data_inscricao', 'local_inscricao']) if (kept[k] && !data[k]) data[k] = kept[k];
   const accepted = acceptTerms ? now : prev?.terms_accepted_at || null;
@@ -167,7 +167,7 @@ export function saveFicha(memberId, data, { acceptTerms = false } = {}) {
 }
 
 /**
- * Documento que identifica a pessoa em todo o app (um clã por pessoa):
+ * Documento que identifica a pessoa em todo o app (um clube por pessoa):
  * o CPF, ou o número da certidão de nascimento para quem ainda não tem CPF.
  */
 export function checkIdentity({ cpf: rawCpf, certidao: rawCert }, selfId = null) {
@@ -178,7 +178,7 @@ export function checkIdentity({ cpf: rawCpf, certidao: rawCert }, selfId = null)
   if (certidao && certidao.length < 6) fail(400, 'Número da certidão de nascimento inválido');
   const taken = (col, v) => {
     const other = v && get(`SELECT id FROM members WHERE ${col} = ?`, v);
-    if (other && other.id !== selfId) fail(409, `Este ${col === 'cpf' ? 'CPF' : 'número de certidão'} já está cadastrado em um clã. Para trazer a pessoa, peça a transferência.`);
+    if (other && other.id !== selfId) fail(409, `Este ${col === 'cpf' ? 'CPF' : 'número de certidão'} já está cadastrado em um clube. Para trazer a pessoa, peça a transferência.`);
   };
   taken('cpf', cpf);
   taken('birth_cert', certidao);

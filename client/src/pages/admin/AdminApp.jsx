@@ -41,10 +41,10 @@ function AdminHome() {
         {(o) => (
           <Section title="Visão geral">
             <div className="stats">
-              <Stat icon={Map} value={o.districts} label="Distritos" to={`${base}/clas`} />
-              <Stat icon={Tent} value={o.clubs} label="Clãs" to={`${base}/clas`} />
-              <Stat icon={UserPlus} value={o.clan_applications} label="Inscrição clã (novas)" to={`${base}/inscricoes-cla`} accent={o.clan_applications > 0} />
-              <Stat icon={Flag} value={o.units} label="Grupos" />
+              <Stat icon={Map} value={o.districts} label="Distritos" to={`${base}/clubes`} />
+              <Stat icon={Tent} value={o.clubs} label="Clubes" to={`${base}/clubes`} />
+              <Stat icon={UserPlus} value={o.clan_applications} label="Inscrição clube (novas)" to={`${base}/inscricoes-cla`} accent={o.clan_applications > 0} />
+              <Stat icon={Flag} value={o.units} label="Unidades" />
               <Stat icon={Users} value={o.members} label="Membros" />
               <Stat icon={ClipboardCheck} value={o.requirements} label="Requisitos gerais" to={`${base}/requisitos`} />
               <Stat icon={Inbox} value={o.pending_reviews} label="Envios p/ avaliar" to={`${base}/requisitos?aba=avaliar`} accent={o.pending_reviews > 0} />
@@ -55,31 +55,31 @@ function AdminHome() {
       <Section title="Atalhos">
         <MoreMenu items={[
           { to: `${base}/pagamentos`, icon: Wallet, label: 'Pagamentos', hint: 'Taxas e chave Pix' },
-    { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas para todos, distrito ou clã' },
-    { to: `${base}/inscricoes-cla`, icon: UserPlus, label: 'Inscrição clã', hint: 'Pedidos para criar clã' },
+    { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas para todos, distrito ou clube' },
+    { to: `${base}/inscricoes-cla`, icon: UserPlus, label: 'Inscrição clube', hint: 'Pedidos para criar clube' },
     { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo' },
           { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial' },
           { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos' },
           { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios' },
         ]} />
       </Section>
-      <p className="muted small mt center">Os dados pessoais dos membros são editados somente pelo clã de cada um.</p>
+      <p className="muted small mt center">Os dados pessoais dos membros são editados somente pelo clube de cada um.</p>
     </>
   );
 }
 
-// ---------- Distritos, clãs e administradores ----------
+// ---------- Distritos, clubes e administradores ----------
 /**
- * Clã: o admin escreve só o nome, o distrito e o diretor. O app coloca o número
+ * Clube: o admin escreve só o nome, o distrito e o diretor. O app coloca o número
  * na frente (1º, 2º...), cria o código (4 números) e a senha (2 letras + 4 números).
  */
-const baseName = (n) => String(n || '').replace(/^\d+º\s*/, '').replace(/^cl[ãa]\s+/i, '');
+const baseName = (n) => String(n || '').replace(/^\d+º\s*/, '').replace(/^(clube|cl[ãa])\s+/i, '');
 function ClubForm({ item, nextNumber, districts, onClose, onCreated, onSaved }) {
   const [f, setF] = useState({ name: baseName(item?.name), district_id: item?.district_id || districts?.[0]?.id || '', director_name: item?.director_name || '', associate_directors: item?.associate_directors || '' });
   const [busy, run] = useAsync();
   const save = async () => {
     if (item) {
-      await run(() => api.put('/admin/clubs/' + item.id, f), 'Clã atualizado!');
+      await run(() => api.put('/admin/clubs/' + item.id, f), 'Clube atualizado!');
       onSaved();
     } else {
       const r = await run(() => api.post('/admin/clubs', f), null);
@@ -87,10 +87,10 @@ function ClubForm({ item, nextNumber, districts, onClose, onCreated, onSaved }) 
     }
   };
   return (
-    <Modal title={item ? `Editar ${item.name}` : 'Criar clã'} onClose={onClose}
+    <Modal title={item ? `Editar ${item.name}` : 'Criar clube'} onClose={onClose}
       footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} disabled={!f.name.trim() || !f.director_name.trim()} onClick={save}>Salvar</Button></>}>
       <div className="form">
-        <Field label="Nome do clã" hint={f.name.trim() ? `Vai ficar: ${item?.number ?? nextNumber}º Clã ${baseName(f.name)}` : 'O número entra sozinho na frente do nome'}>
+        <Field label="Nome do clube" hint={f.name.trim() ? `Vai ficar: ${item?.number ?? nextNumber}º Clube ${baseName(f.name)}` : 'O número entra sozinho na frente do nome'}>
           <input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder="Ex.: Águias do Vale" />
         </Field>
         <Field label="Distrito">
@@ -98,11 +98,11 @@ function ClubForm({ item, nextNumber, districts, onClose, onCreated, onSaved }) 
             {districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
           </select>
         </Field>
-        <Field label="Diretor(a) do clã" hint="Responsável pelo clã. Só o administrativo troca (todo ano)."><input value={f.director_name} onChange={(e) => setF({ ...f, director_name: e.target.value })} /></Field>
+        <Field label="Diretor(a) do clube" hint="Responsável pelo clube. Só o administrativo troca (todo ano)."><input value={f.director_name} onChange={(e) => setF({ ...f, director_name: e.target.value })} /></Field>
         <Field label="Diretores associados (opcional)" hint="Um nome por linha.">
           <textarea rows={3} value={f.associate_directors} onChange={(e) => setF({ ...f, associate_directors: e.target.value })} placeholder={'Ex.: Ana Souza\nJoão Lima'} />
         </Field>
-        {!item && <p className="muted small">O app cria o código do clã e a senha (2 letras + 4 números). A senha não pode ser trocada. Os grupos entram com o mesmo código e a senha de cada grupo.</p>}
+        {!item && <p className="muted small">O app cria o código do clube e a senha (2 letras + 4 números). A senha não pode ser trocada. As unidades entram com o mesmo código e a senha de cada unidade.</p>}
       </div>
     </Modal>
   );
@@ -157,8 +157,8 @@ function ClubsAdmin() {
 
   return (
     <>
-      <PageHeader title="Clãs e acessos" />
-      <Tabs tabs={[['clubes', 'Clãs'], ['distritos', 'Distritos'], ['admins', 'Administradores']]} value={tab} onChange={setTab} />
+      <PageHeader title="Clubes e acessos" />
+      <Tabs tabs={[['clubes', 'Clubes'], ['distritos', 'Distritos'], ['admins', 'Administradores']]} value={tab} onChange={setTab} />
       {tab === 'distritos' && (
         <>
           <Card>
@@ -172,7 +172,7 @@ function ClubsAdmin() {
               {(list) => list.map((d) => (
                 <div key={d.id} className="list-item">
                   <span className="trophy-bg"><Map size={22} /></span>
-                  <div className="grow"><div className="title">{d.name}</div><div className="sub">{plural(d.club_count, 'clã', 'clãs')}</div></div>
+                  <div className="grow"><div className="title">{d.name}</div><div className="sub">{plural(d.club_count, 'clube', 'clubes')}</div></div>
                   <Button small variant="secondary" onClick={() => renameDistrict(d)}>Renomear</Button>
                 </div>
               ))}
@@ -182,20 +182,20 @@ function ClubsAdmin() {
       )}
       {tab === 'clubes' && (
         <>
-          <Button block onClick={() => setModal({ kind: 'club' })}>+ Criar clã</Button>
+          <Button block onClick={() => setModal({ kind: 'club' })}>+ Criar clube</Button>
           <CreateClanLink />
           <div className="list mt">
-            <Loading {...clubs} empty="Nenhum clã cadastrado.">
+            <Loading {...clubs} empty="Nenhum clube cadastrado.">
               {(list) => list.map((c) => (
                 <div key={c.id} className="list-item">
                   <Avatar src={c.logo} name={c.name} size={48} square />
                   <div className="grow">
                     <div className="title">{c.name}</div>
-                    <div className="sub">{c.district_name} · {plural(c.unit_count, 'grupo', 'grupos')} · {plural(c.member_count, 'membro', 'membros')}</div>
+                    <div className="sub">{c.district_name} · {plural(c.unit_count, 'unidade', 'unidades')} · {plural(c.member_count, 'membro', 'membros')}</div>
                     <div className="sub">Nº {c.number} · Código <b>{c.code}</b>{c.director_name ? <> · Diretor(a): {c.director_name}</> : ''}{c.associate_directors ? <> · Associados: {c.associate_directors.split('\n').join(', ')}</> : ''}</div>
                   </div>
                   <div className="stack" style={{ gap: '.35rem' }}>
-                    <Link to={`${base}/clas/${c.id}`}><Button small>Ver por dentro</Button></Link>
+                    <Link to={`${base}/clubes/${c.id}`}><Button small>Ver por dentro</Button></Link>
                     <Button small variant="secondary" onClick={() => setModal({ kind: 'club', item: c })}>Editar</Button>
                   </div>
                 </div>
@@ -230,11 +230,11 @@ function ClubsAdmin() {
         />
       )}
       {modal?.kind === 'created' && (
-        <Modal title="Clã criado!" onClose={() => setModal(null)} footer={<Button onClick={() => setModal(null)}>Entendi</Button>}>
-          <p className="center">Passe estes dados para o <b>{modal.name}</b>. Ele entra na tela <b>Clã</b>.</p>
-          <p className="center muted small" style={{ marginBottom: 0 }}>Número do clã</p>
+        <Modal title="Clube criado!" onClose={() => setModal(null)} footer={<Button onClick={() => setModal(null)}>Entendi</Button>}>
+          <p className="center">Passe estes dados para o <b>{modal.name}</b>. Ele entra na tela <b>Clube</b>.</p>
+          <p className="center muted small" style={{ marginBottom: 0 }}>Número do clube</p>
           <div className="code-big" style={{ fontSize: '1.6rem' }}>{modal.number}º</div>
-          <p className="center muted small" style={{ marginBottom: 0 }}>Código do clã</p>
+          <p className="center muted small" style={{ marginBottom: 0 }}>Código do clube</p>
           <div className="code-big">{modal.code}</div>
           <p className="center muted small" style={{ marginBottom: 0 }}>Senha</p>
           <div className="code-big" style={{ fontSize: '1.6rem' }}>{modal.password}</div>
@@ -252,12 +252,12 @@ function ClubsAdmin() {
   );
 }
 
-/** Requisitos: criados e avaliação (separados por exploradores, grupos e clãs) e análise dos cursos. */
+/** Requisitos: criados e avaliação (separados por desbravadores, unidades e clubes) e análise dos cursos. */
 function RequirementsAdmin() {
   const [tab, setTab] = useState(new URLSearchParams(location.search).get('aba') || 'criados');
   return (
     <>
-      <PageHeader title="Requisitos" subtitle="Exploradores, grupos e clãs" />
+      <PageHeader title="Requisitos" subtitle="Desbravadores, unidades e clubes" />
       <Tabs tabs={[['criados', 'Criados'], ['avaliar', 'Avaliar envios'], ['cursos', 'Aulas dos cursos']]} value={tab} onChange={setTab} />
       {tab === 'criados' && <CreatedRequirements />}
       {tab === 'avaliar' && <ReviewsPanel />}
@@ -270,31 +270,31 @@ function RequirementsAdmin() {
 export default function AdminApp() {
   const tabs = [
     { to: base, icon: House, label: 'Início', end: true },
-    { to: `${base}/clas`, icon: Tent, label: 'Clãs' },
+    { to: `${base}/clubes`, icon: Tent, label: 'Clubes' },
     { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },
     { to: `${base}/conteudo`, icon: Library, label: 'Conteúdo' },
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
     { to: `${base}/pagamentos`, icon: Wallet, label: 'Pagamentos', hint: 'Taxas e chave Pix' },
-    { to: `${base}/inscricoes-cla`, icon: UserPlus, label: 'Inscrição clã', hint: 'Pedidos para criar clã' },
+    { to: `${base}/inscricoes-cla`, icon: UserPlus, label: 'Inscrição clube', hint: 'Pedidos para criar clube' },
     { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo', hint: 'Medalhas, troféus e cursos' },
-    { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial', hint: 'Insígnias' },
+    { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial', hint: 'Especialidades' },
     { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos', hint: 'Criar e participantes' },
     { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: 'Aparecem ao abrir o app' },
     { to: `${base}/ranking`, icon: Trophy, label: 'Rankings', hint: 'Todas as tabelas' },
-    { to: `${base}/explorar`, icon: Map, label: 'Explorar clãs', hint: 'Perfis públicos' },
+    { to: `${base}/explorar`, icon: Map, label: 'Explorar clubes', hint: 'Perfis públicos' },
   ];
   return (
     <Shell tabs={tabs} parentOf={(path) => {
       const [, , seg, sub] = path.split('/');
-      if (sub && ['clas', 'pagamentos'].includes(seg)) return `${base}/${seg}`;
-      return ['clas', 'requisitos', 'conteudo', 'ver'].includes(seg) ? base : `${base}/mais`;
+      if (sub && ['clubes', 'pagamentos'].includes(seg)) return `${base}/${seg}`;
+      return ['clubes', 'requisitos', 'conteudo', 'ver'].includes(seg) ? base : `${base}/mais`;
     }}>
       <Routes>
         <Route index element={<AdminHome />} />
-        <Route path="clas" element={<ClubsAdmin />} />
-        <Route path="clas/:id" element={<ClanView base={base} />} />
+        <Route path="clubes" element={<ClubsAdmin />} />
+        <Route path="clubes/:id" element={<ClanView base={base} />} />
         <Route path="inscricoes-cla" element={<ClanApplications />} />
         <Route path="pagamentos" element={<AdminPayments base={base} />} />
         <Route path="agenda" element={<AgendaAdmin />} />

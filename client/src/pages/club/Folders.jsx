@@ -1,5 +1,5 @@
-// Pastas do Sistema do Clã: Secretaria (agenda, matrículas), Tesouraria (minhas finanças),
-// Patrimônio, Biblioteca (insígnias e guias), Grupos (membros por grupo), Ferramentas e Suporte.
+// Pastas do Sistema do Clube: Secretaria (agenda, matrículas), Tesouraria (minhas finanças),
+// Patrimônio, Biblioteca (especialidades e classes), Unidades (membros por unidade), Ferramentas e Suporte.
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
@@ -27,10 +27,10 @@ export function waLink(phone, text = '') {
 }
 
 // ---------- Agenda ----------
-const ORIGEM = { clube: ['green', 'Do clã'], geral: ['yellow', 'Para todos os clãs'], distrito: ['blue', 'Do distrito'] };
+const ORIGEM = { clube: ['green', 'Do clube'], geral: ['yellow', 'Para todos os clubes'], distrito: ['blue', 'Do distrito'] };
 const origemDe = (a) => (a.creator_type === 'club' ? ORIGEM.clube
   : a.scope === 'distrito' ? ['blue', a.district_name || 'Do distrito']
-    : a.scope === 'clube' ? ['yellow', a.club_name ? `App · ${a.club_name}` : 'Do App para o clã'] : ORIGEM.geral);
+    : a.scope === 'clube' ? ['yellow', a.club_name ? `App · ${a.club_name}` : 'Do App para o clube'] : ORIGEM.geral);
 /** As 6 cores para identificar cada coisa no calendário. */
 export const CORES = [['verde', 'Verde', '#18875A'], ['azul', 'Azul', '#2563EB'], ['laranja', 'Laranja', '#EA7A12'], ['vermelho', 'Vermelho', '#DC2626'], ['roxo', 'Roxo', '#7C3AED'], ['preto', 'Preto', '#1F2937']];
 const corDe = (a) => (CORES.find((c) => c[0] === a.color) || CORES[0])[2];
@@ -107,7 +107,7 @@ function AgendaItem({ a, onEdit, onDelete }) {
   );
 }
 
-/** Formulário de um item da agenda (clã ou admin). */
+/** Formulário de um item da agenda (clube ou admin). */
 /** Escolher os dias tocando no calendário: um, vários seguidos (acampamento, semana) ou soltos. */
 function DayPicker({ value, onChange }) {
   const start = value[0] || today();
@@ -152,7 +152,7 @@ function DayPicker({ value, onChange }) {
   );
 }
 
-/** Formulário de um item da agenda (clã ou admin). */
+/** Formulário de um item da agenda (clube ou admin). */
 export function AgendaForm({ item, onClose, onSave, extra = null }) {
   const [f, setF] = useState({
     title: item?.title || '', dates: item?.date ? daysOf(item) : [today()], color: item?.color || 'verde', time: item?.time || '', location: item?.location || '', description: item?.description || '', ...(item?._extra || {}),
@@ -184,7 +184,7 @@ export function AgendaForm({ item, onClose, onSave, extra = null }) {
   );
 }
 
-/** Lista de um mês com calendário; usada pelo clã (e pelo admin). */
+/** Lista de um mês com calendário; usada pelo clube (e pelo admin). */
 export function AgendaView({ items, onEdit, onDelete, canEdit = () => true }) {
   const now = new Date();
   const [ym, setYm] = useState([now.getFullYear(), now.getMonth()]);
@@ -221,7 +221,7 @@ export function AgendaPage() {
   const save = (f) => (editing?.id ? api.put('/club/agenda/' + editing.id, f) : api.post('/club/agenda', f)).then(state.reload);
   return (
     <>
-      <PageHeader title="Agenda" subtitle="Reuniões, acampamentos e o que vem do App para o seu clã" action={<Button small onClick={() => setEditing({})}>+ Marcar</Button>} />
+      <PageHeader title="Agenda" subtitle="Reuniões, acampamentos e o que vem do App para o seu clube" action={<Button small onClick={() => setEditing({})}>+ Marcar</Button>} />
       <Loading {...state}>
         {(items) => (
           <AgendaView items={items} onEdit={setEditing} canEdit={(a) => a.creator_type === 'club'}
@@ -233,18 +233,18 @@ export function AgendaPage() {
   );
 }
 
-/** Agenda só para ver (exploradores, liderança e grupos). */
+/** Agenda só para ver (desbravadores, liderança e unidades). */
 export function AgendaLeitura() {
   const state = useLoad(() => api.get('/agenda'));
   return (
     <>
-      <PageHeader title="Agenda" subtitle="Datas do seu clã e do App" />
+      <PageHeader title="Agenda" subtitle="Datas do seu clube e do App" />
       <Loading {...state}>{(items) => <AgendaView items={items} canEdit={() => false} />}</Loading>
     </>
   );
 }
 
-/** Próximas datas da agenda, para o painel do explorador e do grupo. */
+/** Próximas datas da agenda, para o painel do desbravador e da unidade. */
 export function ProximasDatas({ to }) {
   const state = useLoad(() => api.get('/agenda'));
   const hoje = today();
@@ -279,9 +279,9 @@ export function MatriculasPage() {
   const { actor } = useAuth();
   return (
     <>
-      <PageHeader title="Matrículas" subtitle="Links para divulgar o clã" />
-      <LinkCard title="Link de inscrição" text="Para quem quer entrar no clã: ficha de cadastro, ficha de saúde e termos. Você aprova em Membros → Pendentes." url={`${location.origin}/inscricao/${actor.code}`} />
-      <LinkCard title="Link do clã" text="Perfil público do clã: história, grupos, medalhas e ranking. Cada grupo tem o seu: o link do clã + / + o número do grupo." url={`${location.origin}/cla/${actor.code}`} />
+      <PageHeader title="Matrículas" subtitle="Links para divulgar o clube" />
+      <LinkCard title="Link de inscrição" text="Para quem quer entrar no clube: ficha de cadastro, ficha de saúde e termos. Você aprova em Membros → Pendentes." url={`${location.origin}/inscricao/${actor.code}`} />
+      <LinkCard title="Link do clube" text="Perfil público do clube: história, unidades, medalhas e ranking. Cada unidade tem o seu: o link do clube + / + o número da unidade." url={`${location.origin}/clube/${actor.code}`} />
     </>
   );
 }
@@ -298,7 +298,7 @@ export function FinancasPage() {
   };
   return (
     <>
-      <PageHeader title="Minhas finanças" subtitle="Controle do dinheiro do clã. É só anotação: não cobra nem paga nada." action={<Button small onClick={() => setF({ kind: 'entrada', description: '', amount: '', date: today() })}>+ Lançar</Button>} />
+      <PageHeader title="Minhas finanças" subtitle="Controle do dinheiro do clube. É só anotação: não cobra nem paga nada." action={<Button small onClick={() => setF({ kind: 'entrada', description: '', amount: '', date: today() })}>+ Lançar</Button>} />
       <Loading {...state}>
         {(d) => (
           <>
@@ -359,7 +359,7 @@ export function PatrimonioPage() {
   };
   return (
     <>
-      <PageHeader title="Meus patrimônios" subtitle="O que o clã tem: barracas, bandeiras, materiais..." action={<Button small onClick={() => setF({ name: '', price: '', acquired_at: '', notes: '', photo: null })}>+ Novo</Button>} />
+      <PageHeader title="Meus patrimônios" subtitle="O que o clube tem: barracas, bandeiras, materiais..." action={<Button small onClick={() => setF({ name: '', price: '', acquired_at: '', notes: '', photo: null })}>+ Novo</Button>} />
       <Loading {...state}>
         {(d) => (
           <>
@@ -398,8 +398,8 @@ export function PatrimonioPage() {
   );
 }
 
-// ---------- Biblioteca: insígnias e guias ----------
-/** Escolher várias pessoas de uma vez (com "todos" e filtro por grupo). */
+// ---------- Biblioteca: especialidades e classes ----------
+/** Escolher várias pessoas de uma vez (com "todos" e filtro por unidade). */
 function PeopleSelect({ people, units, selected, onChange }) {
   const [q, setQ] = useState('');
   const [unit, setUnit] = useState('');
@@ -411,7 +411,7 @@ function PeopleSelect({ people, units, selected, onChange }) {
       <div className="grid2">
         <input placeholder="Buscar pessoa" value={q} onChange={(e) => setQ(e.target.value)} />
         <select value={unit} onChange={(e) => setUnit(e.target.value)}>
-          <option value="">Todos os grupos</option>
+          <option value="">Todos as unidades</option>
           {units.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
         </select>
       </div>
@@ -429,14 +429,14 @@ function PeopleSelect({ people, units, selected, onChange }) {
   );
 }
 
-/** Entregar insígnias ou guias para várias pessoas de uma vez. */
+/** Entregar especialidades ou classes para várias pessoas de uma vez. */
 function Entregar({ type, people, units, onDone }) {
   const catalog = useLoad(() => api.get('/catalog?type=' + type), [type]);
   const [who, setWho] = useState(new Set());
   const [what, setWhat] = useState(new Set());
   const [step, setStep] = useState(1);
   const [busy, run] = useAsync();
-  const label = type === 'classe' ? 'guia' : 'insígnia';
+  const label = type === 'classe' ? 'classe' : 'especialidade';
   const send = async () => {
     const r = await run(() => api.post('/club/biblioteca/entregar', { member_ids: [...who], content_ids: [...what] }), null);
     notify(`Pronto! ${r.added} entrega${r.added === 1 ? '' : 's'} registrada${r.added === 1 ? '' : 's'}. Já aparece no perfil.`);
@@ -444,7 +444,7 @@ function Entregar({ type, people, units, onDone }) {
   };
   return (
     <Card>
-      <div className="steps-head"><span className={step === 1 ? 'on' : ''}>1. Quem recebe</span><span className={step === 2 ? 'on' : ''}>2. {type === 'classe' ? 'Quais guias' : 'Quais insígnias'}</span></div>
+      <div className="steps-head"><span className={step === 1 ? 'on' : ''}>1. Quem recebe</span><span className={step === 2 ? 'on' : ''}>2. {type === 'classe' ? 'Quais classes' : 'Quais especialidades'}</span></div>
       {step === 1 ? (
         <>
           <PeopleSelect people={people} units={units} selected={who} onChange={setWho} />
@@ -463,13 +463,13 @@ function Entregar({ type, people, units, onDone }) {
   );
 }
 
-/** Quem tem insígnias (ou guias), a quantidade, e o certificado de cada uma. */
+/** Quem tem especialidades (ou classes), a quantidade, e o certificado de cada uma. */
 function QuemTem({ list, kind }) {
   const [open, setOpen] = useState(null);
   const [q, setQ] = useState('');
   const rows = list.filter((p) => !q.trim() || p.name.toLowerCase().includes(q.trim().toLowerCase()))
     .sort((a, b) => b[kind].length - a[kind].length || a.name.localeCompare(b.name, 'pt-BR'));
-  const word = kind === 'guias' ? ['guia', 'guias'] : ['insígnia', 'insígnias'];
+  const word = kind === 'guias' ? ['classe', 'classes'] : ['especialidade', 'especialidades'];
   return (
     <>
       <div className="search-box"><Search size={16} /><input placeholder="Buscar pessoa" value={q} onChange={(e) => setQ(e.target.value)} /></div>
@@ -489,7 +489,7 @@ function QuemTem({ list, kind }) {
               <div key={c.id} className="list-item">
                 <span className="ach-img"><ContentIcon c={c} size={20} /></span>
                 <div className="grow"><div className="title">{c.name}</div><div className="sub">Desde {fmtDate(c.date)}</div></div>
-                <Link to={`/cla/certificado/${open.id}/${c.id}`}><Button small variant="secondary"><Printer size={14} /> Certificado</Button></Link>
+                <Link to={`/clube/certificado/${open.id}/${c.id}`}><Button small variant="secondary"><Printer size={14} /> Certificado</Button></Link>
               </div>
             ))}
           </div>
@@ -505,8 +505,8 @@ export function BibliotecaPage({ approvals }) {
   const [tab, setTab] = useState('insignias');
   return (
     <>
-      <PageHeader title="Biblioteca" subtitle="Insígnias e guias do clã" />
-      <Tabs tabs={[['insignias', 'Insígnias'], ['guias', 'Guias'], ['entregar', 'Entregar'], ['pedidos', 'Pedidos']]} value={tab} onChange={setTab} />
+      <PageHeader title="Biblioteca" subtitle="Especialidades e classes do clube" />
+      <Tabs tabs={[['insignias', 'Especialidades'], ['guias', 'Classes'], ['entregar', 'Entregar'], ['pedidos', 'Pedidos']]} value={tab} onChange={setTab} />
       {tab === 'pedidos' ? approvals : (
         <Loading {...state}>
           {(list) => (
@@ -525,8 +525,8 @@ function EntregarTabs({ people, units, onDone }) {
   return (
     <>
       <div className="seg" role="tablist" style={{ marginBottom: '.7rem' }}>
-        <button type="button" className={type === 'especialidade' ? 'active' : ''} onClick={() => setType('especialidade')}>Insígnias</button>
-        <button type="button" className={type === 'classe' ? 'active' : ''} onClick={() => setType('classe')}>Guias</button>
+        <button type="button" className={type === 'especialidade' ? 'active' : ''} onClick={() => setType('especialidade')}>Especialidades</button>
+        <button type="button" className={type === 'classe' ? 'active' : ''} onClick={() => setType('classe')}>Classes</button>
       </div>
       <Entregar key={type} type={type} people={people} units={units} onDone={onDone} />
     </>
@@ -540,25 +540,25 @@ export function CertificadoPage() {
   return (
     <div className="cert-page">
       <div className="cert-tools no-print">
-        <Link to="/cla/biblioteca"><Button variant="secondary" small><ChevronLeft size={14} /> Voltar</Button></Link>
+        <Link to="/clube/biblioteca"><Button variant="secondary" small><ChevronLeft size={14} /> Voltar</Button></Link>
         <Button small onClick={() => window.print()}><Printer size={14} /> Imprimir / salvar PDF</Button>
       </div>
       <Loading {...state}>
         {(c) => (
           <div className="cert">
             <div className="cert-logos">
-              <img src="/marca/logo.png" alt="Exploradores do Brasil" />
+              <img src="/marca/logo.png" alt="App do DBV" />
               {c.club_logo && <img src={c.club_logo} alt={c.club_name} />}
             </div>
-            <p className="cert-kicker">Exploradores do Brasil · {c.club_name}</p>
+            <p className="cert-kicker">App do DBV · {c.club_name}</p>
             <h1>Certificado</h1>
             <p className="cert-text">Certificamos que</p>
             <p className="cert-name">{c.member_name}</p>
-            <p className="cert-text">concluiu {c.type === 'classe' ? 'o guia' : 'a insígnia'}</p>
+            <p className="cert-text">concluiu {c.type === 'classe' ? 'a classe' : 'a especialidade'}</p>
             <p className="cert-item"><span className="ach-img"><ContentIcon c={c} size={22} /></span> {c.content_name}</p>
             <p className="cert-text">em {fmtDate(c.date)}.</p>
             <div className="cert-sign">
-              <div><span />{c.director_name || 'Diretor(a) do clã'}<small>Diretor(a)</small></div>
+              <div><span />{c.director_name || 'Diretor(a) do clube'}<small>Diretor(a)</small></div>
             </div>
           </div>
         )}
@@ -567,7 +567,7 @@ export function CertificadoPage() {
   );
 }
 
-// ---------- Grupos: membros por grupo ----------
+// ---------- Unidades: membros por unidade ----------
 export function MembrosPorGrupo({ base }) {
   const members = useLoad(() => api.get('/club/members'));
   const units = useLoad(() => api.get('/club/units'));
@@ -575,7 +575,7 @@ export function MembrosPorGrupo({ base }) {
     <Loading data={members.data && units.data} loading={members.loading || units.loading} error={members.error || units.error}>
       {() => {
         const list = members.data.filter((m) => m.status !== 'inativo');
-        const groups = [...units.data.map((u) => ({ id: u.id, name: u.name, logo: u.logo })), { id: null, name: 'Sem grupo' }];
+        const groups = [...units.data.map((u) => ({ id: u.id, name: u.name, logo: u.logo })), { id: null, name: 'Sem unidade' }];
         return groups.map((g) => {
           const ms = list.filter((m) => (m.unit_id || null) === g.id);
           if (!ms.length && g.id === null) return null;
@@ -589,7 +589,7 @@ export function MembrosPorGrupo({ base }) {
                     {m.status === 'pendente' && <Badge kind="yellow">Pendente</Badge>}
                   </Link>
                 ))}
-                {!ms.length && <Empty>Ninguém neste grupo.</Empty>}
+                {!ms.length && <Empty>Ninguém nesta unidade.</Empty>}
               </div>
             </Section>
           );
@@ -624,7 +624,7 @@ export function Aniversariantes() {
                   <div key={m.id} className={'list-item' + (isToday ? ' bday-today' : '')}>
                     <span className="agenda-date"><b>{m.birth_date.slice(8, 10)}</b><small>{MESES[month].slice(0, 3)}</small></span>
                     <Avatar src={m.photo} name={m.name} size={38} />
-                    <div className="grow"><div className="title">{m.name}{isToday ? ' 🎉' : ''}</div><div className="sub">Faz {year - Number(m.birth_date.slice(0, 4))} anos · {m.unit_name || 'Sem grupo'}</div></div>
+                    <div className="grow"><div className="title">{m.name}{isToday ? ' 🎉' : ''}</div><div className="sub">Faz {year - Number(m.birth_date.slice(0, 4))} anos · {m.unit_name || 'Sem unidade'}</div></div>
                   </div>
                 );
               })}
@@ -653,7 +653,7 @@ export function Contatos() {
                   <Avatar src={m.photo} name={m.name} size={42} />
                   <div className="grow">
                     <div className="title">{m.name}</div>
-                    <div className="sub">{m.age} anos · {m.unit_name || 'Sem grupo'}</div>
+                    <div className="sub">{m.age} anos · {m.unit_name || 'Sem unidade'}</div>
                     <div className="contact-lines">
                       {m.whatsapp
                         ? <a className="contact-line" href={waLink(m.whatsapp)} target="_blank" rel="noreferrer"><MessageCircle size={16} /><span><small>Membro</small>{m.whatsapp}</span></a>
@@ -691,7 +691,7 @@ export function SuportePage() {
   const { actor } = useAuth();
   return (
     <>
-      <PageHeader title="Suporte" subtitle="Fale com a equipe do Exploradores do Brasil" />
+      <PageHeader title="Suporte" subtitle="Fale com a equipe do App do DBV" />
       <Loading {...state}>
         {(s) => (
           <Card className="center">

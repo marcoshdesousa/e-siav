@@ -10,7 +10,7 @@ import { fail, int, str, validDate, parseJson, memberKind, newClubCode, newClubN
 
 // Painel do Administrador Geral.
 // Observação: não existe aqui nenhuma rota que altere nome ou dados de membros —
-// isso é exclusivo do clã ao qual o membro pertence.
+// isso é exclusivo do clube ao qual o membro pertence.
 const r = Router();
 r.use('/admin', requireAuth('admin'));
 
@@ -46,7 +46,7 @@ r.put('/admin/districts/:id', (req, res) => {
   res.json({ ok: true });
 });
 
-// ---------- Clãs ----------
+// ---------- Clubes ----------
 /** Diretores associados: um nome por linha (até 10). */
 function associates(v) {
   const list = (Array.isArray(v) ? v : String(v ?? '').split('\n')).map((n) => str(n, 100)).filter(Boolean).slice(0, 10);
@@ -64,15 +64,15 @@ r.get('/admin/clubs', (_req, res) => {
 });
 
 /**
- * Novo clã: o admin só escreve o nome. O app dá o número (1º, 2º...), o código
+ * Novo clube: o admin só escreve o nome. O app dá o número (1º, 2º...), o código
  * (4 números) e a senha (2 letras + 4 números), que não pode ser trocada.
  */
 r.post('/admin/clubs', (req, res) => {
   const name = str(req.body.name, 100);
   const districtId = int(req.body.district_id);
   const director = str(req.body.director_name, 100);
-  if (!name) fail(400, 'Informe o nome do clã');
-  if (!director) fail(400, 'Informe o nome do diretor do clã');
+  if (!name) fail(400, 'Informe o nome do clube');
+  if (!director) fail(400, 'Informe o nome do diretor do clube');
   if (!get('SELECT 1 FROM districts WHERE id = ?', districtId)) fail(400, 'Distrito inválido');
   const password = newClubPassword();
   const out = tx(() => {
@@ -90,7 +90,7 @@ r.post('/admin/clubs', (req, res) => {
 
 r.put('/admin/clubs/:id', (req, res) => {
   const id = int(req.params.id);
-  if (!get('SELECT 1 FROM clubs WHERE id = ?', id)) fail(404, 'Clã não encontrado');
+  if (!get('SELECT 1 FROM clubs WHERE id = ?', id)) fail(404, 'Clube não encontrado');
   tx(() => {
     const name = str(req.body.name, 100);
     if (name) run('UPDATE clubs SET name = ? WHERE id = ?', clubDisplayName(get('SELECT number FROM clubs WHERE id = ?', id).number, name), id);
@@ -101,7 +101,7 @@ r.put('/admin/clubs/:id', (req, res) => {
     }
     if (req.body.director_name !== undefined) {
       const director = str(req.body.director_name, 100);
-      if (!director) fail(400, 'Informe o nome do diretor do clã');
+      if (!director) fail(400, 'Informe o nome do diretor do clube');
       run('UPDATE clubs SET director_name = ? WHERE id = ?', director, id);
     }
     if (req.body.associate_directors !== undefined) run('UPDATE clubs SET associate_directors = ? WHERE id = ?', associates(req.body.associate_directors), id);
@@ -109,11 +109,11 @@ r.put('/admin/clubs/:id', (req, res) => {
   res.json({ ok: true });
 });
 
-// Visualizar o clã por dentro: membros, fichas e grupos. Só leitura — o admin não edita nada.
+// Visualizar o clube por dentro: membros, fichas e unidades. Só leitura — o admin não edita nada.
 r.get('/admin/clubs/:id/view', (req, res) => {
   const id = int(req.params.id);
   const club = clubProfile(id);
-  if (!club) fail(404, 'Clã não encontrado');
+  if (!club) fail(404, 'Clube não encontrado');
   res.json({ club, members: listMembers(id), units: listUnits(id) });
 });
 r.get('/admin/clubs/:id/members/:mid/ficha', (req, res) => {
@@ -250,7 +250,7 @@ r.delete('/admin/events/:id', (req, res) => {
   run('DELETE FROM events WHERE id = ?', int(req.params.id));
   res.json({ ok: true });
 });
-// Marca participantes de uma vez: clãs e/ou membros (lista de ids).
+// Marca participantes de uma vez: clubes e/ou membros (lista de ids).
 r.post('/admin/events/:id/participants', (req, res) => {
   const eventId = int(req.params.id);
   if (!get('SELECT 1 FROM events WHERE id = ?', eventId)) fail(404, 'Evento não encontrado');
@@ -272,7 +272,7 @@ r.delete('/admin/events/:id/participants/:type/:tid', (req, res) => {
   res.json({ ok: true });
 });
 
-// ---------- Diretório: clãs → grupos → pessoas (para escolher destinatários) ----------
+// ---------- Diretório: clubes → unidades → pessoas (para escolher destinatários) ----------
 r.get('/admin/directory', (_req, res) => {
   const clubs = all('SELECT c.id, c.name, c.logo, c.district_id, d.name AS district_name FROM clubs c JOIN districts d ON d.id = c.district_id ORDER BY d.name, c.name');
   for (const c of clubs) {
@@ -286,7 +286,7 @@ r.get('/admin/directory', (_req, res) => {
 });
 
 // ---------- Entregar conteúdo ----------
-// Medalha/troféu → clãs, grupos e/ou pessoas. Curso → pessoas
+// Medalha/troféu → clubes, unidades e/ou pessoas. Curso → pessoas
 // (liberar o acesso, inclusive de curso pago, ou registrar como concluído).
 r.post('/admin/deliver', (req, res) => {
   const b = req.body;
@@ -307,7 +307,7 @@ r.post('/admin/deliver', (req, res) => {
       }
     });
   } else if (b.item_type === 'content') {
-    // Cadernos guia e insígnias não são entregues pelo admin (quem registra é a diretoria do clã).
+    // Classes e especialidades não são entregues pelo admin (quem registra é a diretoria do clube).
     const c = get(`SELECT id, type FROM content WHERE id = ? AND type = 'curso'`, int(b.item_id));
     if (!c) fail(404, 'Curso não encontrado');
     if (!members.length) fail(400, 'Escolha as pessoas que vão receber');

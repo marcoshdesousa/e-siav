@@ -5,8 +5,8 @@ import { imageUpload, fileUrl } from '../uploads.js';
 import { bool, fail, int, str } from '../util.js';
 
 // Anúncios: aparecem grandes no meio da tela quando a pessoa abre o app.
-// Administrador Geral escolhe o público (todos, um distrito ou um clã).
-// A diretoria de um clã publica só para os membros e grupos do próprio clã.
+// Administrador Geral escolhe o público (todos, um distrito ou um clube).
+// A diretoria de um clube publica só para os membros e unidades do próprio clube.
 const r = Router();
 
 /** Aceita "www.site.com" e completa com https://. Só links web. */
@@ -39,7 +39,7 @@ function visibleTo(actor) {
 r.get('/announcements/active', requireAuth(), (req, res) => res.json(visibleTo(req.actor)));
 
 // Eventos (sempre grátis) aparecem como anúncio na abertura do app até a data do evento.
-// Evento de clã aparece só para aquele clã.
+// Evento de clube aparece só para aquele clube.
 r.get('/events/upcoming', requireAuth(), (req, res) => {
   const today = new Date(Date.now() - 3 * 36e5).toISOString().slice(0, 10); // fuso do Brasil
   const district = req.actor.district_id ?? null;
@@ -54,7 +54,7 @@ r.get('/events/upcoming', requireAuth(), (req, res) => {
   res.json(rows.map((e) => ({ ...e, attachments: JSON.parse(e.attachments || '[]') })));
 });
 
-// ---------- Gestão (Administrador Geral e diretoria do clã) ----------
+// ---------- Gestão (Administrador Geral e diretoria do clube) ----------
 const manager = requireAuth('admin', 'club');
 const own = (a) => (a.type === 'admin' ? ['club_id IS NULL'] : ['club_id = ?', a.id]);
 
@@ -64,7 +64,7 @@ function targetOf(a, b) {
   if (type === 'all') return ['all', null];
   const id = int(b.target_id);
   const table = type === 'district' ? 'districts' : 'clubs';
-  if (!get(`SELECT 1 FROM ${table} WHERE id = ?`, id)) fail(400, type === 'district' ? 'Escolha o distrito' : 'Escolha o clã');
+  if (!get(`SELECT 1 FROM ${table} WHERE id = ?`, id)) fail(400, type === 'district' ? 'Escolha o distrito' : 'Escolha o clube');
   return [type, id];
 }
 

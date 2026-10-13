@@ -4,7 +4,7 @@ import { LogOut } from 'lucide-react';
 import { Avatar, BackButton, LogoHorizontal } from '../ui.jsx';
 import AnnouncementPopup from './Announcement.jsx';
 
-const TYPE_LABEL = { admin: 'Administrador Geral', club: 'Sistema do Clã', unit: 'Portal do Grupo', member: '' };
+const TYPE_LABEL = { admin: 'Administrador Geral', club: 'Sistema do Clube', unit: 'Portal da Unidade', member: '' };
 
 /**
  * Estrutura de app: cabeçalho + abas na parte de baixo. Fora das abas principais,
@@ -16,7 +16,7 @@ export default function Shell({ tabs, children, hideNav = false, parentOf = null
   const nav = useNavigate();
   const { pathname } = useLocation();
   const path = pathname.replace(/\/+$/, '') || '/';
-  const base = { admin: '/admin', club: '/cla', unit: '/grupo', member: '/membro' }[actor.type];
+  const base = { admin: '/admin', club: '/clube', unit: '/unidade', member: '/membro' }[actor.type];
   const subtitle = actor.type === 'member' ? actor.club_name : actor.type === 'unit' ? actor.club_name : TYPE_LABEL[actor.type];
 
   return (

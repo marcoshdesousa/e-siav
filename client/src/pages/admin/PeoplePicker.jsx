@@ -20,7 +20,7 @@ const stateOf = (ids, set) => {
 const plain = (s) => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 
 /**
- * Escolha de destinatários com filtros: distrito → clã → grupo → tipo → busca.
+ * Escolha de destinatários com filtros: distrito → clube → unidade → tipo → busca.
  * Mostra só quem passa nos filtros; "Selecionar todos" marca a lista filtrada.
  * value: { clubs: Set, units: Set, members: Set }.
  * allowClubs / allowUnits: permite marcar o próprio clube/unidade (medalhas, eventos).
@@ -41,7 +41,7 @@ export default function PeoplePicker({ directory, value, onChange, allowClubs = 
     const out = [];
     for (const c of clubs) {
       if (clubId && String(c.id) !== clubId) continue;
-      const groups = [...c.units.map((u) => [u, u.members]), [{ id: 'none', name: 'Sem grupo', virtual: true }, c.no_unit]];
+      const groups = [...c.units.map((u) => [u, u.members]), [{ id: 'none', name: 'Sem unidade', virtual: true }, c.no_unit]];
       for (const [u, members] of groups) {
         if (unitId && String(u.id) !== unitId) continue;
         for (const m of members) {
@@ -69,12 +69,12 @@ export default function PeoplePicker({ directory, value, onChange, allowClubs = 
   const unit = club?.units.find((u) => String(u.id) === unitId);
   const total = value.members.size + (allowClubs ? value.clubs.size : 0) + (allowUnits ? value.units.size : 0);
 
-  // Agrupa a lista filtrada por clã e grupo para leitura.
+  // Agrupa a lista filtrada por clube e unidade para leitura.
   const sections = [];
   for (const m of people) {
     const key = m.club.id + '-' + m.unit.id;
     let sec = sections.find((x) => x.key === key);
-    if (!sec) sections.push((sec = { key, title: `${m.club.name} · ${m.unit.virtual ? 'Sem grupo' : 'Grupo ' + m.unit.name}`, list: [] }));
+    if (!sec) sections.push((sec = { key, title: `${m.club.name} · ${m.unit.virtual ? 'Sem unidade' : 'Unidade ' + m.unit.name}`, list: [] }));
     sec.list.push(m);
   }
 
@@ -87,19 +87,19 @@ export default function PeoplePicker({ directory, value, onChange, allowClubs = 
               <option value="">Todos os distritos</option>
               {districts.map(([id, name]) => <option key={id} value={String(id)}>{name}</option>)}
             </select>
-            <select value={clubId} onChange={(e) => { setClubId(e.target.value); setUnitId(''); }} aria-label="Clã">
-              <option value="">Todos os clãs</option>
+            <select value={clubId} onChange={(e) => { setClubId(e.target.value); setUnitId(''); }} aria-label="Clube">
+              <option value="">Todos os clubes</option>
               {clubs.map((c) => <option key={c.id} value={String(c.id)}>{c.name}</option>)}
             </select>
-            <select value={unitId} onChange={(e) => setUnitId(e.target.value)} disabled={!club} aria-label="Grupo">
-              <option value="">{club ? 'Todos os grupos' : 'Escolha um clã'}</option>
+            <select value={unitId} onChange={(e) => setUnitId(e.target.value)} disabled={!club} aria-label="Unidade">
+              <option value="">{club ? 'Todos as unidades' : 'Escolha um clube'}</option>
               {club?.units.map((u) => <option key={u.id} value={String(u.id)}>{u.name}</option>)}
-              {club && <option value="none">Sem grupo</option>}
+              {club && <option value="none">Sem unidade</option>}
             </select>
             <select value={kind} onChange={(e) => setKind(e.target.value)} aria-label="Tipo de membro">
-              <option value="">Exploradores e tutores</option>
-              <option value="desbravador">Só exploradores</option>
-              <option value="lideranca">Só liderança e tutores</option>
+              <option value="">Desbravadores e conselheiros</option>
+              <option value="desbravador">Só desbravadores</option>
+              <option value="lideranca">Só liderança</option>
             </select>
           </div>
           <div className="cat-search"><Search size={18} /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar por nome ou @" /></div>
@@ -107,12 +107,12 @@ export default function PeoplePicker({ directory, value, onChange, allowClubs = 
           {(allowClubs && club) || (allowUnits && unit && !unit.is_leadership) ? (
             <div className="pp-groups">
               {allowClubs && club && (
-                <label className="pp-row pp-group"><Box state={value.clubs.has(club.id) ? 'on' : 'off'} label="O próprio clã" onClick={() => toggleIn('clubs', club.id)} />
-                  <Tent size={16} /> <span>Entregar também ao clã <b>{club.name}</b></span></label>
+                <label className="pp-row pp-group"><Box state={value.clubs.has(club.id) ? 'on' : 'off'} label="O próprio clube" onClick={() => toggleIn('clubs', club.id)} />
+                  <Tent size={16} /> <span>Entregar também ao clube <b>{club.name}</b></span></label>
               )}
               {allowUnits && unit && !unit.is_leadership && (
-                <label className="pp-row pp-group"><Box state={value.units.has(unit.id) ? 'on' : 'off'} label="O próprio grupo" onClick={() => toggleIn('units', unit.id)} />
-                  <Flag size={16} /> <span>Entregar também ao grupo <b>{unit.name}</b></span></label>
+                <label className="pp-row pp-group"><Box state={value.units.has(unit.id) ? 'on' : 'off'} label="A própria unidade" onClick={() => toggleIn('units', unit.id)} />
+                  <Flag size={16} /> <span>Entregar também à unidade <b>{unit.name}</b></span></label>
               )}
             </div>
           ) : null}

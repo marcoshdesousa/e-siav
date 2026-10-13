@@ -5,7 +5,7 @@ import { catalog, iconForArea, importSpecialties, norm, AREAS } from '../catalog
 import { imageUpload, fileUrl } from '../uploads.js';
 import { fail, int, str } from '../util.js';
 
-// Cadernos guia e insígnias: o membro informa as que tem; a diretoria do clã aprova.
+// Classes e especialidades: o membro informa as que tem; a diretoria do clube aprova.
 const r = Router();
 const TYPES = ['classe', 'especialidade'];
 const typeOf = (v) => (TYPES.includes(v) ? v : 'especialidade');
@@ -34,7 +34,7 @@ r.post('/me/achievement-requests', requireAuth('member'), (req, res) => {
   let created = 0;
   tx(() => {
     for (const id of ids) {
-      const c = get(`SELECT id, type, leader FROM content WHERE id = ? AND type = 'especialidade'`, id); // cadernos guia: fora por enquanto
+      const c = get(`SELECT id, type, leader FROM content WHERE id = ? AND type = 'especialidade'`, id); // classes: fora por enquanto
       if (!c) continue;
       if (c.type === 'classe' && c.leader && req.actor.kind !== 'lideranca') continue;
       if (get('SELECT 1 FROM achievements WHERE member_id = ? AND content_id = ?', req.actor.id, id)) continue;
@@ -49,7 +49,7 @@ r.delete('/me/achievement-requests/:id', requireAuth('member'), (req, res) => {
   res.json({ ok: true });
 });
 
-// ---------- Diretoria do clã ----------
+// ---------- Diretoria do clube ----------
 r.get('/club/achievement-requests', requireAuth('club'), (req, res) => {
   const status = ['pendente', 'aprovado', 'recusado'].includes(req.query.status) ? req.query.status : 'pendente';
   const rows = all(
@@ -93,11 +93,11 @@ r.post('/club/achievement-requests/decide', requireAuth('club'), (req, res) => {
   res.json({ ok: true, done });
 });
 
-// A diretoria pode incluir uma insígnia que esteja faltando no catálogo.
+// A diretoria pode incluir uma especialidade que esteja faltando no catálogo.
 r.post('/club/catalog', requireAuth('club'), (req, res) => {
   const name = str(req.body.name, 100);
   const category = str(req.body.category, 60) || 'Outras';
-  if (name.length < 3) fail(400, 'Informe o nome da insígnia');
+  if (name.length < 3) fail(400, 'Informe o nome da especialidade');
   const existing = get(`SELECT id FROM content WHERE type = 'especialidade' AND name = ? COLLATE NOCASE`, name);
   if (existing) return res.json({ id: existing.id, existed: true });
   const { lastInsertRowid } = run(

@@ -13,12 +13,12 @@ export function Lightbox({ src, onClose }) {
   return <div className="lightbox" onClick={onClose}><img src={src} alt="" /></div>;
 }
 
-/** Públicos dos requisitos, na ordem pedida: membros, grupos e clãs. */
-const AUDIENCES = [['member', 'Membros'], ['unit', 'Grupos'], ['club', 'Clãs']];
-/** O clã cria para os próprios grupos e para os próprios membros. */
-const CLUB_AUDIENCES = [['unit', 'Grupos'], ['member', 'Membros']];
-/** O grupo cria só para os próprios exploradores. */
-const UNIT_AUDIENCES = [['member', 'Exploradores do grupo']];
+/** Públicos dos requisitos, na ordem pedida: membros, unidades e clubes. */
+const AUDIENCES = [['member', 'Membros'], ['unit', 'Unidades'], ['club', 'Clubes']];
+/** O clube cria para os próprias unidades e para os próprios membros. */
+const CLUB_AUDIENCES = [['unit', 'Unidades'], ['member', 'Membros']];
+/** A unidade cria só para os próprios desbravadores. */
+const UNIT_AUDIENCES = [['member', 'Desbravadores da unidade']];
 const audiencesFor = (type) => (type === 'admin' ? AUDIENCES : type === 'club' ? CLUB_AUDIENCES : UNIT_AUDIENCES);
 
 function RequirementCard({ r, onSubmit }) {
@@ -101,10 +101,10 @@ function SubmitModal({ r, onClose, onDone }) {
 
 /**
  * Requisitos para a conta logada cumprir.
- * Explorador e grupo veem duas abas: requisitos do App (gerais) e do meu clã.
- * O clã cumpre só os requisitos do App.
+ * Desbravador e unidade veem duas abas: requisitos do App (gerais) e do meu clube.
+ * O clube cumpre só os requisitos do App.
  */
-export function RequirementsTodo({ originTabs = false, clubLabel = 'Do meu clã', groupTab = false }) {
+export function RequirementsTodo({ originTabs = false, clubLabel = 'Do meu clube', groupTab = false }) {
   const state = useLoad(() => api.get('/requirements/mine'));
   const [sending, setSending] = useState(null);
   const [origin, setOrigin] = useState('geral');
@@ -120,7 +120,7 @@ export function RequirementsTodo({ originTabs = false, clubLabel = 'Do meu clã'
         return (
           <>
             {originTabs && (
-              <Tabs tabs={[['geral', 'Do App', openCount('geral')], ['clube', clubLabel, openCount('clube')], ...(groupTab ? [['grupo', 'Do meu grupo', openCount('grupo')]] : [])]} value={origin} onChange={setOrigin} />
+              <Tabs tabs={[['geral', 'Do App', openCount('geral')], ['clube', clubLabel, openCount('clube')], ...(groupTab ? [['grupo', 'Da minha unidade', openCount('grupo')]] : [])]} value={origin} onChange={setOrigin} />
             )}
             <div className="seg" style={{ marginBottom: '.9rem' }}>
               {[['abertos', 'A cumprir', counts.abertos], ['enviados', 'Em avaliação', counts.enviados], ['aprovados', 'Aprovados']].map(([k, l, n]) => (
@@ -128,7 +128,7 @@ export function RequirementsTodo({ originTabs = false, clubLabel = 'Do meu clã'
               ))}
             </div>
             {shown.length ? shown.map((r) => <RequirementCard key={r.id} r={r} onSubmit={setSending} />) : (
-              <Empty icon={CheckCircle2}>{originTabs && origin === 'clube' ? 'Nenhum requisito do seu clã por aqui.' : originTabs && origin === 'grupo' ? 'Nenhum requisito do seu grupo por aqui.' : 'Nada por aqui.'}</Empty>
+              <Empty icon={CheckCircle2}>{originTabs && origin === 'clube' ? 'Nenhum requisito do seu clube por aqui.' : originTabs && origin === 'grupo' ? 'Nenhum requisito da sua unidade por aqui.' : 'Nada por aqui.'}</Empty>
             )}
             {sending && <SubmitModal r={sending} onClose={() => setSending(null)} onDone={() => { setSending(null); state.reload(); }} />}
           </>
@@ -185,7 +185,7 @@ export function RequirementForm({ audience: fixedAudience, onClose, onDone }) {
               </Field>
             )}
           </div>
-        ) : <Badge kind="blue">{actor.type === 'unit' ? 'Para os exploradores do seu grupo' : f.audience === 'member' ? 'Para os membros do seu clã' : 'Para os grupos do seu clã'}</Badge>}
+        ) : <Badge kind="blue">{actor.type === 'unit' ? 'Para os desbravadores da sua unidade' : f.audience === 'member' ? 'Para os membros do seu clube' : 'Para as unidades do seu clube'}</Badge>}
         {f.audience === 'member' && actor.type !== 'unit' && (
           <Field label="Quem cumpre">
             <select value={f.member_kind} onChange={set('member_kind')}>
@@ -214,7 +214,7 @@ export function RequirementForm({ audience: fixedAudience, onClose, onDone }) {
   );
 }
 
-/** only: mostra só um público (ex.: 'member' na pasta Ranking, 'unit' na pasta Grupos). */
+/** only: mostra só um público (ex.: 'member' na pasta Ranking, 'unit' na pasta Unidades). */
 export function CreatedRequirements({ only = null } = {}) {
   const { actor } = useAuth();
   const isAdmin = actor.type === 'admin';
@@ -307,7 +307,7 @@ function PersonReviews({ person, status, onBack }) {
 }
 
 /**
- * Avaliar envios: separado por público (exploradores, grupos, clãs) e por pessoa.
+ * Avaliar envios: separado por público (desbravadores, unidades, clubes) e por pessoa.
  * Toque em alguém para ver só os envios dela.
  */
 export function ReviewsPanel() {

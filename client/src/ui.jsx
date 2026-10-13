@@ -5,7 +5,7 @@ import { AppIcon, ICONS } from './icons.jsx';
 
 // ---------- Marca ----------
 export const LogoIcon = ({ size = 40 }) => (
-  <img src="/marca/logo.png?v=3" width={size} height={size} alt="Exploradores do Brasil" className="logo-icon" />
+  <img src="/marca/logo.svg?v=4" width={size} height={size} alt="App do DBV" className="logo-icon" />
 );
 
 export function LogoHorizontal({ light = false, size = 36 }) {
@@ -13,8 +13,8 @@ export function LogoHorizontal({ light = false, size = 36 }) {
     <span className={'logo-h' + (light ? ' light' : '')}>
       <LogoIcon size={size} />
       <span className="logo-text">
-        <b>Exploradores</b>
-        <small>do Brasil</small>
+        <small>App do</small>
+        <b>DBV</b>
       </span>
     </span>
   );
@@ -92,7 +92,7 @@ export function Button({ variant = 'primary', small, block, busy, children, ...p
   );
 }
 
-/** group: para grupos de botões (o rótulo não fica preso ao primeiro botão). */
+/** group: para unidades de botões (o rótulo não fica preso ao primeiro botão). */
 export function Field({ label, hint, children, group = false }) {
   const Tag = group ? 'div' : 'label';
   return (

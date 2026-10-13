@@ -9,14 +9,14 @@ import { fmtCpf } from '../format.js';
  */
 export const TERMOS = [
   ['termo_responsabilidade', 'Autorização para participar das atividades',
-    'Autorizo a participação nas atividades do clã de Exploradores: reuniões, aulas práticas, excursões, acampamentos, eventos e atividades ao ar livre, com o acompanhamento da liderança e dos tutores. Em caso de emergência, autorizo a liderança a prestar os primeiros socorros e a buscar atendimento médico, avisando a família o quanto antes.'],
+    'Autorizo a participação nas atividades do clube de Desbravadores: reuniões, aulas práticas, excursões, acampamentos, eventos e atividades ao ar livre, com o acompanhamento da liderança. Em caso de emergência, autorizo a liderança a prestar os primeiros socorros e a buscar atendimento médico, avisando a família o quanto antes.'],
   ['termo_imagem', 'Uso de imagem e voz',
-    'Autorizo, sem custo, o uso de imagem e voz (fotos, vídeos e áudios) feitos nas atividades do clã, para registro e divulgação nas redes sociais, no app e em materiais do clã e do movimento Exploradores do Brasil. A autorização pode ser cancelada a qualquer momento, pedindo à diretoria do clã.'],
+    'Autorizo, sem custo, o uso de imagem e voz (fotos, vídeos e áudios) feitos nas atividades do clube, para registro e divulgação nas redes sociais, no app e em materiais do clube e do movimento App do DBV. A autorização pode ser cancelada a qualquer momento, pedindo à diretoria do clube.'],
   ['termo_dados', 'Proteção de dados (LGPD)',
-    'Concordo que os dados da ficha de cadastro e da ficha de saúde fiquem guardados no sistema do clã e sejam usados só para o cadastro, a segurança e o atendimento médico do membro. Esses dados não são vendidos nem divulgados, e posso pedir para conferir ou corrigir a qualquer momento.'],
+    'Concordo que os dados da ficha de cadastro e da ficha de saúde fiquem guardados no sistema do clube e sejam usados só para o cadastro, a segurança e o atendimento médico do membro. Esses dados não são vendidos nem divulgados, e posso pedir para conferir ou corrigir a qualquer momento.'],
 ];
 export const DECLARACAO_CADASTRO = 'Me responsabilizo por todas as informações desta Ficha de Cadastro, e garanto como fiel e verdadeiro.';
-export const DECLARACAO_SAUDE = 'Me responsabilizo por todas as informações desta Ficha de Saúde, e garanto que nenhuma outra informação foi omitida, que pode vir a prejudicar o membro e o clã, em caso de um atendimento médico de emergência.';
+export const DECLARACAO_SAUDE = 'Me responsabilizo por todas as informações desta Ficha de Saúde, e garanto que nenhuma outra informação foi omitida, que pode vir a prejudicar o membro e o clube, em caso de um atendimento médico de emergência.';
 
 /** Caixas dos termos com título e texto. */
 export function TermosLista({ value: f, onChange }) {
@@ -78,7 +78,7 @@ export default function FichaForm({ value: f, onChange, age = null, readOnly = f
         </>
       )}
       <h3 className="ficha-title">Contato e endereço</h3>
-      <Field label="WhatsApp" hint="Se o explorador não tiver WhatsApp, coloque o do responsável.">{input('whatsapp', { inputMode: 'tel', placeholder: '(00) 00000-0000' })}</Field>
+      <Field label="WhatsApp" hint="Se o desbravador não tiver WhatsApp, coloque o do responsável.">{input('whatsapp', { inputMode: 'tel', placeholder: '(00) 00000-0000' })}</Field>
 
       <div className="grid-addr">
         <Field label="Endereço">{input('endereco', { placeholder: 'Rua, avenida...' })}</Field>
@@ -337,7 +337,7 @@ export function SaudeQuiz({ value: f, onChange, onDone }) {
   );
 }
 
-/** Ficha de saúde inteira numa página (o clã confere e corrige). */
+/** Ficha de saúde inteira numa página (o clube confere e corrige). */
 export function SaudeLista({ value: f, onChange }) {
   return (
     <div className="form">

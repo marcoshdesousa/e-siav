@@ -20,17 +20,17 @@ function Guard({ type, children }) {
 }
 
 /**
- * /cla/4821 e /cla/4821/2 são os links públicos do clã e dos grupos (código de 4 números).
- * O resto de /cla/... é o Sistema do Clã.
+ * /clube/4821 e /clube/4821/2 são os links públicos do clube e das unidades (código de 4 números).
+ * O resto de /clube/... é o Sistema do Clube.
  */
-function ClaRoute() {
+function ClubeRoute() {
   const rest = useParams()['*'] || '';
   const [first, second] = rest.split('/');
   if (/^\d{4}$/.test(first || '')) return <ClanLinkPage code={first} n={second} />;
   return <Guard type="club"><ClubApp /></Guard>;
 }
 
-/** Endereços antigos (/clube/..., /unidade/...) continuam funcionando. */
+/** Endereços antigos (/cla/..., /grupo/...) continuam funcionando. */
 function OldPath({ to }) {
   const { pathname, search } = useLocation();
   return <Navigate to={pathname.replace(/^\/[^/]+/, to) + search} replace />;
@@ -45,13 +45,14 @@ export default function App() {
             <Route path="/entrar" element={<Login />} />
             <Route path="/p/:kind/:id" element={<PublicProfilePage />} />
             <Route path="/inscricao/:code" element={<SignupPage />} />
-            <Route path="/criar-cla" element={<CreateClanPage />} />
+            <Route path="/criar-clube" element={<CreateClanPage />} />
+            <Route path="/criar-cla" element={<Navigate to="/criar-clube" replace />} />
             <Route path="/termo/:token" element={<TermoPage />} />
             <Route path="/admin/*" element={<Guard type="admin"><AdminApp /></Guard>} />
-            <Route path="/cla/*" element={<ClaRoute />} />
-            <Route path="/grupo/*" element={<Guard type="unit"><UnitApp /></Guard>} />
-            <Route path="/clube/*" element={<OldPath to="/cla" />} />
-            <Route path="/unidade/*" element={<OldPath to="/grupo" />} />
+            <Route path="/clube/*" element={<ClubeRoute />} />
+            <Route path="/unidade/*" element={<Guard type="unit"><UnitApp /></Guard>} />
+            <Route path="/cla/*" element={<OldPath to="/clube" />} />
+            <Route path="/grupo/*" element={<OldPath to="/unidade" />} />
             <Route path="/membro/*" element={<Guard type="member"><MemberApp /></Guard>} />
             <Route path="/:code" element={<MemberLinkPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />

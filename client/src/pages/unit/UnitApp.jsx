@@ -10,17 +10,17 @@ import { InAppProfile, UnitProfileView } from '../Profiles.jsx';
 import { CreatedRequirements, RequirementsTodo, ReviewsPanel } from '../Requirements.jsx';
 import RankingHub from '../Ranking.jsx';
 
-const base = '/grupo';
+const base = '/unidade';
 
-/** Perfil do grupo: o grupo escreve a biografia; nome, logo e membros são do clã. */
+/** Perfil da unidade: a unidade escreve a biografia; nome, logo e membros são do clube. */
 function BioForm({ bio, onDone }) {
   const [text, setText] = useState(bio || '');
   const [busy, run] = useAsync();
   return (
-    <Section title="Sobre o grupo">
+    <Section title="Sobre a unidade">
       <Card>
         <div className="form">
-          <textarea value={text} onChange={(e) => setText(e.target.value)} maxLength={1000} placeholder="Conte quem é o grupo: grito de guerra, conquistas, o que vocês gostam de fazer..." />
+          <textarea value={text} onChange={(e) => setText(e.target.value)} maxLength={1000} placeholder="Conte quem é a unidade: grito de guerra, conquistas, o que vocês gostam de fazer..." />
           <div className="row" style={{ justifyContent: 'flex-end' }}>
             <Button busy={busy} disabled={text === (bio || '')} onClick={() => run(() => api.put('/me/bio', { bio: text }), 'Biografia salva!').then(onDone)}>Salvar</Button>
           </div>
@@ -37,30 +37,30 @@ function UnitProfile() {
       {(u) => (
         <>
           <UnitProfileView unit={u} linkBase={`${base}/ver`} hideBio extra={<><ProximasDatas to={`${base}/agenda`} /><BioForm bio={u.bio} onDone={state.reload} /></>} />
-          <p className="muted small center mt">Nome, logo e membros do grupo são cadastrados pelo clã.</p>
+          <p className="muted small center mt">Nome, logo e membros da unidade são cadastrados pelo clube.</p>
         </>
       )}
     </Loading>
   );
 }
 
-/** O padrinho cria requisitos para os exploradores do grupo e avalia os envios. */
+/** O conselheiro cria requisitos para os desbravadores da unidade e avalia os envios. */
 function GroupRequirements() {
   const [tab, setTab] = useState('criados');
   return (
     <>
-      <PageHeader title="Para os exploradores" subtitle="Requisitos que o grupo cria para os próprios exploradores" />
-      <Tabs tabs={[['criados', 'Criados pelo grupo'], ['avaliar', 'Avaliar']]} value={tab} onChange={setTab} />
+      <PageHeader title="Para os desbravadores" subtitle="Requisitos que a unidade cria para os próprios desbravadores" />
+      <Tabs tabs={[['criados', 'Criados pela unidade'], ['avaliar', 'Avaliar']]} value={tab} onChange={setTab} />
       {tab === 'criados' ? <CreatedRequirements /> : <ReviewsPanel />}
     </>
   );
 }
 
-/** Portal do Grupo: abre no perfil; cumpre requisitos em grupo e cria requisitos para os exploradores do grupo. */
+/** Portal da Unidade: abre no perfil; cumpre requisitos em unidade e cria requisitos para os desbravadores da unidade. */
 export default function UnitApp() {
   const { pathname } = useLocation();
   const { actor } = useAuth();
-  // O grupo Tutores não cumpre requisitos de grupo nem entra no ranking de grupos.
+  // A unidade Liderança não cumpre requisitos de unidade nem entra no ranking de unidades.
   const lid = !!actor.is_leadership;
   // Bolinha com o número de requisitos em aberto (atualiza a cada troca de tela).
   const reqs = useLoad(() => (lid ? Promise.resolve([]) : api.get('/requirements/mine')), [pathname]);
@@ -78,7 +78,7 @@ export default function UnitApp() {
     <Shell tabs={tabs}>
       <Routes>
         <Route index element={<UnitProfile />} />
-        <Route path="requisitos" element={<><PageHeader title="Requisitos do grupo" subtitle="Cumpram juntos dentro do prazo e subam no ranking" /><RequirementsTodo originTabs clubLabel="Do clã" /></>} />
+        <Route path="requisitos" element={<><PageHeader title="Requisitos da unidade" subtitle="Cumpram juntos dentro do prazo e subam no ranking" /><RequirementsTodo originTabs clubLabel="Do clube" /></>} />
         <Route path="exploradores" element={<GroupRequirements />} />
         <Route path="ranking" element={<RankingHub base={base} />} />
         <Route path="agenda" element={<AgendaLeitura />} />

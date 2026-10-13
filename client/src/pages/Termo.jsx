@@ -48,8 +48,8 @@ export default function TermoPage() {
               <Card>
                 <div className="form">
                   <p className="small" style={{ marginTop: 0 }}>
-                    {m.minor ? <>Você, responsável por <b>{m.name.split(' ')[0]}</b>, precisa ler e assinar os termos abaixo para que {m.name.split(' ')[0]} possa participar das atividades do clã.</>
-                      : <>Leia e assine os termos abaixo para participar das atividades do clã.</>}
+                    {m.minor ? <>Você, responsável por <b>{m.name.split(' ')[0]}</b>, precisa ler e assinar os termos abaixo para que {m.name.split(' ')[0]} possa participar das atividades do clube.</>
+                      : <>Leia e assine os termos abaixo para participar das atividades do clube.</>}
                   </p>
                   <TermosLista value={f} onChange={setF} />
                   <label className="check termo"><input type="checkbox" checked={!!f.decl_cadastro} onChange={(e) => setF({ ...f, decl_cadastro: e.target.checked })} /> <span><b style={{ display: 'block' }}>Ficha de cadastro</b>{DECLARACAO_CADASTRO}</span></label>

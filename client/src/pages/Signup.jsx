@@ -11,7 +11,7 @@ const ageOf = (d) => (d ? Math.floor((Date.now() - Date.parse(d + 'T12:00:00')) 
  * Cadastro completo em duas partes:
  * 1) Ficha de cadastro + termos + assinatura (nome e CPF de quem assina).
  * 2) Ficha de saúde em formato de quiz + declaração + assinatura.
- * Usado na inscrição pelo link (mode "link") e no cadastro feito pelo clã (mode "cla").
+ * Usado na inscrição pelo link (mode "link") e no cadastro feito pelo clube (mode "cla").
  */
 export function CadastroFlow({ local, mode = 'link', extra = null, submitLabel, busy, onSubmit }) {
   const [step, setStep] = useState('cadastro');
@@ -19,7 +19,7 @@ export function CadastroFlow({ local, mode = 'link', extra = null, submitLabel, 
   const [ficha, setFicha] = useState({ doc_tipo: 'rg_cpf' });
   const age = ageOf(f.birth_date);
   const minor = age != null && age < 18;
-  // No cadastro pelo clã, quem assina é o responsável, depois, pelo link do termo.
+  // No cadastro pelo clube, quem assina é o responsável, depois, pelo link do termo.
   const signed = mode !== 'cla';
   const missing = cadastroFaltando({ ...f, age, needPassword: false, signed }, ficha);
   const top = () => window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -85,8 +85,8 @@ export function AccessInfo({ code, password }) {
 }
 
 /**
- * Inscrição pelo link do clã. A pessoa (ou o responsável) preenche tudo; a inscrição
- * fica pendente até o clã aprovar.
+ * Inscrição pelo link do clube. A pessoa (ou o responsável) preenche tudo; a inscrição
+ * fica pendente até o clube aprovar.
  */
 export default function SignupPage() {
   const { code } = useParams();
@@ -109,7 +109,7 @@ export default function SignupPage() {
               <h1 style={{ marginTop: '.5rem' }}>Inscrição enviada!</h1>
               <p>Agora a diretoria do <b>{done.club_name}</b> confere e aprova a sua inscrição.</p>
               <AccessInfo code={done.code} password={done.password} />
-              <p className="muted small">Você já pode entrar no app. Até o clã aprovar, vai aparecer "Esperando a aprovação do clã".</p>
+              <p className="muted small">Você já pode entrar no app. Até o clube aprovar, vai aparecer "Esperando a aprovação do clube".</p>
               <Link to="/"><Button block>Ir para a tela de entrada</Button></Link>
             </Card>
           ) : (
@@ -117,13 +117,13 @@ export default function SignupPage() {
               <div className="hero">
                 <div className="profile-head">
                   <Avatar src={c.logo} name={c.name} size={80} square />
-                  <p className="muted small" style={{ margin: '.4rem 0 0' }}>Inscrição no clã</p>
+                  <p className="muted small" style={{ margin: '.4rem 0 0' }}>Inscrição no clube</p>
                   <h1>{c.name}</h1>
                   <span className="chip">{c.district_name}</span>
                 </div>
               </div>
               <CadastroFlow local={`${c.name} — sistema online`} submitLabel="Enviar inscrição" busy={busy} onSubmit={send} />
-              <p className="muted small center">Cada pessoa pode estar em um clã só. Se você já é de outro clã, peça para este clã solicitar a sua transferência.</p>
+              <p className="muted small center">Cada pessoa pode estar em um clube só. Se você já é de outro clube, peça para este clube solicitar a sua transferência.</p>
             </>
           )}
         </Loading>

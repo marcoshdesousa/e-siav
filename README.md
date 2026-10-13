@@ -1,10 +1,10 @@
-# Exploradores do Brasil
+# App do DBV
 
 Plataforma para clubes de Desbravadores: gestão do clube (membros e unidades), requisitos com pontuação e ranking, perfis públicos com medalhas e eventos, especialidades/classes/cursos e chat interno em tempo real.
 
 Aplicação web responsiva, pensada primeiro para celular e instalável como app (PWA). Toda a organização é por distrito (a primeira versão vem com o **Distrito Palmares**).
 
-<img src="client/public/marca/logo.png" alt="Logo do Exploradores do Brasil" width="160">
+<img src="client/public/marca/logo.png" alt="Logo do App do DBV" width="160">
 
 ## Como rodar
 
@@ -29,24 +29,24 @@ Testes da API (permissões, privacidade, pontuação, ranking e chat): `npm test
 | Tela de entrada | Conta | Como entra |
 |---|---|---|
 | Membros | Administrador Geral | usuário `admin` + senha (`ADMIN_PASSWORD`) |
-| Clã | Sistema do Clã | código do clã (4 números) + senha do clã (2 letras + 4 números, gerada pelo app) |
-| Clã | Portal do Grupo | código do clã + senha do grupo (2 letras + 4 números, gerada pelo app) |
-| Membros | Explorador / Tutor | código do membro (6 números) + senha |
+| Clube | Sistema do Clube | código do clube (4 números) + senha do clube (2 letras + 4 números, gerada pelo app) |
+| Clube | Portal do Unidade | código do clube + senha da unidade (2 letras + 4 números, gerada pelo app) |
+| Membros | Desbravador / Conselheiro | código do membro (6 números) + senha |
 
-Cada clã tem um número (1º, 2º...) que entra no nome, um código de 4 números e dois links: o do perfil (`/p/clube/ID`) e o de cadastro (`/inscricao/CÓDIGO`). As senhas de clã e de grupo não podem ser trocadas. Quem quer abrir um clã usa `/criar-cla`; os pedidos aparecem em **Inscrição clã** no painel do admin.
+Cada clube tem um número (1º, 2º...) que entra no nome, um código de 4 números e dois links: o do perfil (`/p/clube/ID`) e o de cadastro (`/inscricao/CÓDIGO`). As senhas de clube e de unidade não podem ser trocadas. Quem quer abrir um clube usa `/criar-cla`; os pedidos aparecem em **Inscrição clube** no painel do admin.
 
-Novos membros entram pelo link de cadastro (ficha de cadastro + ficha de saúde em quiz, com assinaturas). A inscrição fica pendente até o clã aprovar. Ninguém é apagado: o clã desativa e pode reativar. Para mudar de clã, o clã novo pede a transferência (nome + CPF ou certidão), o clã atual autoriza e o clã novo confirma.
+Novos membros entram pelo link de cadastro (ficha de cadastro + ficha de saúde em quiz, com assinaturas). A inscrição fica pendente até o clube aprovar. Ninguém é apagado: o clube desativa e pode reativar. Para mudar de clube, o clube novo pede a transferência (nome + CPF ou certidão), o clube atual autoriza e o clube novo confirma.
 
 ### Dados de teste
 
-No app no ar, os clãs antigos foram trocados uma vez pelos clãs de teste (o admin continua o mesmo). Localmente, `SEED_DEMO=1` cria tudo, com o admin `admin` / `admin123`.
+No app no ar, os clubes antigos foram trocados uma vez pelos clubes de teste (o admin continua o mesmo). Localmente, `SEED_DEMO=1` cria tudo, com o admin `admin` / `admin123`.
 
 | Conta | Tela | Login | Senha |
 |---|---|---|---|
-| 1º Clã Águias do Vale | Clã | `4821` | `AG2026` |
-| Grupos Falcões / Gaviões / Tutores | Clã | `4821` | `FA1111` / `GA2222` / `TU9001` |
-| 2º Clã Leões de Judá | Clã | `7350` | `LE2026` |
-| Grupos Panteras / Tigres / Tutores | Clã | `7350` | `PA3333` / `TI4444` / `TU9002` |
+| 1º Clube Águias do Vale | Clube | `4821` | `AG2026` |
+| Unidades Falcões / Gaviões / Conselheiros | Clube | `4821` | `FA1111` / `GA2222` / `TU9001` |
+| 2º Clube Leões de Judá | Clube | `7350` | `LE2026` |
+| Unidades Panteras / Tigres / Conselheiros | Clube | `7350` | `PA3333` / `TI4444` / `TU9002` |
 | Membros (Pedro, Ana, Lucas...) | Membros | `100001` a `100013` | `dbv123` |
 
 Links de cadastro de teste: `/inscricao/4821` e `/inscricao/7350`.
@@ -56,14 +56,14 @@ Links de cadastro de teste: `/inscricao/4821` e `/inscricao/7350`.
 - **Cinco tipos de conta**, ninguém se cadastra sozinho: Administrador Geral → Clube → Unidade, Desbravador e Liderança. Sem CPF.
 - **Login Clube** (clube e unidades) e **Login Membros** (desbravadores, liderança e Administrador Geral).
 - **Painel do Administrador Geral**: distritos, clubes e seus logins, outros administradores, requisitos gerais (clubes, unidades, desbravadores; alcance geral ou por distrito), avaliação de envios, especialidades/classes/cursos grátis ou pagos, compras e liberação manual de acesso, medalhas e troféus (entrega manual), eventos e participantes, rankings e denúncias.
-- **Sistema do Clube**: foto e logo, membros (a idade define Desbravador 10–15 ou Liderança 16+), cargos, unidades com login, classes/especialidades concluídas e Insígnia de Excelência, requisitos para as próprias unidades, avaliação, ranking interno, mensagens da diretoria e denúncias.
+- **Sistema do Clube**: foto e logo, membros (a idade define Desbravador 10–15 ou Liderança 16+), cargos, unidades com login, classes/especialidades concluídas e Especialidade de Excelência, requisitos para as próprias unidades, avaliação, ranking interno, mensagens da diretoria e denúncias.
 - **Portal da Unidade**: requisitos do clube e gerais de unidade, ranking e perfil.
 - **Portal do Membro**: Perfil, Requisitos (só desbravadores), Especialidades, Classes, Cursos, Ranking, Clubes e Chat.
 - **Requisitos**: modelos Texto, Foto, Quiz, Relatório + foto, Quiz + foto; pontos no prazo e fora do prazo; quiz com nota proporcional calculada na hora; demais modelos avaliados por quem criou; estados pendente, enviado, aprovado, recusado e fora do prazo.
 - **Rankings** atualizados a cada envio pontuado, com pódio e desempate por quem enviou primeiro: membros (Meu clube · Distrito · Todos), unidades do clube, unidades gerais (Distrito · Todos) e clubes (Distrito · Todos). Não há ranking de liderança.
 - **Requisitos do clube**: a diretoria cria requisitos para as próprias unidades e para os próprios desbravadores; contam no ranking do clube. Desbravador e unidade veem as abas "Requisitos do App" e "Requisitos do meu clube".
 - **Perfis públicos** com link para compartilhar: `/p/clube/:id`, `/p/unidade/:id`, `/p/membro/:código`. Clubes e unidades mostram só a quantidade de membros.
-- **Chat estilo WhatsApp**: Unidade (grupo), Diretoria (membro ↔ clube) e Direta (pelo @ ou pelo nome). Texto, áudio gravado na hora e fotos; tempo real via WebSocket; horário, ✓✓ de lida, aviso de nova mensagem; apagar mensagem para mim ou para todos; limpar conversa (só para você); arquivar e apagar conversas diretas; Denunciar e Bloquear em toda conversa (denúncias vão para a diretoria e para o Administrador Geral, com cópia da mensagem mesmo se ela for apagada depois).
+- **Chat estilo WhatsApp**: Unidade (unidade), Diretoria (membro ↔ clube) e Direta (pelo @ ou pelo nome). Texto, áudio gravado na hora e fotos; tempo real via WebSocket; horário, ✓✓ de lida, aviso de nova mensagem; apagar mensagem para mim ou para todos; limpar conversa (só para você); arquivar e apagar conversas diretas; Denunciar e Bloquear em toda conversa (denúncias vão para a diretoria e para o Administrador Geral, com cópia da mensagem mesmo se ela for apagada depois).
 - **@ do membro**: escolhido no primeiro acesso; é por ele que os outros encontram a pessoa no chat, aparece no perfil e forma o link `/p/membro/@arroba`.
 - **Requisitos com envio livre**: em cada requisito (geral ou aula de curso) o criador marca o que o membro envia — relatório, foto e/ou quiz, em qualquer combinação — e pode anexar fotos de exemplo.
 - **Classes e especialidades** não são vendidas nem feitas online: o membro informa as que já tem (catálogo com busca e filtro por área) e a **diretoria do clube aprova** em "Aprovações"; aprovadas, vão para o perfil. A diretoria também pode registrar direto no cadastro do membro e incluir uma especialidade que falte.

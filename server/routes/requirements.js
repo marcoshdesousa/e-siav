@@ -13,13 +13,13 @@ const r = Router();
 function applies(actor, req) {
   const audience = { club: 'club', unit: 'unit', member: 'member' }[actor.type];
   if (req.audience !== audience) return false;
-  // O grupo Tutores não entra no ranking de grupos: não recebe requisitos de grupo.
+  // A unidade Liderança não entra no ranking de unidades: não recebe requisitos de unidade.
   if (actor.type === 'unit' && actor.is_leadership) return false;
-  // Requisito de membro pode ser só para exploradores ou só para tutores/liderança.
+  // Requisito de membro pode ser só para desbravadores ou só para tutores/liderança.
   if (actor.type === 'member' && req.member_kind && req.member_kind !== actor.kind) return false;
-  // Requisitos do clã: só para os grupos e os membros daquele clã.
+  // Requisitos do clube: só para as unidades e os membros daquele clube.
   if (req.creator_type === 'club') return req.club_id === actor.club_id && actor.type !== 'club';
-  // Requisitos do grupo: só para os membros daquele grupo.
+  // Requisitos da unidade: só para os membros daquela unidade.
   if (req.creator_type === 'unit') return actor.type === 'member' && req.unit_id === actor.unit_id;
   return req.scope === 'geral' || req.district_id === actor.district_id;
 }
@@ -45,7 +45,7 @@ function decorate(req, sub) {
   };
 }
 
-// Requisitos que a conta logada precisa cumprir (clã, grupo ou explorador).
+// Requisitos que a conta logada precisa cumprir (clube, unidade ou desbravador).
 r.get('/requirements/mine', requireAuth('club', 'unit', 'member'), (req, res) => {
   const a = req.actor;
   const rows = all('SELECT * FROM requirements ORDER BY deadline').filter((q) => applies(a, q));
@@ -97,7 +97,7 @@ r.post('/requirements/:id/submit', requireAuth('club', 'unit', 'member'), privat
   res.json({ status, points, late: !!late, quiz_correct: correct, quiz_total: total });
 });
 
-// ---------- Criação (Administrador Geral, Clã e Grupo) ----------
+// ---------- Criação (Administrador Geral, Clube e Unidade) ----------
 r.post('/requirements', requireAuth('admin', 'club', 'unit'), imageUpload.array('images', 6), (req, res) => {
   const a = req.actor;
   const b = req.body;
@@ -123,13 +123,13 @@ r.post('/requirements', requireAuth('admin', 'club', 'unit'), imageUpload.array(
       if (!get('SELECT 1 FROM districts WHERE id = ?', districtId)) fail(400, 'Escolha o distrito');
     }
   } else if (a.type === 'club') {
-    // Clã cria para os próprios grupos ou para os próprios membros.
+    // Clube cria para os próprias unidades ou para os próprios membros.
     audience = b.audience === 'member' ? 'member' : 'unit';
     scope = 'clube';
     clubId = a.id;
   } else {
-    if (a.is_leadership) fail(403, 'O grupo Tutores não cria requisitos de grupo');
-    // Grupo cria só para os próprios exploradores.
+    if (a.is_leadership) fail(403, 'A unidade Liderança não cria requisitos de unidade');
+    // Unidade cria só para os próprios desbravadores.
     audience = 'member';
     scope = 'grupo';
     clubId = a.club_id;

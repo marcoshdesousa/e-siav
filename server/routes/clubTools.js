@@ -1,5 +1,5 @@
-// Pastas do Sistema do Clã: agenda, tesouraria (minhas finanças), patrimônio,
-// biblioteca (insígnias e guias), ferramentas (aniversariantes e contatos) e suporte.
+// Pastas do Sistema do Clube: agenda, tesouraria (minhas finanças), patrimônio,
+// biblioteca (especialidades e guias), ferramentas (aniversariantes e contatos) e suporte.
 import { Router } from 'express';
 import { all, get, run, tx } from '../db.js';
 import { requireAuth } from '../auth.js';
@@ -41,7 +41,7 @@ const AGENDA_COLS = `a.id, a.creator_type, a.scope, a.title, a.description, a.lo
   d.name AS district_name, c.name AS club_name`;
 const AGENDA_FROM = 'agenda_items a LEFT JOIN districts d ON d.id = a.district_id LEFT JOIN clubs c ON c.id = a.club_id';
 
-/** Agenda que um clã (ou um membro/grupo dele) vê: a do clã + a do App para todos, o distrito ou o clã. */
+/** Agenda que um clube (ou um membro/grupo dele) vê: a do clube + a do App para todos, o distrito ou o clube. */
 function agendaFor(clubId, districtId) {
   return withDates(all(
     `SELECT ${AGENDA_COLS} FROM ${AGENDA_FROM}
@@ -72,7 +72,7 @@ r.delete('/club/agenda/:id', club, (req, res) => {
   res.json({ ok: true });
 });
 
-// Admin: agenda para todos os clãs, um distrito ou um clã.
+// Admin: agenda para todos os clubes, um distrito ou um clube.
 r.get('/admin/agenda', admin, (_req, res) => res.json(withDates(all(`SELECT ${AGENDA_COLS} FROM ${AGENDA_FROM} WHERE a.creator_type = 'admin' ORDER BY a.date, a.time`))));
 function adminScope(b) {
   const scope = ['geral', 'distrito', 'clube'].includes(b.scope) ? b.scope : 'geral';
@@ -84,7 +84,7 @@ function adminScope(b) {
   }
   if (scope === 'clube') {
     clubId = int(b.club_id);
-    if (!get('SELECT 1 FROM clubs WHERE id = ?', clubId)) fail(400, 'Escolha o clã');
+    if (!get('SELECT 1 FROM clubs WHERE id = ?', clubId)) fail(400, 'Escolha o clube');
   }
   return { scope, districtId, clubId };
 }
@@ -162,8 +162,8 @@ r.delete('/club/patrimonio/:id', club, (req, res) => {
   res.json({ ok: true });
 });
 
-// ---------- Biblioteca: insígnias e guias ----------
-/** Quem tem insígnias e guias no clã, com a quantidade e a lista de cada um. */
+// ---------- Biblioteca: especialidades e guias ----------
+/** Quem tem especialidades e guias no clube, com a quantidade e a lista de cada um. */
 r.get('/club/biblioteca', club, (req, res) => {
   const members = all(`SELECT id, name, photo, code, birth_date, unit_id FROM members WHERE club_id = ? AND status <> 'inativo' ORDER BY name`, req.actor.id);
   const ach = all(
@@ -181,18 +181,18 @@ r.get('/club/biblioteca', club, (req, res) => {
   }));
 });
 
-/** Entrega de uma vez: várias insígnias ou guias para várias pessoas. */
+/** Entrega de uma vez: várias especialidades ou guias para várias pessoas. */
 r.post('/club/biblioteca/entregar', club, (req, res) => {
   const memberIds = [...new Set((Array.isArray(req.body.member_ids) ? req.body.member_ids : []).map(Number).filter(Boolean))];
   const contentIds = [...new Set((Array.isArray(req.body.content_ids) ? req.body.content_ids : []).map(Number).filter(Boolean))];
   if (!memberIds.length) fail(400, 'Escolha pelo menos uma pessoa');
-  if (!contentIds.length) fail(400, 'Escolha pelo menos uma insígnia ou guia');
+  if (!contentIds.length) fail(400, 'Escolha pelo menos uma especialidade ou guia');
   let added = 0;
   tx(() => {
     for (const mid of memberIds) {
       if (!get(`SELECT 1 FROM members WHERE id = ? AND club_id = ? AND status <> 'inativo'`, mid, req.actor.id)) fail(400, 'Membro inválido');
       for (const cid of contentIds) {
-        if (!get(`SELECT 1 FROM content WHERE id = ? AND type IN ('classe','especialidade')`, cid)) fail(400, 'Insígnia ou guia inválido');
+        if (!get(`SELECT 1 FROM content WHERE id = ? AND type IN ('classe','especialidade')`, cid)) fail(400, 'Especialidade ou guia inválido');
         added += Number(run(`INSERT OR IGNORE INTO achievements (member_id, content_id, source) VALUES (?, ?, 'clube')`, mid, cid).changes);
       }
     }
@@ -200,7 +200,7 @@ r.post('/club/biblioteca/entregar', club, (req, res) => {
   res.json({ added });
 });
 
-/** Dados do certificado (gerado automaticamente) de uma insígnia ou guia. */
+/** Dados do certificado (gerado automaticamente) de uma especialidade ou guia. */
 r.get('/club/certificado/:memberId/:contentId', club, (req, res) => {
   const c = get(
     `SELECT m.name AS member_name, ct.name AS content_name, ct.type, ct.image, ct.icon, a.date, cl.name AS club_name, cl.logo AS club_logo, cl.director_name

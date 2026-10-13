@@ -14,32 +14,32 @@ r.get('/rankings/clubs', (req, res) => res.json(clubsRanking(district(req))));
 r.get('/rankings/leaders', (req, res) => res.json(leadersRanking(district(req))));
 r.get('/rankings/units', (req, res) => res.json(unitsRanking(district(req))));
 
-// Ranking interno de grupos: visível ao próprio clã (e ao Administrador Geral).
+// Ranking interno de unidades: visível ao próprio clube (e ao Administrador Geral).
 r.get('/rankings/club/:clubId/units', (req, res) => {
   const clubId = int(req.params.clubId);
-  if (req.actor.type !== 'admin' && req.actor.club_id !== clubId) fail(403, 'Ranking de outro clã');
+  if (req.actor.type !== 'admin' && req.actor.club_id !== clubId) fail(403, 'Ranking de outro clube');
   const club = get('SELECT id, name FROM clubs WHERE id = ?', clubId);
-  if (!club) fail(404, 'Clã não encontrado');
+  if (!club) fail(404, 'Clube não encontrado');
   res.json({ club, rows: clubUnitsRanking(clubId) });
 });
 
-// Ranking de exploradores do clã (requisitos criados pelo clã).
+// Ranking de desbravadores do clube (requisitos criados pelo clube).
 r.get('/rankings/club/:clubId/members', (req, res) => {
   const clubId = int(req.params.clubId);
-  if (req.actor.type !== 'admin' && req.actor.club_id !== clubId) fail(403, 'Ranking de outro clã');
+  if (req.actor.type !== 'admin' && req.actor.club_id !== clubId) fail(403, 'Ranking de outro clube');
   res.json(clubMembersRanking(clubId));
 });
 
-// Melhor da liderança e dos tutores do clã (requisitos criados pelo clã).
+// Melhor da liderança do clube (requisitos criados pelo clube).
 r.get('/rankings/club/:clubId/leaders', (req, res) => {
   const clubId = int(req.params.clubId);
-  if (req.actor.type !== 'admin' && req.actor.club_id !== clubId) fail(403, 'Ranking de outro clã');
+  if (req.actor.type !== 'admin' && req.actor.club_id !== clubId) fail(403, 'Ranking de outro clube');
   res.json(clubLeadersRanking(clubId));
 });
 
 const pick = (row) => (row ? { position: row.position, points: row.points } : null);
 
-// Resumo: a posição do membro, da seu grupo e do seu clã de uma vez.
+// Resumo: a posição do membro, da sua unidade e do seu clube de uma vez.
 r.get('/rankings/summary', (req, res) => {
   const a = req.actor;
   if (a.type === 'admin') return res.json({});

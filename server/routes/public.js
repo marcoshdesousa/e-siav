@@ -24,7 +24,7 @@ r.get('/public/districts/:id/clubs', (req, res) => {
   res.json(rows);
 });
 
-// Busca de clã pelo número (1º, 2º...), pelo código (4 números) ou pelo nome.
+// Busca de clube pelo número (1º, 2º...), pelo código (4 números) ou pelo nome.
 r.get('/public/clubs/search', (req, res) => {
   const q = String(req.query.q || '').trim().replace(/º/g, '').slice(0, 80);
   if (!q) return res.json([]);
@@ -38,31 +38,31 @@ r.get('/public/clubs/search', (req, res) => {
 
 r.get('/public/clubs/:id', (req, res) => {
   const c = clubProfile(int(req.params.id));
-  if (!c) fail(404, 'Clã não encontrado');
+  if (!c) fail(404, 'Clube não encontrado');
   res.json(c);
 });
 
-// Links bonitos: /cla/4821 (clã) e /cla/4821/2 (grupo nº 2 do clã; "tutores" para o grupo Tutores).
+// Links bonitos: /clube/4821 (clube) e /clube/4821/2 (unidade nº 2 do clube; "lideranca" para a unidade Liderança).
 r.get('/public/cla/:code', (req, res) => {
   const c = get('SELECT id FROM clubs WHERE code = ?', String(req.params.code).trim());
   const p = c && clubProfile(c.id);
-  if (!p) fail(404, 'Clã não encontrado');
+  if (!p) fail(404, 'Clube não encontrado');
   res.json(p);
 });
 r.get('/public/cla/:code/:n', (req, res) => {
   const n = String(req.params.n).toLowerCase();
   const u = get(
-    `SELECT u.id FROM units u JOIN clubs c ON c.id = u.club_id WHERE c.code = ? AND ${n === 'tutores' ? 'u.is_leadership = 1' : 'u.number = ?'}`,
-    ...[String(req.params.code).trim(), ...(n === 'tutores' ? [] : [int(n)])],
+    `SELECT u.id FROM units u JOIN clubs c ON c.id = u.club_id WHERE c.code = ? AND ${['lideranca', 'tutores'].includes(n) ? 'u.is_leadership = 1' : 'u.number = ?'}`,
+    ...[String(req.params.code).trim(), ...(['lideranca', 'tutores'].includes(n) ? [] : [int(n)])],
   );
   const p = u && unitProfile(u.id);
-  if (!p) fail(404, 'Grupo não encontrado');
+  if (!p) fail(404, 'Unidade não encontrada');
   res.json(p);
 });
 
 r.get('/public/units/:id', (req, res) => {
   const u = unitProfile(int(req.params.id));
-  if (!u) fail(404, 'Grupo não encontrado');
+  if (!u) fail(404, 'Unidade não encontrada');
   res.json(u);
 });
 

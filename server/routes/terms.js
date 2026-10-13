@@ -1,4 +1,4 @@
-// Termo assinado pelo responsável: cada membro cadastrado pelo clã tem o seu link
+// Termo assinado pelo responsável: cada membro cadastrado pelo clube tem o seu link
 // (/termo/TOKEN). O responsável lê os termos e assina digitalmente (nome + CPF).
 // Assinou, o membro fica ativo e o link deixa de valer.
 import { Router } from 'express';

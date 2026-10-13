@@ -10,9 +10,9 @@ import {
 import { ResponseFields } from './Requirements.jsx';
 
 const TITLES = {
-  especialidade: ['Insígnias', 'Faça insígnias online, cumprindo os requisitos no app'],
-  classe: ['Cadernos guia', 'Requisitos de cada caderno guia'],
-  curso: ['Cursos', 'Cursos em aulas para exploradores e tutores'],
+  especialidade: ['Especialidades', 'Faça especialidades online, cumprindo os requisitos no app'],
+  classe: ['Classes', 'Requisitos de cada classe'],
+  curso: ['Cursos', 'Cursos em aulas para desbravadores e conselheiros'],
 };
 
 function StatusTag({ c }) {
@@ -103,7 +103,7 @@ export function ContentDetail() {
               <div className="grow">
                 <h1>{c.name}</h1>
                 <div className="muted small">
-                  {c.type === 'classe' ? 'Caderno guia' : c.type === 'curso' ? 'Curso' : `Insígnia${c.category ? ' · ' + c.category : ''}`}
+                  {c.type === 'classe' ? 'Classe' : c.type === 'curso' ? 'Curso' : `Especialidade${c.category ? ' · ' + c.category : ''}`}
                 </div>
               </div>
             </div>

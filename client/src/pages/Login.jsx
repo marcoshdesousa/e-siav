@@ -35,9 +35,9 @@ function FloatField({ label, type = 'text', value, onChange, autoComplete, right
 }
 
 const STEPS = {
-  ios: { title: 'Instalar no iPhone', steps: [[Share, 'No Safari, toque em Compartilhar (o quadrado com a seta para cima).'], [SquarePlus, 'Role e toque em “Adicionar à Tela de Início”.'], [Smartphone, 'Toque em “Adicionar”. O Exploradores do Brasil aparece junto com os seus apps.']] },
-  android: { title: 'Instalar no Android', steps: [[MoreVertical, 'No Chrome, toque no menu (os três pontinhos no canto de cima).'], [Download, 'Toque em “Instalar app” ou “Adicionar à tela inicial”.'], [Smartphone, 'Confirme. O Exploradores do Brasil aparece junto com os seus apps.']] },
-  desktop: { title: 'Instalar no computador', steps: [[Monitor, 'No Chrome ou Edge, clique no ícone de instalar na barra de endereço (à direita).'], [Download, 'Ou abra o menu do navegador e escolha “Instalar Exploradores do Brasil”.'], [Monitor, 'O app abre em uma janela própria, como um programa.']] },
+  ios: { title: 'Instalar no iPhone', steps: [[Share, 'No Safari, toque em Compartilhar (o quadrado com a seta para cima).'], [SquarePlus, 'Role e toque em “Adicionar à Tela de Início”.'], [Smartphone, 'Toque em “Adicionar”. O App do DBV aparece junto com os seus apps.']] },
+  android: { title: 'Instalar no Android', steps: [[MoreVertical, 'No Chrome, toque no menu (os três pontinhos no canto de cima).'], [Download, 'Toque em “Instalar app” ou “Adicionar à tela inicial”.'], [Smartphone, 'Confirme. O App do DBV aparece junto com os seus apps.']] },
+  desktop: { title: 'Instalar no computador', steps: [[Monitor, 'No Chrome ou Edge, clique no ícone de instalar na barra de endereço (à direita).'], [Download, 'Ou abra o menu do navegador e escolha “Instalar App do DBV”.'], [Monitor, 'O app abre em uma janela própria, como um programa.']] },
 };
 
 function InstallSection() {
@@ -136,16 +136,16 @@ export default function Login() {
         <div className="ig-col">
           <form className="ig-card ig-login" onSubmit={submit} key={shake} data-shake={shake > 0 || undefined}>
             <LogoIcon size={132} />
-            <h1 className="ig-brand">Exploradores do Brasil</h1>
-            <p className="ig-tagline">Entre para ver o seu clã, o seu grupo e o ranking.</p>
+            <h1 className="ig-brand">App do DBV</h1>
+            <p className="ig-tagline">Entre para ver o seu clube, a sua unidade e o ranking.</p>
 
             <div className="ig-switch" role="tablist" data-mode={mode}>
               <span className="ig-switch-pill" />
               <button type="button" role="tab" aria-selected={mode === 'membros'} onClick={() => setMode('membros')}><Compass size={17} /> Membros</button>
-              <button type="button" role="tab" aria-selected={mode === 'clube'} onClick={() => setMode('clube')}><Tent size={17} /> Clã</button>
+              <button type="button" role="tab" aria-selected={mode === 'clube'} onClick={() => setMode('clube')}><Tent size={17} /> Clube</button>
             </div>
 
-            <FloatField label={mode === 'clube' ? 'Código do clã' : 'Seu código'} value={username} onChange={setUsername} autoComplete="username" inputMode={mode === 'clube' ? 'numeric' : undefined} />
+            <FloatField label={mode === 'clube' ? 'Código do clube' : 'Seu código'} value={username} onChange={setUsername} autoComplete="username" inputMode={mode === 'clube' ? 'numeric' : undefined} />
             <FloatField
               label="Senha" type={show ? 'text' : 'password'} value={password} onChange={setPassword} autoComplete="current-password"
               right={password ? <button type="button" className="ig-show" onClick={() => setShow((s) => !s)}>{show ? 'Ocultar' : 'Mostrar'}</button> : null}
@@ -156,21 +156,21 @@ export default function Login() {
             {error && <p className="ig-error" role="alert">{error}</p>}
             <QuickLogin mode={mode} onPick={pick} />
             <p className="ig-hint">{mode === 'clube'
-              ? 'Coloque o código do clã e a senha. Para entrar como grupo, use a senha do seu grupo.'
+              ? 'Coloque o código do clube e a senha. Para entrar como unidade, use a senha da sua unidade.'
               : 'Coloque o seu código e a sua senha.'}</p>
 
           </form>
 
           <div className="ig-card ig-signup">
-            Não tem uma conta? <b>Peça ao seu clã o link de inscrição.</b>
+            Não tem uma conta? <b>Peça ao seu clube o link de inscrição.</b>
           </div>
 
           <InstallSection />
         </div>
       </main>
       <footer className="ig-footer">
-        <span>Clãs, grupos e aventura</span>
-        <span>© {new Date().getFullYear()} Exploradores do Brasil</span>
+        <span>Clubes, unidades e aventura</span>
+        <span>© {new Date().getFullYear()} App do DBV</span>
       </footer>
     </div>
   );

@@ -7,7 +7,7 @@ import { currentYear } from '../memberStatus.js';
 
 const r = Router();
 
-// Clã: vê as parcelas, a taxa anual dos membros e a chave Pix.
+// Clube: vê as parcelas, a taxa anual dos membros e a chave Pix.
 r.get('/club/pagamentos', requireAuth('club'), (req, res) => res.json(clubPayments(req.actor.id)));
 
 const admin = requireAuth('admin');
@@ -35,11 +35,11 @@ r.get('/admin/pagamentos/inscricoes', admin, (_req, res) => {
 });
 r.get('/admin/pagamentos/:clubId', admin, (req, res) => {
   const c = get('SELECT id, name, number, code FROM clubs WHERE id = ?', int(req.params.clubId));
-  if (!c) fail(404, 'Clã não encontrado');
+  if (!c) fail(404, 'Clube não encontrado');
   res.json({ club: c, ...clubPayments(c.id) });
 });
 
-// Valores e chave Pix (valem para os clãs criados daqui pra frente).
+// Valores e chave Pix (valem para os clubes criados daqui pra frente).
 r.put('/admin/pagamentos/config', admin, (req, res) => {
   const member = toCents(req.body.fee_member_year);
   const month = toCents(req.body.fee_club_month);
@@ -54,7 +54,7 @@ r.put('/admin/pagamentos/config', admin, (req, res) => {
   res.json(feeConfig());
 });
 
-// Muda o valor das parcelas em aberto de um clã.
+// Muda o valor das parcelas em aberto de um clube.
 r.put('/admin/pagamentos/:clubId/valor', admin, (req, res) => {
   const cents = toCents(req.body.amount);
   if (cents == null) fail(400, 'Valor inválido');
@@ -83,7 +83,7 @@ r.post('/admin/pagamentos/membros', admin, (req, res) => {
     else {
       for (const id of ids) {
         run('DELETE FROM member_fees WHERE member_id = ? AND year = ?', id, year);
-        // Desfez a inscrição do ano: volta a esperar o clã.
+        // Desfez a inscrição do ano: volta a esperar o clube.
         const prev = get('SELECT MAX(year) y FROM member_fees WHERE member_id = ?', id).y;
         run(`UPDATE members SET cleared_year = ?, status = CASE WHEN status = 'ativo' AND (? IS NULL OR ? < ?) THEN 'pendente' ELSE status END
              WHERE id = ? AND cleared_year = ?`, prev, prev, prev, currentYear(), id, year);
@@ -93,7 +93,7 @@ r.post('/admin/pagamentos/membros', admin, (req, res) => {
   res.json({ ok: true });
 });
 
-// Inscrição do ano: o clã escolhe um ou vários membros e paga tudo de uma vez no Pix.
+// Inscrição do ano: o clube escolhe um ou vários membros e paga tudo de uma vez no Pix.
 // O pedido fica esperando a equipe confirmar o Pix; aí todos são liberados.
 r.post('/club/pagamentos/inscricoes', requireAuth('club'), (req, res) => {
   const year = currentYear();

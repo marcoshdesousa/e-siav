@@ -11,8 +11,8 @@ import { listMembers, listUnits, memberFicha } from '../clubData.js';
 import { clubProfile } from '../profiles.js';
 import { clubUnitsRanking } from '../rankings.js';
 
-// Sistema do Clã: conta única da secretaria, diretores e diretores associados.
-// Toda consulta é filtrada por club_id = clã logado: cada clã só vê e edita os seus.
+// Sistema do Clube: conta única da secretaria, diretores e diretores associados.
+// Toda consulta é filtrada por club_id = clube logado: cada clube só vê e edita os seus.
 const r = Router();
 r.use('/club', requireAuth('club'));
 
@@ -35,11 +35,11 @@ r.get('/club/overview', (req, res) => {
   res.json(profile);
 });
 
-// O clã tem só a logo (não tem foto de capa).
+// O clube tem só a logo (não tem foto de capa).
 r.put('/club/profile', imageUpload.fields([{ name: 'logo', maxCount: 1 }]), (req, res) => {
   const logo = req.files?.logo?.[0];
   if (logo) run('UPDATE clubs SET logo = ? WHERE id = ?', fileUrl(logo), req.actor.id);
-  // História do clã. O nome do diretor só o administrativo muda (todo ano).
+  // História do clube. O nome do diretor só o administrativo muda (todo ano).
   if (req.body.history !== undefined) run('UPDATE clubs SET history = ? WHERE id = ?', str(req.body.history, 5000) || null, req.actor.id);
   res.json({ ok: true });
 });
@@ -47,7 +47,7 @@ r.put('/club/profile', imageUpload.fields([{ name: 'logo', maxCount: 1 }]), (req
 // ---------- Membros ----------
 function ownMember(req) {
   const m = get('SELECT * FROM members WHERE id = ? AND club_id = ?', int(req.params.id), req.actor.id);
-  if (!m) fail(404, 'Membro não encontrado neste clã');
+  if (!m) fail(404, 'Membro não encontrado neste clube');
   return m;
 }
 
@@ -80,10 +80,10 @@ function memberFields(req, existing) {
   let unitId = b.unit_id === undefined ? existing?.unit_id ?? null : int(b.unit_id);
   if (unitId) {
     const u = get('SELECT * FROM units WHERE id = ? AND club_id = ?', unitId, req.actor.id);
-    if (!u) fail(400, 'Grupo inválido');
-    if (u.is_leadership && kind === 'desbravador') fail(400, 'Exploradores não podem entrar no grupo Tutores');
+    if (!u) fail(400, 'Unidade inválida');
+    if (u.is_leadership && kind === 'desbravador') fail(400, 'Desbravadores não podem entrar na unidade Liderança');
   }
-  // Tutor sem grupo entra automaticamente no grupo "Tutores".
+  // Conselheiro sem unidade entra automaticamente na unidade "Liderança".
   if (!unitId && kind === 'lideranca') unitId = leadershipUnit(req.actor.id);
   const ids = b.cpf === undefined && b.certidao === undefined && existing
     ? { cpf: existing.cpf, certidao: existing.birth_cert }
@@ -91,7 +91,7 @@ function memberFields(req, existing) {
   return { name, birth, cargo, unitId, cpf: ids.cpf, certidao: ids.certidao };
 }
 
-// Cadastro feito pelo clã: todos os dados da ficha. As assinaturas e os termos ficam
+// Cadastro feito pelo clube: todos os dados da ficha. As assinaturas e os termos ficam
 // com o responsável, que recebe um link só desse membro. Assinou, o membro fica ativo.
 r.post('/club/members', imageUpload.single('photo'), (req, res) => {
   const ficha = cleanFicha(req.body);
@@ -103,7 +103,7 @@ r.post('/club/members', imageUpload.single('photo'), (req, res) => {
   validateSignup(ficha, f.birth, { signed: false });
   for (const k of ['assinatura_nome', 'assinatura_cpf', 'med_assinatura_nome', 'med_assinatura_cpf', 'termo_medico', 'termo_imagem', 'termo_responsabilidade', 'termo_dados']) delete ficha[k];
   ficha.data_inscricao = new Date().toISOString().slice(0, 10);
-  ficha.local_inscricao = `${get('SELECT name FROM clubs WHERE id = ?', req.actor.id).name} — cadastro pelo clã`;
+  ficha.local_inscricao = `${get('SELECT name FROM clubs WHERE id = ?', req.actor.id).name} — cadastro pelo clube`;
   const token = crypto.randomBytes(18).toString('base64url');
   const out = tx(() => {
     const code = newMemberCode();
@@ -129,7 +129,7 @@ r.put('/club/members/:id', imageUpload.single('photo'), (req, res) => {
   res.json({ ok: true });
 });
 
-// Ninguém é apagado: o clã desativa (sai das listas e do ranking) e pode reativar.
+// Ninguém é apagado: o clube desativa (sai das listas e do ranking) e pode reativar.
 r.post('/club/members/:id/desativar', (req, res) => {
   const m = ownMember(req);
   if (m.status !== 'ativo') fail(400, 'Este membro não está ativo');
@@ -143,7 +143,7 @@ r.post('/club/members/:id/reativar', (req, res) => {
   res.json({ ok: true });
 });
 
-// Inscrição feita pelo link do clã: o clã aprova (escolhendo grupo e cargo) ou recusa.
+// Inscrição feita pelo link do clube: o clube aprova (escolhendo unidade e cargo) ou recusa.
 r.post('/club/members/:id/aprovar', (req, res) => {
   const m = ownMember(req);
   if (m.status !== 'pendente' || m.approved_at) fail(400, 'Esta inscrição já foi analisada');
@@ -171,7 +171,7 @@ r.get('/club/members/:id/ficha', (req, res) => {
   res.json(memberFicha(req.actor.id, m.id));
 });
 // A ficha também traz os dados pessoais do membro (nome, nascimento, CPF ou certidão).
-// Grupo e cargo ficam no "Editar".
+// Unidade e cargo ficam no "Editar".
 r.put('/club/members/:id/ficha', (req, res) => {
   const m = ownMember(req);
   const ficha = cleanFicha(req.body);
@@ -193,7 +193,7 @@ r.put('/club/members/:id/ficha', (req, res) => {
   res.json({ ok: true });
 });
 
-// Cadernos guia e insígnias concluídas, registradas pelo clã.
+// Classes e especialidades concluídas, registradas pelo clube.
 r.put('/club/members/:id/achievements', (req, res) => {
   const m = ownMember(req);
   const ids = parseJson(req.body.content_ids, []).map(Number).filter(Boolean);
@@ -207,31 +207,31 @@ r.put('/club/members/:id/achievements', (req, res) => {
   res.json({ ok: true });
 });
 
-// Catálogo de classes/especialidades para o clã registrar conclusões.
+// Catálogo de classes/especialidades para o clube registrar conclusões.
 r.get('/club/catalog', (_req, res) => {
   res.json(all(`SELECT id, type, name, icon, age, leader FROM content WHERE type IN ('classe','especialidade') ORDER BY type, leader, age, name`));
 });
 
-// ---------- Grupos ----------
+// ---------- Unidades ----------
 function ownUnit(req) {
   const u = get('SELECT * FROM units WHERE id = ? AND club_id = ?', int(req.params.id), req.actor.id);
-  if (!u) fail(404, 'Grupo não encontrado neste clã');
+  if (!u) fail(404, 'Unidade não encontrada neste clube');
   return u;
 }
 
 r.get('/club/units', (req, res) => res.json(listUnits(req.actor.id)));
 
-// O login do grupo é o código do clã + uma senha de 4 números gerada pelo app.
+// O login da unidade é o código do clube + uma senha de 4 números gerada pelo app.
 r.post('/club/units', imageUpload.single('logo'), (req, res) => {
   const name = str(req.body.name, 80);
-  if (!name) fail(400, 'Informe o nome do grupo');
-  // Senha gerada pelo app (não pode ser trocada) e diferente da senha do clã.
+  if (!name) fail(400, 'Informe o nome da unidade');
+  // Senha gerada pelo app (não pode ser trocada) e diferente da senha do clube.
   const pin = newUnitPin(req.actor.id, (p) => checkAccountPassword('club', req.actor.id, p));
-  // Número do grupo no clã (1 a 10): o menor livre.
+  // Número da unidade no clube (1 a 10): o menor livre.
   const used = new Set(all('SELECT number FROM units WHERE club_id = ? AND number IS NOT NULL', req.actor.id).map((u) => u.number));
   let number = 1;
   while (used.has(number)) number++;
-  if (number > MAX_GRUPOS) fail(400, `O clã pode ter no máximo ${MAX_GRUPOS} grupos`);
+  if (number > MAX_GRUPOS) fail(400, `O clube pode ter no máximo ${MAX_GRUPOS} unidades`);
   const id = Number(run('INSERT INTO units (club_id, name, logo, pin, number) VALUES (?,?,?,?,?)', req.actor.id, name, fileUrl(req.file), pin, number).lastInsertRowid);
   res.json({ id, pin, number });
 });
@@ -248,7 +248,7 @@ r.put('/club/units/:id', imageUpload.single('logo'), (req, res) => {
 
 r.delete('/club/units/:id', (req, res) => {
   const u = ownUnit(req);
-  if (u.is_leadership) fail(400, 'O grupo Tutores não pode ser removido');
+  if (u.is_leadership) fail(400, 'A unidade Liderança não pode ser removida');
   tx(() => {
     const members = all('SELECT id, birth_date FROM members WHERE unit_id = ?', u.id);
     const lid = leadershipUnit(req.actor.id);

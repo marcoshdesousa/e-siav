@@ -4,7 +4,7 @@ import { useAuth } from '../../auth.jsx';
 import { Button, Field, Loading, PageHeader, useAsync, useLoad } from '../../ui.jsx';
 import { AgendaForm, AgendaView } from '../club/Folders.jsx';
 
-/** Agenda do App: aparece para todos os clãs, para um distrito ou para um clã. */
+/** Agenda do App: aparece para todos os clubes, para um distrito ou para um clube. */
 export default function AgendaAdmin() {
   const { meta } = useAuth();
   const state = useLoad(() => api.get('/admin/agenda'));
@@ -15,9 +15,9 @@ export default function AgendaAdmin() {
     <>
       <Field label="Para quem">
         <select value={f.scope || 'geral'} onChange={(e) => setF({ ...f, scope: e.target.value })}>
-          <option value="geral">Todos os clãs</option>
+          <option value="geral">Todos os clubes</option>
           <option value="distrito">Um distrito</option>
-          <option value="clube">Um clã</option>
+          <option value="clube">Um clube</option>
         </select>
       </Field>
       {f.scope === 'distrito' && (
@@ -29,7 +29,7 @@ export default function AgendaAdmin() {
         </Field>
       )}
       {f.scope === 'clube' && (
-        <Field label="Clã">
+        <Field label="Clube">
           <select value={f.club_id || ''} onChange={(e) => setF({ ...f, club_id: e.target.value })}>
             <option value="">Escolha</option>
             {(clubs.data || []).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -40,7 +40,7 @@ export default function AgendaAdmin() {
   );
   return (
     <>
-      <PageHeader title="Agenda" subtitle="Datas do App que aparecem na agenda dos clãs" action={<Button small onClick={() => setEditing({ _extra: { scope: 'geral' } })}>+ Marcar</Button>} />
+      <PageHeader title="Agenda" subtitle="Datas do App que aparecem na agenda dos clubes" action={<Button small onClick={() => setEditing({ _extra: { scope: 'geral' } })}>+ Marcar</Button>} />
       <Loading {...state}>
         {(items) => (
           <AgendaView items={items} canEdit={() => true}

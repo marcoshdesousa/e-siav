@@ -9,7 +9,7 @@ import { MAX_FOTOS_ENVIO } from '../config.js';
 
 // Cursos (grátis ou pagos). Cada aula pode pedir relatório, foto e/ou quiz; o Administrador
 // Geral avalia. Aula sem forma de envio é só "marcar como concluída".
-// Cadernos guia e insígnias NÃO passam por aqui: não são vendidas nem feitas online
+// Classes e especialidades NÃO passam por aqui: não são vendidas nem feitas online
 // (o membro informa as que tem e a diretoria aprova — ver routes/achievements.js).
 const r = Router();
 const TYPES = ['curso'];
@@ -18,7 +18,7 @@ function hasAccess(memberId, c) {
   return !!c.is_free || !!get('SELECT 1 FROM content_access WHERE member_id = ? AND content_id = ?', memberId, c.id);
 }
 
-/** Explorador não vê cadernos guia de líder; tutor vê todos. */
+/** Desbravador não vê classes de líder; conselheiro vê todos. */
 const visibleTo = (actor, c) => !(c.type === 'classe' && c.leader && actor.kind !== 'lideranca');
 
 const approvedCount = (contentId, memberId) =>
@@ -168,7 +168,7 @@ r.get('/admin/content/:id', admin, (req, res) => {
 
 function contentFields(b) {
   const type = b.type || 'curso';
-  if (!TYPES.includes(type)) fail(400, 'Cadernos guia e insígnias não são criadas nem vendidas aqui. Use o catálogo.');
+  if (!TYPES.includes(type)) fail(400, 'Classes e especialidades não são criadas nem vendidas aqui. Use o catálogo.');
   const name = str(b.name, 120);
   if (!name) fail(400, 'Informe o nome');
   // Nada no app é vendido: todo conteúdo é grátis.
@@ -253,7 +253,7 @@ r.delete('/admin/content/:id', admin, (req, res) => {
   res.json({ ok: true });
 });
 
-// ---------- Análise de cadernos guia e insígnias ----------
+// ---------- Análise de classes e especialidades ----------
 r.get('/admin/content-review', admin, (req, res) => {
   const type = 'curso';
   const rows = all(

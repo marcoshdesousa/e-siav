@@ -32,7 +32,7 @@ import { createInitialAdmin, resetToDemoClubsOnce, seed } from './seed.js';
 
 // Banco vazio: cria só o administrador. Os dados de exemplo completos só entram com
 // SEED_DEMO=1 (testes e desenvolvimento). Nada que já existe é apagado na inicialização,
-// a não ser a troca única dos clãs antigos pelos clãs de teste (resetToDemoClubsOnce).
+// a não ser a troca única dos clubes antigos pelos clubes de teste (resetToDemoClubsOnce).
 let justSeeded = false;
 if (!get('SELECT 1 FROM admins LIMIT 1')) {
   if (process.env.SEED_DEMO === '1') {
@@ -44,9 +44,9 @@ if (!get('SELECT 1 FROM admins LIMIT 1')) {
   }
 }
 resetToDemoClubsOnce({ justSeeded });
-// Todo clã tem as suas parcelas (criadas a partir da data de criação do clã).
+// Todo clube tem as suas parcelas (criadas a partir da data de criação do clube).
 for (const c of all('SELECT id, created_at FROM clubs')) ensureInstallments(c.id, c.created_at);
-// Virada do ano: quem não teve a inscrição renovada pelo clã fica esperando (confere de hora em hora).
+// Virada do ano: quem não teve a inscrição renovada pelo clube fica esperando (confere de hora em hora).
 expireYear();
 setInterval(expireYear, 60 * 60 * 1000).unref();
 
@@ -93,14 +93,14 @@ if (fs.existsSync(path.join(dist, 'index.html'))) {
 } else {
   console.error(`ATENÇÃO: site não encontrado em ${dist}. Rode "npm run build" antes de "npm start".`);
   app.get('/{*splat}', (_req, res) =>
-    res.status(503).send('<h1>Exploradores do Brasil</h1><p>O site ainda não foi gerado. Rode <code>npm run build</code> e reinicie o servidor.</p>'));
+    res.status(503).send('<h1>App do DBV</h1><p>O site ainda não foi gerado. Rode <code>npm run build</code> e reinicie o servidor.</p>'));
 }
 
 // eslint-disable-next-line no-unused-vars
 app.use((err, _req, res, _next) => {
   if (err instanceof HttpError) return res.status(err.status).json({ error: err.message });
   if (err instanceof multer.MulterError) return res.status(400).json({ error: err.code === 'LIMIT_FILE_SIZE' ? 'Arquivo muito grande' : 'Erro no envio do arquivo' });
-  if (err?.code === 'ERR_SQLITE_ERROR' && /constraint|RAISE|ABORT|grupo|clã|unidade|clube|requisito/i.test(err.message)) {
+  if (err?.code === 'ERR_SQLITE_ERROR' && /constraint|RAISE|ABORT|unidade|clube|unidade|clube|requisito/i.test(err.message)) {
     return res.status(400).json({ error: err.message.replace(/^.*?:\s*/, '') });
   }
   console.error(err);
@@ -109,4 +109,4 @@ app.use((err, _req, res, _next) => {
 
 const server = http.createServer(app);
 const PORT = Number(process.env.PORT) || 3000;
-server.listen(PORT, () => console.log(`Exploradores do Brasil rodando em http://localhost:${PORT}`));
+server.listen(PORT, () => console.log(`App do DBV rodando em http://localhost:${PORT}`));
