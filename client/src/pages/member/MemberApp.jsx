@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import {
-  CalendarDays, Camera, ClipboardCheck, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, Waypoints, Hourglass,
+  BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, Waypoints, Hourglass,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -14,6 +14,7 @@ import ClubsBrowser from '../Clubs.jsx';
 import MyAchievements from './MyAchievements.jsx';
 import { AgendaLeitura, ProximasDatas } from '../club/Folders.jsx';
 import { EmbeddedSite, SupportChat } from '../Shared.jsx';
+import { AlbumsPage, GamePage, GamesHub } from '../games/GamesHub.jsx';
 
 const base = '/membro';
 
@@ -66,11 +67,13 @@ export default function MemberApp() {
     { to: base, icon: UserRound, label: 'Perfil', end: true },
     { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },
     { to: `${base}/ranking`, icon: Trophy, label: 'Ranking' },
-    { to: `${base}/especialidades`, icon: Waypoints, label: 'Especialidades' },
+    { to: `${base}/jogos`, icon: Gamepad2, label: 'Jogos' },
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
     { to: `${base}/cartao`, icon: IdCard, label: 'Cartão DBV', hint: 'O seu cartão de desbravador' },
+    { to: `${base}/especialidades`, icon: Waypoints, label: 'Especialidades', hint: 'As suas especialidades' },
+    { to: `${base}/albuns`, icon: BookImage, label: 'Álbuns de figurinhas', hint: 'Palmares 27 · em breve' },
     { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas do clube e do App' },
     { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },
     { to: `${base}/cursos`, icon: GraduationCap, label: 'Cursos', hint: 'Aulas' },
@@ -81,7 +84,7 @@ export default function MemberApp() {
       <Route
         path="*"
         element={
-          <Shell tabs={tabs} parentOf={(path) => (['cursos', 'clubes', 'agenda', 'cartao', 'suporte'].includes(path.split('/')[2]) ? `${base}/mais` : base)}>
+          <Shell tabs={tabs} parentOf={(path) => (((seg, sub) => (seg === 'jogos' && sub ? `${base}/jogos` : ['cursos', 'clubes', 'agenda', 'cartao', 'suporte', 'especialidades', 'albuns'].includes(seg) ? `${base}/mais` : base))(...path.split('/').slice(2)))}>
             {actor.waiting ? <Waiting text={actor.waiting} /> : <Routes>
               <Route index element={<MyProfile />} />
               <Route path="requisitos" element={<><PageHeader title="Requisitos" subtitle={isDbv ? 'Cumpra os requisitos e suba no ranking' : 'Requisitos para a liderança'} /><RequirementsTodo originTabs groupTab={isDbv} /></>} />
@@ -89,6 +92,9 @@ export default function MemberApp() {
               <Route path="agenda" element={<AgendaLeitura />} />
               <Route path="cartao" element={<EmbeddedSite title="Cartão DBV" linkKey="link_cartao" subtitle="Entre com o código e a senha que o seu clube passar" />} />
               <Route path="suporte" element={<SupportChat />} />
+              <Route path="jogos" element={<GamesHub base={base} />} />
+              <Route path="jogos/:id" element={<GamePage base={base} />} />
+              <Route path="albuns" element={<AlbumsPage />} />
               <Route path="cursos" element={<ContentList type="curso" base={base} />} />
               <Route path="conteudo/:id" element={<ContentDetail />} />
               <Route path="ranking" element={<RankingHub base={base} />} />

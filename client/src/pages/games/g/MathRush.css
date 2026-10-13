@@ -1,0 +1,28 @@
+.mathrush { width: 100%; max-width: 480px; margin: 0 auto; padding: 14px; box-sizing: border-box;
+  background: var(--surface, #fff); color: var(--ink, #101831); border: 1px solid var(--line, #e2e7f0);
+  border-radius: var(--r, 16px); user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+.mathrush-hud { display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  font: 700 1rem var(--font-title, sans-serif); }
+.mathrush-time.mathrush-low { color: #E92A2F; animation: mathrush-pulse .6s infinite alternate; }
+.mathrush-level { font-size: .8rem; color: var(--muted, #5e6a84); font-weight: 600; }
+.mathrush-score { color: #2B54B0; }
+.mathrush-bar { height: 8px; background: var(--line, #e2e7f0); border-radius: 99px; overflow: hidden; margin: 10px 0 0; }
+.mathrush-bar i { display: block; height: 100%; background: linear-gradient(90deg, #18875A, #F9C71D); transition: width .1s linear; }
+.mathrush-q { position: relative; display: flex; align-items: center; justify-content: center; min-height: 130px;
+  font: 800 clamp(2rem, 10vw, 2.8rem) var(--font-title, sans-serif); text-align: center; }
+.mathrush-count { font-size: 1.4em; color: #2B54B0; }
+.mathrush-delta { position: absolute; right: 6px; top: 8px; font-size: 1.1rem; animation: mathrush-float .7s ease-out forwards; }
+.mathrush-good { color: #18875A; }
+.mathrush-bad { color: #E92A2F; }
+.mathrush-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mathrush-opt { position: relative; min-height: 76px; border: 0; border-radius: 14px; cursor: pointer;
+  background: #2B54B0; color: #fff; font: 800 1.7rem var(--font-title, sans-serif);
+  box-shadow: 0 4px 0 #0E2A6B; transition: transform .08s, background .15s; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.mathrush-opt:active { transform: translateY(2px); box-shadow: 0 2px 0 #0E2A6B; }
+.mathrush-opt:disabled { opacity: .6; cursor: default; }
+.mathrush-opt small { position: absolute; left: 10px; top: 6px; font-size: .7rem; opacity: .65; }
+.mathrush-right { background: #18875A; box-shadow: 0 4px 0 #0c5338; }
+.mathrush-wrong { background: #E92A2F; box-shadow: 0 4px 0 #8f1418; animation: mathrush-shake .35s; }
+@keyframes mathrush-float { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-18px); } }
+@keyframes mathrush-pulse { to { opacity: .55; } }
+@keyframes mathrush-shake { 0%,100% { translate: 0 } 25% { translate: -5px 0 } 75% { translate: 5px 0 } }

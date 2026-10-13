@@ -5,7 +5,6 @@ import { imageUpload, fileUrl, attachmentUpload } from '../uploads.js';
 import { NOME_UNIDADE_LIDERANCA } from '../config.js';
 import { listMembers, listUnits, memberFicha } from '../clubData.js';
 import { clubProfile } from '../profiles.js';
-import { ensureInstallments } from '../fees.js';
 import { fail, int, str, validDate, parseJson, memberKind, newClubCode, newClubNumber, newClubPassword, newUnitPin, clubDisplayName } from '../util.js';
 
 // Painel do Administrador Geral.
@@ -21,7 +20,6 @@ r.get('/admin/overview', (_req, res) => {
     clubs: n('SELECT COUNT(*) n FROM clubs'),
     units: n('SELECT COUNT(*) n FROM units WHERE is_leadership = 0'),
     members: n(`SELECT COUNT(*) n FROM members WHERE status = 'ativo'`),
-    clan_applications: n('SELECT COUNT(*) n FROM clan_applications WHERE viewed_at IS NULL'),
     pending_reviews: n(`SELECT COUNT(*) n FROM submissions s JOIN requirements r ON r.id = s.requirement_id WHERE r.creator_type = 'admin' AND s.status = 'enviado'`),
     open_reports: n(`SELECT COUNT(*) n FROM reports WHERE status = 'aberta'`),
     pending_purchases: n(`SELECT COUNT(*) n FROM purchases WHERE status = 'pendente'`),
@@ -82,7 +80,6 @@ r.post('/admin/clubs', (req, res) => {
     const id = Number(run('INSERT INTO clubs (district_id, name, number, code, director_name, associate_directors) VALUES (?,?,?,?,?,?)', districtId, full, number, code, director, associates(req.body.associate_directors)).lastInsertRowid);
     run('INSERT INTO units (club_id, name, is_leadership, pin) VALUES (?, ?, 1, ?)', id, NOME_UNIDADE_LIDERANCA, newUnitPin(id, (p) => p === password));
     setLogin('club', id, 'cla' + code, password);
-    ensureInstallments(id);
     return { id, code, number, name: full };
   });
   res.json({ ...out, password });

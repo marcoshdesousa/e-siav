@@ -1,7 +1,7 @@
 // Transferência de membro entre clubes.
-// 1) O clube novo pede, informando o nome completo e o CPF da pessoa.
-// 2) O clube atual aceita ou recusa.
-// 3) O clube novo confirma. Só então o membro muda de clube, levando todo o histórico.
+// Cada membro fica no sistema para sempre; se ele trocar de clube:
+// 1) O clube novo pede, informando o nome completo e o código do membro.
+// 2) O clube atual aceita (o membro já muda de clube, levando todo o histórico) ou recusa.
 import { Router } from 'express';
 import { all, get, run, tx } from '../db.js';
 import { requireAuth } from '../auth.js';
@@ -53,24 +53,7 @@ function load(req) {
 }
 const setStatus = (t, status) => run(`UPDATE transfers SET status = ?, updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE id = ?`, status, t.id);
 
-// Clube atual: aceita ou recusa a saída do membro.
-r.post('/club/transfers/:id/origem', (req, res) => {
-  const t = load(req);
-  if (t.from_club_id !== req.actor.id || t.status !== 'pendente_origem') fail(400, 'Este pedido não está esperando o seu clube');
-  setStatus(t, req.body.accept ? 'pendente_destino' : 'recusada');
-  res.json({ ok: true });
-});
-
-// Clube novo: confirma (o membro muda de clube) ou desiste.
-r.post('/club/transfers/:id/destino', (req, res) => {
-  const t = load(req);
-  if (t.to_club_id !== req.actor.id) fail(403, 'Só o clube que pediu pode confirmar');
-  if (!req.body.accept) {
-    if (!['pendente_origem', 'pendente_destino'].includes(t.status)) fail(400, 'Este pedido já foi encerrado');
-    setStatus(t, 'cancelada');
-    return res.json({ ok: true });
-  }
-  if (t.status !== 'pendente_destino') fail(400, 'O clube atual ainda não aceitou');
+function move(t) {
   tx(() => {
     setStatus(t, 'concluida');
     // No clube novo, desbravador fica sem unidade e a liderança vai para a unidade "Liderança".
@@ -80,6 +63,25 @@ r.post('/club/transfers/:id/destino', (req, res) => {
     run(`UPDATE members SET club_id = ?, unit_id = ?, status = 'ativo' WHERE id = ?`, t.to_club_id, unit, t.member_id);
     run(`DELETE FROM achievement_requests WHERE member_id = ? AND status = 'pendente'`, t.member_id);
   });
+}
+
+// Clube atual: aceita (pronto, o membro muda de clube) ou recusa.
+r.post('/club/transfers/:id/origem', (req, res) => {
+  const t = load(req);
+  if (t.from_club_id !== req.actor.id || t.status !== 'pendente_origem') fail(400, 'Este pedido não está esperando o seu clube');
+  if (req.body.accept) move(t);
+  else setStatus(t, 'recusada');
+  res.json({ ok: true });
+});
+
+// Clube novo: desiste do pedido. Pedidos antigos que já tinham sido aceitos também concluem aqui.
+r.post('/club/transfers/:id/destino', (req, res) => {
+  const t = load(req);
+  if (t.to_club_id !== req.actor.id) fail(403, 'Só o clube que pediu pode mexer neste pedido');
+  if (!['pendente_origem', 'pendente_destino'].includes(t.status)) fail(400, 'Este pedido já foi encerrado');
+  if (req.body.accept && t.status === 'pendente_destino') move(t);
+  else if (req.body.accept) fail(400, 'O clube atual ainda não aceitou');
+  else setStatus(t, 'cancelada');
   res.json({ ok: true });
 });
 

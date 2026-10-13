@@ -1,0 +1,42 @@
+/* Mini jogos: lista, tela do jogo, resultado, setas na tela e álbuns. */
+.games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .7rem; }
+.game-tile { background: var(--surface); border: 1px solid var(--card-border); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); padding: .9rem .8rem; display: flex; flex-direction: column; gap: .25rem; color: var(--ink); transition: transform .12s, box-shadow .2s; }
+.game-tile:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+.game-tile b { font-family: var(--font-title); font-weight: 600; font-size: .95rem; line-height: 1.2; }
+.game-tile small { color: var(--muted); font-size: .74rem; font-weight: 700; }
+.game-ico { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: var(--blue-soft); color: var(--blue-ink); flex-shrink: 0; }
+.game-tile:nth-child(3n+2) .game-ico { background: var(--red-soft); color: var(--red-ink); }
+.game-tile:nth-child(3n) .game-ico { background: var(--yellow-soft); color: var(--yellow-ink); }
+.game-head { display: flex; align-items: center; gap: .7rem; margin: .2rem 0 .8rem; }
+.game-head h1 { margin: 0; font-size: 1.3rem; line-height: 1.2; }
+.game-score { font-family: var(--font-title); font-weight: 700; color: var(--link); }
+.game-intro p { margin-top: 0; }
+.game-stage { position: relative; max-width: 480px; margin: 0 auto; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.game-stage canvas { display: block; width: 100%; height: auto; touch-action: none; border-radius: 16px; }
+.game-over { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(8, 16, 38, .55); border-radius: 16px; z-index: 5; padding: 1rem; min-height: 280px; }
+.game-over-card { background: var(--surface); color: var(--ink); border-radius: var(--r-lg); box-shadow: var(--shadow-lg); padding: 1.2rem; width: min(100%, 300px); text-align: center; display: flex; flex-direction: column; gap: .5rem; align-items: center; }
+.game-over-card svg { color: var(--yellow); }
+.game-over-card h2 { margin: 0; }
+.game-over-card p { margin: 0 0 .3rem; }
+
+.dpad { display: flex; align-items: center; justify-content: center; gap: 1.2rem; margin-top: .7rem; touch-action: none; }
+.dpad-arrows { display: grid; grid-template-columns: repeat(3, 56px); grid-template-rows: repeat(2, 52px); gap: 6px; }
+.dpad-btn { border: 0; border-radius: 16px; background: var(--surface-3); color: var(--ink); display: grid; place-items: center; font: 700 .95rem var(--font-title); touch-action: none; cursor: pointer; box-shadow: var(--shadow-sm); }
+.dpad-btn:active { background: var(--navy-3); color: #fff; }
+.dpad-up { grid-column: 2; grid-row: 1; }
+.dpad-left { grid-column: 1; grid-row: 2; }
+.dpad-down { grid-column: 2; grid-row: 2; }
+.dpad-right { grid-column: 3; grid-row: 2; }
+.dpad-arrows:not(:has(.dpad-up)):not(:has(.dpad-down)) { grid-template-rows: 56px; }
+.dpad-arrows:not(:has(.dpad-up)):not(:has(.dpad-down)) .dpad-left,
+.dpad-arrows:not(:has(.dpad-up)):not(:has(.dpad-down)) .dpad-right { grid-row: 1; }
+.dpad-action { min-width: 96px; height: 64px; padding: 0 1rem; border-radius: 32px; background: var(--red); color: #fff; }
+.dpad-action:active { background: var(--red-ink); }
+
+.album-card { display: flex; gap: 1rem; background: var(--surface); border-radius: var(--r-lg); box-shadow: var(--shadow); padding: 1rem; align-items: center; }
+.album-cover { width: 110px; height: 150px; flex-shrink: 0; border-radius: 12px 18px 18px 12px; background: linear-gradient(150deg, var(--navy) 0%, var(--navy-3) 60%, var(--red) 100%); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: inset 6px 0 0 rgba(255, 255, 255, .15), var(--shadow); }
+.album-year { font-family: var(--font-title); font-size: 3rem; font-weight: 800; color: var(--yellow); line-height: 1; }
+.album-cover b { font-family: var(--font-title); letter-spacing: .04em; }
+.album-info h2 { margin: 0 0 .3rem; font-size: 1.1rem; }
+.album-info p { margin: .5rem 0 0; color: var(--muted); }
+@media (max-width: 380px) { .album-card { flex-direction: column; text-align: center; } }

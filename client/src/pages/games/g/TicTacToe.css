@@ -1,0 +1,20 @@
+.tictactoe { width: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: .8rem; padding: .5rem 0; user-select: none; -webkit-user-select: none; }
+.tictactoe-status { font-family: var(--font-title); font-weight: 700; font-size: 1.1rem; color: var(--ink); padding: .45rem 1rem; border-radius: 999px; background: var(--blue-soft); text-align: center; }
+.tictactoe-status-win { background: var(--green-soft); }
+.tictactoe-status-lose { background: var(--red-soft); }
+.tictactoe-status-draw { background: var(--yellow-soft); }
+.tictactoe-board { width: min(100%, 360px); aspect-ratio: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 8px; background: #0E2A6B; border-radius: var(--r, 16px); box-shadow: 0 6px 18px rgba(14, 42, 107, .25); }
+.tictactoe-cell { border: 0; border-radius: 12px; background: var(--surface); cursor: pointer; display: grid; place-items: center; font-size: clamp(2.4rem, 14vw, 4rem); font-weight: 900; line-height: 1; padding: 0; transition: transform .12s, background .2s; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.tictactoe-cell:not(:disabled):hover { background: var(--blue-soft); }
+.tictactoe-cell:not(:disabled):active { transform: scale(.95); }
+.tictactoe-cell:disabled { cursor: default; }
+.tictactoe-busy .tictactoe-cell { cursor: wait; }
+.tictactoe-cell span { animation: tictactoe-pop .22s ease-out; }
+.tictactoe-x { color: #E92A2F; }
+.tictactoe-o { color: #2B54B0; }
+.tictactoe-hit { background: #F9C71D !important; animation: tictactoe-pulse .6s ease-in-out infinite alternate; }
+.tictactoe-hit.tictactoe-o { color: #0E2A6B; }
+.tictactoe-legend { display: flex; gap: 1.2rem; color: var(--muted); font-size: .9rem; }
+.tictactoe-legend b { font-size: 1.1rem; margin-right: .2rem; }
+@keyframes tictactoe-pop { from { transform: scale(.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes tictactoe-pulse { from { transform: scale(1); } to { transform: scale(1.05); } }

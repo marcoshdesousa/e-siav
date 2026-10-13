@@ -1,0 +1,25 @@
+.memory { width: 100%; max-width: 440px; margin: 0 auto; background: #0B1430; color: #fff; border-radius: 14px; padding: 10px; box-sizing: border-box; user-select: none; -webkit-user-select: none; }
+.memory-top { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 10px; padding: 0 2px; }
+.memory-top b { color: #F9C71D; }
+.memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.memory-card {
+  aspect-ratio: 1; border: 0; padding: 0; background: transparent; perspective: 600px; cursor: pointer;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+.memory-inner {
+  position: relative; display: block; width: 100%; height: 100%; transition: transform .35s ease;
+  transform-style: preserve-3d;
+}
+.memory-up .memory-inner { transform: rotateY(180deg); }
+.memory-back, .memory-front {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; border-radius: 10px;
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+}
+.memory-back {
+  background: linear-gradient(135deg, #2B54B0, #0E2A6B); color: #F9C71D; font-size: 26px;
+  border: 2px solid rgba(255, 255, 255, .15);
+}
+.memory-front { background: #FFFFFF; transform: rotateY(180deg); font-size: clamp(28px, 9vw, 44px); border: 2px solid #F9C71D; }
+.memory-done .memory-front { background: #DDF6E7; border-color: #18875A; animation: memory-match .35s ease .3s; }
+@keyframes memory-match { 50% { transform: rotateY(180deg) scale(1.1); } }
+.memory-win { text-align: center; margin: 10px 0 0; font-weight: 700; color: #5BD38A; }

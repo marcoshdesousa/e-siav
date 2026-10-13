@@ -58,7 +58,7 @@ export default function TransfersPage() {
       {tab === 'pedir' && (
         <Card>
           <div className="form">
-            <p className="small muted" style={{ marginTop: 0 }}>Informe o <b>nome completo</b> e o <b>código do membro</b> (6 números) da pessoa. Não precisa saber de qual clube ela é: o app encontra e manda o pedido para o clube atual aceitar. Depois que ele aceitar, você confirma aqui.</p>
+            <p className="small muted" style={{ marginTop: 0 }}>Informe o <b>nome completo</b> e o <b>código do membro</b> (6 números) da pessoa. Não precisa saber de qual clube ela é: o app encontra e manda o pedido para o clube atual aceitar. Quando ele aceitar, a pessoa já entra no seu clube com tudo o que conquistou.</p>
             <Field label="Nome completo"><input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
             <Field label="Código do membro (6 números)"><input inputMode="numeric" value={f.cpf} onChange={(e) => setF({ ...f, cpf: e.target.value.replace(/\D/g, '').slice(0, 6) })} placeholder="000000" /></Field>
             <Button block busy={busy} disabled={f.name.trim().length < 5 || f.cpf.length !== 6} onClick={request}><Search size={16} /> Pedir transferência</Button>
@@ -84,7 +84,7 @@ export default function TransfersPage() {
                   <Row key={t.id} t={t}>
                     {side === 'origem' && t.status === 'pendente_origem' && (
                       <>
-                        <Button small variant="green" onClick={() => act(t, 'origem', true, 'Transferência autorizada. Falta o outro clube confirmar.')}><Check size={14} /> Autorizar saída</Button>
+                        <Button small variant="green" onClick={() => act(t, 'origem', true, `Pronto! ${t.member_name.split(' ')[0]} agora é do ${t.to_club_name}.`)}><Check size={14} /> Aceitar</Button>
                         <Confirm text={`Recusar a transferência de ${t.member_name}?`} onYes={() => act(t, 'origem', false, 'Pedido recusado')}><X size={14} /> Recusar</Confirm>
                       </>
                     )}

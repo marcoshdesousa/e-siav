@@ -1,0 +1,43 @@
+.g2048 { width: 100%; max-width: 440px; margin: 0 auto; user-select: none; -webkit-user-select: none; font-family: inherit; background: #0B1430; color: #fff; padding: 10px; border-radius: 14px; box-sizing: border-box; }
+.g2048-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 8px; }
+.g2048-info { font-size: 14px; color: inherit; }
+.g2048-quit {
+  border: 0; border-radius: 8px; padding: 7px 14px; font-weight: 700; font-size: 14px; cursor: pointer;
+  background: #E92A2F; color: #fff;
+}
+.g2048-quit:disabled { opacity: .5; cursor: default; }
+.g2048-board {
+  position: relative; width: 100%; aspect-ratio: 1; border-radius: 12px; background: #1A3A85;
+  touch-action: none; overflow: hidden;
+}
+.g2048-cell, .g2048-tile {
+  position: absolute; width: 21.875%; height: 21.875%;
+  left: calc(2.5% + var(--c) * 24.375%); top: calc(2.5% + var(--r) * 24.375%);
+}
+.g2048-cell { border-radius: 8px; background: rgba(255, 255, 255, .12); }
+.g2048-tile { transition: left .11s ease-out, top .11s ease-out; z-index: 1; }
+.g2048-in {
+  width: 100%; height: 100%; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-weight: 800; color: #101831; background: #fff; line-height: 1;
+}
+.g2048-new { animation: g2048-appear .18s ease-out .08s both; }
+.g2048-pop { animation: g2048-pop .2s ease-out .08s; }
+@keyframes g2048-appear { from { transform: scale(0); } to { transform: scale(1); } }
+@keyframes g2048-pop { 0% { transform: scale(1); } 50% { transform: scale(1.18); } 100% { transform: scale(1); } }
+.g2048-v2 { background: #EEF3FF; }
+.g2048-v4 { background: #D3E2FF; }
+.g2048-v8 { background: #7FB2FF; }
+.g2048-v16 { background: #4F86E8; color: #fff; }
+.g2048-v32 { background: #2B54B0; color: #fff; }
+.g2048-v64 { background: #5BD38A; }
+.g2048-v128 { background: #18875A; color: #fff; }
+.g2048-v256 { background: #FBE07A; }
+.g2048-v512 { background: #F9C71D; }
+.g2048-v1024 { background: #F58A3A; color: #fff; }
+.g2048-v2048 { background: #E92A2F; color: #fff; box-shadow: 0 0 14px #F9C71D; }
+.g2048-v4096 { background: #101831; color: #F9C71D; box-shadow: 0 0 14px #F9C71D; }
+.g2048-msg {
+  position: absolute; inset: 0; z-index: 3; display: flex; align-items: center; justify-content: center;
+  background: rgba(11, 20, 48, .55); color: #fff; font-size: 26px; font-weight: 800;
+}
+.g2048-hint { text-align: center; font-size: 12px; opacity: .7; margin: 8px 0 0; }

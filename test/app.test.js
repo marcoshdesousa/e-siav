@@ -84,20 +84,9 @@ const form = (obj) => {
   return fd;
 };
 
-test('pedido para criar clube: público envia, admin vê e marca como visualizado', async () => {
-  const send = (b) => fetch(BASE + '/public/criar-cla', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) });
-  const body = { name: 'João Pedido Teste', cpf: cpf(900000050), whatsapp: '(81) 99999-0000', uf: 'PE', city: 'Palmares', neighborhood: 'Centro',
-    adults: 3, teens: 2, kids_6_9: 20, kids_10_15: 35 };
-  assert.equal((await send({ ...body, cpf: '123' })).status, 400);
-  assert.equal((await send(body)).status, 200);
-  const admin = await login('membros', 'admin', 'admin123');
-  const list = (await admin.get('/admin/cla-inscricoes')).body;
-  const item = list.items.find((x) => x.name === 'João Pedido Teste');
-  assert.ok(item && list.unviewed >= 1);
-  await admin.post(`/admin/cla-inscricoes/${item.id}/visualizar`);
-  assert.ok((await admin.get('/admin/cla-inscricoes?visualizados=1')).body.items.some((x) => x.id === item.id));
-  const aguias = await login('clube', 'aguias', 'AG2026');
-  assert.equal((await aguias.get('/admin/cla-inscricoes')).status, 403);
+test('não existe pedido público para criar clube: o admin cadastra', async () => {
+  const r = await fetch(BASE + '/public/criar-cla', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+  assert.equal(r.status, 404);
 });
 
 test('login separa Login Clube e Login Membros', async () => {
@@ -325,7 +314,7 @@ test('clube: número automático, código, senhas geradas (2 letras + 4 números
 
 const pedroFicha = async () => (await login('membros', 'pedro')).get('/club/members/1/ficha');
 
-test('transferência: clube novo pede, clube atual aceita, clube novo confirma', async () => {
+test('transferência: clube novo pede, clube atual aceita e pronto', async () => {
   const aguias = await login('clube', 'aguias', 'AG2026');
   const leoes = await login('clube', 'leoes', 'LE2026');
   const gabriel = (await aguias.get('/club/members')).body.find((m) => m.name === 'Gabriel Oliveira');
@@ -334,9 +323,8 @@ test('transferência: clube novo pede, clube atual aceita, clube novo confirma',
   assert.equal(t.status, 200);
   assert.equal((await leoes.post(`/club/transfers/${t.body.id}/destino`, { accept: true })).status, 400, 'clube atual ainda não aceitou');
   assert.equal((await leoes.post(`/club/transfers/${t.body.id}/origem`, { accept: true })).status, 400, 'só o clube atual aceita a saída');
-  await aguias.post(`/club/transfers/${t.body.id}/origem`, { accept: true });
   assert.ok((await aguias.get('/club/members')).body.some((m) => m.id === gabriel.id), 'ainda no clube antigo');
-  await leoes.post(`/club/transfers/${t.body.id}/destino`, { accept: true });
+  assert.equal((await aguias.post(`/club/transfers/${t.body.id}/origem`, { accept: true })).status, 200);
   assert.ok(!(await aguias.get('/club/members')).body.some((m) => m.id === gabriel.id));
   assert.ok((await leoes.get('/club/members')).body.some((m) => m.id === gabriel.id), 'agora no clube novo');
 });
@@ -708,4 +696,24 @@ test('suporte: chat de cada conta com a equipe; links do SGC, Cantinho e Cartão
   assert.deepEqual((await aguias.get('/links')).body, { link_sgc: 'https://sgc.exemplo.org' }, 'clube vê só o SGC');
   assert.deepEqual((await falcoes.get('/links')).body, { link_cantinho: 'https://cantinho.exemplo.org' });
   assert.deepEqual((await pedro.get('/links')).body, { link_cartao: 'https://cartao.exemplo.org' }, 'membro não vê o SGC');
+});
+
+test('mini jogos: recorde, soma, ranking geral só dos jogos', async () => {
+  const pedro = await login('membros', 'pedro');
+  const marcos = await login('membros', '100006');
+  assert.equal((await pedro.post('/jogos/nao-existe/pontos', { score: 5 })).status, 404);
+  assert.equal((await pedro.post('/jogos/cobrinha/pontos', { score: -1 })).status, 400);
+  await pedro.post('/jogos/cobrinha/pontos', { score: 120 });
+  const r2 = (await pedro.post('/jogos/cobrinha/pontos', { score: 80 })).body;
+  assert.equal(r2.best, 120, 'vale o recorde');
+  assert.equal(r2.record, false);
+  assert.equal((await marcos.post('/jogos/cobrinha/pontos', { score: 999999 })).body.best, 5000, 'limite por partida');
+  const rk = (await pedro.get('/jogos/cobrinha/ranking')).body;
+  assert.equal(rk.rows[0].name.split(' ')[0], 'Marcos');
+  assert.equal(rk.me.position, 2);
+  await pedro.post('/jogos/velha/pontos', { score: 3 });
+  assert.equal((await pedro.post('/jogos/velha/pontos', { score: 1 })).body.total, 4, 'jogo da velha soma');
+  assert.equal((await pedro.get('/jogos/meus')).body.velha.value, 4);
+  const aguias = await login('clube', 'aguias', 'AG2026');
+  assert.equal((await aguias.get('/jogos/cobrinha/ranking')).status, 403, 'só membros');
 });

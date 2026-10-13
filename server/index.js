@@ -20,10 +20,9 @@ import announcementRoutes from './routes/announcements.js';
 import achievementRoutes from './routes/achievements.js';
 import clubEventRoutes from './routes/clubEvents.js';
 import transferRoutes from './routes/transfers.js';
-import clanApplicationRoutes from './routes/clanApplications.js';
-import feeRoutes from './routes/fees.js';
 import clubToolRoutes from './routes/clubTools.js';
 import supportRoutes from './routes/support.js';
+import gameRoutes from './routes/games.js';
 import { syncCatalog } from './catalog.js';
 import { createInitialAdmin, resetClubsForDbvOnce, resetToDemoClubsOnce, seed } from './seed.js';
 
@@ -71,7 +70,7 @@ if (MANUTENCAO) {
 
 const api = express.Router();
 api.get('/health', (_req, res) => res.json({ ok: true }));
-for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, transferRoutes, clanApplicationRoutes, feeRoutes, clubToolRoutes, supportRoutes]) api.use(r);
+for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, transferRoutes, clubToolRoutes, supportRoutes, gameRoutes]) api.use(r);
 api.use((_req, _res, next) => next(new HttpError(404, 'Rota não encontrada')));
 app.use('/api', api);
 

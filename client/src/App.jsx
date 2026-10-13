@@ -2,7 +2,6 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from '
 import { AuthProvider, homeFor, useAuth } from './auth.jsx';
 import { Notices, Spinner } from './ui.jsx';
 import Login from './pages/Login.jsx';
-import CreateClanPage from './pages/CreateClan.jsx';
 import { ClanLinkPage, MemberLinkPage, PublicProfilePage } from './pages/Profiles.jsx';
 import AdminApp from './pages/admin/AdminApp.jsx';
 import ClubApp from './pages/club/ClubApp.jsx';
@@ -43,8 +42,8 @@ export default function App() {
             <Route path="/entrar" element={<Login />} />
             <Route path="/p/:kind/:id" element={<PublicProfilePage />} />
             <Route path="/inscricao/*" element={<Navigate to="/" replace />} />
-            <Route path="/criar-clube" element={<CreateClanPage />} />
-            <Route path="/criar-cla" element={<Navigate to="/criar-clube" replace />} />
+            <Route path="/criar-clube" element={<Navigate to="/" replace />} />
+            <Route path="/criar-cla" element={<Navigate to="/" replace />} />
             <Route path="/termo/*" element={<Navigate to="/" replace />} />
             <Route path="/admin/*" element={<Guard type="admin"><AdminApp /></Guard>} />
             <Route path="/clube/*" element={<ClubeRoute />} />

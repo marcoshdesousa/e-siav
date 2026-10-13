@@ -1,0 +1,30 @@
+.colors { width: 100%; max-width: 480px; margin: 0 auto; padding: 14px; box-sizing: border-box;
+  background: #141B30; color: #fff; border-radius: var(--r, 16px);
+  user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+.colors-hud { display: flex; justify-content: space-between; font: 600 .95rem var(--font-title, sans-serif); color: #c9d3ee; }
+.colors-hud b { color: #fff; }
+.colors-bar { height: 8px; background: #26304A; border-radius: 99px; overflow: hidden; margin-top: 10px; }
+.colors-bar i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, #E92A2F, #F9C71D 35%, #22B36B);
+  transform-origin: left; animation: colors-shrink linear forwards; }
+.colors-stage { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  min-height: 150px; text-align: center; }
+.colors-stage small { color: #b9c6e8; font-size: .9rem; }
+.colors-count { font: 800 3.4rem/1 var(--font-title, sans-serif); }
+.colors-word { font: 900 clamp(2.2rem, 12vw, 3.2rem)/1.05 var(--font-title, sans-serif); letter-spacing: .02em; }
+.colors-pop { color: #F9C71D !important; font-weight: 700; animation: colors-float .6s ease-out forwards; }
+.colors-msg { color: #ff9a9d !important; font-weight: 600; }
+.colors-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.colors-opt { position: relative; display: flex; align-items: center; gap: 10px; min-height: 64px; padding: 0 14px;
+  border: 2px solid #2f3a5a; border-radius: 14px; background: #1F2A45; color: #fff; cursor: pointer;
+  font: 700 1rem var(--font-title, sans-serif); -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: transform .08s, opacity .2s; }
+.colors-opt:active { transform: scale(.97); }
+.colors-opt:disabled { cursor: default; }
+.colors-opt small { position: absolute; right: 8px; top: 5px; font-size: .65rem; opacity: .5; }
+.colors-swatch { width: 30px; height: 30px; flex: none; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 3px rgba(255,255,255,.12); }
+.colors-right { border-color: #22B36B; box-shadow: 0 0 0 3px rgba(34,179,107,.4); }
+.colors-wrong { border-color: #E92A2F; animation: colors-shake .35s; }
+.colors-dim { opacity: .45; }
+@keyframes colors-shrink { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+@keyframes colors-float { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-14px); } }
+@keyframes colors-shake { 0%,100% { translate: 0 } 25% { translate: -5px 0 } 75% { translate: 5px 0 } }

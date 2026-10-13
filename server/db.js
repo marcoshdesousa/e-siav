@@ -735,6 +735,17 @@ function migrate() {
     created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
   )`);
 
+  // Mini jogos: recorde (best), soma dos pontos (total) e partidas de cada membro em cada jogo.
+  db.exec(`CREATE TABLE IF NOT EXISTS game_scores (
+    member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    game TEXT NOT NULL,
+    best INTEGER NOT NULL DEFAULT 0,
+    total INTEGER NOT NULL DEFAULT 0,
+    plays INTEGER NOT NULL DEFAULT 0,
+    updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+    PRIMARY KEY (member_id, game)
+  )`);
+
   // Volta para os Desbravadores: "Nº Clã X" vira "Nº Clube X" e a medalha de grupo vira de unidade.
   if (!flag('nomes-dbv-v1')) {
     db.exec(`UPDATE clubs SET name = replace(name, 'º Clã ', 'º Clube ') WHERE name LIKE '%º Clã %'`);

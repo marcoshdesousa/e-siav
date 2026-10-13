@@ -1,0 +1,29 @@
+.hangman { width: 100%; max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: .6rem; padding: .3rem 0; color: var(--ink); user-select: none; -webkit-user-select: none; }
+.hangman-head { display: flex; justify-content: space-between; align-items: center; gap: .5rem; }
+.hangman-hint { background: var(--yellow-soft); color: var(--ink); font-weight: 800; font-size: .85rem; padding: .35rem .8rem; border-radius: 999px; }
+.hangman-score { font-family: var(--font-title); font-weight: 800; font-size: 1.05rem; }
+.hangman-stage { display: flex; align-items: center; justify-content: center; gap: 1rem; background: var(--blue-soft); border-radius: var(--r, 16px); padding: .5rem; }
+.hangman-svg { width: 130px; height: 140px; flex: none; }
+.hangman-wood { stroke: #0E2A6B; stroke-width: 5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.hangman-body { stroke: #E92A2F; stroke-width: 4; fill: none; stroke-linecap: round; transition: opacity .25s; }
+.hangman-on { opacity: 1; }
+.hangman-off { opacity: 0; }
+.hangman-lives { display: grid; grid-template-columns: repeat(3, auto); gap: .2rem .3rem; font-size: 1.15rem; justify-items: center; }
+.hangman-lives small { grid-column: 1 / -1; font-size: .78rem; color: var(--muted); margin-top: .3rem; }
+.hangman-word { display: flex; flex-wrap: wrap; justify-content: center; gap: .45rem .9rem; min-height: 44px; }
+.hangman-chunk { display: flex; gap: 4px; }
+.hangman-slot { width: clamp(20px, 7vw, 30px); height: 38px; border-bottom: 3px solid var(--ink); display: grid; place-items: center; font-family: var(--font-title); font-weight: 800; font-size: clamp(1.05rem, 5vw, 1.4rem); color: var(--ink); }
+.hangman-sym { border-bottom-color: transparent; width: 12px; }
+.hangman-miss { color: #E92A2F; }
+.hangman-won .hangman-slot { color: #18875A; border-bottom-color: #18875A; }
+.hangman-msg { text-align: center; font-weight: 800; font-size: .95rem; color: var(--muted); min-height: 1.4em; }
+.hangman-msg-won { color: #18875A; }
+.hangman-msg-lost { color: #E92A2F; }
+.hangman-keys { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.hangman-key { border: 0; border-radius: 10px; background: #0E2A6B; color: #fff; font-family: var(--font-title); font-weight: 800; font-size: 1.05rem; height: 44px; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; transition: transform .1s, opacity .2s; }
+.hangman-key:not(:disabled):hover { background: #2B54B0; }
+.hangman-key:not(:disabled):active { transform: scale(.92); }
+.hangman-key:disabled { cursor: default; }
+.hangman-key-ok { background: #18875A; }
+.hangman-key-bad { background: var(--line); color: var(--muted); }
+.hangman-key:disabled:not(.hangman-key-ok):not(.hangman-key-bad) { opacity: .5; }

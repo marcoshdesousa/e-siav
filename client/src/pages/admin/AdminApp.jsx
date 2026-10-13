@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import {
-  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, Tent, Trophy, UserPlus, Users, Globe, MessageCircle,
+  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, Tent, Trophy, Users, Globe, MessageCircle,
 } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -18,7 +18,6 @@ import Deliver from './Deliver.jsx';
 import EventsAdmin from './Events.jsx';
 import AnnouncementsAdmin from './Announcements.jsx';
 import CatalogAdmin from './CatalogAdmin.jsx';
-import ClanApplications, { CreateClanLink } from './ClanApplications.jsx';
 import ClanView from './ClanView.jsx';
 import AgendaAdmin from './AgendaAdmin.jsx';
 import SupportAdmin, { LinksAdmin } from './SupportAdmin.jsx';
@@ -43,7 +42,6 @@ function AdminHome() {
             <div className="stats">
               <Stat icon={Map} value={o.districts} label="Distritos" to={`${base}/clubes`} />
               <Stat icon={Tent} value={o.clubs} label="Clubes" to={`${base}/clubes`} />
-              <Stat icon={UserPlus} value={o.clan_applications} label="Inscrição clube (novas)" to={`${base}/inscricoes-cla`} accent={o.clan_applications > 0} />
               <Stat icon={Flag} value={o.units} label="Unidades" />
               <Stat icon={Users} value={o.members} label="Membros" />
               <Stat icon={ClipboardCheck} value={o.requirements} label="Requisitos gerais" to={`${base}/requisitos`} />
@@ -57,7 +55,6 @@ function AdminHome() {
           { to: `${base}/suporte`, icon: MessageCircle, label: 'Suporte', hint: 'Responder os clubes e membros' },
           { to: `${base}/links`, icon: Globe, label: 'Links dos sites', hint: 'SGC, Cantinho e Cartão DBV' },
     { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas para todos, distrito ou clube' },
-    { to: `${base}/inscricoes-cla`, icon: UserPlus, label: 'Inscrição clube', hint: 'Pedidos para criar clube' },
     { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo' },
           { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial' },
           { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos' },
@@ -184,7 +181,6 @@ function ClubsAdmin() {
       {tab === 'clubes' && (
         <>
           <Button block onClick={() => setModal({ kind: 'club' })}>+ Criar clube</Button>
-          <CreateClanLink />
           <div className="list mt">
             <Loading {...clubs} empty="Nenhum clube cadastrado.">
               {(list) => list.map((c) => (
@@ -277,7 +273,6 @@ export default function AdminApp() {
   const more = [
     { to: `${base}/suporte`, icon: MessageCircle, label: 'Suporte', hint: 'Responder os clubes e membros' },
     { to: `${base}/links`, icon: Globe, label: 'Links dos sites', hint: 'SGC, Cantinho e Cartão DBV' },
-    { to: `${base}/inscricoes-cla`, icon: UserPlus, label: 'Inscrição clube', hint: 'Pedidos para criar clube' },
     { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo', hint: 'Medalhas, troféus e cursos' },
     { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial', hint: 'Especialidades' },
     { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos', hint: 'Criar e participantes' },
@@ -295,7 +290,6 @@ export default function AdminApp() {
         <Route index element={<AdminHome />} />
         <Route path="clubes" element={<ClubsAdmin />} />
         <Route path="clubes/:id" element={<ClanView base={base} />} />
-        <Route path="inscricoes-cla" element={<ClanApplications />} />
         <Route path="suporte" element={<SupportAdmin />} />
         <Route path="links" element={<LinksAdmin />} />
         <Route path="agenda" element={<AgendaAdmin />} />

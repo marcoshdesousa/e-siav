@@ -1,0 +1,28 @@
+.simon { width: 100%; max-width: 480px; margin: 0 auto; padding: 14px; box-sizing: border-box;
+  background: radial-gradient(circle at 50% 40%, #16245a, #0B1430 75%); border-radius: var(--r, 16px);
+  user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+.simon-board { position: relative; width: 100%; max-width: 380px; aspect-ratio: 1; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 10px; }
+.simon-pad { position: relative; border: 0; padding: 0; cursor: pointer; background: var(--c);
+  filter: brightness(.5) saturate(.75); transition: filter .12s, transform .12s, box-shadow .12s;
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none; }
+.simon-active .simon-pad:hover { filter: brightness(.65) saturate(.85); }
+.simon-pad0 { border-radius: 100% 12px 12px 12px; }
+.simon-pad1 { border-radius: 12px 100% 12px 12px; }
+.simon-pad2 { border-radius: 12px 12px 12px 100%; }
+.simon-pad3 { border-radius: 12px 12px 100% 12px; }
+.simon-pad.simon-lit { filter: brightness(1.25) saturate(1.1); transform: scale(.97);
+  box-shadow: 0 0 34px 6px var(--c); }
+.simon-pad.simon-wrong { filter: brightness(1) grayscale(.2); animation: simon-shake .4s; box-shadow: 0 0 0 5px #fff inset; }
+.simon-key { position: absolute; font: 700 .85rem var(--font-title, sans-serif); color: rgba(255,255,255,.75); }
+.simon-pad0 .simon-key { right: 14px; bottom: 12px; }
+.simon-pad1 .simon-key { left: 14px; bottom: 12px; }
+.simon-pad2 .simon-key { right: 14px; top: 12px; }
+.simon-pad3 .simon-key { left: 14px; top: 12px; }
+.simon-center { position: absolute; left: 50%; top: 50%; width: 34%; aspect-ratio: 1; transform: translate(-50%, -50%);
+  border-radius: 50%; background: #0B1430; border: 6px solid #1c2c66; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; color: #fff; pointer-events: none; text-align: center; }
+.simon-big { font: 800 2.2rem/1 var(--font-title, sans-serif); }
+.simon-center small { font-size: .78rem; color: #9fb3e6; margin-top: 4px; }
+.simon-tip { margin: 12px 0 0; text-align: center; color: #b9c6e8; font-size: .85rem; }
+@keyframes simon-shake { 0%,100% { translate: 0 } 25% { translate: -6px 0 } 75% { translate: 6px 0 } }
