@@ -814,3 +814,10 @@ input::-webkit-datetime-edit { padding: 0; }
 .chat-box { display: flex; gap: .5rem; }
 .chat-box input { flex: 1; min-width: 0; }
 .nav-badge.static { position: static; display: inline-block; border: 0; }
+
+/* Campo com prefixo fixo (ex.: "Clube" + nome) */
+.prefix-input { display: flex; align-items: stretch; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface-2); overflow: hidden; }
+.prefix-input:focus-within { border-color: var(--link); box-shadow: 0 0 0 3px var(--blue-soft); }
+.prefix-input span { display: flex; align-items: center; padding: 0 .85rem; background: var(--surface-3); color: var(--muted); font-weight: 800; border-right: 1px solid var(--line); user-select: none; }
+.prefix-input input { border: 0; border-radius: 0; flex: 1; min-width: 0; background: transparent; box-shadow: none; }
+.prefix-input input:focus { box-shadow: none; outline: none; }

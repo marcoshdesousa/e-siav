@@ -413,6 +413,8 @@ export function wipeClubs() {
     run(`DELETE FROM conversations`);
     run(`DELETE FROM logins WHERE account_type IN ('club','unit','member')`);
     run(`DELETE FROM requirements WHERE creator_type IN ('club','unit')`);
+    run(`DELETE FROM support_threads WHERE actor_type IN ('club','unit','member')`);
+    run(`DELETE FROM agenda_items WHERE creator_type = 'club' OR scope = 'clube'`);
     run(`DELETE FROM members`);
     run(`DELETE FROM units`);
     run(`DELETE FROM clubs`);
@@ -453,5 +455,21 @@ export function resetToDemoClubsOnce({ justSeeded = false } = {}) {
   if (get('SELECT 1 FROM app_flags WHERE key = ?', KEY)) return;
   // Não cria mais clubes de teste no ar (os clubes são criados pelo administrador).
   void justSeeded;
+  run('INSERT OR IGNORE INTO app_flags (key) VALUES (?)', KEY);
+}
+
+/**
+ * Uma vez (pedido do dono do app): apaga todos os clubes que existem no ar (com unidades e
+ * membros) e cria os clubes de teste com os botões de "entrar como". O administrador e a
+ * senha dele não mudam. Com os dados de exemplo recém-criados (SEED_DEMO=1), só marca.
+ */
+export function resetToTestClubsOnce({ justSeeded = false } = {}) {
+  const KEY = 'clubes-teste-v2';
+  if (get('SELECT 1 FROM app_flags WHERE key = ?', KEY)) return;
+  if (!justSeeded) {
+    wipeClubs();
+    seed({ production: true });
+    console.log('Clubes apagados e clubes de teste criados (o administrador continua o mesmo).');
+  }
   run('INSERT OR IGNORE INTO app_flags (key) VALUES (?)', KEY);
 }

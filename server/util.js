@@ -54,7 +54,7 @@ export const newClubNumber = () => (get('SELECT MAX(number) n FROM clubs').n || 
 
 /** Nome mostrado no app: "1º Clube Águias" (o número vem na frente, sozinho). */
 export function clubDisplayName(number, raw) {
-  const base = String(raw || '').trim().replace(/^\d+\s*º\s*/, '').replace(/^(clube|cl[ãa])\s+/i, '').trim();
+  const base = String(raw || '').trim().replace(/^\d+\s*º\s*/, '').replace(/^(clube|club|cl[ãa])(\s+|$)/i, '').trim();
   // O nome sempre começa com "Clube" (ex.: "Titânio" vira "Clube Titânio").
   return `Clube ${base}`;
 }

@@ -717,3 +717,14 @@ test('mini jogos: recorde, soma, ranking geral só dos jogos', async () => {
   const aguias = await login('clube', 'aguias', 'AG2026');
   assert.equal((await aguias.get('/jogos/cobrinha/ranking')).status, 403, 'só membros');
 });
+
+test('criar clube: o nome sempre vira "Clube X", sem repetir "Clube"/"Club"', async () => {
+  const admin = await login('membros', 'admin', 'admin123');
+  const district = (await admin.get('/admin/districts')).body[0].id;
+  for (const [typed, expected] of [['Titãs', 'Clube Titãs'], ['Club Titãs', 'Clube Titãs'], ['clube Titãs', 'Clube Titãs'], ['3º Clube Titãs', 'Clube Titãs']]) {
+    const r = await admin.post('/admin/clubs', { name: typed, district_id: district, director_name: 'Fulano de Tal' });
+    assert.equal(r.body.name, expected, typed);
+    assert.match(r.body.code, /^\d{4}$/);
+  }
+  assert.equal((await admin.post('/admin/clubs', { name: 'Clube', district_id: district, director_name: 'Fulano' })).status, 400);
+});

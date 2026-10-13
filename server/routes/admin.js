@@ -69,7 +69,7 @@ r.post('/admin/clubs', (req, res) => {
   const name = str(req.body.name, 100);
   const districtId = int(req.body.district_id);
   const director = str(req.body.director_name, 100);
-  if (!name) fail(400, 'Informe o nome do clube');
+  if (!name || clubDisplayName(0, name) === 'Clube ') fail(400, 'Informe o nome do clube');
   if (!director) fail(400, 'Informe o nome do diretor do clube');
   if (!get('SELECT 1 FROM districts WHERE id = ?', districtId)) fail(400, 'Distrito inválido');
   const password = newClubPassword();
@@ -90,7 +90,7 @@ r.put('/admin/clubs/:id', (req, res) => {
   if (!get('SELECT 1 FROM clubs WHERE id = ?', id)) fail(404, 'Clube não encontrado');
   tx(() => {
     const name = str(req.body.name, 100);
-    if (name) run('UPDATE clubs SET name = ? WHERE id = ?', clubDisplayName(get('SELECT number FROM clubs WHERE id = ?', id).number, name), id);
+    if (name && clubDisplayName(0, name) !== 'Clube ') run('UPDATE clubs SET name = ? WHERE id = ?', clubDisplayName(get('SELECT number FROM clubs WHERE id = ?', id).number, name), id);
     const districtId = int(req.body.district_id);
     if (districtId) {
       if (!get('SELECT 1 FROM districts WHERE id = ?', districtId)) fail(400, 'Distrito inválido');

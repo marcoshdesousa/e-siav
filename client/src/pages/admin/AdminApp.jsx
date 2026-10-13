@@ -71,7 +71,8 @@ function AdminHome() {
  * Clube: o admin escreve só o nome, o distrito e o diretor. O app coloca "Clube" na
  * frente do nome, cria o código (4 números) e a senha (2 letras + 4 números).
  */
-const baseName = (n) => String(n || '').replace(/^\d+º\s*/, '').replace(/^(clube|cl[ãa])\s+/i, '');
+// Tira número antigo ("1º") e um "Clube"/"Club" digitado na frente: o app já coloca "Clube".
+const baseName = (n) => String(n || '').replace(/^\s+/, '').replace(/^\d+\s*º\s*/, '').replace(/^(clube|club|cl[ãa])\s+/i, '');
 function ClubForm({ item, nextNumber, districts, onClose, onCreated, onSaved }) {
   const [f, setF] = useState({ name: baseName(item?.name), district_id: item?.district_id || districts?.[0]?.id || '', director_name: item?.director_name || '', associate_directors: item?.associate_directors || '' });
   const [busy, run] = useAsync();
@@ -88,8 +89,11 @@ function ClubForm({ item, nextNumber, districts, onClose, onCreated, onSaved }) 
     <Modal title={item ? `Editar ${item.name}` : 'Criar clube'} onClose={onClose}
       footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} disabled={!f.name.trim() || !f.director_name.trim()} onClick={save}>Salvar</Button></>}>
       <div className="form">
-        <Field label="Nome do clube" hint={f.name.trim() ? `Vai ficar: Clube ${baseName(f.name)}` : 'O app coloca “Clube” na frente do nome (ex.: Titânio → Clube Titânio)'}>
-          <input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder="Ex.: Águias do Vale" />
+        <Field label="Nome do clube" hint={f.name.trim() ? `Vai ficar: Clube ${f.name.trim()}` : 'Escreva só o nome: o “Clube” já vem na frente (ex.: Titãs → Clube Titãs).'}>
+          <div className="prefix-input">
+            <span aria-hidden="true">Clube</span>
+            <input value={f.name} onChange={(e) => setF({ ...f, name: baseName(e.target.value) })} placeholder="Ex.: Titãs" aria-label="Nome do clube (sem a palavra Clube)" />
+          </div>
         </Field>
         <Field label="Distrito">
           <select value={f.district_id} onChange={(e) => setF({ ...f, district_id: e.target.value })}>
