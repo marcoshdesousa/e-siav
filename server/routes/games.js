@@ -5,6 +5,7 @@ import { all, get, run } from '../db.js';
 import { requireAuth } from '../auth.js';
 import { fail } from '../util.js';
 import { GAMES } from '../games.js';
+import { createWorld, myWorlds } from '../online/craft.js';
 
 const r = Router();
 const member = requireAuth('member');
@@ -60,6 +61,14 @@ r.get('/jogos/:id/ranking', member, (req, res) => {
     rows: rows.map((x, i) => ({ ...x, position: i + 1 })),
     me: mine ? { ...mine, position: myPosition(req.params.id, g, mine.value) } : null,
   });
+});
+
+// DesbravaCraft: meus mundos online (criados ou que já entrei) e criar um mundo novo.
+r.get('/craft/mundos', member, (req, res) => res.json(myWorlds(req.actor.id)));
+r.post('/craft/mundos', member, (req, res) => {
+  const count = get('SELECT COUNT(*) n FROM craft_worlds WHERE owner_id = ?', req.actor.id).n;
+  if (count >= 5) fail(400, 'Você já tem 5 mundos online');
+  res.json(createWorld(req.actor.id, req.body.name));
 });
 
 export default r;

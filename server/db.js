@@ -804,6 +804,30 @@ function migrate() {
     passed_at TEXT,
     PRIMARY KEY (member_id, phase)
   )`);
+  // DesbravaCraft: mundos online (código de 4 números), blocos alterados por pedaço e o estado de cada jogador.
+  db.exec(`CREATE TABLE IF NOT EXISTS craft_worlds (
+    id INTEGER PRIMARY KEY,
+    code TEXT NOT NULL UNIQUE,
+    name TEXT NOT NULL,
+    seed INTEGER NOT NULL,
+    owner_id INTEGER REFERENCES members(id) ON DELETE SET NULL,
+    time REAL NOT NULL DEFAULT 180,
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+    updated_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+  )`);
+  db.exec(`CREATE TABLE IF NOT EXISTS craft_chunks (
+    world_id INTEGER NOT NULL REFERENCES craft_worlds(id) ON DELETE CASCADE,
+    chunk TEXT NOT NULL,
+    data TEXT NOT NULL DEFAULT '{}',
+    PRIMARY KEY (world_id, chunk)
+  )`);
+  db.exec(`CREATE TABLE IF NOT EXISTS craft_players (
+    world_id INTEGER NOT NULL REFERENCES craft_worlds(id) ON DELETE CASCADE,
+    member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    state TEXT,
+    last_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+    PRIMARY KEY (world_id, member_id)
+  )`);
   // Pix automático (SyncPay): identificador da cobrança, código e quem pagou.
   add('sticker_orders', 'identifier', 'TEXT');
   add('sticker_orders', 'pix_code', 'TEXT');

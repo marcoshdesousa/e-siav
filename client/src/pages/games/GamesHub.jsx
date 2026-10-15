@@ -40,7 +40,7 @@ export const BIG_GAMES = [
   { id: 'uno', name: 'Uno DBV', hint: 'Cartas online, 2 a 6 jogadores, com chat de voz', icon: Layers, ranks: [['uno', 'Vitórias']], ready: true },
   { id: 'corrida', name: 'Corrida DBV', hint: 'Corra pelos trilhos, fuja do guarda e junte desbrava coins', icon: TrainFront, ranks: [['corrida-moedas', 'Mais moedas'], ['corrida-distancia', 'Maior distância']], ready: true },
   { id: 'stumble', name: 'Stumble DBV', hint: 'Até 10 jogadores em fases malucas. Só o 1º vence', icon: PersonStanding, ranks: [['stumble', 'Vitórias']], ready: true },
-  { id: 'craft', name: 'DesbravaCraft', hint: 'Construa o seu mundo sozinho ou com até 10 amigos', icon: Pickaxe, ranks: [] },
+  { id: 'craft', name: 'DesbravaCraft', hint: 'Construa o seu mundo sozinho ou com até 10 amigos', icon: Pickaxe, ranks: [], ready: true },
 ];
 
 function BigGames({ base }) {
@@ -61,7 +61,7 @@ function BigGames({ base }) {
           ? <Link key={g.id} to={`${base}/jogos/${g.id}`} className="big-game">{body}</Link>
           : <div key={g.id} className="big-game soon">{body}</div>;
       })}
-      <p className="small muted center">Os jogos grandes precisam de internet (o DesbravaCraft terá também um mundo offline).</p>
+      <p className="small muted center">Os jogos grandes precisam de internet, menos o mundo offline do DesbravaCraft.</p>
     </div>
   );
 }

@@ -168,3 +168,8 @@ As telas mostradas no celular da página de entrada ficam em `client/public/show
   - Até 10 jogadores. Cada partida tem 3 fases sorteadas entre 20; nas duas primeiras passam os primeiros a chegar, e a final tem um só vencedor.
   - Sala aleatória: começa 30 s depois de ter 3 jogadores. Se o número cair abaixo de 3, a contagem para. Se a sala encher (10), começa na hora.
   - O movimento roda em cada celular, e a posição é repassada aos outros cerca de 12 vezes por segundo. O servidor controla o tempo, a ordem de chegada e as vitórias.
+- **DesbravaCraft** (`client/src/pages/online/craft/`, `server/online/craft.js`): mundo de blocos com biomas (campos, floresta, deserto, neve, montanhas, lagos), árvores, minérios, bancada de trabalho, fornalha, ferramentas de madeira/pedra/ferro/diamante, vida, fome e dia e noite.
+  - **Bichos:** vacas, ovelhas e galinhas para comida. À noite aparecem aranhas. Não tem zumbis, esqueletos, Endermen nem porcos.
+  - **Mundo offline:** salvo no próprio celular (IndexedDB) e funciona sem internet.
+  - **Mundos online:** código de 4 números e até 10 jogadores ao mesmo tempo. O mundo fica salvo no servidor (`craft_worlds`, `craft_chunks`, `craft_players`), e qualquer membro com o código entra, mesmo sem o dono.
+  - **Sem ranking.**

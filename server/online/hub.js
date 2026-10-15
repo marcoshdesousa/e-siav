@@ -9,6 +9,7 @@ import { actorFromToken, COOKIE } from '../auth.js';
 import { run } from '../db.js';
 import * as uno from './uno.js';
 import * as stumble from './stumble.js';
+import * as craft from './craft.js';
 
 /** Jogos com sala. size: tamanhos de sala; quick: tamanhos da partida rápida; min: mínimo para começar. */
 const GAMES = {
@@ -160,8 +161,40 @@ function onAction(actor, room, msg) {
   if (!r.quiet) broadcast(room);
 }
 
+/** Mensagens do DesbravaCraft (mundos persistentes, fora das salas de partida). */
+function craftSendAll(worldId, msg, except) {
+  const data = JSON.stringify(msg);
+  for (const p of craft.playersIn(worldId)) if (p.id !== except) { const c = conns.get(p.id); if (c?.ws.readyState === 1) c.ws.send(data); }
+}
+function craftLeave(memberId) {
+  const wid = craft.leave(memberId);
+  if (wid != null) craftSendAll(wid, { t: 'craft-left', id: memberId });
+}
+function handleCraft(actor, msg) {
+  const id = actor.id;
+  if (msg.t === 'craft-join') {
+    const r = craft.join(id, msg.code, { name: firstName(actor.name), outfit: cleanOutfit(msg.outfit) });
+    if (r.error) return send(id, { t: 'error', msg: r.error });
+    send(id, { t: 'craft-world', world: r.world, changes: r.changes, player: r.player, players: craft.playersIn(r.worldId) });
+    return craftSendAll(r.worldId, { t: 'craft-joined', player: { id, name: firstName(actor.name), outfit: cleanOutfit(msg.outfit) } }, id);
+  }
+  if (msg.t === 'craft-leave') return craftLeave(id);
+  if (msg.t === 'craft-set') {
+    const wid = craft.setBlock(id, msg.x, msg.y, msg.z, msg.b);
+    if (wid != null) craftSendAll(wid, { t: 'craft-set', x: msg.x, y: msg.y, z: msg.z, b: msg.b }, id);
+    return;
+  }
+  if (msg.t === 'craft-pos') {
+    const wid = craft.worldOf(id);
+    if (wid != null) craftSendAll(wid, { t: 'craft-pos', id, d: msg.d }, id);
+    return;
+  }
+  if (msg.t === 'craft-save') return craft.savePlayer(id, msg.state, Number(msg.time));
+}
+
 function handle(actor, msg) {
   const id = actor.id;
+  if (msg.t.startsWith('craft-')) return handleCraft(actor, msg);
   const room = rooms.get(memberRoom.get(id));
   switch (msg.t) {
     case 'lobby': {
@@ -293,8 +326,8 @@ export function attachOnline(server) {
       conns.set(actor.id, conn);
       ws.isAlive = true;
       ws.on('pong', () => { ws.isAlive = true; });
-      let budget = 40;
-      const refill = setInterval(() => { budget = 40; }, 1000);
+      let budget = 60;
+      const refill = setInterval(() => { budget = 60; }, 1000);
       ws.on('message', (raw) => {
         if (--budget < 0) return; // mensagens demais por segundo
         let msg;
@@ -307,6 +340,7 @@ export function attachOnline(server) {
         clearInterval(refill);
         if (conns.get(actor.id) !== conn) return;
         conns.delete(actor.id);
+        craftLeave(actor.id);
         const room = rooms.get(memberRoom.get(actor.id));
         const p = room?.players.get(actor.id);
         if (p) { p.connected = false; p.goneAt = Date.now(); broadcast(room); }
