@@ -10,6 +10,7 @@ import { isMuted, onMuteChange, setMuted, sfx, startMusic, stopMusic, unlockAudi
 import { createRunner, SKATE_TIME, SKATE_WAIT } from './engine.js';
 import { POWERS } from './powerups.js';
 import { boardById, readChoice, skinById, syncChoice } from '../avatar/skins.js';
+import { loadRig } from '../avatar/build.js';
 import './corrida.css';
 
 /** Botão do skate: mostra o tempo que falta ou a espera para usar de novo. */
@@ -59,6 +60,8 @@ export default function CorridaPage({ base }) {
   const canvasRef = useRef(null);
   const game = useRef(null);
   const [look, setLook] = useState(readChoice);
+  const lookRef = useRef(look);
+  lookRef.current = look;
   const [phase, setPhase] = useState('menu'); // menu | story | run | over
   const [hud, setHud] = useState({ coins: 0, dist: 0, skate: 0, skateWait: 0 });
   const [warn, setWarn] = useState(null);
@@ -66,6 +69,7 @@ export default function CorridaPage({ base }) {
   const [mine, setMine] = useState(null);
   const [round, setRound] = useState(0);
   const [ready, setReady] = useState(false);
+  const [loadErr, setLoadErr] = useState(false);
   const [mute, setMute] = useState(isMuted());
   useEffect(() => onMuteChange(setMute), []);
 
@@ -75,10 +79,13 @@ export default function CorridaPage({ base }) {
   // Cria o mundo 3D (de novo a cada partida)
   useEffect(() => {
     if (!canvasRef.current) return undefined;
-    const c = readChoice();
-    const g = createRunner(canvasRef.current, {
-      skin: c.skin,
-      board: c.board,
+    let g = null;
+    let dead = false;
+    const make = () => {
+    if (dead || !canvasRef.current) return;
+    g = createRunner(canvasRef.current, {
+      skin: lookRef.current.skin,
+      board: lookRef.current.board,
       onHud: (h) => {
         if (h.warn) { setWarn({ text: h.warn, good: !!h.good, id: Date.now() }); setTimeout(() => setWarn((w) => (w && Date.now() - w.id >= 1500 ? null : w)), 1600); return; }
         setHud(h);
@@ -104,7 +111,10 @@ export default function CorridaPage({ base }) {
     });
     game.current = g;
     setReady(true);
-    return () => { g.dispose(); game.current = null; stopMusic(); };
+    };
+    // Os personagens usam um esqueleto com animações que é baixado uma vez (fica guardado para jogar sem internet)
+    loadRig().then(make).catch(() => { if (!dead) setLoadErr(true); });
+    return () => { dead = true; g?.dispose(); game.current = null; stopMusic(); };
   }, [round]);
 
   useEffect(() => {
@@ -167,7 +177,7 @@ export default function CorridaPage({ base }) {
     <div className={'corrida ' + phase}>
       <div className="corrida-stage" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={() => { touch.current = null; }}>
         <canvas key={round} ref={canvasRef} className="corrida-canvas" />
-        {!ready && <div className="corrida-loading"><Spinner /></div>}
+        {!ready && <div className="corrida-loading">{loadErr ? <p className="small center">Não deu para carregar os personagens. Confira a internet e abra o jogo de novo.</p> : <Spinner />}</div>}
 
         {(phase === 'run' || phase === 'story') && (
           <div className="corrida-hud">
@@ -216,7 +226,7 @@ export default function CorridaPage({ base }) {
           <div className="game-over">
             <div className="game-over-card">
               <Trophy size={36} />
-              <h2>{result.crash ? 'Bateu no trem!' : 'O guarda pegou você!'}</h2>
+              <h2>{result.crash ? 'Bateu! O guarda pegou você!' : 'O guarda pegou você!'}</h2>
               <p><Coins size={16} /> <b>{result.coins}</b> moedas · <Footprints size={16} /> <b>{result.dist}</b> m</p>
               {result.saving && <p className="small muted">Salvando...</p>}
               {result.offline && <p className="small"><WifiOff size={13} /> Sem internet: esta corrida não entrou no ranking.</p>}

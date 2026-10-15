@@ -1,7 +1,7 @@
 // Prévia 3D da skin: o personagem gira devagar num pedestal e vai correndo, pulando e acenando.
 // mode: 'surf' (adolescente + skate), 'stumble' (bonequinho) ou 'board' (só o skate).
 import * as THREE from 'three';
-import { buildAvatar, poseAvatar, studioEnv } from './build.js';
+import { buildAvatar, loadRig, poseAvatar, rigLoaded, studioEnv } from './build.js';
 import { buildBoard, poseBoard } from './board.js';
 import { boardById, skinById } from './skins.js';
 
@@ -45,8 +45,10 @@ export function mountPreview(canvas, { mode = 'surf', skin = 'm01', board = 'b01
   let model = null;
   let deck = null;
   let cur = {};
+  let alive = true;
   function set(next) {
     cur = { mode, skin, board, ...cur, ...next };
+    if (cur.mode !== 'board' && !rigLoaded()) { loadRig().then(() => alive && set({})); return; }
     if (model) { turn.remove(model); model = null; }
     if (deck) { turn.remove(deck); deck = null; }
     if (cur.mode !== 'board') {
@@ -117,6 +119,6 @@ export function mountPreview(canvas, { mode = 'surf', skin = 'm01', board = 'b01
   loop();
   return {
     set,
-    dispose() { window.cancelAnimationFrame(raf); ro.disconnect(); renderer.dispose(); },
+    dispose() { alive = false; window.cancelAnimationFrame(raf); ro.disconnect(); renderer.dispose(); },
   };
 }

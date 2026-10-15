@@ -1,0 +1,4 @@
+dbv-rig.glb — esqueleto e animações do "Universal Animation Library" 1 e 2, de Quaternius
+(https://quaternius.com). Licença: CC0 1.0 Universal (domínio público).
+https://creativecommons.org/publicdomain/zero/1.0/
+Os corpos, roupas e rostos dos personagens são gerados pelo app (client/src/pages/online/avatar/build.js).

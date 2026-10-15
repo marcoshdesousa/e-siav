@@ -1,6 +1,6 @@
 // Miniaturas (fotos) das skins e dos skates, desenhadas uma vez num renderizador escondido.
 import * as THREE from 'three';
-import { buildAvatar, poseAvatar, studioEnv } from './build.js';
+import { buildAvatar, loadRig, poseAvatar, studioEnv } from './build.js';
 import { buildBoard, poseBoard } from './board.js';
 import { boardById, skinById } from './skins.js';
 
@@ -28,7 +28,7 @@ let queue = Promise.resolve();
 export function thumb(kind, id) {
   const key = kind + id;
   if (cache.has(key)) return Promise.resolve(cache.get(key));
-  queue = queue.then(() => new Promise((ok) => {
+  queue = queue.then(() => loadRig()).then(() => new Promise((ok) => {
     window.setTimeout(() => {
       if (cache.has(key)) { ok(cache.get(key)); return; }
       const { renderer, scene, cam } = setup();
@@ -42,7 +42,8 @@ export function thumb(kind, id) {
         cam.lookAt(0, 0.3, 0);
       } else {
         obj = buildAvatar(skinById(id), 'surf');
-        poseAvatar(obj, 'idle', 0.4);
+        poseAvatar(obj, 'idle', 0);
+        poseAvatar(obj, 'idle', 0.2);
         obj.rotation.y = Math.PI - 0.35;
         cam.position.set(0, 1.25, 4.4);
         cam.lookAt(0, 0.95, 0);

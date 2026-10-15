@@ -4,10 +4,10 @@
 // quem chegou e em que ordem.
 import crypto from 'node:crypto';
 
-export const STAGE_COUNT = 20;
+export const STAGE_COUNT = 30;
 const INTRO_MS = 5000;
-const RACE_MS = 150_000;
-const RESULTS_MS = 6000;
+const RACE_MAX_S = 120; // nenhuma fase passa de 2 minutos
+const RESULTS_MS = 4500;
 const MIN_RACE_MS = 9000; // ninguém termina uma fase em menos que isso
 
 export function qualifyCount(n, round) {
@@ -26,15 +26,19 @@ function pickStages() {
   return all.slice(0, 3);
 }
 
+// Comprimento (m) de cada fase, da largada até a chegada (medido montando as fases de stages.js).
+export const STAGE_LEN = [178, 188, 190, 184, 192, 185, 172, 206, 192, 203, 181, 200, 178, 189, 182, 207, 203, 184, 230, 247, 196, 213, 211, 192, 191, 194, 198, 182, 189, 186];
+const stageLen = (s) => STAGE_LEN[s.stages[s.round]] || 140;
+/** Tempo máximo da fase (s): justo para quem cai algumas vezes, sem deixar a partida arrastada. */
+export const raceSeconds = (len) => Math.min(RACE_MAX_S, Math.round(len / 3.5 + 20));
+/** Depois disso (s) os robôs terminam mesmo que alguém ainda esteja correndo. */
+export const botFreeAfter = (len) => len / 4 + 10;
 /** Tempo que cada robô leva para fazer a fase (em segundos): nem rápido demais, nem lento. */
-// Comprimento (m) de cada fase, do início até a chegada (para calcular o tempo dos robôs).
-const STAGE_LEN = [80, 101, 95, 80, 90, 66, 67, 102, 70, 94, 72, 88, 98, 88, 80, 82, 94, 78, 125, 122];
 function botPlan(s) {
-  const len = STAGE_LEN[s.stages[s.round]] || 90;
-  // A pessoa corre a ~7 m/s; os robôs, entre 3,6 e 5,6 m/s (mais os tropeços).
-  s.botT = Object.fromEntries(s.alive.filter((id) => id < 0).map((id) => [id, len / (3.6 + Math.random() * 2) + Math.random() * 6]));
+  const len = stageLen(s);
+  // A pessoa corre a ~7 m/s; os robôs, entre 4,2 e 6 m/s (mais um tropeço ou outro).
+  s.botT = Object.fromEntries(s.alive.filter((id) => id < 0).map((id) => [id, len / (4.2 + Math.random() * 1.8) + Math.random() * 4]));
 }
-const BOT_FREE_AFTER = 100; // depois de 100 s os robôs terminam mesmo que alguém ainda esteja correndo
 
 export function start(ids, now = Date.now()) {
   const s = {
@@ -58,7 +62,7 @@ export function bot(s, now = Date.now()) {
     if (el < T) continue;
     const humansLeft = s.alive.filter((x) => x > 0 && !s.finished.includes(x)).length;
     const slots = s.qualify - s.finished.length;
-    const free = el > BOT_FREE_AFTER || (s.round >= 2 ? humansLeft === 0 : slots > humansLeft);
+    const free = el > botFreeAfter(stageLen(s)) || (s.round >= 2 ? humansLeft === 0 : slots > humansLeft);
     if (!free) continue;
     s.finished.push(id);
     s.progress[id] = 1;
@@ -89,7 +93,7 @@ export function tick(s, now = Date.now()) {
   if (s.phase === 'intro' && now >= s.phaseEndsAt) {
     s.phase = 'race';
     s.raceStartAt = s.phaseEndsAt;
-    s.phaseEndsAt = s.raceStartAt + RACE_MS;
+    s.phaseEndsAt = s.raceStartAt + raceSeconds(stageLen(s)) * 1000;
     return true;
   }
   if (s.phase === 'race') {
@@ -147,6 +151,6 @@ export function view(s) {
   return {
     stage: s.stages[s.round], stages: s.stages, round: s.round, phase: s.phase, phaseEndsAt: s.phaseEndsAt,
     raceStartAt: s.raceStartAt, alive: s.alive, finished: s.finished, qualify: s.qualify, eliminated: s.eliminated,
-    winner: s.winner, now: Date.now(), seed: s.seed + s.round, botT: s.botT || {},
+    winner: s.winner, now: Date.now(), seed: s.seed + s.round, botT: s.botT || {}, stageLen: stageLen(s),
   };
 }

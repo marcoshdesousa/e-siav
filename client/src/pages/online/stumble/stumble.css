@@ -21,24 +21,12 @@
 
 .stb-match { position: fixed; inset: 0; z-index: 30; background: #7dd3fc; touch-action: none; user-select: none; }
 .stb-canvas { width: 100%; height: 100%; display: block; }
-.stb-hud { position: absolute; top: calc(8px + env(safe-area-inset-top)); left: 8px; right: 8px; display: flex; gap: .35rem; align-items: center; }
-.stb-pill { display: inline-flex; gap: .3rem; align-items: center; background: rgba(15, 23, 42, .7); color: #fff; font-weight: 800; font-size: .8rem; padding: .35rem .7rem; border-radius: 999px; border: 0; font-family: var(--font); }
-.stb-pill.btn { cursor: pointer; }
 .stb-go { position: absolute; top: 30%; left: 0; right: 0; text-align: center; font-size: 5rem; font-weight: 900; color: #22c55e; text-shadow: 4px 4px 0 #14532d; animation: uno-pop .4s; pointer-events: none; }
 .stb-qual { position: absolute; top: 22%; left: 0; right: 0; text-align: center; font-size: 2.2rem; font-weight: 900; color: #fde047; text-shadow: 3px 3px 0 #7c2d12; pointer-events: none; animation: uno-pop .4s; }
 .stb-spect { position: absolute; bottom: 24px; left: 12px; right: 12px; text-align: center; background: rgba(15, 23, 42, .78); color: #fff; padding: .7rem; border-radius: 14px; font-weight: 700; }
-.stb-controls { position: absolute; left: 0; right: 0; bottom: calc(16px + env(safe-area-inset-bottom)); display: flex; justify-content: space-between; align-items: flex-end; padding: 0 16px; pointer-events: none; }
-.stb-joy { pointer-events: auto; width: 124px; height: 124px; border-radius: 50%; background: rgba(15, 23, 42, .28); border: 3px solid rgba(255, 255, 255, .6); display: grid; place-items: center; touch-action: none; }
-.stb-knob { width: 54px; height: 54px; border-radius: 50%; background: rgba(255, 255, 255, .9); box-shadow: 0 3px 8px rgba(0, 0, 0, .3); }
-.stb-btns { pointer-events: auto; display: grid; gap: .6rem; justify-items: end; }
-.stb-btn { border: 0; border-radius: 50%; width: 84px; height: 84px; font-weight: 900; color: #fff; font-family: var(--font); font-size: .8rem; cursor: pointer; box-shadow: 0 4px 0 rgba(0, 0, 0, .3); touch-action: none; }
-.stb-btn.jump { background: #22c55e; width: 96px; height: 96px; font-size: .95rem; }
-.stb-btn.dive { background: #f59e0b; width: 70px; height: 70px; }
-.stb-btn:active { transform: translateY(3px); }
 .stb-match .game-over { position: absolute; inset: 0; z-index: 5; }
 @keyframes stb-in { from { transform: translate(-50%, 30px); opacity: 0; } }
 @keyframes stb-pulse { to { transform: scale(1.12); } }
-.stb-pill.mic-on { background: #16a34a; }
 
 /* Saguão e espera */
 .stb-me { display: grid; gap: .5rem; }
@@ -92,3 +80,28 @@
 @keyframes stb-fall { to { transform: translateY(240px) rotate(540deg); } }
 .stb-pill { white-space: nowrap; }
 .stb-over .stb-crown svg { color: #92400e; }
+
+/* Controles e HUD da partida: vidro fosco, gradiente brilhante e animação ao tocar */
+.stb-hud { position: absolute; top: calc(8px + env(safe-area-inset-top)); left: 8px; right: 8px; display: flex; gap: .35rem; align-items: center; }
+.stb-pill { display: inline-flex; gap: .3rem; align-items: center; color: #fff; font-weight: 800; font-size: .8rem; padding: .38rem .72rem; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .35); font-family: var(--font); background: linear-gradient(180deg, rgba(30, 41, 59, .72), rgba(15, 23, 42, .82)); box-shadow: 0 4px 12px rgba(15, 23, 42, .25), inset 0 1px 0 rgba(255, 255, 255, .25); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.stb-pill b { color: #fde047; }
+.stb-pill.round { background: linear-gradient(180deg, #8b5cf6, #6d28d9); }
+.stb-pill.time { font-variant-numeric: tabular-nums; }
+.stb-pill.time.low { background: linear-gradient(180deg, #f43f5e, #be123c); animation: stb-pulse .5s infinite alternate; }
+.stb-pill.btn { cursor: pointer; padding: .42rem .55rem; }
+.stb-pill.btn:active { transform: scale(.92); }
+.stb-pill.mic-on { background: linear-gradient(180deg, #22c55e, #15803d); }
+.stb-controls { position: absolute; left: 0; right: 0; bottom: calc(18px + env(safe-area-inset-bottom)); display: flex; justify-content: space-between; align-items: flex-end; padding: 0 18px; pointer-events: none; }
+.stb-joy { position: relative; pointer-events: auto; width: 132px; height: 132px; border-radius: 50%; display: grid; place-items: center; touch-action: none; background: radial-gradient(circle, rgba(255, 255, 255, .1) 0 38%, rgba(255, 255, 255, .22) 39% 41%, rgba(15, 23, 42, .3) 42%); border: 2px solid rgba(255, 255, 255, .55); box-shadow: 0 8px 24px rgba(15, 23, 42, .28), inset 0 2px 10px rgba(255, 255, 255, .25); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+.stb-joy-ring { position: absolute; inset: 6px; border-radius: 50%; pointer-events: none; opacity: .75; background: conic-gradient(from -20deg, #fff 0 40deg, transparent 40deg 90deg, #fff 90deg 130deg, transparent 130deg 180deg, #fff 180deg 220deg, transparent 220deg 270deg, #fff 270deg 310deg, transparent 310deg); -webkit-mask: radial-gradient(circle, transparent 0 55px, #000 56px 58px, transparent 59px); mask: radial-gradient(circle, transparent 0 55px, #000 56px 58px, transparent 59px); }
+.stb-knob { width: 58px; height: 58px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff 0 18%, #e0f2fe 40%, #93c5fd 100%); box-shadow: 0 6px 14px rgba(15, 23, 42, .35), inset 0 -4px 8px rgba(37, 99, 235, .35), inset 0 2px 3px #fff; transition: transform .14s ease-out, box-shadow .15s; }
+.stb-knob.on { transition: none; box-shadow: 0 3px 8px rgba(15, 23, 42, .35), 0 0 0 6px rgba(255, 255, 255, .25), inset 0 -4px 8px rgba(37, 99, 235, .35), inset 0 2px 3px #fff; }
+.stb-btns { pointer-events: auto; display: grid; grid-template-columns: auto auto; align-items: end; gap: .55rem; }
+.stb-btn { position: relative; display: grid; place-items: center; align-content: center; gap: 1px; border: 0; border-radius: 50%; color: #fff; font-family: var(--font); font-weight: 900; font-size: .62rem; letter-spacing: .03em; text-transform: uppercase; cursor: pointer; touch-action: none; overflow: hidden; text-shadow: 0 1px 2px rgba(0, 0, 0, .3); transition: transform .08s ease-out, box-shadow .08s ease-out, filter .15s; -webkit-tap-highlight-color: transparent; }
+.stb-btn::before { content: ''; position: absolute; left: 16%; right: 16%; top: 5%; height: 40%; border-radius: 50%; background: linear-gradient(180deg, rgba(255, 255, 255, .55), rgba(255, 255, 255, 0)); pointer-events: none; }
+.stb-btn svg { filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .25)); }
+.stb-btn.jump { width: 100px; height: 100px; font-size: .72rem; background: radial-gradient(circle at 50% 30%, #4ade80, #16a34a 72%); box-shadow: 0 6px 0 #166534, 0 12px 22px rgba(22, 101, 52, .45), inset 0 -6px 12px rgba(0, 0, 0, .15), inset 0 0 0 3px rgba(255, 255, 255, .35); }
+.stb-btn.dive { width: 80px; height: 80px; margin-bottom: 6px; font-size: .52rem; letter-spacing: 0; background: radial-gradient(circle at 50% 30%, #fdba74, #f97316 72%); box-shadow: 0 5px 0 #9a3412, 0 10px 18px rgba(154, 52, 18, .4), inset 0 -5px 10px rgba(0, 0, 0, .15), inset 0 0 0 3px rgba(255, 255, 255, .35); }
+.stb-btn:active { transform: translateY(5px) scale(.96); filter: brightness(1.1); }
+.stb-btn.jump:active { box-shadow: 0 1px 0 #166534, 0 4px 10px rgba(22, 101, 52, .4), inset 0 -6px 12px rgba(0, 0, 0, .15), inset 0 0 0 3px rgba(255, 255, 255, .5); }
+.stb-btn.dive:active { box-shadow: 0 1px 0 #9a3412, 0 4px 8px rgba(154, 52, 18, .35), inset 0 -5px 10px rgba(0, 0, 0, .15), inset 0 0 0 3px rgba(255, 255, 255, .5); }

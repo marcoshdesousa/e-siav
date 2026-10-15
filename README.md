@@ -165,7 +165,8 @@ As telas mostradas no celular da página de entrada ficam em `client/public/show
 - **Ranking:** por vitórias, em `game_scores` (jogo `uno`), marcado pelo servidor. O celular não consegue mandar pontos desse jogo.
 - **Voz:** WebRTC entre os celulares, usando servidores STUN públicos. Em algumas redes (por exemplo, algumas operadoras 4G ou redes de escola) a voz pode não conectar. Para essas redes seria preciso um servidor TURN, que é pago à parte.
 - **Stumble DBV** (`server/online/stumble.js`, `client/src/pages/online/stumble/`):
-  - Até 10 jogadores. Cada partida tem 3 fases sorteadas entre 20; nas duas primeiras passam os primeiros a chegar, e a final tem um só vencedor.
+  - Até 10 jogadores. Cada partida tem 3 fases sorteadas entre 30 (de 180 a 250 m); nas duas primeiras passam os primeiros a chegar, e a final tem um só vencedor.
   - Sala aleatória: espera 1 minuto. Durante a espera vão entrando robôs aos poucos até completar 10; quando entra uma pessoa, um robô sai.
+- **Personagens:** corpo gerado pelo app sobre o esqueleto com animações do *Universal Animation Library* (Quaternius, CC0) em `client/public/models/dbv-rig.glb` (correr, pular, rolar, escorregar, tomar batida, comemorar...).
 - **Skin** (`client/src/pages/online/avatar/`): 30 personagens de menino, 30 de menina e 30 skates. A escolha vale para o Surf DBV e o Stumble DBV e fica salva no aparelho e no servidor (`members.game_skin`, `members.game_board`, rota `/api/jogos/skin`).
   - O movimento roda em cada celular, e a posição é repassada aos outros cerca de 12 vezes por segundo. O servidor controla o tempo, a ordem de chegada e as vitórias.

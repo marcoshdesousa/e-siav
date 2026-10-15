@@ -1,7 +1,7 @@
 // Stumble DBV: saguão (visual, partida aleatória, criar/entrar em sala), sala de espera e a partida.
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Copy, Crown, Globe2, Hash, Lock, LogOut, Mic, MicOff, Play, RefreshCw, Shirt, Timer, Trophy, UserX, Users, Wifi, WifiOff } from 'lucide-react';
+import { ArrowBigUpDash, ArrowLeft, Copy, Crown, Flag, Globe2, Hash, Lock, LogOut, Mic, MicOff, Play, RefreshCw, Shirt, Timer, Trophy, UserX, Users, Wifi, WifiOff, Zap } from 'lucide-react';
 import { Button, Card, Modal, PageHeader, Section } from '../../../ui.jsx';
 import { useOnline as useInternet } from '../../../offline.js';
 import { sfx, startMusic, stopMusic, unlockAudio } from '../../games/audio.js';
@@ -11,12 +11,15 @@ import { BotTag, VoiceBar } from '../Uno.jsx';
 import { createStumble } from './engine.js';
 import { readChoice, skinById, syncChoice } from '../avatar/skins.js';
 import SkinPreview from '../avatar/SkinPreview.jsx';
+import { loadRig, rigLoaded } from '../avatar/build.js';
 import SkinThumb from '../avatar/SkinThumb.jsx';
 import { STAGES } from './stages.js';
 import './stumble.css';
 
 export default function StumblePage({ base }) {
   const net = useOnline('stumble');
+  const [rigOk, setRigOk] = useState(rigLoaded);
+  useEffect(() => { loadRig().then(() => setRigOk(true)).catch(() => {}); }, []);
   const internet = useInternet();
   const [outfit, setOutfit] = useState(() => readChoice().skin);
   useEffect(() => { syncChoice().then((c) => setOutfit(c.skin)); }, []);
@@ -33,7 +36,7 @@ export default function StumblePage({ base }) {
       {!net.connected && <div className="uno-conn"><RefreshCw size={14} className="spin" /> Conectando...</div>}
       {!room && <Lobby net={net} base={base} outfit={outfit} />}
       {room && room.status === 'waiting' && <Waiting net={net} base={base} voice={voice} />}
-      {room && room.status !== 'waiting' && net.game && <Match net={net} outfit={outfit} base={base} voice={voice} />}
+      {room && room.status !== 'waiting' && net.game && rigOk && <Match net={net} outfit={outfit} base={base} voice={voice} />}
     </div>
   );
 }
@@ -177,7 +180,8 @@ function Joystick({ onMove }) {
       onPointerUp={() => { id.current = null; setKnob({ x: 0, y: 0 }); onMove(0, 0); }}
       onPointerCancel={() => { id.current = null; setKnob({ x: 0, y: 0 }); onMove(0, 0); }}
     >
-      <span className="stb-knob" style={{ transform: `translate(${knob.x * 34}px, ${knob.y * 34}px)` }} />
+      <i className="stb-joy-ring" aria-hidden="true" />
+      <span className={'stb-knob' + (knob.x || knob.y ? ' on' : '')} style={{ transform: `translate(${knob.x * 36}px, ${knob.y * 36}px)` }} />
     </div>
   );
 }
@@ -281,9 +285,9 @@ function Match({ net, outfit, base, voice }) {
     <div className="stb-match">
       <canvas ref={canvasRef} className="stb-canvas" />
       <div className="stb-hud">
-        <span className="stb-pill">Fase {g.round + 1}/3</span>
-        <span className="stb-pill">{g.round >= 2 ? 'Final' : `Passam ${g.qualify}`} · {g.finished.length}/{g.qualify}</span>
-        {raceLeft != null && <span className="stb-pill"><Timer size={13} /> {raceLeft}s</span>}
+        <span className="stb-pill round"><Flag size={13} /> {g.round + 1}/3</span>
+        <span className="stb-pill"><Trophy size={13} /> {g.round >= 2 ? 'Final' : `Passam ${g.qualify}`} · <b>{g.finished.length}/{g.qualify}</b></span>
+        {raceLeft != null && <span className={'stb-pill time' + (raceLeft <= 10 ? ' low' : '')}><Timer size={13} /> {raceLeft}s</span>}
         <span className="grow" />
         <button type="button" className={'stb-pill btn' + (voice.mic ? ' mic-on' : '')} onClick={() => { unlockAudio(); voice.toggleMic(); }} aria-label="Microfone">{voice.mic ? <Mic size={14} /> : <MicOff size={14} />}</button>
         <button type="button" className="stb-pill btn" onClick={() => setLeave(true)}><LogOut size={14} /></button>
@@ -327,8 +331,8 @@ function Match({ net, outfit, base, voice }) {
         <div className="stb-controls">
           <Joystick onMove={(x, y) => eng.current?.input.move(x, y)} />
           <div className="stb-btns">
-            <button type="button" className="stb-btn dive" onPointerDown={() => eng.current?.input.dive()}>Mergulhar</button>
-            <button type="button" className="stb-btn jump" onPointerDown={() => eng.current?.input.jump()}>Pular</button>
+            <button type="button" className="stb-btn dive" onPointerDown={() => eng.current?.input.dive()}><Zap size={24} strokeWidth={2.6} /><span>Mergulhar</span></button>
+            <button type="button" className="stb-btn jump" onPointerDown={() => eng.current?.input.jump()}><ArrowBigUpDash size={34} strokeWidth={2.4} /><span>Pular</span></button>
           </div>
         </div>
       )}

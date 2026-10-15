@@ -223,7 +223,7 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
   let player = shadowed(buildAvatar(skinById(skin), 'surf'));
   scene.add(player);
   const officer = shadowed(buildAvatar(OFFICER, 'surf'));
-  officer.scale.setScalar(1.08);
+  officer.scale.setScalar(1.22); // o guarda é grandão (segura o personagem de cabeça para baixo)
   officer.visible = false;
   scene.add(officer);
   let skate = buildBoard(boardById(board));
@@ -252,7 +252,7 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
   const st = {
     z: 8.6, lane: 0, x: 0, y: 0, prevY: 0, vy: 0, roll: 0, speed: START_SPEED, t: 0, coins: 0, dist: 0,
     groundY: 0, alive: true, phase: 'menu', hitAt: -100, officerDist: 2.2, nextRowZ: -26, slow: 0, over: false,
-    stumble: 0, shake: 0, skate: 0, skateWait: 0, invuln: 0, story: 0, flip: -1, dead: null, deadAt: 0, deadZ: 0,
+    stumble: 0, bump: 0, shake: 0, skate: 0, skateWait: 0, invuln: 0, story: 0, flip: -1, dead: null, deadAt: 0, deadZ: 0,
     power: { ima: 0, estrela: 0, foguete: 0, pulapula: 0 }, lastPowerAt: 0,
   };
   const objects = [];
@@ -407,7 +407,7 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
     const nl = Math.max(-1, Math.min(1, st.lane + d));
     if (nl === st.lane) return;
     const bh = blockH(nl, st.z, 0.3);
-    if (bh > 0.6 && st.y < bh - 0.35) { hit('side', null); return; }
+    if (bh > 0.6 && st.y < bh - 0.35) { st.bump = d; hit('side', null); return; }
     st.lane = nl;
     onSound?.('whoosh');
   }
@@ -497,9 +497,9 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
     st.roll = 0;
     st.shake = how === 'crash' ? 0.7 : 0.6;
     onSound?.('crash');
-    if (how === 'crash') onHud?.({ warn: 'Bateu de frente no trem!' });
-    setTimeout(() => onSound?.('whistle'), 400);
-    setTimeout(() => finish(), 2000);
+    if (how === 'crash') onHud?.({ warn: 'Bateu de frente!' });
+    setTimeout(() => onSound?.('whistle'), 500);
+    setTimeout(() => finish(), 3000);
   }
   /** Bateu de frente num trem. Sem skate: acaba. Com skate: o skate explode e o personagem
    *  desvia para um trilho livre (ou pula para o teto, se não houver). Nunca entra no trem. */
@@ -579,6 +579,7 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
     st.dist += Math.max(0, st.z - nz);
     st.z = nz;
     st.x += (laneX(st.lane) - st.x) * Math.min(1, dt * 15);
+    st.bump *= Math.max(0, 1 - dt * 7); // esbarrão de lado: dá um tranco para o lado e volta
     st.roll = Math.max(0, st.roll - dt);
     if (st.flip >= 0) { st.flip += dt / 0.55; if (st.flip >= 1) st.flip = -1; }
     const lane = Math.round(st.x / LANE_W);
@@ -605,11 +606,17 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
       } else if ((o.type === 'low' || o.type === 'high') && st.z <= o.zNear && st.z >= o.zFar) {
         const bad = o.type === 'low' ? st.y < 0.9 : !(st.roll > 0) && st.y < 2.3;
         if (bad) {
-          // Derruba a barreira e tropeça
-          o.ghost = true;
-          o.mesh.rotation.x = -1.3;
-          o.mesh.position.y = 0.1;
-          hit('front', null);
+          if (st.skate > 0 || st.invuln > 0 || st.power.foguete > 0) {
+            // Com skate (ou piscando depois de uma batida): derruba a barreira e segue
+            o.ghost = true;
+            o.mesh.rotation.x = -1.3;
+            o.mesh.position.y = 0.1;
+            hit('front', null);
+          } else {
+            // Bateu de frente na barreira: acabou (como no trem). Fica na frente dela, nunca dentro.
+            st.z = o.zNear + 0.45;
+            caught('crash');
+          }
         }
       }
     }
@@ -695,7 +702,7 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
         officer.visible = true;
         officer.position.set(laneX(-1) + 0.6, 0, Math.max(11, 24 - st.story * 7));
         officer.rotation.y = 0;
-        poseAvatar(officer, st.story < 1.9 ? 'run' : 'caught', clock);
+        poseAvatar(officer, st.story < 1.9 ? 'run' : 'hold', clock);
       } else officer.visible = false;
       camera.position.lerp(st.phase === 'story' && st.story > 1.7 ? camStory : camIntro, Math.min(1, dt * 2.2));
       camera.lookAt(camLook);
@@ -709,16 +716,18 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
     const deadK = Math.min(1, (st.t - st.deadAt) / 0.45);
     let pz = st.z;
     if (st.dead === 'crash') pz = st.deadZ + Math.sin(deadK * Math.PI * 0.5) * 0.7; // quica para trás
+    // Fim de jogo: o guarda chega e levanta o personagem de cabeça para baixo, pelas pernas
+    const sinceDead = st.t - st.deadAt;
+    const held = !st.alive && sinceDead > 0.95;
     const flying = st.power.foguete > 0 && st.alive;
     const pogoOn = st.power.pulapula > 0 && st.alive && !onSkate;
     const lift = onSkate && !lie ? 0.2 : onSkate ? 0.08 : pogoOn ? 0.62 : 0;
-    player.position.set(st.x, st.y + lift, pz);
-    player.rotation.y = (laneX(st.lane) - st.x) * -0.12;
-    let state = st.dead === 'crash' ? 'crash' : !st.alive ? 'caught' : lie ? 'skatelie' : st.roll > 0 ? 'roll' : st.stumble > 0 ? 'stumble' : onSkate ? 'skate' : air ? 'jump' : 'run';
+    player.position.set(st.x + st.bump * 0.45, st.y + lift, pz);
+    player.rotation.set(0, (laneX(st.lane) - st.x) * -0.12 - st.bump * 0.5, 0);
+    let state = held ? 'caught' : st.dead === 'crash' ? 'crash' : !st.alive ? 'stumble' : lie ? 'skatelie' : st.roll > 0 ? 'roll' : st.stumble > 0 ? 'stumble' : onSkate ? 'skate' : air ? 'jump' : 'run';
     if (flying) state = 'fly';
     else if (pogoOn && st.alive && st.roll <= 0) state = 'pogo';
-    poseAvatar(player, state, st.t, st.dead === 'crash' ? deadK : 1 - st.stumble / 0.7);
-    if (st.dead === 'caught') player.rotation.y = Math.PI;
+    poseAvatar(player, state, st.t);
     // Foguete nas costas (com fogo e rastro), pula-pula nos pés, anel do ímã e brilho da estrela
     rocketPack.visible = flying;
     if (flying) {
@@ -749,16 +758,47 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
       poseBoard(skate, clock, st.flip);
     }
     const close = st.t - st.hitAt < CATCH_WINDOW || st.t < 2.5;
-    const target = !st.alive ? (st.dead === 'crash' ? 1.6 : 0.9) : close ? 2.3 : 16;
-    st.officerDist += (target - st.officerDist) * Math.min(1, dt * (st.alive ? 1.6 : 4));
+    const target = !st.alive ? 0.75 : close ? 2.3 : 16;
+    st.officerDist += (target - st.officerDist) * Math.min(1, dt * (st.alive ? 1.6 : 5));
     officer.visible = true;
-    officer.position.set(st.x + (st.lane <= 0 ? 0.8 : -0.8), Math.min(st.y, 0.01), pz + st.officerDist);
-    officer.rotation.y = 0;
-    poseAvatar(officer, st.alive || st.officerDist > 2 ? 'run' : 'caught', st.t + 0.3);
+    const ox = held ? st.x : st.x + (st.lane <= 0 ? 0.8 : -0.8);
+    const gy = held ? 0 : Math.min(st.y, 0.01);
+    officer.position.set(ox, gy, pz + st.officerDist);
+    // Quando pega, o guarda vira para a câmera mostrando o personagem pendurado
+    officer.rotation.y = held ? Math.PI - 0.5 * Math.min(1, (sinceDead - 0.95) / 0.4) : 0;
+    poseAvatar(officer, held ? 'hold' : 'run', st.t + 0.3);
+    if (held) {
+      // Pendura o personagem pelos pés na mão levantada do guarda
+      officer.updateMatrixWorld(true);
+      // ponto entre as duas mãos (o guarda segura pelos pés com as mãos levantadas)
+      const hand = new THREE.Vector3();
+      let nHands = 0;
+      for (const n of ['hand_l', 'hand_r']) {
+        const bone = officer.getObjectByName(n);
+        if (!bone) continue;
+        hand.add(bone.getWorldPosition(new THREE.Vector3()));
+        nHands++;
+      }
+      if (nHands) hand.multiplyScalar(1 / nHands);
+      const k = Math.min(1, (sinceDead - 0.95) / 0.35);
+      const feet = new THREE.Vector3(hand.x + 0.1, Math.max(hand.y, 2.1), hand.z + 0.32); // na frente do guarda, sem encostar nele // ao lado do guarda, sem encostar nele
+      const from = new THREE.Vector3(st.x, 0.2, pz);
+      player.position.copy(from.lerp(feet, k));
+      player.rotation.set(Math.PI * k, 0, 0);
+      player.position.y += Math.sin(st.t * 6) * 0.04;
+    }
     const sh = st.shake > 0 ? st.shake * 0.5 : 0;
-    const want = new THREE.Vector3(st.x * 0.75 + rnd(-sh, sh), (flying ? 3.2 + st.y * 0.85 : 4.9 + st.y * 0.6) + rnd(-sh, sh), st.z + (flying ? 6.6 : 7.6));
-    camera.position.lerp(want, Math.min(1, dt * 8));
-    camera.lookAt(st.x * 0.85, flying ? st.y - 0.6 : 1.1 + st.y * 0.65, st.z - 8);
+    if (!st.alive && sinceDead > 0.5) {
+      // Câmera vira de lado para mostrar o guarda segurando o personagem
+      const gz = pz + st.officerDist;
+      const want = new THREE.Vector3(st.x + 2.4, 2.5, gz + 5.4);
+      camera.position.lerp(want, Math.min(1, dt * 2.5));
+      camera.lookAt(st.x + 0.3, 1.35, gz);
+    } else {
+      const want = new THREE.Vector3(st.x * 0.75 + rnd(-sh, sh), (flying ? 3.2 + st.y * 0.85 : 4.9 + st.y * 0.6) + rnd(-sh, sh), st.z + (flying ? 6.6 : 7.6));
+      camera.position.lerp(want, Math.min(1, dt * 8));
+      camera.lookAt(st.x * 0.85, flying ? st.y - 0.6 : 1.1 + st.y * 0.65, st.z - 8);
+    }
     sun.position.set(st.x - 8, 20, st.z + 6);
     sun.target.position.set(st.x, 0, st.z - 4);
     renderer.render(scene, camera);
