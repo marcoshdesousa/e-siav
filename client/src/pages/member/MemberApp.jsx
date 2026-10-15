@@ -16,6 +16,7 @@ import MyAchievements from './MyAchievements.jsx';
 import { AgendaLeitura, ProximasDatas } from '../club/Folders.jsx';
 import { EmbeddedSite, SupportChat } from '../Shared.jsx';
 import { GamePage, GamesHub } from '../games/GamesHub.jsx';
+import UnoPage from '../online/Uno.jsx';
 import { AlbumPage, AlbumsPage } from '../albums/AlbumsHub.jsx';
 import { BibleDay, BibleYear, BomDeBiblia, BomDeBibliaPhase, LearningHub, StreakCard } from '../learning/Learning.jsx';
 
@@ -123,6 +124,7 @@ export default function MemberApp() {
               <Route path="cartao" element={<EmbeddedSite title="Cartão DBV" linkKey="link_cartao" subtitle="Entre com o código e a senha que o seu clube passar" />} />
               <Route path="suporte" element={<SupportChat />} />
               <Route path="jogos" element={<GamesHub base={base} />} />
+              <Route path="jogos/uno" element={<UnoPage base={base} />} />
               <Route path="jogos/:id" element={<GamePage base={base} />} />
               <Route path="albuns" element={<AlbumsPage base={base} />} />
               <Route path="albuns/:id" element={<AlbumPage />} />

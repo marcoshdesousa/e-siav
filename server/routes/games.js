@@ -33,6 +33,7 @@ r.get('/jogos/meus', member, (req, res) => {
 
 r.post('/jogos/:id/pontos', member, (req, res) => {
   const g = game(req.params.id);
+  if (g.server) fail(400, 'Os pontos deste jogo são marcados pelo servidor');
   const score = Math.floor(Number(req.body.score));
   if (!Number.isFinite(score) || score < 0) fail(400, 'Pontuação inválida');
   const pts = Math.min(score, g.max);

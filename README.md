@@ -155,3 +155,12 @@ As telas mostradas no celular da página de entrada ficam em `client/public/show
   - Na primeira vez, o programa e a voz são baixados para `DATA_DIR/piper`.
   - Depois disso, o servidor prepara sozinho, em segundo plano, um MP3 por capítulo em `DATA_DIR/biblia-audio`, começando pela leitura de hoje. São cerca de 1 GB para a Bíblia inteira, que fica no disco permanente.
   - Para desligar, use `BIBLE_AUDIO=0`.
+
+## Jogos online (Uno DBV)
+
+- **Salas:** pelo WebSocket `/ws/online` (`server/online/hub.js`); as regras ficam no servidor (`server/online/uno.js`).
+  - Cada jogador recebe só a própria mão.
+  - Quem demora mais de 30 s compra 1 carta e passa a vez.
+  - Quem cai tem 90 s para voltar. Depois disso, as cartas dele voltam para o monte.
+- **Ranking:** por vitórias, em `game_scores` (jogo `uno`), marcado pelo servidor. O celular não consegue mandar pontos desse jogo.
+- **Voz:** WebRTC entre os celulares, usando servidores STUN públicos. Em algumas redes (por exemplo, algumas operadoras 4G ou redes de escola) a voz pode não conectar. Para essas redes seria preciso um servidor TURN, que é pago à parte.

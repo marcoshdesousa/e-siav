@@ -1,6 +1,6 @@
 // Jogos dos membros (jogos grandes + mini-jogos): lista de jogos, tela de cada jogo e ranking geral de cada um.
 import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Flag, Keyboard, Layers, Lightbulb, Smartphone, Target, Pickaxe, PersonStanding, Play, RotateCcw, TrainFront, Trophy, Volume2, VolumeX } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -37,37 +37,45 @@ function GameRanking({ game, base, limit }) {
 
 /** Jogos grandes (online). Ficam "em breve" até cada um ficar pronto. */
 export const BIG_GAMES = [
-  { id: 'uno', name: 'Uno DBV', hint: 'Cartas online, 2 a 6 jogadores, com chat de voz', icon: Layers, ranks: [['vitorias', 'Vitórias']] },
+  { id: 'uno', name: 'Uno DBV', hint: 'Cartas online, 2 a 6 jogadores, com chat de voz', icon: Layers, ranks: [['uno', 'Vitórias']], ready: true },
   { id: 'corrida', name: 'Corrida DBV', hint: 'Corra pelos trilhos, fuja do guarda e junte desbrava coins', icon: TrainFront, ranks: [['moedas', 'Mais moedas'], ['distancia', 'Maior distância']] },
   { id: 'stumble', name: 'Stumble DBV', hint: 'Até 10 jogadores em fases malucas. Só o 1º vence', icon: PersonStanding, ranks: [['vitorias', 'Vitórias']] },
   { id: 'craft', name: 'DesbravaCraft', hint: 'Construa o seu mundo sozinho ou com até 10 amigos', icon: Pickaxe, ranks: [] },
 ];
 
-function BigGames() {
+function BigGames({ base }) {
   return (
     <div className="big-games">
-      {BIG_GAMES.map((g) => (
-        <div key={g.id} className="big-game soon">
-          <span className="big-game-ico"><g.icon size={34} /></span>
-          <div className="grow">
-            <b>{g.name}</b>
-            <small>{g.hint}</small>
-          </div>
-          <span className="chip">Em breve</span>
-        </div>
-      ))}
+      {BIG_GAMES.map((g) => {
+        const body = (
+          <>
+            <span className="big-game-ico"><g.icon size={34} /></span>
+            <div className="grow">
+              <b>{g.name}</b>
+              <small>{g.hint}</small>
+            </div>
+            {g.ready ? <Play size={26} /> : <span className="chip">Em breve</span>}
+          </>
+        );
+        return g.ready
+          ? <Link key={g.id} to={`${base}/jogos/${g.id}`} className="big-game">{body}</Link>
+          : <div key={g.id} className="big-game soon">{body}</div>;
+      })}
       <p className="small muted center">Os jogos grandes precisam de internet (o DesbravaCraft terá também um mundo offline).</p>
     </div>
   );
 }
 
 /** Rankings: primeiro escolhe Mini-jogos ou Jogos, depois o jogo. */
-function GamesRankings({ base, online }) {
-  const [kind, setKind] = useState('mini');
-  const [rankGame, setRankGame] = useState(GAMES[0].id);
+function GamesRankings({ base, online, initial }) {
   const ranked = BIG_GAMES.filter((g) => g.ranks.length);
-  const [big, setBig] = useState(ranked[0].id);
+  const initialBig = ranked.find((g) => g.ranks.some((r) => r[0] === initial));
+  const [kind, setKind] = useState(initialBig ? 'big' : 'mini');
+  const [rankGame, setRankGame] = useState(GAMES.some((g) => g.id === initial) ? initial : GAMES[0].id);
+  const [big, setBig] = useState(initialBig?.id || ranked[0].id);
   const bigGame = ranked.find((g) => g.id === big);
+  const [board, setBoard] = useState(initialBig ? initial : bigGame.ranks[0][0]);
+  const boardId = bigGame.ranks.some((r) => r[0] === board) ? board : bigGame.ranks[0][0];
   return (
     <>
       <div className="seg games-rank-kind" role="tablist">
@@ -87,8 +95,14 @@ function GamesRankings({ base, online }) {
           <select value={big} onChange={(e) => setBig(e.target.value)} aria-label="Jogo">
             {ranked.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
           </select>
-          <p className="small muted">{bigGame.ranks.map((r) => r[1]).join(' · ')}</p>
-          <Card className="small center">O ranking de {bigGame.name} começa quando o jogo for lançado.</Card>
+          {bigGame.ranks.length > 1 && (
+            <div className="seg games-rank-kind" role="tablist">
+              {bigGame.ranks.map(([id, label]) => <button key={id} type="button" className={boardId === id ? 'active' : ''} onClick={() => setBoard(id)}>{label}</button>)}
+            </div>
+          )}
+          {!bigGame.ready ? <Card className="small center">O ranking de {bigGame.name} começa quando o jogo for lançado.</Card>
+            : online ? <><p className="small muted">{bigGame.ranks.find((r) => r[0] === boardId)[1]} · ranking geral de todos os membros.</p><GameRanking key={boardId} game={{ id: boardId, mode: 'sum' }} base={base} /></>
+              : <Card className="small center">Os rankings precisam de internet.</Card>}
         </>
       )}
     </>
@@ -97,7 +111,8 @@ function GamesRankings({ base, online }) {
 
 /** Aba Jogos: jogos grandes, mini-jogos e rankings. */
 export function GamesHub({ base }) {
-  const [tab, setTab] = useState(() => { try { return window.sessionStorage.getItem('dbv-games-tab') || 'mini'; } catch { return 'mini'; } });
+  const [params] = useSearchParams();
+  const [tab, setTab] = useState(() => { if (params.get('aba') === 'ranking') return 'ranking'; try { return window.sessionStorage.getItem('dbv-games-tab') || 'mini'; } catch { return 'mini'; } });
   const pick = (t) => { setTab(t); try { window.sessionStorage.setItem('dbv-games-tab', t); } catch { /* sem armazenamento */ } };
   const mine = useLoad(() => api.get('/jogos/meus'));
   const my = mine.data || {};
@@ -106,7 +121,7 @@ export function GamesHub({ base }) {
     <>
       <PageHeader title="Jogos" subtitle={`Jogos online e ${GAMES.length} mini-jogos para fazer pontos e subir no ranking. Sem anúncios!`} />
       <Tabs tabs={[['jogos', 'Jogos'], ['mini', 'Mini-jogos'], ['ranking', 'Rankings']]} value={tab} onChange={pick} />
-      {tab === 'jogos' && <BigGames />}
+      {tab === 'jogos' && <BigGames base={base} />}
       {tab === 'mini' && (
         <div className="games-grid">
           {GAMES.map((g) => (
@@ -118,7 +133,7 @@ export function GamesHub({ base }) {
           ))}
         </div>
       )}
-      {tab === 'ranking' && <GamesRankings base={base} online={online} />}
+      {tab === 'ranking' && <GamesRankings base={base} online={online} initial={params.get('jogo')} />}
     </>
   );
 }

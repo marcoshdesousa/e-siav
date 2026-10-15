@@ -2,6 +2,8 @@
 // mode 'best': vale o recorde de uma partida; 'sum': os pontos das partidas vão somando.
 // max: maior pontuação aceita numa partida (evita números absurdos).
 export const GAMES = {
+  // Jogos online: o servidor é quem marca as vitórias (server: true, o celular não manda pontos).
+  uno: { mode: 'sum', max: 1, server: true },
   cobrinha: { mode: 'best', max: 5000 },
   aventura: { mode: 'best', max: 200000 },
   velha: { mode: 'sum', max: 3 },

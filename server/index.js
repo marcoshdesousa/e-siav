@@ -27,6 +27,7 @@ import albumRoutes from './routes/albums.js';
 import paymentRoutes from './routes/payments.js';
 import learningRoutes from './routes/learning.js';
 import { startAudioGenerator } from './bible.js';
+import { attachOnline } from './online/hub.js';
 import { startPaymentSweep } from './payments.js';
 import { syncCatalog } from './catalog.js';
 import { createInitialAdmin, resetClubsForDbvOnce, resetToDemoClubsOnce, resetToTestClubsOnce, giftTestPacksOnce, seed } from './seed.js';
@@ -113,5 +114,6 @@ app.use((err, _req, res, _next) => {
 });
 
 const server = http.createServer(app);
+attachOnline(server);
 const PORT = Number(process.env.PORT) || 3000;
 server.listen(PORT, () => console.log(`App do DBV rodando em http://localhost:${PORT}`));
