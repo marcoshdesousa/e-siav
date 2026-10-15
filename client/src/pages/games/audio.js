@@ -89,9 +89,12 @@ const SFX = {
   explode: () => { noise(0, 0.6, 0.5); tone(90, 0, 0.5, { type: 'square', vol: 0.18, to: 30 }); },
   skate: () => [392, 523, 659, 784].forEach((f, i) => tone(f, i * 0.05, 0.12, { type: 'triangle', vol: 0.18 })),
   spray: () => noise(0, 0.5, 0.08),
+  power: () => [523, 784, 1047, 1568].forEach((f, i) => tone(f, i * 0.06, 0.16, { type: 'triangle', vol: 0.2 })),
+  rocket: () => { noise(0, 0.9, 0.18); tone(140, 0, 0.8, { type: 'sawtooth', vol: 0.08, to: 320 }); },
+  boing: () => tone(180, 0, 0.28, { type: 'sine', vol: 0.25, to: 900 }),
 };
 
-/** Efeito sonoro: tap, move, flip, point, coin, jump, shoot, pop, hit, error, win, lose, record, whistle, whoosh, crash, explode, skate, spray. */
+/** Efeito sonoro: tap, move, flip, point, coin, jump, shoot, pop, hit, error, win, lose, record, whistle, whoosh, crash, explode, skate, spray, power, rocket, boing. */
 export function sfx(name) {
   try { SFX[name]?.(); } catch { /* sem som */ }
 }

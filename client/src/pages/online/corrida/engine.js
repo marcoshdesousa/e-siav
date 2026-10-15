@@ -5,7 +5,8 @@
 // Esbarrar ou bater numa barreira: tropeça e o guarda chega perto. De novo com ele perto: pegou!
 import * as THREE from 'three';
 import { makeCoin, makeTrain, toon, TRAIN_H } from './models.js';
-import { buildAvatar, poseAvatar } from '../avatar/build.js';
+import { buildAvatar, poseAvatar, studioEnv } from '../avatar/build.js';
+import { createParticles, makePogo, makePowerup, makeRocket, POWERS, POWER_TYPES } from './powerups.js';
 import { buildBoard, poseBoard } from '../avatar/board.js';
 import { boardById, skinById } from '../avatar/skins.js';
 
@@ -18,6 +19,7 @@ const OFFICER = {
 const LANE_W = 2.4;
 const GRAVITY = 40;
 const JUMP_V = 13;
+const FLY_Y = 8.2; // altura do voo de foguete
 const ROLL_TIME = 0.7;
 const CATCH_WINDOW = 9;
 const START_SPEED = 13;
@@ -145,8 +147,10 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
   scene.fog = new THREE.Fog('#cfe9ff', 70, 160);
   const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 240);
 
-  scene.add(new THREE.HemisphereLight('#ffffff', '#8a7a66', 1.5));
-  const sun = new THREE.DirectionalLight('#fff4dc', 1.8);
+  scene.environment = studioEnv(renderer);
+  scene.environmentIntensity = 0.45;
+  scene.add(new THREE.HemisphereLight('#ffffff', '#8a7a66', 1.35));
+  const sun = new THREE.DirectionalLight('#fff4dc', 1.9);
   sun.castShadow = true;
   sun.shadow.mapSize.set(1024, 1024);
   Object.assign(sun.shadow.camera, { left: -14, right: 14, top: 18, bottom: -18, near: 1, far: 70 });
@@ -226,23 +230,30 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
   skate.visible = false;
   scene.add(skate);
 
-  // Partículas (poeira, brilho das moedas, explosão do skate, tinta do spray)
-  const parts = [];
-  const pGeo = new THREE.SphereGeometry(0.08, 6, 4);
-  function burst(x, y, z, n, colors, speed = 5, life = 0.7, size = 1, grav = 12) {
-    for (let i = 0; i < n; i++) {
-      const m = new THREE.Mesh(pGeo, new THREE.MeshBasicMaterial({ color: colors[i % colors.length], transparent: true }));
-      m.position.set(x, y, z);
-      m.scale.setScalar(size * rnd(0.6, 1.4));
-      scene.add(m);
-      parts.push({ m, vx: rnd(-1, 1) * speed, vy: rnd(0.3, 1.2) * speed, vz: rnd(-1, 1) * speed, life, max: life, grav });
-    }
+  // Partículas brilhantes (poeira, brilho das moedas, explosão do skate, tinta do spray, poderes)
+  const fx = createParticles(scene);
+  function burst(x, y, z, n, colors, speed = 5, life = 0.7, size = 1, grav = 12, star = false) {
+    fx.burst(x, y, z, n, { colors, speed, life, size: 0.42 * size, grav, star, up: 0.3 });
   }
+
+  // Poderes: foguete nas costas, pula-pula nos pés e o anel do ímã
+  const rocketPack = makeRocket(0.82);
+  rocketPack.visible = false;
+  scene.add(rocketPack);
+  const pogo = makePogo(1.15);
+  pogo.visible = false;
+  scene.add(pogo);
+  const magnetRing = new THREE.Mesh(new THREE.TorusGeometry(1.1, 0.05, 8, 48), new THREE.MeshBasicMaterial({ color: '#ef4444', transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false }));
+  magnetRing.rotation.x = Math.PI / 2;
+  magnetRing.visible = false;
+  scene.add(magnetRing);
+  const powerups = [];
 
   const st = {
     z: 8.6, lane: 0, x: 0, y: 0, prevY: 0, vy: 0, roll: 0, speed: START_SPEED, t: 0, coins: 0, dist: 0,
     groundY: 0, alive: true, phase: 'menu', hitAt: -100, officerDist: 2.2, nextRowZ: -26, slow: 0, over: false,
     stumble: 0, shake: 0, skate: 0, skateWait: 0, invuln: 0, story: 0, flip: -1, dead: null, deadAt: 0, deadZ: 0,
+    power: { ima: 0, estrela: 0, foguete: 0, pulapula: 0 }, lastPowerAt: 0,
   };
   const objects = [];
   const coins = [];
@@ -311,6 +322,21 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
     scene.add(m);
     coins.push({ lane, z, y, mesh: m });
   }
+  function addPowerup(lane, z, type) {
+    const m = makePowerup(type);
+    m.scale.setScalar(1.35);
+    m.position.set(laneX(lane), 1.3, z);
+    scene.add(m);
+    powerups.push({ lane, z, type, mesh: m });
+  }
+  /** Moedas lá no alto (voo de foguete): fileiras trocando de trilho de vez em quando. */
+  function skyCoins(z0, len) {
+    let lane = st.lane;
+    for (let z = z0; z > z0 - len; z -= 2.4) {
+      if (Math.random() < 0.06) lane = Math.max(-1, Math.min(1, lane + (Math.random() < 0.5 ? -1 : 1)));
+      addCoin(lane, z, FLY_Y + 0.6);
+    }
+  }
   function coinLine(lane, z0, n, y = 1, arc = false) {
     for (let k = 0; k < n; k++) addCoin(lane, z0 - k * 2.2, arc ? y + Math.sin((k / (n - 1)) * Math.PI) * 2.2 : y);
   }
@@ -325,6 +351,14 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
     for (const lane of lanes) {
       const r = Math.random();
       if (lane === free) {
+        const quiet = !POWER_TYPES.some((k) => st.power[k] > 0);
+        if (quiet && st.t > 6 && st.t - st.lastPowerAt > 14 && Math.random() < 0.35) {
+          st.lastPowerAt = st.t;
+          addPowerup(lane, z - 2, POWER_TYPES[Math.floor(Math.random() * POWER_TYPES.length)]);
+          coinLine(lane, z - 6, 4);
+          continue;
+        }
+        if (st.power.pulapula > 0 && r < 0.6) { coinLine(lane, z, 7, 2.5, true); for (let k = 0; k < 5; k++) addCoin(lane, z - 18 - k * 2.2, 5.6); continue; }
         if (r < 0.45) coinLine(lane, z, 7);
         else if (r < 0.75) { const high = Math.random() < 0.45; addBarrier(lane, z - 4, high); coinLine(lane, z, 5, high ? 0.6 : 1, !high); }
         continue;
@@ -379,21 +413,44 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
   }
   function jump() {
     if (!playing()) return;
-    if (st.y <= st.groundY + 0.06) { st.vy = JUMP_V; st.roll = 0; onSound?.('jump'); if (st.skate > 0) st.flip = 0; }
+    if (st.power.foguete > 0) return;
+    if (st.y <= st.groundY + 0.06) {
+      const pg = st.power.pulapula > 0;
+      st.vy = pg ? JUMP_V * 1.62 : JUMP_V;
+      st.roll = 0;
+      onSound?.(pg ? 'boing' : 'jump');
+      if (st.skate > 0) st.flip = 0;
+      if (pg) burst(st.x, st.groundY + 0.1, st.z, 10, ['#86efac', '#ffffff'], 3, 0.45, 0.8, 4);
+    }
   }
   function roll() {
-    if (!playing()) return;
+    if (!playing() || st.power.foguete > 0) return;
     st.roll = ROLL_TIME;
     if (st.y > st.groundY + 0.06) st.vy = -JUMP_V * 1.3;
     onSound?.('whoosh');
   }
   const input = { left: () => move(-1), right: () => move(1), up: jump, down: roll };
   function useSkate() {
-    if (!playing() || st.skate > 0 || st.skateWait > 0) return false;
+    if (!playing() || st.skate > 0 || st.skateWait > 0 || st.power.foguete > 0) return false;
     st.skate = SKATE_TIME;
     onSound?.('skate');
     burst(st.x, st.y + 0.2, st.z, 14, ['#38bdf8', '#facc15', '#ffffff'], 4, 0.5);
     return true;
+  }
+
+  /** Pegou um poder. */
+  function activate(type) {
+    st.power[type] = POWERS[type].time;
+    onSound?.('power');
+    onHud?.({ warn: `${POWERS[type].name}!`, good: true });
+    burst(st.x, st.y + 1.2, st.z - 0.3, 26, [POWERS[type].color, '#ffffff', '#fde047'], 5, 0.8, 1.2, 3, true);
+    if (type === 'foguete') {
+      onSound?.('rocket');
+      st.roll = 0;
+      st.skateWait = Math.max(st.skateWait, 0);
+      // Moedas no céu por todo o voo
+      skyCoins(st.z - 10, st.speed * POWERS.foguete.time);
+    }
   }
 
   // ───────────── Batidas ─────────────
@@ -408,7 +465,7 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
     });
   }
   function hit(kind, obj) {
-    if (!st.alive || st.invuln > 0) return;
+    if (!st.alive || st.invuln > 0 || st.power.foguete > 0) return;
     if (obj && obj.type !== 'train') ghost(obj);
     if (st.skate > 0) {
       // Com skate: o skate explode e a corrida continua
@@ -447,6 +504,7 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
   /** Bateu de frente num trem. Sem skate: acaba. Com skate: o skate explode e o personagem
    *  desvia para um trilho livre (ou pula para o teto, se não houver). Nunca entra no trem. */
   function frontCrash(o) {
+    if (st.power.foguete > 0) return;
     if (st.skate > 0 || st.invuln > 0) {
       if (st.skate > 0) {
         st.skate = 0;
@@ -495,6 +553,14 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
     st.stumble = Math.max(0, st.stumble - dt);
     st.invuln = Math.max(0, st.invuln - dt);
     st.shake = Math.max(0, st.shake - dt);
+    for (const k of POWER_TYPES) {
+      if (st.power[k] <= 0) continue;
+      st.power[k] = Math.max(0, st.power[k] - dt);
+      if (st.power[k] === 0) {
+        onSound?.('pop');
+        if (k === 'foguete') { st.invuln = 1.8; st.vy = 0; }
+      }
+    }
     if (st.skate > 0) { st.skate -= dt; if (st.skate <= 0) { st.skate = 0; st.skateWait = SKATE_WAIT; onSound?.('pop'); } }
     else st.skateWait = Math.max(0, st.skateWait - dt);
     for (const o of objects) if (o.v) { o.zNear += o.v * dt; o.zFar += o.v * dt; o.mesh.position.z += o.v * dt; }
@@ -518,10 +584,16 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
     const lane = Math.round(st.x / LANE_W);
     st.prevY = st.y;
     st.groundY = surfaceAt(lane, st.z, st.y);
-    st.vy -= GRAVITY * dt;
-    st.y += st.vy * dt;
-    if (st.y <= st.groundY && st.vy <= 0) {
-      if (st.prevY > st.groundY + 0.5) burst(st.x, st.groundY + 0.05, st.z, 5, ['#e7e5e4'], 2, 0.35);
+    if (st.power.foguete > 0) {
+      // Voando: sobe rápido até a altura do voo e fica lá
+      st.vy = 0;
+      st.y = Math.min(FLY_Y, st.y + Math.max(2, (FLY_Y - st.y) * 6) * dt);
+    } else {
+      st.vy -= GRAVITY * dt * (st.invuln > 0 && st.y > TRAIN_H + 1 ? 0.55 : 1);
+      st.y += st.vy * dt;
+    }
+    if (st.power.foguete > 0) { /* no ar */ } else if (st.y <= st.groundY && st.vy <= 0) {
+      if (st.prevY > st.groundY + 0.5) burst(st.x, st.groundY + 0.05, st.z, 7, ['#f5f5f4', '#d6d3d1'], 2.2, 0.4, 0.9, 2);
       st.y = st.groundY; st.vy = 0;
     } else if (st.y < st.groundY) st.y = st.groundY; // subindo a rampa
     const h = st.roll > 0 ? 0.8 : 1.75;
@@ -541,15 +613,35 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
         }
       }
     }
+    const magnet = st.power.ima > 0;
+    const val = st.power.estrela > 0 ? 2 : 1;
     for (let i = coins.length - 1; i >= 0; i--) {
       const c = coins[i];
-      if (c.lane === lane && Math.abs(c.z - st.z) < 0.9 && Math.abs(c.y - (st.y + h / 2)) < 1.4) {
-        st.coins++;
+      // Ímã: puxa as moedas por perto (qualquer trilho) até o personagem
+      if (magnet && !c.mag && c.z < st.z + 1 && c.z > st.z - 26 && Math.abs(c.y - st.y) < 4.5) c.mag = true;
+      let got = c.lane === lane && Math.abs(c.z - st.z) < 0.9 && Math.abs(c.y - (st.y + h / 2)) < 1.4;
+      if (c.mag) {
+        const m = c.mesh.position;
+        const k = Math.min(1, dt * 9);
+        m.x += (st.x - m.x) * k; m.y += (st.y + 1 - m.y) * k; c.z += (st.z - 0.2 - c.z) * k; m.z = c.z;
+        c.y = m.y;
+        got = got || (Math.abs(m.x - st.x) < 0.7 && Math.abs(c.z - st.z) < 0.9);
+      }
+      if (got) {
+        st.coins += val;
         onSound?.('coin');
-        burst(c.mesh.position.x, c.mesh.position.y, c.z, 6, ['#fde047', '#fbbf24', '#ffffff'], 2.5, 0.35, 0.7);
+        burst(c.mesh.position.x, c.mesh.position.y, c.z, val > 1 ? 9 : 6, val > 1 ? ['#fde047', '#fb923c', '#ffffff'] : ['#fde047', '#fbbf24', '#ffffff'], 2.6, 0.4, 0.75, 2, true);
         scene.remove(c.mesh);
         coins.splice(i, 1);
       } else if (c.z > st.z + 14) { scene.remove(c.mesh); coins.splice(i, 1); }
+    }
+    for (let i = powerups.length - 1; i >= 0; i--) {
+      const pu = powerups[i];
+      if (pu.lane === lane && Math.abs(pu.z - st.z) < 1.1 && Math.abs(st.y + 0.9 - pu.mesh.position.y) < 1.7) {
+        activate(pu.type);
+        scene.remove(pu.mesh);
+        powerups.splice(i, 1);
+      } else if (pu.z > st.z + 14) { scene.remove(pu.mesh); powerups.splice(i, 1); }
     }
     while (st.nextRowZ > st.z - 175) spawnRow();
     for (let i = objects.length - 1; i >= 0; i--) if (objects[i].zFar > st.z + 16) { scene.remove(objects[i].mesh); objects.splice(i, 1); }
@@ -569,15 +661,15 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
     last = now;
     clock += dt;
     if (st.phase === 'run') { if (st.alive) stepRun(dt); else st.t += dt; }
-    for (let i = parts.length - 1; i >= 0; i--) {
-      const p = parts[i];
-      p.life -= dt;
-      p.vy -= p.grav * dt;
-      p.m.position.x += p.vx * dt; p.m.position.y += p.vy * dt; p.m.position.z += p.vz * dt;
-      p.m.material.opacity = Math.max(0, p.life / p.max);
-      if (p.life <= 0) { scene.remove(p.m); p.m.material.dispose(); parts.splice(i, 1); }
+    fx.update(dt);
+    for (const c of coins) { c.mesh.rotation.y = clock * 3; if (!c.mag) c.mesh.position.y = c.y + Math.sin(clock * 3 + c.z) * 0.06; }
+    for (const pu of powerups) {
+      const u = pu.mesh.userData;
+      pu.mesh.position.y = 1.3 + Math.sin(clock * 2.5 + pu.z) * 0.15;
+      u.icon.rotation.y = clock * 2;
+      u.ring.rotation.set(Math.PI / 2 + Math.sin(clock * 1.7) * 0.4, clock * 1.3, 0);
+      u.glow.material.opacity = 0.55 + Math.sin(clock * 5) * 0.2;
     }
-    for (const c of coins) { c.mesh.rotation.y = clock * 3; c.mesh.position.y = c.y + Math.sin(clock * 3 + c.z) * 0.06; }
     for (const s of scenery) while (s.position.z > st.z + 26) s.position.z -= STEP * 15;
     ground.position.z = st.z - 90; side.position.z = st.z - 90; rails.position.z = st.z - 90;
     trackTex.offset.y = (st.z / 260) * 40;
@@ -617,12 +709,40 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
     const deadK = Math.min(1, (st.t - st.deadAt) / 0.45);
     let pz = st.z;
     if (st.dead === 'crash') pz = st.deadZ + Math.sin(deadK * Math.PI * 0.5) * 0.7; // quica para trás
-    player.position.set(st.x, st.y + (onSkate && !lie ? 0.2 : onSkate ? 0.08 : 0), pz);
+    const flying = st.power.foguete > 0 && st.alive;
+    const pogoOn = st.power.pulapula > 0 && st.alive && !onSkate;
+    const lift = onSkate && !lie ? 0.2 : onSkate ? 0.08 : pogoOn ? 0.62 : 0;
+    player.position.set(st.x, st.y + lift, pz);
     player.rotation.y = (laneX(st.lane) - st.x) * -0.12;
-    const state = st.dead === 'crash' ? 'crash' : !st.alive ? 'caught' : lie ? 'skatelie' : st.roll > 0 ? 'roll' : st.stumble > 0 ? 'stumble' : onSkate ? 'skate' : air ? 'jump' : 'run';
+    let state = st.dead === 'crash' ? 'crash' : !st.alive ? 'caught' : lie ? 'skatelie' : st.roll > 0 ? 'roll' : st.stumble > 0 ? 'stumble' : onSkate ? 'skate' : air ? 'jump' : 'run';
+    if (flying) state = 'fly';
+    else if (pogoOn && st.alive && st.roll <= 0) state = 'pogo';
     poseAvatar(player, state, st.t, st.dead === 'crash' ? deadK : 1 - st.stumble / 0.7);
     if (st.dead === 'caught') player.rotation.y = Math.PI;
-    skate.visible = onSkate;
+    // Foguete nas costas (com fogo e rastro), pula-pula nos pés, anel do ímã e brilho da estrela
+    rocketPack.visible = flying;
+    if (flying) {
+      rocketPack.position.set(st.x, st.y + 1.15, pz + 0.32);
+      rocketPack.rotation.set(-0.55, 0, 0);
+      const f = rocketPack.userData.flame;
+      f.scale.set(1, 0.8 + Math.random() * 0.5, 1);
+      if (Math.random() < 0.8) burst(st.x + rnd(-0.15, 0.15), st.y + 0.75, pz + 0.75, 1, ['#fb923c', '#f97316', '#f87171'], 1.2, 0.4, 0.6, -2);
+    }
+    pogo.visible = pogoOn;
+    if (pogoOn) {
+      pogo.position.set(st.x, st.y, pz - 0.05);
+      const squash = air ? 1 : 0.8 + Math.abs(Math.sin(clock * 10)) * 0.2;
+      pogo.userData.spring.scale.y = squash;
+    }
+    magnetRing.visible = st.power.ima > 0 && st.alive;
+    if (magnetRing.visible) {
+      magnetRing.position.set(st.x, st.y + 0.08, pz);
+      const pulse = 1 + Math.sin(clock * 8) * 0.12;
+      magnetRing.scale.set(pulse, pulse, 1);
+      magnetRing.material.opacity = st.power.ima < 2 ? (Math.sin(clock * 20) > 0 ? 0.6 : 0.15) : 0.6;
+    }
+    if (st.power.estrela > 0 && st.alive && Math.random() < 0.35) burst(st.x + rnd(-0.4, 0.4), st.y + rnd(0.4, 1.8), pz + 0.2, 1, ['#fde047', '#ffffff'], 0.6, 0.5, 0.7, 0, true);
+    skate.visible = onSkate && !flying;
     if (skate.visible) {
       skate.position.set(st.x, st.y, st.z);
       skate.rotation.y = player.rotation.y;
@@ -636,15 +756,15 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
     officer.rotation.y = 0;
     poseAvatar(officer, st.alive || st.officerDist > 2 ? 'run' : 'caught', st.t + 0.3);
     const sh = st.shake > 0 ? st.shake * 0.5 : 0;
-    const want = new THREE.Vector3(st.x * 0.75 + rnd(-sh, sh), 4.9 + st.y * 0.6 + rnd(-sh, sh), st.z + 7.6);
+    const want = new THREE.Vector3(st.x * 0.75 + rnd(-sh, sh), (flying ? 3.2 + st.y * 0.85 : 4.9 + st.y * 0.6) + rnd(-sh, sh), st.z + (flying ? 6.6 : 7.6));
     camera.position.lerp(want, Math.min(1, dt * 8));
-    camera.lookAt(st.x * 0.85, 1.1 + st.y * 0.65, st.z - 8);
+    camera.lookAt(st.x * 0.85, flying ? st.y - 0.6 : 1.1 + st.y * 0.65, st.z - 8);
     sun.position.set(st.x - 8, 20, st.z + 6);
     sun.target.position.set(st.x, 0, st.z - 4);
     renderer.render(scene, camera);
     if (now - hudAt > 100) {
       hudAt = now;
-      onHud?.({ coins: st.coins, dist: Math.floor(st.dist), close: close && st.t > 2.5, skate: st.skate, skateWait: st.skateWait });
+      onHud?.({ coins: st.coins, dist: Math.floor(st.dist), close: close && st.t > 2.5 && !flying, skate: st.skate, skateWait: st.skateWait, power: { ...st.power } });
     }
   }
 
@@ -689,7 +809,7 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
       scene.add(skate);
     },
     /** Para os testes automáticos. */
-    _debug: { st, addTrain },
+    _debug: { st, addTrain, activate, addPowerup },
     giveUp() { if (st.alive && st.phase === 'run') { st.alive = false; finish(); } },
     dispose() {
       window.cancelAnimationFrame(raf);

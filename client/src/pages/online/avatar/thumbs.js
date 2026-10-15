@@ -1,6 +1,6 @@
 // Miniaturas (fotos) das skins e dos skates, desenhadas uma vez num renderizador escondido.
 import * as THREE from 'three';
-import { buildAvatar, poseAvatar } from './build.js';
+import { buildAvatar, poseAvatar, studioEnv } from './build.js';
 import { buildBoard, poseBoard } from './board.js';
 import { boardById, skinById } from './skins.js';
 
@@ -12,8 +12,10 @@ function setup() {
   renderer.setSize(180, 220);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   const scene = new THREE.Scene();
-  scene.add(new THREE.HemisphereLight('#ffffff', '#8aa0c8', 1.7));
-  const sun = new THREE.DirectionalLight('#ffffff', 2.1);
+  scene.environment = studioEnv(renderer);
+  scene.environmentIntensity = 0.5;
+  scene.add(new THREE.HemisphereLight('#ffffff', '#8aa0c8', 0.9));
+  const sun = new THREE.DirectionalLight('#fff6e8', 1.9);
   sun.position.set(2, 4, 3);
   scene.add(sun);
   const cam = new THREE.PerspectiveCamera(26, 180 / 220, 0.1, 30);

@@ -177,18 +177,19 @@ export function makeCoin() {
     const img = new Image();
     img.onload = () => { x.drawImage(img, 62, 56, 132, 132); tex.needsUpdate = true; };
     img.src = '/marca/logo.svg?v=4';
-    const face = new THREE.MeshBasicMaterial({ map: tex, transparent: true });
+    // Moeda dourada brilhante com o símbolo dos Desbravadores
+    const face = new THREE.MeshStandardMaterial({ map: tex, transparent: true, metalness: 0.45, roughness: 0.3, emissive: '#ffb300', emissiveMap: tex, emissiveIntensity: 0.35 });
     coinParts = {
-      faceGeo: new THREE.CircleGeometry(0.4, 28), face,
-      rimGeo: new THREE.CylinderGeometry(0.4, 0.4, 0.08, 28, 1, true),
-      rim: new THREE.MeshStandardMaterial({ color: '#f59e0b', metalness: 0.6, roughness: 0.3, emissive: '#7c4a03', emissiveIntensity: 0.4 }),
+      faceGeo: new THREE.CircleGeometry(0.44, 32), face,
+      rimGeo: new THREE.CylinderGeometry(0.44, 0.44, 0.1, 32, 1, true),
+      rim: new THREE.MeshStandardMaterial({ color: '#f59e0b', metalness: 0.75, roughness: 0.25, emissive: '#a16207', emissiveIntensity: 0.45 }),
     };
   }
   const g = new THREE.Group();
   const front = new THREE.Mesh(coinParts.faceGeo, coinParts.face);
-  front.position.z = 0.041;
+  front.position.z = 0.051;
   const back = new THREE.Mesh(coinParts.faceGeo, coinParts.face);
-  back.position.z = -0.041;
+  back.position.z = -0.051;
   back.rotation.y = Math.PI; // o verso também fica de pé, não de cabeça para baixo
   const rim = new THREE.Mesh(coinParts.rimGeo, coinParts.rim);
   rim.rotation.x = Math.PI / 2;

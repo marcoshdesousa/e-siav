@@ -64,3 +64,5 @@
 .tutorial ul { margin: 0 0 .3rem; padding-left: 1.2rem; }
 .tutorial li { margin: .15rem 0; }
 .game-intro-actions { display: grid; grid-template-columns: 1fr 1.4fr; gap: .6rem; margin-top: .6rem; }
+.games-sub { margin: .8rem 0 0; display: grid; grid-template-columns: 1fr 1fr; }
+.games-sub button { display: inline-flex; align-items: center; justify-content: center; gap: .35rem; }

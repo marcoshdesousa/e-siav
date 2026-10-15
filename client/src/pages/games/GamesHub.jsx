@@ -121,7 +121,13 @@ function GamesRankings({ base, online, initial }) {
 /** Aba Jogos: jogos grandes, mini-jogos e rankings. */
 export function GamesHub({ base }) {
   const [params] = useSearchParams();
-  const [tab, setTab] = useState(() => { if (['ranking', 'skin'].includes(params.get('aba'))) return params.get('aba'); try { return window.sessionStorage.getItem('dbv-games-tab') || 'mini'; } catch { return 'mini'; } });
+  const [tab, setTab] = useState(() => {
+    if (params.get('aba') === 'ranking') return 'ranking';
+    if (params.get('aba') === 'skin') return 'jogos';
+    try { const t = window.sessionStorage.getItem('dbv-games-tab'); return ['jogos', 'mini', 'ranking'].includes(t) ? t : 'mini'; } catch { return 'mini'; }
+  });
+  // Dentro da aba Jogos: a lista dos jogos ou a Skin (que vale para os jogos, não para os mini-jogos)
+  const [sub, setSub] = useState(() => (params.get('aba') === 'skin' ? 'skin' : 'jogar'));
   const pick = (t) => { setTab(t); try { window.sessionStorage.setItem('dbv-games-tab', t); } catch { /* sem armazenamento */ } };
   const mine = useLoad(() => api.get('/jogos/meus'));
   const my = mine.data || {};
@@ -129,9 +135,16 @@ export function GamesHub({ base }) {
   return (
     <>
       <PageHeader title="Jogos" subtitle={`Jogos online e ${GAMES.length} mini-jogos para fazer pontos e subir no ranking. Sem anúncios!`} />
-      <Tabs tabs={[['jogos', 'Jogos'], ['skin', 'Skin'], ['mini', 'Mini-jogos'], ['ranking', 'Rankings']]} value={tab} onChange={pick} />
-      {tab === 'jogos' && <BigGames base={base} onSkin={() => pick('skin')} />}
-      {tab === 'skin' && <Suspense fallback={<Spinner />}><SkinPage /></Suspense>}
+      <Tabs tabs={[['jogos', 'Jogos'], ['mini', 'Mini-jogos'], ['ranking', 'Rankings']]} value={tab} onChange={pick} />
+      {tab === 'jogos' && (
+        <>
+          <div className="seg games-sub" role="tablist">
+            <button type="button" className={sub === 'jogar' ? 'active' : ''} onClick={() => setSub('jogar')}><Play size={14} /> Jogar</button>
+            <button type="button" className={sub === 'skin' ? 'active' : ''} onClick={() => setSub('skin')}><Shirt size={14} /> Skin</button>
+          </div>
+          {sub === 'jogar' ? <BigGames base={base} onSkin={() => setSub('skin')} /> : <Suspense fallback={<Spinner />}><SkinPage /></Suspense>}
+        </>
+      )}
       {tab === 'mini' && (
         <div className="games-grid">
           {GAMES.map((g) => (

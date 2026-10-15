@@ -1,7 +1,7 @@
 // Prévia 3D da skin: o personagem gira devagar num pedestal e vai correndo, pulando e acenando.
 // mode: 'surf' (adolescente + skate), 'stumble' (bonequinho) ou 'board' (só o skate).
 import * as THREE from 'three';
-import { buildAvatar, poseAvatar } from './build.js';
+import { buildAvatar, poseAvatar, studioEnv } from './build.js';
 import { buildBoard, poseBoard } from './board.js';
 import { boardById, skinById } from './skins.js';
 
@@ -16,9 +16,11 @@ export function mountPreview(canvas, { mode = 'surf', skin = 'm01', board = 'b01
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   const scene = new THREE.Scene();
+  scene.environment = studioEnv(renderer);
+  scene.environmentIntensity = 0.5;
   const cam = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
-  scene.add(new THREE.HemisphereLight('#ffffff', '#8aa0c8', 1.6));
-  const sun = new THREE.DirectionalLight('#ffffff', 2.2);
+  scene.add(new THREE.HemisphereLight('#ffffff', '#8aa0c8', 0.9));
+  const sun = new THREE.DirectionalLight('#fff6e8', 2.0);
   sun.position.set(2.5, 5, -3);
   sun.castShadow = true;
   sun.shadow.mapSize.set(1024, 1024);
