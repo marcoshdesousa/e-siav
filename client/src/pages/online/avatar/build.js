@@ -92,7 +92,7 @@ class MeshBuild {
  * o: { s0, s1 (pedaço do tubo, 0..1), capStart, capEnd, front, blend, startBone, segs, steps }
  */
 function tube(mb, pts, rad, bn, o = {}) {
-  const { s0 = 0, s1 = 1, capStart = false, capEnd = false, front = V(0, 0, 1), blend = 0.35, startBone = null, segs = 22, steps = 7, grow = 0 } = o;
+  const { s0 = 0, s1 = 1, capStart = false, capEnd = false, front = V(0, 0, 1), blend = 0.35, startBone = null, segs = 22, steps = 7, grow = 0, capK = 1 } = o;
   const n = pts.length;
   const L = [0];
   for (let i = 1; i < n; i++) L.push(L[i - 1] + pts[i].distanceTo(pts[i - 1]));
@@ -148,7 +148,7 @@ function tube(mb, pts, rad, bn, o = {}) {
     for (let q = 6; q >= 1; q--) {
       const phi = (q / 6) * (Math.PI / 2);
       const back = g.T.clone().negate();
-      const st = ring(g.c.clone().addScaledVector(back, Math.sin(phi) * rc), g.r, g.f, g.sd, g.ws, 0, Math.max(0.001, Math.cos(phi)), back, phi);
+      const st = ring(g.c.clone().addScaledVector(back, Math.sin(phi) * rc * capK), g.r, g.f, g.sd, g.ws, 0, Math.max(0.001, Math.cos(phi)), back, phi);
       if (last != null) join(last, st);
       last = st;
     }
@@ -252,27 +252,31 @@ function canvasTex(key, w, h, draw) {
 /** Camisa do adolescente (barra mais escura embaixo e gola em cima). */
 const shirtTex = (s) => canvasTex('shirt:' + s.id, 512, 256, (g, W, H) => {
   drawShirt(g, s, W, H);
-  g.fillStyle = 'rgba(0,0,0,.16)'; g.fillRect(0, H - 14, W, 14);
+  weave(g, W, H, 0.05);
+  // costuras dos lados e dobrinhas do tecido
+  for (const u of [0.25, 0.75]) { g.fillStyle = 'rgba(0,0,0,.18)'; g.fillRect(u * W - 1, 0, 2, H); }
+  for (let k = 0; k < 6; k++) { const x = (k * 89 + 40) % W; const gr = g.createLinearGradient(x - 10, 0, x + 10, 0); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(0.5, 'rgba(0,0,0,.06)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(x - 10, H * 0.55, 20, H * 0.45); }
+  g.fillStyle = 'rgba(0,0,0,.14)'; g.fillRect(0, H - 10, W, 10);
 });
-/** Feijãozinho: calça/saia embaixo, camisa no meio e pele em cima (a cabeça). */
-function beanTex(s, vWaist, vNeck) {
-  return canvasTex(`bean:${s.id}:${vWaist.toFixed(2)}:${vNeck.toFixed(2)}`, 512, 512, (g, W, H) => {
-    const y = (v) => (1 - v) * H;
-    const bottom = s.bottom.type === 'vestido' ? s.top.color : s.bottom.color;
-    g.fillStyle = s.skin; g.fillRect(0, 0, W, H);
-    // camisa
-    g.save();
-    g.translate(0, y(vNeck));
-    drawShirt(g, s, W, y(vWaist) - y(vNeck));
-    g.restore();
-    // gola
-    g.fillStyle = shade(s.top.color, 0.8);
-    g.fillRect(0, y(vNeck) - 8, W, 12);
-    // calça / saia
-    g.fillStyle = bottom; g.fillRect(0, y(vWaist), W, H - y(vWaist));
-    if (s.bottom.type !== 'vestido') { g.fillStyle = shade(bottom, 0.75); g.fillRect(0, y(vWaist), W, 10); }
-    if (['jaqueta', 'moletom', 'jaleco', 'camisa-aberta'].includes(s.top.type) && s.bottom.type === 'calca') { g.fillStyle = 'rgba(0,0,0,.15)'; g.fillRect(W / 2 - 1, y(vWaist), 2, H); }
-  });
+/** Calça: tecido com trama, costura dos lados e vinco na frente. */
+const pantsTex = (color) => canvasTex('pants:' + color, 128, 256, (g, W, H) => {
+  g.fillStyle = color; g.fillRect(0, 0, W, H);
+  weave(g, W, H, 0.07);
+  for (const u of [0.25, 0.75]) { g.fillStyle = 'rgba(0,0,0,.22)'; g.fillRect(u * W - 1, 0, 2, H); g.fillStyle = 'rgba(255,255,255,.08)'; g.fillRect(u * W + 1, 0, 2, H); }
+  const crease = g.createLinearGradient(W * 0.42, 0, W * 0.58, 0);
+  crease.addColorStop(0, 'rgba(255,255,255,0)'); crease.addColorStop(0.5, 'rgba(255,255,255,.08)'); crease.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = crease; g.fillRect(0, 0, W, H);
+});
+/** Saia: tecido com pregas suaves e barra. */
+const skirtTex = (color) => canvasTex('skirt:' + color, 256, 128, (g, W, H) => {
+  g.fillStyle = color; g.fillRect(0, 0, W, H);
+  for (let x = 0; x < W; x += 16) { const gr = g.createLinearGradient(x, 0, x + 16, 0); gr.addColorStop(0, 'rgba(0,0,0,.12)'); gr.addColorStop(0.5, 'rgba(255,255,255,.06)'); gr.addColorStop(1, 'rgba(0,0,0,.12)'); g.fillStyle = gr; g.fillRect(x, 0, 16, H); }
+  g.fillStyle = 'rgba(255,255,255,.25)'; g.fillRect(0, H - 8, W, 3);
+  weave(g, W, H, 0.05);
+});
+/** Trama do tecido (pontinhos claros e escuros bem leves). */
+function weave(g, W, H, k) {
+  for (let y = 0; y < H; y += 2) for (let x = (y / 2) % 2; x < W; x += 2) { g.fillStyle = `rgba(${(x + y) % 4 ? '0,0,0' : '255,255,255'},${k})`; g.fillRect(x, y, 1, 1); }
 }
 
 /**
@@ -281,7 +285,23 @@ function beanTex(s, vWaist, vNeck) {
  */
 const STYLE = {
   surf: { scale: 1.0, headR: 0.19, eye: 0.21, shoe: 1.3, hand: 1.05 },
-  stumble: { scale: 0.62, headR: 0.27, eye: 0.26, shoe: 1.55, hand: 1.35 },
+  stumble: { scale: 0.62, headR: 0.42, eye: 0.25, shoe: 1.75, hand: 1.5 },
+};
+/** Medidas do corpo (raios [lado, frente] em cada junta). */
+const TEEN = {
+  leg: [[0.074, 0.074], [0.062, 0.064], [0.05, 0.054]], pad: 0.01,
+  hip: [[0.124, 0.086], [0.138, 0.092], [0.132, 0.086]], hipZ: 0.012, hipDrop: 0.085, skirtK: 1,
+  torso: [[0.15, 0.108], [0.138, 0.098], [0.148, 0.1], [0.172, 0.108], [0.1, 0.082]],
+  arm: [[0.062, 0.062], [0.062, 0.062], [0.05, 0.052], [0.042, 0.044]],
+  neck: true, collarR: 0.085, legScale: 1, armScale: 1,
+};
+/** Bonequinho (chibi): cabeção redondo, corpinho fofo, bracinhos e perninhas curtas. */
+const CHIBI = {
+  leg: [[0.118, 0.118], [0.1, 0.1], [0.092, 0.095]], pad: 0.016,
+  hip: [[0.19, 0.15], [0.192, 0.148], [0.175, 0.13]], hipZ: 0.03, hipDrop: 0.06, skirtK: 0.75,
+  torso: [[0.215, 0.178], [0.205, 0.168], [0.212, 0.168], [0.22, 0.17], [0.14, 0.12]],
+  arm: [[0.088, 0.088], [0.086, 0.086], [0.078, 0.078], [0.07, 0.07]],
+  neck: false, collarR: 0.13, legScale: 0.55, armScale: 0.72,
 };
 const SLEEVE = { camiseta: 'curta', polo: 'curta', uniforme: 'curta', 'camisa-aberta': 'curta', vestido: 'curta', regata: 'sem', manga: 'longa', moletom: 'longa', jaqueta: 'longa', jaleco: 'longa', terno: 'longa', xadrez: 'longa', colete: 'longa' };
 
@@ -294,7 +314,12 @@ export function buildAvatar(s, style = 'surf') {
   const bones = [];
   const idx = {};
   rig.traverse((o) => { if (o !== rig && o.name && o.name !== 'Rig' && o.name !== 'AuxScene') { idx[o.name] = bones.length; bones.push(o); } });
+  // Estilo pequeno: encurta pernas e braços (as animações só giram os ossos, então a escala fica)
+  const Dm = stumble ? CHIBI : TEEN;
+  for (const n of ['thigh_l', 'thigh_r']) bones[idx[n]].scale.setScalar(Dm.legScale);
+  for (const n of ['upperarm_l', 'upperarm_r']) bones[idx[n]].scale.setScalar(Dm.armScale);
   rig.updateMatrixWorld(true);
+  const legLoss = bones[idx.thigh_l].getWorldPosition(V()).y * (1 - Dm.legScale);
   const P = (n) => bones[idx[n]].getWorldPosition(V());
   const B = idx;
   const skin = skinMat(s.skin);
@@ -329,81 +354,56 @@ export function buildAvatar(s, style = 'surf') {
     return { pts: [inner, sh, P('lowerarm' + sfx), P('hand' + sfx)], bn: [B['upperarm' + sfx], B['upperarm' + sfx], B['lowerarm' + sfx], B['hand' + sfx]] };
   };
 
-  if (!stumble) {
-    // ── Adolescente
-    const longPants = s.bottom.type === 'calca';
-    const shorts = s.bottom.type === 'bermuda';
-    for (const side of [1, -1]) {
-      const { pts, bn } = legs(side);
-      const R = [[0.074, 0.074], [0.062, 0.064], [0.05, 0.054]];
-      const Rp = R.map(([a, b]) => [a + 0.01, b + 0.01]); // calça um pouco folgada
-      if (longPants) tube(mb(pants), pts, Rp, bn, { s0: 0.04, capEnd: false, startBone: B.pelvis });
-      else {
-        tube(mb(skin), pts, R, bn, { s0: 0.25, s1: 1, capEnd: false });
-        if (shorts) tube(mb(pants), pts, Rp.map(([a, b]) => [a + 0.006, b + 0.006]), bn, { s0: 0.04, s1: 0.48, startBone: B.pelvis });
-        tube(mb(cloth('#f8fafc')), pts, R.map(([a, b]) => [a + 0.006, b + 0.006]), bn, { s0: 0.82, s1: 1 }); // meia
+  // ── Corpo (o mesmo molde nos dois estilos; o pequeno tem cabeção, bracinhos e perninhas curtas)
+  const D = stumble ? CHIBI : TEEN;
+  const longPants = s.bottom.type === 'calca';
+  const shorts = s.bottom.type === 'bermuda';
+  const skirtLike = ['saia', 'saia-longa', 'vestido'].includes(s.bottom.type);
+  const pantsTexM = new THREE.MeshStandardMaterial({ map: pantsTex(bottomColor), roughness: 0.85 });
+  for (const side of [1, -1]) {
+    const { pts, bn } = legs(side);
+    const R = D.leg;
+    const Rp = R.map(([a, b]) => [a + D.pad, b + D.pad]);
+    if (longPants) {
+      tube(mb(pantsTexM), pts, Rp, bn, { s0: 0.02, startBone: B.pelvis });
+      tube(mb(cloth(shade(bottomColor, 0.8))), pts, Rp.map(([a, b]) => [a + D.pad * 0.6, b + D.pad * 0.6]), bn, { s0: 0.92, s1: 1 }); // barra dobrada
+    } else {
+      tube(mb(skin), pts, R, bn, { s0: 0.22, s1: 1 });
+      if (shorts) {
+        tube(mb(pantsTexM), pts, Rp.map(([a, b]) => [a + D.pad * 0.6, b + D.pad * 0.6]), bn, { s0: 0.02, s1: 0.5, startBone: B.pelvis });
+        tube(mb(cloth(shade(bottomColor, 0.8))), pts, Rp.map(([a, b]) => [a + D.pad, b + D.pad]), bn, { s0: 0.45, s1: 0.5 });
       }
-      if (longPants) tube(mb(cloth(shade(bottomColor, 0.82))), pts, Rp.map(([a, b]) => [a + 0.006, b + 0.006]), bn, { s0: 0.9, s1: 1 }); // barra
+      tube(mb(cloth('#f8fafc')), pts, R.map(([a, b]) => [a + D.pad * 0.5, b + D.pad * 0.5]), bn, { s0: 0.8, s1: 1 }); // meia
+      tube(mb(cloth(s.shoes2)), pts, R.map(([a, b]) => [a + D.pad * 0.7, b + D.pad * 0.7]), bn, { s0: 0.8, s1: 0.83 }); // listra da meia
     }
-    // Quadril (calça) e tronco (camisa)
-    const pel = P('pelvis');
-    tube(mb(pants), [P('spine_01').add(V(0, 0, 0.012)), pel.clone().add(V(0, 0, 0.02)), pel.clone().add(V(0, -0.085, 0.022))], [[0.138, 0.098], [0.142, 0.094], [0.132, 0.086]], [B.spine_01, B.pelvis, B.pelvis], { capEnd: true, front: V(0, 0, 1) });
-    if (['saia', 'saia-longa', 'vestido'].includes(s.bottom.type)) {
-      const len = s.bottom.type === 'saia-longa' ? 0.62 : 0.45;
-      skirt(mb(new THREE.MeshStandardMaterial({ color: bottomColor, roughness: 0.78, side: THREE.DoubleSide })), pel.clone().add(V(0, 0.06, 0)), len, 0.165, 0.27, { pelvis: B.pelvis, thighL: B.thigh_l, thighR: B.thigh_r });
-    }
-    const torsoPts = [pel.clone().add(V(0, -0.02, 0)), P('spine_01'), P('spine_02'), P('spine_03'), P('neck_01').add(V(0, -0.02, 0))];
-    const torsoR = [[0.14, 0.1], [0.135, 0.095], [0.148, 0.1], [0.172, 0.108], [0.1, 0.082]];
-    const shirt = new THREE.MeshStandardMaterial({ map: shirtTex(s), roughness: 0.8 });
-    tube(mb(shirt), torsoPts, torsoR, [B.pelvis, B.spine_01, B.spine_02, B.spine_03, B.neck_01], { capEnd: true, front: V(0, 0, 1), segs: 28 });
-    // Pescoço
-    tube(mb(skin), [P('spine_03').add(V(0, 0.08, 0)), P('neck_01'), P('Head')], [[0.06, 0.06], [0.058, 0.058], [0.055, 0.055]], [B.spine_03, B.neck_01, B.Head], {});
-    // Braços: manga (curta ou comprida) e pele
-    for (const side of [1, -1]) {
-      const { pts, bn } = arms(side);
-      const R = [[0.062, 0.062], [0.062, 0.062], [0.05, 0.052], [0.042, 0.044]];
-      const Rs = R.map(([a, b]) => [a + 0.014, b + 0.014]);
-      if (sleeve === 'longa') {
-        tube(mb(cloth(sleeveCol)), pts, Rs, bn, { capStart: true, startBone: B.spine_03 });
-        tube(mb(cloth(shade(sleeveCol, 0.82))), pts, Rs.map(([a, b]) => [a + 0.004, b + 0.004]), bn, { s0: 0.9, s1: 1 });
-      } else {
-        tube(mb(skin), pts, R, bn, { capStart: true, startBone: B.spine_03 });
-        if (sleeve === 'curta') tube(mb(cloth(sleeveCol)), pts, Rs.map(([a, b]) => [a + 0.006, b + 0.006]), bn, { s0: 0, s1: 0.42, capStart: true, startBone: B.spine_03 });
-      }
-    }
-  } else {
-    // ── Feijãozinho (corpo e cabeça num só)
-    for (const side of [1, -1]) {
-      const { pts, bn } = legs(side);
-      const R = [[0.095, 0.095], [0.088, 0.088], [0.08, 0.082]];
-      const shorts = s.bottom.type === 'bermuda';
-      tube(mb(shorts ? skin : pants), pts, R, bn, { s0: 0.3, s1: 1 });
-      if (shorts) tube(mb(pants), pts, R.map(([a, b]) => [a + 0.01, b + 0.01]), bn, { s0: 0.3, s1: 0.55 });
-    }
-    const pel = P('pelvis');
-    const head = P('Head');
-    const beanPts = [pel.clone().add(V(0, -0.15, 0.045)), pel.clone().add(V(0, 0, 0.035)), P('spine_01').add(V(0, 0, 0.015)), P('spine_02'), P('spine_03'), P('neck_01'), head, head.clone().add(V(0, 0.2, 0.005))];
-    const beanR = [[0.22, 0.19], [0.255, 0.225], [0.27, 0.245], [0.278, 0.25], [0.28, 0.252], [0.28, 0.255], [0.275, 0.255], [0.22, 0.21]];
-    const beanB = [B.pelvis, B.pelvis, B.spine_01, B.spine_02, B.spine_03, B.neck_01, B.Head, B.Head];
-    // altura (0..1 ao longo do feijão) da cintura e do pescoço, para pintar a roupa
-    const Ls = [0];
-    for (let i = 1; i < beanPts.length; i++) Ls.push(Ls[i - 1] + beanPts[i].distanceTo(beanPts[i - 1]));
-    const Lt = Ls[Ls.length - 1];
-    const vWaist = (Ls[1] + 0.06) / Lt;
-    const vNeck = (Ls[4] + (Ls[5] - Ls[4]) * 0.55) / Lt;
-    const beanMat = new THREE.MeshStandardMaterial({ map: beanTex(s, vWaist, vNeck), roughness: 0.6 });
-    tube(mb(beanMat), beanPts, beanR, beanB, { capStart: true, capEnd: true, segs: 32, steps: 6 });
-    if (['saia', 'saia-longa', 'vestido'].includes(s.bottom.type)) {
-      // babado da saia
-      tube(mb(cloth(bottomColor)), [beanPts[0].clone().add(V(0, 0.07, 0)), beanPts[0].clone().add(V(0, -0.02, 0))], [[0.25, 0.235], [0.28, 0.265]], [B.pelvis, B.pelvis], { segs: 32 });
-    }
-    for (const side of [1, -1]) {
-      const { pts, bn } = arms(side);
-      const R = [[0.085, 0.085], [0.085, 0.085], [0.078, 0.078], [0.07, 0.07]];
-      if (sleeve === 'longa') tube(mb(cloth(sleeveCol)), pts, R, bn, { s0: 0.15, s1: 1 });
-      else {
-        tube(mb(skin), pts, R, bn, { s0: 0.15, s1: 1 });
-        if (sleeve === 'curta') tube(mb(cloth(sleeveCol)), pts, R.map(([a, b]) => [a + 0.012, b + 0.012]), bn, { s0: 0.15, s1: 0.5 });
+  }
+  const pel = P('pelvis');
+  // Quadril: arredondado, sem volume para trás
+  tube(mb(skirtLike ? cloth(bottomColor) : pantsTexM), [P('spine_01').add(V(0, 0, D.hipZ)), pel.clone().add(V(0, 0, D.hipZ + 0.008)), pel.clone().add(V(0, -D.hipDrop, D.hipZ + 0.01))], D.hip, [B.spine_01, B.pelvis, B.pelvis], { capEnd: true, front: V(0, 0, 1) });
+  if (skirtLike) {
+    const len = (s.bottom.type === 'saia-longa' ? 0.62 : 0.45) * D.skirtK;
+    skirt(mb(new THREE.MeshStandardMaterial({ map: skirtTex(bottomColor), roughness: 0.78, side: THREE.DoubleSide })), pel.clone().add(V(0, 0.06 * D.skirtK, D.hipZ)), len, D.hip[1][0] + 0.02, D.hip[1][0] * 1.75, { pelvis: B.pelvis, thighL: B.thigh_l, thighR: B.thigh_r });
+  }
+  // Tronco (camisa) com barra mais larga embaixo
+  const torsoPts = [pel.clone().add(V(0, -0.02, D.hipZ)), P('spine_01').add(V(0, 0, D.hipZ * 0.5)), P('spine_02'), P('spine_03'), P('neck_01').add(V(0, -0.02, 0))];
+  const shirt = new THREE.MeshStandardMaterial({ map: shirtTex(s), roughness: 0.82 });
+  tube(mb(shirt), torsoPts, D.torso, [B.pelvis, B.spine_01, B.spine_02, B.spine_03, B.neck_01], { capStart: true, capK: 0.12, capEnd: true, front: V(0, 0, 1), segs: 32 });
+  const tucked = s.top.type === 'uniforme' || s.top.type === 'terno' || s.top.type === 'polo';
+  if (!tucked && s.top.type !== 'vestido') tube(mb(cloth(shade(s.top.color, 0.86))), torsoPts.slice(0, 2), D.torso.slice(0, 2).map(([a, b]) => [a + D.pad * 0.8, b + D.pad * 0.8]), [B.pelvis, B.spine_01], { s0: 0, s1: 0.32, front: V(0, 0, 1), segs: 32 });
+  if (D.neck) tube(mb(skin), [P('spine_03').add(V(0, 0.08, 0)), P('neck_01'), P('Head')], [[0.06, 0.06], [0.058, 0.058], [0.055, 0.055]], [B.spine_03, B.neck_01, B.Head], {});
+  // Braços: manga (curta ou comprida, com punho) e pele
+  for (const side of [1, -1]) {
+    const { pts, bn } = arms(side);
+    const R = D.arm;
+    const Rs = R.map(([a, b]) => [a + D.pad * 1.3, b + D.pad * 1.3]);
+    if (sleeve === 'longa') {
+      tube(mb(cloth(sleeveCol)), pts, Rs, bn, { capStart: true, startBone: B.spine_03 });
+      tube(mb(cloth(shade(sleeveCol, 0.8))), pts, Rs.map(([a, b]) => [a + D.pad * 0.5, b + D.pad * 0.5]), bn, { s0: 0.88, s1: 1 });
+    } else {
+      tube(mb(skin), pts, R, bn, { capStart: true, startBone: B.spine_03 });
+      if (sleeve === 'curta') {
+        tube(mb(cloth(sleeveCol)), pts, Rs.map(([a, b]) => [a + D.pad * 0.4, b + D.pad * 0.4]), bn, { s0: 0, s1: 0.42, capStart: true, startBone: B.spine_03 });
+        tube(mb(cloth(shade(sleeveCol, 0.82))), pts, Rs.map(([a, b]) => [a + D.pad * 0.8, b + D.pad * 0.8]), bn, { s0: 0.38, s1: 0.42 });
       }
     }
   }
@@ -435,15 +435,16 @@ export function buildAvatar(s, style = 'surf') {
     th.position.set(-side * 0.01 * k, 0.025 * k, 0.045 * k);
     g.add(th);
     const fp = P('foot' + sfx);
-    const shoe = attach('foot' + sfx, V(fp.x, 0, fp.z));
+    const shoe = attach('foot' + sfx, V(fp.x, legLoss, fp.z));
     shoe.add(sneaker(s, S.shoe));
   }
-  const headC = stumble ? P('Head').add(V(0, 0.12, 0.0)) : P('Head').add(V(0, 0.15, 0.02));
+  const headC = stumble ? P('Head').add(V(0, 0.27, 0.03)) : P('Head').add(V(0, 0.15, 0.02));
   const headG = attach('Head', headC);
   const face = new THREE.Group(); // o rosto foi desenhado olhando para -z: gira para +z (frente do esqueleto)
   face.rotation.y = Math.PI;
   headG.add(face);
   buildHead(face, s, S.headR, S.eye, stumble);
+  buildCollar(attach, P, s, Dm, stumble);
   // Acessórios no corpo
   const acc = s.acc?.type;
   const chest = P('spine_03');
@@ -489,6 +490,7 @@ export function buildAvatar(s, style = 'surf') {
   const root = new THREE.Group();
   rig.rotation.y = Math.PI;
   rig.scale.setScalar(S.scale);
+  rig.position.y = -legLoss * S.scale; // pés no chão com as perninhas curtas
   root.add(rig);
   const mixer = new THREE.AnimationMixer(rig);
   root.userData = { style, rig, mixer, actions: new Map(), state: null, clip: null, current: null, lastT: null };
@@ -526,6 +528,69 @@ function mergeRigid(group) {
   }
 }
 
+/** Gola de cada roupa (gola redonda, gola de camisa, capuz, gola alta, lapelas). */
+function buildCollar(attach, P, s, D, chibi) {
+  const t = s.top.type;
+  const neck = P('neck_01');
+  const col = cloth(shade(s.top.color, 0.86));
+  if (t === 'moletom') {
+    // capuz caído nas costas + cordões
+    const k = chibi ? 1.55 : 1;
+    const g = attach('spine_03', V(0, chibi ? P('spine_03').y + 0.07 : neck.y - 0.03, neck.z - 0.02 * k));
+    const hood = new THREE.Mesh(new THREE.TorusGeometry(0.1 * k, 0.04 * k, 12, 30), cloth(s.top.color));
+    hood.rotation.x = Math.PI / 2 - 0.55;
+    hood.position.set(0, 0, -0.035 * k);
+    hood.scale.set(1.05, 1.15, 1);
+    g.add(hood);
+    if (!chibi) for (const sd of [-1, 1]) {
+      const cord = new THREE.Mesh(new THREE.CapsuleGeometry(0.006, 0.1, 4, 6), cloth('#f8fafc'));
+      cord.position.set(sd * 0.035, -0.075, 0.085);
+      g.add(cord);
+    }
+    return;
+  }
+  if (chibi) return; // no bonequinho a cabeça cobre a gola
+  const g = attach('spine_03', V(0, neck.y - 0.035, neck.z + 0.004));
+  const r = D.collarR;
+  const ring = (rad, tub, mat) => { const m = new THREE.Mesh(new THREE.TorusGeometry(rad, tub, 10, 30), mat); m.rotation.x = Math.PI / 2; m.scale.set(1, 0.85, 1); g.add(m); return m; };
+  if (['camiseta', 'regata', 'manga', 'vestido'].includes(t)) ring(r, 0.013, col);
+  if (t === 'colete') ring(r, 0.013, cloth(shade(s.top.color2, 0.9)));
+  if (t === 'jaqueta') {
+    const c = new THREE.Mesh(new THREE.CylinderGeometry(r + 0.006, r + 0.016, 0.055, 28, 1, true), new THREE.MeshStandardMaterial({ color: s.top.color, roughness: 0.8, side: THREE.DoubleSide }));
+    c.position.y = 0.015;
+    g.add(c);
+  }
+  if (['polo', 'uniforme', 'jaleco', 'xadrez', 'camisa-aberta', 'terno'].includes(t)) {
+    const cm = t === 'terno' ? cloth('#ffffff') : cloth(shade(s.top.color, 0.95));
+    ring(r, 0.016, cm);
+    for (const sd of [-1, 1]) {
+      const flap = new THREE.Mesh(new RoundedBoxGeometry(0.075, 0.055, 0.012, 2, 0.005), cm);
+      flap.position.set(sd * 0.04, -0.022, r * 0.72);
+      flap.rotation.set(-0.45, 0, sd * 0.55);
+      flap.castShadow = true;
+      g.add(flap);
+    }
+  }
+  if (t === 'terno') for (const sd of [-1, 1]) {
+    const lapel = new THREE.Mesh(new RoundedBoxGeometry(0.05, 0.17, 0.012, 2, 0.005), cloth(shade(s.top.color, 0.75)));
+    lapel.position.set(sd * 0.055, -0.1, 0.098);
+    lapel.rotation.set(-0.12, 0, sd * 0.32);
+    g.add(lapel);
+  }
+  if (t === 'uniforme' && s.bottom.type !== 'vestido') {
+    // cinto com fivela dourada
+    const pel = P('pelvis');
+    const b = attach('pelvis', V(0, pel.y + 0.035, pel.z + D.hipZ + 0.008));
+    const belt = new THREE.Mesh(new THREE.TorusGeometry(1, 0.018, 8, 36), toon('#4a2f17', { roughness: 0.5 }));
+    belt.rotation.x = Math.PI / 2;
+    belt.scale.set(D.hip[0][0] + 0.004, D.hip[0][1] + 0.006, 1);
+    b.add(belt);
+    const buckle = new THREE.Mesh(new RoundedBoxGeometry(0.04, 0.03, 0.01, 2, 0.004), toon('#eab308', { roughness: 0.25, metalness: 0.7 }));
+    buckle.position.set(0, 0, D.hip[0][1] + 0.01);
+    b.add(buckle);
+  }
+}
+
 /** Tênis grande (solado branco grosso, corpo arredondado, biqueira e gola coloridas). */
 function sneaker(s, k) {
   const g = new THREE.Group();
@@ -557,7 +622,8 @@ function sneaker(s, k) {
 }
 
 /** Cabeça (no feijãozinho, só o rosto, o cabelo e o chapéu: a cabeça é o próprio corpo). Desenhada olhando para -z. */
-function buildHead(head, s, r, eyeK, bean) {
+function buildHead(head, s, r, eyeK, chibi) {
+  const bean = chibi;
   const skin = skinMat(s.skin);
   const part = (geo, mat, o = {}) => {
     const m = new THREE.Mesh(geo, mat);
@@ -567,8 +633,8 @@ function buildHead(head, s, r, eyeK, bean) {
     head.add(m);
     return m;
   };
-  if (!bean) {
-    part(new THREE.SphereGeometry(r, 32, 24), skin, { sy: 1.04, sz: 0.97 });
+  {
+    part(new THREE.SphereGeometry(r, 36, 28), skin, chibi ? { sx: 1.05, sy: 0.97, sz: 0.98 } : { sy: 1.04, sz: 0.97 });
     for (const sd of [-1, 1]) part(new THREE.SphereGeometry(r * 0.2, 14, 10), skin, { x: sd * r * 0.98, y: -r * 0.05, sx: 0.55 });
   }
   // Olhos grandes: branco, íris, pupila, dois brilhos e a linha dos cílios
