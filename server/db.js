@@ -651,6 +651,9 @@ function migrate() {
 
   // Inscrição anual: o ano até quando o membro está liberado. Quem já estava liberado fica no ano atual.
   add('members', 'cleared_year', 'INTEGER');
+  // Skin escolhida para os jogos (personagem m01..m30 / f01..f30 e skate b01..b30)
+  add('members', 'game_skin', 'TEXT');
+  add('members', 'game_board', 'TEXT');
   if (!flag('member-cleared-year-v1')) {
     db.prepare('UPDATE members SET cleared_year = ? WHERE cleared_year IS NULL AND fee_cleared_at IS NOT NULL').run(new Date().getFullYear());
     setFlag('member-cleared-year-v1');
@@ -804,7 +807,7 @@ function migrate() {
     passed_at TEXT,
     PRIMARY KEY (member_id, phase)
   )`);
-  // DesbravaCraft: mundos online (código de 4 números), blocos alterados por pedaço e o estado de cada jogador.
+  // Tabelas do antigo DesbravaCraft (o jogo saiu; ficam vazias, sem uso).
   db.exec(`CREATE TABLE IF NOT EXISTS craft_worlds (
     id INTEGER PRIMARY KEY,
     code TEXT NOT NULL UNIQUE,

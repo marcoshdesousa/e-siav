@@ -1,7 +1,7 @@
 // Jogos dos membros (jogos grandes + mini-jogos): lista de jogos, tela de cada jogo e ranking geral de cada um.
-import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, Flag, Keyboard, Layers, Lightbulb, Smartphone, Target, Pickaxe, PersonStanding, Play, RotateCcw, TrainFront, Trophy, Volume2, VolumeX } from 'lucide-react';
+import { ArrowLeft, Flag, Keyboard, Layers, Lightbulb, Smartphone, Target, PersonStanding, Shirt, Play, RotateCcw, TrainFront, Trophy, Volume2, VolumeX } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Button, Card, Loading, PageHeader, Section, Spinner, Tabs, useLoad } from '../../ui.jsx';
@@ -11,6 +11,8 @@ import { isMuted, onMuteChange, setMuted, sfx, startMusic, stopMusic, unlockAudi
 import { useOnline } from '../../offline.js';
 import TUTORIALS from './tutorials.json';
 import './games.css';
+
+const SkinPage = lazy(() => import('../online/avatar/SkinPage.jsx'));
 
 const valueLabel = (g) => (g.mode === 'sum' ? 'Total de pontos' : 'Recorde');
 
@@ -37,13 +39,12 @@ function GameRanking({ game, base, limit }) {
 
 /** Jogos grandes (online). Ficam "em breve" até cada um ficar pronto. */
 export const BIG_GAMES = [
-  { id: 'uno', name: 'Uno DBV', hint: 'Cartas online, 2 a 6 jogadores, com chat de voz', icon: Layers, ranks: [['uno', 'Vitórias']], ready: true },
-  { id: 'corrida', name: 'Corrida DBV', hint: 'Corra pelos trilhos, fuja do guarda e junte desbrava coins', icon: TrainFront, ranks: [['corrida-moedas', 'Mais moedas'], ['corrida-distancia', 'Maior distância']], ready: true },
+  { id: 'uno', name: 'Cartada DBV', hint: 'Cartas online, 2 a 6 jogadores, com chat de voz', icon: Layers, ranks: [['uno', 'Vitórias']], ready: true },
+  { id: 'corrida', name: 'Surf DBV', hint: 'Surfe pelos trilhos de skate, fuja do guarda e junte desbrava coins', icon: TrainFront, ranks: [['corrida-moedas', 'Mais moedas'], ['corrida-distancia', 'Maior distância']], ready: true },
   { id: 'stumble', name: 'Stumble DBV', hint: 'Até 10 jogadores em fases malucas. Só o 1º vence', icon: PersonStanding, ranks: [['stumble', 'Vitórias']], ready: true },
-  { id: 'craft', name: 'DesbravaCraft', hint: 'Construa o seu mundo sozinho ou com até 10 amigos', icon: Pickaxe, ranks: [], ready: true },
 ];
 
-function BigGames({ base }) {
+function BigGames({ base, onSkin }) {
   return (
     <div className="big-games">
       {BIG_GAMES.map((g) => {
@@ -61,7 +62,15 @@ function BigGames({ base }) {
           ? <Link key={g.id} to={`${base}/jogos/${g.id}`} className="big-game">{body}</Link>
           : <div key={g.id} className="big-game soon">{body}</div>;
       })}
-      <p className="small muted center">Os jogos grandes precisam de internet, menos o mundo offline do DesbravaCraft.</p>
+      <button type="button" onClick={onSkin} className="big-game skin-link">
+        <span className="big-game-ico"><Shirt size={34} /></span>
+        <div className="grow">
+          <b>Skin</b>
+          <small>Escolha o seu personagem (60 opções) e o seu skate (30 opções). Vale para todos os jogos</small>
+        </div>
+        <Play size={26} />
+      </button>
+      <p className="small muted center">O Cartada DBV e o Stumble DBV precisam de internet. O Surf DBV dá para jogar sem internet (sem contar no ranking).</p>
     </div>
   );
 }
@@ -112,7 +121,7 @@ function GamesRankings({ base, online, initial }) {
 /** Aba Jogos: jogos grandes, mini-jogos e rankings. */
 export function GamesHub({ base }) {
   const [params] = useSearchParams();
-  const [tab, setTab] = useState(() => { if (params.get('aba') === 'ranking') return 'ranking'; try { return window.sessionStorage.getItem('dbv-games-tab') || 'mini'; } catch { return 'mini'; } });
+  const [tab, setTab] = useState(() => { if (['ranking', 'skin'].includes(params.get('aba'))) return params.get('aba'); try { return window.sessionStorage.getItem('dbv-games-tab') || 'mini'; } catch { return 'mini'; } });
   const pick = (t) => { setTab(t); try { window.sessionStorage.setItem('dbv-games-tab', t); } catch { /* sem armazenamento */ } };
   const mine = useLoad(() => api.get('/jogos/meus'));
   const my = mine.data || {};
@@ -120,8 +129,9 @@ export function GamesHub({ base }) {
   return (
     <>
       <PageHeader title="Jogos" subtitle={`Jogos online e ${GAMES.length} mini-jogos para fazer pontos e subir no ranking. Sem anúncios!`} />
-      <Tabs tabs={[['jogos', 'Jogos'], ['mini', 'Mini-jogos'], ['ranking', 'Rankings']]} value={tab} onChange={pick} />
-      {tab === 'jogos' && <BigGames base={base} />}
+      <Tabs tabs={[['jogos', 'Jogos'], ['skin', 'Skin'], ['mini', 'Mini-jogos'], ['ranking', 'Rankings']]} value={tab} onChange={pick} />
+      {tab === 'jogos' && <BigGames base={base} onSkin={() => pick('skin')} />}
+      {tab === 'skin' && <Suspense fallback={<Spinner />}><SkinPage /></Suspense>}
       {tab === 'mini' && (
         <div className="games-grid">
           {GAMES.map((g) => (

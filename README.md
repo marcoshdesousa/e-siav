@@ -156,7 +156,7 @@ As telas mostradas no celular da página de entrada ficam em `client/public/show
   - Depois disso, o servidor prepara sozinho, em segundo plano, um MP3 por capítulo em `DATA_DIR/biblia-audio`, começando pela leitura de hoje. São cerca de 1 GB para a Bíblia inteira, que fica no disco permanente.
   - Para desligar, use `BIBLE_AUDIO=0`.
 
-## Jogos online (Uno DBV e Stumble DBV)
+## Jogos online (Cartada DBV e Stumble DBV)
 
 - **Salas:** pelo WebSocket `/ws/online` (`server/online/hub.js`); as regras ficam no servidor (`server/online/uno.js`).
   - Cada jogador recebe só a própria mão.
@@ -166,10 +166,6 @@ As telas mostradas no celular da página de entrada ficam em `client/public/show
 - **Voz:** WebRTC entre os celulares, usando servidores STUN públicos. Em algumas redes (por exemplo, algumas operadoras 4G ou redes de escola) a voz pode não conectar. Para essas redes seria preciso um servidor TURN, que é pago à parte.
 - **Stumble DBV** (`server/online/stumble.js`, `client/src/pages/online/stumble/`):
   - Até 10 jogadores. Cada partida tem 3 fases sorteadas entre 20; nas duas primeiras passam os primeiros a chegar, e a final tem um só vencedor.
-  - Sala aleatória: começa 30 s depois de ter 3 jogadores. Se o número cair abaixo de 3, a contagem para. Se a sala encher (10), começa na hora.
+  - Sala aleatória: espera 1 minuto. Durante a espera vão entrando robôs aos poucos até completar 10; quando entra uma pessoa, um robô sai.
+- **Skin** (`client/src/pages/online/avatar/`): 30 personagens de menino, 30 de menina e 30 skates. A escolha vale para o Surf DBV e o Stumble DBV e fica salva no aparelho e no servidor (`members.game_skin`, `members.game_board`, rota `/api/jogos/skin`).
   - O movimento roda em cada celular, e a posição é repassada aos outros cerca de 12 vezes por segundo. O servidor controla o tempo, a ordem de chegada e as vitórias.
-- **DesbravaCraft** (`client/src/pages/online/craft/`, `server/online/craft.js`): mundo de blocos com biomas (campos, floresta, deserto, neve, montanhas, lagos), árvores, minérios, bancada de trabalho, fornalha, ferramentas de madeira/pedra/ferro/diamante, vida, fome e dia e noite.
-  - **Bichos:** vacas, ovelhas e galinhas para comida. À noite aparecem aranhas. Não tem zumbis, esqueletos, Endermen nem porcos.
-  - **Mundo offline:** salvo no próprio celular (IndexedDB) e funciona sem internet.
-  - **Mundos online:** código de 4 números e até 10 jogadores ao mesmo tempo. O mundo fica salvo no servidor (`craft_worlds`, `craft_chunks`, `craft_players`), e qualquer membro com o código entra, mesmo sem o dono.
-  - **Sem ranking.**

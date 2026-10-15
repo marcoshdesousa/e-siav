@@ -1,4 +1,4 @@
-/* Uno DBV */
+/* Cartada DBV */
 .online-playing .bottom-nav, .online-playing .main > .back-link { display: none; }
 .online-playing .main { padding-bottom: .8rem; }
 .uno-page { display: grid; gap: .6rem; }
@@ -38,17 +38,18 @@
 .wild-oval .q.r { background: #e5262c; } .wild-oval .q.b { background: #1f6fd6; } .wild-oval .q.y { background: #f7c90d; } .wild-oval .q.g { background: #2ea44f; }
 .wild-oval.mini { position: absolute; inset: 18%; width: auto; height: auto; }
 .uno-card.wild .uno-big { color: #fff; position: relative; }
-.uno-card.back::before { background: #161616; }
-.uno-card.back .uno-oval { background: #e5262c; }
-.uno-card.back .uno-oval b { transform: rotate(28deg) skewX(6deg); color: #f7c90d; font-size: calc(var(--w) * .3); text-shadow: 2px 2px 0 #111; letter-spacing: -1px; }
+.uno-card.back::before { background: radial-gradient(circle at 30% 20%, #1d4ed8, #0b1f4d 70%); }
+.uno-card.back .uno-oval { background: transparent; transform: none; display: grid; place-items: center; }
+.uno-card.back .back-tri { position: absolute; width: 0; height: 0; border-left: calc(var(--w) * .3) solid transparent; border-right: calc(var(--w) * .3) solid transparent; border-top: calc(var(--w) * .52) solid #facc15; filter: drop-shadow(0 2px 0 #0b1f4d); }
+.uno-card.back .uno-oval b { position: relative; margin-top: calc(var(--w) * -.18); color: #0b1f4d; font-size: calc(var(--w) * .17); letter-spacing: 0; }
 button.uno-card { cursor: pointer; }
 
 /* Saguão */
 .uno-hero { display: flex; align-items: center; justify-content: center; gap: .6rem; padding: 1.2rem 0 .3rem; }
 .uno-hero .tilt-l { transform: rotate(-14deg); }
 .uno-hero .tilt-r { transform: rotate(14deg); }
-.uno-logo { display: grid; place-items: center; width: 150px; height: 90px; border-radius: 50%; background: #e5262c; transform: rotate(-12deg); box-shadow: 0 0 0 5px #fff, 0 0 0 9px #161616, 0 8px 20px rgba(0, 0, 0, .3); }
-.uno-logo span { font-family: 'Arial Black', Arial, sans-serif; font-size: 2.6rem; color: #f7c90d; line-height: .9; text-shadow: 3px 3px 0 #161616; letter-spacing: -2px; }
+.uno-logo { display: grid; place-items: center; width: 170px; height: 92px; border-radius: 22px; background: linear-gradient(135deg, #1d4ed8, #7c3aed); transform: rotate(-6deg); box-shadow: 0 0 0 4px #fff, 0 0 0 7px #facc15, 0 8px 20px rgba(0, 0, 0, .3); }
+.uno-logo span { font-family: 'Arial Black', Arial, sans-serif; font-size: 1.9rem; color: #facc15; line-height: .9; text-shadow: 2px 3px 0 #0b1f4d; letter-spacing: -1px; }
 .uno-logo small { font-weight: 900; color: #fff; letter-spacing: .3em; margin-top: -6px; }
 .uno-quick { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
 .uno-big-btn { display: flex; flex-direction: column; align-items: flex-start; gap: .25rem; padding: 1rem; border-radius: 18px; border: 0; cursor: pointer; text-align: left; color: #fff; background: linear-gradient(135deg, #e5262c, #9f1239); font-family: var(--font); box-shadow: 0 6px 14px rgba(0, 0, 0, .18); }

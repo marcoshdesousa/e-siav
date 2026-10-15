@@ -5,7 +5,6 @@ import { all, get, run } from '../db.js';
 import { requireAuth } from '../auth.js';
 import { fail } from '../util.js';
 import { GAMES } from '../games.js';
-import { createWorld, myWorlds } from '../online/craft.js';
 
 const r = Router();
 const member = requireAuth('member');
@@ -48,6 +47,20 @@ r.post('/jogos/:id/pontos', member, (req, res) => {
 });
 
 // Ranking geral de um jogo: os 50 primeiros e a minha posição.
+// Skin dos jogos (vale para o Surf DBV e o Stumble DBV).
+const SKIN_RE = /^[mf](0[1-9]|[12][0-9]|30)$/;
+const BOARD_RE = /^b(0[1-9]|[12][0-9]|30)$/;
+r.get('/jogos/skin', member, (req, res) => {
+  const m = get('SELECT game_skin, game_board FROM members WHERE id = ?', req.actor.id);
+  res.json({ skin: m?.game_skin || null, board: m?.game_board || null });
+});
+r.put('/jogos/skin', member, (req, res) => {
+  const { skin, board } = req.body || {};
+  if (!SKIN_RE.test(String(skin)) || !BOARD_RE.test(String(board))) fail(400, 'Skin inválida');
+  run('UPDATE members SET game_skin = ?, game_board = ? WHERE id = ?', skin, board, req.actor.id);
+  res.json({ ok: true, skin, board });
+});
+
 r.get('/jogos/:id/ranking', member, (req, res) => {
   const g = game(req.params.id);
   const c = col(g);
@@ -61,14 +74,6 @@ r.get('/jogos/:id/ranking', member, (req, res) => {
     rows: rows.map((x, i) => ({ ...x, position: i + 1 })),
     me: mine ? { ...mine, position: myPosition(req.params.id, g, mine.value) } : null,
   });
-});
-
-// DesbravaCraft: meus mundos online (criados ou que já entrei) e criar um mundo novo.
-r.get('/craft/mundos', member, (req, res) => res.json(myWorlds(req.actor.id)));
-r.post('/craft/mundos', member, (req, res) => {
-  const count = get('SELECT COUNT(*) n FROM craft_worlds WHERE owner_id = ?', req.actor.id).n;
-  if (count >= 5) fail(400, 'Você já tem 5 mundos online');
-  res.json(createWorld(req.actor.id, req.body.name));
 });
 
 export default r;

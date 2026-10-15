@@ -97,18 +97,18 @@ export function act(s, id, a, names = {}) {
     if (hand.length === 1 || (hand.length === 2 && current(s) === id)) {
       s.unoSaid[id] = true;
       if (s.unoPending === id) s.unoPending = null;
-      say(s, `${nm(id)} gritou UNO!`);
+      say(s, `${nm(id)} gritou ÚLTIMA!`);
       s.lastEvent = { type: 'uno', who: id, at: Date.now() };
       return { ok: true };
     }
-    return { error: 'Só dá para gritar UNO com 2 cartas na sua vez ou com 1 carta' };
+    return { error: 'Só dá para gritar ÚLTIMA com 2 cartas na sua vez ou com 1 carta' };
   }
   if (a.type === 'catch') {
     const t = s.unoPending;
     if (!t || t === id || s.hands[t]?.length !== 1 || s.unoSaid[t]) return { error: 'Não dá para pegar ninguém agora' };
     draw(s, t, UNO_PENALTY);
     s.unoPending = null;
-    say(s, `${nm(id)} pegou ${nm(t)} sem gritar UNO: +${UNO_PENALTY} cartas!`);
+    say(s, `${nm(id)} pegou ${nm(t)} sem gritar ÚLTIMA: +${UNO_PENALTY} cartas!`);
     s.lastEvent = { type: 'caught', who: t, by: id, at: Date.now() };
     return { ok: true };
   }
@@ -222,7 +222,7 @@ export function view(s, me) {
 
 /**
  * Robôs (jogadores com número negativo). Jogam de um jeito simples, para a pessoa ter boa chance
- * de ganhar: às vezes compram mesmo podendo jogar e às vezes esquecem de gritar UNO.
+ * de ganhar: às vezes compram mesmo podendo jogar e às vezes esquecem de gritar ÚLTIMA.
  */
 export function bot(s, now, names) {
   if (s.winner) return false;

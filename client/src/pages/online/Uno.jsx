@@ -1,4 +1,4 @@
-// Uno DBV: cartas online de 2 a 6 jogadores, com chat de voz.
+// Cartada DBV: cartas online de 2 a 6 jogadores, com chat de voz.
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -19,7 +19,7 @@ export function UnoCard({ card, back, size = 'md', playable, onClick, style, cla
   if (back || !card) {
     return (
       <span className={`uno-card back ${size} ${className}`} style={style}>
-        <span className="uno-oval"><b>DBV</b></span>
+        <span className="uno-oval"><i className="back-tri" /><b>DBV</b></span>
       </span>
     );
   }
@@ -58,7 +58,7 @@ export default function UnoPage({ base }) {
     document.body.classList.toggle('online-playing', !!room);
     return () => document.body.classList.remove('online-playing');
   }, [room]);
-  if (!internet) return <><PageHeader title="Uno DBV" /><Card className="center"><WifiOff size={30} /><p>O Uno DBV precisa de internet.</p></Card></>;
+  if (!internet) return <><PageHeader title="Cartada DBV" /><Card className="center"><WifiOff size={30} /><p>O Cartada DBV precisa de internet.</p></Card></>;
   return (
     <div className="uno-page">
       {!net.connected && <div className="uno-conn"><RefreshCw size={14} className="spin" /> Conectando...</div>}
@@ -82,7 +82,7 @@ function Lobby({ net, base }) {
     <>
       <div className="uno-hero">
         <UnoCard card={{ color: 'r', value: 'draw2' }} size="sm" className="tilt-l" />
-        <div className="uno-logo"><span>UNO</span><small>DBV</small></div>
+        <div className="uno-logo"><span>Cartada</span><small>DBV</small></div>
         <UnoCard card={{ color: 'w', value: 'wild' }} size="sm" className="tilt-r" />
       </div>
       <p className="center small muted"><Wifi size={13} /> {lobby?.online ?? '…'} jogando agora</p>
@@ -298,7 +298,7 @@ function Table({ net, voice, base }) {
                   {Array.from({ length: Math.min(n, 8) }).map((_, k) => <i key={k} style={{ transform: `rotate(${(k - Math.min(n, 8) / 2) * 7}deg)` }} />)}
                 </span>
                 <small>{n} carta{n === 1 ? '' : 's'}</small>
-                {n === 1 && g.unoSaid?.[id] && <span className="uno-badge">UNO!</span>}
+                {n === 1 && g.unoSaid?.[id] && <span className="uno-badge">ÚLTIMA!</span>}
               </div>
             );
           })}
@@ -326,7 +326,7 @@ function Table({ net, voice, base }) {
       {g.log?.length > 0 && <div className="uno-log">{g.log.at(-1)}</div>}
 
       <div className="uno-buttons">
-        {canUno && <button type="button" className="uno-shout" onClick={() => act({ type: 'uno' })}>UNO!</button>}
+        {canUno && <button type="button" className="uno-shout" onClick={() => act({ type: 'uno' })}>ÚLTIMA!</button>}
         {catchable && <button type="button" className="uno-catch" onClick={() => act({ type: 'catch' })}>Pegou {byId[g.unoPending]?.name}! +2</button>}
         {myTurn && g.drawn != null && <Button small variant="secondary" onClick={() => act({ type: 'pass' })}>Passar</Button>}
       </div>
@@ -372,7 +372,7 @@ function Table({ net, voice, base }) {
           <div className="game-over-card">
             <Trophy size={40} />
             <h2>{room.result?.winner === me ? 'Você venceu!' : room.result?.winner ? `${room.result.winnerName} venceu!` : 'Partida encerrada'}</h2>
-            <p className="small">{room.result?.winner === me ? 'Mais uma vitória no ranking do Uno DBV.' : room.result?.winner ? 'Na próxima é você!' : 'Os outros jogadores saíram.'}</p>
+            <p className="small">{room.result?.winner === me ? 'Mais uma vitória no ranking do Cartada DBV.' : room.result?.winner ? 'Na próxima é você!' : 'Os outros jogadores saíram.'}</p>
             <Button block onClick={() => net.send({ t: 'again' })}><RefreshCw size={16} /> Jogar de novo</Button>
             <Button block variant="secondary" onClick={() => { net.send({ t: 'leave' }); nav(`${base}/jogos?aba=ranking&jogo=uno`); }}><Trophy size={16} /> Ver ranking</Button>
             <Button block variant="secondary" onClick={() => net.send({ t: 'leave' })}><ArrowLeft size={16} /> Sair da sala</Button>
