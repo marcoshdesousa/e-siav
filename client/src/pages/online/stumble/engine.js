@@ -55,9 +55,63 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
     stage = null;
   }
 
+  /** Caminho dos robôs: segue o chão da pista (desvia das portas de verdade e pula os buracos). */
+  let path = [];
+  function buildPath() {
+    path = [];
+    let px = 0;
+    for (let z = -2; z >= stage.finishZ - 3; z -= 0.5) {
+      let best = null;
+      for (const p of stage.plats) {
+        if (p.kind === 'fake' || Math.abs(z - p.z) > p.d / 2) continue;
+        const inside = Math.abs(px - p.x) <= p.w / 2 - 0.3;
+        const d = inside ? -1 : Math.abs(px - p.x);
+        if (!best || d < best.d) best = { p, d };
+      }
+      if (best) {
+        const p = best.p;
+        px = Math.max(p.x - p.w / 2 + 0.5, Math.min(p.x + p.w / 2 - 0.5, best.d < 0 ? px : p.x));
+        // Porta de verdade na frente: vai para uma porta falsa
+        const wall = stage.walls.find((w) => !w.fake && !w.knock && Math.abs(z - w.z) < 0.8 && Math.abs(px - w.x) < w.w / 2 && w.y0 < 1);
+        if (wall) {
+          const doors = stage.walls.filter((w) => w.fake && Math.abs(z - w.z) < 0.8);
+          if (doors.length) px = doors.reduce((a, b) => (Math.abs(b.x - px) < Math.abs(a.x - px) ? b : a)).x;
+        }
+        path.push({ x: px, z, y: platTop({ ...p, ox: 0, oy: 0, oz: 0, gone: false }, px, z) ?? p.top });
+      } else path.push({ x: null, z, y: null });
+    }
+    // Buracos: liga as pontas com um pulo
+    for (let i = 0; i < path.length; i++) {
+      if (path[i].y != null) continue;
+      let j = i;
+      while (j < path.length && path[j].y == null) j++;
+      const a = path[i - 1] || path[j];
+      const b = path[j] || a;
+      for (let k = i; k < j; k++) {
+        const f = (k - i + 1) / (j - i + 1);
+        path[k].x = a.x + (b.x - a.x) * f;
+        path[k].y = a.y + (b.y - a.y) * f + Math.sin(f * Math.PI) * 1.8;
+        path[k].air = true;
+      }
+      i = j;
+    }
+  }
+  function pathAt(k, off) {
+    if (!path.length) return null;
+    const f = Math.max(0, Math.min(1, k)) * (path.length - 1);
+    const i = Math.floor(f);
+    const a = path[i];
+    const b = path[Math.min(path.length - 1, i + 1)];
+    const t = f - i;
+    return { x: a.x + (b.x - a.x) * t + off, y: a.y + (b.y - a.y) * t, z: a.z + (b.z - a.z) * t, air: a.air || b.air };
+  }
+  let botT = {};
+  let botDone = new Set();
+
   function loadStage(index, seed, slot, count) {
     clearStage();
     stage = buildStage(scene, index, seed);
+    buildPath();
     const cols = Math.min(count, 5);
     const row = Math.floor(slot / 5);
     st.x = (slot % 5 - (cols - 1) / 2) * 1.6;
@@ -257,6 +311,18 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
       st.lastProg = now;
       onProgress?.(Math.max(0, Math.min(1, st.z / stage.finishZ)));
     }
+    // Robôs: andam pelo caminho no tempo deles
+    for (const [id, r] of remotes) {
+      if (!r.bot || !r.alive || t < 0) continue;
+      const T = botT[id] || 40;
+      const done = botDone.has(id);
+      const k = done ? 1 : Math.min(t / T, 0.985);
+      const q = pathAt(k, r.off);
+      if (!q) continue;
+      const prev = r.target || q;
+      const moving = !done && k < 0.985;
+      r.target = { x: q.x, y: q.y, z: done ? q.z - 1.5 : q.z, r: Math.atan2(-(q.x - prev.x), -(q.z - prev.z) || -1e-3), a: q.air && moving ? 'air' : moving ? 'run' : 'idle' };
+    }
     // Os outros
     for (const r of remotes.values()) {
       if (!r.target) continue;
@@ -327,13 +393,14 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
           const mesh = makeStumbler(outfitById(p.outfit));
           mesh.add(nameSprite(p.name));
           scene.add(mesh);
-          r = { mesh, outfit: p.outfit, target: null, phase: Math.random() * 3, alive: true };
+          r = { mesh, outfit: p.outfit, target: null, phase: Math.random() * 3, alive: true, bot: !!p.bot, off: (Math.random() - 0.5) * 1.2 };
           remotes.set(p.id, r);
         }
         r.alive = p.alive !== false;
         r.mesh.visible = r.alive || st.mode === 'spectate';
       }
     },
+    setBots(times, finished) { botT = times || {}; botDone = new Set(finished || []); },
     placeRemote(id, slot, count) {
       const r = remotes.get(id);
       if (!r) return;
@@ -361,7 +428,7 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
       },
     },
     get finished() { return st.finished; },
-    debug: () => ({ ...st, t: getTime() }),
+    debug: () => ({ ...st, t: getTime(), path: path.length, bots: [...remotes].map(([id, r]) => ({ id, bot: r.bot, alive: r.alive, vis: r.mesh.visible, t: r.target, pos: r.mesh.position.toArray() })) }),
     dispose() {
       window.cancelAnimationFrame(raf);
       ro.disconnect();

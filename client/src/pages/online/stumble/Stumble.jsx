@@ -2,11 +2,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
-import { ArrowLeft, Copy, Crown, Globe2, Hash, Lock, LogOut, Play, RefreshCw, Shirt, Timer, Trophy, UserX, Users, Wifi, WifiOff } from 'lucide-react';
+import { ArrowLeft, Copy, Crown, Globe2, Hash, Lock, LogOut, Mic, MicOff, Play, RefreshCw, Shirt, Timer, Trophy, UserX, Users, Wifi, WifiOff } from 'lucide-react';
 import { Button, Card, Modal, PageHeader, Section } from '../../../ui.jsx';
 import { useOnline as useInternet } from '../../../offline.js';
 import { sfx, startMusic, stopMusic, unlockAudio } from '../../games/audio.js';
 import { useOnline } from '../net.js';
+import { useVoice } from '../voice.js';
+import { BotTag, VoiceBar } from '../Uno.jsx';
 import { animate, makeStumbler } from './character.js';
 import { createStumble } from './engine.js';
 import { OUTFITS, outfitById } from './outfits.js';
@@ -83,6 +85,8 @@ export default function StumblePage({ base }) {
     if (net.room?.status === 'waiting') net.send({ t: 'outfit', outfit: o });
   };
   const { room } = net;
+  const humanPlayers = useMemo(() => room?.players.filter((p) => !p.bot), [room?.players]);
+  const voice = useVoice({ me: net.me, players: humanPlayers, send: net.send, listen: net.listen });
   useEffect(() => {
     document.body.classList.toggle('online-playing', !!room);
     return () => document.body.classList.remove('online-playing');
@@ -92,8 +96,8 @@ export default function StumblePage({ base }) {
     <div className="stb-page">
       {!net.connected && <div className="uno-conn"><RefreshCw size={14} className="spin" /> Conectando...</div>}
       {!room && <Lobby net={net} base={base} outfit={outfit} setOutfit={setOutfit} />}
-      {room && room.status === 'waiting' && <Waiting net={net} outfit={outfit} setOutfit={setOutfit} />}
-      {room && room.status !== 'waiting' && net.game && <Match net={net} outfit={outfit} base={base} />}
+      {room && room.status === 'waiting' && <Waiting net={net} outfit={outfit} setOutfit={setOutfit} voice={voice} />}
+      {room && room.status !== 'waiting' && net.game && <Match net={net} outfit={outfit} base={base} voice={voice} />}
     </div>
   );
 }
@@ -168,7 +172,7 @@ function useServerClock(room) {
   return () => Date.now() + off.current;
 }
 
-function Waiting({ net, outfit, setOutfit }) {
+function Waiting({ net, outfit, setOutfit, voice }) {
   const { room, me } = net;
   const owner = room.owner === me;
   const clock = useServerClock(room);
@@ -183,25 +187,25 @@ function Waiting({ net, outfit, setOutfit }) {
         <b>{room.quick ? 'Partida aleatória' : room.public ? 'Sala pública' : 'Sala privada'}</b>
         {!room.quick && <button type="button" className="uno-code" onClick={copy}><small>Código da sala</small><span>{room.code}</span><small><Copy size={12} /> Toque para copiar</small></button>}
         <div className="stb-count"><Users size={16} /> {room.players.length}/{room.size}</div>
-        {room.quick && (left != null
-          ? <div className="stb-countdown"><Timer size={18} /> Começa em {left}s</div>
-          : <p className="small muted">Esperando pelo menos 3 jogadores. Quando tiver 3, começa a contagem de 30 segundos.</p>)}
-        {!room.quick && <p className="small muted">{owner ? 'Você começa quando tiver pelo menos 3 jogadores.' : 'O dono da sala vai começar.'}</p>}
+        {room.quick && left != null && <div className="stb-countdown"><Timer size={18} /> Começa em {left}s</div>}
+        <p className="small muted">{room.quick ? 'A partida sempre tem 10 jogadores: se faltar gente, robôs completam (e saem quando alguém entra).' : owner ? 'Você começa quando quiser: as vagas vazias viram robôs.' : 'O dono da sala vai começar.'}</p>
       </div>
       <div className="stb-players">
         {room.players.map((p) => (
           <div key={p.id} className="stb-player">
             <span className="stb-swatch" style={{ background: (() => { const o = outfitById(p.outfit); return `linear-gradient(180deg, ${o.hatColor || o.hairColor} 0 22%, ${o.skin} 22% 42%, ${o.top} 42% 72%, ${o.bottom} 72%)`; })() }} />
             <b>{p.name}{p.id === me ? ' (você)' : ''}</b>
+            {p.bot && <BotTag />}
             {room.owner === p.id && !room.quick && <Crown size={13} />}
             {owner && !room.quick && p.id !== me && <button type="button" className="icon-btn" onClick={() => net.send({ t: 'kick', member: p.id })} aria-label="Tirar"><UserX size={15} /></button>}
           </div>
         ))}
       </div>
+      <VoiceBar net={net} voice={voice} />
       <Button variant="secondary" onClick={() => setPick(true)}><Shirt size={16} /> Trocar visual</Button>
       <div className="uno-actions">
         <Button variant="secondary" onClick={() => net.send({ t: 'leave' })}><LogOut size={16} /> Sair</Button>
-        {owner && !room.quick && <Button disabled={room.players.length < room.min} onClick={() => { unlockAudio(); net.send({ t: 'start' }); }}><Play size={16} /> Começar</Button>}
+        {owner && !room.quick && <Button onClick={() => { unlockAudio(); net.send({ t: 'start' }); }}><Play size={16} /> Começar</Button>}
       </div>
       {net.error && <p className="small center uno-err">{net.error.msg}</p>}
       {pick && <OutfitPicker value={outfit} onChange={setOutfit} onClose={() => setPick(false)} />}
@@ -238,7 +242,7 @@ function Joystick({ onMove }) {
   );
 }
 
-function Match({ net, outfit, base }) {
+function Match({ net, outfit, base, voice }) {
   const nav = useNavigate();
   const { room, game: g, me } = net;
   const canvasRef = useRef(null);
@@ -286,6 +290,7 @@ function Match({ net, outfit, base }) {
   useEffect(() => {
     eng.current?.setPlayers(room.players.map((p) => ({ ...p, alive: g.alive.includes(p.id) })), me);
   }, [room.players, g.alive, me]);
+  useEffect(() => { eng.current?.setBots(g.botT, g.finished); }, [g.botT, g.finished]);
 
   // Fase do jogo → modo da câmera
   const now = clock();
@@ -339,6 +344,7 @@ function Match({ net, outfit, base }) {
         <span className="stb-pill">{g.round >= 2 ? 'Final' : `Passam ${g.qualify}`} · {g.finished.length}/{g.qualify}</span>
         {raceLeft != null && <span className="stb-pill"><Timer size={13} /> {raceLeft}s</span>}
         <span className="grow" />
+        <button type="button" className={'stb-pill btn' + (voice.mic ? ' mic-on' : '')} onClick={() => { unlockAudio(); voice.toggleMic(); }} aria-label="Microfone">{voice.mic ? <Mic size={14} /> : <MicOff size={14} />}</button>
         <button type="button" className="stb-pill btn" onClick={() => setLeave(true)}><LogOut size={14} /></button>
       </div>
 

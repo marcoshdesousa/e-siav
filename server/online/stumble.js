@@ -26,12 +26,47 @@ function pickStages() {
   return all.slice(0, 3);
 }
 
+/** Tempo que cada robô leva para fazer a fase (em segundos): nem rápido demais, nem lento. */
+// Comprimento (m) de cada fase, do início até a chegada (para calcular o tempo dos robôs).
+const STAGE_LEN = [80, 101, 95, 80, 90, 66, 67, 102, 70, 94, 72, 88, 98, 88, 80, 82, 94, 78, 125, 122];
+function botPlan(s) {
+  const len = STAGE_LEN[s.stages[s.round]] || 90;
+  // A pessoa corre a ~7 m/s; os robôs, entre 3,6 e 5,6 m/s (mais os tropeços).
+  s.botT = Object.fromEntries(s.alive.filter((id) => id < 0).map((id) => [id, len / (3.6 + Math.random() * 2) + Math.random() * 6]));
+}
+const BOT_FREE_AFTER = 100; // depois de 100 s os robôs terminam mesmo que alguém ainda esteja correndo
+
 export function start(ids, now = Date.now()) {
-  return {
+  const s = {
     players: [...ids], alive: [...ids], stages: pickStages(), round: 0, phase: 'intro',
     phaseEndsAt: now + INTRO_MS, raceStartAt: now + INTRO_MS, finished: [], progress: {},
     qualify: qualifyCount(ids.length, 0), eliminated: [], winner: null, done: false, seed: crypto.randomInt(1e9),
   };
+  botPlan(s);
+  return s;
+}
+
+/** Robôs: chegam no tempo deles, mas deixam as vagas (e a vitória da final) para as pessoas. */
+export function bot(s, now = Date.now()) {
+  if (s.phase !== 'race') return false;
+  const el = (now - s.raceStartAt) / 1000;
+  let changed = false;
+  for (const id of s.alive) {
+    if (id > 0 || s.finished.includes(id)) continue;
+    const T = s.botT?.[id] || 40;
+    s.progress[id] = Math.min(0.99, el / T);
+    if (el < T) continue;
+    const humansLeft = s.alive.filter((x) => x > 0 && !s.finished.includes(x)).length;
+    const slots = s.qualify - s.finished.length;
+    const free = el > BOT_FREE_AFTER || (s.round >= 2 ? humansLeft === 0 : slots > humansLeft);
+    if (!free) continue;
+    s.finished.push(id);
+    s.progress[id] = 1;
+    changed = true;
+    if (s.round >= 2) { toResults(s, now); return true; }
+  }
+  if (changed) tick(s, now);
+  return changed;
 }
 
 function toResults(s, now) {
@@ -76,6 +111,7 @@ export function tick(s, now = Date.now()) {
     s.qualify = qualifyCount(s.alive.length, s.round);
     s.phaseEndsAt = now + INTRO_MS;
     s.raceStartAt = s.phaseEndsAt;
+    botPlan(s);
     return true;
   }
   return false;
@@ -111,6 +147,6 @@ export function view(s) {
   return {
     stage: s.stages[s.round], stages: s.stages, round: s.round, phase: s.phase, phaseEndsAt: s.phaseEndsAt,
     raceStartAt: s.raceStartAt, alive: s.alive, finished: s.finished, qualify: s.qualify, eliminated: s.eliminated,
-    winner: s.winner, now: Date.now(), seed: s.seed + s.round,
+    winner: s.winner, now: Date.now(), seed: s.seed + s.round, botT: s.botT || {},
   };
 }

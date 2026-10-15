@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  ArrowLeft, Ban, Copy, Crown, Globe2, Hash, Lock, LogOut, Mic, MicOff, Play, RefreshCw, Repeat2, Trophy,
+  ArrowLeft, Ban, Bot, Copy, Timer, Crown, Globe2, Hash, Lock, LogOut, Mic, MicOff, Play, RefreshCw, Repeat2, Trophy,
   UserX, Users, Volume2, VolumeX, Wifi, WifiOff, Zap, Ear, EarOff,
 } from 'lucide-react';
 import { Avatar, Button, Card, Modal, PageHeader, Section } from '../../ui.jsx';
@@ -51,7 +51,8 @@ export default function UnoPage({ base }) {
   const net = useOnline('uno');
   const internet = useInternet();
   const { room, game } = net;
-  const voice = useVoice({ me: net.me, players: room?.players, send: net.send, listen: net.listen });
+  const humanPlayers = useMemo(() => room?.players.filter((p) => !p.bot), [room?.players]);
+  const voice = useVoice({ me: net.me, players: humanPlayers, send: net.send, listen: net.listen });
   const playing = room && room.status !== 'waiting';
   useEffect(() => {
     document.body.classList.toggle('online-playing', !!room);
@@ -138,9 +139,22 @@ function Lobby({ net, base }) {
 
 // ───────────── Sala de espera ─────────────
 
+/** Segundos que faltam (relógio do servidor). */
+export function useCountdown(room) {
+  const off = useRef(0);
+  const seen = useRef(null);
+  if (room?.now && seen.current !== room.now) { seen.current = room.now; off.current = room.now - Date.now(); }
+  const [, force] = useState(0);
+  useEffect(() => { const t = setInterval(() => force((n) => n + 1), 500); return () => clearInterval(t); }, []);
+  return room?.startAt ? Math.max(0, Math.ceil((room.startAt - (Date.now() + off.current)) / 1000)) : null;
+}
+
+export const BotTag = () => <span className="bot-tag"><Bot size={11} /> robô</span>;
+
 function WaitingRoom({ net, voice }) {
   const { room, me } = net;
   const owner = room.owner === me;
+  const left = useCountdown(room);
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     try { await window.navigator.clipboard.writeText(room.code); setCopied(true); setTimeout(() => setCopied(false), 1500); } catch { /* sem área de transferência */ }
@@ -154,7 +168,8 @@ function WaitingRoom({ net, voice }) {
             <small>Código da sala</small><span>{room.code}</span><small><Copy size={12} /> {copied ? 'Copiado!' : 'Toque para copiar'}</small>
           </button>
         )}
-        <p className="small muted">{room.quick ? `Procurando jogadores... ${room.players.length}/${room.size}. Começa sozinho quando encher.` : `${room.players.length}/${room.size} jogadores. ${owner ? 'Você começa quando quiser.' : 'O dono da sala vai começar.'}`}</p>
+        {room.quick && left != null && <div className="stb-countdown"><Timer size={18} /> Começa em {left}s</div>}
+        <p className="small muted">{room.quick ? 'Procurando jogadores. Se faltar gente, robôs completam a mesa (e saem quando alguém entra).' : `${room.players.length}/${room.size} jogadores. ${owner ? 'Você começa quando quiser: as vagas vazias viram robôs.' : 'O dono da sala vai começar.'}`}</p>
       </div>
       {room.quick && <div className="uno-searching"><span /><span /><span /></div>}
       <div className="list">
@@ -162,8 +177,8 @@ function WaitingRoom({ net, voice }) {
           <div key={p.id} className="list-item">
             <Avatar src={p.photo} name={p.name} size={40} />
             <div className="grow">
-              <div className="title">{p.name} {p.id === me && <span className="muted small">(você)</span>}</div>
-              <div className="sub">{room.owner === p.id ? <><Crown size={12} /> Dono da sala</> : p.connected ? 'Pronto' : 'Reconectando...'}</div>
+              <div className="title">{p.name} {p.id === me && <span className="muted small">(você)</span>} {p.bot && <BotTag />}</div>
+              <div className="sub">{room.owner === p.id && !room.quick ? <><Crown size={12} /> Dono da sala</> : p.bot ? 'Jogador automático' : p.connected ? 'Pronto' : 'Reconectando...'}</div>
             </div>
             {voice.talking.has(p.id) && <Mic size={16} className="uno-mic-on" />}
             {owner && p.id !== me && <Button small variant="secondary" onClick={() => net.send({ t: 'kick', member: p.id })}><UserX size={14} /> Tirar</Button>}
@@ -173,7 +188,7 @@ function WaitingRoom({ net, voice }) {
       <VoiceBar net={net} voice={voice} />
       <div className="uno-actions">
         <Button variant="secondary" onClick={() => net.send({ t: 'leave' })}><LogOut size={16} /> Sair</Button>
-        {owner && !room.quick && <Button disabled={room.players.length < room.min} onClick={() => { unlockAudio(); net.send({ t: 'start' }); }}><Play size={16} /> Começar</Button>}
+        {owner && !room.quick && <Button onClick={() => { unlockAudio(); net.send({ t: 'start' }); }}><Play size={16} /> Começar</Button>}
       </div>
       {net.error && <p className="small center uno-err">{net.error.msg}</p>}
     </>
@@ -182,9 +197,9 @@ function WaitingRoom({ net, voice }) {
 
 // ───────────── Voz ─────────────
 
-function VoiceBar({ net, voice }) {
+export function VoiceBar({ net, voice }) {
   const [open, setOpen] = useState(false);
-  const others = net.room.players.filter((p) => p.id !== net.me);
+  const others = net.room.players.filter((p) => p.id !== net.me && !p.bot);
   return (
     <>
       <div className="uno-voice">
@@ -278,7 +293,7 @@ function Table({ net, voice, base }) {
                   {g.turn === id && <TurnRing left={left} />}
                   {voice.talking.has(id) && <span className="uno-opp-mic"><Mic size={11} /></span>}
                 </div>
-                <b>{p.name}</b>
+                <b>{p.bot && <Bot size={11} />} {p.name}</b>
                 <span className="uno-mini-fan">
                   {Array.from({ length: Math.min(n, 8) }).map((_, k) => <i key={k} style={{ transform: `rotate(${(k - Math.min(n, 8) / 2) * 7}deg)` }} />)}
                 </span>

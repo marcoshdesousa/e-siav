@@ -13,9 +13,10 @@ import * as craft from './craft.js';
 
 /** Jogos com sala. size: tamanhos de sala; quick: tamanhos da partida rápida; min: mínimo para começar. */
 const GAMES = {
-  uno: { name: 'Uno DBV', sizes: [2, 4, 6], quick: [2, 4], min: 2, logic: uno },
-  // Stumble: a sala aleatória começa 30 s depois de ter 3 jogadores (ou na hora, se encher com 10).
-  stumble: { name: 'Stumble DBV', sizes: [10], quick: [10], min: 3, countdown: 30_000, logic: stumble },
+  // Robôs completam sempre a sala até o máximo. Na sala aleatória eles vão entrando durante a
+  // contagem e saem para dar lugar a quem chega; na sala criada, entram quando o dono começa.
+  uno: { name: 'Uno DBV', sizes: [2, 4, 6], quick: [2, 4], min: 1, countdown: 15_000, logic: uno },
+  stumble: { name: 'Stumble DBV', sizes: [10], quick: [10], min: 1, countdown: 30_000, logic: stumble },
 };
 
 const rooms = new Map(); // id -> sala
@@ -45,7 +46,7 @@ function roomInfo(room) {
   return {
     id: room.id, game: room.game, code: room.code, public: room.public, quick: room.quick, size: room.size,
     owner: room.owner, status: room.status, min: GAMES[room.game].min,
-    players: [...room.players.values()].map((p) => ({ id: p.id, name: p.name, photo: p.photo, connected: p.connected, outfit: p.outfit || null })),
+    players: [...room.players.values()].map((p) => ({ id: p.id, name: p.name, photo: p.photo, connected: p.connected, outfit: p.outfit || null, bot: !!p.bot })),
     result: room.result || null, startAt: room.startAt || null, now: Date.now(),
   };
 }
@@ -53,6 +54,7 @@ function roomInfo(room) {
 function broadcast(room) {
   const info = roomInfo(room);
   for (const p of room.players.values()) {
+    if (p.bot) continue;
     send(p.id, { t: 'room', room: info, me: p.id, game: room.state ? GAMES[room.game].logic.view(room.state, p.id) : null });
   }
   if (room.public || room.quick) lobbyUpdate(room.game);
@@ -60,8 +62,8 @@ function broadcast(room) {
 
 function lobbyList(game) {
   return [...rooms.values()]
-    .filter((r) => r.game === game && r.public && !r.quick && r.status === 'waiting' && r.players.size < r.size)
-    .map((r) => ({ code: r.code, size: r.size, count: r.players.size, owner: r.players.get(r.owner)?.name || '' }));
+    .filter((r) => r.game === game && r.public && !r.quick && r.status === 'waiting' && humans(r).length < r.size)
+    .map((r) => ({ code: r.code, size: r.size, count: humans(r).length, owner: r.players.get(r.owner)?.name || '' }));
 }
 function online(game) {
   let n = 0;
@@ -97,11 +99,32 @@ function closeRoom(room) {
 
 const cleanOutfit = (o) => (typeof o === 'string' && /^[a-z0-9-]{1,24}$/.test(o) ? o : null);
 
+// ───────────── Robôs ─────────────
+const BOT_NAMES = ['Lucas', 'Ana', 'Pedro', 'Bia', 'Davi', 'Lara', 'Gabriel', 'Sofia', 'Miguel', 'Alice', 'Rafa', 'Clara', 'Theo', 'Laura', 'Enzo', 'Manu', 'Samuel', 'Helena', 'Caleb', 'Ester', 'Noah', 'Rute', 'Elias', 'Sara'];
+const OUTFIT_IDS = [...Array.from({ length: 20 }, (_, i) => `m${String(i + 1).padStart(2, '0')}`), ...Array.from({ length: 20 }, (_, i) => `f${String(i + 1).padStart(2, '0')}`)];
+let botSeq = 0;
+const isBot = (id) => id < 0;
+const humans = (room) => [...room.players.values()].filter((p) => !p.bot);
+function addBot(room) {
+  const used = new Set([...room.players.values()].map((p) => p.name));
+  const free = BOT_NAMES.filter((n) => !used.has(n));
+  const name = free[Math.floor(Math.random() * free.length)] || `Robô ${room.players.size}`;
+  const id = -(++botSeq);
+  room.players.set(id, { id, name, photo: null, connected: true, bot: true, outfit: OUTFIT_IDS[Math.floor(Math.random() * OUTFIT_IDS.length)] });
+}
+function removeOneBot(room) {
+  const bot = [...room.players.values()].reverse().find((p) => p.bot);
+  if (bot) room.players.delete(bot.id);
+  return !!bot;
+}
+function fillBots(room) { while (room.players.size < room.size) addBot(room); }
+
 function addPlayer(room, actor, outfit) {
   leaveRoom(actor.id, { silent: true });
+  if (room.players.size >= room.size) removeOneBot(room); // um robô sai para a pessoa entrar
   room.players.set(actor.id, { id: actor.id, name: firstName(actor.name), photo: actor.photo || null, connected: true, goneAt: null, outfit: cleanOutfit(outfit) });
   memberRoom.set(actor.id, room.id);
-  if (room.quick && room.status === 'waiting' && room.players.size >= room.size) startGame(room);
+  if (room.quick && room.status === 'waiting' && humans(room).length >= room.size) startGame(room);
   else broadcast(room);
   lobbyUpdate();
 }
@@ -120,12 +143,13 @@ function leaveRoom(memberId, { silent = false, kicked = false } = {}) {
     // Ficou um só no Uno: acaba sem vencedor (ninguém ganha vitória porque os outros saíram).
     else if (room.state.done) finishGame(room, room.state.winner || null);
   }
-  if (!room.players.size) return closeRoom(room);
-  if (room.owner === memberId) room.owner = room.players.keys().next().value;
+  if (!humans(room).length) return closeRoom(room);
+  if (room.owner === memberId) room.owner = humans(room)[0].id;
   broadcast(room);
 }
 
 function startGame(room) {
+  fillBots(room);
   const ids = [...room.players.keys()];
   room.state = GAMES[room.game].logic.start(ids);
   room.status = 'playing';
@@ -138,8 +162,8 @@ function startGame(room) {
 /** Fim de partida: vitória para o vencedor e uma partida a mais para todos (ranking por vitórias). */
 function finishGame(room, winner) {
   room.status = 'over';
-  room.result = { winner, winnerName: winner ? room.players.get(winner)?.name || '' : null, at: Date.now() };
-  for (const id of room.startedWith || []) {
+  room.result = { winner, winnerName: winner ? room.players.get(winner)?.name || '' : null, winnerBot: winner != null && isBot(winner), at: Date.now() };
+  for (const id of (room.startedWith || []).filter((x) => !isBot(x))) {
     const win = id === winner ? 1 : 0;
     try {
       run(`INSERT INTO game_scores (member_id, game, best, total, plays) VALUES (?, ?, ?, ?, 1)
@@ -212,7 +236,7 @@ function handle(actor, msg) {
         room.players.get(id).outfit = cleanOutfit(msg.outfit) || room.players.get(id).outfit;
         return broadcast(room);
       }
-      let r = [...rooms.values()].find((x) => x.game === msg.game && x.quick && x.size === size && x.status === 'waiting' && x.players.size < x.size && !x.players.has(id));
+      let r = [...rooms.values()].find((x) => x.game === msg.game && x.quick && x.size === size && x.status === 'waiting' && humans(x).length < x.size && !x.players.has(id));
       if (!r) r = createRoom(msg.game, { size, quick: true, owner: id });
       return addPlayer(r, actor, msg.outfit);
     }
@@ -227,7 +251,7 @@ function handle(actor, msg) {
       if (!r || r.quick) return send(id, { t: 'error', msg: 'Sala não encontrada. Confira o código.' });
       if (r.players.has(id)) { r.players.get(id).outfit = cleanOutfit(msg.outfit) || r.players.get(id).outfit; return broadcast(r); }
       if (r.status !== 'waiting') return send(id, { t: 'error', msg: 'Essa partida já começou' });
-      if (r.players.size >= r.size) return send(id, { t: 'error', msg: 'A sala está cheia' });
+      if (humans(r).length >= r.size) return send(id, { t: 'error', msg: 'A sala está cheia' });
       return addPlayer(r, actor, msg.outfit);
     }
     case 'leave': return leaveRoom(id);
@@ -239,7 +263,6 @@ function handle(actor, msg) {
     }
     case 'start': {
       if (!room || room.owner !== id || room.status === 'playing') return;
-      if (room.players.size < GAMES[room.game].min) return send(id, { t: 'error', msg: `Precisa de pelo menos ${GAMES[room.game].min} jogadores` });
       return startGame(room);
     }
     case 'again': {
@@ -248,8 +271,8 @@ function handle(actor, msg) {
       room.status = 'waiting';
       room.state = null;
       room.result = null;
-      for (const [pid, p] of room.players) if (!p.connected) room.players.delete(pid);
-      if (room.quick && room.players.size >= room.size) return startGame(room);
+      for (const [pid, p] of room.players) if (!p.connected || p.bot) room.players.delete(pid);
+      room.startAt = null;
       return broadcast(room);
     }
     case 'act': return room && onAction(actor, room, msg.action || {});
@@ -297,11 +320,19 @@ setInterval(() => {
       if (room.state.done) finishGame(room, room.state.winner || null);
       else broadcast(room);
     }
-    // Sala aleatória com contagem: começa 30 s depois de ter o mínimo; volta a esperar se cair abaixo.
+    // Sala aleatória: a contagem começa com a primeira pessoa; os robôs vão entrando aos poucos
+    // e, no fim da contagem, completam o que faltar.
     if (room.status === 'waiting' && room.quick && g.countdown) {
-      if (room.players.size >= g.min && !room.startAt) { room.startAt = now + g.countdown; broadcast(room); }
-      else if (room.players.size < g.min && room.startAt) { room.startAt = null; broadcast(room); }
-      else if (room.startAt && now >= room.startAt) startGame(room);
+      if (!room.startAt) { room.startAt = now + g.countdown; room.botAt = now + 2500; broadcast(room); }
+      else if (now >= room.startAt) startGame(room);
+      else if (now >= room.botAt && room.players.size < room.size - 1) { room.botAt = now + 1500 + Math.random() * 3000; addBot(room); broadcast(room); }
+    }
+    if (room.status === 'playing' && room.state && !room.state.done && g.logic.bot) {
+      const r = g.logic.bot(room.state, now, names(room));
+      if (r) {
+        if (room.state.done) finishGame(room, room.state.winner || null);
+        else broadcast(room);
+      }
     }
     // Sala esquecida há mais de 6 horas some.
     if (now - room.createdAt > 6 * 3600_000 && room.status !== 'playing') closeRoom(room);

@@ -219,3 +219,49 @@ export function view(s, me) {
     lastPlay: s.lastPlay, lastEvent: s.lastEvent || null,
   };
 }
+
+/**
+ * Robôs (jogadores com número negativo). Jogam de um jeito simples, para a pessoa ter boa chance
+ * de ganhar: às vezes compram mesmo podendo jogar e às vezes esquecem de gritar UNO.
+ */
+export function bot(s, now, names) {
+  if (s.winner) return false;
+  let changed = false;
+  // Pegar uma pessoa que esqueceu de gritar UNO (nem sempre)
+  if (s.unoPending != null && s.unoPending > 0) {
+    if (s.catchFor !== s.unoPending) { s.catchFor = s.unoPending; s.catchAt = now + 1800 + Math.random() * 2500; }
+    else if (s.catchAt && now >= s.catchAt) {
+      s.catchAt = null;
+      const catcher = s.order.find((id) => id < 0);
+      if (catcher && Math.random() < 0.45) { act(s, catcher, { type: 'catch' }, names); changed = true; }
+    }
+  } else s.catchFor = null;
+  const cur = s.order[s.turn];
+  if (cur == null || cur > 0) { s.botAt = null; return changed; }
+  if (!s.botAt) { s.botAt = now + 900 + Math.random() * 1500; return changed; }
+  if (now < s.botAt) return changed;
+  s.botAt = null;
+  const hand = s.hands[cur];
+  const colorFor = () => {
+    const n = { r: 0, y: 0, g: 0, b: 0 };
+    for (const c of hand) if (c.color !== 'w') n[c.color]++;
+    return Object.entries(n).sort((a, b) => b[1] - a[1])[0][0];
+  };
+  const play = (c) => {
+    if (hand.length === 2 && Math.random() < 0.8) act(s, cur, { type: 'uno' }, names);
+    act(s, cur, { type: 'play', card: c.id, color: colorFor() }, names);
+  };
+  if (s.drawn != null) {
+    const c = hand.find((x) => x.id === s.drawn);
+    if (c && Math.random() < 0.75) play(c);
+    else act(s, cur, { type: 'pass' }, names);
+    return true;
+  }
+  const ok = hand.filter((c) => canPlay(s, c));
+  // Com poucas cartas o robô "vacila" mais vezes (fica mais fácil ganhar dele)
+  if (ok.length && Math.random() < (hand.length <= 3 ? 0.55 : 0.85)) {
+    const plain = ok.filter((c) => c.color !== 'w');
+    play(plain.length ? plain[Math.floor(Math.random() * plain.length)] : ok.find((c) => c.value === 'wild') || ok[0]);
+  } else act(s, cur, { type: 'draw' }, names);
+  return true;
+}
