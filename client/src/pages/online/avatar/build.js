@@ -92,7 +92,7 @@ class MeshBuild {
  * o: { s0, s1 (pedaço do tubo, 0..1), capStart, capEnd, front, blend, startBone, segs, steps }
  */
 function tube(mb, pts, rad, bn, o = {}) {
-  const { s0 = 0, s1 = 1, capStart = false, capEnd = false, front = V(0, 0, 1), blend = 0.35, startBone = null, segs = 22, steps = 7, grow = 0, capK = 1 } = o;
+  const { s0 = 0, s1 = 1, capStart = false, capEnd = false, front = V(0, 0, 1), blend = 0.35, startBone = null, segs = 22, steps = 7, grow = 0, capK = 1, clamp = null } = o;
   const n = pts.length;
   const L = [0];
   for (let i = 1; i < n; i++) L.push(L[i - 1] + pts[i].distanceTo(pts[i - 1]));
@@ -136,6 +136,16 @@ function tube(mb, pts, rad, bn, o = {}) {
       const pos = c.clone().addScaledVector(f, cf * r[1] * scale).addScaledVector(sd, ss * r[0] * scale);
       const nor = f.clone().multiplyScalar(cf / r[1]).addScaledVector(sd, ss / r[0]).normalize();
       if (along) nor.multiplyScalar(Math.cos(alongK)).addScaledVector(along, Math.sin(alongK)).normalize();
+      // Calça inteiriça: acima do gancho, o lado de dentro de cada perna encosta no meio (x = 0)
+      // e fica preso no quadril; as duas pernas viram uma peça só, sem fresta.
+      if (clamp && pos.y > clamp.y && pos.x * clamp.side < 0) {
+        const k = Math.min(1, (pos.y - clamp.y) / 0.03);
+        pos.x *= 1 - k;
+        nor.x *= 1 - k;
+        nor.normalize();
+        mb.vert(pos, nor, 1 - u, v, k >= 1 ? [[clamp.bone, 1]] : ws.map(([b, w]) => [b, w * (1 - k)]).concat([[clamp.bone, k]]));
+        continue;
+      }
       mb.vert(pos, nor, 1 - u, v, ws);
     }
     return start;
@@ -290,15 +300,15 @@ const STYLE = {
 /** Medidas do corpo (raios [lado, frente] em cada junta). */
 const TEEN = {
   leg: [[0.074, 0.074], [0.062, 0.064], [0.05, 0.054]], pad: 0.01,
-  hip: [[0.124, 0.086], [0.138, 0.092], [0.132, 0.086]], hipZ: 0.012, hipDrop: 0.085, skirtK: 1,
+  waistX: 0.016, waistR: [0.12, 0.09], hipPad: 0.022, crotch: 0.07, hipZ: 0.012, skirtK: 1, shirtY: -0.02,
   torso: [[0.15, 0.108], [0.138, 0.098], [0.148, 0.1], [0.172, 0.108], [0.1, 0.082]],
   arm: [[0.062, 0.062], [0.062, 0.062], [0.05, 0.052], [0.042, 0.044]],
   neck: true, collarR: 0.085, legScale: 1, armScale: 1,
 };
 /** Bonequinho (chibi): cabeção redondo, corpinho fofo, bracinhos e perninhas curtas. */
 const CHIBI = {
-  leg: [[0.118, 0.118], [0.1, 0.1], [0.092, 0.095]], pad: 0.016,
-  hip: [[0.19, 0.15], [0.192, 0.148], [0.175, 0.13]], hipZ: 0.03, hipDrop: 0.06, skirtK: 0.75,
+  leg: [[0.105, 0.105], [0.095, 0.095], [0.09, 0.092]], pad: 0.016,
+  waistX: 0.022, waistR: [0.178, 0.148], hipPad: 0.014, crotch: 0.05, hipZ: 0.03, skirtK: 0.75, shirtY: 0.05,
   torso: [[0.215, 0.178], [0.205, 0.168], [0.212, 0.168], [0.22, 0.17], [0.14, 0.12]],
   arm: [[0.088, 0.088], [0.086, 0.086], [0.078, 0.078], [0.07, 0.07]],
   neck: false, collarR: 0.13, legScale: 0.55, armScale: 0.72,
@@ -360,32 +370,50 @@ export function buildAvatar(s, style = 'surf') {
   const shorts = s.bottom.type === 'bermuda';
   const skirtLike = ['saia', 'saia-longa', 'vestido'].includes(s.bottom.type);
   const pantsTexM = new THREE.MeshStandardMaterial({ map: pantsTex(bottomColor), roughness: 0.85 });
+  const pel = P('pelvis');
+  const crotchY = P('thigh_l').y - D.crotch;
   for (const side of [1, -1]) {
-    const { pts, bn } = legs(side);
-    const R = D.leg;
-    const Rp = R.map(([a, b]) => [a + D.pad, b + D.pad]);
+    const sfx = side > 0 ? '_l' : '_r';
+    // Molde da perna desde a cintura: cintura -> quadril -> joelho -> tornozelo
+    const th = P('thigh' + sfx);
+    const pts = [V(side * D.waistX, P('spine_01').y, D.hipZ), V(th.x * 0.82, th.y, th.z + D.hipZ * 0.6), P('calf' + sfx), P('foot' + sfx)];
+    const bn = [B.pelvis, B['thigh' + sfx], B['calf' + sfx], B['foot' + sfx]];
+    const L = D.leg;
+    const shape = (pad) => [[D.waistR[0] + pad, D.waistR[1] + pad], [L[0][0] + D.hipPad + pad, L[0][1] + D.hipPad + pad], [L[1][0] + pad, L[1][1] + pad], [L[2][0] + pad, L[2][1] + pad]];
+    const clamp = { side, y: crotchY, bone: B.pelvis };
+    const kneeS = (pts[0].distanceTo(pts[1]) + pts[1].distanceTo(pts[2])) / (pts[0].distanceTo(pts[1]) + pts[1].distanceTo(pts[2]) + pts[2].distanceTo(pts[3]));
     if (longPants) {
-      tube(mb(pantsTexM), pts, Rp, bn, { s0: 0.02, startBone: B.pelvis });
-      tube(mb(cloth(shade(bottomColor, 0.8))), pts, Rp.map(([a, b]) => [a + D.pad * 0.6, b + D.pad * 0.6]), bn, { s0: 0.92, s1: 1 }); // barra dobrada
+      tube(mb(pantsTexM), pts, shape(D.pad), bn, { clamp, segs: 26, steps: 9 });
+      tube(mb(cloth(shade(bottomColor, 0.8))), pts, shape(D.pad * 1.6), bn, { s0: 0.94, s1: 1, segs: 26 }); // barra dobrada
     } else {
-      tube(mb(skin), pts, R, bn, { s0: 0.22, s1: 1 });
+      // perna (pele) com o mesmo molde; bermuda por cima até perto do joelho. Com saia, a pele começa
+      // embaixo da saia (o quadril fica escondido).
+      tube(mb(skin), pts, shape(skirtLike ? -0.012 : 0), bn, { clamp, segs: 26, steps: 9, s0: skirtLike ? 0.22 : 0 });
       if (shorts) {
-        tube(mb(pantsTexM), pts, Rp.map(([a, b]) => [a + D.pad * 0.6, b + D.pad * 0.6]), bn, { s0: 0.02, s1: 0.5, startBone: B.pelvis });
-        tube(mb(cloth(shade(bottomColor, 0.8))), pts, Rp.map(([a, b]) => [a + D.pad, b + D.pad]), bn, { s0: 0.45, s1: 0.5 });
+        tube(mb(pantsTexM), pts, shape(D.pad), bn, { s1: kneeS - 0.06, clamp, segs: 26, steps: 9 });
+        tube(mb(cloth(shade(bottomColor, 0.8))), pts, shape(D.pad * 1.5), bn, { s0: kneeS - 0.1, s1: kneeS - 0.06, segs: 26 });
+      } else if (!skirtLike) {
+        tube(mb(pantsTexM), pts, shape(D.pad * 0.4), bn, { s1: 0.2, clamp, segs: 26 });
       }
-      tube(mb(cloth('#f8fafc')), pts, R.map(([a, b]) => [a + D.pad * 0.5, b + D.pad * 0.5]), bn, { s0: 0.8, s1: 1 }); // meia
-      tube(mb(cloth(s.shoes2)), pts, R.map(([a, b]) => [a + D.pad * 0.7, b + D.pad * 0.7]), bn, { s0: 0.8, s1: 0.83 }); // listra da meia
+      tube(mb(cloth('#f8fafc')), pts, shape(D.pad * 0.5), bn, { s0: 0.86, s1: 1, segs: 26 }); // meia
+      tube(mb(cloth(s.shoes2)), pts, shape(D.pad * 0.7), bn, { s0: 0.86, s1: 0.885, segs: 26 }); // listra da meia
     }
   }
-  const pel = P('pelvis');
-  // Quadril: arredondado, sem volume para trás
-  tube(mb(skirtLike ? cloth(bottomColor) : pantsTexM), [P('spine_01').add(V(0, 0, D.hipZ)), pel.clone().add(V(0, 0, D.hipZ + 0.008)), pel.clone().add(V(0, -D.hipDrop, D.hipZ + 0.01))], D.hip, [B.spine_01, B.pelvis, B.pelvis], { capEnd: true, front: V(0, 0, 1) });
+  // Fecha o "V" da frente do gancho (a camisa não aparece entre as pernas)
+  if (!skirtLike) {
+    const th = P('thigh_l');
+    const fr = D.leg[0][1] + D.hipPad + D.pad;
+    const fill = attach('pelvis', V(0, th.y + 0.01, th.z + D.hipZ * 0.6 + fr * 0.55));
+    const m = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 14), longPants || shorts ? pantsTexM : skin);
+    m.scale.set(fr * 0.55, fr * 0.95, fr * 0.5);
+    fill.add(m);
+  }
   if (skirtLike) {
     const len = (s.bottom.type === 'saia-longa' ? 0.62 : 0.45) * D.skirtK;
-    skirt(mb(new THREE.MeshStandardMaterial({ map: skirtTex(bottomColor), roughness: 0.78, side: THREE.DoubleSide })), pel.clone().add(V(0, 0.06 * D.skirtK, D.hipZ)), len, D.hip[1][0] + 0.02, D.hip[1][0] * 1.75, { pelvis: B.pelvis, thighL: B.thigh_l, thighR: B.thigh_r });
+    skirt(mb(new THREE.MeshStandardMaterial({ map: skirtTex(bottomColor), roughness: 0.78, side: THREE.DoubleSide })), pel.clone().add(V(0, 0.06 * D.skirtK, D.hipZ)), len, D.waistX + D.waistR[0] + 0.02, (D.waistX + D.waistR[0]) * 1.75, { pelvis: B.pelvis, thighL: B.thigh_l, thighR: B.thigh_r });
   }
   // Tronco (camisa) com barra mais larga embaixo
-  const torsoPts = [pel.clone().add(V(0, -0.02, D.hipZ)), P('spine_01').add(V(0, 0, D.hipZ * 0.5)), P('spine_02'), P('spine_03'), P('neck_01').add(V(0, -0.02, 0))];
+  const torsoPts = [pel.clone().add(V(0, D.shirtY, D.hipZ)), P('spine_01').add(V(0, 0, D.hipZ * 0.5)), P('spine_02'), P('spine_03'), P('neck_01').add(V(0, -0.02, 0))];
   const shirt = new THREE.MeshStandardMaterial({ map: shirtTex(s), roughness: 0.82 });
   tube(mb(shirt), torsoPts, D.torso, [B.pelvis, B.spine_01, B.spine_02, B.spine_03, B.neck_01], { capStart: true, capK: 0.12, capEnd: true, front: V(0, 0, 1), segs: 32 });
   const tucked = s.top.type === 'uniforme' || s.top.type === 'terno' || s.top.type === 'polo';
@@ -583,10 +611,10 @@ function buildCollar(attach, P, s, D, chibi) {
     const b = attach('pelvis', V(0, pel.y + 0.035, pel.z + D.hipZ + 0.008));
     const belt = new THREE.Mesh(new THREE.TorusGeometry(1, 0.018, 8, 36), toon('#4a2f17', { roughness: 0.5 }));
     belt.rotation.x = Math.PI / 2;
-    belt.scale.set(D.hip[0][0] + 0.004, D.hip[0][1] + 0.006, 1);
+    belt.scale.set(D.waistX + D.waistR[0] + 0.006, D.waistR[1] + 0.008, 1);
     b.add(belt);
     const buckle = new THREE.Mesh(new RoundedBoxGeometry(0.04, 0.03, 0.01, 2, 0.004), toon('#eab308', { roughness: 0.25, metalness: 0.7 }));
-    buckle.position.set(0, 0, D.hip[0][1] + 0.01);
+    buckle.position.set(0, 0, D.waistR[1] + 0.012);
     b.add(buckle);
   }
 }
