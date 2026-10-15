@@ -281,7 +281,7 @@ function beanTex(s, vWaist, vNeck) {
  */
 const STYLE = {
   surf: { scale: 1.0, headR: 0.19, eye: 0.21, shoe: 1.3, hand: 1.05 },
-  stumble: { scale: 0.62, headR: 0.3, eye: 0.25, shoe: 1.65, hand: 1.45 },
+  stumble: { scale: 0.62, headR: 0.27, eye: 0.26, shoe: 1.55, hand: 1.35 },
 };
 const SLEEVE = { camiseta: 'curta', polo: 'curta', uniforme: 'curta', 'camisa-aberta': 'curta', vestido: 'curta', regata: 'sem', manga: 'longa', moletom: 'longa', jaqueta: 'longa', jaleco: 'longa', terno: 'longa', xadrez: 'longa', colete: 'longa' };
 
@@ -335,25 +335,25 @@ export function buildAvatar(s, style = 'surf') {
     const shorts = s.bottom.type === 'bermuda';
     for (const side of [1, -1]) {
       const { pts, bn } = legs(side);
-      const R = [[0.088, 0.09], [0.07, 0.072], [0.056, 0.06]];
-      const Rp = R.map(([a, b]) => [a + 0.018, b + 0.018]); // calça larga
-      if (longPants) tube(mb(pants), pts, Rp, bn, { capStart: true, capEnd: false, startBone: B.pelvis });
+      const R = [[0.074, 0.074], [0.062, 0.064], [0.05, 0.054]];
+      const Rp = R.map(([a, b]) => [a + 0.01, b + 0.01]); // calça um pouco folgada
+      if (longPants) tube(mb(pants), pts, Rp, bn, { s0: 0.04, capEnd: false, startBone: B.pelvis });
       else {
         tube(mb(skin), pts, R, bn, { s0: 0.25, s1: 1, capEnd: false });
-        if (shorts) tube(mb(pants), pts, Rp.map(([a, b]) => [a + 0.006, b + 0.006]), bn, { s0: 0, s1: 0.48, capStart: true, startBone: B.pelvis });
+        if (shorts) tube(mb(pants), pts, Rp.map(([a, b]) => [a + 0.006, b + 0.006]), bn, { s0: 0.04, s1: 0.48, startBone: B.pelvis });
         tube(mb(cloth('#f8fafc')), pts, R.map(([a, b]) => [a + 0.006, b + 0.006]), bn, { s0: 0.82, s1: 1 }); // meia
       }
       if (longPants) tube(mb(cloth(shade(bottomColor, 0.82))), pts, Rp.map(([a, b]) => [a + 0.006, b + 0.006]), bn, { s0: 0.9, s1: 1 }); // barra
     }
     // Quadril (calça) e tronco (camisa)
     const pel = P('pelvis');
-    tube(mb(pants), [P('spine_01'), pel, pel.clone().add(V(0, -0.1, 0.01))], [[0.15, 0.112], [0.162, 0.12], [0.155, 0.112]], [B.spine_01, B.pelvis, B.pelvis], { capEnd: true, front: V(0, 0, 1) });
+    tube(mb(pants), [P('spine_01').add(V(0, 0, 0.012)), pel.clone().add(V(0, 0, 0.02)), pel.clone().add(V(0, -0.085, 0.022))], [[0.138, 0.098], [0.142, 0.094], [0.132, 0.086]], [B.spine_01, B.pelvis, B.pelvis], { capEnd: true, front: V(0, 0, 1) });
     if (['saia', 'saia-longa', 'vestido'].includes(s.bottom.type)) {
       const len = s.bottom.type === 'saia-longa' ? 0.62 : 0.45;
       skirt(mb(new THREE.MeshStandardMaterial({ color: bottomColor, roughness: 0.78, side: THREE.DoubleSide })), pel.clone().add(V(0, 0.06, 0)), len, 0.165, 0.27, { pelvis: B.pelvis, thighL: B.thigh_l, thighR: B.thigh_r });
     }
     const torsoPts = [pel.clone().add(V(0, -0.02, 0)), P('spine_01'), P('spine_02'), P('spine_03'), P('neck_01').add(V(0, -0.02, 0))];
-    const torsoR = [[0.158, 0.117], [0.152, 0.11], [0.165, 0.115], [0.19, 0.125], [0.11, 0.09]];
+    const torsoR = [[0.14, 0.1], [0.135, 0.095], [0.148, 0.1], [0.172, 0.108], [0.1, 0.082]];
     const shirt = new THREE.MeshStandardMaterial({ map: shirtTex(s), roughness: 0.8 });
     tube(mb(shirt), torsoPts, torsoR, [B.pelvis, B.spine_01, B.spine_02, B.spine_03, B.neck_01], { capEnd: true, front: V(0, 0, 1), segs: 28 });
     // Pescoço
@@ -375,15 +375,15 @@ export function buildAvatar(s, style = 'surf') {
     // ── Feijãozinho (corpo e cabeça num só)
     for (const side of [1, -1]) {
       const { pts, bn } = legs(side);
-      const R = [[0.11, 0.11], [0.1, 0.1], [0.09, 0.092]];
+      const R = [[0.095, 0.095], [0.088, 0.088], [0.08, 0.082]];
       const shorts = s.bottom.type === 'bermuda';
       tube(mb(shorts ? skin : pants), pts, R, bn, { s0: 0.3, s1: 1 });
       if (shorts) tube(mb(pants), pts, R.map(([a, b]) => [a + 0.01, b + 0.01]), bn, { s0: 0.3, s1: 0.55 });
     }
     const pel = P('pelvis');
     const head = P('Head');
-    const beanPts = [pel.clone().add(V(0, -0.24, 0.0)), pel, P('spine_01'), P('spine_02'), P('spine_03'), P('neck_01'), head, head.clone().add(V(0, 0.2, 0.005))];
-    const beanR = [[0.27, 0.25], [0.335, 0.3], [0.35, 0.31], [0.355, 0.315], [0.35, 0.31], [0.335, 0.3], [0.315, 0.29], [0.25, 0.235]];
+    const beanPts = [pel.clone().add(V(0, -0.15, 0.045)), pel.clone().add(V(0, 0, 0.035)), P('spine_01').add(V(0, 0, 0.015)), P('spine_02'), P('spine_03'), P('neck_01'), head, head.clone().add(V(0, 0.2, 0.005))];
+    const beanR = [[0.22, 0.19], [0.255, 0.225], [0.27, 0.245], [0.278, 0.25], [0.28, 0.252], [0.28, 0.255], [0.275, 0.255], [0.22, 0.21]];
     const beanB = [B.pelvis, B.pelvis, B.spine_01, B.spine_02, B.spine_03, B.neck_01, B.Head, B.Head];
     // altura (0..1 ao longo do feijão) da cintura e do pescoço, para pintar a roupa
     const Ls = [0];
@@ -395,7 +395,7 @@ export function buildAvatar(s, style = 'surf') {
     tube(mb(beanMat), beanPts, beanR, beanB, { capStart: true, capEnd: true, segs: 32, steps: 6 });
     if (['saia', 'saia-longa', 'vestido'].includes(s.bottom.type)) {
       // babado da saia
-      tube(mb(cloth(bottomColor)), [beanPts[0].clone().add(V(0, 0.07, 0)), beanPts[0].clone().add(V(0, -0.02, 0))], [[0.31, 0.29], [0.34, 0.32]], [B.pelvis, B.pelvis], { segs: 32 });
+      tube(mb(cloth(bottomColor)), [beanPts[0].clone().add(V(0, 0.07, 0)), beanPts[0].clone().add(V(0, -0.02, 0))], [[0.25, 0.235], [0.28, 0.265]], [B.pelvis, B.pelvis], { segs: 32 });
     }
     for (const side of [1, -1]) {
       const { pts, bn } = arms(side);
@@ -448,7 +448,7 @@ export function buildAvatar(s, style = 'surf') {
   const acc = s.acc?.type;
   const chest = P('spine_03');
   if (acc === 'mochila') {
-    const g = attach('spine_02', P('spine_02').add(V(0, 0.02, stumble ? -0.33 : -0.15)));
+    const g = attach('spine_02', P('spine_02').add(V(0, 0.02, stumble ? -0.29 : -0.13)));
     const k = stumble ? 1.5 : 1;
     const bag = new THREE.Mesh(new RoundedBoxGeometry(0.26 * k, 0.32 * k, 0.13 * k, 4, 0.05 * k), cloth(s.acc.color));
     bag.castShadow = true;
@@ -458,7 +458,7 @@ export function buildAvatar(s, style = 'surf') {
     g.add(pocket);
   }
   if (acc === 'lenco' || acc === 'cachecol') {
-    const k = stumble ? 1.75 : 1;
+    const k = stumble ? 1.5 : 0.92;
     const g = attach('spine_03', V(chest.x, stumble ? P('neck_01').y - 0.05 : chest.y + 0.12, chest.z));
     const ring = new THREE.Mesh(new THREE.TorusGeometry(0.1 * k, 0.03 * k, 10, 28), cloth(s.acc.color));
     ring.rotation.x = Math.PI / 2;
