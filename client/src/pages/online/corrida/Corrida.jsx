@@ -1,16 +1,60 @@
 // Corrida DBV: tela do jogo (menu, escolha do personagem, partida em 3D e fim de corrida).
+// Funciona sem internet; o ranking só vale quando a corrida termina com internet.
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Coins, Flag, Footprints, Play, RotateCcw, Trophy, Volume2, VolumeX, WifiOff } from 'lucide-react';
 import { api } from '../../../api.js';
-import { Button, Card, PageHeader, Spinner } from '../../../ui.jsx';
+import { Button, Spinner } from '../../../ui.jsx';
 import { useOnline as useInternet } from '../../../offline.js';
 import { isMuted, onMuteChange, setMuted, sfx, startMusic, stopMusic, unlockAudio } from '../../games/audio.js';
-import { createRunner } from './engine.js';
+import { createRunner, SKATE_TIME, SKATE_WAIT } from './engine.js';
 import './corrida.css';
 
 const readGender = () => { try { return window.localStorage.getItem('dbv-corrida-menina') === '1'; } catch { return false; } };
 const saveGender = (f) => { try { window.localStorage.setItem('dbv-corrida-menina', f ? '1' : '0'); } catch { /* sem armazenamento */ } };
+
+/** Desenho do personagem para o botão de escolha. */
+function Face({ female }) {
+  return (
+    <svg viewBox="0 0 64 64" width="54" height="54" aria-hidden="true">
+      <circle cx="32" cy="58" r="22" fill="#c9a66b" />
+      <path d="M20 44 L32 58 L44 44 Z" fill="#facc15" />
+      <circle cx="32" cy="30" r="15" fill={female ? '#f6c9a0' : '#d79a6b'} />
+      {female ? (
+        <>
+          <path d="M16 30 Q16 12 32 12 Q48 12 48 30 Q44 20 32 19 Q20 20 16 30Z" fill="#3b2314" />
+          <ellipse cx="48" cy="36" rx="5" ry="10" fill="#3b2314" />
+          <ellipse cx="33" cy="12" rx="14" ry="5" fill="#14532d" />
+        </>
+      ) : (
+        <>
+          <path d="M17 27 Q18 13 32 13 Q46 13 47 27 Z" fill="#15803d" />
+          <rect x="30" y="14" width="18" height="4" rx="2" fill="#14532d" />
+        </>
+      )}
+      <circle cx="26.5" cy="31" r="2.6" fill="#1f2937" />
+      <circle cx="37.5" cy="31" r="2.6" fill="#1f2937" />
+      <path d="M26 37 Q32 42 38 37" stroke="#7f1d1d" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+/** Botão do skate: mostra o tempo que falta ou a espera para usar de novo. */
+function SkateButton({ skate, wait, onUse }) {
+  const active = skate > 0;
+  const k = active ? skate / SKATE_TIME : wait > 0 ? 1 - wait / SKATE_WAIT : 1;
+  return (
+    <button type="button" className={'corrida-skate' + (active ? ' on' : wait > 0 ? ' wait' : '')} onPointerDown={(e) => { e.stopPropagation(); onUse(); }}>
+      <svg viewBox="0 0 64 64" className="ring"><circle cx="32" cy="32" r="29" pathLength="100" strokeDasharray={`${k * 100} 100`} /></svg>
+      <svg viewBox="0 0 64 64" width="34" height="34" aria-hidden="true">
+        <rect x="8" y="26" width="48" height="10" rx="5" fill="#1d4ed8" />
+        <rect x="12" y="28" width="40" height="3" rx="1.5" fill="#facc15" />
+        <circle cx="18" cy="42" r="5" fill="#f8fafc" /><circle cx="46" cy="42" r="5" fill="#f8fafc" />
+      </svg>
+      <small>{active ? `${Math.ceil(skate)}s` : wait > 0 ? `${Math.ceil(wait)}s` : 'Skate'}</small>
+    </button>
+  );
+}
 
 export default function CorridaPage({ base }) {
   const nav = useNavigate();
@@ -19,11 +63,12 @@ export default function CorridaPage({ base }) {
   const game = useRef(null);
   const [female, setFemale] = useState(readGender);
   const [phase, setPhase] = useState('menu'); // menu | story | run | over
-  const [hud, setHud] = useState({ coins: 0, dist: 0 });
+  const [hud, setHud] = useState({ coins: 0, dist: 0, skate: 0, skateWait: 0 });
   const [warn, setWarn] = useState('');
   const [result, setResult] = useState(null);
   const [mine, setMine] = useState(null);
   const [round, setRound] = useState(0);
+  const [ready, setReady] = useState(false);
   const [mute, setMute] = useState(isMuted());
   useEffect(() => onMuteChange(setMute), []);
 
@@ -39,13 +84,11 @@ export default function CorridaPage({ base }) {
         if (h.warn) { setWarn(h.warn); setTimeout(() => setWarn(''), 1600); return; }
         setHud(h);
       },
-      onSound: (n) => {
-        if (n === 'whistle') sfx('error');
-        else sfx(n);
-      },
+      onSound: (n) => sfx(n),
       onEnd: async (r) => {
         stopMusic();
         setPhase('over');
+        if (!window.navigator.onLine) { setResult({ ...r, offline: true }); return; }
         setResult({ ...r, saving: true });
         try {
           const [a, b] = await Promise.all([
@@ -56,11 +99,12 @@ export default function CorridaPage({ base }) {
           if (a.record || b.record) sfx('record');
           loadMine();
         } catch (e) {
-          setResult({ ...r, error: e.offline ? 'Sem internet: a corrida não entrou no ranking.' : 'Não deu para salvar.' });
+          setResult({ ...r, offline: !!e.offline, error: e.offline ? null : 'Não deu para salvar.' });
         }
       },
     });
     game.current = g;
+    setReady(true);
     return () => { g.dispose(); game.current = null; stopMusic(); };
   }, [round]);
 
@@ -75,6 +119,7 @@ export default function CorridaPage({ base }) {
       const g = game.current;
       if (!g || phase !== 'run') return;
       const map = { ArrowLeft: 'left', a: 'left', ArrowRight: 'right', d: 'right', ArrowUp: 'up', w: 'up', ' ': 'up', ArrowDown: 'down', s: 'down' };
+      if (e.key === 'e' || e.key === 'Shift') { g.useSkate(); return; }
       const a = map[e.key];
       if (a) { e.preventDefault(); g.input[a](); }
     };
@@ -82,79 +127,87 @@ export default function CorridaPage({ base }) {
     return () => window.removeEventListener('keydown', k);
   }, [phase]);
 
-  // Deslizar o dedo
+  // Deslizar o dedo; dois toques rápidos = skate
   const touch = useRef(null);
-  const onDown = (e) => { touch.current = { x: e.clientX, y: e.clientY, done: false }; };
+  const lastTap = useRef(0);
+  const onDown = (e) => { touch.current = { x: e.clientX, y: e.clientY, done: false, t: Date.now() }; };
   const onMove = (e) => {
     const t = touch.current;
     if (!t || t.done || phase !== 'run') return;
     const dx = e.clientX - t.x;
     const dy = e.clientY - t.y;
-    if (Math.max(Math.abs(dx), Math.abs(dy)) < 28) return;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < 26) return;
     t.done = true;
     const g = game.current;
     if (Math.abs(dx) > Math.abs(dy)) g?.input[dx < 0 ? 'left' : 'right']();
     else g?.input[dy < 0 ? 'up' : 'down']();
   };
-  const onUp = () => { touch.current = null; };
+  const onUp = () => {
+    const t = touch.current;
+    touch.current = null;
+    if (!t || t.done || phase !== 'run' || Date.now() - t.t > 250) return;
+    if (Date.now() - lastTap.current < 320) game.current?.useSkate();
+    lastTap.current = Date.now();
+  };
 
   const pickGender = (f) => { setFemale(f); saveGender(f); game.current?.setFemale(f); sfx('tap'); };
   const play = () => {
     unlockAudio();
     setResult(null);
-    setHud({ coins: 0, dist: 0 });
+    setHud({ coins: 0, dist: 0, skate: 0, skateWait: 0 });
     setPhase('story');
-    setTimeout(() => { setPhase('run'); game.current?.start(); startMusic('corrida'); }, 2600);
+    game.current?.story();
+    setTimeout(() => { setPhase('run'); game.current?.start(); startMusic('corrida'); }, 2700);
   };
-  const again = () => { setRound((r) => r + 1); setPhase('menu'); setTimeout(play, 50); };
+  const again = () => { setReady(false); setRound((r) => r + 1); setPhase('menu'); setTimeout(play, 120); };
 
   const wallet = mine?.['corrida-moedas']?.total || 0;
   const bestCoins = mine?.['corrida-moedas']?.best || 0;
   const bestDist = mine?.['corrida-distancia']?.best || 0;
 
-  if (!internet) return <><PageHeader title="Corrida DBV" /><Card className="center"><WifiOff size={30} /><p>A Corrida DBV precisa de internet.</p></Card></>;
-
   return (
     <div className={'corrida ' + phase}>
-      <div className="corrida-stage" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp}>
+      <div className="corrida-stage" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={() => { touch.current = null; }}>
         <canvas key={round} ref={canvasRef} className="corrida-canvas" />
-        {!game.current && phase === 'menu' && <div className="corrida-loading"><Spinner /></div>}
+        {!ready && <div className="corrida-loading"><Spinner /></div>}
 
         {(phase === 'run' || phase === 'story') && (
           <div className="corrida-hud">
-            <span className="corrida-pill"><Coins size={16} /> {hud.coins}</span>
+            <span className="corrida-pill gold"><Coins size={16} /> {hud.coins}</span>
             <span className="corrida-pill"><Footprints size={16} /> {hud.dist} m</span>
             <span className="grow" />
-            <button type="button" className="corrida-btn" onClick={() => { unlockAudio(); setMuted(!mute); }} aria-label="Som">{mute ? <VolumeX size={18} /> : <Volume2 size={18} />}</button>
-            <button type="button" className="corrida-btn" onClick={() => game.current?.giveUp()}><Flag size={16} /> Desistir</button>
+            <button type="button" className="corrida-btn" onPointerDown={(e) => e.stopPropagation()} onClick={() => { unlockAudio(); setMuted(!mute); }} aria-label="Som">{mute ? <VolumeX size={18} /> : <Volume2 size={18} />}</button>
+            <button type="button" className="corrida-btn" onPointerDown={(e) => e.stopPropagation()} onClick={() => game.current?.giveUp()}><Flag size={16} /> Desistir</button>
           </div>
         )}
+        {phase === 'run' && <SkateButton skate={hud.skate} wait={hud.skateWait} onUse={() => game.current?.useSkate()} />}
         {phase === 'run' && hud.close && !warn && <div className="corrida-police">O guarda está perto!</div>}
         {warn && <div className="corrida-warn">{warn}</div>}
 
         {phase === 'story' && (
           <div className="corrida-story">
-            <p>Você acabou de pintar o símbolo dos Desbravadores no muro da estação...</p>
+            <p>Você terminou de pintar o símbolo dos Desbravadores no trem...</p>
             <b>O guarda viu! CORRA!</b>
           </div>
         )}
 
         {phase === 'menu' && (
           <div className="corrida-menu">
-            <h1>Corrida DBV</h1>
+            <h1><span>Corrida</span> DBV</h1>
             <div className="corrida-gender">
-              <button type="button" className={!female ? 'on' : ''} onClick={() => pickGender(false)}>Desbravador</button>
-              <button type="button" className={female ? 'on' : ''} onClick={() => pickGender(true)}>Desbravadora</button>
+              <button type="button" className={!female ? 'on' : ''} onClick={() => pickGender(false)}><Face /> <b>Desbravador</b></button>
+              <button type="button" className={female ? 'on' : ''} onClick={() => pickGender(true)}><Face female /> <b>Desbravadora</b></button>
             </div>
             <div className="corrida-stats">
               <span><Coins size={14} /> {wallet} desbrava coins</span>
               <span><Trophy size={14} /> Recordes: {bestCoins} moedas · {bestDist} m</span>
+              {!internet && <span className="off"><WifiOff size={14} /> Sem internet: dá para jogar, mas não vale para o ranking.</span>}
             </div>
-            <Button block onClick={play}><Play size={18} /> Correr</Button>
-            <p className="small corrida-help">Deslize: ← → troca de trilho · ↑ pula · ↓ rola. No computador: setas ou W A S D.</p>
+            <button type="button" className="corrida-go" onClick={play} disabled={!ready}><Play size={22} /> Correr</button>
+            <p className="small corrida-help">Deslize: ← → troca de trilho · ↑ pula · ↓ rola · dois toques = skate. No computador: setas ou W A S D e E para o skate.</p>
             <div className="corrida-row">
               <Button small variant="secondary" onClick={() => nav(`${base}/jogos`)}><ArrowLeft size={14} /> Voltar</Button>
-              <Button small variant="secondary" onClick={() => nav(`${base}/jogos?aba=ranking&jogo=corrida-moedas`)}><Trophy size={14} /> Ranking</Button>
+              <Button small variant="secondary" disabled={!internet} onClick={() => nav(`${base}/jogos?aba=ranking&jogo=corrida-moedas`)}><Trophy size={14} /> Ranking</Button>
             </div>
           </div>
         )}
@@ -166,6 +219,7 @@ export default function CorridaPage({ base }) {
               <h2>O guarda pegou você!</h2>
               <p><Coins size={16} /> <b>{result.coins}</b> moedas · <Footprints size={16} /> <b>{result.dist}</b> m</p>
               {result.saving && <p className="small muted">Salvando...</p>}
+              {result.offline && <p className="small"><WifiOff size={13} /> Sem internet: esta corrida não entrou no ranking.</p>}
               {result.error && <p className="small">{result.error}</p>}
               {result.coinsRec && (
                 <p className="small">
@@ -174,8 +228,8 @@ export default function CorridaPage({ base }) {
                 </p>
               )}
               <Button block onClick={again}><RotateCcw size={16} /> Jogar de novo</Button>
-              <Button block variant="secondary" onClick={() => nav(`${base}/jogos?aba=ranking&jogo=corrida-moedas`)}><Trophy size={16} /> Ver ranking</Button>
-              <Button block variant="secondary" onClick={() => { setRound((r) => r + 1); setPhase('menu'); }}><ArrowLeft size={16} /> Voltar</Button>
+              <Button block variant="secondary" disabled={!internet} onClick={() => nav(`${base}/jogos?aba=ranking&jogo=corrida-moedas`)}><Trophy size={16} /> Ver ranking</Button>
+              <Button block variant="secondary" onClick={() => { setReady(false); setRound((r) => r + 1); setPhase('menu'); }}><ArrowLeft size={16} /> Voltar</Button>
             </div>
           </div>
         )}

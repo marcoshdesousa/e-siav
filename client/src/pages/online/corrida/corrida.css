@@ -24,3 +24,20 @@
 .corrida-stats span { display: inline-flex; gap: .3rem; align-items: center; }
 .corrida-help { color: #475569; text-align: center; margin: 0; }
 .corrida-row { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+.corrida-pill.gold { color: #fde047; }
+.corrida-menu h1 span { color: #ea580c; }
+.corrida-gender button { display: flex; flex-direction: column; align-items: center; gap: .2rem; padding: .5rem .3rem; border-radius: 16px; }
+.corrida-gender button b { font-size: .85rem; }
+.corrida-gender button.on { background: linear-gradient(135deg, #1e3a8a, #2563eb); box-shadow: 0 4px 0 #172554; transform: translateY(-2px); }
+.corrida-gender button:not(.on) { box-shadow: 0 3px 0 #cbd5e1; }
+.corrida-stats .off { color: #b45309; font-size: .78rem; text-align: center; }
+.corrida-go { display: flex; align-items: center; justify-content: center; gap: .5rem; border: 0; border-radius: 16px; padding: .85rem; font-size: 1.3rem; font-weight: 900; color: #fff; background: linear-gradient(135deg, #f97316, #dc2626); box-shadow: 0 5px 0 #7f1d1d; cursor: pointer; font-family: var(--font); }
+.corrida-go:active { transform: translateY(3px); box-shadow: 0 2px 0 #7f1d1d; }
+.corrida-go:disabled { opacity: .6; }
+.corrida-skate { position: absolute; right: 14px; bottom: calc(22px + env(safe-area-inset-bottom)); width: 78px; height: 78px; border-radius: 50%; border: 0; background: rgba(15, 23, 42, .7); color: #fff; display: grid; place-items: center; align-content: center; cursor: pointer; font-family: var(--font); }
+.corrida-skate small { font-weight: 900; font-size: .72rem; margin-top: -4px; }
+.corrida-skate .ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.corrida-skate .ring circle { fill: none; stroke: #38bdf8; stroke-width: 5; stroke-linecap: round; }
+.corrida-skate.on { background: rgba(29, 78, 216, .85); animation: corrida-pulse .5s infinite alternate; }
+.corrida-skate.wait { opacity: .7; }
+.corrida-skate.wait .ring circle { stroke: #94a3b8; }

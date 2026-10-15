@@ -83,9 +83,15 @@ const SFX = {
   win: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, i * 0.09, 0.16, { vol: 0.2 })),
   lose: () => [392, 330, 262, 196].forEach((f, i) => tone(f, i * 0.12, 0.2, { type: 'triangle', vol: 0.22 })),
   record: () => [523, 659, 784, 659, 784, 1047].forEach((f, i) => tone(f, i * 0.08, 0.14, { vol: 0.2 })),
+  whistle: () => { for (let k = 0; k < 2; k++) { tone(2600, k * 0.32, 0.26, { type: 'sine', vol: 0.18, to: 2450 }); tone(2690, k * 0.32, 0.26, { type: 'sine', vol: 0.1 }); } },
+  whoosh: () => noise(0, 0.25, 0.12),
+  crash: () => { noise(0, 0.35, 0.45); tone(120, 0, 0.3, { type: 'sawtooth', vol: 0.2, to: 40 }); },
+  explode: () => { noise(0, 0.6, 0.5); tone(90, 0, 0.5, { type: 'square', vol: 0.18, to: 30 }); },
+  skate: () => [392, 523, 659, 784].forEach((f, i) => tone(f, i * 0.05, 0.12, { type: 'triangle', vol: 0.18 })),
+  spray: () => noise(0, 0.5, 0.08),
 };
 
-/** Efeito sonoro: tap, move, flip, point, coin, jump, shoot, pop, hit, error, win, lose, record. */
+/** Efeito sonoro: tap, move, flip, point, coin, jump, shoot, pop, hit, error, win, lose, record, whistle, whoosh, crash, explode, skate, spray. */
 export function sfx(name) {
   try { SFX[name]?.(); } catch { /* sem som */ }
 }
