@@ -1,7 +1,7 @@
 // Dados internos de um clube (membros, unidades e fichas). Usado pelo Sistema do Clube
 // (pode editar) e pelo Administrador Geral (só visualiza).
 import { all, get } from './db.js';
-import { ageFrom, memberKind, roleOf } from './util.js';
+import { ageFrom, memberKind, roleOf, cargoOf } from './util.js';
 import { getFicha } from './ficha.js';
 
 export function listMembers(clubId) {
@@ -14,6 +14,7 @@ export function listMembers(clubId) {
     m.age = ageFrom(m.birth_date);
     m.kind = memberKind(m.birth_date);
     m.role = roleOf(m.kind, m.cargo);
+    m.cargo = cargoOf(m.kind, m.cargo);
     // Sem ficha nem inscrição (o cadastro completo fica no SGC).
     m.pending_reason = null;
     m.outdated = false;

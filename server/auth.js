@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { get, run, DATA_DIR } from './db.js';
-import { fail, memberKind, roleOf } from './util.js';
+import { fail, memberKind, roleOf, cargoOf } from './util.js';
 import { pendingReason, waitingMessage } from './memberStatus.js';
 
 function loadSecret() {
@@ -63,7 +63,8 @@ export function loadActor(type, id) {
     // Pendente entra no app, mas só vê a mensagem de espera (nada de pagamento).
     const waiting = m.status === 'pendente' ? waitingMessage(pendingReason(m)) : null;
     const { status: _s, terms_token: _t, approved_at: _a, cleared_year: _c, ...rest } = m;
-    return { type, ...rest, waiting, kind: memberKind(m.birth_date), role: roleOf(memberKind(m.birth_date), m.cargo) };
+    const kind = memberKind(m.birth_date);
+    return { type, ...rest, cargo: cargoOf(kind, rest.cargo), waiting, kind, role: roleOf(kind, m.cargo) };
   }
   return null;
 }

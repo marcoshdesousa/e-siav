@@ -25,6 +25,8 @@ import supportRoutes from './routes/support.js';
 import gameRoutes from './routes/games.js';
 import albumRoutes from './routes/albums.js';
 import paymentRoutes from './routes/payments.js';
+import learningRoutes from './routes/learning.js';
+import { startAudioGenerator } from './bible.js';
 import { startPaymentSweep } from './payments.js';
 import { syncCatalog } from './catalog.js';
 import { createInitialAdmin, resetClubsForDbvOnce, resetToDemoClubsOnce, resetToTestClubsOnce, giftTestPacksOnce, seed } from './seed.js';
@@ -50,6 +52,10 @@ giftTestPacksOnce();
 
 syncCatalog();
 startPaymentSweep();
+// Áudio do Ano Bíblico: preparado aos poucos, em segundo plano (no ar, ou com BIBLE_AUDIO=1).
+if (process.env.BIBLE_AUDIO === '1' || (process.env.NODE_ENV === 'production' && process.env.BIBLE_AUDIO !== '0')) {
+  setTimeout(() => startAudioGenerator().catch((e) => console.error('[ano bíblico] áudio:', e.message)), 60_000).unref();
+}
 
 const app = express();
 app.disable('x-powered-by');
@@ -76,7 +82,7 @@ if (MANUTENCAO) {
 
 const api = express.Router();
 api.get('/health', (_req, res) => res.json({ ok: true }));
-for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, transferRoutes, clubToolRoutes, supportRoutes, gameRoutes, albumRoutes, paymentRoutes]) api.use(r);
+for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, transferRoutes, clubToolRoutes, supportRoutes, gameRoutes, albumRoutes, paymentRoutes, learningRoutes]) api.use(r);
 api.use((_req, _res, next) => next(new HttpError(404, 'Rota não encontrada')));
 app.use('/api', api);
 

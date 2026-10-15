@@ -144,3 +144,14 @@ As telas mostradas no celular da página de entrada ficam em `client/public/show
 - O aviso da SyncPay (webhook) vai para `https://appdodbv.onrender.com/api/pagamentos/aviso` e só faz o app conferir na hora. Se o endereço do site mudar, defina `SITE_URL`.
 - No painel da SyncPay, autorize os IPs de saída do Render (Render → Connect → Outbound).
 - Sem as chaves da SyncPay, vale o Pix manual (chave Pix em Admin → Pagamentos → Configurar Pix) e a equipe confirma cada pagamento.
+
+## Aprendizagem Diária (Ano Bíblico e Bom de Bíblia)
+
+- **Texto:** Almeida 1911 Atualizada Livre (JFAAL, licença MIT) em `server/data/biblia-jfaal.json`.
+- **Plano:** `server/data/ano-biblico-2027.json`, 275 dias de 01/03/2027 a 30/11/2027, com os capítulos de cada dia equilibrados pelo tamanho do texto. Para testar antes, o admin muda a data de início em **Admin → Aprendizagem Diária → Ajustes**.
+- **Quizzes:** 5 perguntas por dia (`server/data/quiz-ano-biblico/`). O dia fica concluído com 3 acertos, e cada dia concluído dá 1 pacotinho do Álbum Bíblico. Só conta para a sequência quando é feito na própria data.
+- **Bom de Bíblia:** 100 fases de 10 perguntas (`server/data/bom-de-biblia/`), com 15 segundos por pergunta. Passa de fase com 7 acertos.
+- **Áudio:** voz Piper (grátis, roda no próprio servidor).
+  - Na primeira vez, o programa e a voz são baixados para `DATA_DIR/piper`.
+  - Depois disso, o servidor prepara sozinho, em segundo plano, um MP3 por capítulo em `DATA_DIR/biblia-audio`, começando pela leitura de hoje. São cerca de 1 GB para a Bíblia inteira, que fica no disco permanente.
+  - Para desligar, use `BIBLE_AUDIO=0`.

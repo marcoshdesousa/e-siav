@@ -784,6 +784,26 @@ function migrate() {
     stickers TEXT NOT NULL,
     created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
   )`);
+  // Aprendizagem Diária. Ano Bíblico: um registro por dia do plano (melhor nota do quiz, quando
+  // concluiu e se foi no dia certo, que é o que conta para a sequência).
+  db.exec(`CREATE TABLE IF NOT EXISTS bible_progress (
+    member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    day INTEGER NOT NULL,
+    best INTEGER NOT NULL DEFAULT 0,
+    attempts INTEGER NOT NULL DEFAULT 0,
+    completed_at TEXT,
+    on_time INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (member_id, day)
+  )`);
+  // Bom de Bíblia: melhor nota de cada fase (passa de fase com 7 de 10).
+  db.exec(`CREATE TABLE IF NOT EXISTS bdb_progress (
+    member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    phase INTEGER NOT NULL,
+    best INTEGER NOT NULL DEFAULT 0,
+    attempts INTEGER NOT NULL DEFAULT 0,
+    passed_at TEXT,
+    PRIMARY KEY (member_id, phase)
+  )`);
   // Pix automático (SyncPay): identificador da cobrança, código e quem pagou.
   add('sticker_orders', 'identifier', 'TEXT');
   add('sticker_orders', 'pix_code', 'TEXT');

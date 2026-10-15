@@ -1,7 +1,7 @@
-// Mini jogos dos membros: lista de jogos, tela de cada jogo e ranking geral de cada um.
+// Jogos dos membros (jogos grandes + mini-jogos): lista de jogos, tela de cada jogo e ranking geral de cada um.
 import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Flag, Play, RotateCcw, Trophy, Volume2, VolumeX } from 'lucide-react';
+import { ArrowLeft, Flag, Keyboard, Layers, Lightbulb, Smartphone, Target, Pickaxe, PersonStanding, Play, RotateCcw, TrainFront, Trophy, Volume2, VolumeX } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Button, Card, Loading, PageHeader, Section, Spinner, Tabs, useLoad } from '../../ui.jsx';
@@ -9,6 +9,7 @@ import { RankingTable } from '../Ranking.jsx';
 import { GAMES, gameById, gameComponent } from './games.js';
 import { isMuted, onMuteChange, setMuted, sfx, startMusic, stopMusic, unlockAudio } from './audio.js';
 import { useOnline } from '../../offline.js';
+import TUTORIALS from './tutorials.json';
 import './games.css';
 
 const valueLabel = (g) => (g.mode === 'sum' ? 'Total de pontos' : 'Recorde');
@@ -34,18 +35,79 @@ function GameRanking({ game, base, limit }) {
   );
 }
 
-/** Lista de jogos + aba de rankings (cada jogo tem o seu). */
-export function GamesHub({ base }) {
-  const [tab, setTab] = useState('jogos');
+/** Jogos grandes (online). Ficam "em breve" até cada um ficar pronto. */
+export const BIG_GAMES = [
+  { id: 'uno', name: 'Uno DBV', hint: 'Cartas online, 2 a 6 jogadores, com chat de voz', icon: Layers, ranks: [['vitorias', 'Vitórias']] },
+  { id: 'corrida', name: 'Corrida DBV', hint: 'Corra pelos trilhos, fuja do guarda e junte desbrava coins', icon: TrainFront, ranks: [['moedas', 'Mais moedas'], ['distancia', 'Maior distância']] },
+  { id: 'stumble', name: 'Stumble DBV', hint: 'Até 10 jogadores em fases malucas. Só o 1º vence', icon: PersonStanding, ranks: [['vitorias', 'Vitórias']] },
+  { id: 'craft', name: 'DesbravaCraft', hint: 'Construa o seu mundo sozinho ou com até 10 amigos', icon: Pickaxe, ranks: [] },
+];
+
+function BigGames() {
+  return (
+    <div className="big-games">
+      {BIG_GAMES.map((g) => (
+        <div key={g.id} className="big-game soon">
+          <span className="big-game-ico"><g.icon size={34} /></span>
+          <div className="grow">
+            <b>{g.name}</b>
+            <small>{g.hint}</small>
+          </div>
+          <span className="chip">Em breve</span>
+        </div>
+      ))}
+      <p className="small muted center">Os jogos grandes precisam de internet (o DesbravaCraft terá também um mundo offline).</p>
+    </div>
+  );
+}
+
+/** Rankings: primeiro escolhe Mini-jogos ou Jogos, depois o jogo. */
+function GamesRankings({ base, online }) {
+  const [kind, setKind] = useState('mini');
   const [rankGame, setRankGame] = useState(GAMES[0].id);
+  const ranked = BIG_GAMES.filter((g) => g.ranks.length);
+  const [big, setBig] = useState(ranked[0].id);
+  const bigGame = ranked.find((g) => g.id === big);
+  return (
+    <>
+      <div className="seg games-rank-kind" role="tablist">
+        <button type="button" className={kind === 'mini' ? 'active' : ''} onClick={() => setKind('mini')}>Mini-jogos</button>
+        <button type="button" className={kind === 'big' ? 'active' : ''} onClick={() => setKind('big')}>Jogos</button>
+      </div>
+      {kind === 'mini' ? (
+        <>
+          <select value={rankGame} onChange={(e) => setRankGame(e.target.value)} aria-label="Jogo">
+            {GAMES.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
+          </select>
+          <p className="small muted">{gameById(rankGame).mode === 'sum' ? 'Os pontos de todas as partidas vão somando.' : 'Vale a melhor partida de cada um.'} Ranking geral de todos os membros.</p>
+          {online ? <GameRanking key={rankGame} game={gameById(rankGame)} base={base} /> : <Card className="small center">Os rankings precisam de internet. Sem internet, dá para jogar, mas as partidas não entram no ranking.</Card>}
+        </>
+      ) : (
+        <>
+          <select value={big} onChange={(e) => setBig(e.target.value)} aria-label="Jogo">
+            {ranked.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
+          </select>
+          <p className="small muted">{bigGame.ranks.map((r) => r[1]).join(' · ')}</p>
+          <Card className="small center">O ranking de {bigGame.name} começa quando o jogo for lançado.</Card>
+        </>
+      )}
+    </>
+  );
+}
+
+/** Aba Jogos: jogos grandes, mini-jogos e rankings. */
+export function GamesHub({ base }) {
+  const [tab, setTab] = useState(() => { try { return window.sessionStorage.getItem('dbv-games-tab') || 'mini'; } catch { return 'mini'; } });
+  const pick = (t) => { setTab(t); try { window.sessionStorage.setItem('dbv-games-tab', t); } catch { /* sem armazenamento */ } };
   const mine = useLoad(() => api.get('/jogos/meus'));
   const my = mine.data || {};
   const online = useOnline();
   return (
     <>
-      <PageHeader title="Mini jogos" subtitle={`${GAMES.length} jogos para jogar, fazer pontos e subir no ranking de cada um. Sem anúncios!`} />
-      <Tabs tabs={[['jogos', 'Jogos'], ['ranking', 'Rankings']]} value={tab} onChange={setTab} />
-      {tab === 'jogos' ? (
+      <PageHeader title="Jogos" subtitle={`Jogos online e ${GAMES.length} mini-jogos para fazer pontos e subir no ranking. Sem anúncios!`} />
+      <Tabs tabs={[['jogos', 'Jogos'], ['mini', 'Mini-jogos'], ['ranking', 'Rankings']]} value={tab} onChange={pick} />
+      {tab === 'jogos' && <BigGames />}
+      {tab === 'mini' && (
         <div className="games-grid">
           {GAMES.map((g) => (
             <Link key={g.id} to={`${base}/jogos/${g.id}`} className="game-tile">
@@ -55,16 +117,25 @@ export function GamesHub({ base }) {
             </Link>
           ))}
         </div>
-      ) : (
-        <>
-          <select value={rankGame} onChange={(e) => setRankGame(e.target.value)} aria-label="Jogo">
-            {GAMES.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
-          </select>
-          <p className="small muted">{gameById(rankGame).mode === 'sum' ? 'Os pontos de todas as partidas vão somando.' : 'Vale a melhor partida de cada um.'} Ranking geral de todos os membros.</p>
-          {online ? <GameRanking key={rankGame} game={gameById(rankGame)} base={base} /> : <Card className="small center">Os rankings precisam de internet. Sem internet, dá para jogar, mas as partidas não entram no ranking.</Card>}
-        </>
       )}
+      {tab === 'ranking' && <GamesRankings base={base} online={online} />}
     </>
+  );
+}
+
+/** Tutorial do jogo: objetivo, controles no celular e no computador, pontos e dicas. */
+function Tutorial({ game }) {
+  const t = TUTORIALS[game.id];
+  if (!t) return <p>{game.how}</p>;
+  return (
+    <div className="tutorial">
+      <h3><Target size={16} /> Objetivo</h3>
+      <p>{t.objetivo}</p>
+      {t.celular?.length > 0 && <><h3><Smartphone size={16} /> No celular</h3><ul>{t.celular.map((x) => <li key={x}>{x}</li>)}</ul></>}
+      {t.computador?.length > 0 && <><h3><Keyboard size={16} /> No computador</h3><ul>{t.computador.map((x) => <li key={x}>{x}</li>)}</ul></>}
+      {t.pontos && <><h3><Trophy size={16} /> Pontos</h3><p>{t.pontos}</p></>}
+      {t.dicas?.length > 0 && <><h3><Lightbulb size={16} /> Dicas</h3><ul>{t.dicas.map((x) => <li key={x}>{x}</li>)}</ul></>}
+    </div>
   );
 }
 
@@ -200,11 +271,14 @@ export function GamePage({ base }) {
 
       {phase === 'intro' && (
         <Card className="game-intro">
-          <p>{game.how}</p>
+          <Tutorial game={game} />
           {online
             ? <p className="small muted">{game.mode === 'sum' ? 'Cada partida soma pontos no seu total.' : 'Vale a sua melhor partida no ranking.'} Se desistir, os pontos que você fez contam.</p>
             : <p className="small offline-note">Sem internet: dá para jogar, mas a partida não entra no ranking.</p>}
-          <Button block onClick={start}><Play size={18} /> Jogar</Button>
+          <div className="game-intro-actions">
+            <Button variant="secondary" onClick={() => nav(`${base}/jogos`)}><ArrowLeft size={18} /> Voltar</Button>
+            <Button onClick={start}><Play size={18} /> Iniciar</Button>
+          </div>
         </Card>
       )}
 

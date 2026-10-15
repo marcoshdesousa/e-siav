@@ -770,3 +770,47 @@ test('álbum bíblico: Pix, confirmação da equipe, abrir, colar, trocar repeti
   assert.ok(done.some((x) => x.code === '100001' && x.club_name && x.album === 'biblico'));
   assert.equal((await pedro.get('/admin/figurinhas/completos')).status, 403);
 });
+
+test('aprendizagem diária: ano bíblico (sequência, dias perdidos, futuro trancado, pacotinho) e bom de bíblia', async () => {
+  const admin = await login('membros', 'admin', 'admin123');
+  const pedro = await login('membros', 'pedro');
+  const d = new Date(Date.now() - 2 * 86400000);
+  const start = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo' }).format(d);
+  assert.equal((await admin.put('/admin/ano-biblico/inicio', { date: start })).status, 200);
+  const plan = (await pedro.get('/ano-biblico')).body;
+  assert.equal(plan.total, 275);
+  assert.equal(plan.today_day, 3);
+  assert.deepEqual(plan.days.slice(0, 4).map((x) => x.status), ['perdido', 'perdido', 'hoje', 'futuro']);
+  assert.equal((await pedro.get('/ano-biblico/dia/4')).status, 403, 'dia futuro trancado');
+  const day = (await pedro.get('/ano-biblico/dia/3')).body;
+  assert.ok(day.chapters.length && day.chapters[0].verses.length);
+  assert.equal(day.quiz.length, 5);
+  assert.equal(day.quiz[0].answer, undefined, 'resposta não vai para o celular');
+  const packs = (await pedro.get('/albuns/biblico')).body.packs_unopened;
+  const wrong = (await pedro.post('/ano-biblico/dia/3/quiz', { answers: [9, 9, 9, 9, 9] })).body;
+  assert.equal(wrong.passed, false);
+  const right = (await pedro.post('/ano-biblico/dia/3/quiz', { answers: wrong.correct })).body;
+  assert.ok(right.passed && right.on_time && right.pack);
+  assert.equal(right.streak, 1);
+  assert.equal((await pedro.post('/ano-biblico/dia/3/quiz', { answers: wrong.correct })).body.pack, false, 'pacotinho só uma vez');
+  const late = (await pedro.post('/ano-biblico/dia/1/quiz', { answers: [9] })).body;
+  const lateOk = (await pedro.post('/ano-biblico/dia/1/quiz', { answers: late.correct })).body;
+  assert.ok(lateOk.passed && !lateOk.on_time && lateOk.pack, 'dia perdido dá pacotinho mas não conta na sequência');
+  assert.equal(lateOk.streak, 1);
+  assert.equal((await pedro.get('/albuns/biblico')).body.packs_unopened, packs + 2);
+  const sum = (await pedro.get('/aprendizagem')).body;
+  assert.equal(sum.bible.done, 2);
+  assert.equal(sum.bdb.total, 100);
+  assert.equal((await admin.get('/aprendizagem')).status, 403, 'só membros');
+  // Bom de Bíblia: fase 2 trancada até passar a 1
+  assert.equal((await pedro.get('/bom-de-biblia/fase/2')).status, 403);
+  const ph = (await pedro.get('/bom-de-biblia/fase/1')).body;
+  assert.equal(ph.questions.length, 10);
+  const ans = [];
+  for (let i = 0; i < 10; i++) ans.push((await pedro.post('/bom-de-biblia/fase/1/confere', { i, choice: 0 })).body.answer);
+  const res = (await pedro.post('/bom-de-biblia/fase/1', { answers: ans })).body;
+  assert.ok(res.passed && res.next === 2);
+  assert.equal((await pedro.get('/bom-de-biblia/fase/2')).status, 200);
+  await admin.put('/admin/ano-biblico/inicio', { date: '' });
+  assert.equal((await admin.get('/admin/ano-biblico')).body.start, '2027-03-01');
+});

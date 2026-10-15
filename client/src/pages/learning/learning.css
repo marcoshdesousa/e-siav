@@ -1,0 +1,127 @@
+/* Aprendizagem Diária */
+.streak-card { display: flex; align-items: center; gap: .8rem; padding: .85rem 1rem; margin: .8rem 0; border-radius: 18px; text-decoration: none; color: #fff; background: linear-gradient(135deg, #f97316, #dc2626); box-shadow: 0 6px 18px rgba(220, 38, 38, .25); }
+.streak-card.done { background: linear-gradient(135deg, #16a34a, #0d9488); box-shadow: 0 6px 18px rgba(13, 148, 136, .25); }
+.streak-card b { display: block; }
+.streak-card small { display: block; opacity: .92; line-height: 1.3; }
+.streak-flame { position: relative; width: 52px; height: 52px; border-radius: 50%; background: rgba(255, 255, 255, .2); display: grid; place-items: center; flex: none; }
+.streak-flame b { position: absolute; bottom: -4px; right: -4px; min-width: 24px; height: 24px; padding: 0 5px; border-radius: 12px; background: #fff; color: #dc2626; font-size: .8rem; display: grid; place-items: center; }
+.streak-flame.big { width: 70px; height: 70px; background: linear-gradient(135deg, #f97316, #dc2626); color: #fff; }
+.streak-banner { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 18px; background: var(--surface); border: 1px solid var(--border); margin-bottom: .8rem; }
+.streak-banner b { display: block; font-size: 1.1rem; }
+.streak-banner small { color: var(--muted); }
+
+.learn-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: .7rem; margin-bottom: .8rem; }
+.learn-card { display: flex; flex-direction: column; gap: .3rem; padding: 1rem; border-radius: 18px; color: #fff; text-decoration: none; min-height: 170px; box-shadow: 0 6px 16px rgba(0, 0, 0, .12); }
+.learn-card.c1 { background: linear-gradient(135deg, #1d4ed8, #1e3a8a); }
+.learn-card.c2 { background: linear-gradient(135deg, #7c3aed, #4c1d95); }
+.learn-card.c3 { background: linear-gradient(135deg, #d97706, #92400e); }
+.learn-card.c4 { background: linear-gradient(135deg, #0d9488, #134e4a); }
+.learn-card.soon { opacity: .75; }
+.learn-card b { font-size: 1.05rem; }
+.learn-card small { opacity: .92; line-height: 1.3; }
+.learn-card .chip { margin-top: auto; align-self: flex-start; background: rgba(255, 255, 255, .22); color: #fff; }
+.learn-ico { width: 50px; height: 50px; border-radius: 14px; background: rgba(255, 255, 255, .18); display: grid; place-items: center; }
+.learn-bar { display: block; height: 7px; border-radius: 4px; background: rgba(255, 255, 255, .25); overflow: hidden; margin-top: auto; }
+.learn-bar i { display: block; height: 100%; background: #fff; border-radius: 4px; }
+
+.arganel-msg { display: flex; gap: .8rem; align-items: flex-start; padding: 1rem; border-radius: 16px; background: #dcfce7; color: #14532d; border: 2px solid #22c55e; margin-bottom: .8rem; }
+.arganel-msg p { margin: .2rem 0 0; }
+.today-card { display: flex; flex-direction: column; gap: .3rem; padding: 1.1rem; border-radius: 18px; background: linear-gradient(135deg, #f97316, #dc2626); color: #fff; text-decoration: none; margin-bottom: .6rem; }
+.today-card.done { background: linear-gradient(135deg, #16a34a, #0d9488); }
+.today-card b { font-size: 1.25rem; }
+.today-tag { font-size: .78rem; font-weight: 700; opacity: .9; text-transform: uppercase; letter-spacing: .04em; }
+.today-go { display: inline-flex; align-items: center; gap: .35rem; font-weight: 800; align-self: flex-start; background: rgba(255, 255, 255, .22); padding: .35rem .8rem; border-radius: 999px; margin-top: .3rem; }
+
+.month { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); margin-bottom: .5rem; overflow: hidden; }
+.month summary { padding: .75rem 1rem; font-weight: 800; cursor: pointer; text-transform: capitalize; display: flex; justify-content: space-between; }
+.month summary small { color: var(--muted); font-weight: 700; }
+.month .day-list { padding: 0 .5rem .5rem; }
+.day-list { display: grid; gap: .35rem; }
+.day-row { display: flex; align-items: center; gap: .65rem; padding: .55rem .7rem; border-radius: 12px; background: var(--surface-2, var(--surface)); color: inherit; text-decoration: none; border: 1px solid var(--border); }
+.day-row b { display: block; font-size: .9rem; }
+.day-row small { color: var(--muted); }
+.day-row.locked { opacity: .5; }
+.day-row.hoje { border-color: #f97316; box-shadow: 0 0 0 2px rgba(249, 115, 22, .25); }
+.day-n { width: 34px; height: 34px; border-radius: 10px; background: var(--surface-3); display: grid; place-items: center; font-weight: 800; font-size: .8rem; flex: none; }
+.day-st { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; flex: none; }
+.day-st.feito { background: #16a34a; color: #fff; }
+.day-st.feito-depois { background: #86efac; color: #14532d; }
+.day-st.perdido { background: #fee2e2; color: #b91c1c; }
+.day-st.hoje { background: #f97316; color: #fff; }
+.day-st.futuro { color: var(--muted); }
+
+/* Leitura em páginas, como um livro */
+.bible-day, .bible-quiz, .bdb { display: grid; gap: .7rem; }
+.bible-top { display: flex; align-items: center; gap: .6rem; }
+.bible-top b { display: block; }
+.bible-top small { color: var(--muted); }
+.bible-book { perspective: 1600px; touch-action: pan-y; }
+.bible-page {
+  position: relative; min-height: 62vh; padding: 1.3rem 1.2rem 2.2rem; border-radius: 6px 16px 16px 6px;
+  background: linear-gradient(90deg, #e9dcc0 0, #f8f1e1 18px, #fbf6ea 100%); color: #2b2118;
+  box-shadow: inset 6px 0 10px -6px rgba(0, 0, 0, .35), 0 8px 22px rgba(0, 0, 0, .18);
+  font-family: Georgia, 'Times New Roman', serif; font-size: 1.08rem; line-height: 1.7; text-align: justify;
+  transform-origin: left center;
+}
+.bible-page.turn-next { animation: page-next .45s ease-out; }
+.bible-page.turn-prev { animation: page-prev .45s ease-out; }
+@keyframes page-next { from { transform: rotateY(-70deg); opacity: .3; } to { transform: none; opacity: 1; } }
+@keyframes page-prev { from { transform: rotateY(25deg); opacity: .3; } to { transform: none; opacity: 1; } }
+.bible-chapter { font-family: Georgia, serif; text-align: center; font-size: 1.35rem; margin: .4rem 0 .7rem; color: #7c2d12; }
+.verse { cursor: pointer; border-radius: 4px; transition: background .2s; }
+.verse sup { font-size: .65em; font-weight: 700; color: #9a3412; margin-right: .15em; font-family: var(--font); }
+.verse.reading { background: #fde68a; box-shadow: 0 2px 0 #f59e0b; }
+.bible-pg { position: absolute; bottom: .6rem; left: 0; right: 0; text-align: center; font-size: .78rem; color: #8b7355; font-family: var(--font); }
+.bible-controls { display: flex; align-items: center; justify-content: center; gap: .7rem; }
+.play-btn { display: inline-flex; align-items: center; gap: .45rem; border: 0; border-radius: 999px; padding: .7rem 1.4rem; background: var(--primary); color: #fff; font-weight: 800; font-size: 1rem; cursor: pointer; font-family: var(--font); }
+.rate-btn { border: 1px solid var(--border); background: var(--surface); color: inherit; border-radius: 999px; padding: .45rem .7rem; font-weight: 800; cursor: pointer; font-family: var(--font); }
+.bible-controls .icon-btn:disabled { opacity: .35; }
+
+/* Quiz */
+.quiz-q p { margin: 0 0 .6rem; }
+.quiz-opts { display: grid; gap: .45rem; }
+.quiz-opt { display: flex; align-items: center; gap: .6rem; text-align: left; padding: .7rem .8rem; border-radius: 12px; border: 2px solid var(--border); background: var(--surface); color: inherit; font: inherit; cursor: pointer; }
+.quiz-opt.picked { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 12%, var(--surface)); }
+.quiz-opt.right { border-color: #16a34a; background: #dcfce7; color: #14532d; }
+.quiz-opt.wrong { border-color: #dc2626; background: #fee2e2; color: #7f1d1d; }
+.quiz-opt:disabled { cursor: default; }
+.quiz-letter { width: 28px; height: 28px; border-radius: 50%; background: var(--surface-3); display: grid; place-items: center; font-weight: 800; font-size: .8rem; flex: none; }
+.quiz-result { text-align: center; padding: 1.2rem; border-radius: 18px; }
+.quiz-result.ok { background: #dcfce7; color: #14532d; border: 2px solid #22c55e; }
+.quiz-result.no { background: #ffedd5; color: #7c2d12; border: 2px solid #f97316; }
+.quiz-result p { margin: .3rem 0; }
+.quiz-score { display: block; font-size: 2.6rem; line-height: 1.1; }
+.quiz-gift { display: inline-flex; align-items: center; gap: .35rem; font-weight: 800; }
+.quiz-actions { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin-top: .8rem; }
+
+/* Bom de Bíblia */
+.phase-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(58px, 1fr)); gap: .45rem; }
+.phase { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .1rem; aspect-ratio: 1; border-radius: 14px; text-decoration: none; color: #fff; font-weight: 800; background: var(--primary); }
+.phase small { font-size: .65rem; opacity: .9; }
+.lv-facil .phase { background: #16a34a; }
+.lv-intermediario .phase { background: #2563eb; }
+.lv-dificil .phase { background: #d97706; }
+.lv-muito-dificil .phase { background: #dc2626; }
+.phase.passed { box-shadow: inset 0 0 0 3px #fde047; }
+.phase.locked { background: var(--surface-3) !important; color: var(--muted); gap: .2rem; font-size: .8rem; }
+.bdb-top { display: flex; justify-content: space-between; font-weight: 800; }
+.bdb-timer { display: inline-flex; align-items: center; gap: .3rem; }
+.bdb-timer.hurry { color: #dc2626; animation: hurry .5s infinite alternate; }
+@keyframes hurry { to { transform: scale(1.12); } }
+.bdb-bar { height: 8px; border-radius: 4px; background: var(--surface-3); overflow: hidden; }
+.bdb-bar i { display: block; height: 100%; background: linear-gradient(90deg, #f97316, #16a34a); transition: width 1s linear; }
+.bdb-q { font-size: 1.1rem; font-weight: 700; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .arganel-msg { background: #052e16; color: #bbf7d0; }
+  :root:not([data-theme='light']) .quiz-result.ok { background: #052e16; color: #bbf7d0; }
+  :root:not([data-theme='light']) .quiz-result.no { background: #431407; color: #fed7aa; }
+  :root:not([data-theme='light']) .quiz-opt.right { background: #052e16; color: #bbf7d0; }
+  :root:not([data-theme='light']) .quiz-opt.wrong { background: #450a0a; color: #fecaca; }
+}
+:root[data-theme='dark'] .arganel-msg, :root[data-theme='dark'] .quiz-result.ok, :root[data-theme='dark'] .quiz-opt.right { background: #052e16; color: #bbf7d0; }
+:root[data-theme='dark'] .quiz-result.no { background: #431407; color: #fed7aa; }
+:root[data-theme='dark'] .quiz-opt.wrong { background: #450a0a; color: #fecaca; }
+.learn-focus .bottom-nav, .learn-focus .main > .back-link { display: none; }
+.learn-focus .main { padding-bottom: 1rem; }
+.bible-page { min-height: calc(100dvh - 250px); }

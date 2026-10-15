@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import {
-  BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, Waypoints, Hourglass,
+  BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, Waypoints, Hourglass, Flame,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -16,8 +17,26 @@ import { AgendaLeitura, ProximasDatas } from '../club/Folders.jsx';
 import { EmbeddedSite, SupportChat } from '../Shared.jsx';
 import { GamePage, GamesHub } from '../games/GamesHub.jsx';
 import { AlbumPage, AlbumsPage } from '../albums/AlbumsHub.jsx';
+import { BibleDay, BibleYear, BomDeBiblia, BomDeBibliaPhase, LearningHub, StreakCard } from '../learning/Learning.jsx';
 
 const base = '/membro';
+
+/** Aba Requisitos: os requisitos e, ao lado, o ranking. */
+function RequirementsAndRanking({ isDbv }) {
+  const [tab, setTab] = useState(() => { try { return window.sessionStorage.getItem('dbv-req-tab') || 'req'; } catch { return 'req'; } });
+  const pick = (t) => { setTab(t); try { window.sessionStorage.setItem('dbv-req-tab', t); } catch { /* sem armazenamento */ } };
+  return (
+    <>
+      <div className="seg req-switch" role="tablist">
+        <button type="button" className={tab === 'req' ? 'active' : ''} onClick={() => pick('req')}><ClipboardCheck size={14} /> Requisitos</button>
+        <button type="button" className={tab === 'rank' ? 'active' : ''} onClick={() => pick('rank')}><Trophy size={14} /> Ranking</button>
+      </div>
+      {tab === 'req'
+        ? <><PageHeader title="Requisitos" subtitle={isDbv ? 'Cumpra os requisitos e suba no ranking' : 'Requisitos para a liderança'} /><RequirementsTodo originTabs groupTab={isDbv} /></>
+        : <RankingHub base={base} />}
+    </>
+  );
+}
 
 function MyProfile() {
   const { refresh } = useAuth();
@@ -36,6 +55,7 @@ function MyProfile() {
         <MemberProfileView
           member={m}
           linkBase={`${base}/ver`}
+          extra={<StreakCard base={base} />}
           photoAction={
             <label className="chip yellow" style={{ cursor: 'pointer' }}>
               {busy ? 'Enviando...' : <span className="ico"><Camera size={14} /> Trocar foto</span>}
@@ -61,18 +81,27 @@ function Waiting({ text }) {
   );
 }
 
+/** Para onde o "Voltar" do topo leva em cada tela. */
+function parentOf(path) {
+  const [seg, sub, sub2] = path.split('/').slice(2);
+  if (seg === 'aprendizagem') return sub === 'bom-de-biblia' && sub2 ? `${base}/aprendizagem/bom-de-biblia` : sub === 'ano-biblico' && sub2 ? `${base}/aprendizagem/ano-biblico` : sub ? `${base}/aprendizagem` : `${base}/mais`;
+  if ((seg === 'jogos' || seg === 'albuns') && sub) return `${base}/${seg}`;
+  if (['cursos', 'clubes', 'agenda', 'suporte', 'especialidades', 'albuns'].includes(seg)) return `${base}/mais`;
+  return base;
+}
+
 export default function MemberApp() {
   const { actor } = useAuth();
   const isDbv = actor.kind === 'desbravador';
   const tabs = [
     { to: base, icon: UserRound, label: 'Perfil', end: true },
     { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },
-    { to: `${base}/ranking`, icon: Trophy, label: 'Ranking' },
     { to: `${base}/jogos`, icon: Gamepad2, label: 'Jogos' },
     { to: `${base}/cartao`, icon: IdCard, label: 'Cartão' },
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
+    { to: `${base}/aprendizagem`, icon: Flame, label: 'Aprendizagem Diária', hint: 'Ano Bíblico, Bom de Bíblia e mais' },
     { to: `${base}/especialidades`, icon: Waypoints, label: 'Especialidades', hint: 'As suas especialidades' },
     { to: `${base}/albuns`, icon: BookImage, label: 'Álbuns de figurinhas', hint: 'Álbum Bíblico' },
     { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas do clube e do App' },
@@ -85,10 +114,10 @@ export default function MemberApp() {
       <Route
         path="*"
         element={
-          <Shell tabs={tabs} offlineOk={(path) => ['jogos', 'albuns', 'mais'].includes(path.split('/')[2])} parentOf={(path) => (((seg, sub) => ((seg === 'jogos' || seg === 'albuns') && sub ? `${base}/${seg}` : ['cursos', 'clubes', 'agenda', 'suporte', 'especialidades', 'albuns'].includes(seg) ? `${base}/mais` : base))(...path.split('/').slice(2)))}>
+          <Shell tabs={tabs} offlineOk={(path) => ['jogos', 'albuns', 'mais'].includes(path.split('/')[2])} parentOf={parentOf}>
             {actor.waiting ? <Waiting text={actor.waiting} /> : <Routes>
               <Route index element={<MyProfile />} />
-              <Route path="requisitos" element={<><PageHeader title="Requisitos" subtitle={isDbv ? 'Cumpra os requisitos e suba no ranking' : 'Requisitos para a liderança'} /><RequirementsTodo originTabs groupTab={isDbv} /></>} />
+              <Route path="requisitos" element={<RequirementsAndRanking isDbv={isDbv} />} />
               <Route path="especialidades" element={<MyAchievements key="e" type="especialidade" />} />
               <Route path="agenda" element={<AgendaLeitura />} />
               <Route path="cartao" element={<EmbeddedSite title="Cartão DBV" linkKey="link_cartao" subtitle="Entre com o código e a senha que o seu clube passar" />} />
@@ -97,9 +126,14 @@ export default function MemberApp() {
               <Route path="jogos/:id" element={<GamePage base={base} />} />
               <Route path="albuns" element={<AlbumsPage base={base} />} />
               <Route path="albuns/:id" element={<AlbumPage />} />
+              <Route path="aprendizagem" element={<LearningHub base={base} />} />
+              <Route path="aprendizagem/ano-biblico" element={<BibleYear base={base} />} />
+              <Route path="aprendizagem/ano-biblico/:day" element={<BibleDay base={base} />} />
+              <Route path="aprendizagem/bom-de-biblia" element={<BomDeBiblia base={base} />} />
+              <Route path="aprendizagem/bom-de-biblia/:phase" element={<BomDeBibliaPhase base={base} />} />
               <Route path="cursos" element={<ContentList type="curso" base={base} />} />
               <Route path="conteudo/:id" element={<ContentDetail />} />
-              <Route path="ranking" element={<RankingHub base={base} />} />
+              <Route path="ranking" element={<Navigate to={`${base}/requisitos`} replace />} />
               <Route path="clubes" element={<ClubsBrowser base={base} />} />
               <Route path="ver/:kind/:id" element={<InAppProfile base={base} />} />
               <Route path="mais" element={<><PageHeader title="Mais" /><MoreMenu items={more} /></>} />

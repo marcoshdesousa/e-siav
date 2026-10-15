@@ -1,0 +1,4142 @@
+[
+  {
+    "day": 1,
+    "questions": [
+      {
+        "q": "O que Deus criou no primeiro dia?",
+        "options": [
+          "A luz",
+          "Os animais",
+          "O sol e a lua",
+          "As plantas"
+        ],
+        "answer": 0,
+        "ref": "Gênesis 1:3"
+      },
+      {
+        "q": "De que Deus formou o homem?",
+        "options": [
+          "De uma pedra",
+          "Do pó da terra",
+          "Da água do mar",
+          "De uma árvore"
+        ],
+        "answer": 1,
+        "ref": "Gênesis 2:7"
+      },
+      {
+        "q": "Qual animal enganou a mulher no jardim?",
+        "options": [
+          "O leão",
+          "O corvo",
+          "A serpente",
+          "O lobo"
+        ],
+        "answer": 2,
+        "ref": "Gênesis 3:1"
+      },
+      {
+        "q": "Qual era a profissão de Abel?",
+        "options": [
+          "Lavrador",
+          "Caçador",
+          "Ferreiro",
+          "Pastor de ovelhas"
+        ],
+        "answer": 3,
+        "ref": "Gênesis 4:2"
+      },
+      {
+        "q": "O que Deus fez no sétimo dia?",
+        "options": [
+          "Descansou",
+          "Criou o homem",
+          "Criou os peixes",
+          "Separou as águas"
+        ],
+        "answer": 0,
+        "ref": "Gênesis 2:2"
+      }
+    ]
+  },
+  {
+    "day": 2,
+    "questions": [
+      {
+        "q": "Quantos anos viveu Metusalém?",
+        "options": [
+          "930 anos",
+          "969 anos",
+          "365 anos",
+          "777 anos"
+        ],
+        "answer": 1,
+        "ref": "Gênesis 5:27"
+      },
+      {
+        "q": "Quais eram os nomes dos filhos de Noé?",
+        "options": [
+          "Caim, Abel e Sete",
+          "Abrão, Naor e Harã",
+          "Sem, Cam e Jafé",
+          "Esaú, Jacó e Ló"
+        ],
+        "answer": 2,
+        "ref": "Gênesis 5:32"
+      },
+      {
+        "q": "Por quantos dias e noites choveu sobre a terra?",
+        "options": [
+          "7 dias e 7 noites",
+          "100 dias e noites",
+          "12 dias e 12 noites",
+          "40 dias e 40 noites"
+        ],
+        "answer": 3,
+        "ref": "Gênesis 7:12"
+      },
+      {
+        "q": "O que a pomba trouxe no bico para Noé?",
+        "options": [
+          "Uma folha de oliveira",
+          "Um galho de figueira",
+          "Uma pedra",
+          "Uma espiga de trigo"
+        ],
+        "answer": 0,
+        "ref": "Gênesis 8:11"
+      },
+      {
+        "q": "Qual sinal Deus deu de sua aliança com Noé?",
+        "options": [
+          "Uma estrela",
+          "O arco nas nuvens",
+          "Uma coluna de fogo",
+          "Um altar de pedra"
+        ],
+        "answer": 1,
+        "ref": "Gênesis 9:13"
+      }
+    ]
+  },
+  {
+    "day": 3,
+    "questions": [
+      {
+        "q": "Quem foi chamado de poderoso caçador diante do Senhor?",
+        "options": [
+          "Ló",
+          "Terá",
+          "Ninrode",
+          "Cuxe"
+        ],
+        "answer": 2,
+        "ref": "Gênesis 10:9"
+      },
+      {
+        "q": "Por que a cidade foi chamada Babel?",
+        "options": [
+          "Era a cidade do rei",
+          "Ali havia muita água",
+          "Ali nasceu Abrão",
+          "Ali o Senhor confundiu a língua"
+        ],
+        "answer": 3,
+        "ref": "Gênesis 11:9"
+      },
+      {
+        "q": "Quantos anos Abrão tinha quando saiu de Harã?",
+        "options": [
+          "75 anos",
+          "100 anos",
+          "50 anos",
+          "90 anos"
+        ],
+        "answer": 0,
+        "ref": "Gênesis 12:4"
+      },
+      {
+        "q": "Que parte da terra Ló escolheu para si?",
+        "options": [
+          "As montanhas de Betel",
+          "A campina do Jordão",
+          "O deserto do Egito",
+          "A terra de Ur"
+        ],
+        "answer": 1,
+        "ref": "Gênesis 13:11"
+      },
+      {
+        "q": "Qual rei e sacerdote trouxe pão e vinho a Abrão?",
+        "options": [
+          "Faraó",
+          "Abimeleque",
+          "Melquisedeque",
+          "Quedorlaomer"
+        ],
+        "answer": 2,
+        "ref": "Gênesis 14:18"
+      }
+    ]
+  },
+  {
+    "day": 4,
+    "questions": [
+      {
+        "q": "Qual era o nome da serva egípcia de Sarai?",
+        "options": [
+          "Quetura",
+          "Bila",
+          "Zilpa",
+          "Agar"
+        ],
+        "answer": 3,
+        "ref": "Gênesis 16:1"
+      },
+      {
+        "q": "Que nome o anjo mandou dar ao filho de Agar?",
+        "options": [
+          "Ismael",
+          "Isaque",
+          "Edom",
+          "Moabe"
+        ],
+        "answer": 0,
+        "ref": "Gênesis 16:11"
+      },
+      {
+        "q": "Para qual nome Deus mudou o nome de Abrão?",
+        "options": [
+          "Israel",
+          "Abraão",
+          "Isaque",
+          "Ismael"
+        ],
+        "answer": 1,
+        "ref": "Gênesis 17:5"
+      },
+      {
+        "q": "Por que Sara riu dentro de si?",
+        "options": [
+          "Viu um anjo engraçado",
+          "Ló contou uma piada",
+          "Achou que era velha demais para ter filho",
+          "Ganhou um presente"
+        ],
+        "answer": 2,
+        "ref": "Gênesis 18:12"
+      },
+      {
+        "q": "Em que se transformou a mulher de Ló?",
+        "options": [
+          "Uma pedra",
+          "Uma árvore",
+          "Uma pomba",
+          "Uma estátua de sal"
+        ],
+        "answer": 3,
+        "ref": "Gênesis 19:26"
+      }
+    ]
+  },
+  {
+    "day": 5,
+    "questions": [
+      {
+        "q": "Abraão disse que Sara era o que dele, diante de Abimeleque?",
+        "options": [
+          "Sua irmã",
+          "Sua serva",
+          "Sua filha",
+          "Sua prima"
+        ],
+        "answer": 0,
+        "ref": "Gênesis 20:2"
+      },
+      {
+        "q": "Quantos anos Abraão tinha quando Isaque nasceu?",
+        "options": [
+          "75 anos",
+          "100 anos",
+          "90 anos",
+          "120 anos"
+        ],
+        "answer": 1,
+        "ref": "Gênesis 21:5"
+      },
+      {
+        "q": "O que Deus mostrou a Agar no deserto para salvar o menino?",
+        "options": [
+          "Uma tenda",
+          "Um camelo",
+          "Um poço de água",
+          "Uma árvore com frutos"
+        ],
+        "answer": 2,
+        "ref": "Gênesis 21:19"
+      },
+      {
+        "q": "Que animal Abraão ofereceu no lugar de Isaque?",
+        "options": [
+          "Um cordeiro",
+          "Um bezerro",
+          "Uma pomba",
+          "Um carneiro"
+        ],
+        "answer": 3,
+        "ref": "Gênesis 22:13"
+      },
+      {
+        "q": "Onde Abraão sepultou Sara?",
+        "options": [
+          "Na caverna de Macpela",
+          "Em Berseba",
+          "No monte Moriá",
+          "Em Betel"
+        ],
+        "answer": 0,
+        "ref": "Gênesis 23:19"
+      }
+    ]
+  },
+  {
+    "day": 6,
+    "questions": [
+      {
+        "q": "Qual sinal o servo de Abraão pediu junto ao poço?",
+        "options": [
+          "Que chovesse",
+          "Que a moça desse água a ele e aos camelos",
+          "Que um anjo aparecesse",
+          "Que a moça cantasse"
+        ],
+        "answer": 1,
+        "ref": "Gênesis 24:14"
+      },
+      {
+        "q": "Quem era o irmão de Rebeca?",
+        "options": [
+          "Ló",
+          "Naor",
+          "Labão",
+          "Betuel"
+        ],
+        "answer": 2,
+        "ref": "Gênesis 24:29"
+      },
+      {
+        "q": "Quantos anos Isaque tinha quando se casou com Rebeca?",
+        "options": [
+          "20 anos",
+          "60 anos",
+          "30 anos",
+          "40 anos"
+        ],
+        "answer": 3,
+        "ref": "Gênesis 25:20"
+      },
+      {
+        "q": "O que Esaú recebeu em troca da primogenitura?",
+        "options": [
+          "Pão e cozinhado de lentilhas",
+          "Um camelo",
+          "Moedas de prata",
+          "Uma túnica"
+        ],
+        "answer": 0,
+        "ref": "Gênesis 25:34"
+      },
+      {
+        "q": "Por que Isaque disse que Rebeca era sua irmã?",
+        "options": [
+          "Quis enganar o rei por dinheiro",
+          "Teve medo de que o matassem",
+          "Ela pediu",
+          "Era costume"
+        ],
+        "answer": 1,
+        "ref": "Gênesis 26:7"
+      }
+    ]
+  },
+  {
+    "day": 7,
+    "questions": [
+      {
+        "q": "O que Rebeca colocou nas mãos de Jacó para enganar Isaque?",
+        "options": [
+          "Luvas de couro",
+          "Lã de ovelha",
+          "Peles de cabritos",
+          "Panos de linho"
+        ],
+        "answer": 2,
+        "ref": "Gênesis 27:16"
+      },
+      {
+        "q": "Esaú planejou fazer o quê depois de perder a bênção?",
+        "options": [
+          "Fugir para o Egito",
+          "Casar com Raquel",
+          "Morar com Labão",
+          "Matar Jacó"
+        ],
+        "answer": 3,
+        "ref": "Gênesis 27:41"
+      },
+      {
+        "q": "O que Jacó viu em sonho em Betel?",
+        "options": [
+          "Uma escada até o céu",
+          "Um rio de fogo",
+          "Sete vacas",
+          "Uma estrela"
+        ],
+        "answer": 0,
+        "ref": "Gênesis 28:12"
+      },
+      {
+        "q": "Quantos anos Jacó serviu a Labão por Raquel no início?",
+        "options": [
+          "Dois anos",
+          "Sete anos",
+          "Catorze anos",
+          "Vinte anos"
+        ],
+        "answer": 1,
+        "ref": "Gênesis 29:20"
+      },
+      {
+        "q": "Qual filha Labão deu a Jacó na primeira noite?",
+        "options": [
+          "Raquel",
+          "Diná",
+          "Lia",
+          "Zilpa"
+        ],
+        "answer": 2,
+        "ref": "Gênesis 29:23"
+      }
+    ]
+  },
+  {
+    "day": 8,
+    "questions": [
+      {
+        "q": "Qual foi o primeiro filho que Raquel teve?",
+        "options": [
+          "Benjamim",
+          "Dã",
+          "Levi",
+          "José"
+        ],
+        "answer": 3,
+        "ref": "Gênesis 30:24"
+      },
+      {
+        "q": "Que salário Jacó pediu a Labão?",
+        "options": [
+          "Os animais salpicados e malhados",
+          "Metade do ouro",
+          "A tenda de Labão",
+          "Dez camelos"
+        ],
+        "answer": 0,
+        "ref": "Gênesis 30:32"
+      },
+      {
+        "q": "O que Raquel furtou de seu pai?",
+        "options": [
+          "Suas joias",
+          "Os ídolos dele",
+          "Seus camelos",
+          "Suas roupas"
+        ],
+        "answer": 1,
+        "ref": "Gênesis 31:19"
+      },
+      {
+        "q": "Onde Raquel escondeu os ídolos?",
+        "options": [
+          "Num poço",
+          "Debaixo da tenda",
+          "Na sela do camelo",
+          "Num saco de trigo"
+        ],
+        "answer": 2,
+        "ref": "Gênesis 31:34"
+      },
+      {
+        "q": "Quantos anos Jacó disse que serviu na casa de Labão?",
+        "options": [
+          "7 anos",
+          "14 anos",
+          "40 anos",
+          "20 anos"
+        ],
+        "answer": 3,
+        "ref": "Gênesis 31:41"
+      }
+    ]
+  },
+  {
+    "day": 9,
+    "questions": [
+      {
+        "q": "Com quem Jacó lutou até o romper da alva?",
+        "options": [
+          "Um homem",
+          "Esaú",
+          "Labão",
+          "Um leão"
+        ],
+        "answer": 0,
+        "ref": "Gênesis 32:24"
+      },
+      {
+        "q": "Qual novo nome Jacó recebeu?",
+        "options": [
+          "Abraão",
+          "Israel",
+          "Edom",
+          "Judá"
+        ],
+        "answer": 1,
+        "ref": "Gênesis 32:28"
+      },
+      {
+        "q": "Como Esaú recebeu Jacó?",
+        "options": [
+          "Atacou com 400 homens",
+          "Não quis vê-lo",
+          "Correu, abraçou e beijou",
+          "Mandou prendê-lo"
+        ],
+        "answer": 2,
+        "ref": "Gênesis 33:4"
+      },
+      {
+        "q": "Para qual lugar Deus mandou Jacó subir e fazer um altar?",
+        "options": [
+          "Siquém",
+          "Hebrom",
+          "Egito",
+          "Betel"
+        ],
+        "answer": 3,
+        "ref": "Gênesis 35:1"
+      },
+      {
+        "q": "Como Raquel chamou o filho que nasceu quando ela morria?",
+        "options": [
+          "Benoni",
+          "Benjamim",
+          "José",
+          "Rúben"
+        ],
+        "answer": 0,
+        "ref": "Gênesis 35:18"
+      }
+    ]
+  },
+  {
+    "day": 10,
+    "questions": [
+      {
+        "q": "Esaú também é chamado por qual outro nome?",
+        "options": [
+          "Israel",
+          "Edom",
+          "Seir",
+          "Temã"
+        ],
+        "answer": 1,
+        "ref": "Gênesis 36:1"
+      },
+      {
+        "q": "O que Israel fez para José, por amá-lo mais?",
+        "options": [
+          "Um anel de ouro",
+          "Uma casa",
+          "Uma túnica de mangas compridas",
+          "Uma espada"
+        ],
+        "answer": 2,
+        "ref": "Gênesis 37:3"
+      },
+      {
+        "q": "Por quanto José foi vendido aos ismaelitas?",
+        "options": [
+          "Trinta siclos de prata",
+          "Cem siclos de ouro",
+          "Dez camelos",
+          "Vinte siclos de prata"
+        ],
+        "answer": 3,
+        "ref": "Gênesis 37:28"
+      },
+      {
+        "q": "Quem comprou José no Egito?",
+        "options": [
+          "Potifar",
+          "Faraó",
+          "O copeiro",
+          "Judá"
+        ],
+        "answer": 0,
+        "ref": "Gênesis 39:1"
+      },
+      {
+        "q": "Para onde José foi levado após a acusação da mulher de Potifar?",
+        "options": [
+          "Para o palácio",
+          "Para a prisão",
+          "Para Canaã",
+          "Para o deserto"
+        ],
+        "answer": 1,
+        "ref": "Gênesis 39:20"
+      }
+    ]
+  },
+  {
+    "day": 11,
+    "questions": [
+      {
+        "q": "Quais servos de Faraó tiveram sonhos na prisão com José?",
+        "options": [
+          "O general e o escriba",
+          "O pastor e o ferreiro",
+          "O copeiro e o padeiro",
+          "O mago e o sacerdote"
+        ],
+        "answer": 2,
+        "ref": "Gênesis 40:5"
+      },
+      {
+        "q": "No sonho de Faraó, quantas vacas formosas e robustas subiam do rio?",
+        "options": [
+          "Doze",
+          "Três",
+          "Dez",
+          "Sete"
+        ],
+        "answer": 3,
+        "ref": "Gênesis 41:2"
+      },
+      {
+        "q": "Quantos anos José tinha quando se apresentou a Faraó?",
+        "options": [
+          "30 anos",
+          "17 anos",
+          "40 anos",
+          "25 anos"
+        ],
+        "answer": 0,
+        "ref": "Gênesis 41:46"
+      },
+      {
+        "q": "Qual irmão de José ficou em casa e não foi ao Egito na primeira vez?",
+        "options": [
+          "Rúben",
+          "Benjamim",
+          "Judá",
+          "Simeão"
+        ],
+        "answer": 1,
+        "ref": "Gênesis 42:4"
+      },
+      {
+        "q": "Qual irmão José mandou prender diante dos outros?",
+        "options": [
+          "Rúben",
+          "Levi",
+          "Simeão",
+          "Judá"
+        ],
+        "answer": 2,
+        "ref": "Gênesis 42:24"
+      }
+    ]
+  },
+  {
+    "day": 12,
+    "questions": [
+      {
+        "q": "Qual irmão se ofereceu como fiador de Benjamim?",
+        "options": [
+          "Rúben",
+          "Simeão",
+          "Levi",
+          "Judá"
+        ],
+        "answer": 3,
+        "ref": "Gênesis 43:9"
+      },
+      {
+        "q": "Na refeição, quantas vezes maior era a porção de Benjamim?",
+        "options": [
+          "Cinco vezes",
+          "Duas vezes",
+          "Sete vezes",
+          "Dez vezes"
+        ],
+        "answer": 0,
+        "ref": "Gênesis 43:34"
+      },
+      {
+        "q": "O que José mandou colocar no saco de Benjamim?",
+        "options": [
+          "Uma espada",
+          "Seu copo de prata",
+          "Um anel de ouro",
+          "Uma túnica nova"
+        ],
+        "answer": 1,
+        "ref": "Gênesis 44:2"
+      },
+      {
+        "q": "Quem José disse que o enviou ao Egito para preservar vidas?",
+        "options": [
+          "Faraó",
+          "Seus irmãos",
+          "Deus",
+          "Os midianitas"
+        ],
+        "answer": 2,
+        "ref": "Gênesis 45:5"
+      },
+      {
+        "q": "O que Faraó mandou dar para trazer a família de Jacó?",
+        "options": [
+          "Navios",
+          "Camelos de Midiã",
+          "Cavalos de guerra",
+          "Carros do Egito"
+        ],
+        "answer": 3,
+        "ref": "Gênesis 45:19"
+      }
+    ]
+  },
+  {
+    "day": 13,
+    "questions": [
+      {
+        "q": "Quantas pessoas da casa de Jacó entraram no Egito?",
+        "options": [
+          "Setenta",
+          "Doze",
+          "Cem",
+          "Quarenta"
+        ],
+        "answer": 0,
+        "ref": "Gênesis 46:27"
+      },
+      {
+        "q": "Em qual terra a família de Jacó foi morar no Egito?",
+        "options": [
+          "Ramessés",
+          "Gósen",
+          "Mênfis",
+          "Midiã"
+        ],
+        "answer": 1,
+        "ref": "Gênesis 47:6"
+      },
+      {
+        "q": "Quantos anos Jacó tinha quando falou com Faraó?",
+        "options": [
+          "100 anos",
+          "147 anos",
+          "130 anos",
+          "110 anos"
+        ],
+        "answer": 2,
+        "ref": "Gênesis 47:9"
+      },
+      {
+        "q": "Quais filhos de José foram abençoados por Jacó?",
+        "options": [
+          "Rúben e Simeão",
+          "Judá e Levi",
+          "Dã e Naftali",
+          "Manassés e Efraim"
+        ],
+        "answer": 3,
+        "ref": "Gênesis 48:5"
+      },
+      {
+        "q": "Jacó comparou Judá a qual animal?",
+        "options": [
+          "Um leão",
+          "Um lobo",
+          "Uma serpente",
+          "Uma corça"
+        ],
+        "answer": 0,
+        "ref": "Gênesis 49:9"
+      }
+    ]
+  },
+  {
+    "day": 14,
+    "questions": [
+      {
+        "q": "Com quantos anos José morreu?",
+        "options": [
+          "130 anos",
+          "110 anos",
+          "120 anos",
+          "100 anos"
+        ],
+        "answer": 1,
+        "ref": "Gênesis 50:26"
+      },
+      {
+        "q": "O que Faraó mandou fazer com os meninos hebreus?",
+        "options": [
+          "Levá-los ao palácio",
+          "Ensiná-los a ler",
+          "Lançá-los no Nilo",
+          "Vendê-los"
+        ],
+        "answer": 2,
+        "ref": "Êxodo 1:22"
+      },
+      {
+        "q": "Em que a mãe colocou o bebê Moisés?",
+        "options": [
+          "Um jarro de barro",
+          "Uma caixa de ouro",
+          "Um pequeno barco",
+          "Um cesto de juncos"
+        ],
+        "answer": 3,
+        "ref": "Êxodo 2:3"
+      },
+      {
+        "q": "Quem tirou Moisés das águas?",
+        "options": [
+          "A filha de Faraó",
+          "Miriã",
+          "A rainha",
+          "Uma escrava"
+        ],
+        "answer": 0,
+        "ref": "Êxodo 2:10"
+      },
+      {
+        "q": "Em que Deus apareceu a Moisés no monte Horebe?",
+        "options": [
+          "Numa nuvem escura",
+          "Numa chama de fogo no meio de uma sarça",
+          "Num terremoto",
+          "Num rio"
+        ],
+        "answer": 1,
+        "ref": "Êxodo 3:2"
+      }
+    ]
+  },
+  {
+    "day": 15,
+    "questions": [
+      {
+        "q": "Em que se transformou a vara de Moisés no chão?",
+        "options": [
+          "Uma árvore",
+          "Uma pomba",
+          "Uma serpente",
+          "Um rio"
+        ],
+        "answer": 2,
+        "ref": "Êxodo 4:3"
+      },
+      {
+        "q": "Quem Deus disse que falaria ao povo por Moisés?",
+        "options": [
+          "Josué",
+          "Jetro",
+          "Miriã",
+          "Arão"
+        ],
+        "answer": 3,
+        "ref": "Êxodo 4:14-16"
+      },
+      {
+        "q": "O que Faraó deixou de dar aos israelitas para os tijolos?",
+        "options": [
+          "Palha",
+          "Barro",
+          "Água",
+          "Pão"
+        ],
+        "answer": 0,
+        "ref": "Êxodo 5:7"
+      },
+      {
+        "q": "Quantos anos tinha Moisés quando falou com Faraó?",
+        "options": [
+          "40 anos",
+          "80 anos",
+          "120 anos",
+          "60 anos"
+        ],
+        "answer": 1,
+        "ref": "Êxodo 7:7"
+      },
+      {
+        "q": "Na primeira praga, em que se tornaram as águas do rio?",
+        "options": [
+          "Vinho",
+          "Gelo",
+          "Sangue",
+          "Areia"
+        ],
+        "answer": 2,
+        "ref": "Êxodo 7:20"
+      }
+    ]
+  },
+  {
+    "day": 16,
+    "questions": [
+      {
+        "q": "Qual praga subiu dos rios e cobriu o Egito?",
+        "options": [
+          "Gafanhotos",
+          "Moscas",
+          "Piolhos",
+          "Rãs"
+        ],
+        "answer": 3,
+        "ref": "Êxodo 8:6"
+      },
+      {
+        "q": "Em que se tornou o pó da terra na terceira praga?",
+        "options": [
+          "Piolhos",
+          "Pedras",
+          "Moscas",
+          "Cinzas"
+        ],
+        "answer": 0,
+        "ref": "Êxodo 8:17"
+      },
+      {
+        "q": "O que caiu do céu misturado com fogo na sétima praga?",
+        "options": [
+          "Neve",
+          "Chuva de pedras",
+          "Enxofre",
+          "Cinzas"
+        ],
+        "answer": 1,
+        "ref": "Êxodo 9:23"
+      },
+      {
+        "q": "Que praga trouxe o vento oriental?",
+        "options": [
+          "Trevas",
+          "Úlceras",
+          "Gafanhotos",
+          "Rãs"
+        ],
+        "answer": 2,
+        "ref": "Êxodo 10:13"
+      },
+      {
+        "q": "Por quantos dias houve trevas espessas no Egito?",
+        "options": [
+          "Sete dias",
+          "Um dia",
+          "Dez dias",
+          "Três dias"
+        ],
+        "answer": 3,
+        "ref": "Êxodo 10:22"
+      }
+    ]
+  },
+  {
+    "day": 17,
+    "questions": [
+      {
+        "q": "Como devia ser o cordeiro da Páscoa?",
+        "options": [
+          "Sem defeito, macho de um ano",
+          "Velho e grande",
+          "Preto e malhado",
+          "De qualquer idade"
+        ],
+        "answer": 0,
+        "ref": "Êxodo 12:5"
+      },
+      {
+        "q": "Onde os israelitas deviam pôr o sangue do cordeiro?",
+        "options": [
+          "No telhado",
+          "Nas ombreiras e na verga da porta",
+          "No altar do templo",
+          "Nas roupas"
+        ],
+        "answer": 1,
+        "ref": "Êxodo 12:7"
+      },
+      {
+        "q": "Quanto tempo os filhos de Israel habitaram no Egito?",
+        "options": [
+          "400 anos",
+          "40 anos",
+          "430 anos",
+          "215 anos"
+        ],
+        "answer": 2,
+        "ref": "Êxodo 12:40"
+      },
+      {
+        "q": "Como Deus guiava o povo de dia e de noite?",
+        "options": [
+          "Uma estrela",
+          "Um anjo com tocha",
+          "Um vento forte",
+          "Coluna de nuvem e coluna de fogo"
+        ],
+        "answer": 3,
+        "ref": "Êxodo 13:21"
+      },
+      {
+        "q": "O que Moisés estendeu sobre o mar para dividi-lo?",
+        "options": [
+          "Sua mão",
+          "Uma bandeira",
+          "Um manto",
+          "Uma tocha"
+        ],
+        "answer": 0,
+        "ref": "Êxodo 14:21"
+      }
+    ]
+  },
+  {
+    "day": 18,
+    "questions": [
+      {
+        "q": "Quem tomou o tamborim e as mulheres saíram dançando?",
+        "options": [
+          "Zípora",
+          "Miriã, a profetisa",
+          "Joquebede",
+          "A filha de Faraó"
+        ],
+        "answer": 1,
+        "ref": "Êxodo 15:20"
+      },
+      {
+        "q": "Em Mara, o que tornou as águas doces?",
+        "options": [
+          "Sal",
+          "A vara de Arão",
+          "Uma árvore lançada nas águas",
+          "Mel"
+        ],
+        "answer": 2,
+        "ref": "Êxodo 15:25"
+      },
+      {
+        "q": "Que nome a casa de Israel deu ao pão do deserto?",
+        "options": [
+          "Pão de cevada",
+          "Codorniz",
+          "Pão dos anjos",
+          "Maná"
+        ],
+        "answer": 3,
+        "ref": "Êxodo 16:31"
+      },
+      {
+        "q": "Por que Israel vencia a batalha contra Amaleque?",
+        "options": [
+          "Quando Moisés erguia a mão",
+          "Quando tocavam trombetas",
+          "Quando Josué gritava",
+          "Quando chovia"
+        ],
+        "answer": 0,
+        "ref": "Êxodo 17:11"
+      },
+      {
+        "q": "Quem aconselhou Moisés a pôr chefes de mil, de cem e de dez?",
+        "options": [
+          "Arão",
+          "Jetro, seu sogro",
+          "Josué",
+          "Hur"
+        ],
+        "answer": 1,
+        "ref": "Êxodo 18:21-24"
+      }
+    ]
+  },
+  {
+    "day": 19,
+    "questions": [
+      {
+        "q": "Por que o monte Sinai fumegava todo?",
+        "options": [
+          "Era um vulcão",
+          "Havia uma fogueira",
+          "O Senhor desceu sobre ele em fogo",
+          "Era época de seca"
+        ],
+        "answer": 2,
+        "ref": "Êxodo 19:18"
+      },
+      {
+        "q": "Qual mandamento fala sobre o dia de sábado?",
+        "options": [
+          "Não matarás",
+          "Não furtarás",
+          "Honra teu pai e tua mãe",
+          "Lembre-se do dia de sábado, para santificá-lo"
+        ],
+        "answer": 3,
+        "ref": "Êxodo 20:8"
+      },
+      {
+        "q": "Qual mandamento tem a promessa de vida longa na terra?",
+        "options": [
+          "Honra teu pai e tua mãe",
+          "Não matarás",
+          "Não furtarás",
+          "Não cobiçarás"
+        ],
+        "answer": 0,
+        "ref": "Êxodo 20:12"
+      },
+      {
+        "q": "Quantos anos um servo hebreu servia antes de sair livre?",
+        "options": [
+          "Três anos",
+          "Seis anos",
+          "Sete anos",
+          "Dez anos"
+        ],
+        "answer": 1,
+        "ref": "Êxodo 21:2"
+      },
+      {
+        "q": "Quem furtasse um boi e o matasse devia pagar quantos bois?",
+        "options": [
+          "Dois",
+          "Sete",
+          "Cinco",
+          "Um"
+        ],
+        "answer": 2,
+        "ref": "Êxodo 22:1"
+      }
+    ]
+  },
+  {
+    "day": 20,
+    "questions": [
+      {
+        "q": "Quantas vezes por ano os homens deviam celebrar festa ao Senhor?",
+        "options": [
+          "Uma vez",
+          "Sete vezes",
+          "Doze vezes",
+          "Três vezes"
+        ],
+        "answer": 3,
+        "ref": "Êxodo 23:14"
+      },
+      {
+        "q": "Quantos anciãos de Israel subiram com Moisés ao monte?",
+        "options": [
+          "Setenta",
+          "Doze",
+          "Quarenta",
+          "Cem"
+        ],
+        "answer": 0,
+        "ref": "Êxodo 24:1"
+      },
+      {
+        "q": "Quantos dias e noites Moisés ficou no monte?",
+        "options": [
+          "7 dias e 7 noites",
+          "40 dias e 40 noites",
+          "3 dias",
+          "12 dias"
+        ],
+        "answer": 1,
+        "ref": "Êxodo 24:18"
+      },
+      {
+        "q": "De que madeira devia ser feita a arca?",
+        "options": [
+          "Cedro",
+          "Oliveira",
+          "Madeira de acácia",
+          "Carvalho"
+        ],
+        "answer": 2,
+        "ref": "Êxodo 25:10"
+      },
+      {
+        "q": "Quantos querubins de ouro ficavam sobre o propiciatório?",
+        "options": [
+          "Quatro",
+          "Sete",
+          "Um",
+          "Dois"
+        ],
+        "answer": 3,
+        "ref": "Êxodo 25:18"
+      }
+    ]
+  },
+  {
+    "day": 21,
+    "questions": [
+      {
+        "q": "Qual era o comprimento e a largura do altar do holocausto?",
+        "options": [
+          "Cinco côvados",
+          "Dez côvados",
+          "Três côvados",
+          "Sete côvados"
+        ],
+        "answer": 0,
+        "ref": "Êxodo 27:1"
+      },
+      {
+        "q": "Que azeite devia ser usado para o candeeiro?",
+        "options": [
+          "Azeite de nozes",
+          "Azeite puro de oliveira batido",
+          "Óleo de peixe",
+          "Gordura de carneiro"
+        ],
+        "answer": 1,
+        "ref": "Êxodo 27:20"
+      },
+      {
+        "q": "Quem Deus escolheu para servir como sacerdote com seus filhos?",
+        "options": [
+          "Moisés",
+          "Josué",
+          "Arão",
+          "Bezalel"
+        ],
+        "answer": 2,
+        "ref": "Êxodo 28:1"
+      },
+      {
+        "q": "Quantas pedras com nomes dos filhos de Israel havia no peitoral?",
+        "options": [
+          "Sete",
+          "Dez",
+          "Quatro",
+          "Doze"
+        ],
+        "answer": 3,
+        "ref": "Êxodo 28:21"
+      },
+      {
+        "q": "O que estava escrito na lâmina de ouro do sacerdote?",
+        "options": [
+          "Santidade ao Senhor",
+          "Deus é amor",
+          "Israel é santo",
+          "Lei de Moisés"
+        ],
+        "answer": 0,
+        "ref": "Êxodo 28:36"
+      }
+    ]
+  },
+  {
+    "day": 22,
+    "questions": [
+      {
+        "q": "Para que servia o altar de acácia de Êxodo 30?",
+        "options": [
+          "Para assar pães",
+          "Para queimar incenso",
+          "Para lavar as mãos",
+          "Para guardar as tábuas"
+        ],
+        "answer": 1,
+        "ref": "Êxodo 30:1"
+      },
+      {
+        "q": "Quanto cada recenseado devia dar como oferta ao Senhor?",
+        "options": [
+          "Um siclo de ouro",
+          "Dez siclos",
+          "Meio siclo",
+          "Um talento"
+        ],
+        "answer": 2,
+        "ref": "Êxodo 30:13"
+      },
+      {
+        "q": "Quem Deus encheu do seu Espírito para fazer as obras artísticas?",
+        "options": [
+          "Arão",
+          "Josué",
+          "Corá",
+          "Bezalel"
+        ],
+        "answer": 3,
+        "ref": "Êxodo 31:2-3"
+      },
+      {
+        "q": "Com o que foram escritas as tábuas do testemunho?",
+        "options": [
+          "Com o dedo de Deus",
+          "Com tinta de ouro",
+          "Com uma pena de Moisés",
+          "Com fogo da sarça"
+        ],
+        "answer": 0,
+        "ref": "Êxodo 31:18"
+      },
+      {
+        "q": "Que imagem Arão fez com o ouro do povo?",
+        "options": [
+          "Uma serpente",
+          "Um bezerro de fundição",
+          "Um leão",
+          "Uma estrela"
+        ],
+        "answer": 1,
+        "ref": "Êxodo 32:4"
+      }
+    ]
+  },
+  {
+    "day": 23,
+    "questions": [
+      {
+        "q": "Como o Senhor falava com Moisés na tenda?",
+        "options": [
+          "Somente em sonhos",
+          "Por meio de anjos",
+          "Face a face, como a um amigo",
+          "Por cartas"
+        ],
+        "answer": 2,
+        "ref": "Êxodo 33:11"
+      },
+      {
+        "q": "Onde Deus colocou Moisés ao passar sua glória?",
+        "options": [
+          "Dentro de uma caverna de leões",
+          "Debaixo de uma árvore",
+          "No alto de uma torre",
+          "Numa fenda da rocha"
+        ],
+        "answer": 3,
+        "ref": "Êxodo 33:22"
+      },
+      {
+        "q": "Quantos dias Moisés ficou no monte sem comer pão nem beber água?",
+        "options": [
+          "Quarenta dias",
+          "Sete dias",
+          "Três dias",
+          "Doze dias"
+        ],
+        "answer": 0,
+        "ref": "Êxodo 34:28"
+      },
+      {
+        "q": "O que aconteceu com o rosto de Moisés ao descer do monte?",
+        "options": [
+          "Ficou com rugas",
+          "Resplandecia",
+          "Ficou pálido",
+          "Ficou queimado"
+        ],
+        "answer": 1,
+        "ref": "Êxodo 34:29"
+      },
+      {
+        "q": "Em quantos dias da semana se podia trabalhar?",
+        "options": [
+          "Cinco dias",
+          "Sete dias",
+          "Seis dias",
+          "Quatro dias"
+        ],
+        "answer": 2,
+        "ref": "Êxodo 35:2"
+      }
+    ]
+  },
+  {
+    "day": 24,
+    "questions": [
+      {
+        "q": "Por que Moisés mandou o povo parar de trazer ofertas?",
+        "options": [
+          "O ouro acabou",
+          "Faraó proibiu",
+          "Era sábado",
+          "Já havia mais que o suficiente"
+        ],
+        "answer": 3,
+        "ref": "Êxodo 36:5-6"
+      },
+      {
+        "q": "Quem fez a arca de madeira de acácia?",
+        "options": [
+          "Bezalel",
+          "Moisés",
+          "Arão",
+          "Hur"
+        ],
+        "answer": 0,
+        "ref": "Êxodo 37:1"
+      },
+      {
+        "q": "De que foi feita a pia de bronze?",
+        "options": [
+          "De moedas antigas",
+          "Dos espelhos das mulheres",
+          "Das armas dos soldados",
+          "Das panelas do Egito"
+        ],
+        "answer": 1,
+        "ref": "Êxodo 38:8"
+      },
+      {
+        "q": "De qual tribo era Aholiab, ajudante de Bezalel?",
+        "options": [
+          "Judá",
+          "Levi",
+          "Dan",
+          "Rúben"
+        ],
+        "answer": 2,
+        "ref": "Êxodo 38:23"
+      },
+      {
+        "q": "Moisés viu que tudo foi feito como?",
+        "options": [
+          "Como Arão quis",
+          "Como no Egito",
+          "Como o povo pediu",
+          "Como o Senhor havia ordenado"
+        ],
+        "answer": 3,
+        "ref": "Êxodo 39:43"
+      }
+    ]
+  },
+  {
+    "day": 25,
+    "questions": [
+      {
+        "q": "O que encheu o tabernáculo quando ficou pronto?",
+        "options": [
+          "A glória do Senhor",
+          "Fumaça de incenso",
+          "Água",
+          "Pombas"
+        ],
+        "answer": 0,
+        "ref": "Êxodo 40:34"
+      },
+      {
+        "q": "Quando os israelitas partiam em suas jornadas?",
+        "options": [
+          "Ao toque do sino",
+          "Quando a nuvem se levantava",
+          "Toda manhã",
+          "Quando chovia"
+        ],
+        "answer": 1,
+        "ref": "Êxodo 40:36"
+      },
+      {
+        "q": "Como devia ser o animal do holocausto de gado?",
+        "options": [
+          "Fêmea velha",
+          "Qualquer animal",
+          "Macho sem defeito",
+          "Animal doente"
+        ],
+        "answer": 2,
+        "ref": "Levítico 1:3"
+      },
+      {
+        "q": "O que devia ser posto em todas as ofertas de cereais?",
+        "options": [
+          "Mel",
+          "Fermento",
+          "Vinagre",
+          "Sal"
+        ],
+        "answer": 3,
+        "ref": "Levítico 2:13"
+      },
+      {
+        "q": "O que os israelitas não deviam comer, segundo Levítico 3?",
+        "options": [
+          "Gordura e sangue",
+          "Pão e frutas",
+          "Peixes",
+          "Leite"
+        ],
+        "answer": 0,
+        "ref": "Levítico 3:17"
+      }
+    ]
+  },
+  {
+    "day": 26,
+    "questions": [
+      {
+        "q": "Quem não pudesse oferecer um cordeiro podia trazer o quê?",
+        "options": [
+          "Um camelo",
+          "Duas rolas ou dois pombinhos",
+          "Um boi",
+          "Uma cabra grande"
+        ],
+        "answer": 1,
+        "ref": "Levítico 5:7"
+      },
+      {
+        "q": "Além de restituir, quanto a pessoa devia acrescentar?",
+        "options": [
+          "O dobro",
+          "A décima parte",
+          "Um quinto do valor",
+          "Nada"
+        ],
+        "answer": 2,
+        "ref": "Levítico 5:16"
+      },
+      {
+        "q": "Como devia ficar o fogo do altar?",
+        "options": [
+          "Aceso só aos sábados",
+          "Apagado à noite",
+          "Aceso uma vez por ano",
+          "Aceso continuamente, sem se apagar"
+        ],
+        "answer": 3,
+        "ref": "Levítico 6:13"
+      },
+      {
+        "q": "O que não se devia comer em nenhuma habitação?",
+        "options": [
+          "Sangue",
+          "Pão",
+          "Frutas",
+          "Mel"
+        ],
+        "answer": 0,
+        "ref": "Levítico 7:26"
+      },
+      {
+        "q": "De quem eram as porções do peito e da coxa das ofertas pacíficas?",
+        "options": [
+          "Dos reis",
+          "Dos sacerdotes, Arão e seus filhos",
+          "Dos pobres",
+          "Dos estrangeiros"
+        ],
+        "answer": 1,
+        "ref": "Levítico 7:34"
+      }
+    ]
+  },
+  {
+    "day": 27,
+    "questions": [
+      {
+        "q": "Com o que Moisés lavou Arão e seus filhos?",
+        "options": [
+          "Com azeite",
+          "Com vinho",
+          "Com água",
+          "Com sangue"
+        ],
+        "answer": 2,
+        "ref": "Levítico 8:6"
+      },
+      {
+        "q": "Onde Moisés pôs o sangue do carneiro em Arão?",
+        "options": [
+          "Na testa",
+          "Nas costas",
+          "Nos cabelos",
+          "Na orelha direita e nos polegares direitos"
+        ],
+        "answer": 3,
+        "ref": "Levítico 8:23"
+      },
+      {
+        "q": "Quantos dias durava a consagração dos sacerdotes?",
+        "options": [
+          "Sete dias",
+          "Três dias",
+          "Quarenta dias",
+          "Um dia"
+        ],
+        "answer": 0,
+        "ref": "Levítico 8:33"
+      },
+      {
+        "q": "O que saiu de diante do Senhor e consumiu o holocausto?",
+        "options": [
+          "Um anjo",
+          "Fogo",
+          "Um vento",
+          "Água"
+        ],
+        "answer": 1,
+        "ref": "Levítico 9:24"
+      },
+      {
+        "q": "Quem ofereceu fogo estranho diante do Senhor?",
+        "options": [
+          "Eleazar e Itamar",
+          "Moisés e Arão",
+          "Nadabe e Abiú",
+          "Corá e Datã"
+        ],
+        "answer": 2,
+        "ref": "Levítico 10:1"
+      }
+    ]
+  },
+  {
+    "day": 28,
+    "questions": [
+      {
+        "q": "Que animais terrestres o povo podia comer?",
+        "options": [
+          "Todos os que voam",
+          "Os que rastejam",
+          "Os que não ruminam",
+          "Os de unha fendida que ruminam"
+        ],
+        "answer": 3,
+        "ref": "Levítico 11:3"
+      },
+      {
+        "q": "Por que o porco era imundo para Israel?",
+        "options": [
+          "Tem unha fendida mas não rumina",
+          "É muito grande",
+          "Vive na água",
+          "Come pouco"
+        ],
+        "answer": 0,
+        "ref": "Levítico 11:7"
+      },
+      {
+        "q": "Que animais das águas o povo podia comer?",
+        "options": [
+          "Todos sem exceção",
+          "Os que têm barbatanas e escamas",
+          "Só os de casca",
+          "Os que rastejam"
+        ],
+        "answer": 1,
+        "ref": "Levítico 11:9"
+      },
+      {
+        "q": "Em que dia o menino devia ser circuncidado?",
+        "options": [
+          "No primeiro dia",
+          "No sétimo dia",
+          "No oitavo dia",
+          "No trigésimo dia"
+        ],
+        "answer": 2,
+        "ref": "Levítico 12:3"
+      },
+      {
+        "q": "Onde devia morar a pessoa com lepra?",
+        "options": [
+          "No tabernáculo",
+          "Na casa do sacerdote",
+          "No centro do arraial",
+          "Fora do acampamento"
+        ],
+        "answer": 3,
+        "ref": "Levítico 13:46"
+      }
+    ]
+  },
+  {
+    "day": 29,
+    "questions": [
+      {
+        "q": "Quantas aves vivas eram trazidas para purificar o leproso?",
+        "options": [
+          "Duas",
+          "Sete",
+          "Uma",
+          "Quatro"
+        ],
+        "answer": 0,
+        "ref": "Levítico 14:4"
+      },
+      {
+        "q": "Quantas vezes o sacerdote aspergia o que se purificava?",
+        "options": [
+          "Três vezes",
+          "Sete vezes",
+          "Uma vez",
+          "Dez vezes"
+        ],
+        "answer": 1,
+        "ref": "Levítico 14:7"
+      },
+      {
+        "q": "O que o leproso purificado devia raspar?",
+        "options": [
+          "Somente a barba",
+          "As unhas",
+          "Todo o cabelo",
+          "Nada"
+        ],
+        "answer": 2,
+        "ref": "Levítico 14:8"
+      },
+      {
+        "q": "O que se fazia com a casa em que a praga continuava?",
+        "options": [
+          "Pintava-se de branco",
+          "Vendia-se",
+          "Fechava-se para sempre",
+          "Derrubava-se a casa"
+        ],
+        "answer": 3,
+        "ref": "Levítico 14:45"
+      },
+      {
+        "q": "Quem não podia oferecer muito, por ser pobre, trazia o quê?",
+        "options": [
+          "Um cordeiro e duas rolas ou pombinhos",
+          "Um boi",
+          "Ouro",
+          "Nada"
+        ],
+        "answer": 0,
+        "ref": "Levítico 14:21-22"
+      }
+    ]
+  },
+  {
+    "day": 30,
+    "questions": [
+      {
+        "q": "Quantos bodes Arão tomava no Dia da Expiação?",
+        "options": [
+          "Sete",
+          "Dois",
+          "Um",
+          "Doze"
+        ],
+        "answer": 1,
+        "ref": "Levítico 16:7"
+      },
+      {
+        "q": "O que Arão confessava sobre a cabeça do bode vivo?",
+        "options": [
+          "Os nomes das tribos",
+          "Uma canção",
+          "As iniquidades dos filhos de Israel",
+          "As leis do sábado"
+        ],
+        "answer": 2,
+        "ref": "Levítico 16:21"
+      },
+      {
+        "q": "Segundo Levítico 17, onde está a vida da carne?",
+        "options": [
+          "Na gordura",
+          "Nos ossos",
+          "No coração",
+          "No sangue"
+        ],
+        "answer": 3,
+        "ref": "Levítico 17:11"
+      },
+      {
+        "q": "O que fazer com os bagos caídos da vinha?",
+        "options": [
+          "Deixá-los para o pobre e o estrangeiro",
+          "Queimá-los",
+          "Levá-los ao rei",
+          "Vendê-los"
+        ],
+        "answer": 0,
+        "ref": "Levítico 19:9-10"
+      },
+      {
+        "q": "Como devemos amar o nosso próximo?",
+        "options": [
+          "Só se for amigo",
+          "Como a nós mesmos",
+          "Menos que a nós",
+          "Só aos sábados"
+        ],
+        "answer": 1,
+        "ref": "Levítico 19:18"
+      }
+    ]
+  },
+  {
+    "day": 31,
+    "questions": [
+      {
+        "q": "Por que Deus diz que o povo deve ser santo?",
+        "options": [
+          "Porque são muitos",
+          "Porque são fortes",
+          "Porque Ele, o Senhor, é santo",
+          "Porque são ricos"
+        ],
+        "answer": 2,
+        "ref": "Levítico 20:26"
+      },
+      {
+        "q": "Quem tivesse defeito não podia fazer o quê, sendo da família de Arão?",
+        "options": [
+          "Comer",
+          "Morar no arraial",
+          "Ter filhos",
+          "Oferecer o pão do seu Deus"
+        ],
+        "answer": 3,
+        "ref": "Levítico 21:17"
+      },
+      {
+        "q": "Em que dia do primeiro mês era a Páscoa do Senhor?",
+        "options": [
+          "No dia catorze",
+          "No dia um",
+          "No dia dez",
+          "No dia vinte"
+        ],
+        "answer": 0,
+        "ref": "Levítico 23:5"
+      },
+      {
+        "q": "Em que dia do sétimo mês era o Dia da Expiação?",
+        "options": [
+          "No dia um",
+          "No dia dez",
+          "No dia quinze",
+          "No dia sete"
+        ],
+        "answer": 1,
+        "ref": "Levítico 23:27"
+      },
+      {
+        "q": "Por quantos dias o povo devia habitar em tendas de ramos?",
+        "options": [
+          "Três dias",
+          "Quarenta dias",
+          "Sete dias",
+          "Um dia"
+        ],
+        "answer": 2,
+        "ref": "Levítico 23:42"
+      }
+    ]
+  },
+  {
+    "day": 32,
+    "questions": [
+      {
+        "q": "Quantos pães eram postos sobre a mesa diante do Senhor?",
+        "options": [
+          "Sete",
+          "Dez",
+          "Cinco",
+          "Doze"
+        ],
+        "answer": 3,
+        "ref": "Levítico 24:5"
+      },
+      {
+        "q": "O que fez o filho da mulher israelita na briga no arraial?",
+        "options": [
+          "Blasfemou o nome do Senhor",
+          "Roubou um boi",
+          "Fugiu para o Egito",
+          "Queimou a tenda"
+        ],
+        "answer": 0,
+        "ref": "Levítico 24:11"
+      },
+      {
+        "q": "Em que ano a terra devia ter descanso?",
+        "options": [
+          "No décimo ano",
+          "No sétimo ano",
+          "No terceiro ano",
+          "No quinto ano"
+        ],
+        "answer": 1,
+        "ref": "Levítico 25:4"
+      },
+      {
+        "q": "Qual ano devia ser santificado como jubileu?",
+        "options": [
+          "O vigésimo",
+          "O centésimo",
+          "O quinquagésimo",
+          "O sétimo"
+        ],
+        "answer": 2,
+        "ref": "Levítico 25:10-11"
+      },
+      {
+        "q": "Se obedecessem, cinco israelitas perseguiriam quantos inimigos?",
+        "options": [
+          "Cinquenta",
+          "Mil",
+          "Dez",
+          "Cem"
+        ],
+        "answer": 3,
+        "ref": "Levítico 26:8"
+      }
+    ]
+  },
+  {
+    "day": 33,
+    "questions": [
+      {
+        "q": "De quem é todo dízimo da terra?",
+        "options": [
+          "Do Senhor",
+          "Do rei",
+          "Dos pobres",
+          "Dos anciãos"
+        ],
+        "answer": 0,
+        "ref": "Levítico 27:30"
+      },
+      {
+        "q": "Onde Israel estava quando Deus mandou fazer o censo?",
+        "options": [
+          "No Egito",
+          "No deserto do Sinai",
+          "Em Canaã",
+          "Em Moabe"
+        ],
+        "answer": 1,
+        "ref": "Números 1:1"
+      },
+      {
+        "q": "A partir de que idade os homens eram contados para a guerra?",
+        "options": [
+          "Doze anos",
+          "Trinta anos",
+          "Vinte anos",
+          "Quinze anos"
+        ],
+        "answer": 2,
+        "ref": "Números 1:3"
+      },
+      {
+        "q": "Qual tribo não foi contada com as outras no censo?",
+        "options": [
+          "Judá",
+          "Benjamim",
+          "Dã",
+          "Levi"
+        ],
+        "answer": 3,
+        "ref": "Números 1:49"
+      },
+      {
+        "q": "Qual era a tarefa dos levitas segundo Números 1?",
+        "options": [
+          "Cuidar do tabernáculo",
+          "Ir à guerra",
+          "Plantar",
+          "Pastorear ovelhas"
+        ],
+        "answer": 0,
+        "ref": "Números 1:50"
+      }
+    ]
+  },
+  {
+    "day": 34,
+    "questions": [
+      {
+        "q": "Como os filhos de Israel deviam acampar?",
+        "options": [
+          "Todos juntos sem ordem",
+          "Cada um junto à sua bandeira",
+          "Em cavernas",
+          "Dentro de cidades"
+        ],
+        "answer": 1,
+        "ref": "Números 2:2"
+      },
+      {
+        "q": "Qual tribo acampava do lado oriental?",
+        "options": [
+          "Rúben",
+          "Efraim",
+          "Judá",
+          "Dã"
+        ],
+        "answer": 2,
+        "ref": "Números 2:3"
+      },
+      {
+        "q": "Os levitas foram tomados no lugar de quem?",
+        "options": [
+          "Dos reis",
+          "Dos estrangeiros",
+          "Dos anciãos",
+          "Dos primogênitos de Israel"
+        ],
+        "answer": 3,
+        "ref": "Números 3:12"
+      },
+      {
+        "q": "Com que idade os levitas começavam o serviço na tenda?",
+        "options": [
+          "De trinta a cinquenta anos",
+          "De dez a vinte anos",
+          "De sessenta anos",
+          "De quinze anos"
+        ],
+        "answer": 0,
+        "ref": "Números 4:3"
+      },
+      {
+        "q": "O que aconteceria se os filhos de Coate tocassem nas coisas santas?",
+        "options": [
+          "Ficariam ricos",
+          "Morreriam",
+          "Seriam reis",
+          "Nada"
+        ],
+        "answer": 1,
+        "ref": "Números 4:15"
+      }
+    ]
+  },
+  {
+    "day": 35,
+    "questions": [
+      {
+        "q": "De que o nazireu devia se abster?",
+        "options": [
+          "De água",
+          "De pão",
+          "De vinho e bebida forte",
+          "De conversar"
+        ],
+        "answer": 2,
+        "ref": "Números 6:3"
+      },
+      {
+        "q": "O que não podia passar sobre a cabeça do nazireu?",
+        "options": [
+          "Água",
+          "Azeite",
+          "Chapéu",
+          "Navalha"
+        ],
+        "answer": 3,
+        "ref": "Números 6:5"
+      },
+      {
+        "q": "Como começa a bênção sacerdotal de Arão?",
+        "options": [
+          "O Senhor te abençoe e te guarde",
+          "Bendito é o povo",
+          "Ouve, ó Israel",
+          "Paz a esta casa"
+        ],
+        "answer": 0,
+        "ref": "Números 6:24"
+      },
+      {
+        "q": "O que os príncipes trouxeram como oferta ao tabernáculo?",
+        "options": [
+          "Dez camelos",
+          "Seis carros e doze bois",
+          "Cem ovelhas",
+          "Um carro de ouro"
+        ],
+        "answer": 1,
+        "ref": "Números 7:3"
+      },
+      {
+        "q": "Por que os filhos de Coate não receberam carros?",
+        "options": [
+          "Não sabiam guiar",
+          "Eram poucos",
+          "Levavam as coisas santas nos ombros",
+          "Moravam longe"
+        ],
+        "answer": 2,
+        "ref": "Números 7:9"
+      }
+    ]
+  },
+  {
+    "day": 36,
+    "questions": [
+      {
+        "q": "Quantas lâmpadas iluminavam diante do candelabro?",
+        "options": [
+          "Doze",
+          "Três",
+          "Dez",
+          "Sete"
+        ],
+        "answer": 3,
+        "ref": "Números 8:2"
+      },
+      {
+        "q": "Com que idade os levitas entravam no serviço, em Números 8?",
+        "options": [
+          "Vinte e cinco anos",
+          "Quinze anos",
+          "Quarenta anos",
+          "Doze anos"
+        ],
+        "answer": 0,
+        "ref": "Números 8:24"
+      },
+      {
+        "q": "Quando quem estava impuro podia celebrar a Páscoa?",
+        "options": [
+          "No sétimo mês",
+          "No segundo mês, dia catorze",
+          "Nunca",
+          "No ano seguinte"
+        ],
+        "answer": 1,
+        "ref": "Números 9:10-11"
+      },
+      {
+        "q": "De que metal eram as duas trombetas?",
+        "options": [
+          "Ouro",
+          "Bronze",
+          "Prata",
+          "Ferro"
+        ],
+        "answer": 2,
+        "ref": "Números 10:2"
+      },
+      {
+        "q": "O que Moisés dizia quando a arca partia?",
+        "options": [
+          "Vamos embora",
+          "Paz a Israel",
+          "Avante, soldados",
+          "Levanta-te, Senhor"
+        ],
+        "answer": 3,
+        "ref": "Números 10:35"
+      }
+    ]
+  },
+  {
+    "day": 37,
+    "questions": [
+      {
+        "q": "Do que o povo sentiu saudade do Egito?",
+        "options": [
+          "Peixe, pepinos e melões",
+          "Ouro e prata",
+          "Palácios",
+          "Cavalos"
+        ],
+        "answer": 0,
+        "ref": "Números 11:5"
+      },
+      {
+        "q": "Quantos anciãos Deus mandou reunir para ajudar Moisés?",
+        "options": [
+          "Doze",
+          "Setenta",
+          "Quarenta",
+          "Cem"
+        ],
+        "answer": 1,
+        "ref": "Números 11:16"
+      },
+      {
+        "q": "Que aves o vento trouxe do mar?",
+        "options": [
+          "Pombas",
+          "Corvos",
+          "Codornizes",
+          "Águias"
+        ],
+        "answer": 2,
+        "ref": "Números 11:31"
+      },
+      {
+        "q": "O que aconteceu com Miriã por falar contra Moisés?",
+        "options": [
+          "Ficou cega",
+          "Ficou muda",
+          "Morreu",
+          "Ficou leprosa"
+        ],
+        "answer": 3,
+        "ref": "Números 12:10"
+      },
+      {
+        "q": "O que os espias trouxeram do vale de Escol, numa vara?",
+        "options": [
+          "Um cacho de uvas",
+          "Um peixe enorme",
+          "Uma ovelha",
+          "Um tesouro"
+        ],
+        "answer": 0,
+        "ref": "Números 13:23"
+      }
+    ]
+  },
+  {
+    "day": 38,
+    "questions": [
+      {
+        "q": "Quem rasgou as vestes e defendeu entrar na terra?",
+        "options": [
+          "Corá e Datã",
+          "Josué e Calebe",
+          "Arão e Hur",
+          "Nadabe e Abiú"
+        ],
+        "answer": 1,
+        "ref": "Números 14:6"
+      },
+      {
+        "q": "Por quantos anos o povo andaria no deserto?",
+        "options": [
+          "Sete anos",
+          "Dez anos",
+          "Quarenta anos",
+          "Vinte anos"
+        ],
+        "answer": 2,
+        "ref": "Números 14:33"
+      },
+      {
+        "q": "O que fazia o homem achado no deserto no dia de sábado?",
+        "options": [
+          "Pescava",
+          "Dormia",
+          "Cantava",
+          "Apanhava lenha"
+        ],
+        "answer": 3,
+        "ref": "Números 15:32"
+      },
+      {
+        "q": "O que os israelitas deviam fazer nas bordas das vestes?",
+        "options": [
+          "Borlas com cordão azul",
+          "Bolsos",
+          "Botões",
+          "Sinos"
+        ],
+        "answer": 0,
+        "ref": "Números 15:38"
+      },
+      {
+        "q": "O que aconteceu com Corá, Datã e Abirão?",
+        "options": [
+          "Foram para o Egito",
+          "A terra abriu e os engoliu",
+          "Viraram reis",
+          "Ficaram leprosos"
+        ],
+        "answer": 1,
+        "ref": "Números 16:31-32"
+      }
+    ]
+  },
+  {
+    "day": 39,
+    "questions": [
+      {
+        "q": "O que produziu a vara de Arão no tabernáculo?",
+        "options": [
+          "Uvas",
+          "Figos",
+          "Brotos, flores e amêndoas",
+          "Nada"
+        ],
+        "answer": 2,
+        "ref": "Números 17:8"
+      },
+      {
+        "q": "Qual era a cor da novilha usada na purificação?",
+        "options": [
+          "Branca",
+          "Preta",
+          "Malhada",
+          "Vermelha"
+        ],
+        "answer": 3,
+        "ref": "Números 19:2"
+      },
+      {
+        "q": "Onde Miriã morreu e foi sepultada?",
+        "options": [
+          "Em Cades",
+          "No monte Hor",
+          "No Egito",
+          "Em Moabe"
+        ],
+        "answer": 0,
+        "ref": "Números 20:1"
+      },
+      {
+        "q": "Quantas vezes Moisés feriu a rocha com a vara?",
+        "options": [
+          "Uma vez",
+          "Duas vezes",
+          "Três vezes",
+          "Sete vezes"
+        ],
+        "answer": 1,
+        "ref": "Números 20:11"
+      },
+      {
+        "q": "Onde morreu Arão?",
+        "options": [
+          "Em Cades",
+          "No Sinai",
+          "No cume do monte Hor",
+          "No Egito"
+        ],
+        "answer": 2,
+        "ref": "Números 20:25-28"
+      }
+    ]
+  },
+  {
+    "day": 40,
+    "questions": [
+      {
+        "q": "Que animais o Senhor enviou contra o povo que murmurou?",
+        "options": [
+          "Leões",
+          "Lobos",
+          "Gafanhotos",
+          "Serpentes ardentes"
+        ],
+        "answer": 3,
+        "ref": "Números 21:6"
+      },
+      {
+        "q": "O que Moisés fez para quem fosse mordido olhar e viver?",
+        "options": [
+          "Uma serpente de bronze",
+          "Um bezerro de ouro",
+          "Um altar de pedra",
+          "Uma tenda"
+        ],
+        "answer": 0,
+        "ref": "Números 21:9"
+      },
+      {
+        "q": "Quem era Ogue?",
+        "options": [
+          "Rei de Moabe",
+          "Rei de Basã",
+          "Rei do Egito",
+          "Sacerdote de Midiã"
+        ],
+        "answer": 1,
+        "ref": "Números 21:33"
+      },
+      {
+        "q": "Qual animal falou com Balaão?",
+        "options": [
+          "Seu cavalo",
+          "Seu camelo",
+          "Sua jumenta",
+          "Seu cão"
+        ],
+        "answer": 2,
+        "ref": "Números 22:28"
+      },
+      {
+        "q": "Quantos altares Balaão mandou Balaque construir?",
+        "options": [
+          "Três",
+          "Doze",
+          "Dois",
+          "Sete"
+        ],
+        "answer": 3,
+        "ref": "Números 23:1"
+      }
+    ]
+  },
+  {
+    "day": 41,
+    "questions": [
+      {
+        "q": "Quantas vezes Balaão abençoou Israel em vez de amaldiçoar?",
+        "options": [
+          "Três vezes",
+          "Uma vez",
+          "Sete vezes",
+          "Duas vezes"
+        ],
+        "answer": 0,
+        "ref": "Números 24:10"
+      },
+      {
+        "q": "Segundo Balaão, o que procederia de Jacó?",
+        "options": [
+          "Um leão",
+          "Uma estrela",
+          "Um rio",
+          "Uma montanha"
+        ],
+        "answer": 1,
+        "ref": "Números 24:17"
+      },
+      {
+        "q": "Quem pegou uma lança e deteve a praga em Israel?",
+        "options": [
+          "Eleazar",
+          "Josué",
+          "Fineias",
+          "Calebe"
+        ],
+        "answer": 2,
+        "ref": "Números 25:7-8"
+      },
+      {
+        "q": "Quantos morreram na praga de Números 25?",
+        "options": [
+          "Três mil",
+          "Mil",
+          "Cem mil",
+          "Vinte e quatro mil"
+        ],
+        "answer": 3,
+        "ref": "Números 25:9"
+      },
+      {
+        "q": "Quem Deus escolheu para liderar o povo depois de Moisés?",
+        "options": [
+          "Josué, filho de Num",
+          "Calebe",
+          "Eleazar",
+          "Fineias"
+        ],
+        "answer": 0,
+        "ref": "Números 27:18"
+      }
+    ]
+  },
+  {
+    "day": 42,
+    "questions": [
+      {
+        "q": "Quantos cordeiros eram oferecidos a cada dia no holocausto contínuo?",
+        "options": [
+          "Sete",
+          "Dois",
+          "Um",
+          "Doze"
+        ],
+        "answer": 1,
+        "ref": "Números 28:3"
+      },
+      {
+        "q": "Quantos cordeiros se ofereciam a mais no dia de sábado?",
+        "options": [
+          "Cinco",
+          "Dez",
+          "Dois",
+          "Nenhum"
+        ],
+        "answer": 2,
+        "ref": "Números 28:9"
+      },
+      {
+        "q": "O primeiro dia do sétimo mês era dia de quê?",
+        "options": [
+          "Jejum total",
+          "Colheita",
+          "Mudança de acampamento",
+          "Tocar as trombetas"
+        ],
+        "answer": 3,
+        "ref": "Números 29:1"
+      },
+      {
+        "q": "Quantos novilhos se ofereciam no primeiro dia da festa do sétimo mês?",
+        "options": [
+          "Treze",
+          "Sete",
+          "Dois",
+          "Vinte"
+        ],
+        "answer": 0,
+        "ref": "Números 29:13"
+      },
+      {
+        "q": "O que um homem devia fazer ao fazer um voto ao Senhor?",
+        "options": [
+          "Esquecer depois",
+          "Cumprir tudo o que disse",
+          "Pedir dinheiro",
+          "Contar só ao rei"
+        ],
+        "answer": 1,
+        "ref": "Números 30:2"
+      }
+    ]
+  },
+  {
+    "day": 43,
+    "questions": [
+      {
+        "q": "Contra qual povo Deus mandou Israel se vingar?",
+        "options": [
+          "Os egípcios",
+          "Os edomitas",
+          "Os midianitas",
+          "Os moabitas"
+        ],
+        "answer": 2,
+        "ref": "Números 31:2"
+      },
+      {
+        "q": "Quantos homens de cada tribo foram à guerra contra Midiã?",
+        "options": [
+          "Cem",
+          "Dez mil",
+          "Doze",
+          "Mil"
+        ],
+        "answer": 3,
+        "ref": "Números 31:4"
+      },
+      {
+        "q": "Quem foi morto à espada junto com os reis de Midiã?",
+        "options": [
+          "Balaão",
+          "Balaque",
+          "Ogue",
+          "Seom"
+        ],
+        "answer": 0,
+        "ref": "Números 31:8"
+      },
+      {
+        "q": "Por que Rúben e Gade quiseram ficar a leste do Jordão?",
+        "options": [
+          "Tinham medo",
+          "Tinham muito gado",
+          "Eram poucos",
+          "Não gostavam de Canaã"
+        ],
+        "answer": 1,
+        "ref": "Números 32:1"
+      },
+      {
+        "q": "Quantas fontes de água havia em Elim?",
+        "options": [
+          "Sete",
+          "Setenta",
+          "Doze",
+          "Três"
+        ],
+        "answer": 2,
+        "ref": "Números 33:9"
+      }
+    ]
+  },
+  {
+    "day": 44,
+    "questions": [
+      {
+        "q": "Quantas cidades de refúgio deviam ser dadas?",
+        "options": [
+          "Doze",
+          "Três",
+          "Dez",
+          "Seis"
+        ],
+        "answer": 3,
+        "ref": "Números 35:6"
+      },
+      {
+        "q": "Quantas cidades no total os levitas receberiam?",
+        "options": [
+          "Quarenta e oito",
+          "Doze",
+          "Sete",
+          "Setenta"
+        ],
+        "answer": 0,
+        "ref": "Números 35:7"
+      },
+      {
+        "q": "Com quem as filhas de Zelofeade deviam se casar?",
+        "options": [
+          "Com estrangeiros",
+          "Com alguém da tribo de seu pai",
+          "Com levitas",
+          "Com reis"
+        ],
+        "answer": 1,
+        "ref": "Números 36:6"
+      },
+      {
+        "q": "Quantas jornadas há de Horebe a Cades-Barneia?",
+        "options": [
+          "Quarenta",
+          "Três",
+          "Onze",
+          "Sete"
+        ],
+        "answer": 2,
+        "ref": "Deuteronômio 1:2"
+      },
+      {
+        "q": "Quem Deus disse que entraria na terra no lugar de Moisés?",
+        "options": [
+          "Arão",
+          "Eleazar",
+          "Fineias",
+          "Josué"
+        ],
+        "answer": 3,
+        "ref": "Deuteronômio 1:38"
+      }
+    ]
+  },
+  {
+    "day": 45,
+    "questions": [
+      {
+        "q": "Por quanto tempo Deus esteve com Israel no deserto sem faltar nada?",
+        "options": [
+          "Quarenta anos",
+          "Sete anos",
+          "Dez anos",
+          "Cem anos"
+        ],
+        "answer": 0,
+        "ref": "Deuteronômio 2:7"
+      },
+      {
+        "q": "De que material era a cama de Ogue?",
+        "options": [
+          "Ouro",
+          "Ferro",
+          "Madeira",
+          "Pedra"
+        ],
+        "answer": 1,
+        "ref": "Deuteronômio 3:11"
+      },
+      {
+        "q": "De qual monte Moisés poderia ver a terra?",
+        "options": [
+          "Do Sinai",
+          "Do Carmelo",
+          "Do cume do Pisga",
+          "Do Hor"
+        ],
+        "answer": 2,
+        "ref": "Deuteronômio 3:27"
+      },
+      {
+        "q": "O que o povo não devia fazer às palavras que Deus ordenou?",
+        "options": [
+          "Ler",
+          "Ensinar",
+          "Guardar",
+          "Acrescentar ou diminuir"
+        ],
+        "answer": 3,
+        "ref": "Deuteronômio 4:2"
+      },
+      {
+        "q": "Em quantas tábuas de pedra Deus escreveu os dez mandamentos?",
+        "options": [
+          "Duas",
+          "Uma",
+          "Dez",
+          "Doze"
+        ],
+        "answer": 0,
+        "ref": "Deuteronômio 4:13"
+      }
+    ]
+  },
+  {
+    "day": 46,
+    "questions": [
+      {
+        "q": "De que casa Deus tirou Israel, segundo Deuteronômio 5?",
+        "options": [
+          "Da casa de Labão",
+          "Da casa da servidão",
+          "Da casa do rei",
+          "Da casa de Moabe"
+        ],
+        "answer": 1,
+        "ref": "Deuteronômio 5:6"
+      },
+      {
+        "q": "Como completa: Ouve, Israel, o Senhor nosso Deus é...",
+        "options": [
+          "O rei do Egito",
+          "Um entre muitos",
+          "O único Senhor",
+          "Distante"
+        ],
+        "answer": 2,
+        "ref": "Deuteronômio 6:4"
+      },
+      {
+        "q": "Com o quê devemos amar o Senhor?",
+        "options": [
+          "Só com palavras",
+          "Só com ofertas",
+          "Só aos sábados",
+          "Coração, alma e força"
+        ],
+        "answer": 3,
+        "ref": "Deuteronômio 6:5"
+      },
+      {
+        "q": "A quem os pais deviam ensinar as palavras de Deus?",
+        "options": [
+          "Aos seus filhos",
+          "Só aos sacerdotes",
+          "Só aos reis",
+          "A ninguém"
+        ],
+        "answer": 0,
+        "ref": "Deuteronômio 6:7"
+      },
+      {
+        "q": "Por que Deus escolheu Israel?",
+        "options": [
+          "Porque eram muitos",
+          "Porque os amou",
+          "Porque eram fortes",
+          "Porque eram ricos"
+        ],
+        "answer": 1,
+        "ref": "Deuteronômio 7:7-8"
+      }
+    ]
+  },
+  {
+    "day": 47,
+    "questions": [
+      {
+        "q": "Do que vive o homem, além do pão?",
+        "options": [
+          "Só de água",
+          "De ouro",
+          "De tudo o que procede da boca do Senhor",
+          "De carne"
+        ],
+        "answer": 2,
+        "ref": "Deuteronômio 8:3"
+      },
+      {
+        "q": "O que não envelheceu durante os quarenta anos no deserto?",
+        "options": [
+          "As tendas",
+          "Os camelos",
+          "As armas",
+          "As vestes do povo"
+        ],
+        "answer": 3,
+        "ref": "Deuteronômio 8:4"
+      },
+      {
+        "q": "Onde Moisés colocou as novas tábuas?",
+        "options": [
+          "Na arca que fizera",
+          "No altar",
+          "Numa caverna",
+          "Na tenda de Arão"
+        ],
+        "answer": 0,
+        "ref": "Deuteronômio 10:5"
+      },
+      {
+        "q": "Quem Israel devia amar, lembrando que foi estrangeiro no Egito?",
+        "options": [
+          "Só os parentes",
+          "O estrangeiro",
+          "Os reis",
+          "Os ricos"
+        ],
+        "answer": 1,
+        "ref": "Deuteronômio 10:19"
+      },
+      {
+        "q": "Em qual monte seria dada a bênção?",
+        "options": [
+          "Ebal",
+          "Sinai",
+          "Gerizim",
+          "Hor"
+        ],
+        "answer": 2,
+        "ref": "Deuteronômio 11:29"
+      }
+    ]
+  },
+  {
+    "day": 48,
+    "questions": [
+      {
+        "q": "Onde Israel devia levar seus sacrifícios?",
+        "options": [
+          "A qualquer monte",
+          "À casa de cada um",
+          "Ao Egito",
+          "Ao lugar que o Senhor escolher"
+        ],
+        "answer": 3,
+        "ref": "Deuteronômio 12:5-6"
+      },
+      {
+        "q": "Por que não se devia comer o sangue?",
+        "options": [
+          "Porque o sangue é a vida",
+          "Porque é amargo",
+          "Porque é caro",
+          "Porque é do rei"
+        ],
+        "answer": 0,
+        "ref": "Deuteronômio 12:23"
+      },
+      {
+        "q": "Como Deus chama Israel em Deuteronômio 14:2?",
+        "options": [
+          "Povo fraco",
+          "Povo santo",
+          "Povo pequeno",
+          "Povo rebelde"
+        ],
+        "answer": 1,
+        "ref": "Deuteronômio 14:2"
+      },
+      {
+        "q": "Em que não se devia cozinhar o cabrito?",
+        "options": [
+          "Em água",
+          "Em azeite",
+          "No leite da sua mãe",
+          "No fogo"
+        ],
+        "answer": 2,
+        "ref": "Deuteronômio 14:21"
+      },
+      {
+        "q": "Com quem o dízimo do terceiro ano devia ser repartido?",
+        "options": [
+          "Só o rei",
+          "Só os soldados",
+          "Os ricos",
+          "Levita, estrangeiro, órfão e viúva"
+        ],
+        "answer": 3,
+        "ref": "Deuteronômio 14:28-29"
+      }
+    ]
+  },
+  {
+    "day": 49,
+    "questions": [
+      {
+        "q": "Ao final de quantos anos se fazia a remissão?",
+        "options": [
+          "Sete anos",
+          "Dez anos",
+          "Três anos",
+          "Cinquenta anos"
+        ],
+        "answer": 0,
+        "ref": "Deuteronômio 15:1"
+      },
+      {
+        "q": "Quantas vezes por ano os homens se apresentavam diante do Senhor?",
+        "options": [
+          "Uma vez",
+          "Três vezes",
+          "Sete vezes",
+          "Doze vezes"
+        ],
+        "answer": 1,
+        "ref": "Deuteronômio 16:16"
+      },
+      {
+        "q": "O que o rei de Israel devia escrever para si?",
+        "options": [
+          "Uma canção",
+          "Sua história",
+          "Uma cópia desta lei",
+          "Uma carta ao Egito"
+        ],
+        "answer": 2,
+        "ref": "Deuteronômio 17:18"
+      },
+      {
+        "q": "Deus prometeu levantar um profeta semelhante a quem?",
+        "options": [
+          "Arão",
+          "Balaão",
+          "Faraó",
+          "Moisés"
+        ],
+        "answer": 3,
+        "ref": "Deuteronômio 18:15"
+      },
+      {
+        "q": "Quantas testemunhas eram necessárias para confirmar um caso?",
+        "options": [
+          "Duas ou três",
+          "Uma",
+          "Sete",
+          "Dez"
+        ],
+        "answer": 0,
+        "ref": "Deuteronômio 19:15"
+      }
+    ]
+  },
+  {
+    "day": 50,
+    "questions": [
+      {
+        "q": "Por que Israel não devia temer cavalos e carros inimigos?",
+        "options": [
+          "Os inimigos eram poucos",
+          "O Senhor estava com eles",
+          "Os inimigos eram fracos",
+          "Os inimigos iam fugir"
+        ],
+        "answer": 1,
+        "ref": "Deuteronômio 20:1"
+      },
+      {
+        "q": "Quem tinha construído uma casa nova e não a dedicou devia fazer o quê?",
+        "options": [
+          "Ir à frente",
+          "Pagar ouro",
+          "Voltar para casa",
+          "Ser sacerdote"
+        ],
+        "answer": 2,
+        "ref": "Deuteronômio 20:5"
+      },
+      {
+        "q": "Que árvores não deviam ser cortadas no cerco de uma cidade?",
+        "options": [
+          "Só os cedros",
+          "Só as palmeiras",
+          "Todas podiam ser cortadas",
+          "As árvores que dão alimento"
+        ],
+        "answer": 3,
+        "ref": "Deuteronômio 20:19"
+      },
+      {
+        "q": "O que fazer ao ver o boi do irmão extraviado?",
+        "options": [
+          "Devolvê-lo ao irmão",
+          "Ignorá-lo",
+          "Ficar com ele",
+          "Vendê-lo"
+        ],
+        "answer": 0,
+        "ref": "Deuteronômio 22:1"
+      },
+      {
+        "q": "O que se devia fazer no telhado de uma casa nova?",
+        "options": [
+          "Um jardim",
+          "Um parapeito",
+          "Uma torre",
+          "Um poço"
+        ],
+        "answer": 1,
+        "ref": "Deuteronômio 22:8"
+      }
+    ]
+  },
+  {
+    "day": 51,
+    "questions": [
+      {
+        "q": "Por quanto tempo o recém-casado ficava livre de ir à guerra?",
+        "options": [
+          "Um mês",
+          "Sete anos",
+          "Um ano",
+          "Uma semana"
+        ],
+        "answer": 2,
+        "ref": "Deuteronômio 24:5"
+      },
+      {
+        "q": "Quando se devia pagar o salário do trabalhador pobre?",
+        "options": [
+          "No fim do ano",
+          "Só quando ele pedir",
+          "Depois de um mês",
+          "No mesmo dia, antes do pôr do sol"
+        ],
+        "answer": 3,
+        "ref": "Deuteronômio 24:15"
+      },
+      {
+        "q": "Para quem devia ficar o feixe esquecido no campo?",
+        "options": [
+          "Estrangeiro, órfão e viúva",
+          "Para o rei",
+          "Para os sacerdotes",
+          "Para os animais"
+        ],
+        "answer": 0,
+        "ref": "Deuteronômio 24:19"
+      },
+      {
+        "q": "O que não se devia fazer ao boi que debulha?",
+        "options": [
+          "Dar-lhe água",
+          "Atar a sua boca",
+          "Deixá-lo descansar",
+          "Alimentá-lo"
+        ],
+        "answer": 1,
+        "ref": "Deuteronômio 25:4"
+      },
+      {
+        "q": "O que devia ser escrito nas pedras grandes caiadas?",
+        "options": [
+          "Os nomes dos reis",
+          "Uma canção de vitória",
+          "As palavras desta lei",
+          "As medidas do altar"
+        ],
+        "answer": 2,
+        "ref": "Deuteronômio 27:2-3"
+      }
+    ]
+  },
+  {
+    "day": 52,
+    "questions": [
+      {
+        "q": "Se obedecesse, Israel seria a cabeça e não o quê?",
+        "options": [
+          "Os pés",
+          "As mãos",
+          "O corpo",
+          "A cauda"
+        ],
+        "answer": 3,
+        "ref": "Deuteronômio 28:13"
+      },
+      {
+        "q": "Onde Israel seria bendito, se obedecesse?",
+        "options": [
+          "Na cidade e no campo",
+          "Só no templo",
+          "Só no Egito",
+          "Só no deserto"
+        ],
+        "answer": 0,
+        "ref": "Deuteronômio 28:3"
+      },
+      {
+        "q": "Além das vestes, o que não se consumiu nos quarenta anos de deserto?",
+        "options": [
+          "As tendas",
+          "Os sapatos",
+          "Os camelos",
+          "As armas"
+        ],
+        "answer": 1,
+        "ref": "Deuteronômio 29:5"
+      },
+      {
+        "q": "O que Deus pôs diante do povo em Deuteronômio 30:15?",
+        "options": [
+          "Ouro e prata",
+          "Dois caminhos de areia",
+          "A vida e o bem, a morte e o mal",
+          "Duas cidades"
+        ],
+        "answer": 2,
+        "ref": "Deuteronômio 30:15"
+      },
+      {
+        "q": "O que Moisés pediu que o povo escolhesse?",
+        "options": [
+          "A riqueza",
+          "A guerra",
+          "O Egito",
+          "A vida"
+        ],
+        "answer": 3,
+        "ref": "Deuteronômio 30:19"
+      }
+    ]
+  },
+  {
+    "day": 53,
+    "questions": [
+      {
+        "q": "Quantos anos Moisés tinha ao falar suas últimas palavras ao povo?",
+        "options": [
+          "Cento e vinte",
+          "Oitenta",
+          "Cem",
+          "Cento e dez"
+        ],
+        "answer": 0,
+        "ref": "Deuteronômio 31:2"
+      },
+      {
+        "q": "O que Moisés disse a Josué e ao povo para serem?",
+        "options": [
+          "Ricos e famosos",
+          "Esforçados e corajosos",
+          "Calados",
+          "Medrosos"
+        ],
+        "answer": 1,
+        "ref": "Deuteronômio 31:6"
+      },
+      {
+        "q": "De quanto em quanto tempo a lei devia ser lida ao povo?",
+        "options": [
+          "Todo dia",
+          "A cada cinquenta anos",
+          "A cada sete anos",
+          "Uma vez só"
+        ],
+        "answer": 2,
+        "ref": "Deuteronômio 31:10-11"
+      },
+      {
+        "q": "Onde foi colocado o livro da lei?",
+        "options": [
+          "Num poço",
+          "No palácio",
+          "Debaixo de uma árvore",
+          "Ao lado da arca da aliança"
+        ],
+        "answer": 3,
+        "ref": "Deuteronômio 31:26"
+      },
+      {
+        "q": "Em qual monte Deus mandou Moisés subir para ver Canaã?",
+        "options": [
+          "Monte Nebo",
+          "Monte Sinai",
+          "Monte Carmelo",
+          "Monte Sião"
+        ],
+        "answer": 0,
+        "ref": "Deuteronômio 32:49"
+      }
+    ]
+  },
+  {
+    "day": 54,
+    "questions": [
+      {
+        "q": "Como estavam os olhos de Moisés quando ele morreu?",
+        "options": [
+          "Estavam cegos",
+          "Não se escureceram",
+          "Estavam fechados",
+          "Estavam fracos"
+        ],
+        "answer": 1,
+        "ref": "Deuteronômio 34:7"
+      },
+      {
+        "q": "Por quantos dias Israel chorou Moisés?",
+        "options": [
+          "Sete dias",
+          "Quarenta dias",
+          "Trinta dias",
+          "Três dias"
+        ],
+        "answer": 2,
+        "ref": "Deuteronômio 34:8"
+      },
+      {
+        "q": "O que Josué devia fazer com o livro da lei de dia e de noite?",
+        "options": [
+          "Escondê-lo",
+          "Guardá-lo fechado",
+          "Vendê-lo",
+          "Meditar nele"
+        ],
+        "answer": 3,
+        "ref": "Josué 1:8"
+      },
+      {
+        "q": "Onde Raabe escondeu os espias?",
+        "options": [
+          "No telhado, entre as canas de linho",
+          "Num poço",
+          "Numa caverna",
+          "Debaixo da cama"
+        ],
+        "answer": 0,
+        "ref": "Josué 2:6"
+      },
+      {
+        "q": "Quantas pedras foram tiradas do meio do Jordão?",
+        "options": [
+          "Sete",
+          "Doze",
+          "Dez",
+          "Duas"
+        ],
+        "answer": 1,
+        "ref": "Josué 4:3"
+      }
+    ]
+  },
+  {
+    "day": 55,
+    "questions": [
+      {
+        "q": "Com que Josué fez facas para circuncidar o povo?",
+        "options": [
+          "Bronze",
+          "Ferro",
+          "Pederneira",
+          "Ouro"
+        ],
+        "answer": 2,
+        "ref": "Josué 5:2"
+      },
+      {
+        "q": "Quando o maná cessou?",
+        "options": [
+          "Ao sair do Egito",
+          "No Sinai",
+          "Nunca cessou",
+          "Quando comeram do fruto da terra"
+        ],
+        "answer": 3,
+        "ref": "Josué 5:12"
+      },
+      {
+        "q": "Quem apareceu a Josué com uma espada na mão?",
+        "options": [
+          "O príncipe do exército do Senhor",
+          "Um rei de Jericó",
+          "Raabe",
+          "Calebe"
+        ],
+        "answer": 0,
+        "ref": "Josué 5:13-14"
+      },
+      {
+        "q": "O que aconteceu quando o povo gritou e as trombetas tocaram?",
+        "options": [
+          "Choveu",
+          "As muralhas ruíram",
+          "A terra tremeu sem nada cair",
+          "O rio secou"
+        ],
+        "answer": 1,
+        "ref": "Josué 6:20"
+      },
+      {
+        "q": "Quem tomou das coisas condenadas e trouxe derrota em Ai?",
+        "options": [
+          "Calebe",
+          "Fineias",
+          "Acã",
+          "Eleazar"
+        ],
+        "answer": 2,
+        "ref": "Josué 7:1"
+      }
+    ]
+  },
+  {
+    "day": 56,
+    "questions": [
+      {
+        "q": "O que Josué fez com a cidade de Ai depois de vencê-la?",
+        "options": [
+          "Reconstruiu-a",
+          "Fez dela capital",
+          "Deu-a a Raabe",
+          "Queimou-a"
+        ],
+        "answer": 3,
+        "ref": "Josué 8:28"
+      },
+      {
+        "q": "Como os gibeonitas enganaram Josué?",
+        "options": [
+          "Fingiram vir de terra distante",
+          "Trouxeram ouro falso",
+          "Disfarçaram-se de sacerdotes",
+          "Esconderam-se"
+        ],
+        "answer": 0,
+        "ref": "Josué 9:4-6"
+      },
+      {
+        "q": "Que trabalho foi dado aos gibeonitas?",
+        "options": [
+          "Construir muros",
+          "Rachar lenha e tirar água",
+          "Guardar as portas",
+          "Cuidar dos camelos"
+        ],
+        "answer": 1,
+        "ref": "Josué 9:21"
+      },
+      {
+        "q": "O que Josué pediu que parasse sobre Gibeão?",
+        "options": [
+          "O vento",
+          "A chuva",
+          "O sol",
+          "O rio"
+        ],
+        "answer": 2,
+        "ref": "Josué 10:12"
+      },
+      {
+        "q": "Onde os cinco reis se esconderam?",
+        "options": [
+          "Em Jericó",
+          "No rio Jordão",
+          "Numa torre",
+          "Numa cova em Maquedá"
+        ],
+        "answer": 3,
+        "ref": "Josué 10:16"
+      }
+    ]
+  },
+  {
+    "day": 57,
+    "questions": [
+      {
+        "q": "O que Deus mandou fazer com os cavalos e carros inimigos?",
+        "options": [
+          "Cortar os cavalos e queimar os carros",
+          "Ficar com todos",
+          "Devolvê-los",
+          "Vendê-los"
+        ],
+        "answer": 0,
+        "ref": "Josué 11:6"
+      },
+      {
+        "q": "Quantos reis ao todo Josué derrotou?",
+        "options": [
+          "Doze",
+          "Trinta e um",
+          "Sete",
+          "Cem"
+        ],
+        "answer": 1,
+        "ref": "Josué 12:24"
+      },
+      {
+        "q": "Qual tribo não recebeu herança de terra, segundo Josué 13?",
+        "options": [
+          "Judá",
+          "Benjamim",
+          "Levi",
+          "Efraim"
+        ],
+        "answer": 2,
+        "ref": "Josué 13:14"
+      },
+      {
+        "q": "Quantos anos Calebe tinha quando Moisés o enviou como espia?",
+        "options": [
+          "Vinte anos",
+          "Oitenta anos",
+          "Sessenta anos",
+          "Quarenta anos"
+        ],
+        "answer": 3,
+        "ref": "Josué 14:7"
+      },
+      {
+        "q": "Qual cidade Josué deu a Calebe por herança?",
+        "options": [
+          "Hebrom",
+          "Jericó",
+          "Siló",
+          "Gibeom"
+        ],
+        "answer": 0,
+        "ref": "Josué 14:13"
+      }
+    ]
+  },
+  {
+    "day": 58,
+    "questions": [
+      {
+        "q": "Quem conquistou Quiriate-Sefer e recebeu Acsa como esposa?",
+        "options": [
+          "Josué",
+          "Otniel",
+          "Calebe",
+          "Fineias"
+        ],
+        "answer": 1,
+        "ref": "Josué 15:17"
+      },
+      {
+        "q": "Quem os filhos de Judá não conseguiram expulsar de Jerusalém?",
+        "options": [
+          "Os filisteus",
+          "Os moabitas",
+          "Os jebuseus",
+          "Os egípcios"
+        ],
+        "answer": 2,
+        "ref": "Josué 15:63"
+      },
+      {
+        "q": "Zelofeade não teve filhos homens, mas sim o quê?",
+        "options": [
+          "Nenhum filho",
+          "Netos",
+          "Sobrinhos",
+          "Somente filhas"
+        ],
+        "answer": 3,
+        "ref": "Josué 17:3"
+      },
+      {
+        "q": "Onde a congregação levantou a tenda da congregação?",
+        "options": [
+          "Em Siló",
+          "Em Jericó",
+          "Em Hebrom",
+          "Em Gilgal"
+        ],
+        "answer": 0,
+        "ref": "Josué 18:1"
+      },
+      {
+        "q": "Quantas tribos ainda não tinham recebido herança em Siló?",
+        "options": [
+          "Duas",
+          "Sete",
+          "Doze",
+          "Cinco"
+        ],
+        "answer": 1,
+        "ref": "Josué 18:2"
+      }
+    ]
+  },
+  {
+    "day": 59,
+    "questions": [
+      {
+        "q": "Qual cidade os filhos de Israel deram a Josué?",
+        "options": [
+          "Hebrom",
+          "Siló",
+          "Timnate-Sera",
+          "Jericó"
+        ],
+        "answer": 2,
+        "ref": "Josué 19:50"
+      },
+      {
+        "q": "Para quem eram as cidades de refúgio?",
+        "options": [
+          "Para os ladrões",
+          "Para os reis",
+          "Para os estrangeiros ricos",
+          "Para quem matou alguém sem querer"
+        ],
+        "answer": 3,
+        "ref": "Josué 20:3"
+      },
+      {
+        "q": "Até quando o homicida devia ficar na cidade de refúgio?",
+        "options": [
+          "Até a morte do sumo sacerdote",
+          "Até ficar velho",
+          "Por sete dias",
+          "Por um ano"
+        ],
+        "answer": 0,
+        "ref": "Josué 20:6"
+      },
+      {
+        "q": "Quantas promessas boas de Deus falharam, segundo Josué 21?",
+        "options": [
+          "Uma",
+          "Nenhuma",
+          "Metade",
+          "Algumas"
+        ],
+        "answer": 1,
+        "ref": "Josué 21:45"
+      },
+      {
+        "q": "O que Rúben, Gade e meia tribo de Manassés construíram junto ao Jordão?",
+        "options": [
+          "Uma ponte",
+          "Uma torre",
+          "Um altar grande",
+          "Uma cidade"
+        ],
+        "answer": 2,
+        "ref": "Josué 22:10"
+      }
+    ]
+  },
+  {
+    "day": 60,
+    "questions": [
+      {
+        "q": "Segundo Josué, um só israelita perseguiria quantos inimigos?",
+        "options": [
+          "Cem",
+          "Dez",
+          "Cinco",
+          "Mil"
+        ],
+        "answer": 3,
+        "ref": "Josué 23:10"
+      },
+      {
+        "q": "O que Josué disse que ele e sua casa fariam?",
+        "options": [
+          "Serviriam ao Senhor",
+          "Voltariam ao Egito",
+          "Iriam para Moabe",
+          "Construiriam um palácio"
+        ],
+        "answer": 0,
+        "ref": "Josué 24:15"
+      },
+      {
+        "q": "Com quantos anos Josué morreu?",
+        "options": [
+          "Cento e vinte",
+          "Cento e dez",
+          "Oitenta",
+          "Noventa"
+        ],
+        "answer": 1,
+        "ref": "Josué 24:29"
+      },
+      {
+        "q": "Onde foram enterrados os ossos de José?",
+        "options": [
+          "Em Hebrom",
+          "No Egito",
+          "Em Siquém",
+          "Em Siló"
+        ],
+        "answer": 2,
+        "ref": "Josué 24:32"
+      },
+      {
+        "q": "Qual tribo Deus mandou subir primeiro contra os cananeus?",
+        "options": [
+          "Benjamim",
+          "Dã",
+          "Levi",
+          "Judá"
+        ],
+        "answer": 3,
+        "ref": "Juízes 1:2"
+      }
+    ]
+  },
+  {
+    "day": 61,
+    "questions": [
+      {
+        "q": "Quem foi o primeiro libertador que Deus levantou em Juízes 3?",
+        "options": [
+          "Otniel",
+          "Eúde",
+          "Sangar",
+          "Baraque"
+        ],
+        "answer": 0,
+        "ref": "Juízes 3:9"
+      },
+      {
+        "q": "Qual característica de Eúde é mencionada no texto?",
+        "options": [
+          "Era gigante",
+          "Era canhoto",
+          "Era cego",
+          "Era muito velho"
+        ],
+        "answer": 1,
+        "ref": "Juízes 3:15"
+      },
+      {
+        "q": "Com o que Sangar matou seiscentos filisteus?",
+        "options": [
+          "Uma espada",
+          "Uma funda",
+          "Uma aguilhada de bois",
+          "Uma lança"
+        ],
+        "answer": 2,
+        "ref": "Juízes 3:31"
+      },
+      {
+        "q": "Quem era a profetisa que julgava Israel debaixo de uma palmeira?",
+        "options": [
+          "Jael",
+          "Miriã",
+          "Raabe",
+          "Débora"
+        ],
+        "answer": 3,
+        "ref": "Juízes 4:4-5"
+      },
+      {
+        "q": "Quantos carros de ferro Jabim, rei de Canaã, tinha?",
+        "options": [
+          "Novecentos",
+          "Cem",
+          "Trezentos",
+          "Mil"
+        ],
+        "answer": 0,
+        "ref": "Juízes 4:3"
+      }
+    ]
+  },
+  {
+    "day": 62,
+    "questions": [
+      {
+        "q": "Onde Gideão estava malhando o trigo?",
+        "options": [
+          "Na eira da cidade",
+          "No lagar",
+          "No campo aberto",
+          "Em casa"
+        ],
+        "answer": 1,
+        "ref": "Juízes 6:11"
+      },
+      {
+        "q": "O que Gideão colocou na eira como sinal de Deus?",
+        "options": [
+          "Uma espada",
+          "Um pão",
+          "Uma porção de lã",
+          "Uma pedra"
+        ],
+        "answer": 2,
+        "ref": "Juízes 6:37"
+      },
+      {
+        "q": "Com quantos homens Deus disse que livraria Israel?",
+        "options": [
+          "Dez mil",
+          "Mil",
+          "Trinta",
+          "Trezentos"
+        ],
+        "answer": 3,
+        "ref": "Juízes 7:7"
+      },
+      {
+        "q": "O que os homens de Gideão levavam nas mãos?",
+        "options": [
+          "Trombetas e jarros vazios com tochas",
+          "Espadas e escudos",
+          "Arcos e flechas",
+          "Lanças e redes"
+        ],
+        "answer": 0,
+        "ref": "Juízes 7:16"
+      },
+      {
+        "q": "Gideão disse que quem dominaria sobre Israel?",
+        "options": [
+          "Ele mesmo",
+          "O Senhor",
+          "Seu filho",
+          "Os anciãos"
+        ],
+        "answer": 1,
+        "ref": "Juízes 8:23"
+      }
+    ]
+  },
+  {
+    "day": 63,
+    "questions": [
+      {
+        "q": "Quantos irmãos Abimeleque matou sobre uma pedra?",
+        "options": [
+          "Doze",
+          "Sete",
+          "Setenta",
+          "Trinta"
+        ],
+        "answer": 2,
+        "ref": "Juízes 9:5"
+      },
+      {
+        "q": "Qual filho de Jerubaal escapou porque se escondeu?",
+        "options": [
+          "Abimeleque",
+          "Gaal",
+          "Zebul",
+          "Jotão"
+        ],
+        "answer": 3,
+        "ref": "Juízes 9:5"
+      },
+      {
+        "q": "Na parábola de Jotão, quem procurava um rei?",
+        "options": [
+          "As árvores",
+          "Os animais",
+          "Os pássaros",
+          "Os peixes"
+        ],
+        "answer": 0,
+        "ref": "Juízes 9:8"
+      },
+      {
+        "q": "O que uma mulher lançou sobre a cabeça de Abimeleque?",
+        "options": [
+          "Uma flecha",
+          "Uma pedra de moinho",
+          "Água fervendo",
+          "Uma tocha"
+        ],
+        "answer": 1,
+        "ref": "Juízes 9:53"
+      },
+      {
+        "q": "Quantos filhos tinha Jair, que montavam trinta jumentos?",
+        "options": [
+          "Sete",
+          "Dez",
+          "Trinta",
+          "Setenta"
+        ],
+        "answer": 2,
+        "ref": "Juízes 10:4"
+      }
+    ]
+  },
+  {
+    "day": 64,
+    "questions": [
+      {
+        "q": "Como a Bíblia descreve Jefté, o gileadita?",
+        "options": [
+          "Homem muito rico",
+          "Sacerdote",
+          "Pastor de ovelhas",
+          "Homem valente"
+        ],
+        "answer": 3,
+        "ref": "Juízes 11:1"
+      },
+      {
+        "q": "Quem saiu primeiro ao encontro de Jefté após a vitória?",
+        "options": [
+          "Sua filha",
+          "Sua esposa",
+          "Seu servo",
+          "Seu irmão"
+        ],
+        "answer": 0,
+        "ref": "Juízes 11:34"
+      },
+      {
+        "q": "Que palavra os efraimitas não conseguiam pronunciar certo?",
+        "options": [
+          "Shalom",
+          "Chibolete",
+          "Aleluia",
+          "Amém"
+        ],
+        "answer": 1,
+        "ref": "Juízes 12:6"
+      },
+      {
+        "q": "Que animal Sansão despedaçou nas vinhas de Timna?",
+        "options": [
+          "Um urso",
+          "Um lobo",
+          "Um leão",
+          "Um javali"
+        ],
+        "answer": 2,
+        "ref": "Juízes 14:5-6"
+      },
+      {
+        "q": "O que Sansão encontrou no corpo do leão?",
+        "options": [
+          "Uma serpente",
+          "Moedas de ouro",
+          "Um ninho de pássaros",
+          "Um enxame de abelhas e mel"
+        ],
+        "answer": 3,
+        "ref": "Juízes 14:8"
+      }
+    ]
+  },
+  {
+    "day": 65,
+    "questions": [
+      {
+        "q": "Quantas raposas Sansão apanhou para queimar as searas?",
+        "options": [
+          "Trezentas",
+          "Cem",
+          "Mil",
+          "Setenta"
+        ],
+        "answer": 0,
+        "ref": "Juízes 15:4"
+      },
+      {
+        "q": "Com o que Sansão matou mil homens?",
+        "options": [
+          "Uma espada",
+          "Uma queixada de jumento",
+          "Uma lança",
+          "Uma pedra"
+        ],
+        "answer": 1,
+        "ref": "Juízes 15:15"
+      },
+      {
+        "q": "Qual mulher amada por Sansão vivia no vale de Soreque?",
+        "options": [
+          "Rute",
+          "Jael",
+          "Dalila",
+          "Débora"
+        ],
+        "answer": 2,
+        "ref": "Juízes 16:4"
+      },
+      {
+        "q": "Quantas tranças havia na cabeça de Sansão?",
+        "options": [
+          "Três",
+          "Doze",
+          "Cinco",
+          "Sete"
+        ],
+        "answer": 3,
+        "ref": "Juízes 16:19"
+      },
+      {
+        "q": "O que os filisteus fizeram com os olhos de Sansão?",
+        "options": [
+          "Arrancaram-lhe os olhos",
+          "Vendaram-nos",
+          "Curaram-nos",
+          "Pintaram-nos"
+        ],
+        "answer": 0,
+        "ref": "Juízes 16:21"
+      }
+    ]
+  },
+  {
+    "day": 66,
+    "questions": [
+      {
+        "q": "De onde era a concubina do levita de Efraim?",
+        "options": [
+          "De Siló",
+          "De Belém de Judá",
+          "De Gibeá",
+          "De Jericó"
+        ],
+        "answer": 1,
+        "ref": "Juízes 19:1"
+      },
+      {
+        "q": "Israel se reuniu desde Dã até onde?",
+        "options": [
+          "Jericó",
+          "Gaza",
+          "Berseba",
+          "Hebrom"
+        ],
+        "answer": 2,
+        "ref": "Juízes 20:1"
+      },
+      {
+        "q": "Quantos canhotos de Benjamim atiravam pedras sem errar?",
+        "options": [
+          "Trezentos",
+          "Mil",
+          "Cem",
+          "Setecentos"
+        ],
+        "answer": 3,
+        "ref": "Juízes 20:16"
+      },
+      {
+        "q": "Onde as moças saíam para dançar nas festas?",
+        "options": [
+          "Em Siló",
+          "Em Belém",
+          "Em Gibeá",
+          "Em Mispa"
+        ],
+        "answer": 0,
+        "ref": "Juízes 21:21"
+      },
+      {
+        "q": "O que diz o último versículo de Juízes sobre aqueles dias?",
+        "options": [
+          "Havia paz total",
+          "Não havia rei em Israel",
+          "Israel era rico",
+          "Moisés ainda vivia"
+        ],
+        "answer": 1,
+        "ref": "Juízes 21:25"
+      }
+    ]
+  },
+  {
+    "day": 67,
+    "questions": [
+      {
+        "q": "Por que Elimeleque saiu de Belém para Moabe?",
+        "options": [
+          "Por causa da guerra",
+          "Para fazer comércio",
+          "Por causa da fome",
+          "Para se casar"
+        ],
+        "answer": 2,
+        "ref": "Rute 1:1"
+      },
+      {
+        "q": "Como se chamavam as noras de Noemi?",
+        "options": [
+          "Lia e Raquel",
+          "Ana e Penina",
+          "Débora e Jael",
+          "Órfa e Rute"
+        ],
+        "answer": 3,
+        "ref": "Rute 1:4"
+      },
+      {
+        "q": "O que Rute disse a Noemi?",
+        "options": [
+          "O teu povo é o meu povo",
+          "Volto para Moabe",
+          "Quero ficar sozinha",
+          "Vou procurar outro marido"
+        ],
+        "answer": 0,
+        "ref": "Rute 1:16"
+      },
+      {
+        "q": "Em qual campo Rute foi respigar?",
+        "options": [
+          "No campo de Elimeleque",
+          "No campo de Boaz",
+          "No campo do rei",
+          "No campo de Orfa"
+        ],
+        "answer": 1,
+        "ref": "Rute 2:3"
+      },
+      {
+        "q": "Quem foi o filho de Boaz e Rute?",
+        "options": [
+          "Jessé",
+          "Davi",
+          "Obede",
+          "Malom"
+        ],
+        "answer": 2,
+        "ref": "Rute 4:13-17"
+      }
+    ]
+  },
+  {
+    "day": 68,
+    "questions": [
+      {
+        "q": "Quais eram as duas mulheres de Elcana?",
+        "options": [
+          "Rute e Orfa",
+          "Lia e Raquel",
+          "Sara e Agar",
+          "Ana e Penina"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 1:2"
+      },
+      {
+        "q": "Que nome Ana deu ao filho que pediu ao Senhor?",
+        "options": [
+          "Samuel",
+          "Eli",
+          "Hofni",
+          "Fineias"
+        ],
+        "answer": 0,
+        "ref": "1ª Samuel 1:20"
+      },
+      {
+        "q": "O que Ana fazia todo ano para Samuel?",
+        "options": [
+          "Um par de sandálias",
+          "Uma túnica pequena",
+          "Um cajado",
+          "Um pão especial"
+        ],
+        "answer": 1,
+        "ref": "1ª Samuel 2:19"
+      },
+      {
+        "q": "O que Samuel respondeu quando o Senhor o chamou de novo?",
+        "options": [
+          "Estou cansado",
+          "Quem é você?",
+          "Fala, pois o teu servo ouve",
+          "Eli me chamou"
+        ],
+        "answer": 2,
+        "ref": "1ª Samuel 3:10"
+      },
+      {
+        "q": "Que nome foi dado ao menino quando a arca foi tomada?",
+        "options": [
+          "Ebenézer",
+          "Samuel",
+          "Aitube",
+          "Icabô"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 4:21"
+      }
+    ]
+  },
+  {
+    "day": 69,
+    "questions": [
+      {
+        "q": "O que aconteceu com o deus Dagom diante da arca?",
+        "options": [
+          "Caiu com o rosto em terra",
+          "Ficou de pé",
+          "Desapareceu",
+          "Pegou fogo"
+        ],
+        "answer": 0,
+        "ref": "1ª Samuel 5:3"
+      },
+      {
+        "q": "Por quanto tempo a arca ficou na terra dos filisteus?",
+        "options": [
+          "Sete anos",
+          "Sete meses",
+          "Três dias",
+          "Um ano"
+        ],
+        "answer": 1,
+        "ref": "1ª Samuel 6:1"
+      },
+      {
+        "q": "Quantos ratos de ouro os filisteus enviaram com a arca?",
+        "options": [
+          "Dez",
+          "Sete",
+          "Cinco",
+          "Doze"
+        ],
+        "answer": 2,
+        "ref": "1ª Samuel 6:4"
+      },
+      {
+        "q": "Que nome Samuel deu à pedra que levantou?",
+        "options": [
+          "Betel",
+          "Gilgal",
+          "Mispa",
+          "Ebenézer"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 7:12"
+      },
+      {
+        "q": "O que os anciãos de Israel pediram a Samuel?",
+        "options": [
+          "Um rei que os governasse",
+          "Mais terras",
+          "Um novo templo",
+          "Ouro"
+        ],
+        "answer": 0,
+        "ref": "1ª Samuel 8:5"
+      }
+    ]
+  }
+]

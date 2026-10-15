@@ -1,5 +1,5 @@
 import { all, get } from './db.js';
-import { ageFrom, memberKind, roleOf } from './util.js';
+import { ageFrom, memberKind, roleOf, cargoOf } from './util.js';
 import { clubsRanking, unitsRanking, clubUnitsRanking, membersRanking, leadersRanking, positionOf } from './rankings.js';
 
 export function medalsOf(type, id) {
@@ -72,6 +72,7 @@ export function memberProfile(where, value) {
   m.age = ageFrom(m.birth_date);
   m.kind = memberKind(m.birth_date);
   m.role = roleOf(m.kind, m.cargo);
+  m.cargo = cargoOf(m.kind, m.cargo);
   delete m.birth_date; // data de nascimento não é exibida no perfil
   const ach = all(
     `SELECT ct.id, ct.type, ct.name, ct.icon, ct.image, ct.category, ct.leader, a.source, a.date

@@ -1,5 +1,5 @@
 import crypto from 'node:crypto';
-import { CARGOS_LIDERANCA, IDADE_MIN_DESBRAVADOR, IDADE_MAX_DESBRAVADOR } from './config.js';
+import { CARGOS, CARGOS_LIDERANCA, IDADE_MIN_DESBRAVADOR, IDADE_MAX_DESBRAVADOR } from './config.js';
 import { get } from './db.js';
 
 export class HttpError extends Error {
@@ -23,7 +23,16 @@ export function ageFrom(birthDate, ref = new Date()) {
 /** Papel mostrado no app: Desbravador (10–15), ou Diretoria / Conselheiro (16+) conforme o cargo. */
 export function roleOf(kind, cargo) {
   if (kind === 'desbravador') return 'Desbravador';
+  if (!CARGOS.lideranca.includes(cargo)) return 'Liderança';
   return CARGOS_LIDERANCA.includes(cargo) ? 'Diretoria' : 'Conselheiro';
+}
+
+/**
+ * Cargo mostrado no app. Aos 16 anos o membro vira liderança sozinho (continua na unidade dele):
+ * enquanto o clube não troca o cargo de desbravador, aparece "Liderança".
+ */
+export function cargoOf(kind, cargo) {
+  return kind === 'lideranca' && !CARGOS.lideranca.includes(cargo) ? 'Liderança' : cargo;
 }
 
 /** A idade define o tipo de conta: 10–15 desbravador, 16+ liderança. */

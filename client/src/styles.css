@@ -837,3 +837,4 @@ input::-webkit-datetime-edit { padding: 0; }
 .offline-actions { display: flex; flex-direction: column; gap: .5rem; width: min(100%, 280px); margin-top: .6rem; }
 .offline-bar.back { background: #12452F; color: #B9F3D3; gap: .6rem; }
 .offline-bar.back button { border: 0; border-radius: 999px; background: #B9F3D3; color: #12452F; font: 800 .8rem var(--font); padding: .25rem .8rem; cursor: pointer; }
+.req-switch { display: flex; width: fit-content; margin: 0 auto .4rem; }

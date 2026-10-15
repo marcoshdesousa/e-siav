@@ -122,7 +122,7 @@ export function UnitProfileView({ unit: u, linkBase, hideBio = false, extra = nu
   );
 }
 
-export function MemberProfileView({ member: m, linkBase, photoAction }) {
+export function MemberProfileView({ member: m, linkBase, photoAction, extra }) {
   return (
     <>
       <div className="hero">
@@ -147,6 +147,7 @@ export function MemberProfileView({ member: m, linkBase, photoAction }) {
         </div>
       </div>
 
+      {extra}
       <ChipRow title="Especialidades" items={m.specialties} empty="Nenhuma especialidade ainda." emptyIcon="knot" />
       {m.classes?.length ? <ChipRow title="Classes" items={m.classes} /> : null}
       {m.courses?.length ? <ChipRow title="Cursos concluídos" items={m.courses} /> : null}

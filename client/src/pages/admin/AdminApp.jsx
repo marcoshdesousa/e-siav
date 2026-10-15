@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import {
-  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, Tent, Trophy, Users, Globe, MessageCircle, BookImage, Wallet,
+  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, Tent, Trophy, Users, Globe, MessageCircle, BookImage, Wallet, Flame,
 } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -22,6 +22,7 @@ import ClanView from './ClanView.jsx';
 import AgendaAdmin from './AgendaAdmin.jsx';
 import SupportAdmin, { LinksAdmin } from './SupportAdmin.jsx';
 import StickersAdmin from './StickersAdmin.jsx';
+import LearningAdmin from './LearningAdmin.jsx';
 import PaymentsAdmin from './PaymentsAdmin.jsx';
 
 const base = '/admin';
@@ -57,6 +58,7 @@ function AdminHome() {
           { to: `${base}/suporte`, icon: MessageCircle, label: 'Suporte', hint: 'Responder os clubes e membros' },
           { to: `${base}/pagamentos`, icon: Wallet, label: 'Pagamentos', hint: 'Pix (SyncPay) e confirmações' },
           { to: `${base}/figurinhas`, icon: BookImage, label: 'Figurinhas', hint: 'Álbuns completos e presentes' },
+          { to: `${base}/aprendizagem`, icon: Flame, label: 'Aprendizagem Diária', hint: 'Arganel, medalhas e áudio' },
           { to: `${base}/links`, icon: Globe, label: 'Links dos sites', hint: 'SGC, Cantinho e Cartão DBV' },
     { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas para todos, distrito ou clube' },
     { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo' },
@@ -282,6 +284,7 @@ export default function AdminApp() {
     { to: `${base}/suporte`, icon: MessageCircle, label: 'Suporte', hint: 'Responder os clubes e membros' },
     { to: `${base}/pagamentos`, icon: Wallet, label: 'Pagamentos', hint: 'Pix (SyncPay) e confirmações' },
     { to: `${base}/figurinhas`, icon: BookImage, label: 'Figurinhas', hint: 'Álbuns completos e presentes' },
+          { to: `${base}/aprendizagem`, icon: Flame, label: 'Aprendizagem Diária', hint: 'Arganel, medalhas e áudio' },
     { to: `${base}/links`, icon: Globe, label: 'Links dos sites', hint: 'SGC, Cantinho e Cartão DBV' },
     { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo', hint: 'Medalhas, troféus e cursos' },
     { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial', hint: 'Especialidades' },
@@ -303,6 +306,7 @@ export default function AdminApp() {
         <Route path="suporte" element={<SupportAdmin />} />
         <Route path="links" element={<LinksAdmin />} />
         <Route path="figurinhas" element={<StickersAdmin />} />
+        <Route path="aprendizagem" element={<LearningAdmin />} />
         <Route path="pagamentos" element={<PaymentsAdmin />} />
         <Route path="agenda" element={<AgendaAdmin />} />
         <Route path="requisitos" element={<RequirementsAdmin />} />
