@@ -6,6 +6,8 @@
 // bottom: calca | bermuda | saia | saia-longa | (vestido usa a cor do top)
 // hat: bone | bone-tras | gorro | faixa | chapeu | boina | capacete | null
 // acc: mochila | oculos | lenco | fone | cachecol | null
+import { api } from '../../../api.js';
+
 const TONES = ['#f8d5b8', '#efc39e', '#d9a07a', '#b97a52', '#8d5a3b', '#5e3a24'];
 const M = (id, name, o) => ({ id, name, g: 'm', skin: TONES[1], hair: 'curto', hairColor: '#2b1a10', eyes: '#3b2a1a', shoes: '#f8fafc', shoes2: '#ef4444', bottom: { type: 'calca', color: '#1e3a8a' }, ...o });
 const F = (id, name, o) => ({ id, name, g: 'f', skin: TONES[0], hair: 'longo', hairColor: '#3b2314', eyes: '#3b2a1a', shoes: '#f8fafc', shoes2: '#ec4899', bottom: { type: 'saia', color: '#1e3a8a' }, ...o });
@@ -110,4 +112,13 @@ export function readChoice() {
 }
 export function saveChoice(c) {
   try { window.localStorage.setItem('dbv-skin', JSON.stringify(c)); } catch { /* sem armazenamento */ }
+}
+
+/** Lê a escolha salva no servidor (se houver) e guarda no aparelho. */
+export async function syncChoice() {
+  try {
+    const r = await api.get('/jogos/skin');
+    if (r?.skin) { const c = { skin: skinById(r.skin).id, board: boardById(r.board).id }; saveChoice(c); return c; }
+  } catch { /* sem internet: fica a do aparelho */ }
+  return readChoice();
 }

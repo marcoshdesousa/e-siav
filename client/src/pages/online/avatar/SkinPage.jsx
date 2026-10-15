@@ -3,47 +3,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { Check } from 'lucide-react';
 import { api } from '../../../api.js';
-import { BOARDS, SKINS, boardById, readChoice, saveChoice, skinById } from './skins.js';
-import { mountPreview } from './preview.js';
-import { thumb } from './thumbs.js';
+import { BOARDS, SKINS, boardById, readChoice, saveChoice, skinById, syncChoice } from './skins.js';
+import SkinPreview from './SkinPreview.jsx';
+import SkinThumb from './SkinThumb.jsx';
 import './skin.css';
-
-/** Lê a escolha salva no servidor (se houver) e guarda no aparelho. */
-export async function syncChoice() {
-  try {
-    const r = await api.get('/jogos/skin');
-    if (r?.skin) { const c = { skin: skinById(r.skin).id, board: boardById(r.board).id }; saveChoice(c); return c; }
-  } catch { /* sem internet: fica a do aparelho */ }
-  return readChoice();
-}
-
-function Preview({ mode, skin, board, label }) {
-  const ref = useRef(null);
-  const view = useRef(null);
-  useEffect(() => {
-    let v = null;
-    try { v = mountPreview(ref.current, { mode }); } catch { /* sem WebGL */ }
-    view.current = v;
-    return () => { v?.dispose(); view.current = null; };
-  }, [mode]);
-  useEffect(() => { view.current?.set({ skin, board }); }, [skin, board, mode]);
-  return (
-    <div className={`skin-stage ${mode}`}>
-      <canvas ref={ref} />
-      <span className="skin-stage-tag">{label}</span>
-    </div>
-  );
-}
-
-function Thumb({ kind, id }) {
-  const [url, setUrl] = useState(null);
-  useEffect(() => {
-    let live = true;
-    thumb(kind, id).then((u) => live && setUrl(u)).catch(() => {});
-    return () => { live = false; };
-  }, [kind, id]);
-  return url ? <img src={url} alt="" draggable={false} /> : <span className="skin-thumb-wait" />;
-}
 
 export default function SkinPage() {
   const [choice, setChoice] = useState(readChoice);
@@ -65,8 +28,8 @@ export default function SkinPage() {
   return (
     <div className="skin-page">
       <div className="skin-stages">
-        <Preview mode="surf" skin={choice.skin} board={choice.board} label="Surf DBV" />
-        <Preview mode="stumble" skin={choice.skin} board={choice.board} label="Stumble DBV" />
+        <SkinPreview mode="surf" skin={choice.skin} board={choice.board} label="Surf DBV" />
+        <SkinPreview mode="stumble" skin={choice.skin} board={choice.board} label="Stumble DBV" />
       </div>
       <div className="skin-now">
         <div>
@@ -88,7 +51,7 @@ export default function SkinPage() {
           <div className="skin-grid">
             {SKINS.filter((s) => s.g === g).map((s) => (
               <button key={s.id} type="button" className={'skin-card' + (choice.skin === s.id ? ' on' : '')} onClick={() => pick({ skin: s.id })} aria-pressed={choice.skin === s.id}>
-                <span className="skin-thumb" style={{ '--c': s.top.color }}><Thumb kind="skin" id={s.id} /></span>
+                <span className="skin-thumb" style={{ '--c': s.top.color }}><SkinThumb kind="skin" id={s.id} /></span>
                 <span className="skin-name">{s.name}</span>
                 {choice.skin === s.id && <span className="skin-tick"><Check size={14} /></span>}
               </button>
@@ -99,7 +62,7 @@ export default function SkinPage() {
         <div className="skin-grid boards">
           {BOARDS.map((b) => (
             <button key={b.id} type="button" className={'skin-card' + (choice.board === b.id ? ' on' : '')} onClick={() => pick({ board: b.id })} aria-pressed={choice.board === b.id}>
-              <span className="skin-thumb" style={{ '--c': b.glow }}><Thumb kind="board" id={b.id} /></span>
+              <span className="skin-thumb" style={{ '--c': b.glow }}><SkinThumb kind="board" id={b.id} /></span>
               <span className="skin-name">{b.name}</span>
               {choice.board === b.id && <span className="skin-tick"><Check size={14} /></span>}
             </button>

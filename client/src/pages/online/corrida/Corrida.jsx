@@ -1,43 +1,15 @@
-// Corrida DBV: tela do jogo (menu, escolha do personagem, partida em 3D e fim de corrida).
+// Surf DBV: tela do jogo (menu com a skin escolhida, partida em 3D e fim de corrida).
 // Funciona sem internet; o ranking só vale quando a corrida termina com internet.
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Coins, Flag, Footprints, Play, RotateCcw, Trophy, Volume2, VolumeX, WifiOff } from 'lucide-react';
+import { ArrowLeft, Coins, Flag, Footprints, Play, RotateCcw, Shirt, Trophy, Volume2, VolumeX, WifiOff } from 'lucide-react';
 import { api } from '../../../api.js';
 import { Button, Spinner } from '../../../ui.jsx';
 import { useOnline as useInternet } from '../../../offline.js';
 import { isMuted, onMuteChange, setMuted, sfx, startMusic, stopMusic, unlockAudio } from '../../games/audio.js';
 import { createRunner, SKATE_TIME, SKATE_WAIT } from './engine.js';
+import { boardById, readChoice, skinById, syncChoice } from '../avatar/skins.js';
 import './corrida.css';
-
-const readGender = () => { try { return window.localStorage.getItem('dbv-corrida-menina') === '1'; } catch { return false; } };
-const saveGender = (f) => { try { window.localStorage.setItem('dbv-corrida-menina', f ? '1' : '0'); } catch { /* sem armazenamento */ } };
-
-/** Desenho do personagem para o botão de escolha. */
-function Face({ female }) {
-  return (
-    <svg viewBox="0 0 64 64" width="54" height="54" aria-hidden="true">
-      <circle cx="32" cy="58" r="22" fill="#c9a66b" />
-      <path d="M20 44 L32 58 L44 44 Z" fill="#facc15" />
-      <circle cx="32" cy="30" r="15" fill={female ? '#f6c9a0' : '#d79a6b'} />
-      {female ? (
-        <>
-          <path d="M16 30 Q16 12 32 12 Q48 12 48 30 Q44 20 32 19 Q20 20 16 30Z" fill="#3b2314" />
-          <ellipse cx="48" cy="36" rx="5" ry="10" fill="#3b2314" />
-          <ellipse cx="33" cy="12" rx="14" ry="5" fill="#14532d" />
-        </>
-      ) : (
-        <>
-          <path d="M17 27 Q18 13 32 13 Q46 13 47 27 Z" fill="#15803d" />
-          <rect x="30" y="14" width="18" height="4" rx="2" fill="#14532d" />
-        </>
-      )}
-      <circle cx="26.5" cy="31" r="2.6" fill="#1f2937" />
-      <circle cx="37.5" cy="31" r="2.6" fill="#1f2937" />
-      <path d="M26 37 Q32 42 38 37" stroke="#7f1d1d" strokeWidth="2.2" fill="none" strokeLinecap="round" />
-    </svg>
-  );
-}
 
 /** Botão do skate: mostra o tempo que falta ou a espera para usar de novo. */
 function SkateButton({ skate, wait, onUse }) {
@@ -61,7 +33,7 @@ export default function CorridaPage({ base }) {
   const internet = useInternet();
   const canvasRef = useRef(null);
   const game = useRef(null);
-  const [female, setFemale] = useState(readGender);
+  const [look, setLook] = useState(readChoice);
   const [phase, setPhase] = useState('menu'); // menu | story | run | over
   const [hud, setHud] = useState({ coins: 0, dist: 0, skate: 0, skateWait: 0 });
   const [warn, setWarn] = useState('');
@@ -73,13 +45,15 @@ export default function CorridaPage({ base }) {
   useEffect(() => onMuteChange(setMute), []);
 
   const loadMine = () => api.get('/jogos/meus').then((m) => setMine(m)).catch(() => {});
-  useEffect(() => { loadMine(); }, []);
+  useEffect(() => { loadMine(); syncChoice().then((c) => { setLook(c); game.current?.setLook(c.skin, c.board); }); }, []);
 
   // Cria o mundo 3D (de novo a cada partida)
   useEffect(() => {
     if (!canvasRef.current) return undefined;
+    const c = readChoice();
     const g = createRunner(canvasRef.current, {
-      female,
+      skin: c.skin,
+      board: c.board,
       onHud: (h) => {
         if (h.warn) { setWarn(h.warn); setTimeout(() => setWarn(''), 1600); return; }
         setHud(h);
@@ -150,7 +124,6 @@ export default function CorridaPage({ base }) {
     lastTap.current = Date.now();
   };
 
-  const pickGender = (f) => { setFemale(f); saveGender(f); game.current?.setFemale(f); sfx('tap'); };
   const play = () => {
     unlockAudio();
     setResult(null);
@@ -193,11 +166,12 @@ export default function CorridaPage({ base }) {
 
         {phase === 'menu' && (
           <div className="corrida-menu">
-            <h1><span>Corrida</span> DBV</h1>
-            <div className="corrida-gender">
-              <button type="button" className={!female ? 'on' : ''} onClick={() => pickGender(false)}><Face /> <b>Desbravador</b></button>
-              <button type="button" className={female ? 'on' : ''} onClick={() => pickGender(true)}><Face female /> <b>Desbravadora</b></button>
-            </div>
+            <h1><span>Surf</span> DBV</h1>
+            <button type="button" className="corrida-look" onClick={() => nav(`${base}/jogos?aba=skin`)}>
+              <Shirt size={20} />
+              <span className="grow"><b>{skinById(look.skin).name}</b><small>Skate {boardById(look.board).name}</small></span>
+              <span className="chip">Trocar skin</span>
+            </button>
             <div className="corrida-stats">
               <span><Coins size={14} /> {wallet} desbrava coins</span>
               <span><Trophy size={14} /> Recordes: {bestCoins} moedas · {bestDist} m</span>
@@ -216,7 +190,7 @@ export default function CorridaPage({ base }) {
           <div className="game-over">
             <div className="game-over-card">
               <Trophy size={36} />
-              <h2>O guarda pegou você!</h2>
+              <h2>{result.crash ? 'Bateu no trem!' : 'O guarda pegou você!'}</h2>
               <p><Coins size={16} /> <b>{result.coins}</b> moedas · <Footprints size={16} /> <b>{result.dist}</b> m</p>
               {result.saving && <p className="small muted">Salvando...</p>}
               {result.offline && <p className="small"><WifiOff size={13} /> Sem internet: esta corrida não entrou no ranking.</p>}

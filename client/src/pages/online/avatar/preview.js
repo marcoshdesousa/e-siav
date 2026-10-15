@@ -6,9 +6,10 @@ import { buildBoard, poseBoard } from './board.js';
 import { boardById, skinById } from './skins.js';
 
 const CYCLE = [['run', 2.4], ['jump', 0.9], ['run', 1.6], ['wave', 1.8], ['idle', 1.2]];
+const CELEBRATE = [['wave', 1.6], ['jump', 0.8], ['jump', 0.8], ['idle', 0.6]];
 const SURF_CYCLE = [['run', 2.0], ['jump', 0.9], ['skate', 2.2], ['skatejump', 1.0], ['skatelie', 1.4], ['skate', 1.0], ['wave', 1.6]];
 
-export function mountPreview(canvas, { mode = 'surf', skin = 'm01', board = 'b01', spin = true } = {}) {
+export function mountPreview(canvas, { mode = 'surf', skin = 'm01', board = 'b01', spin = true, cycle = null } = {}) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
   renderer.shadowMap.enabled = true;
@@ -79,12 +80,13 @@ export function mountPreview(canvas, { mode = 'surf', skin = 'm01', board = 'b01
   const loop = () => {
     raf = window.requestAnimationFrame(loop);
     const t = (window.performance.now() - t0) / 1000;
-    if (spin) turn.rotation.y = t * 0.6;
+    if (spin && cycle !== 'celebrate') turn.rotation.y = t * 0.6;
+    else if (cycle === 'celebrate') turn.rotation.y = Math.sin(t * 0.8) * 0.5;
     if (cur.mode === 'board') {
       poseBoard(deck, t, (t % 3) / 0.8);
       deck.rotation.y = 0;
     } else {
-      const cyc = cur.mode === 'surf' ? SURF_CYCLE : CYCLE;
+      const cyc = cycle === 'celebrate' ? CELEBRATE : cur.mode === 'surf' ? SURF_CYCLE : CYCLE;
       const total = cyc.reduce((a, c) => a + c[1], 0);
       let r = t % total;
       let i = 0;

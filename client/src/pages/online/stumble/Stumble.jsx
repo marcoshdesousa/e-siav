@@ -1,7 +1,6 @@
 // Stumble DBV: saguão (visual, partida aleatória, criar/entrar em sala), sala de espera e a partida.
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import * as THREE from 'three';
 import { ArrowLeft, Copy, Crown, Globe2, Hash, Lock, LogOut, Mic, MicOff, Play, RefreshCw, Shirt, Timer, Trophy, UserX, Users, Wifi, WifiOff } from 'lucide-react';
 import { Button, Card, Modal, PageHeader, Section } from '../../../ui.jsx';
 import { useOnline as useInternet } from '../../../offline.js';
@@ -9,81 +8,18 @@ import { sfx, startMusic, stopMusic, unlockAudio } from '../../games/audio.js';
 import { useOnline } from '../net.js';
 import { useVoice } from '../voice.js';
 import { BotTag, VoiceBar } from '../Uno.jsx';
-import { animate, makeStumbler } from './character.js';
 import { createStumble } from './engine.js';
-import { OUTFITS, outfitById } from './outfits.js';
+import { readChoice, skinById, syncChoice } from '../avatar/skins.js';
+import SkinPreview from '../avatar/SkinPreview.jsx';
+import SkinThumb from '../avatar/SkinThumb.jsx';
 import { STAGES } from './stages.js';
 import './stumble.css';
-
-const readOutfit = () => { try { return window.localStorage.getItem('dbv-stumble-visual') || 'm01'; } catch { return 'm01'; } };
-
-/** Mostra o boneco com o visual escolhido, girando. */
-function OutfitPreview({ outfit, height = 180 }) {
-  const ref = useRef(null);
-  useEffect(() => {
-    const canvas = ref.current;
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    const scene = new THREE.Scene();
-    scene.add(new THREE.HemisphereLight('#fff', '#64748b', 2));
-    const d = new THREE.DirectionalLight('#fff', 1.2);
-    d.position.set(2, 4, -3);
-    scene.add(d);
-    const cam = new THREE.PerspectiveCamera(32, 1, 0.1, 50);
-    cam.position.set(0, 1.4, -5.2);
-    cam.lookAt(0, 1.15, 0);
-    const p = makeStumbler(outfitById(outfit));
-    scene.add(p);
-    let raf = 0;
-    let t = 0;
-    const loop = () => {
-      raf = window.requestAnimationFrame(loop);
-      t += 1 / 60;
-      p.rotation.y = Math.sin(t * 0.8) * 0.7;
-      animate(p, t, 'idle');
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
-      if (canvas.width !== Math.floor(w * renderer.getPixelRatio())) { renderer.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); }
-      renderer.render(scene, cam);
-    };
-    loop();
-    return () => { window.cancelAnimationFrame(raf); renderer.dispose(); };
-  }, [outfit]);
-  return <canvas ref={ref} className="stb-preview" style={{ height }} />;
-}
-
-function OutfitPicker({ value, onChange, onClose }) {
-  const [g, setG] = useState(outfitById(value).g);
-  return (
-    <Modal title="Escolha o seu visual" onClose={onClose}>
-      <OutfitPreview outfit={value} height={170} />
-      <p className="center"><b>{outfitById(value).name}</b></p>
-      <div className="seg stb-seg">
-        <button type="button" className={g === 'm' ? 'active' : ''} onClick={() => setG('m')}>Meninos</button>
-        <button type="button" className={g === 'f' ? 'active' : ''} onClick={() => setG('f')}>Meninas</button>
-      </div>
-      <div className="stb-outfits">
-        {OUTFITS.filter((o) => o.g === g).map((o) => (
-          <button key={o.id} type="button" className={'stb-outfit' + (o.id === value ? ' on' : '')} onClick={() => onChange(o.id)}>
-            <span className="stb-swatch" style={{ background: `linear-gradient(180deg, ${o.hatColor || o.hairColor} 0 22%, ${o.skin} 22% 42%, ${o.top} 42% 72%, ${o.bottom} 72%)` }} />
-            <small>{o.name}</small>
-          </button>
-        ))}
-      </div>
-      <Button block onClick={onClose}>Pronto</Button>
-    </Modal>
-  );
-}
 
 export default function StumblePage({ base }) {
   const net = useOnline('stumble');
   const internet = useInternet();
-  const [outfit, setOutfitState] = useState(readOutfit);
-  const setOutfit = (o) => {
-    setOutfitState(o);
-    try { window.localStorage.setItem('dbv-stumble-visual', o); } catch { /* sem armazenamento */ }
-    if (net.room?.status === 'waiting') net.send({ t: 'outfit', outfit: o });
-  };
+  const [outfit, setOutfit] = useState(() => readChoice().skin);
+  useEffect(() => { syncChoice().then((c) => setOutfit(c.skin)); }, []);
   const { room } = net;
   const humanPlayers = useMemo(() => room?.players.filter((p) => !p.bot), [room?.players]);
   const voice = useVoice({ me: net.me, players: humanPlayers, send: net.send, listen: net.listen });
@@ -95,16 +31,15 @@ export default function StumblePage({ base }) {
   return (
     <div className="stb-page">
       {!net.connected && <div className="uno-conn"><RefreshCw size={14} className="spin" /> Conectando...</div>}
-      {!room && <Lobby net={net} base={base} outfit={outfit} setOutfit={setOutfit} />}
-      {room && room.status === 'waiting' && <Waiting net={net} outfit={outfit} setOutfit={setOutfit} voice={voice} />}
+      {!room && <Lobby net={net} base={base} outfit={outfit} />}
+      {room && room.status === 'waiting' && <Waiting net={net} base={base} voice={voice} />}
       {room && room.status !== 'waiting' && net.game && <Match net={net} outfit={outfit} base={base} voice={voice} />}
     </div>
   );
 }
 
-function Lobby({ net, base, outfit, setOutfit }) {
+function Lobby({ net, base, outfit }) {
   const nav = useNavigate();
-  const [pick, setPick] = useState(false);
   const [code, setCode] = useState('');
   const [pub, setPub] = useState(true);
   const go = (m) => { unlockAudio(); sfx('tap'); net.send({ ...m, outfit }); };
@@ -115,8 +50,10 @@ function Lobby({ net, base, outfit, setOutfit }) {
         <p><Wifi size={13} /> {net.lobby?.online ?? '…'} jogando agora</p>
       </div>
       <div className="stb-me">
-        <OutfitPreview outfit={outfit} height={190} />
-        <Button small variant="secondary" onClick={() => setPick(true)}><Shirt size={14} /> {outfitById(outfit).name}</Button>
+        <SkinPreview mode="stumble" skin={outfit} className="stb-me-stage" />
+        <button type="button" className="stb-skin-btn" onClick={() => nav(`${base}/jogos?aba=skin`)}>
+          <Shirt size={16} /> <span className="grow">{skinById(outfit).name}</span> <small>Trocar skin</small>
+        </button>
       </div>
       {net.kicked && <Card className="small center">O dono da sala tirou você da sala.</Card>}
       {net.error && <Card className="small center uno-err">{net.error.msg}</Card>}
@@ -156,7 +93,6 @@ function Lobby({ net, base, outfit, setOutfit }) {
         <Button variant="secondary" onClick={() => nav(`${base}/jogos`)}><ArrowLeft size={16} /> Voltar</Button>
         <Button variant="secondary" onClick={() => nav(`${base}/jogos?aba=ranking&jogo=stumble`)}><Trophy size={16} /> Ranking</Button>
       </div>
-      {pick && <OutfitPicker value={outfit} onChange={setOutfit} onClose={() => setPick(false)} />}
     </>
   );
 }
@@ -172,12 +108,12 @@ function useServerClock(room) {
   return () => Date.now() + off.current;
 }
 
-function Waiting({ net, outfit, setOutfit, voice }) {
+function Waiting({ net, base, voice }) {
+  const nav = useNavigate();
   const { room, me } = net;
   const owner = room.owner === me;
   const clock = useServerClock(room);
   const [, force] = useState(0);
-  const [pick, setPick] = useState(false);
   useEffect(() => { const t = setInterval(() => force((n) => n + 1), 500); return () => clearInterval(t); }, []);
   const left = room.startAt ? Math.max(0, Math.ceil((room.startAt - clock()) / 1000)) : null;
   const copy = () => window.navigator.clipboard?.writeText(room.code).catch(() => {});
@@ -187,13 +123,18 @@ function Waiting({ net, outfit, setOutfit, voice }) {
         <b>{room.quick ? 'Partida aleatória' : room.public ? 'Sala pública' : 'Sala privada'}</b>
         {!room.quick && <button type="button" className="uno-code" onClick={copy}><small>Código da sala</small><span>{room.code}</span><small><Copy size={12} /> Toque para copiar</small></button>}
         <div className="stb-count"><Users size={16} /> {room.players.length}/{room.size}</div>
-        {room.quick && left != null && <div className="stb-countdown"><Timer size={18} /> Começa em {left}s</div>}
+        {room.quick && left != null && (
+          <div className="stb-countdown">
+            <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28" pathLength="100" strokeDasharray={`${Math.min(100, (left / 60) * 100)} 100`} /></svg>
+            <b>{left}</b><small>segundos</small>
+          </div>
+        )}
         <p className="small muted">{room.quick ? 'A partida sempre tem 10 jogadores: se faltar gente, robôs completam (e saem quando alguém entra).' : owner ? 'Você começa quando quiser: as vagas vazias viram robôs.' : 'O dono da sala vai começar.'}</p>
       </div>
       <div className="stb-players">
         {room.players.map((p) => (
           <div key={p.id} className="stb-player">
-            <span className="stb-swatch" style={{ background: (() => { const o = outfitById(p.outfit); return `linear-gradient(180deg, ${o.hatColor || o.hairColor} 0 22%, ${o.skin} 22% 42%, ${o.top} 42% 72%, ${o.bottom} 72%)`; })() }} />
+            <span className="stb-face"><SkinThumb id={skinById(p.outfit).id} /></span>
             <b>{p.name}{p.id === me ? ' (você)' : ''}</b>
             {p.bot && <BotTag />}
             {room.owner === p.id && !room.quick && <Crown size={13} />}
@@ -202,13 +143,12 @@ function Waiting({ net, outfit, setOutfit, voice }) {
         ))}
       </div>
       <VoiceBar net={net} voice={voice} />
-      <Button variant="secondary" onClick={() => setPick(true)}><Shirt size={16} /> Trocar visual</Button>
+      <Button variant="secondary" onClick={() => { net.send({ t: 'leave' }); nav(`${base}/jogos?aba=skin`); }}><Shirt size={16} /> Trocar skin</Button>
       <div className="uno-actions">
         <Button variant="secondary" onClick={() => net.send({ t: 'leave' })}><LogOut size={16} /> Sair</Button>
         {owner && !room.quick && <Button onClick={() => { unlockAudio(); net.send({ t: 'start' }); }}><Play size={16} /> Começar</Button>}
       </div>
       {net.error && <p className="small center uno-err">{net.error.msg}</p>}
-      {pick && <OutfitPicker value={outfit} onChange={setOutfit} onClose={() => setPick(false)} />}
     </>
   );
 }
@@ -257,6 +197,7 @@ function Match({ net, outfit, base, voice }) {
   const [leave, setLeave] = useState(false);
   const alive = g.alive.includes(me);
   const names = useMemo(() => Object.fromEntries(room.players.map((p) => [p.id, p.name])), [room.players]);
+  const outfits = useMemo(() => Object.fromEntries(room.players.map((p) => [p.id, p.outfit])), [room.players]);
 
   // Cria o mundo 3D uma vez
   useEffect(() => {
@@ -349,23 +290,34 @@ function Match({ net, outfit, base, voice }) {
       </div>
 
       {g.phase === 'intro' && (
-        <div className="stb-banner">
+        <div className={'stb-banner' + (g.round >= 2 ? ' final' : '')}>
+          <div className="stb-rounds">{[0, 1, 2].map((r) => <i key={r} className={r < g.round ? 'done' : r === g.round ? 'now' : ''}>{r === 2 ? <Crown size={12} /> : r + 1}</i>)}</div>
           <small>{g.round >= 2 ? 'Fase final' : `Fase ${g.round + 1} de 3`}</small>
           <b>{stage.name}</b>
           <span>{g.round >= 2 ? 'Quem chegar primeiro vence!' : `Os ${g.qualify} primeiros passam de fase`}</span>
-          {toStart <= 3.2 && toStart > 0 && <em className="stb-321">{Math.ceil(toStart)}</em>}
+          <span className="stb-alive"><Users size={13} /> {g.alive.length} jogadores</span>
         </div>
       )}
+      {g.phase === 'intro' && toStart <= 3.2 && toStart > 0 && <em key={Math.ceil(toStart)} className="stb-321">{Math.ceil(toStart)}</em>}
       {g.phase === 'race' && toStart > -1 && toStart <= 0 && <div className="stb-go">VAI!</div>}
       {myPlace && g.phase === 'race' && <div className="stb-qual">{g.round >= 2 ? 'Você venceu!' : `Classificado! ${myPlace}º`}</div>}
       {!alive && !over && <div className="stb-spect">Você foi eliminado. Assistindo a partida...</div>}
 
       {g.phase === 'results' && !over && (
         <div className="stb-results">
-          <b>{g.winner ? `${names[g.winner] || ''} venceu!` : 'Resultado da fase'}</b>
+          <small className="stb-res-tag">{g.winner ? 'Fim da partida' : `Fim da fase ${g.round + 1}`}</small>
+          <b>{g.winner ? `${names[g.winner] || ''} venceu!` : g.alive.includes(me) ? 'Você passou!' : 'Resultado da fase'}</b>
           <div className="stb-res-list">
-            {g.alive.map((id) => <span key={id} className="ok">{names[id] || 'Jogador'}</span>)}
-            {g.eliminated.map((id) => <span key={id} className="out">{names[id] || 'Jogador'}</span>)}
+            {g.alive.map((id, i) => (
+              <span key={id} className={'ok' + (id === me ? ' me' : '')} style={{ animationDelay: `${i * 0.08}s` }}>
+                <SkinThumb id={skinById(outfits[id]).id} /><em>{names[id] || 'Jogador'}</em>
+              </span>
+            ))}
+            {g.eliminated.map((id, i) => (
+              <span key={id} className={'out' + (id === me ? ' me' : '')} style={{ animationDelay: `${(g.alive.length + i) * 0.08}s` }}>
+                <SkinThumb id={skinById(outfits[id]).id} /><em>{names[id] || 'Jogador'}</em>
+              </span>
+            ))}
           </div>
           {!g.winner && <small>Próxima fase já vai começar...</small>}
         </div>
@@ -392,8 +344,14 @@ function Match({ net, outfit, base, voice }) {
       )}
       {over && (
         <div className="game-over">
-          <div className="game-over-card">
-            <Trophy size={40} />
+          <div className="game-over-card stb-over">
+            {room.result?.winner ? (
+              <div className="stb-winner">
+                <SkinPreview mode="stumble" skin={skinById(outfits[room.result.winner]).id} cycle="celebrate" />
+                <span className="stb-crown"><Crown size={22} /></span>
+                <div className="stb-confetti" aria-hidden="true">{Array.from({ length: 18 }, (_, i) => <i key={i} style={{ '--i': i }} />)}</div>
+              </div>
+            ) : <Trophy size={40} />}
             <h2>{room.result?.winner === me ? 'Você venceu!' : room.result?.winner ? `${room.result.winnerName} venceu!` : 'Partida encerrada'}</h2>
             <p className="small">{room.result?.winner === me ? 'Mais uma vitória no ranking do Stumble DBV.' : 'Na próxima é você!'}</p>
             <Button block onClick={() => net.send({ t: 'again' })}><RefreshCw size={16} /> Jogar de novo</Button>

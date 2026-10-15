@@ -1,9 +1,19 @@
-// Corrida DBV: corrida infinita em 3D nos trilhos (estilo "subway runner").
+// Surf DBV: corrida infinita em 3D nos trilhos (estilo "subway runner").
 // Três trilhos: deslize para os lados para trocar, para cima para pular e para baixo para rolar.
 // Trens parados e andando, rampas para o teto, barreiras baixas (pule) e altas (role), skate.
-// Bateu uma vez: tropeça e o guarda chega perto. Bateu de novo com ele perto: pegou!
+// Bater de frente num trem acaba a corrida (o personagem para na frente do trem, nunca entra).
+// Esbarrar ou bater numa barreira: tropeça e o guarda chega perto. De novo com ele perto: pegou!
 import * as THREE from 'three';
-import { makeCoin, makeRunner, makeSkate, makeTrain, pose, toon, TRAIN_H } from './models.js';
+import { makeCoin, makeTrain, toon, TRAIN_H } from './models.js';
+import { buildAvatar, poseAvatar } from '../avatar/build.js';
+import { buildBoard, poseBoard } from '../avatar/board.js';
+import { boardById, skinById } from '../avatar/skins.js';
+
+/** O guarda que corre atrás. */
+const OFFICER = {
+  id: 'guarda', name: 'Guarda', g: 'm', skin: '#d9a07a', hair: 'curto', hairColor: '#1f2937', eyes: '#3b2a1a', shoes: '#111827', shoes2: '#111827',
+  top: { type: 'jaqueta', color: '#1e3a8a', color2: '#facc15' }, bottom: { type: 'calca', color: '#172554' }, hat: { type: 'bone', color: '#172554' },
+};
 
 const LANE_W = 2.4;
 const GRAVITY = 40;
@@ -125,7 +135,7 @@ function makeGraffiti() {
   };
 }
 
-export function createRunner(canvas, { female = false, onHud, onEnd, onSound }) {
+export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd, onSound }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: window.devicePixelRatio < 2, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
   renderer.shadowMap.enabled = true;
@@ -205,12 +215,14 @@ export function createRunner(canvas, { female = false, onHud, onEnd, onSound }) 
   const stripeMat = new THREE.MeshLambertMaterial({ map: stripesTexture() });
 
   // Jogador, guarda, skate
-  let player = makeRunner({ female });
+  const shadowed = (m) => { m.traverse((o) => { if (o.isMesh && o.material.type !== 'MeshBasicMaterial') o.castShadow = true; }); return m; };
+  let player = shadowed(buildAvatar(skinById(skin), 'surf'));
   scene.add(player);
-  const officer = makeRunner({ officer: true });
+  const officer = shadowed(buildAvatar(OFFICER, 'surf'));
+  officer.scale.setScalar(1.08);
   officer.visible = false;
   scene.add(officer);
-  const skate = makeSkate();
+  let skate = buildBoard(boardById(board));
   skate.visible = false;
   scene.add(skate);
 
@@ -230,7 +242,7 @@ export function createRunner(canvas, { female = false, onHud, onEnd, onSound }) 
   const st = {
     z: 8.6, lane: 0, x: 0, y: 0, prevY: 0, vy: 0, roll: 0, speed: START_SPEED, t: 0, coins: 0, dist: 0,
     groundY: 0, alive: true, phase: 'menu', hitAt: -100, officerDist: 2.2, nextRowZ: -26, slow: 0, over: false,
-    stumble: 0, shake: 0, skate: 0, skateWait: 0, invuln: 0, story: 0,
+    stumble: 0, shake: 0, skate: 0, skateWait: 0, invuln: 0, story: 0, flip: -1, dead: null, deadAt: 0, deadZ: 0,
   };
   const objects = [];
   const coins = [];
@@ -346,19 +358,28 @@ export function createRunner(canvas, { female = false, onHud, onEnd, onSound }) 
 
   // ───────────── Controles ─────────────
   const playing = () => st.phase === 'run' && st.alive;
-  const trainAt = (lane, z, pad = 0) => objects.find((o) => o.type === 'train' && !o.ghost && o.lane === lane && z <= o.zNear + pad && z >= o.zFar - pad);
+  /** Altura do bloco (trem ou rampa) num trilho; 0 se o trilho está livre ali. */
+  const blockH = (lane, z, pad = 0) => {
+    let h = 0;
+    for (const o of objects) {
+      if (o.lane !== lane || z > o.zNear + pad || z < o.zFar - pad) continue;
+      if (o.type === 'train') h = Math.max(h, TRAIN_H);
+      if (o.type === 'ramp') h = Math.max(h, ((o.zNear - z) / (o.zNear - o.zFar)) * TRAIN_H);
+    }
+    return h;
+  };
   function move(d) {
     if (!playing()) return;
     const nl = Math.max(-1, Math.min(1, st.lane + d));
     if (nl === st.lane) return;
-    const tr = trainAt(nl, st.z, 0.3);
-    if (tr && st.y < TRAIN_H - 0.35) { hit('side', tr); return; }
+    const bh = blockH(nl, st.z, 0.3);
+    if (bh > 0.6 && st.y < bh - 0.35) { hit('side', null); return; }
     st.lane = nl;
     onSound?.('whoosh');
   }
   function jump() {
     if (!playing()) return;
-    if (st.y <= st.groundY + 0.06) { st.vy = JUMP_V; st.roll = 0; onSound?.('jump'); }
+    if (st.y <= st.groundY + 0.06) { st.vy = JUMP_V; st.roll = 0; onSound?.('jump'); if (st.skate > 0) st.flip = 0; }
   }
   function roll() {
     if (!playing()) return;
@@ -388,7 +409,7 @@ export function createRunner(canvas, { female = false, onHud, onEnd, onSound }) 
   }
   function hit(kind, obj) {
     if (!st.alive || st.invuln > 0) return;
-    if (obj && kind !== 'side') ghost(obj);
+    if (obj && obj.type !== 'train') ghost(obj);
     if (st.skate > 0) {
       // Com skate: o skate explode e a corrida continua
       st.skate = 0;
@@ -400,7 +421,7 @@ export function createRunner(canvas, { female = false, onHud, onEnd, onSound }) 
       onHud?.({ warn: 'O skate explodiu!' });
       return;
     }
-    if (st.t - st.hitAt < CATCH_WINDOW) { caught(); return; }
+    if (st.t - st.hitAt < CATCH_WINDOW) { caught('caught'); return; }
     st.hitAt = st.t;
     st.slow = 0.9;
     st.stumble = 0.7;
@@ -410,17 +431,44 @@ export function createRunner(canvas, { female = false, onHud, onEnd, onSound }) 
     burst(st.x, 0.3, st.z - 0.4, 14, ['#d6d3d1', '#a8a29e', '#78716c'], 3, 0.6);
     onHud?.({ warn: kind === 'side' ? 'Esbarrou! O guarda está chegando!' : 'Bateu! O guarda está perto!' });
   }
-  function caught() {
+  function caught(how) {
+    if (!st.alive) return;
     st.alive = false;
-    st.shake = 0.6;
+    st.dead = how;
+    st.deadAt = st.t;
+    st.deadZ = st.z;
+    st.roll = 0;
+    st.shake = how === 'crash' ? 0.7 : 0.6;
     onSound?.('crash');
-    setTimeout(() => onSound?.('whistle'), 300);
-    setTimeout(() => finish(), 1600);
+    if (how === 'crash') onHud?.({ warn: 'Bateu de frente no trem!' });
+    setTimeout(() => onSound?.('whistle'), 400);
+    setTimeout(() => finish(), 2000);
+  }
+  /** Bateu de frente num trem. Sem skate: acaba. Com skate: o skate explode e o personagem
+   *  desvia para um trilho livre (ou pula para o teto, se não houver). Nunca entra no trem. */
+  function frontCrash(o) {
+    if (st.skate > 0 || st.invuln > 0) {
+      if (st.skate > 0) {
+        st.skate = 0;
+        st.skateWait = SKATE_WAIT;
+        st.invuln = 1.2;
+        st.shake = 0.5;
+        st.flip = -1;
+        onSound?.('explode');
+        burst(st.x, st.y + 0.5, st.z - 0.5, 34, ['#f97316', '#facc15', '#ef4444', '#38bdf8', '#ffffff'], 7, 0.8, 1.6);
+        onHud?.({ warn: 'O skate explodiu!' });
+        const free = [-1, 0, 1].filter((l) => l !== o.lane && blockH(l, st.z - 1, 1.2) < 0.6).sort((a, b) => Math.abs(a - st.lane) - Math.abs(b - st.lane))[0];
+        if (free !== undefined) st.lane = free;
+        else { st.vy = 17.5; st.roll = 0; }
+      }
+      return;
+    }
+    caught('crash');
   }
   function finish() {
     if (st.over) return;
     st.over = true;
-    onEnd?.({ coins: st.coins, dist: Math.floor(st.dist) });
+    onEnd?.({ coins: st.coins, dist: Math.floor(st.dist), crash: st.dead === 'crash' });
   }
 
   // ───────────── Física ─────────────
@@ -449,12 +497,24 @@ export function createRunner(canvas, { female = false, onHud, onEnd, onSound }) 
     st.shake = Math.max(0, st.shake - dt);
     if (st.skate > 0) { st.skate -= dt; if (st.skate <= 0) { st.skate = 0; st.skateWait = SKATE_WAIT; onSound?.('pop'); } }
     else st.skateWait = Math.max(0, st.skateWait - dt);
-    const prevZ = st.z;
-    st.z -= sp * dt;
-    st.dist += sp * dt;
+    for (const o of objects) if (o.v) { o.zNear += o.v * dt; o.zFar += o.v * dt; o.mesh.position.z += o.v * dt; }
+    let nz = st.z - sp * dt;
+    // Frente dos trens: o personagem nunca passa da frente (só por cima)
+    for (const o of objects) {
+      if (o.type !== 'train' || Math.abs(st.x - laneX(o.lane)) > 1.25 || st.y >= TRAIN_H - 0.45) continue;
+      const front = o.zNear + 0.5;
+      if (nz < front && st.z > o.zFar) {
+        nz = Math.max(nz, front);
+        if (st.alive && Math.abs(st.x - laneX(o.lane)) < 0.9) frontCrash(o);
+        if (!st.alive) break;
+      }
+    }
+    if (!st.alive) { st.z = nz; st.deadZ = nz; return; }
+    st.dist += Math.max(0, st.z - nz);
+    st.z = nz;
     st.x += (laneX(st.lane) - st.x) * Math.min(1, dt * 15);
     st.roll = Math.max(0, st.roll - dt);
-    for (const o of objects) if (o.v) { o.zNear += o.v * dt; o.zFar += o.v * dt; o.mesh.position.z += o.v * dt; }
+    if (st.flip >= 0) { st.flip += dt / 0.55; if (st.flip >= 1) st.flip = -1; }
     const lane = Math.round(st.x / LANE_W);
     st.prevY = st.y;
     st.groundY = surfaceAt(lane, st.z, st.y);
@@ -468,7 +528,8 @@ export function createRunner(canvas, { female = false, onHud, onEnd, onSound }) 
     for (const o of objects) {
       if (o.lane !== lane || o.ghost) continue;
       if (o.type === 'train') {
-        if (st.z <= o.zNear && st.z >= o.zFar && st.y < TRAIN_H - 0.45) hit(prevZ > o.zNear - 0.05 ? 'front' : 'side', o);
+        // Segurança: se por algum motivo ficou dentro do trem, sobe para o teto
+        if (st.z <= o.zNear && st.z >= o.zFar && st.y < TRAIN_H - 0.45) { st.y = TRAIN_H; st.vy = 0; }
       } else if ((o.type === 'low' || o.type === 'high') && st.z <= o.zNear && st.z >= o.zFar) {
         const bad = o.type === 'low' ? st.y < 0.9 : !(st.roll > 0) && st.y < 2.3;
         if (bad) {
@@ -526,7 +587,7 @@ export function createRunner(canvas, { female = false, onHud, onEnd, onSound }) 
       player.position.set(laneX(1) - 1.9, 0, 8.6);
       const turn = st.phase === 'story' ? Math.min(1, Math.max(0, (st.story - 1.7) * 2.5)) : 0;
       player.rotation.y = -Math.PI / 2 + turn * (Math.PI / 2);
-      pose(player, turn > 0 ? 'idle' : 'spray', clock);
+      poseAvatar(player, turn > 0 ? 'idle' : 'spray', clock);
       if (st.phase === 'menu' || st.story < 1.6) {
         const k = st.phase === 'menu' ? (clock * 0.11) % 1.3 : 0.55 + st.story * 0.45;
         const p = graffiti.paint(k);
@@ -542,7 +603,7 @@ export function createRunner(canvas, { female = false, onHud, onEnd, onSound }) 
         officer.visible = true;
         officer.position.set(laneX(-1) + 0.6, 0, Math.max(11, 24 - st.story * 7));
         officer.rotation.y = 0;
-        pose(officer, st.story < 1.9 ? 'run' : 'caught', clock);
+        poseAvatar(officer, st.story < 1.9 ? 'run' : 'caught', clock);
       } else officer.visible = false;
       camera.position.lerp(st.phase === 'story' && st.story > 1.7 ? camStory : camIntro, Math.min(1, dt * 2.2));
       camera.lookAt(camLook);
@@ -550,25 +611,30 @@ export function createRunner(canvas, { female = false, onHud, onEnd, onSound }) 
       return;
     }
     // Correndo
-    player.position.set(st.x, st.y + (st.skate > 0 ? 0.16 : 0), st.z);
-    player.rotation.y = (laneX(st.lane) - st.x) * -0.12;
+    const onSkate = st.skate > 0 && st.alive;
     const air = st.y > st.groundY + 0.25;
-    const state = !st.alive ? 'caught' : st.roll > 0 ? 'roll' : st.stumble > 0 ? 'stumble' : air ? 'jump' : st.skate > 0 ? 'skate' : 'run';
-    pose(player, state, st.t, 1 - st.stumble / 0.7);
-    if (!st.alive) player.rotation.y = Math.PI;
-    skate.visible = st.skate > 0 && st.alive;
+    const lie = onSkate && st.roll > 0;
+    const deadK = Math.min(1, (st.t - st.deadAt) / 0.45);
+    let pz = st.z;
+    if (st.dead === 'crash') pz = st.deadZ + Math.sin(deadK * Math.PI * 0.5) * 0.7; // quica para trás
+    player.position.set(st.x, st.y + (onSkate && !lie ? 0.2 : onSkate ? 0.08 : 0), pz);
+    player.rotation.y = (laneX(st.lane) - st.x) * -0.12;
+    const state = st.dead === 'crash' ? 'crash' : !st.alive ? 'caught' : lie ? 'skatelie' : st.roll > 0 ? 'roll' : st.stumble > 0 ? 'stumble' : onSkate ? 'skate' : air ? 'jump' : 'run';
+    poseAvatar(player, state, st.t, st.dead === 'crash' ? deadK : 1 - st.stumble / 0.7);
+    if (st.dead === 'caught') player.rotation.y = Math.PI;
+    skate.visible = onSkate;
     if (skate.visible) {
-      skate.position.set(st.x, st.y + 0.1, st.z);
-      skate.rotation.y = 0.15 * Math.sin(clock * 2);
-      skate.userData.glow.material.opacity = 0.35 + Math.sin(clock * 10) * 0.15;
+      skate.position.set(st.x, st.y, st.z);
+      skate.rotation.y = player.rotation.y;
+      poseBoard(skate, clock, st.flip);
     }
     const close = st.t - st.hitAt < CATCH_WINDOW || st.t < 2.5;
-    const target = !st.alive ? 0.9 : close ? 2.3 : 16;
+    const target = !st.alive ? (st.dead === 'crash' ? 1.6 : 0.9) : close ? 2.3 : 16;
     st.officerDist += (target - st.officerDist) * Math.min(1, dt * (st.alive ? 1.6 : 4));
     officer.visible = true;
-    officer.position.set(st.x + (st.lane <= 0 ? 0.8 : -0.8), Math.min(st.y, 0.01), st.z + st.officerDist);
+    officer.position.set(st.x + (st.lane <= 0 ? 0.8 : -0.8), Math.min(st.y, 0.01), pz + st.officerDist);
     officer.rotation.y = 0;
-    pose(officer, st.alive ? 'run' : 'caught', st.t + 0.3);
+    poseAvatar(officer, st.alive || st.officerDist > 2 ? 'run' : 'caught', st.t + 0.3);
     const sh = st.shake > 0 ? st.shake * 0.5 : 0;
     const want = new THREE.Vector3(st.x * 0.75 + rnd(-sh, sh), 4.9 + st.y * 0.6 + rnd(-sh, sh), st.z + 7.6);
     camera.position.lerp(want, Math.min(1, dt * 8));
@@ -613,11 +679,17 @@ export function createRunner(canvas, { female = false, onHud, onEnd, onSound }) 
       st.z = 8.6; st.x = 0; st.lane = 0;
       st.officerDist = 2.3;
     },
-    setFemale(f) {
+    setLook(sk, bd) {
       scene.remove(player);
-      player = makeRunner({ female: f });
+      player = shadowed(buildAvatar(skinById(sk), 'surf'));
       scene.add(player);
+      scene.remove(skate);
+      skate = buildBoard(boardById(bd));
+      skate.visible = false;
+      scene.add(skate);
     },
+    /** Para os testes automáticos. */
+    _debug: { st, addTrain },
     giveUp() { if (st.alive && st.phase === 'run') { st.alive = false; finish(); } },
     dispose() {
       window.cancelAnimationFrame(raf);

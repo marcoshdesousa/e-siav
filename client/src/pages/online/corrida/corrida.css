@@ -41,3 +41,7 @@
 .corrida-skate.on { background: rgba(29, 78, 216, .85); animation: corrida-pulse .5s infinite alternate; }
 .corrida-skate.wait { opacity: .7; }
 .corrida-skate.wait .ring circle { stroke: #94a3b8; }
+.corrida-look { display: flex; align-items: center; gap: .6rem; border: 0; border-radius: 14px; padding: .6rem .8rem; background: linear-gradient(135deg, #0ea5e9, #6366f1); color: #fff; font-family: var(--font); cursor: pointer; text-align: left; box-shadow: 0 4px 0 #3730a3; }
+.corrida-look b { display: block; font-size: .95rem; }
+.corrida-look small { display: block; opacity: .9; font-size: .78rem; }
+.corrida-look .chip { background: rgba(255, 255, 255, .22); color: #fff; font-weight: 800; white-space: nowrap; }
