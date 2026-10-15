@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import {
   BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, Waypoints, Hourglass, Flame,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
-import { Loading, PageHeader, useAsync, useLoad } from '../../ui.jsx';
+import { Loading, PageHeader, Spinner, useAsync, useLoad } from '../../ui.jsx';
 import Shell, { MoreMenu } from '../Shell.jsx';
 import { InAppProfile, MemberProfileView } from '../Profiles.jsx';
 import { RequirementsTodo } from '../Requirements.jsx';
@@ -17,6 +17,8 @@ import { AgendaLeitura, ProximasDatas } from '../club/Folders.jsx';
 import { EmbeddedSite, SupportChat } from '../Shared.jsx';
 import { GamePage, GamesHub } from '../games/GamesHub.jsx';
 import UnoPage from '../online/Uno.jsx';
+
+const CorridaPage = lazy(() => import('../online/corrida/Corrida.jsx'));
 import { AlbumPage, AlbumsPage } from '../albums/AlbumsHub.jsx';
 import { BibleDay, BibleYear, BomDeBiblia, BomDeBibliaPhase, LearningHub, StreakCard } from '../learning/Learning.jsx';
 
@@ -125,6 +127,7 @@ export default function MemberApp() {
               <Route path="suporte" element={<SupportChat />} />
               <Route path="jogos" element={<GamesHub base={base} />} />
               <Route path="jogos/uno" element={<UnoPage base={base} />} />
+              <Route path="jogos/corrida" element={<Suspense fallback={<Spinner />}><CorridaPage base={base} /></Suspense>} />
               <Route path="jogos/:id" element={<GamePage base={base} />} />
               <Route path="albuns" element={<AlbumsPage base={base} />} />
               <Route path="albuns/:id" element={<AlbumPage />} />

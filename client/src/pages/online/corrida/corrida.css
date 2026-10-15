@@ -1,0 +1,26 @@
+.corrida-playing .bottom-nav, .corrida-playing .main > .back-link, .corrida-playing .topbar, .corrida-playing header { display: none !important; }
+.corrida-playing .main { padding: 0 !important; max-width: none; }
+.corrida-stage { position: relative; height: calc(100dvh - 150px); min-height: 460px; border-radius: 18px; overflow: hidden; background: #8fd3ff; touch-action: none; user-select: none; }
+.corrida.run .corrida-stage, .corrida.story .corrida-stage { height: 100dvh; border-radius: 0; }
+.corrida-canvas { width: 100%; height: 100%; display: block; }
+.corrida-loading { position: absolute; inset: 0; display: grid; place-items: center; }
+.corrida-hud { position: absolute; top: calc(10px + env(safe-area-inset-top)); left: 10px; right: 10px; display: flex; gap: .4rem; align-items: center; }
+.corrida-pill { display: inline-flex; gap: .3rem; align-items: center; background: rgba(15, 23, 42, .65); color: #fde047; font-weight: 900; padding: .35rem .7rem; border-radius: 999px; font-size: 1rem; }
+.corrida-pill:nth-child(2) { color: #fff; }
+.corrida-btn { display: inline-flex; gap: .3rem; align-items: center; border: 0; background: rgba(15, 23, 42, .65); color: #fff; border-radius: 999px; padding: .4rem .7rem; font-weight: 800; cursor: pointer; font-family: var(--font); }
+.corrida-police { position: absolute; top: 60px; left: 50%; transform: translateX(-50%); background: #1e3a8a; color: #fff; font-weight: 900; padding: .3rem .9rem; border-radius: 999px; animation: corrida-blink .5s infinite alternate; }
+@keyframes corrida-blink { to { background: #dc2626; } }
+.corrida-warn { position: absolute; top: 100px; left: 50%; transform: translateX(-50%); background: #dc2626; color: #fff; font-weight: 900; padding: .4rem 1rem; border-radius: 12px; white-space: nowrap; }
+.corrida-story { position: absolute; left: 12px; right: 12px; bottom: 40px; background: rgba(15, 23, 42, .82); color: #fff; padding: 1rem; border-radius: 16px; text-align: center; animation: corrida-in .4s; }
+.corrida-story b { display: block; font-size: 1.5rem; color: #fde047; margin-top: .4rem; animation: corrida-pulse .5s infinite alternate; }
+@keyframes corrida-in { from { transform: translateY(40px); opacity: 0; } }
+@keyframes corrida-pulse { to { transform: scale(1.1); } }
+.corrida-menu { position: absolute; left: 12px; right: 12px; bottom: 12px; display: grid; gap: .55rem; background: rgba(255, 255, 255, .92); color: #0f172a; padding: 1rem; border-radius: 18px; box-shadow: 0 10px 24px rgba(0, 0, 0, .25); }
+.corrida-menu h1 { margin: 0; text-align: center; font-size: 1.6rem; color: #1e3a8a; font-weight: 900; }
+.corrida-gender { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+.corrida-gender button { border: 2px solid #cbd5e1; background: #fff; color: #0f172a; border-radius: 12px; padding: .55rem; font-weight: 800; cursor: pointer; font-family: var(--font); }
+.corrida-gender button.on { border-color: #1e3a8a; background: #1e3a8a; color: #fff; }
+.corrida-stats { display: grid; gap: .15rem; font-size: .85rem; font-weight: 700; justify-items: center; }
+.corrida-stats span { display: inline-flex; gap: .3rem; align-items: center; }
+.corrida-help { color: #475569; text-align: center; margin: 0; }
+.corrida-row { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
