@@ -1,0 +1,44 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import * as stb from '../server/online/stumble.js';
+
+test('stumble: 3 fases sorteadas, classificação por rodada e só o 1º da final vence', () => {
+  assert.equal(stb.qualifyCount(10, 0), 7);
+  assert.equal(stb.qualifyCount(7, 1), 5);
+  assert.equal(stb.qualifyCount(3, 0), 2);
+  assert.equal(stb.qualifyCount(5, 2), 1);
+  let now = 1_000_000;
+  const s = stb.start([1, 2, 3, 4, 5], now);
+  assert.equal(new Set(s.stages).size, 3);
+  assert.ok(s.stages.every((x) => x >= 0 && x < 20));
+  assert.equal(s.phase, 'intro');
+  now += 5000; stb.tick(s, now);
+  assert.equal(s.phase, 'race');
+  assert.ok(stb.act(s, 1, { type: 'finish' }, {}, now + 1000).error, 'rápido demais');
+  now += 20_000;
+  for (const id of [3, 1, 5, 2]) stb.act(s, id, { type: 'finish' }, {}, now);
+  assert.equal(s.phase, 'results');
+  assert.deepEqual(s.alive, [3, 1, 5, 2]);
+  assert.deepEqual(s.eliminated, [4]);
+  now += 6000; stb.tick(s, now);
+  assert.equal(s.round, 1);
+  assert.equal(s.qualify, 3);
+  now += 5000; stb.tick(s, now);
+  now += 20_000;
+  // Tempo acabou com só 1 chegando: passam os que foram mais longe
+  stb.act(s, 2, { type: 'finish' }, {}, now);
+  stb.act(s, 5, { type: 'progress', p: 0.8 }, {}, now);
+  stb.act(s, 3, { type: 'progress', p: 0.3 }, {}, now);
+  stb.act(s, 1, { type: 'progress', p: 0.5 }, {}, now);
+  stb.tick(s, now + 200_000);
+  assert.deepEqual(s.alive, [2, 5, 1]);
+  stb.tick(s, now + 206_001);
+  assert.equal(s.round, 2);
+  assert.equal(s.qualify, 1);
+  now += 230_000; stb.tick(s, now);
+  now += 15_000;
+  stb.act(s, 5, { type: 'finish' }, {}, now);
+  assert.equal(s.winner, 5);
+  stb.tick(s, now + 7000);
+  assert.equal(s.done, true);
+});

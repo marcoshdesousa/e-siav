@@ -39,7 +39,7 @@ function GameRanking({ game, base, limit }) {
 export const BIG_GAMES = [
   { id: 'uno', name: 'Uno DBV', hint: 'Cartas online, 2 a 6 jogadores, com chat de voz', icon: Layers, ranks: [['uno', 'Vitórias']], ready: true },
   { id: 'corrida', name: 'Corrida DBV', hint: 'Corra pelos trilhos, fuja do guarda e junte desbrava coins', icon: TrainFront, ranks: [['corrida-moedas', 'Mais moedas'], ['corrida-distancia', 'Maior distância']], ready: true },
-  { id: 'stumble', name: 'Stumble DBV', hint: 'Até 10 jogadores em fases malucas. Só o 1º vence', icon: PersonStanding, ranks: [['vitorias', 'Vitórias']] },
+  { id: 'stumble', name: 'Stumble DBV', hint: 'Até 10 jogadores em fases malucas. Só o 1º vence', icon: PersonStanding, ranks: [['stumble', 'Vitórias']], ready: true },
   { id: 'craft', name: 'DesbravaCraft', hint: 'Construa o seu mundo sozinho ou com até 10 amigos', icon: Pickaxe, ranks: [] },
 ];
 

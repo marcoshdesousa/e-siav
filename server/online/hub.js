@@ -8,10 +8,13 @@ import { WebSocketServer } from 'ws';
 import { actorFromToken, COOKIE } from '../auth.js';
 import { run } from '../db.js';
 import * as uno from './uno.js';
+import * as stumble from './stumble.js';
 
 /** Jogos com sala. size: tamanhos de sala; quick: tamanhos da partida rápida; min: mínimo para começar. */
 const GAMES = {
   uno: { name: 'Uno DBV', sizes: [2, 4, 6], quick: [2, 4], min: 2, logic: uno },
+  // Stumble: a sala aleatória começa 30 s depois de ter 3 jogadores (ou na hora, se encher com 10).
+  stumble: { name: 'Stumble DBV', sizes: [10], quick: [10], min: 3, countdown: 30_000, logic: stumble },
 };
 
 const rooms = new Map(); // id -> sala
@@ -41,8 +44,8 @@ function roomInfo(room) {
   return {
     id: room.id, game: room.game, code: room.code, public: room.public, quick: room.quick, size: room.size,
     owner: room.owner, status: room.status, min: GAMES[room.game].min,
-    players: [...room.players.values()].map((p) => ({ id: p.id, name: p.name, photo: p.photo, connected: p.connected })),
-    result: room.result || null,
+    players: [...room.players.values()].map((p) => ({ id: p.id, name: p.name, photo: p.photo, connected: p.connected, outfit: p.outfit || null })),
+    result: room.result || null, startAt: room.startAt || null, now: Date.now(),
   };
 }
 
@@ -91,12 +94,15 @@ function closeRoom(room) {
   lobbyUpdate();
 }
 
-function addPlayer(room, actor) {
+const cleanOutfit = (o) => (typeof o === 'string' && /^[a-z0-9-]{1,24}$/.test(o) ? o : null);
+
+function addPlayer(room, actor, outfit) {
   leaveRoom(actor.id, { silent: true });
-  room.players.set(actor.id, { id: actor.id, name: firstName(actor.name), photo: actor.photo || null, connected: true, goneAt: null });
+  room.players.set(actor.id, { id: actor.id, name: firstName(actor.name), photo: actor.photo || null, connected: true, goneAt: null, outfit: cleanOutfit(outfit) });
   memberRoom.set(actor.id, room.id);
   if (room.quick && room.status === 'waiting' && room.players.size >= room.size) startGame(room);
   else broadcast(room);
+  lobbyUpdate();
 }
 
 function leaveRoom(memberId, { silent = false, kicked = false } = {}) {
@@ -109,8 +115,9 @@ function leaveRoom(memberId, { silent = false, kicked = false } = {}) {
   if (room.status === 'playing' && room.state) {
     const logic = GAMES[room.game].logic;
     logic.removePlayer(room.state, memberId);
-    // Ficou um só: a partida acaba sem vencedor (ninguém ganha vitória porque os outros saíram).
-    if (room.state.order.length < 2) finishGame(room, null);
+    if (room.game === 'uno' && room.state.order.length < 2) finishGame(room, null);
+    // Ficou um só no Uno: acaba sem vencedor (ninguém ganha vitória porque os outros saíram).
+    else if (room.state.done) finishGame(room, room.state.winner || null);
   }
   if (!room.players.size) return closeRoom(room);
   if (room.owner === memberId) room.owner = room.players.keys().next().value;
@@ -122,6 +129,7 @@ function startGame(room) {
   room.state = GAMES[room.game].logic.start(ids);
   room.status = 'playing';
   room.result = null;
+  room.startAt = null;
   room.startedWith = ids;
   broadcast(room);
 }
@@ -148,8 +156,8 @@ function onAction(actor, room, msg) {
   const logic = GAMES[room.game].logic;
   const r = logic.act(room.state, actor.id, msg, names(room));
   if (r.error) return send(actor.id, { t: 'error', msg: r.error });
-  if (room.state.winner) return finishGame(room, room.state.winner);
-  broadcast(room);
+  if (room.state.done) return finishGame(room, room.state.winner || null);
+  if (!r.quiet) broadcast(room);
 }
 
 function handle(actor, msg) {
@@ -167,24 +175,27 @@ function handle(actor, msg) {
       const g = GAMES[msg.game];
       const size = Number(msg.size);
       if (!g || !g.quick.includes(size)) return;
-      if (room && room.game === msg.game && room.quick && room.size === size && room.status === 'waiting') return broadcast(room);
+      if (room && room.game === msg.game && room.quick && room.size === size && room.status === 'waiting') {
+        room.players.get(id).outfit = cleanOutfit(msg.outfit) || room.players.get(id).outfit;
+        return broadcast(room);
+      }
       let r = [...rooms.values()].find((x) => x.game === msg.game && x.quick && x.size === size && x.status === 'waiting' && x.players.size < x.size && !x.players.has(id));
       if (!r) r = createRoom(msg.game, { size, quick: true, owner: id });
-      return addPlayer(r, actor);
+      return addPlayer(r, actor, msg.outfit);
     }
     case 'create': {
       const g = GAMES[msg.game];
       const size = Number(msg.size);
       if (!g || !g.sizes.includes(size)) return;
-      return addPlayer(createRoom(msg.game, { size, isPublic: !!msg.public, owner: id }), actor);
+      return addPlayer(createRoom(msg.game, { size, isPublic: !!msg.public, owner: id }), actor, msg.outfit);
     }
     case 'join': {
       const r = byCode.get(String(msg.code || '').trim());
       if (!r || r.quick) return send(id, { t: 'error', msg: 'Sala não encontrada. Confira o código.' });
-      if (r.players.has(id)) return broadcast(r);
+      if (r.players.has(id)) { r.players.get(id).outfit = cleanOutfit(msg.outfit) || r.players.get(id).outfit; return broadcast(r); }
       if (r.status !== 'waiting') return send(id, { t: 'error', msg: 'Essa partida já começou' });
       if (r.players.size >= r.size) return send(id, { t: 'error', msg: 'A sala está cheia' });
-      return addPlayer(r, actor);
+      return addPlayer(r, actor, msg.outfit);
     }
     case 'leave': return leaveRoom(id);
     case 'kick': {
@@ -209,6 +220,18 @@ function handle(actor, msg) {
       return broadcast(room);
     }
     case 'act': return room && onAction(actor, room, msg.action || {});
+    case 'outfit': {
+      const p = room?.players.get(id);
+      if (p && room.status === 'waiting') { p.outfit = cleanOutfit(msg.outfit); broadcast(room); }
+      return;
+    }
+    case 'pos': {
+      // Posição do jogador (Stumble): vai direto para os outros da sala, sem passar pelo estado.
+      if (!room || room.status !== 'playing') return;
+      const data = JSON.stringify({ t: 'pos', from: id, d: msg.d });
+      for (const q of room.players.keys()) if (q !== id) { const c = conns.get(q); if (c?.ws.readyState === 1) c.ws.send(data); }
+      return;
+    }
     case 'rtc': {
       // Sinais da voz (oferta, resposta, candidatos) só entre jogadores da mesma sala.
       const to = Number(msg.to);
@@ -236,10 +259,16 @@ setInterval(() => {
       const limit = room.status === 'playing' ? LEAVE_PLAYING_MS : LEAVE_WAITING_MS;
       if (now - p.goneAt > limit) leaveRoom(p.id, { silent: true });
     }
-    if (room.status === 'playing' && room.state && !room.state.winner && now > room.state.turnEndsAt) {
-      GAMES[room.game].logic.timeout(room.state, names(room));
-      if (room.state.winner) finishGame(room, room.state.winner);
+    const g = GAMES[room.game];
+    if (room.status === 'playing' && room.state && !room.state.done && g.logic.tick(room.state, now, names(room))) {
+      if (room.state.done) finishGame(room, room.state.winner || null);
       else broadcast(room);
+    }
+    // Sala aleatória com contagem: começa 30 s depois de ter o mínimo; volta a esperar se cair abaixo.
+    if (room.status === 'waiting' && room.quick && g.countdown) {
+      if (room.players.size >= g.min && !room.startAt) { room.startAt = now + g.countdown; broadcast(room); }
+      else if (room.players.size < g.min && room.startAt) { room.startAt = null; broadcast(room); }
+      else if (room.startAt && now >= room.startAt) startGame(room);
     }
     // Sala esquecida há mais de 6 horas some.
     if (now - room.createdAt > 6 * 3600_000 && room.status !== 'playing') closeRoom(room);

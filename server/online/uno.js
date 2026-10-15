@@ -151,6 +151,7 @@ export function act(s, id, a, names = {}) {
   } else s.unoSaid[id] = false;
   if (!hand.length) {
     s.winner = id;
+    s.done = true;
     say(s, `${nm(id)} venceu!`);
     return { ok: true, win: true };
   }
@@ -172,6 +173,13 @@ export function act(s, id, a, names = {}) {
   }
   nextTurn(s, skip);
   return { ok: true };
+}
+
+/** Relógio do servidor: passou do tempo da vez, compra e passa sozinho. */
+export function tick(s, now, names) {
+  if (s.winner || now <= s.turnEndsAt) return false;
+  timeout(s, names);
+  return true;
 }
 
 /** Tempo da vez acabou: compra 1 e, se der, joga; senão passa (a partida nunca trava). */

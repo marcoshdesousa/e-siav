@@ -1,0 +1,54 @@
+.stb-page { display: grid; gap: .6rem; }
+.stb-hero { text-align: center; padding-top: .6rem; }
+.stb-hero h1 { margin: 0; font-size: 2.2rem; font-weight: 900; color: #f59e0b; text-shadow: 3px 3px 0 #7c2d12, -1px -1px 0 #7c2d12; letter-spacing: -1px; transform: rotate(-3deg); }
+.stb-hero h1 span { color: #ec4899; text-shadow: 3px 3px 0 #831843; }
+.stb-hero p { margin: .2rem 0 0; font-size: .85rem; color: var(--muted); display: flex; gap: .3rem; justify-content: center; align-items: center; }
+.stb-me { display: grid; justify-items: center; gap: .3rem; background: radial-gradient(circle, #fde68a 0, #f9a8d4 60%, #c4b5fd 100%); border-radius: 22px; padding: .6rem; }
+.stb-preview { width: 100%; display: block; }
+.stb-play { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: .7rem; align-items: center; text-align: left; border: 0; border-radius: 20px; padding: 1rem 1.2rem; cursor: pointer; color: #fff; background: linear-gradient(135deg, #22c55e, #15803d); box-shadow: 0 6px 0 #14532d, 0 10px 20px rgba(0, 0, 0, .2); font-family: var(--font); }
+.stb-play svg { grid-row: span 2; }
+.stb-play b { font-size: 1.5rem; }
+.stb-play small { opacity: .9; }
+.stb-play:active { transform: translateY(4px); box-shadow: 0 2px 0 #14532d; }
+.stb-seg { display: flex; width: fit-content; margin: 0 auto .5rem; }
+.stb-outfits { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); gap: .45rem; max-height: 38vh; overflow-y: auto; margin-bottom: .6rem; }
+.stb-outfit { display: grid; justify-items: center; gap: .2rem; border: 2px solid var(--border); background: var(--surface); border-radius: 12px; padding: .4rem .2rem; cursor: pointer; color: inherit; font-family: var(--font); }
+.stb-outfit.on { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary); }
+.stb-outfit small { font-size: .66rem; line-height: 1.15; text-align: center; }
+.stb-swatch { width: 30px; height: 44px; border-radius: 15px; box-shadow: inset 0 0 0 2px rgba(0, 0, 0, .15); display: inline-block; flex: none; }
+.stb-count { display: inline-flex; gap: .3rem; align-items: center; font-weight: 900; font-size: 1.2rem; }
+.stb-countdown { display: inline-flex; gap: .4rem; align-items: center; font-weight: 900; font-size: 1.3rem; color: #fff; background: #ea580c; padding: .4rem 1rem; border-radius: 999px; animation: uno-pulse .5s infinite alternate; }
+.stb-players { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; }
+.stb-player { display: flex; align-items: center; gap: .45rem; padding: .45rem .6rem; border-radius: 12px; background: var(--surface); border: 1px solid var(--border); min-width: 0; }
+.stb-player b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; font-size: .85rem; }
+.stb-player .stb-swatch { width: 22px; height: 32px; }
+
+.stb-match { position: fixed; inset: 0; z-index: 30; background: #7dd3fc; touch-action: none; user-select: none; }
+.stb-canvas { width: 100%; height: 100%; display: block; }
+.stb-hud { position: absolute; top: calc(8px + env(safe-area-inset-top)); left: 8px; right: 8px; display: flex; gap: .35rem; align-items: center; }
+.stb-pill { display: inline-flex; gap: .3rem; align-items: center; background: rgba(15, 23, 42, .7); color: #fff; font-weight: 800; font-size: .8rem; padding: .35rem .7rem; border-radius: 999px; border: 0; font-family: var(--font); }
+.stb-pill.btn { cursor: pointer; }
+.stb-banner { position: absolute; top: 18%; left: 50%; transform: translateX(-50%); display: grid; justify-items: center; gap: .2rem; text-align: center; background: rgba(15, 23, 42, .78); color: #fff; padding: 1rem 1.6rem; border-radius: 20px; min-width: 260px; animation: stb-in .4s; }
+.stb-banner small { color: #fde047; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+.stb-banner b { font-size: 1.6rem; }
+.stb-321 { font-style: normal; font-size: 4rem; font-weight: 900; color: #fde047; line-height: 1; animation: stb-pulse .5s infinite alternate; }
+.stb-go { position: absolute; top: 30%; left: 0; right: 0; text-align: center; font-size: 5rem; font-weight: 900; color: #22c55e; text-shadow: 4px 4px 0 #14532d; animation: uno-pop .4s; pointer-events: none; }
+.stb-qual { position: absolute; top: 22%; left: 0; right: 0; text-align: center; font-size: 2.2rem; font-weight: 900; color: #fde047; text-shadow: 3px 3px 0 #7c2d12; pointer-events: none; animation: uno-pop .4s; }
+.stb-spect { position: absolute; bottom: 24px; left: 12px; right: 12px; text-align: center; background: rgba(15, 23, 42, .78); color: #fff; padding: .7rem; border-radius: 14px; font-weight: 700; }
+.stb-results { position: absolute; top: 16%; left: 12px; right: 12px; display: grid; gap: .5rem; justify-items: center; background: rgba(15, 23, 42, .85); color: #fff; padding: 1rem; border-radius: 18px; text-align: center; }
+.stb-results b { font-size: 1.4rem; }
+.stb-res-list { display: flex; flex-wrap: wrap; gap: .35rem; justify-content: center; }
+.stb-res-list span { padding: .3rem .7rem; border-radius: 999px; font-weight: 800; font-size: .85rem; }
+.stb-res-list .ok { background: #16a34a; }
+.stb-res-list .out { background: #dc2626; text-decoration: line-through; opacity: .85; }
+.stb-controls { position: absolute; left: 0; right: 0; bottom: calc(16px + env(safe-area-inset-bottom)); display: flex; justify-content: space-between; align-items: flex-end; padding: 0 16px; pointer-events: none; }
+.stb-joy { pointer-events: auto; width: 124px; height: 124px; border-radius: 50%; background: rgba(15, 23, 42, .28); border: 3px solid rgba(255, 255, 255, .6); display: grid; place-items: center; touch-action: none; }
+.stb-knob { width: 54px; height: 54px; border-radius: 50%; background: rgba(255, 255, 255, .9); box-shadow: 0 3px 8px rgba(0, 0, 0, .3); }
+.stb-btns { pointer-events: auto; display: grid; gap: .6rem; justify-items: end; }
+.stb-btn { border: 0; border-radius: 50%; width: 84px; height: 84px; font-weight: 900; color: #fff; font-family: var(--font); font-size: .8rem; cursor: pointer; box-shadow: 0 4px 0 rgba(0, 0, 0, .3); touch-action: none; }
+.stb-btn.jump { background: #22c55e; width: 96px; height: 96px; font-size: .95rem; }
+.stb-btn.dive { background: #f59e0b; width: 70px; height: 70px; }
+.stb-btn:active { transform: translateY(3px); }
+.stb-match .game-over { position: absolute; inset: 0; z-index: 5; }
+@keyframes stb-in { from { transform: translate(-50%, 30px); opacity: 0; } }
+@keyframes stb-pulse { to { transform: scale(1.12); } }

@@ -156,7 +156,7 @@ As telas mostradas no celular da página de entrada ficam em `client/public/show
   - Depois disso, o servidor prepara sozinho, em segundo plano, um MP3 por capítulo em `DATA_DIR/biblia-audio`, começando pela leitura de hoje. São cerca de 1 GB para a Bíblia inteira, que fica no disco permanente.
   - Para desligar, use `BIBLE_AUDIO=0`.
 
-## Jogos online (Uno DBV)
+## Jogos online (Uno DBV e Stumble DBV)
 
 - **Salas:** pelo WebSocket `/ws/online` (`server/online/hub.js`); as regras ficam no servidor (`server/online/uno.js`).
   - Cada jogador recebe só a própria mão.
@@ -164,3 +164,7 @@ As telas mostradas no celular da página de entrada ficam em `client/public/show
   - Quem cai tem 90 s para voltar. Depois disso, as cartas dele voltam para o monte.
 - **Ranking:** por vitórias, em `game_scores` (jogo `uno`), marcado pelo servidor. O celular não consegue mandar pontos desse jogo.
 - **Voz:** WebRTC entre os celulares, usando servidores STUN públicos. Em algumas redes (por exemplo, algumas operadoras 4G ou redes de escola) a voz pode não conectar. Para essas redes seria preciso um servidor TURN, que é pago à parte.
+- **Stumble DBV** (`server/online/stumble.js`, `client/src/pages/online/stumble/`):
+  - Até 10 jogadores. Cada partida tem 3 fases sorteadas entre 20; nas duas primeiras passam os primeiros a chegar, e a final tem um só vencedor.
+  - Sala aleatória: começa 30 s depois de ter 3 jogadores. Se o número cair abaixo de 3, a contagem para. Se a sala encher (10), começa na hora.
+  - O movimento roda em cada celular, e a posição é repassada aos outros cerca de 12 vezes por segundo. O servidor controla o tempo, a ordem de chegada e as vitórias.
