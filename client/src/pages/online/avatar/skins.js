@@ -103,9 +103,17 @@ export function decodeLook(code) {
 }
 export const encodeLook = (o) => o.g + FIELDS.map(([k]) => (o[k] || 0).toString(36)).join('');
 
+/**
+ * Por enquanto todo mundo usa um dos dois personagens padrão (menino ou menina), testados para não ter
+ * roupa entrando no corpo ao correr, pular ou mergulhar. As outras peças ficam guardadas para as skins
+ * (em breve): qualquer código antigo vira o padrão do mesmo gênero.
+ */
+export const STANDARD = { m: 'm10100g0500', f: 'f13200g0500' };
+const standardOf = (code) => STANDARD[String(code || '')[0] === 'f' ? 'f' : 'm'];
+
 /** Escolhas → descrição para montar o personagem (build.js). */
 export function lookOf(code) {
-  const o = decodeLook(code);
+  const o = decodeLook(standardOf(code));
   const top = TOPS[o.top];
   const bottom = BOTTOMS[o.bottom];
   const shoes = SHOES[o.shoes];
@@ -157,7 +165,7 @@ export function readChoice() {
     const v = JSON.parse(window.localStorage.getItem('dbv-skin') || 'null');
     if (v?.skin && valid(v.skin)) return { skin: lookOf(v.skin).id };
   } catch { /* sem armazenamento */ }
-  return { skin: PRESETS.m01 };
+  return { skin: STANDARD.m };
 }
 export function saveChoice(c) {
   try { window.localStorage.setItem('dbv-skin', JSON.stringify({ skin: c.skin })); } catch { /* sem armazenamento */ }
