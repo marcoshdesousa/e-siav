@@ -3,59 +3,59 @@
   "day": 208,
   "questions": [
    {
-    "q": "Que povo Deus disse que iria suscitar, em Habacuque 1?",
+    "q": "Por quantos dias Jesus foi tentado pelo diabo no deserto?",
     "options": [
-     "Os assírios",
-     "Os caldeus",
-     "Os egípcios",
-     "Os filisteus"
-    ],
-    "answer": 1,
-    "ref": "Habacuque 1:6"
-   },
-   {
-    "q": "Segundo Habacuque 2, como viverá o justo?",
-    "options": [
-     "Pela sua força",
-     "Pelas suas riquezas",
-     "Pela sua fé",
-     "Pela sua sabedoria"
-    ],
-    "answer": 2,
-    "ref": "Habacuque 2:4"
-   },
-   {
-    "q": "O que Deus mandou Habacuque fazer com a visão?",
-    "options": [
-     "Escrevê-la em tábuas",
-     "Guardá-la em segredo",
-     "Contá-la só ao rei",
-     "Queimá-la no fogo"
+     "Quarenta dias",
+     "Sete dias",
+     "Doze dias",
+     "Três dias"
     ],
     "answer": 0,
-    "ref": "Habacuque 2:2"
+    "ref": "Lucas 4:2"
    },
    {
-    "q": "Em Habacuque 3, o Senhor faz os pés do profeta como os de qual animal?",
+    "q": "De qual profeta era o livro que Jesus leu na sinagoga de Nazaré?",
     "options": [
-     "Do leão",
-     "Da águia",
-     "Do cavalo",
-     "Da corça"
-    ],
-    "answer": 3,
-    "ref": "Habacuque 3:19"
-   },
-   {
-    "q": "Sofonias profetizou nos dias de qual rei de Judá?",
-    "options": [
-     "Ezequias",
-     "Josias",
-     "Davi",
-     "Manassés"
+     "Jeremias",
+     "Isaías",
+     "Daniel",
+     "Ezequiel"
     ],
     "answer": 1,
-    "ref": "Sofonias 1:1"
+    "ref": "Lucas 4:17"
+   },
+   {
+    "q": "Quem estava com febre alta na casa de Simão?",
+    "options": [
+     "A filha de Simão",
+     "A esposa de Simão",
+     "A sogra de Simão",
+     "O irmão de Simão"
+    ],
+    "answer": 2,
+    "ref": "Lucas 4:38"
+   },
+   {
+    "q": "Depois da pesca maravilhosa, Jesus disse que Simão seria pescador de quê?",
+    "options": [
+     "De peixes grandes",
+     "De pérolas",
+     "De tesouros",
+     "De homens"
+    ],
+    "answer": 3,
+    "ref": "Lucas 5:10"
+   },
+   {
+    "q": "Como os amigos levaram o paralítico até Jesus?",
+    "options": [
+     "Pela janela",
+     "Descendo-o pelo telhado",
+     "Por uma porta dos fundos",
+     "Por um barco"
+    ],
+    "answer": 1,
+    "ref": "Lucas 5:19"
    }
   ]
  },
@@ -63,59 +63,59 @@
   "day": 209,
   "questions": [
    {
-    "q": "Em Ageu, quem era o governador de Judá?",
+    "q": "Segundo Jesus, o Filho do Homem é Senhor de quê?",
     "options": [
-     "Neemias",
-     "Esdras",
-     "Zorobabel",
-     "Josué"
-    ],
-    "answer": 2,
-    "ref": "Ageu 1:1"
-   },
-   {
-    "q": "Segundo Ageu 1, o povo corria para suas próprias casas enquanto qual casa permanecia em ruínas?",
-    "options": [
-     "A casa do SENHOR",
-     "A casa do rei",
-     "A casa de Ageu",
-     "A casa do governador"
-    ],
-    "answer": 0,
-    "ref": "Ageu 1:9"
-   },
-   {
-    "q": "Na visão de Zacarias 1, o homem estava montado num cavalo de que cor?",
-    "options": [
-     "Branco",
-     "Preto",
-     "Malhado",
-     "Vermelho"
+     "Do templo",
+     "Do mar",
+     "Da sinagoga",
+     "Do sábado"
     ],
     "answer": 3,
-    "ref": "Zacarias 1:8"
+    "ref": "Lucas 6:5"
    },
    {
-    "q": "Em Zacarias 3, quem estava à direita do sumo sacerdote Josué para acusá-lo?",
+    "q": "Quantos apóstolos Jesus escolheu dentre os discípulos?",
     "options": [
-     "Um anjo",
-     "Satanás",
-     "Zorobabel",
-     "Um profeta"
-    ],
-    "answer": 1,
-    "ref": "Zacarias 3:1"
-   },
-   {
-    "q": "Zacarias 4:6: \"Não por força, nem por poder, mas pelo meu...\"",
-    "options": [
-     "Exército",
-     "Ouro",
-     "Espírito",
-     "Templo"
+     "Sete",
+     "Setenta",
+     "Doze",
+     "Dez"
     ],
     "answer": 2,
-    "ref": "Zacarias 4:6"
+    "ref": "Lucas 6:13"
+   },
+   {
+    "q": "Onde o homem prudente construiu sua casa?",
+    "options": [
+     "Sobre a areia",
+     "Perto do rio",
+     "No alto do monte",
+     "Sobre a rocha"
+    ],
+    "answer": 3,
+    "ref": "Lucas 6:48"
+   },
+   {
+    "q": "Em que cidade Jesus ressuscitou o filho único de uma viúva?",
+    "options": [
+     "Caná",
+     "Betânia",
+     "Nazaré",
+     "Naim"
+    ],
+    "answer": 3,
+    "ref": "Lucas 7:11"
+   },
+   {
+    "q": "Com que a mulher pecadora enxugava os pés de Jesus?",
+    "options": [
+     "Com uma toalha",
+     "Com seus cabelos",
+     "Com seu manto",
+     "Com folhas"
+    ],
+    "answer": 1,
+    "ref": "Lucas 7:38"
    }
   ]
  },
@@ -123,1087 +123,7 @@
   "day": 210,
   "questions": [
    {
-    "q": "Qual era o comprimento do rolo voante que Zacarias viu?",
-    "options": [
-     "Vinte côvados",
-     "Dez côvados",
-     "Cem côvados",
-     "Sete côvados"
-    ],
-    "answer": 0,
-    "ref": "Zacarias 5:2"
-   },
-   {
-    "q": "Quantos carros Zacarias viu sair dentre dois montes?",
-    "options": [
-     "Dois",
-     "Sete",
-     "Doze",
-     "Quatro"
-    ],
-    "answer": 3,
-    "ref": "Zacarias 6:1"
-   },
-   {
-    "q": "Na cabeça de quem deviam ser colocadas as coroas em Zacarias 6?",
-    "options": [
-     "Zorobabel",
-     "Zacarias",
-     "Josué, o sumo sacerdote",
-     "Dario"
-    ],
-    "answer": 2,
-    "ref": "Zacarias 6:11"
-   },
-   {
-    "q": "Segundo Zacarias 8, as praças de Jerusalém ficarão cheias de quê?",
-    "options": [
-     "Soldados armados",
-     "Meninos e meninas brincando",
-     "Mercadores estrangeiros",
-     "Animais selvagens"
-    ],
-    "answer": 1,
-    "ref": "Zacarias 8:5"
-   },
-   {
-    "q": "Em Zacarias 9:9, o rei vem montado em quê?",
-    "options": [
-     "Num jumento",
-     "Num cavalo branco",
-     "Num carro de guerra",
-     "Num camelo"
-    ],
-    "answer": 0,
-    "ref": "Zacarias 9:9"
-   }
-  ]
- },
- {
-  "day": 211,
-  "questions": [
-   {
-    "q": "Quanto pesaram como salário do pastor em Zacarias 11?",
-    "options": [
-     "Dez moedas de ouro",
-     "Cinquenta siclos",
-     "Cem moedas de prata",
-     "Trinta moedas de prata"
-    ],
-    "answer": 3,
-    "ref": "Zacarias 11:12"
-   },
-   {
-    "q": "Zacarias 13:7: \"Fere o Pastor, e as ... ficarão dispersas.\"",
-    "options": [
-     "Nações",
-     "Ovelhas",
-     "Cabras",
-     "Tribos"
-    ],
-    "answer": 1,
-    "ref": "Zacarias 13:7"
-   },
-   {
-    "q": "Sobre que monte estarão os pés do Senhor naquele dia, em Zacarias 14?",
-    "options": [
-     "Monte das Oliveiras",
-     "Monte Sinai",
-     "Monte Carmelo",
-     "Monte Sião"
-    ],
-    "answer": 0,
-    "ref": "Zacarias 14:4"
-   },
-   {
-    "q": "Em Malaquias 1, Deus diz que amou qual dos irmãos?",
-    "options": [
-     "Esaú",
-     "Ismael",
-     "Jacó",
-     "José"
-    ],
-    "answer": 2,
-    "ref": "Malaquias 1:2"
-   },
-   {
-    "q": "Que tipo de animais o povo oferecia a Deus em Malaquias 1?",
-    "options": [
-     "Os melhores do rebanho",
-     "Animais cegos, coxos e enfermos",
-     "Apenas cordeiros novos",
-     "Animais selvagens"
-    ],
-    "answer": 1,
-    "ref": "Malaquias 1:8"
-   }
-  ]
- },
- {
-  "day": 212,
-  "questions": [
-   {
-    "q": "O que Deus manda trazer à casa do tesouro em Malaquias 3?",
-    "options": [
-     "Todos os dízimos",
-     "Ouro e prata",
-     "Os primeiros filhos",
-     "Pedras preciosas"
-    ],
-    "answer": 0,
-    "ref": "Malaquias 3:10"
-   },
-   {
-    "q": "Que profeta Deus prometeu enviar antes do grande dia do Senhor?",
-    "options": [
-     "Moisés",
-     "Isaías",
-     "Jeremias",
-     "Elias"
-    ],
-    "answer": 3,
-    "ref": "Malaquias 4:5"
-   },
-   {
-    "q": "Em que cidade Jesus nasceu?",
-    "options": [
-     "Nazaré",
-     "Belém da Judeia",
-     "Jerusalém",
-     "Cafarnaum"
-    ],
-    "answer": 1,
-    "ref": "Mateus 2:1"
-   },
-   {
-    "q": "O que João Batista comia no deserto?",
-    "options": [
-     "Pão e peixe",
-     "Maná do céu",
-     "Gafanhotos e mel silvestre",
-     "Frutas e água"
-    ],
-    "answer": 2,
-    "ref": "Mateus 3:4"
-   },
-   {
-    "q": "Quantos dias Jesus jejuou no deserto?",
-    "options": [
-     "Sete",
-     "Quarenta",
-     "Doze",
-     "Três"
-    ],
-    "answer": 1,
-    "ref": "Mateus 4:2"
-   }
-  ]
- },
- {
-  "day": 213,
-  "questions": [
-   {
-    "q": "Jesus disse: \"Vós sois o sal da terra\" e também \"Vós sois a ... do mundo\".",
-    "options": [
-     "Esperança",
-     "Força",
-     "Alegria",
-     "Luz"
-    ],
-    "answer": 3,
-    "ref": "Mateus 5:14"
-   },
-   {
-    "q": "Segundo Jesus, ninguém pode servir a dois...",
-    "options": [
-     "Senhores",
-     "Templos",
-     "Reis",
-     "Povos"
-    ],
-    "answer": 0,
-    "ref": "Mateus 6:24"
-   },
-   {
-    "q": "Onde o homem prudente edificou sua casa?",
-    "options": [
-     "Sobre a areia",
-     "Junto ao rio",
-     "Sobre a rocha",
-     "No vale"
-    ],
-    "answer": 2,
-    "ref": "Mateus 7:24"
-   },
-   {
-    "q": "Durante a tempestade no mar, o que Jesus repreendeu?",
-    "options": [
-     "Os discípulos",
-     "Os ventos e o mar",
-     "Os peixes",
-     "O barqueiro"
-    ],
-    "answer": 1,
-    "ref": "Mateus 8:26"
-   },
-   {
-    "q": "Em quais animais os demônios entraram em Mateus 8?",
-    "options": [
-     "Porcos",
-     "Ovelhas",
-     "Cabras",
-     "Jumentos"
-    ],
-    "answer": 0,
-    "ref": "Mateus 8:32"
-   }
-  ]
- },
- {
-  "day": 214,
-  "questions": [
-   {
-    "q": "Onde Mateus estava sentado quando Jesus o chamou?",
-    "options": [
-     "No templo",
-     "Num barco",
-     "Debaixo de uma figueira",
-     "Na coletoria"
-    ],
-    "answer": 3,
-    "ref": "Mateus 9:9"
-   },
-   {
-    "q": "Há quantos anos a mulher que tocou a orla da roupa de Jesus sofria?",
-    "options": [
-     "Doze anos",
-     "Sete anos",
-     "Trinta anos",
-     "Dois anos"
-    ],
-    "answer": 0,
-    "ref": "Mateus 9:20"
-   },
-   {
-    "q": "Jesus mandou os discípulos serem prudentes como quais animais?",
-    "options": [
-     "Pombas",
-     "Leões",
-     "Serpentes",
-     "Ovelhas"
-    ],
-    "answer": 2,
-    "ref": "Mateus 10:16"
-   },
-   {
-    "q": "Onde João Batista estava quando enviou discípulos a Jesus?",
-    "options": [
-     "No deserto",
-     "No rio Jordão",
-     "No templo",
-     "Na prisão"
-    ],
-    "answer": 3,
-    "ref": "Mateus 11:2"
-   },
-   {
-    "q": "O que Jesus promete aos cansados e sobrecarregados que vêm a ele?",
-    "options": [
-     "Riquezas",
-     "Alívio",
-     "Poder",
-     "Fama"
-    ],
-    "answer": 1,
-    "ref": "Mateus 11:28"
-   }
-  ]
- },
- {
-  "day": 215,
-  "questions": [
-   {
-    "q": "O que os discípulos colheram e comeram num sábado?",
-    "options": [
-     "Figos",
-     "Uvas",
-     "Espigas",
-     "Azeitonas"
-    ],
-    "answer": 2,
-    "ref": "Mateus 12:1"
-   },
-   {
-    "q": "Quantos dias e noites Jonas ficou no ventre do grande peixe?",
-    "options": [
-     "Três",
-     "Sete",
-     "Um",
-     "Quarenta"
-    ],
-    "answer": 0,
-    "ref": "Mateus 12:40"
-   },
-   {
-    "q": "Jesus comparou o reino dos céus a que pequena semente?",
-    "options": [
-     "Semente de trigo",
-     "Grão de cevada",
-     "Semente de figo",
-     "Grão de mostarda"
-    ],
-    "answer": 3,
-    "ref": "Mateus 13:31"
-   },
-   {
-    "q": "O que a filha de Herodias pediu a Herodes?",
-    "options": [
-     "Metade do reino",
-     "A cabeça de João Batista",
-     "Um palácio",
-     "Joias de ouro"
-    ],
-    "answer": 1,
-    "ref": "Mateus 14:8"
-   },
-   {
-    "q": "Quantos pães e peixes os discípulos tinham antes da multiplicação?",
-    "options": [
-     "Sete pães e três peixes",
-     "Dois pães e cinco peixes",
-     "Cinco pães e dois peixes",
-     "Doze pães e um peixe"
-    ],
-    "answer": 2,
-    "ref": "Mateus 14:17"
-   }
-  ]
- },
- {
-  "day": 216,
-  "questions": [
-   {
-    "q": "Na multiplicação de Mateus 15, quantos pães os discípulos tinham?",
-    "options": [
-     "Cinco",
-     "Sete",
-     "Doze",
-     "Dois"
-    ],
-    "answer": 1,
-    "ref": "Mateus 15:34"
-   },
-   {
-    "q": "Quem disse a Jesus: \"Tu és o Cristo, o Filho do Deus vivo\"?",
-    "options": [
-     "João",
-     "Tiago",
-     "André",
-     "Pedro"
-    ],
-    "answer": 3,
-    "ref": "Mateus 16:16"
-   },
-   {
-    "q": "Quem apareceu conversando com Jesus no monte da transfiguração?",
-    "options": [
-     "Moisés e Elias",
-     "Abraão e Davi",
-     "Isaías e Jeremias",
-     "Noé e Jonas"
-    ],
-    "answer": 0,
-    "ref": "Mateus 17:3"
-   },
-   {
-    "q": "Onde Pedro encontraria a moeda para pagar o imposto?",
-    "options": [
-     "Debaixo de uma pedra",
-     "No templo",
-     "Na boca de um peixe",
-     "Na sua bolsa"
-    ],
-    "answer": 2,
-    "ref": "Mateus 17:27"
-   },
-   {
-    "q": "Jesus disse a Pedro que devia perdoar até quantas vezes?",
-    "options": [
-     "Sete vezes",
-     "Três vezes",
-     "Doze vezes",
-     "Setenta vezes sete"
-    ],
-    "answer": 3,
-    "ref": "Mateus 18:22"
-   }
-  ]
- },
- {
-  "day": 217,
-  "questions": [
-   {
-    "q": "Segundo Jesus, é mais fácil qual animal passar pelo fundo de uma agulha?",
-    "options": [
-     "Um camelo",
-     "Um cavalo",
-     "Um boi",
-     "Um jumento"
-    ],
-    "answer": 0,
-    "ref": "Mateus 19:24"
-   },
-   {
-    "q": "Quanto o dono da vinha combinou pagar aos trabalhadores por dia?",
-    "options": [
-     "Dez moedas",
-     "Um talento",
-     "Um denário",
-     "Uma moeda de ouro"
-    ],
-    "answer": 2,
-    "ref": "Mateus 20:2"
-   },
-   {
-    "q": "Quantos cegos clamaram a Jesus à beira do caminho, ao sair de Jericó?",
-    "options": [
-     "Um",
-     "Dois",
-     "Três",
-     "Dez"
-    ],
-    "answer": 1,
-    "ref": "Mateus 20:30"
-   },
-   {
-    "q": "O que Jesus derrubou ao purificar o templo?",
-    "options": [
-     "As colunas",
-     "O altar",
-     "As portas",
-     "As mesas dos cambistas"
-    ],
-    "answer": 3,
-    "ref": "Mateus 21:12"
-   },
-   {
-    "q": "Que árvore secou depois que Jesus não achou fruto nela?",
-    "options": [
-     "Oliveira",
-     "Videira",
-     "Figueira",
-     "Palmeira"
-    ],
-    "answer": 2,
-    "ref": "Mateus 21:19"
-   }
-  ]
- },
- {
-  "day": 218,
-  "questions": [
-   {
-    "q": "Na parábola de Mateus 22, o rei preparou uma festa para quê?",
-    "options": [
-     "O casamento do filho",
-     "A vitória numa guerra",
-     "A colheita",
-     "Seu aniversário"
-    ],
-    "answer": 0,
-    "ref": "Mateus 22:2"
-   },
-   {
-    "q": "De quem era a imagem na moeda mostrada a Jesus?",
-    "options": [
-     "De Herodes",
-     "De Pilatos",
-     "De César",
-     "De Moisés"
-    ],
-    "answer": 2,
-    "ref": "Mateus 22:21"
-   },
-   {
-    "q": "Qual é o grande mandamento citado por Jesus em Mateus 22?",
-    "options": [
-     "Guardar o sábado",
-     "Amar a Deus de todo o coração",
-     "Dar o dízimo",
-     "Não matar"
-    ],
-    "answer": 1,
-    "ref": "Mateus 22:37"
-   },
-   {
-    "q": "Jesus quis ajuntar os filhos de Jerusalém como qual ave junta seus pintinhos?",
-    "options": [
-     "A pomba",
-     "A águia",
-     "O pardal",
-     "A galinha"
-    ],
-    "answer": 3,
-    "ref": "Mateus 23:37"
-   },
-   {
-    "q": "Segundo Jesus, o céu e a terra passarão, mas o que não passará?",
-    "options": [
-     "O templo",
-     "As suas palavras",
-     "Os reinos",
-     "As montanhas"
-    ],
-    "answer": 1,
-    "ref": "Mateus 24:35"
-   }
-  ]
- },
- {
-  "day": 219,
-  "questions": [
-   {
-    "q": "Na parábola das dez virgens, quantas eram prudentes?",
-    "options": [
-     "Cinco",
-     "Três",
-     "Sete",
-     "Duas"
-    ],
-    "answer": 0,
-    "ref": "Mateus 25:2"
-   },
-   {
-    "q": "Quantos talentos o senhor deu ao primeiro servo?",
-    "options": [
-     "Dez",
-     "Dois",
-     "Um",
-     "Cinco"
-    ],
-    "answer": 3,
-    "ref": "Mateus 25:15"
-   },
-   {
-    "q": "Quanto os principais sacerdotes pagaram a Judas para entregar Jesus?",
-    "options": [
-     "Dez moedas de ouro",
-     "Trinta moedas de prata",
-     "Cem denários",
-     "Um talento"
-    ],
-    "answer": 1,
-    "ref": "Mateus 26:15"
-   },
-   {
-    "q": "Jesus disse que Pedro o negaria quantas vezes antes de o galo cantar?",
-    "options": [
-     "Uma",
-     "Duas",
-     "Três",
-     "Sete"
-    ],
-    "answer": 2,
-    "ref": "Mateus 26:34"
-   },
-   {
-    "q": "Quem foi obrigado a carregar a cruz de Jesus?",
-    "options": [
-     "Simão, de Cirene",
-     "José de Arimateia",
-     "Pedro",
-     "Barrabás"
-    ],
-    "answer": 0,
-    "ref": "Mateus 27:32"
-   }
-  ]
- },
- {
-  "day": 220,
-  "questions": [
-   {
-    "q": "O que o anjo fez com a pedra do sepulcro de Jesus?",
-    "options": [
-     "Quebrou-a ao meio",
-     "Rolou-a e sentou-se sobre ela",
-     "Jogou-a no rio",
-     "Escreveu nela"
-    ],
-    "answer": 1,
-    "ref": "Mateus 28:2"
-   },
-   {
-    "q": "Em nome de quem os discípulos deviam batizar?",
-    "options": [
-     "De Moisés",
-     "Dos apóstolos",
-     "Do Pai, do Filho e do Espírito Santo",
-     "De Abraão"
-    ],
-    "answer": 2,
-    "ref": "Mateus 28:19"
-   },
-   {
-    "q": "Jesus disse que faria Simão e André pescadores de quê?",
-    "options": [
-     "Peixes grandes",
-     "Tesouros",
-     "Ovelhas",
-     "Homens"
-    ],
-    "answer": 3,
-    "ref": "Marcos 1:17"
-   },
-   {
-    "q": "Quantas pessoas carregavam o paralítico levado a Jesus em Marcos 2?",
-    "options": [
-     "Quatro",
-     "Duas",
-     "Seis",
-     "Doze"
-    ],
-    "answer": 0,
-    "ref": "Marcos 2:3"
-   },
-   {
-    "q": "Quem estava sentado na coletoria quando Jesus disse \"Segue-me\" em Marcos 2?",
-    "options": [
-     "Zaqueu",
-     "Levi, filho de Alfeu",
-     "Nicodemos",
-     "Simão"
-    ],
-    "answer": 1,
-    "ref": "Marcos 2:14"
-   }
-  ]
- },
- {
-  "day": 221,
-  "questions": [
-   {
-    "q": "Quantos Jesus escolheu para estarem com ele, em Marcos 3?",
-    "options": [
-     "Setenta",
-     "Sete",
-     "Doze",
-     "Três"
-    ],
-    "answer": 2,
-    "ref": "Marcos 3:14"
-   },
-   {
-    "q": "Onde Jesus dormia durante a tempestade no mar?",
-    "options": [
-     "Na popa do barco",
-     "Na praia",
-     "Na casa de Pedro",
-     "No monte"
-    ],
-    "answer": 0,
-    "ref": "Marcos 4:38"
-   },
-   {
-    "q": "Qual nome o espírito imundo disse ter, em Marcos 5?",
-    "options": [
-     "Belzebu",
-     "Gadareno",
-     "Satanás",
-     "Legião"
-    ],
-    "answer": 3,
-    "ref": "Marcos 5:9"
-   },
-   {
-    "q": "Quantos anos tinha a filha de Jairo?",
-    "options": [
-     "Sete",
-     "Doze",
-     "Quinze",
-     "Cinco"
-    ],
-    "answer": 1,
-    "ref": "Marcos 5:42"
-   },
-   {
-    "q": "Como Jesus enviou os doze discípulos em Marcos 6?",
-    "options": [
-     "Sozinhos",
-     "Todos juntos",
-     "De dois em dois",
-     "Em grupos de seis"
-    ],
-    "answer": 2,
-    "ref": "Marcos 6:7"
-   }
-  ]
- },
- {
-  "day": 222,
-  "questions": [
-   {
-    "q": "De que origem era a mulher que pediu a Jesus pela filha em Marcos 7?",
-    "options": [
-     "Egípcia",
-     "Siro-fenícia",
-     "Samaritana",
-     "Romana"
-    ],
-    "answer": 1,
-    "ref": "Marcos 7:26"
-   },
-   {
-    "q": "Que palavra Jesus disse ao surdo e gago, que significa \"Abre-te\"?",
-    "options": [
-     "Efatá",
-     "Talita cumi",
-     "Hosana",
-     "Amém"
-    ],
-    "answer": 0,
-    "ref": "Marcos 7:34"
-   },
-   {
-    "q": "Em que lugar Jesus curou um cego cuspindo em seus olhos, em Marcos 8?",
-    "options": [
-     "Jericó",
-     "Nazaré",
-     "Cafarnaum",
-     "Betsaida"
-    ],
-    "answer": 3,
-    "ref": "Marcos 8:22"
-   },
-   {
-    "q": "Quem Jesus levou consigo ao alto monte em Marcos 9?",
-    "options": [
-     "André e Filipe",
-     "Mateus e Tomé",
-     "Pedro, Tiago e João",
-     "Judas e Simão"
-    ],
-    "answer": 2,
-    "ref": "Marcos 9:2"
-   },
-   {
-    "q": "Segundo Jesus, quem quiser ser o primeiro deverá ser o quê?",
-    "options": [
-     "O mais rico",
-     "O último e servo de todos",
-     "O mais forte",
-     "O mestre de todos"
-    ],
-    "answer": 1,
-    "ref": "Marcos 9:35"
-   }
-  ]
- },
- {
-  "day": 223,
-  "questions": [
-   {
-    "q": "Quem Jesus mandou deixar vir a ele, em Marcos 10?",
-    "options": [
-     "Os soldados",
-     "Os fariseus",
-     "Os ricos",
-     "As crianças"
-    ],
-    "answer": 3,
-    "ref": "Marcos 10:14"
-   },
-   {
-    "q": "Como se chamava o cego que clamava a Jesus perto de Jericó?",
-    "options": [
-     "Bartimeu",
-     "Lázaro",
-     "Jairo",
-     "Zaqueu"
-    ],
-    "answer": 0,
-    "ref": "Marcos 10:46"
-   },
-   {
-    "q": "O que os discípulos deviam trazer da aldeia em Marcos 11?",
-    "options": [
-     "Um cordeiro",
-     "Um cavalo",
-     "Um jumentinho",
-     "Um barco"
-    ],
-    "answer": 2,
-    "ref": "Marcos 11:2"
-   },
-   {
-    "q": "Na parábola de Marcos 12, o que o homem plantou e arrendou a lavradores?",
-    "options": [
-     "Um pomar",
-     "Uma vinha",
-     "Um trigal",
-     "Um jardim"
-    ],
-    "answer": 1,
-    "ref": "Marcos 12:1"
-   },
-   {
-    "q": "Quantas pequenas moedas a viúva pobre depositou?",
-    "options": [
-     "Uma",
-     "Três",
-     "Dez",
-     "Duas"
-    ],
-    "answer": 3,
-    "ref": "Marcos 12:42"
-   }
-  ]
- },
- {
-  "day": 224,
-  "questions": [
-   {
-    "q": "O que Jesus disse que aconteceria com os grandes edifícios do templo?",
-    "options": [
-     "Seriam ampliados",
-     "Seriam cobertos de ouro",
-     "Não ficaria pedra sobre pedra",
-     "Seriam eternos"
-    ],
-    "answer": 2,
-    "ref": "Marcos 13:2"
-   },
-   {
-    "q": "Segundo Marcos 13, quem sabe o dia e a hora do fim?",
-    "options": [
-     "Somente o Pai",
-     "Os anjos",
-     "Os profetas",
-     "Os discípulos"
-    ],
-    "answer": 0,
-    "ref": "Marcos 13:32"
-   },
-   {
-    "q": "Em Betânia, na casa de quem a mulher derramou o perfume sobre Jesus?",
-    "options": [
-     "Lázaro",
-     "Zaqueu",
-     "Simão, o leproso",
-     "Nicodemos"
-    ],
-    "answer": 2,
-    "ref": "Marcos 14:3"
-   },
-   {
-    "q": "Para que lugar Jesus foi orar com os discípulos em Marcos 14?",
-    "options": [
-     "Betânia",
-     "Getsêmani",
-     "Templo",
-     "Monte Sinai"
-    ],
-    "answer": 1,
-    "ref": "Marcos 14:32"
-   },
-   {
-    "q": "Em Marcos 14, Pedro negaria Jesus três vezes antes que o galo cantasse quantas vezes?",
-    "options": [
-     "Uma",
-     "Três",
-     "Sete",
-     "Duas"
-    ],
-    "answer": 3,
-    "ref": "Marcos 14:30"
-   }
-  ]
- },
- {
-  "day": 225,
-  "questions": [
-   {
-    "q": "Qual prisioneiro Pilatos soltou para agradar a multidão?",
-    "options": [
-     "Barrabás",
-     "Simão",
-     "Judas",
-     "Malco"
-    ],
-    "answer": 0,
-    "ref": "Marcos 15:15"
-   },
-   {
-    "q": "Quem pediu a Pilatos o corpo de Jesus?",
-    "options": [
-     "Pedro",
-     "Nicodemos",
-     "José de Arimateia",
-     "João"
-    ],
-    "answer": 2,
-    "ref": "Marcos 15:43"
-   },
-   {
-    "q": "Quem as mulheres viram sentado dentro do sepulcro em Marcos 16?",
-    "options": [
-     "Um soldado",
-     "Um jovem vestido de branco",
-     "Pedro",
-     "O jardineiro"
-    ],
-    "answer": 1,
-    "ref": "Marcos 16:5"
-   },
-   {
-    "q": "Que nome o anjo mandou dar ao filho de Zacarias?",
-    "options": [
-     "Zacarias",
-     "Elias",
-     "Samuel",
-     "João"
-    ],
-    "answer": 3,
-    "ref": "Lucas 1:13"
-   },
-   {
-    "q": "Qual anjo foi enviado por Deus a Maria, em Nazaré?",
-    "options": [
-     "Miguel",
-     "Gabriel",
-     "Rafael",
-     "Querubim"
-    ],
-    "answer": 1,
-    "ref": "Lucas 1:26"
-   }
-  ]
- },
- {
-  "day": 226,
-  "questions": [
-   {
-    "q": "Onde Maria deitou o menino Jesus quando ele nasceu?",
-    "options": [
-     "Numa manjedoura",
-     "Num berço de ouro",
-     "Numa cesta",
-     "Numa cama"
-    ],
-    "answer": 0,
-    "ref": "Lucas 2:7"
-   },
-   {
-    "q": "Quantos anos Jesus tinha quando ficou no templo em Jerusalém?",
-    "options": [
-     "Sete",
-     "Trinta",
-     "Doze",
-     "Quinze"
-    ],
-    "answer": 2,
-    "ref": "Lucas 2:42"
-   },
-   {
-    "q": "Qual homem justo tomou o menino Jesus nos braços e louvou a Deus?",
-    "options": [
-     "Zacarias",
-     "José",
-     "Herodes",
-     "Simeão"
-    ],
-    "answer": 3,
-    "ref": "Lucas 2:28"
-   },
-   {
-    "q": "Quantos anos, aproximadamente, Jesus tinha ao começar seu ministério?",
-    "options": [
-     "Vinte",
-     "Trinta",
-     "Quarenta",
-     "Doze"
-    ],
-    "answer": 1,
-    "ref": "Lucas 3:23"
-   },
-   {
-    "q": "Que livro foi entregue a Jesus na sinagoga de Nazaré?",
-    "options": [
-     "O livro de Moisés",
-     "Os Salmos",
-     "O livro de Daniel",
-     "O livro do profeta Isaías"
-    ],
-    "answer": 3,
-    "ref": "Lucas 4:17"
-   }
-  ]
- },
- {
-  "day": 227,
-  "questions": [
-   {
-    "q": "O que aconteceu com as redes quando Simão obedeceu a Jesus e lançou-as?",
-    "options": [
-     "Vieram vazias",
-     "Afundaram",
-     "Rompiam-se de tantos peixes",
-     "Foram levadas pelo vento"
-    ],
-    "answer": 2,
-    "ref": "Lucas 5:6"
-   },
-   {
-    "q": "Como Jesus passou a noite antes de escolher os doze apóstolos?",
-    "options": [
-     "Orando a Deus",
-     "Pregando ao povo",
-     "Dormindo no barco",
-     "Jejuando no templo"
-    ],
-    "answer": 0,
-    "ref": "Lucas 6:12"
-   },
-   {
-    "q": "Segundo Jesus, como devemos tratar os outros?",
-    "options": [
-     "Como eles nos tratam",
-     "Como queremos que nos tratem",
-     "Só se forem amigos",
-     "Com indiferença"
-    ],
-    "answer": 1,
-    "ref": "Lucas 6:31"
-   },
-   {
-    "q": "Em Lucas 7, quem tinha um servo muito estimado à beira da morte?",
-    "options": [
-     "Um fariseu",
-     "Um sacerdote",
-     "Um pescador",
-     "Um centurião"
-    ],
-    "answer": 3,
-    "ref": "Lucas 7:2"
-   },
-   {
-    "q": "Em que cidade Jesus ressuscitou o filho único de uma viúva?",
-    "options": [
-     "Betânia",
-     "Naim",
-     "Caná",
-     "Jericó"
-    ],
-    "answer": 1,
-    "ref": "Lucas 7:11"
-   }
-  ]
- },
- {
-  "day": 228,
-  "questions": [
-   {
-    "q": "Quantos demônios haviam saído de Maria Madalena?",
+    "q": "Quantos demônios tinham saído de Maria Madalena?",
     "options": [
      "Sete",
      "Três",
@@ -1216,283 +136,523 @@
    {
     "q": "Na parábola do semeador, o que é a semente?",
     "options": [
+     "O amor",
+     "A fé",
      "O dinheiro",
-     "A palavra de Deus",
-     "O trabalho",
-     "A chuva"
+     "A palavra de Deus"
     ],
-    "answer": 1,
+    "answer": 3,
     "ref": "Lucas 8:11"
    },
    {
-    "q": "Quantos cestos de pedaços sobraram na multiplicação de Lucas 9?",
+    "q": "O que Jesus estava fazendo no barco quando veio a tempestade?",
     "options": [
-     "Sete",
-     "Cinco",
-     "Dois",
-     "Doze"
-    ],
-    "answer": 3,
-    "ref": "Lucas 9:17"
-   },
-   {
-    "q": "Quem quis pedir fogo do céu contra a aldeia dos samaritanos?",
-    "options": [
-     "Pedro e André",
-     "Filipe e Natanael",
-     "Tiago e João",
-     "Judas e Tomé"
+     "Pescando",
+     "Orando",
+     "Dormindo",
+     "Comendo"
     ],
     "answer": 2,
-    "ref": "Lucas 9:54"
+    "ref": "Lucas 8:23"
    },
    {
-    "q": "Ninguém que põe a mão em qual objeto e olha para trás é apto para o Reino?",
+    "q": "Qual era o nome dado pelo homem possuído por muitos demônios?",
     "options": [
-     "Espada",
-     "Rede",
-     "Cajado",
-     "Arado"
+     "Belzebu",
+     "Legião",
+     "Multidão",
+     "Gadara"
     ],
-    "answer": 3,
-    "ref": "Lucas 9:62"
+    "answer": 1,
+    "ref": "Lucas 8:30"
+   },
+   {
+    "q": "Quantos anos tinha a filha de Jairo?",
+    "options": [
+     "Cerca de sete",
+     "Cerca de dez",
+     "Cerca de doze",
+     "Cerca de quinze"
+    ],
+    "answer": 2,
+    "ref": "Lucas 8:42"
    }
   ]
  },
  {
-  "day": 229,
+  "day": 211,
   "questions": [
    {
-    "q": "Quantos outros discípulos Jesus designou e enviou em Lucas 10?",
+    "q": "Quantos pães e peixes os discípulos tinham para alimentar a multidão?",
     "options": [
-     "Doze",
-     "Setenta",
-     "Cem",
-     "Quarenta"
+     "Sete pães e três peixes",
+     "Cinco pães e dois peixes",
+     "Dois pães e cinco peixes",
+     "Doze pães e um peixe"
     ],
     "answer": 1,
+    "ref": "Lucas 9:13"
+   },
+   {
+    "q": "Quem apareceu conversando com Jesus no monte da transfiguração?",
+    "options": [
+     "Abraão e Davi",
+     "Isaías e Jeremias",
+     "Moisés e Elias",
+     "Noé e Daniel"
+    ],
+    "answer": 2,
+    "ref": "Lucas 9:30"
+   },
+   {
+    "q": "Quantos outros discípulos Jesus enviou de dois em dois?",
+    "options": [
+     "Cem",
+     "Doze",
+     "Quarenta",
+     "Setenta"
+    ],
+    "answer": 3,
     "ref": "Lucas 10:1"
    },
    {
     "q": "Na parábola, quem teve compaixão do homem ferido no caminho?",
     "options": [
-     "Um samaritano",
      "Um sacerdote",
      "Um levita",
-     "Um soldado"
+     "Um fariseu",
+     "Um samaritano"
     ],
-    "answer": 0,
+    "answer": 3,
     "ref": "Lucas 10:33"
    },
    {
-    "q": "Qual irmã ficou sentada aos pés de Jesus ouvindo sua palavra?",
+    "q": "Qual irmã de Marta se sentava aos pés de Jesus para ouvi-lo?",
     "options": [
-     "Marta",
-     "Isabel",
+     "Ana",
      "Maria",
-     "Ana"
-    ],
-    "answer": 2,
-    "ref": "Lucas 10:39"
-   },
-   {
-    "q": "O que um discípulo pediu a Jesus em Lucas 11:1?",
-    "options": [
-     "Mostra-nos o Pai",
-     "Ensina-nos a orar",
-     "Aumenta a nossa fé",
-     "Dá-nos pão"
+     "Isabel",
+     "Joana"
     ],
     "answer": 1,
-    "ref": "Lucas 11:1"
-   },
-   {
-    "q": "Jesus pergunta: que pai, se o filho pedir um ovo, lhe dará um...?",
-    "options": [
-     "Pão",
-     "Peixe",
-     "Pedra",
-     "Escorpião"
-    ],
-    "answer": 3,
-    "ref": "Lucas 11:12"
+    "ref": "Lucas 10:39"
    }
   ]
  },
  {
-  "day": 230,
+  "day": 212,
   "questions": [
    {
-    "q": "O que o rico insensato decidiu fazer com seus celeiros?",
+    "q": "O que um discípulo pediu a Jesus no início de Lucas 11?",
     "options": [
-     "Derrubá-los e construir maiores",
-     "Doá-los aos pobres",
-     "Vendê-los",
-     "Queimá-los"
+     "Que lhes desse pão",
+     "Que fizesse um milagre",
+     "Que fosse a Jerusalém",
+     "Que os ensinasse a orar"
+    ],
+    "answer": 3,
+    "ref": "Lucas 11:1"
+   },
+   {
+    "q": "Na parábola, quantos pães o homem pediu ao amigo à meia-noite?",
+    "options": [
+     "Dois",
+     "Cinco",
+     "Três",
+     "Sete"
+    ],
+    "answer": 2,
+    "ref": "Lucas 11:5"
+   },
+   {
+    "q": "Segundo Jesus, o que o Pai celestial dará aos que pedirem?",
+    "options": [
+     "Riquezas",
+     "O Espírito Santo",
+     "Uma casa nova",
+     "Muitos anos de vida"
+    ],
+    "answer": 1,
+    "ref": "Lucas 11:13"
+   },
+   {
+    "q": "Que sinal Jesus disse que seria dado a esta geração?",
+    "options": [
+     "O sinal de Moisés",
+     "O sinal de Elias",
+     "O sinal de Davi",
+     "O sinal do profeta Jonas"
+    ],
+    "answer": 3,
+    "ref": "Lucas 11:29"
+   },
+   {
+    "q": "Segundo Jesus, qual é a candeia do corpo?",
+    "options": [
+     "O olho",
+     "O coração",
+     "A boca",
+     "A mão"
     ],
     "answer": 0,
+    "ref": "Lucas 11:34"
+   }
+  ]
+ },
+ {
+  "day": 213,
+  "questions": [
+   {
+    "q": "Jesus disse que o fermento dos fariseus é o quê?",
+    "options": [
+     "A preguiça",
+     "A hipocrisia",
+     "A mentira",
+     "A inveja"
+    ],
+    "answer": 1,
+    "ref": "Lucas 12:1"
+   },
+   {
+    "q": "Segundo Jesus, o que está todo contado em nossa cabeça?",
+    "options": [
+     "Os pensamentos",
+     "Os dias",
+     "Os cabelos",
+     "Os sonhos"
+    ],
+    "answer": 2,
+    "ref": "Lucas 12:7"
+   },
+   {
+    "q": "O que o homem rico da parábola queria fazer com seus celeiros?",
+    "options": [
+     "Vendê-los",
+     "Doá-los aos pobres",
+     "Queimá-los",
+     "Derrubá-los e fazer maiores"
+    ],
+    "answer": 3,
     "ref": "Lucas 12:18"
    },
    {
-    "q": "Que aves Jesus mandou observar, pois não semeiam nem ceifam?",
+    "q": "Que aves Jesus mandou observar, pois Deus as sustenta?",
     "options": [
-     "Pombas",
-     "Corvos",
-     "Águias",
-     "Pardais"
+     "Os corvos",
+     "As pombas",
+     "As águias",
+     "Os pardais"
     ],
-    "answer": 1,
+    "answer": 0,
     "ref": "Lucas 12:24"
+   },
+   {
+    "q": "Segundo Jesus, onde está o nosso tesouro, ali estará também o quê?",
+    "options": [
+     "Nossa casa",
+     "Nossa família",
+     "Nosso dinheiro",
+     "Nosso coração"
+    ],
+    "answer": 3,
+    "ref": "Lucas 12:34"
+   }
+  ]
+ },
+ {
+  "day": 214,
+  "questions": [
+   {
+    "q": "Há quantos anos o dono procurava fruto na figueira?",
+    "options": [
+     "Um ano",
+     "Sete anos",
+     "Dez anos",
+     "Três anos"
+    ],
+    "answer": 3,
+    "ref": "Lucas 13:7"
    },
    {
     "q": "Há quantos anos a mulher curada no sábado andava encurvada?",
     "options": [
-     "Doze",
-     "Sete",
-     "Dezoito",
-     "Trinta e oito"
+     "Dezoito anos",
+     "Doze anos",
+     "Cinco anos",
+     "Quarenta anos"
     ],
-    "answer": 2,
+    "answer": 0,
     "ref": "Lucas 13:11"
    },
    {
-    "q": "Antes de construir uma torre, o que a pessoa deve fazer, segundo Jesus?",
+    "q": "A que semente Jesus comparou o reino de Deus em Lucas 13?",
     "options": [
-     "Pedir ajuda ao rei",
-     "Comprar pedras",
-     "Chamar os vizinhos",
-     "Sentar e calcular as despesas"
+     "Ao trigo",
+     "À semente de uva",
+     "À cevada",
+     "Ao grão de mostarda"
     ],
     "answer": 3,
-    "ref": "Lucas 14:28"
+    "ref": "Lucas 13:19"
    },
    {
-    "q": "Quem o senhor mandou trazer ao banquete quando os convidados recusaram?",
+    "q": "Segundo Jesus, por qual porta devemos nos esforçar para entrar?",
     "options": [
-     "Os ricos da cidade",
-     "Os pobres, aleijados, cegos e coxos",
-     "Os soldados",
-     "Os sacerdotes"
+     "A porta larga",
+     "A porta do templo",
+     "A porta estreita",
+     "A porta da cidade"
     ],
-    "answer": 1,
-    "ref": "Lucas 14:21"
+    "answer": 2,
+    "ref": "Lucas 13:24"
+   },
+   {
+    "q": "Na parábola da grande ceia, o que um convidado disse que comprou?",
+    "options": [
+     "Um camelo",
+     "Uma casa",
+     "Cinco juntas de bois",
+     "Uma vinha"
+    ],
+    "answer": 2,
+    "ref": "Lucas 14:19"
    }
   ]
  },
  {
-  "day": 231,
+  "day": 215,
   "questions": [
    {
-    "q": "Na parábola, quantas ovelhas o homem tinha antes de perder uma?",
+    "q": "Quantas ovelhas o pastor deixou para buscar a que se perdeu?",
     "options": [
      "Cem",
+     "Cinquenta",
      "Dez",
-     "Noventa e nove",
-     "Cinquenta"
+     "Noventa e nove"
     ],
-    "answer": 0,
+    "answer": 3,
     "ref": "Lucas 15:4"
    },
    {
-    "q": "Que animais o filho mais novo foi mandado cuidar no campo?",
+    "q": "Quantas dracmas a mulher da parábola tinha?",
+    "options": [
+     "Sete",
+     "Cem",
+     "Cinco",
+     "Dez"
+    ],
+    "answer": 3,
+    "ref": "Lucas 15:8"
+   },
+   {
+    "q": "De que animais o filho mais novo foi cuidar na terra distante?",
     "options": [
      "Ovelhas",
      "Camelos",
-     "Bois",
-     "Porcos"
+     "Porcos",
+     "Cabras"
     ],
-    "answer": 3,
+    "answer": 2,
     "ref": "Lucas 15:15"
    },
    {
-    "q": "Como se chamava o mendigo que ficava à porta do homem rico?",
+    "q": "O que o pai fez ao ver o filho voltando de longe?",
     "options": [
-     "Bartimeu",
-     "Lázaro",
+     "Fechou a porta",
+     "Chamou o filho mais velho",
+     "Mandou-o embora",
+     "Correu e o abraçou"
+    ],
+    "answer": 3,
+    "ref": "Lucas 15:20"
+   },
+   {
+    "q": "Qual era o nome do mendigo que ficava à porta do homem rico?",
+    "options": [
      "Zaqueu",
-     "Jairo"
+     "Lázaro",
+     "Bartimeu",
+     "Simão"
     ],
     "answer": 1,
     "ref": "Lucas 16:20"
-   },
-   {
-    "q": "Dos dez leprosos curados, quantos voltaram para dar glória a Deus?",
-    "options": [
-     "Dez",
-     "Cinco",
-     "Um",
-     "Nenhum"
-    ],
-    "answer": 2,
-    "ref": "Lucas 17:15"
-   },
-   {
-    "q": "Dois homens subiram ao templo para orar: um fariseu e o outro...",
-    "options": [
-     "Um sacerdote",
-     "Um levita",
-     "Um publicano",
-     "Um soldado"
-    ],
-    "answer": 2,
-    "ref": "Lucas 18:10"
    }
   ]
  },
  {
-  "day": 232,
+  "day": 216,
+  "questions": [
+   {
+    "q": "Quantas vezes no dia Jesus disse para perdoar o irmão arrependido?",
+    "options": [
+     "Uma vez",
+     "Três vezes",
+     "Sete vezes",
+     "Dez vezes"
+    ],
+    "answer": 2,
+    "ref": "Lucas 17:4"
+   },
+   {
+    "q": "Quantos leprosos foram curados por Jesus na aldeia?",
+    "options": [
+     "Cinco",
+     "Doze",
+     "Sete",
+     "Dez"
+    ],
+    "answer": 3,
+    "ref": "Lucas 17:12"
+   },
+   {
+    "q": "O leproso que voltou para agradecer era de que povo?",
+    "options": [
+     "Romano",
+     "Egípcio",
+     "Grego",
+     "Samaritano"
+    ],
+    "answer": 3,
+    "ref": "Lucas 17:16"
+   },
+   {
+    "q": "De quem Jesus mandou que nos lembrássemos em Lucas 17?",
+    "options": [
+     "Da esposa de Noé",
+     "Da esposa de Ló",
+     "Da mãe de Moisés",
+     "Da rainha de Sabá"
+    ],
+    "answer": 1,
+    "ref": "Lucas 17:32"
+   },
+   {
+    "q": "Quem desceu justificado para casa na parábola do templo?",
+    "options": [
+     "O fariseu",
+     "O sacerdote",
+     "O publicano",
+     "O levita"
+    ],
+    "answer": 2,
+    "ref": "Lucas 18:14"
+   }
+  ]
+ },
+ {
+  "day": 217,
   "questions": [
    {
     "q": "Em que árvore Zaqueu subiu para ver Jesus?",
     "options": [
-     "Figueira",
-     "Sicômoro",
-     "Oliveira",
-     "Palmeira"
+     "Em um sicômoro",
+     "Em uma oliveira",
+     "Em uma figueira",
+     "Em uma palmeira"
     ],
-    "answer": 1,
+    "answer": 0,
     "ref": "Lucas 19:4"
    },
    {
-    "q": "Na parábola de Lucas 19, quantos servos o nobre chamou e entregou minas?",
+    "q": "Quanto Zaqueu disse que restituiria a quem tivesse defraudado?",
     "options": [
-     "Três",
-     "Doze",
-     "Dez",
-     "Cinco"
-    ],
-    "answer": 2,
-    "ref": "Lucas 19:13"
-   },
-   {
-    "q": "O que Jesus fez ao se aproximar e ver a cidade de Jerusalém?",
-    "options": [
-     "Chorou sobre ela",
-     "Cantou um salmo",
-     "Amaldiçoou-a",
-     "Dormiu"
-    ],
-    "answer": 0,
-    "ref": "Lucas 19:41"
-   },
-   {
-    "q": "Jesus disse aos discípulos que nenhum ... da cabeça deles se perderia.",
-    "options": [
-     "Pensamento",
-     "Dente",
-     "Osso",
-     "Fio de cabelo"
+     "O dobro",
+     "O mesmo valor",
+     "Dez vezes mais",
+     "Quatro vezes mais"
     ],
     "answer": 3,
-    "ref": "Lucas 21:18"
+    "ref": "Lucas 19:8"
    },
    {
-    "q": "Onde Jesus passava as noites, segundo Lucas 21?",
+    "q": "Em que animal Jesus montou ao se aproximar de Jerusalém?",
     "options": [
+     "Um cavalo",
+     "Um camelo",
+     "Um jumentinho",
+     "Um boi"
+    ],
+    "answer": 2,
+    "ref": "Lucas 19:35"
+   },
+   {
+    "q": "Segundo Jesus, se os discípulos se calassem, quem clamaria?",
+    "options": [
+     "Os anjos",
+     "As pedras",
+     "As árvores",
+     "Os pássaros"
+    ],
+    "answer": 1,
+    "ref": "Lucas 19:40"
+   },
+   {
+    "q": "De quem era a efígie no denário mostrado a Jesus?",
+    "options": [
+     "De Herodes",
+     "De Pilatos",
+     "De César",
+     "De Davi"
+    ],
+    "answer": 2,
+    "ref": "Lucas 20:24"
+   }
+  ]
+ },
+ {
+  "day": 218,
+  "questions": [
+   {
+    "q": "Quantas moedas a viúva pobre lançou no gazofilácio?",
+    "options": [
+     "Uma",
+     "Dez",
+     "Cinco",
+     "Duas"
+    ],
+    "answer": 3,
+    "ref": "Lucas 21:2"
+   },
+   {
+    "q": "O que Jesus disse que aconteceria com as pedras do templo?",
+    "options": [
+     "Seriam pintadas de ouro",
+     "Seriam levadas a Roma",
+     "Não ficaria pedra sobre pedra",
+     "Seriam usadas num novo templo"
+    ],
+    "answer": 2,
+    "ref": "Lucas 21:6"
+   },
+   {
+    "q": "Como se verá o Filho do Homem vindo, segundo Lucas 21?",
+    "options": [
+     "Em uma nuvem, com poder e glória",
+     "Montado num jumento",
+     "Num barco pelo mar",
+     "Escondido no deserto"
+    ],
+    "answer": 0,
+    "ref": "Lucas 21:27"
+   },
+   {
+    "q": "Segundo Jesus, o que nunca passará?",
+    "options": [
+     "O céu",
+     "A terra",
+     "O templo",
+     "As minhas palavras"
+    ],
+    "answer": 3,
+    "ref": "Lucas 21:33"
+   },
+   {
+    "q": "Onde Jesus ia pousar à noite?",
+    "options": [
+     "Em Betânia",
+     "No monte das Oliveiras",
      "No templo",
-     "No Monte das Oliveiras",
-     "Em Cafarnaum",
-     "Num barco"
+     "Em Cafarnaum"
     ],
     "answer": 1,
     "ref": "Lucas 21:37"
@@ -1500,179 +660,299 @@
   ]
  },
  {
-  "day": 233,
+  "day": 219,
   "questions": [
    {
-    "q": "Em Lucas 22, em quem Satanás entrou?",
+    "q": "Quais discípulos Jesus enviou para preparar a Páscoa?",
     "options": [
-     "Judas Iscariotes",
-     "Pedro",
-     "Pilatos",
-     "Caifás"
-    ],
-    "answer": 0,
-    "ref": "Lucas 22:3"
-   },
-   {
-    "q": "Enquanto orava em agonia, como ficou o suor de Jesus?",
-    "options": [
-     "Frio como gelo",
-     "Como gotas de sangue",
-     "Como orvalho",
-     "Como lágrimas"
+     "Tiago e André",
+     "Pedro e João",
+     "Filipe e Tomé",
+     "Judas e Mateus"
     ],
     "answer": 1,
-    "ref": "Lucas 22:44"
+    "ref": "Lucas 22:8"
    },
    {
-    "q": "Qual orelha do servo do sumo sacerdote foi cortada?",
+    "q": "O que os discípulos deviam seguir para achar o lugar da Páscoa?",
     "options": [
-     "A esquerda",
-     "As duas",
-     "Nenhuma",
-     "A direita"
+     "Um menino com pães",
+     "Uma estrela",
+     "Uma mulher com um cesto",
+     "Um homem com um cântaro de água"
     ],
     "answer": 3,
-    "ref": "Lucas 22:50"
+    "ref": "Lucas 22:10"
    },
    {
-    "q": "A quem Pilatos remeteu Jesus, ao saber que ele era da sua jurisdição?",
+    "q": "Quantas vezes Jesus disse que Pedro o negaria?",
     "options": [
-     "A Caifás",
-     "A César",
-     "A Herodes",
-     "A Anás"
+     "Duas",
+     "Uma",
+     "Sete",
+     "Três"
+    ],
+    "answer": 3,
+    "ref": "Lucas 22:34"
+   },
+   {
+    "q": "Como Judas se aproximou para trair Jesus?",
+    "options": [
+     "Com um abraço",
+     "Com uma espada",
+     "Com um beijo",
+     "Com uma carta"
     ],
     "answer": 2,
-    "ref": "Lucas 23:7"
+    "ref": "Lucas 22:48"
    },
    {
-    "q": "O que Jesus prometeu ao malfeitor arrependido na cruz?",
+    "q": "Que parte do servo do sumo sacerdote foi cortada e Jesus curou?",
     "options": [
-     "Que estaria com ele no paraíso",
-     "Que desceria da cruz",
-     "Que seria solto",
-     "Que viveria muitos anos"
+     "A mão esquerda",
+     "O nariz",
+     "O pé direito",
+     "A orelha direita"
     ],
-    "answer": 0,
-    "ref": "Lucas 23:43"
+    "answer": 3,
+    "ref": "Lucas 22:51"
    }
   ]
  },
  {
-  "day": 234,
+  "day": 220,
   "questions": [
    {
-    "q": "Para qual aldeia iam os dois discípulos quando Jesus ressuscitado os encontrou?",
+    "q": "Quem a multidão pediu que Pilatos soltasse no lugar de Jesus?",
     "options": [
+     "Barrabás",
+     "Simão",
+     "Herodes",
+     "Judas"
+    ],
+    "answer": 0,
+    "ref": "Lucas 23:18"
+   },
+   {
+    "q": "De que cidade era Simão, que levou a cruz de Jesus?",
+    "options": [
+     "Nazaré",
      "Betânia",
-     "Naim",
-     "Emaús",
+     "Cirene",
      "Jericó"
     ],
     "answer": 2,
+    "ref": "Lucas 23:26"
+   },
+   {
+    "q": "O que Jesus prometeu ao malfeitor arrependido na cruz?",
+    "options": [
+     "Que seria solto",
+     "Que seria rei",
+     "Que viveria muitos anos",
+     "Estar com ele no Paraíso"
+    ],
+    "answer": 3,
+    "ref": "Lucas 23:43"
+   },
+   {
+    "q": "Para que aldeia iam os dois discípulos quando Jesus os acompanhou?",
+    "options": [
+     "Emaús",
+     "Betânia",
+     "Caná",
+     "Naim"
+    ],
+    "answer": 0,
     "ref": "Lucas 24:13"
    },
    {
-    "q": "O que deram a Jesus ressuscitado para comer diante deles?",
+    "q": "O que os discípulos deram a Jesus para comer em Lucas 24?",
     "options": [
      "Pão e vinho",
-     "Peixe assado",
-     "Figos",
-     "Uvas"
+     "Peixe assado e favo de mel",
+     "Figos e uvas",
+     "Cordeiro assado"
     ],
     "answer": 1,
     "ref": "Lucas 24:42"
-   },
+   }
+  ]
+ },
+ {
+  "day": 221,
+  "questions": [
    {
-    "q": "Ao ver Jesus, João Batista disse: \"Eis o ... de Deus\".",
+    "q": "Segundo João 1, o que havia no princípio?",
     "options": [
-     "Profeta",
-     "Leão",
-     "Servo",
-     "Cordeiro"
+     "O templo",
+     "O mar",
+     "A lei",
+     "O Verbo"
     ],
     "answer": 3,
+    "ref": "João 1:1"
+   },
+   {
+    "q": "Como João Batista chamou Jesus ao vê-lo se aproximar?",
+    "options": [
+     "O Leão de Judá",
+     "O Bom Pastor",
+     "O Cordeiro de Deus",
+     "O Pão da Vida"
+    ],
+    "answer": 2,
     "ref": "João 1:29"
    },
    {
-    "q": "Onde Jesus transformou água em vinho?",
+    "q": "Em forma de que João viu o Espírito descer sobre Jesus?",
+    "options": [
+     "De uma pomba",
+     "De fogo",
+     "De uma nuvem",
+     "De um vento forte"
+    ],
+    "answer": 0,
+    "ref": "João 1:32"
+   },
+   {
+    "q": "Quem levou seu irmão Simão até Jesus?",
+    "options": [
+     "Filipe",
+     "Natanael",
+     "João",
+     "André"
+    ],
+    "answer": 3,
+    "ref": "João 1:41"
+   },
+   {
+    "q": "Onde Jesus disse que viu Natanael antes de Filipe chamá-lo?",
+    "options": [
+     "No templo",
+     "Junto ao rio",
+     "Debaixo da figueira",
+     "No barco"
+    ],
+    "answer": 2,
+    "ref": "João 1:48"
+   }
+  ]
+ },
+ {
+  "day": 222,
+  "questions": [
+   {
+    "q": "Em que cidade aconteceu o casamento onde Jesus transformou água em vinho?",
     "options": [
      "Caná da Galileia",
-     "Jerusalém",
      "Nazaré",
-     "Betânia"
+     "Belém",
+     "Cafarnaum"
     ],
     "answer": 0,
     "ref": "João 2:1"
    },
    {
-    "q": "Quando Nicodemos foi falar com Jesus em João 3?",
+    "q": "Quantas talhas de pedra havia no casamento?",
     "options": [
+     "Doze",
+     "Três",
+     "Seis",
+     "Sete"
+    ],
+    "answer": 2,
+    "ref": "João 2:6"
+   },
+   {
+    "q": "Com o que Jesus fez um azorrague para expulsar os vendedores do templo?",
+    "options": [
+     "Com couro",
+     "Com cordas",
+     "Com galhos",
+     "Com correntes"
+    ],
+    "answer": 1,
+    "ref": "João 2:15"
+   },
+   {
+    "q": "Em que momento do dia Nicodemos foi falar com Jesus?",
+    "options": [
+     "De manhã",
      "Ao meio-dia",
-     "De manhã cedo",
-     "No sábado",
+     "À tarde",
      "De noite"
     ],
     "answer": 3,
     "ref": "João 3:2"
+   },
+   {
+    "q": "Segundo João 3:16, o que Deus deu porque amou o mundo?",
+    "options": [
+     "Uma terra nova",
+     "A lei",
+     "Um rei",
+     "Seu Filho unigênito"
+    ],
+    "answer": 3,
+    "ref": "João 3:16"
    }
   ]
  },
  {
-  "day": 235,
+  "day": 223,
   "questions": [
    {
     "q": "Junto a qual poço Jesus se sentou em Sicar?",
     "options": [
-     "Poço de Abraão",
-     "Poço de Jacó",
-     "Poço de Davi",
-     "Poço de Isaque"
+     "O poço de Abraão",
+     "O poço de Jacó",
+     "O poço de Isaque",
+     "O poço de Davi"
     ],
     "answer": 1,
     "ref": "João 4:6"
    },
    {
-    "q": "Quantos maridos Jesus disse que a samaritana já tivera?",
+    "q": "Que tipo de água Jesus ofereceu à mulher samaritana?",
     "options": [
-     "Cinco",
-     "Dois",
-     "Sete",
-     "Três"
-    ],
-    "answer": 0,
-    "ref": "João 4:18"
-   },
-   {
-    "q": "Em João 4, o filho de quem estava doente em Cafarnaum?",
-    "options": [
-     "De um pescador",
-     "De um fariseu",
-     "De um oficial do rei",
-     "De um samaritano"
+     "Água salgada",
+     "Água benta",
+     "Água viva",
+     "Água do Jordão"
     ],
     "answer": 2,
-    "ref": "João 4:46"
+    "ref": "João 4:10"
    },
    {
-    "q": "Quantos pavilhões tinha o tanque de Betesda?",
+    "q": "O que a mulher deixou ao correr para a cidade?",
     "options": [
-     "Três",
-     "Sete",
-     "Doze",
-     "Cinco"
+     "Suas sandálias",
+     "Seu manto",
+     "Seu dinheiro",
+     "Seu cântaro"
+    ],
+    "answer": 3,
+    "ref": "João 4:28"
+   },
+   {
+    "q": "Como se chamava o tanque perto da Porta das Ovelhas?",
+    "options": [
+     "Siloé",
+     "Jordão",
+     "Genesaré",
+     "Betesda"
     ],
     "answer": 3,
     "ref": "João 5:2"
    },
    {
-    "q": "Há quantos anos o homem junto ao tanque estava enfermo?",
+    "q": "Há quantos anos estava enfermo o homem curado no tanque?",
     "options": [
-     "Doze",
-     "Dezoito",
-     "Trinta e oito",
-     "Quarenta"
+     "Doze anos",
+     "Dezoito anos",
+     "Trinta e oito anos",
+     "Quarenta anos"
     ],
     "answer": 2,
     "ref": "João 5:5"
@@ -1680,62 +960,782 @@
   ]
  },
  {
-  "day": 236,
+  "day": 224,
   "questions": [
    {
-    "q": "De que eram os cinco pães do rapaz em João 6?",
+    "q": "Quem disse que havia um rapaz com cinco pães e dois peixinhos?",
     "options": [
-     "De trigo",
-     "De cevada",
-     "De milho",
-     "De centeio"
+     "Filipe",
+     "Pedro",
+     "André",
+     "João"
     ],
-    "answer": 1,
+    "answer": 2,
     "ref": "João 6:9"
    },
    {
-    "q": "Em João 6, Jesus disse: \"Eu sou o ... da vida\".",
+    "q": "Os pães que o rapaz tinha eram de quê?",
     "options": [
-     "Pão",
-     "Caminho",
-     "Rio",
-     "Livro"
+     "De cevada",
+     "De trigo",
+     "De milho",
+     "De centeio"
     ],
     "answer": 0,
+    "ref": "João 6:9"
+   },
+   {
+    "q": "Sobre o que Jesus caminhava ao se aproximar do barco?",
+    "options": [
+     "Sobre a areia",
+     "Sobre uma ponte",
+     "Sobre as pedras",
+     "Sobre o mar"
+    ],
+    "answer": 3,
+    "ref": "João 6:19"
+   },
+   {
+    "q": "Segundo João 6:35, o que Jesus disse que ele é?",
+    "options": [
+     "A porta",
+     "O pão da vida",
+     "A videira",
+     "O caminho"
+    ],
+    "answer": 1,
     "ref": "João 6:35"
    },
    {
-    "q": "Que festa dos judeus estava próxima em João 7?",
+    "q": "Segundo Pedro, Jesus tem as palavras de quê?",
     "options": [
+     "Da sabedoria",
+     "Da lei",
+     "Da vida eterna",
+     "Dos profetas"
+    ],
+    "answer": 2,
+    "ref": "João 6:68"
+   }
+  ]
+ },
+ {
+  "day": 225,
+  "questions": [
+   {
+    "q": "Qual festa dos judeus estava se aproximando em João 7?",
+    "options": [
+     "Festa dos Tabernáculos",
      "Páscoa",
      "Pentecostes",
-     "Festa das Trombetas",
-     "Festa dos Tabernáculos"
+     "Festa das Trombetas"
     ],
-    "answer": 3,
+    "answer": 0,
     "ref": "João 7:2"
    },
    {
-    "q": "O que Jesus fazia com o dedo enquanto acusavam a mulher?",
+    "q": "Quem não acreditava em Jesus, segundo João 7:5?",
     "options": [
-     "Apontava para eles",
-     "Escrevia no chão",
-     "Contava nos dedos",
-     "Tocava a mulher"
+     "Seus discípulos",
+     "Sua mãe",
+     "Os samaritanos",
+     "Seus irmãos"
+    ],
+    "answer": 3,
+    "ref": "João 7:5"
+   },
+   {
+    "q": "O que Jesus disse que brotaria do interior de quem crê nele?",
+    "options": [
+     "Flores",
+     "Rios de água viva",
+     "Fogo",
+     "Luz"
     ],
     "answer": 1,
+    "ref": "João 7:38"
+   },
+   {
+    "q": "O que os guardas disseram sobre Jesus ao voltarem sem ele?",
+    "options": [
+     "Ele fugiu",
+     "Ele é perigoso",
+     "Jamais alguém falou como ele",
+     "Não o encontramos"
+    ],
+    "answer": 2,
+    "ref": "João 7:46"
+   },
+   {
+    "q": "Quem defendeu que a lei deveria ouvir o homem antes de condená-lo?",
+    "options": [
+     "Gamaliel",
+     "Caifás",
+     "Pedro",
+     "Nicodemos"
+    ],
+    "answer": 3,
+    "ref": "João 7:51"
+   }
+  ]
+ },
+ {
+  "day": 226,
+  "questions": [
+   {
+    "q": "Onde Jesus escrevia com o dedo enquanto os fariseus o tentavam?",
+    "options": [
+     "Numa pedra",
+     "Num pergaminho",
+     "Na terra",
+     "Na parede"
+    ],
+    "answer": 2,
     "ref": "João 8:6"
    },
    {
-    "q": "Segundo Jesus, o que a verdade fará com quem a conhece?",
+    "q": "O que Jesus disse à mulher depois que os acusadores saíram?",
     "options": [
-     "Enriquecerá",
-     "Julgará",
-     "Libertará",
-     "Assustará"
+     "Vai e não peques mais",
+     "Fica no templo",
+     "Volta amanhã",
+     "Oferece um sacrifício"
+    ],
+    "answer": 0,
+    "ref": "João 8:11"
+   },
+   {
+    "q": "Em João 8:12, Jesus disse: Eu sou a luz do quê?",
+    "options": [
+     "Do templo",
+     "Do mundo",
+     "Do céu",
+     "Da noite"
+    ],
+    "answer": 1,
+    "ref": "João 8:12"
+   },
+   {
+    "q": "Segundo Jesus, o que nos libertará?",
+    "options": [
+     "A força",
+     "A riqueza",
+     "A lei",
+     "A verdade"
+    ],
+    "answer": 3,
+    "ref": "João 8:32"
+   },
+   {
+    "q": "O que os judeus pegaram para atirar em Jesus no fim de João 8?",
+    "options": [
+     "Pedras",
+     "Lanças",
+     "Paus",
+     "Flechas"
+    ],
+    "answer": 0,
+    "ref": "João 8:59"
+   }
+  ]
+ },
+ {
+  "day": 227,
+  "questions": [
+   {
+    "q": "Desde quando era cego o homem que Jesus curou em João 9?",
+    "options": [
+     "Desde a infância",
+     "Desde um acidente",
+     "Desde o nascimento",
+     "Há doze anos"
     ],
     "answer": 2,
-    "ref": "João 8:32"
+    "ref": "João 9:1"
+   },
+   {
+    "q": "Com o que Jesus fez lodo para pôr nos olhos do cego?",
+    "options": [
+     "Com a saliva",
+     "Com azeite",
+     "Com água do rio",
+     "Com vinho"
+    ],
+    "answer": 0,
+    "ref": "João 9:6"
+   },
+   {
+    "q": "Em que tanque o cego foi lavar-se?",
+    "options": [
+     "Betesda",
+     "Siloé",
+     "Jordão",
+     "Salomão"
+    ],
+    "answer": 1,
+    "ref": "João 9:7"
+   },
+   {
+    "q": "Em que dia Jesus abriu os olhos do cego?",
+    "options": [
+     "No primeiro dia da semana",
+     "No dia da Páscoa",
+     "No sexto dia",
+     "No sábado"
+    ],
+    "answer": 3,
+    "ref": "João 9:14"
+   },
+   {
+    "q": "O que o homem curado disse: uma coisa sei...?",
+    "options": [
+     "Que sou pobre",
+     "Eu era cego e agora vejo",
+     "Que Jesus é rei",
+     "Que os fariseus erram"
+    ],
+    "answer": 1,
+    "ref": "João 9:25"
+   }
+  ]
+ },
+ {
+  "day": 228,
+  "questions": [
+   {
+    "q": "Segundo Jesus, por que as ovelhas seguem o pastor?",
+    "options": [
+     "Porque reconhecem sua voz",
+     "Porque ele tem comida",
+     "Porque têm medo",
+     "Porque ele é forte"
+    ],
+    "answer": 0,
+    "ref": "João 10:4"
+   },
+   {
+    "q": "Segundo Jesus, o ladrão vem somente para quê?",
+    "options": [
+     "Pedir ajuda",
+     "Cuidar das ovelhas",
+     "Roubar, matar e destruir",
+     "Abrir a porta"
+    ],
+    "answer": 2,
+    "ref": "João 10:10"
+   },
+   {
+    "q": "O que o bom Pastor faz pelas ovelhas?",
+    "options": [
+     "Vende as ovelhas",
+     "Foge do lobo",
+     "Dorme ao lado delas",
+     "Entrega a sua vida"
+    ],
+    "answer": 3,
+    "ref": "João 10:11"
+   },
+   {
+    "q": "Em que estação era a Festa da Dedicação em João 10?",
+    "options": [
+     "Verão",
+     "Inverno",
+     "Primavera",
+     "Outono"
+    ],
+    "answer": 1,
+    "ref": "João 10:22"
+   },
+   {
+    "q": "Em que parte do templo Jesus passeava na Festa da Dedicação?",
+    "options": [
+     "No altar",
+     "No Santo dos Santos",
+     "No pátio das mulheres",
+     "No Pórtico de Salomão"
+    ],
+    "answer": 3,
+    "ref": "João 10:23"
+   }
+  ]
+ },
+ {
+  "day": 229,
+  "questions": [
+   {
+    "q": "De que aldeia era Lázaro?",
+    "options": [
+     "Betânia",
+     "Belém",
+     "Naim",
+     "Emaús"
+    ],
+    "answer": 0,
+    "ref": "João 11:1"
+   },
+   {
+    "q": "Há quantos dias Lázaro estava sepultado quando Jesus chegou?",
+    "options": [
+     "Dois dias",
+     "Três dias",
+     "Sete dias",
+     "Quatro dias"
+    ],
+    "answer": 3,
+    "ref": "João 11:17"
+   },
+   {
+    "q": "O que Jesus disse a Marta: Eu sou a ressurreição e...?",
+    "options": [
+     "A luz",
+     "A vida",
+     "A porta",
+     "O caminho"
+    ],
+    "answer": 1,
+    "ref": "João 11:25"
+   },
+   {
+    "q": "O que fez Jesus ao ver Maria e os judeus chorando, antes do túmulo?",
+    "options": [
+     "Saiu correndo",
+     "Ficou calado",
+     "Chorou",
+     "Cantou um salmo"
+    ],
+    "answer": 2,
+    "ref": "João 11:35"
+   },
+   {
+    "q": "Quem era o sumo sacerdote naquele ano?",
+    "options": [
+     "Anás",
+     "Caifás",
+     "Gamaliel",
+     "Nicodemos"
+    ],
+    "answer": 1,
+    "ref": "João 11:49"
+   }
+  ]
+ },
+ {
+  "day": 230,
+  "questions": [
+   {
+    "q": "Com que perfume Maria ungiu os pés de Jesus em Betânia?",
+    "options": [
+     "Mirra",
+     "Bálsamo de nardo puro",
+     "Azeite de oliva",
+     "Incenso"
+    ],
+    "answer": 1,
+    "ref": "João 12:3"
+   },
+   {
+    "q": "Por quanto Judas disse que o perfume poderia ser vendido?",
+    "options": [
+     "Trinta moedas",
+     "Cem denários",
+     "Trezentos denários",
+     "Mil denários"
+    ],
+    "answer": 2,
+    "ref": "João 12:5"
+   },
+   {
+    "q": "O que a multidão levou ao sair ao encontro de Jesus?",
+    "options": [
+     "Ramos de palmeiras",
+     "Tochas acesas",
+     "Cestos de pão",
+     "Espadas"
+    ],
+    "answer": 0,
+    "ref": "João 12:13"
+   },
+   {
+    "q": "A quem os gregos pediram: Queremos ver a Jesus?",
+    "options": [
+     "Pedro",
+     "João",
+     "André",
+     "Filipe"
+    ],
+    "answer": 3,
+    "ref": "João 12:21"
+   },
+   {
+    "q": "Segundo Jesus, o que acontece se o grão de trigo cair na terra e morrer?",
+    "options": [
+     "Seca para sempre",
+     "Produz muitos frutos",
+     "Vira pó",
+     "Fica sozinho"
+    ],
+    "answer": 1,
+    "ref": "João 12:24"
+   }
+  ]
+ },
+ {
+  "day": 231,
+  "questions": [
+   {
+    "q": "Com o que Jesus se cingiu antes de lavar os pés dos discípulos?",
+    "options": [
+     "Uma corda",
+     "Um manto",
+     "Uma toalha",
+     "Um cinto de couro"
+    ],
+    "answer": 2,
+    "ref": "João 13:4"
+   },
+   {
+    "q": "O que Pedro pediu depois que Jesus disse que precisava lavá-lo?",
+    "options": [
+     "Lavar também mãos e cabeça",
+     "Lavar só um pé",
+     "Lavar os pés de Jesus",
+     "Sair da sala"
+    ],
+    "answer": 0,
+    "ref": "João 13:9"
+   },
+   {
+    "q": "A quem Jesus deu o pedaço de pão molhado?",
+    "options": [
+     "A Pedro",
+     "A João",
+     "A Tomé",
+     "A Judas Iscariotes"
+    ],
+    "answer": 3,
+    "ref": "João 13:26"
+   },
+   {
+    "q": "Qual foi o novo mandamento que Jesus deu?",
+    "options": [
+     "Jejuar sempre",
+     "Amar uns aos outros",
+     "Orar três vezes",
+     "Ir ao templo"
+    ],
+    "answer": 1,
+    "ref": "João 13:34"
+   },
+   {
+    "q": "Que horas eram quando Judas saiu da ceia?",
+    "options": [
+     "Já era noite",
+     "Era de manhã",
+     "Era meio-dia",
+     "Era madrugada"
+    ],
+    "answer": 0,
+    "ref": "João 13:30"
+   }
+  ]
+ },
+ {
+  "day": 232,
+  "questions": [
+   {
+    "q": "O que Jesus disse que há na casa de seu Pai?",
+    "options": [
+     "Muitos tesouros",
+     "Muitas moradas",
+     "Muitos anjos",
+     "Muitas portas"
+    ],
+    "answer": 1,
+    "ref": "João 14:2"
+   },
+   {
+    "q": "Qual discípulo disse: Senhor, não sabemos para onde estás indo?",
+    "options": [
+     "Filipe",
+     "Pedro",
+     "Tomé",
+     "Judas"
+    ],
+    "answer": 2,
+    "ref": "João 14:5"
+   },
+   {
+    "q": "Segundo João 14:6, Jesus é o caminho, a verdade e...?",
+    "options": [
+     "A vida",
+     "A luz",
+     "A paz",
+     "A porta"
+    ],
+    "answer": 0,
+    "ref": "João 14:6"
+   },
+   {
+    "q": "Em João 15, Jesus disse que é a videira. Quem são os ramos?",
+    "options": [
+     "Os anjos",
+     "Os fariseus",
+     "Os profetas",
+     "Os discípulos"
+    ],
+    "answer": 3,
+    "ref": "João 15:5"
+   },
+   {
+    "q": "Segundo Jesus, qual é o maior amor?",
+    "options": [
+     "Dar muito dinheiro",
+     "Dar a vida pelos amigos",
+     "Orar muito",
+     "Fazer milagres"
+    ],
+    "answer": 1,
+    "ref": "João 15:13"
+   }
+  ]
+ },
+ {
+  "day": 233,
+  "questions": [
+   {
+    "q": "Quem Jesus disse que viria se ele fosse embora?",
+    "options": [
+     "Um novo profeta",
+     "O Consolador",
+     "Elias",
+     "Um anjo"
+    ],
+    "answer": 1,
+    "ref": "João 16:7"
+   },
+   {
+    "q": "Segundo Jesus, a tristeza dos discípulos se converteria em quê?",
+    "options": [
+     "Em alegria",
+     "Em medo",
+     "Em raiva",
+     "Em saudade"
+    ],
+    "answer": 0,
+    "ref": "João 16:20"
+   },
+   {
+    "q": "O que Jesus disse no fim de João 16 para dar bom ânimo?",
+    "options": [
+     "Eu sou rei",
+     "Eu voltarei amanhã",
+     "Eu venci o mundo",
+     "Eu sou forte"
+    ],
+    "answer": 2,
+    "ref": "João 16:33"
+   },
+   {
+    "q": "Na oração de João 17, Jesus disse que a palavra de Deus é o quê?",
+    "options": [
+     "A lei",
+     "A luz",
+     "A vida",
+     "A verdade"
+    ],
+    "answer": 3,
+    "ref": "João 17:17"
+   },
+   {
+    "q": "O que Jesus pediu ao Pai para os que creem nele?",
+    "options": [
+     "Que sejam ricos",
+     "Que sejam um",
+     "Que sejam famosos",
+     "Que saiam do mundo"
+    ],
+    "answer": 1,
+    "ref": "João 17:21"
+   }
+  ]
+ },
+ {
+  "day": 234,
+  "questions": [
+   {
+    "q": "Qual era o nome do servo que teve a orelha cortada por Pedro?",
+    "options": [
+     "Malco",
+     "Barrabás",
+     "Anás",
+     "Cleopas"
+    ],
+    "answer": 0,
+    "ref": "João 18:10"
+   },
+   {
+    "q": "A quem Jesus foi levado primeiro depois de preso?",
+    "options": [
+     "A Pilatos",
+     "A Herodes",
+     "A Caifás",
+     "A Anás"
+    ],
+    "answer": 3,
+    "ref": "João 18:13"
+   },
+   {
+    "q": "O que os soldados colocaram sobre a cabeça de Jesus?",
+    "options": [
+     "Um capacete",
+     "Uma coroa de espinhos",
+     "Um véu",
+     "Uma coroa de ouro"
+    ],
+    "answer": 1,
+    "ref": "João 19:2"
+   },
+   {
+    "q": "Como se chama em hebraico o lugar da Caveira?",
+    "options": [
+     "Getsêmani",
+     "Gabatá",
+     "Gólgota",
+     "Betesda"
+    ],
+    "answer": 2,
+    "ref": "João 19:17"
+   },
+   {
+    "q": "Quem trouxe cerca de cem litros de mirra e aloés para o corpo de Jesus?",
+    "options": [
+     "Nicodemos",
+     "Pedro",
+     "João",
+     "Lázaro"
+    ],
+    "answer": 0,
+    "ref": "João 19:39"
+   }
+  ]
+ },
+ {
+  "day": 235,
+  "questions": [
+   {
+    "q": "Quem foi ao sepulcro de madrugada e viu a pedra revolvida?",
+    "options": [
+     "Marta",
+     "Maria Madalena",
+     "Salomé",
+     "Joana"
+    ],
+    "answer": 1,
+    "ref": "João 20:1"
+   },
+   {
+    "q": "Quem Maria pensou que Jesus fosse, junto ao sepulcro?",
+    "options": [
+     "O jardineiro",
+     "Um soldado",
+     "Um anjo",
+     "Pedro"
+    ],
+    "answer": 0,
+    "ref": "João 20:15"
+   },
+   {
+    "q": "Qual discípulo não estava quando Jesus apareceu pela primeira vez aos discípulos?",
+    "options": [
+     "Pedro",
+     "João",
+     "Tomé",
+     "André"
+    ],
+    "answer": 2,
+    "ref": "João 20:24"
+   },
+   {
+    "q": "Para que lado do barco Jesus mandou lançar a rede?",
+    "options": [
+     "Lado esquerdo",
+     "Para trás",
+     "Para a frente",
+     "Lado direito"
+    ],
+    "answer": 3,
+    "ref": "João 21:6"
+   },
+   {
+    "q": "Quantos grandes peixes havia na rede que Pedro puxou?",
+    "options": [
+     "Cem",
+     "Cento e cinquenta e três",
+     "Duzentos",
+     "Setenta e sete"
+    ],
+    "answer": 1,
+    "ref": "João 21:11"
+   }
+  ]
+ },
+ {
+  "day": 236,
+  "questions": [
+   {
+    "q": "A quem Lucas dirige o livro de Atos?",
+    "options": [
+     "A Timóteo",
+     "A Teófilo",
+     "A Tito",
+     "A Filemom"
+    ],
+    "answer": 1,
+    "ref": "Atos 1:1"
+   },
+   {
+    "q": "Por quantos dias Jesus apareceu aos apóstolos após sofrer?",
+    "options": [
+     "Sete",
+     "Doze",
+     "Quarenta",
+     "Cinquenta"
+    ],
+    "answer": 2,
+    "ref": "Atos 1:3"
+   },
+   {
+    "q": "O que encobriu Jesus quando ele foi elevado às alturas?",
+    "options": [
+     "Uma nuvem",
+     "Um carro de fogo",
+     "Uma luz forte",
+     "Um vento"
+    ],
+    "answer": 0,
+    "ref": "Atos 1:9"
+   },
+   {
+    "q": "Quantas pessoas havia na assembleia reunida com Pedro?",
+    "options": [
+     "Doze",
+     "Setenta",
+     "Quinhentas",
+     "Cerca de cento e vinte"
+    ],
+    "answer": 3,
+    "ref": "Atos 1:15"
+   },
+   {
+    "q": "Quem foi escolhido por sorte para o lugar de Judas?",
+    "options": [
+     "José Barsabás",
+     "Barnabé",
+     "Matias",
+     "Estêvão"
+    ],
+    "answer": 2,
+    "ref": "Atos 1:26"
    }
   ]
  },
@@ -1743,59 +1743,59 @@
   "day": 237,
   "questions": [
    {
-    "q": "Em que tanque o cego de nascença foi mandado se lavar?",
+    "q": "Em que dia os discípulos estavam todos reunidos em Atos 2?",
     "options": [
-     "Betesda",
-     "Siloé",
-     "Jordão",
-     "Gihon"
+     "No sábado",
+     "No dia de Pentecostes",
+     "Na Páscoa",
+     "Na Festa dos Tabernáculos"
     ],
     "answer": 1,
-    "ref": "João 9:7"
+    "ref": "Atos 2:1"
    },
    {
-    "q": "Em João 10, Jesus disse: \"Eu sou o bom...\"",
+    "q": "O que apareceu e pousou sobre cada um dos discípulos?",
     "options": [
-     "Rei",
-     "Mestre",
-     "Pastor",
-     "Servo"
-    ],
-    "answer": 2,
-    "ref": "João 10:11"
-   },
-   {
-    "q": "De qual aldeia era Lázaro?",
-    "options": [
-     "Betânia",
-     "Belém",
-     "Caná",
-     "Nazaré"
+     "Línguas como de fogo",
+     "Pombas brancas",
+     "Coroas de luz",
+     "Gotas de óleo"
     ],
     "answer": 0,
-    "ref": "João 11:1"
+    "ref": "Atos 2:3"
    },
    {
-    "q": "Há quantos dias Lázaro estava no sepulcro quando Jesus chegou?",
+    "q": "De qual profeta Pedro citou a profecia em seu discurso?",
     "options": [
-     "Dois",
-     "Sete",
-     "Três",
-     "Quatro"
+     "Isaías",
+     "Jeremias",
+     "Daniel",
+     "Joel"
     ],
     "answer": 3,
-    "ref": "João 11:17"
+    "ref": "Atos 2:16"
    },
    {
-    "q": "O que Jesus clamou em alta voz diante do túmulo?",
+    "q": "Quantas pessoas foram acrescentadas à igreja naquele dia?",
     "options": [
-     "Lázaro, vem para fora!",
-     "Lázaro, dorme em paz!",
-     "Abram a porta!",
-     "Pai, perdoa-o!"
+     "Cento e vinte",
+     "Quinhentas",
+     "Quase três mil",
+     "Cinco mil"
     ],
-    "answer": 0,
-    "ref": "João 11:43"
+    "answer": 2,
+    "ref": "Atos 2:41"
+   },
+   {
+    "q": "Segundo Atos 2:21, quem será salvo?",
+    "options": [
+     "Quem for rico",
+     "Quem clamar pelo nome do Senhor",
+     "Quem morar em Jerusalém",
+     "Quem for sacerdote"
+    ],
+    "answer": 1,
+    "ref": "Atos 2:21"
    }
   ]
  },
@@ -1803,59 +1803,59 @@
   "day": 238,
   "questions": [
    {
-    "q": "Com o que Maria enxugou os pés de Jesus depois de ungi-los?",
+    "q": "Como se chamava a porta do templo onde ficava o coxo?",
     "options": [
-     "Com uma toalha",
-     "Com seus cabelos",
-     "Com seu manto",
-     "Com folhas"
-    ],
-    "answer": 1,
-    "ref": "João 12:3"
-   },
-   {
-    "q": "O que a multidão levou ao sair ao encontro de Jesus em João 12?",
-    "options": [
-     "Flores",
-     "Mantos de ouro",
-     "Ramos de palmeiras",
-     "Lâmpadas"
+     "Porta das Ovelhas",
+     "Porta Dourada",
+     "Porta Formosa",
+     "Porta do Peixe"
     ],
     "answer": 2,
-    "ref": "João 12:13"
+    "ref": "Atos 3:2"
    },
    {
-    "q": "O que Jesus lavou dos discípulos em João 13?",
+    "q": "O que Pedro disse que não tinha para dar ao coxo?",
     "options": [
-     "As mãos",
-     "O rosto",
-     "A cabeça",
-     "Os pés"
-    ],
-    "answer": 3,
-    "ref": "João 13:5"
-   },
-   {
-    "q": "Qual o novo mandamento que Jesus deu aos discípulos?",
-    "options": [
-     "Que amem uns aos outros",
-     "Que jejuem",
-     "Que guardem o sábado",
-     "Que ofereçam sacrifícios"
+     "Prata nem ouro",
+     "Pão nem água",
+     "Roupa nem sandália",
+     "Tempo nem força"
     ],
     "answer": 0,
-    "ref": "João 13:34"
+    "ref": "Atos 3:6"
    },
    {
-    "q": "Em João 14, Jesus diz: \"Eu sou o caminho, a verdade e a...\"",
+    "q": "Para quantos subiu o número de homens que creram em Atos 4?",
     "options": [
-     "Luz",
-     "Porta",
-     "Vida",
-     "Paz"
+     "Três mil",
+     "Dez mil",
+     "Mil",
+     "Quase cinco mil"
     ],
-    "answer": 2,
-    "ref": "João 14:6"
+    "answer": 3,
+    "ref": "Atos 4:4"
+   },
+   {
+    "q": "O que aconteceu com o lugar depois que os discípulos oraram?",
+    "options": [
+     "Ficou escuro",
+     "Tremeu",
+     "Pegou fogo",
+     "Ficou em silêncio"
+    ],
+    "answer": 1,
+    "ref": "Atos 4:31"
+   },
+   {
+    "q": "Que nome os apóstolos deram a José, levita de Chipre?",
+    "options": [
+     "Barnabé",
+     "Silas",
+     "Marcos",
+     "Estêvão"
+    ],
+    "answer": 0,
+    "ref": "Atos 4:36"
    }
   ]
  },
@@ -1863,209 +1863,51 @@
   "day": 239,
   "questions": [
    {
-    "q": "Em João 15, Jesus diz: \"Eu sou a videira; vocês são os...\"",
-    "options": [
-     "Frutos",
-     "Ramos",
-     "Lavradores",
-     "Raízes"
-    ],
-    "answer": 1,
-    "ref": "João 15:5"
-   },
-   {
-    "q": "Por que os discípulos deviam ter bom ânimo, segundo João 16?",
-    "options": [
-     "Porque seriam ricos",
-     "Porque Jesus venceu o mundo",
-     "Porque não sofreriam",
-     "Porque o templo era forte"
-    ],
-    "answer": 1,
-    "ref": "João 16:33"
-   },
-   {
-    "q": "Que ribeiro Jesus atravessou com os discípulos antes de ser preso?",
-    "options": [
-     "Jordão",
-     "Quisom",
-     "Jaboque",
-     "Cedrom"
-    ],
-    "answer": 3,
-    "ref": "João 18:1"
-   },
-   {
-    "q": "Como se chamava o servo cuja orelha Pedro cortou?",
-    "options": [
-     "Malco",
-     "Barrabás",
-     "Anás",
-     "Lázaro"
-    ],
-    "answer": 0,
-    "ref": "João 18:10"
-   },
-   {
-    "q": "Anás, para quem Jesus foi levado primeiro, era sogro de quem?",
-    "options": [
-     "Pilatos",
-     "Herodes",
-     "Caifás",
-     "Gamaliel"
-    ],
-    "answer": 2,
-    "ref": "João 18:13"
-   }
-  ]
- },
- {
-  "day": 240,
-  "questions": [
-   {
-    "q": "O que os soldados puseram na cabeça de Jesus em João 19?",
-    "options": [
-     "Uma coroa de ouro",
-     "Uma coroa de espinhos",
-     "Um véu",
-     "Um turbante"
-    ],
-    "answer": 1,
-    "ref": "João 19:2"
-   },
-   {
-    "q": "Em quais línguas estava escrito o título na cruz de Jesus?",
-    "options": [
-     "Hebraico, latim e grego",
-     "Só em grego",
-     "Aramaico e egípcio",
-     "Só em latim"
-    ],
-    "answer": 0,
-    "ref": "João 19:20"
-   },
-   {
-    "q": "Quem foi ao sepulcro de madrugada, ainda escuro, em João 20?",
-    "options": [
-     "Pedro",
-     "Marta",
-     "Maria Madalena",
-     "Nicodemos"
-    ],
-    "answer": 2,
-    "ref": "João 20:1"
-   },
-   {
-    "q": "Qual discípulo não estava com os outros quando Jesus apareceu?",
-    "options": [
-     "João",
-     "Pedro",
-     "Filipe",
-     "Tomé"
-    ],
-    "answer": 3,
-    "ref": "João 20:24"
-   },
-   {
-    "q": "Quantos grandes peixes havia na rede em João 21?",
-    "options": [
-     "Cento e cinquenta e três",
-     "Doze",
-     "Cem",
-     "Setenta"
-    ],
-    "answer": 0,
-    "ref": "João 21:11"
-   }
-  ]
- },
- {
-  "day": 241,
-  "questions": [
-   {
-    "q": "Por quantos dias Jesus apareceu aos apóstolos depois de sofrer?",
-    "options": [
-     "Sete",
-     "Doze",
-     "Quarenta",
-     "Três"
-    ],
-    "answer": 2,
-    "ref": "Atos 1:3"
-   },
-   {
-    "q": "Quem foi escolhido por sorte para o lugar de Judas?",
-    "options": [
-     "Barnabé",
-     "Matias",
-     "Estêvão",
-     "Silas"
-    ],
-    "answer": 1,
-    "ref": "Atos 1:26"
-   },
-   {
-    "q": "Quantas pessoas foram acrescentadas no dia de Pentecostes?",
-    "options": [
-     "Cem",
-     "Quinhentas",
-     "Doze mil",
-     "Quase três mil"
-    ],
-    "answer": 3,
-    "ref": "Atos 2:41"
-   },
-   {
-    "q": "Em qual porta do templo ficava o homem coxo de nascença?",
-    "options": [
-     "Porta Formosa",
-     "Porta das Ovelhas",
-     "Porta do Peixe",
-     "Porta Dourada"
-    ],
-    "answer": 0,
-    "ref": "Atos 3:2"
-   },
-   {
-    "q": "Que nome os apóstolos deram a José, o levita de Chipre?",
-    "options": [
-     "Pedro",
-     "Silas",
-     "Barnabé",
-     "Marcos"
-    ],
-    "answer": 2,
-    "ref": "Atos 4:36"
-   }
-  ]
- },
- {
-  "day": 242,
-  "questions": [
-   {
-    "q": "Qual era o nome da esposa de Ananias em Atos 5?",
+    "q": "Qual era o nome da esposa de Ananias?",
     "options": [
      "Safira",
-     "Priscila",
+     "Dorcas",
      "Lídia",
-     "Tabita"
+     "Priscila"
     ],
     "answer": 0,
     "ref": "Atos 5:1"
    },
    {
-    "q": "Qual fariseu, mestre da lei, aconselhou o Sinédrio sobre os apóstolos?",
+    "q": "O que os doentes esperavam que passasse sobre eles quando Pedro passava?",
     "options": [
-     "Caifás",
-     "Nicodemos",
-     "Anás",
-     "Gamaliel"
+     "Seu manto",
+     "Sua sombra",
+     "Sua mão",
+     "Seu bordão"
+    ],
+    "answer": 1,
+    "ref": "Atos 5:15"
+   },
+   {
+    "q": "Quem abriu as portas da prisão onde estavam os apóstolos?",
+    "options": [
+     "Um guarda",
+     "Gamaliel",
+     "Um terremoto",
+     "Um anjo do Senhor"
     ],
     "answer": 3,
+    "ref": "Atos 5:19"
+   },
+   {
+    "q": "Qual fariseu aconselhou o Sinédrio a deixar os apóstolos em paz?",
+    "options": [
+     "Nicodemos",
+     "Caifás",
+     "Gamaliel",
+     "Anás"
+    ],
+    "answer": 2,
     "ref": "Atos 5:34"
    },
    {
-    "q": "Quantos homens os apóstolos mandaram escolher para servir às mesas?",
+    "q": "Quantos homens foram escolhidos para servir às mesas em Atos 6?",
     "options": [
      "Doze",
      "Sete",
@@ -2074,28 +1916,186 @@
     ],
     "answer": 1,
     "ref": "Atos 6:3"
+   }
+  ]
+ },
+ {
+  "day": 240,
+  "questions": [
+   {
+    "q": "Por quantos anos a descendência de Abraão seria maltratada em terra estrangeira?",
+    "options": [
+     "Quatrocentos",
+     "Quarenta",
+     "Setenta",
+     "Cem"
+    ],
+    "answer": 0,
+    "ref": "Atos 7:6"
    },
    {
-    "q": "Aos pés de quem as testemunhas deixaram suas vestes ao apedrejar Estêvão?",
+    "q": "Quem recolheu e criou Moisés como seu próprio filho?",
     "options": [
-     "De Pedro",
-     "De Gamaliel",
-     "De Saulo",
-     "De Filipe"
+     "Sua tia",
+     "Uma serva hebreia",
+     "A filha de Faraó",
+     "A rainha do Egito"
     ],
     "answer": 2,
-    "ref": "Atos 7:58"
+    "ref": "Atos 7:21"
    },
    {
-    "q": "O que Estêvão pediu a Deus enquanto era apedrejado?",
+    "q": "Em que o anjo do Senhor apareceu a Moisés no deserto?",
     "options": [
-     "Que os castigasse",
-     "Que não lhes imputasse este pecado",
-     "Que mandasse fogo",
-     "Que o salvasse da morte"
+     "Numa coluna de nuvem",
+     "Num sonho",
+     "Numa tempestade",
+     "Nas chamas de uma sarça"
+    ],
+    "answer": 3,
+    "ref": "Atos 7:30"
+   },
+   {
+    "q": "Quem edificou a casa para Deus, segundo Estêvão?",
+    "options": [
+     "Davi",
+     "Salomão",
+     "Moisés",
+     "Josué"
     ],
     "answer": 1,
-    "ref": "Atos 7:60"
+    "ref": "Atos 7:47"
+   },
+   {
+    "q": "Aos pés de qual jovem as testemunhas deixaram suas vestes?",
+    "options": [
+     "Saulo",
+     "Timóteo",
+     "Marcos",
+     "Silas"
+    ],
+    "answer": 0,
+    "ref": "Atos 7:58"
+   }
+  ]
+ },
+ {
+  "day": 241,
+  "questions": [
+   {
+    "q": "O que Simão, o mágico, ofereceu aos apóstolos?",
+    "options": [
+     "Sua casa",
+     "Dinheiro",
+     "Seus livros",
+     "Um campo"
+    ],
+    "answer": 1,
+    "ref": "Atos 8:18"
+   },
+   {
+    "q": "Que profeta o eunuco etíope estava lendo na carruagem?",
+    "options": [
+     "Jeremias",
+     "Daniel",
+     "Isaías",
+     "Ezequiel"
+    ],
+    "answer": 2,
+    "ref": "Atos 8:28"
+   },
+   {
+    "q": "Para que cidade Saulo estava indo quando viu uma luz do céu?",
+    "options": [
+     "Damasco",
+     "Antioquia",
+     "Tarso",
+     "Jope"
+    ],
+    "answer": 0,
+    "ref": "Atos 9:3"
+   },
+   {
+    "q": "Como Saulo fugiu de Damasco à noite?",
+    "options": [
+     "Num barco",
+     "Disfarçado de soldado",
+     "Por um túnel",
+     "Num cesto pela muralha"
+    ],
+    "answer": 3,
+    "ref": "Atos 9:25"
+   },
+   {
+    "q": "Qual era o outro nome de Tabita, ressuscitada em Jope?",
+    "options": [
+     "Lídia",
+     "Dorcas",
+     "Rode",
+     "Marta"
+    ],
+    "answer": 1,
+    "ref": "Atos 9:36"
+   }
+  ]
+ },
+ {
+  "day": 242,
+  "questions": [
+   {
+    "q": "Qual era a profissão de Cornélio?",
+    "options": [
+     "Pescador",
+     "Centurião",
+     "Publicano",
+     "Sacerdote"
+    ],
+    "answer": 1,
+    "ref": "Atos 10:1"
+   },
+   {
+    "q": "Na casa de quem Pedro estava hospedado em Jope?",
+    "options": [
+     "Simão, o curtidor",
+     "Tabita",
+     "Maria, mãe de Marcos",
+     "Filipe"
+    ],
+    "answer": 0,
+    "ref": "Atos 10:6"
+   },
+   {
+    "q": "O que desceu do céu na visão de Pedro?",
+    "options": [
+     "Uma escada",
+     "Uma pomba",
+     "Um carro de fogo",
+     "Um grande lençol com animais"
+    ],
+    "answer": 3,
+    "ref": "Atos 10:11"
+   },
+   {
+    "q": "Quantas vezes a visão do lençol aconteceu?",
+    "options": [
+     "Uma vez",
+     "Duas vezes",
+     "Três vezes",
+     "Sete vezes"
+    ],
+    "answer": 2,
+    "ref": "Atos 10:16"
+   },
+   {
+    "q": "O que Pedro reconheceu sobre Deus na casa de Cornélio?",
+    "options": [
+     "Que Deus não faz acepção de pessoas",
+     "Que Deus só ama os judeus",
+     "Que Deus está longe",
+     "Que Deus castiga os gentios"
+    ],
+    "answer": 0,
+    "ref": "Atos 10:34"
    }
   ]
  },
@@ -2103,59 +2103,59 @@
   "day": 243,
   "questions": [
    {
-    "q": "A que cidade Filipe desceu para anunciar Cristo em Atos 8?",
+    "q": "Quantos irmãos foram com Pedro à casa de Cornélio?",
     "options": [
-     "Samaria",
-     "Jope",
-     "Antioquia",
-     "Damasco"
-    ],
-    "answer": 0,
-    "ref": "Atos 8:5"
-   },
-   {
-    "q": "Que profeta o eunuco etíope lia em sua carruagem?",
-    "options": [
-     "Jeremias",
-     "Daniel",
-     "Moisés",
-     "Isaías"
-    ],
-    "answer": 3,
-    "ref": "Atos 8:28"
-   },
-   {
-    "q": "O que brilhou ao redor de Saulo no caminho para Damasco?",
-    "options": [
-     "Uma estrela",
-     "Fogo da terra",
-     "Uma luz do céu",
-     "Um relâmpago no mar"
+     "Dois",
+     "Doze",
+     "Seis",
+     "Três"
     ],
     "answer": 2,
-    "ref": "Atos 9:3"
+    "ref": "Atos 11:12"
    },
    {
-    "q": "Em que rua Ananias deveria procurar Saulo?",
+    "q": "Em que cidade os discípulos foram chamados cristãos pela primeira vez?",
     "options": [
-     "Rua Larga",
-     "Rua Direita",
-     "Rua do Templo",
-     "Rua do Mercado"
+     "Jerusalém",
+     "Antioquia",
+     "Roma",
+     "Damasco"
     ],
     "answer": 1,
-    "ref": "Atos 9:11"
+    "ref": "Atos 11:26"
    },
    {
-    "q": "Quem era Cornélio, de Cesareia?",
+    "q": "Qual profeta anunciou que viria uma grande fome?",
     "options": [
-     "Um sacerdote",
-     "Um pescador",
-     "Um rei",
-     "Um centurião"
+     "Ágabo",
+     "Silas",
+     "Simeão",
+     "Manaém"
+    ],
+    "answer": 0,
+    "ref": "Atos 11:28"
+   },
+   {
+    "q": "Quem abriu a porta da prisão e libertou Pedro?",
+    "options": [
+     "Um soldado",
+     "Barnabé",
+     "João Marcos",
+     "O anjo do Senhor"
     ],
     "answer": 3,
-    "ref": "Atos 10:1"
+    "ref": "Atos 12:7"
+   },
+   {
+    "q": "Como se chamava a criada que reconheceu a voz de Pedro no portão?",
+    "options": [
+     "Rode",
+     "Lídia",
+     "Dorcas",
+     "Safira"
+    ],
+    "answer": 0,
+    "ref": "Atos 12:13"
    }
   ]
  },
@@ -2163,59 +2163,59 @@
   "day": 244,
   "questions": [
    {
-    "q": "Em que cidade os discípulos foram chamados de cristãos pela primeira vez?",
-    "options": [
-     "Jerusalém",
-     "Roma",
-     "Antioquia",
-     "Éfeso"
-    ],
-    "answer": 2,
-    "ref": "Atos 11:26"
-   },
-   {
-    "q": "O que caiu das mãos de Pedro quando o anjo o tocou na prisão?",
-    "options": [
-     "As cadeias",
-     "A espada",
-     "O pão",
-     "As chaves"
-    ],
-    "answer": 0,
-    "ref": "Atos 12:7"
-   },
-   {
-    "q": "Como se chamava a menina que atendeu Pedro à porta?",
-    "options": [
-     "Maria",
-     "Rode",
-     "Lídia",
-     "Dorcas"
-    ],
-    "answer": 1,
-    "ref": "Atos 12:13"
-   },
-   {
-    "q": "Quem o Espírito Santo mandou separar para a obra em Atos 13?",
+    "q": "Quem o Espírito Santo mandou separar para a obra em Antioquia?",
     "options": [
      "Pedro e João",
+     "Barnabé e Saulo",
      "Silas e Timóteo",
-     "Paulo e Lucas",
-     "Barnabé e Saulo"
+     "Lúcio e Manaém"
     ],
-    "answer": 3,
+    "answer": 1,
     "ref": "Atos 13:2"
    },
    {
-    "q": "Em Listra, como o povo chamou Barnabé?",
+    "q": "Para que ilha Barnabé e Saulo navegaram de Selêucia?",
     "options": [
-     "Júpiter",
-     "Mercúrio",
-     "Apolo",
-     "Marte"
+     "Creta",
+     "Malta",
+     "Chipre",
+     "Rodes"
+    ],
+    "answer": 2,
+    "ref": "Atos 13:4"
+   },
+   {
+    "q": "O que aconteceu com o mágico Elimas quando se opôs a Paulo?",
+    "options": [
+     "Ficou mudo",
+     "Fugiu",
+     "Morreu",
+     "Ficou cego por um tempo"
+    ],
+    "answer": 3,
+    "ref": "Atos 13:11"
+   },
+   {
+    "q": "Quem Deus deu como rei a Israel, da tribo de Benjamim?",
+    "options": [
+     "Saul",
+     "Davi",
+     "Salomão",
+     "Samuel"
     ],
     "answer": 0,
-    "ref": "Atos 14:12"
+    "ref": "Atos 13:21"
+   },
+   {
+    "q": "Para que cidade Paulo e Barnabé partiram no fim de Atos 13?",
+    "options": [
+     "Listra",
+     "Icônio",
+     "Derbe",
+     "Antioquia"
+    ],
+    "answer": 1,
+    "ref": "Atos 13:51"
    }
   ]
  },
@@ -2223,59 +2223,59 @@
   "day": 245,
   "questions": [
    {
-    "q": "Após a discussão com Paulo, quem Barnabé levou consigo para Chipre?",
+    "q": "Em Listra, de que nome chamaram Barnabé?",
+    "options": [
+     "Mercúrio",
+     "Júpiter",
+     "Apolo",
+     "Marte"
+    ],
+    "answer": 1,
+    "ref": "Atos 14:12"
+   },
+   {
+    "q": "O que fizeram com Paulo os judeus vindos de Antioquia e Icônio?",
+    "options": [
+     "Apedrejaram-no",
+     "Prenderam-no",
+     "Deram-lhe presentes",
+     "Levaram-no a Roma"
+    ],
+    "answer": 0,
+    "ref": "Atos 14:19"
+   },
+   {
+    "q": "Segundo Pedro, como somos salvos?",
+    "options": [
+     "Pela circuncisão",
+     "Pelas obras da lei",
+     "Pela graça do Senhor Jesus",
+     "Pelos sacrifícios"
+    ],
+    "answer": 2,
+    "ref": "Atos 15:11"
+   },
+   {
+    "q": "Quem Barnabé quis levar na viagem, causando desavença com Paulo?",
     "options": [
      "Silas",
      "Timóteo",
-     "Marcos",
-     "Lucas"
-    ],
-    "answer": 2,
-    "ref": "Atos 15:39"
-   },
-   {
-    "q": "Qual discípulo, filho de uma judia crente, Paulo encontrou em Listra?",
-    "options": [
-     "Timóteo",
      "Tito",
-     "Apolo",
-     "Erasto"
-    ],
-    "answer": 0,
-    "ref": "Atos 16:1"
-   },
-   {
-    "q": "O que Lídia, da cidade de Tiatira, vendia?",
-    "options": [
-     "Perfumes",
-     "Tendas",
-     "Pão",
-     "Púrpura"
+     "João, chamado Marcos"
     ],
     "answer": 3,
-    "ref": "Atos 16:14"
+    "ref": "Atos 15:37"
    },
    {
-    "q": "O que Paulo e Silas faziam à meia-noite na prisão?",
+    "q": "Quem Paulo escolheu como companheiro depois de separar-se de Barnabé?",
     "options": [
-     "Dormiam",
-     "Oravam e cantavam louvores",
-     "Tentavam fugir",
-     "Choravam"
+     "Lucas",
+     "Silas",
+     "Marcos",
+     "Judas"
     ],
     "answer": 1,
-    "ref": "Atos 16:25"
-   },
-   {
-    "q": "O que estava escrito no altar que Paulo viu em Atenas?",
-    "options": [
-     "Ao deus do mar",
-     "Ao deus da guerra",
-     "Ao Deus desconhecido",
-     "Ao deus do sol"
-    ],
-    "answer": 2,
-    "ref": "Atos 17:23"
+    "ref": "Atos 15:40"
    }
   ]
  },
@@ -2283,59 +2283,59 @@
   "day": 246,
   "questions": [
    {
-    "q": "Qual era a profissão de Áquila e Priscila, como Paulo?",
+    "q": "Qual discípulo de Listra, filho de mãe judia e pai grego, acompanhou Paulo?",
     "options": [
-     "Pescadores",
-     "Fabricantes de tendas",
-     "Ourives",
-     "Médicos"
-    ],
-    "answer": 1,
-    "ref": "Atos 18:3"
-   },
-   {
-    "q": "De que cidade era natural Apolo, homem eloquente?",
-    "options": [
-     "Roma",
-     "Corinto",
-     "Tarso",
-     "Alexandria"
-    ],
-    "answer": 3,
-    "ref": "Atos 18:24"
-   },
-   {
-    "q": "Qual era o valor dos livros de magia queimados em Éfeso?",
-    "options": [
-     "Cinquenta mil denários",
-     "Mil moedas de ouro",
-     "Cem denários",
-     "Dez talentos"
+     "Timóteo",
+     "Tito",
+     "Lucas",
+     "Apolo"
     ],
     "answer": 0,
-    "ref": "Atos 19:19"
+    "ref": "Atos 16:1"
    },
    {
-    "q": "Quem era Demétrio, que causou tumulto em Éfeso?",
+    "q": "Na visão de Paulo, um homem de onde pedia: Passa e ajuda-nos?",
     "options": [
-     "Um soldado",
-     "Um sacerdote",
-     "Um ourives",
-     "Um pescador"
+     "Da Ásia",
+     "Do Egito",
+     "Da Macedônia",
+     "Da Grécia"
     ],
     "answer": 2,
-    "ref": "Atos 19:24"
+    "ref": "Atos 16:9"
    },
    {
-    "q": "Do que caiu o jovem Êutico enquanto Paulo pregava?",
+    "q": "O que Lídia vendia?",
     "options": [
-     "De uma árvore",
-     "Da janela do terceiro andar",
-     "De um barco",
-     "De um muro"
+     "Púrpura",
+     "Pães",
+     "Perfumes",
+     "Tendas"
+    ],
+    "answer": 0,
+    "ref": "Atos 16:14"
+   },
+   {
+    "q": "O que Paulo e Silas faziam na prisão por volta da meia-noite?",
+    "options": [
+     "Dormiam",
+     "Choravam",
+     "Planejavam fugir",
+     "Oravam e cantavam louvores"
+    ],
+    "answer": 3,
+    "ref": "Atos 16:25"
+   },
+   {
+    "q": "Que inscrição Paulo encontrou num altar em Atenas?",
+    "options": [
+     "Ao deus do mar",
+     "Ao Deus desconhecido",
+     "Ao deus do sol",
+     "Ao rei César"
     ],
     "answer": 1,
-    "ref": "Atos 20:9"
+    "ref": "Atos 17:23"
    }
   ]
  },
@@ -2343,59 +2343,59 @@
   "day": 247,
   "questions": [
    {
-    "q": "Quantas filhas que profetizavam tinha Filipe, o evangelista?",
+    "q": "Qual era a profissão de Áquila e Priscila, a mesma de Paulo?",
     "options": [
-     "Duas",
-     "Sete",
-     "Três",
-     "Quatro"
-    ],
-    "answer": 3,
-    "ref": "Atos 21:9"
-   },
-   {
-    "q": "Com o que o profeta Ágabo amarrou os próprios pés e mãos?",
-    "options": [
-     "Com o cinto de Paulo",
-     "Com uma corda",
-     "Com correntes",
-     "Com o manto de Pedro"
-    ],
-    "answer": 0,
-    "ref": "Atos 21:11"
-   },
-   {
-    "q": "Aos pés de qual mestre Paulo foi instruído na lei?",
-    "options": [
-     "Caifás",
-     "Gamaliel",
-     "Anás",
-     "Nicodemos"
+     "Pescadores",
+     "Tendeiros",
+     "Carpinteiros",
+     "Ourives"
     ],
     "answer": 1,
-    "ref": "Atos 22:3"
+    "ref": "Atos 18:3"
    },
    {
-    "q": "Quem ouviu falar da cilada contra Paulo e o avisou?",
+    "q": "Quanto tempo Paulo ficou em Corinto ensinando a palavra?",
     "options": [
-     "Um soldado romano",
-     "Lucas",
-     "O filho da irmã de Paulo",
-     "Barnabé"
+     "Um ano e seis meses",
+     "Três meses",
+     "Dois anos",
+     "Sete dias"
     ],
-    "answer": 2,
-    "ref": "Atos 23:16"
+    "answer": 0,
+    "ref": "Atos 18:11"
    },
    {
-    "q": "Quem sucedeu Félix como governador após dois anos?",
+    "q": "De que cidade era Apolo, homem eloquente nas Escrituras?",
     "options": [
-     "Pilatos",
-     "Agripa",
-     "Herodes",
-     "Pórcio Festo"
+     "Roma",
+     "Tarso",
+     "Atenas",
+     "Alexandria"
     ],
     "answer": 3,
-    "ref": "Atos 24:27"
+    "ref": "Atos 18:24"
+   },
+   {
+    "q": "O que os que praticavam artes mágicas em Éfeso fizeram com seus livros?",
+    "options": [
+     "Venderam",
+     "Esconderam",
+     "Queimaram diante de todos",
+     "Deram a Paulo"
+    ],
+    "answer": 2,
+    "ref": "Atos 19:19"
+   },
+   {
+    "q": "Qual era a profissão de Demétrio, que causou o alvoroço em Éfeso?",
+    "options": [
+     "Ourives",
+     "Soldado",
+     "Sacerdote",
+     "Mercador de tecidos"
+    ],
+    "answer": 0,
+    "ref": "Atos 19:24"
    }
   ]
  },
@@ -2403,59 +2403,59 @@
   "day": 248,
   "questions": [
    {
-    "q": "Para quem Paulo apelou diante de Festo?",
+    "q": "Por quantos meses Paulo ficou na Grécia em Atos 20?",
     "options": [
-     "Para Herodes",
-     "Para César",
-     "Para o Sinédrio",
-     "Para Agripa"
-    ],
-    "answer": 1,
-    "ref": "Atos 25:11"
-   },
-   {
-    "q": "Quem chegou a Cesareia com o rei Agripa para saudar Festo?",
-    "options": [
-     "Drusila",
-     "Lídia",
-     "Berenice",
-     "Priscila"
+     "Seis",
+     "Doze",
+     "Três",
+     "Um"
     ],
     "answer": 2,
-    "ref": "Atos 25:13"
+    "ref": "Atos 20:3"
    },
    {
-    "q": "O que Agripa disse a Paulo depois de ouvi-lo?",
+    "q": "Como se chamava o jovem que caiu da janela enquanto Paulo pregava?",
     "options": [
-     "Por pouco me persuades a ser cristão",
-     "Estás louco, Paulo",
-     "Eu te condeno",
-     "Vai em paz"
+     "Êutico",
+     "Timóteo",
+     "Gaio",
+     "Tíquico"
     ],
     "answer": 0,
-    "ref": "Atos 26:28"
+    "ref": "Atos 20:9"
    },
    {
-    "q": "Como se chamava o centurião que levou Paulo para a Itália?",
+    "q": "De Mileto, Paulo mandou chamar os presbíteros de qual igreja?",
     "options": [
-     "Cornélio",
-     "Cláudio",
-     "Lísias",
-     "Júlio"
+     "Corinto",
+     "Filipos",
+     "Antioquia",
+     "Éfeso"
     ],
     "answer": 3,
-    "ref": "Atos 27:1"
+    "ref": "Atos 20:17"
    },
    {
-    "q": "Quantas pessoas estavam no navio com Paulo?",
+    "q": "Do que Paulo disse que surgiriam entre eles após sua partida?",
     "options": [
-     "Duzentas e setenta e seis",
-     "Cem",
-     "Setenta",
-     "Quinhentas"
+     "Leões famintos",
+     "Lobos vorazes",
+     "Ursos ferozes",
+     "Serpentes venenosas"
     ],
-    "answer": 0,
-    "ref": "Atos 27:37"
+    "answer": 1,
+    "ref": "Atos 20:29"
+   },
+   {
+    "q": "O que os presbíteros fizeram ao se despedirem de Paulo?",
+    "options": [
+     "Ficaram alegres",
+     "Foram embora calados",
+     "Abraçaram e beijaram Paulo",
+     "Ficaram com raiva"
+    ],
+    "answer": 2,
+    "ref": "Atos 20:37"
    }
   ]
  },
@@ -2463,59 +2463,59 @@
   "day": 249,
   "questions": [
    {
-    "q": "Como se chamava a ilha onde Paulo chegou após o naufrágio?",
+    "q": "Quantos dias Paulo e seus companheiros ficaram em Tiro?",
     "options": [
-     "Chipre",
-     "Creta",
-     "Malta",
-     "Rodes"
-    ],
-    "answer": 2,
-    "ref": "Atos 28:1"
-   },
-   {
-    "q": "Que animal se prendeu à mão de Paulo junto à fogueira?",
-    "options": [
-     "Um escorpião",
-     "Uma víbora",
-     "Um lagarto",
-     "Uma aranha"
+     "Três",
+     "Sete",
+     "Dez",
+     "Quarenta"
     ],
     "answer": 1,
-    "ref": "Atos 28:3"
+    "ref": "Atos 21:4"
    },
    {
-    "q": "Quanto tempo Paulo ficou em Roma na casa que alugou?",
+    "q": "Quantas filhas que profetizavam tinha Filipe, o evangelista?",
     "options": [
-     "Seis meses",
-     "Um ano",
-     "Dez anos",
-     "Dois anos inteiros"
-    ],
-    "answer": 3,
-    "ref": "Atos 28:30"
-   },
-   {
-    "q": "Paulo diz que não se envergonha do evangelho, pois ele é o quê?",
-    "options": [
-     "Poder de Deus para salvação",
-     "Uma lei antiga",
-     "Uma filosofia grega",
-     "Um segredo dos sábios"
+     "Quatro",
+     "Duas",
+     "Três",
+     "Sete"
     ],
     "answer": 0,
-    "ref": "Romanos 1:16"
+    "ref": "Atos 21:9"
    },
    {
-    "q": "Segundo Romanos 3:23, quantos pecaram?",
+    "q": "O que o profeta Ágabo pegou de Paulo para mostrar sua profecia?",
     "options": [
-     "Só os gentios",
-     "Só os judeus",
-     "Todos",
-     "Poucos"
+     "Sua capa",
+     "Seu bordão",
+     "Suas sandálias",
+     "Seu cinto"
+    ],
+    "answer": 3,
+    "ref": "Atos 21:11"
+   },
+   {
+    "q": "Quem os judeus pensavam que Paulo tinha levado ao templo?",
+    "options": [
+     "Timóteo",
+     "Silas",
+     "Trófimo, o efésio",
+     "Barnabé"
     ],
     "answer": 2,
-    "ref": "Romanos 3:23"
+    "ref": "Atos 21:29"
+   },
+   {
+    "q": "De que cidade Paulo disse ao comandante que era natural?",
+    "options": [
+     "Jerusalém",
+     "Tarso",
+     "Antioquia",
+     "Damasco"
+    ],
+    "answer": 1,
+    "ref": "Atos 21:39"
    }
   ]
  },
@@ -2523,59 +2523,59 @@
   "day": 250,
   "questions": [
    {
-    "q": "Segundo Romanos 4, o que aconteceu quando Abraão creu em Deus?",
+    "q": "Aos pés de qual mestre Paulo disse ter sido instruído?",
     "options": [
-     "Ficou rico",
-     "Isso lhe foi imputado como justiça",
-     "Tornou-se rei",
-     "Recebeu a lei"
+     "Gamaliel",
+     "Nicodemos",
+     "Caifás",
+     "Anás"
     ],
-    "answer": 1,
-    "ref": "Romanos 4:3"
+    "answer": 0,
+    "ref": "Atos 22:3"
    },
    {
-    "q": "Como Deus prova o seu amor para conosco, segundo Romanos 5?",
+    "q": "A que hora do dia Paulo viu a grande luz perto de Damasco?",
     "options": [
-     "Dando-nos riquezas",
-     "Enviando anjos",
-     "Dando-nos a lei",
-     "Cristo morreu por nós, ainda pecadores"
+     "De madrugada",
+     "À tarde",
+     "À meia-noite",
+     "Quase ao meio-dia"
     ],
     "answer": 3,
-    "ref": "Romanos 5:8"
+    "ref": "Atos 22:6"
    },
    {
-    "q": "Segundo Romanos 6:23, qual é o salário do pecado?",
+    "q": "O que Paulo disse ser, que impediu que o açoitassem?",
     "options": [
-     "A morte",
-     "A pobreza",
-     "A doença",
-     "A tristeza"
-    ],
-    "answer": 0,
-    "ref": "Romanos 6:23"
-   },
-   {
-    "q": "Para quem todas as coisas cooperam para o bem, segundo Romanos 8?",
-    "options": [
-     "Para os ricos",
-     "Para os fortes",
-     "Para os que amam a Deus",
-     "Para os sábios"
+     "Fariseu",
+     "Sacerdote",
+     "Cidadão romano",
+     "Soldado"
     ],
     "answer": 2,
-    "ref": "Romanos 8:28"
+    "ref": "Atos 22:25"
    },
    {
-    "q": "Complete Romanos 8:31: \"Se Deus é por nós, quem será...\"",
+    "q": "Quantos homens juraram não comer até matar Paulo?",
     "options": [
-     "Contra nós?",
-     "Maior que nós?",
-     "Igual a nós?",
-     "Por eles?"
+     "Doze",
+     "Mais de quarenta",
+     "Setenta",
+     "Cem"
+    ],
+    "answer": 1,
+    "ref": "Atos 23:13"
+   },
+   {
+    "q": "Quem avisou Paulo sobre a trama para matá-lo?",
+    "options": [
+     "O filho da irmã de Paulo",
+     "Um centurião",
+     "Lucas",
+     "Um anjo"
     ],
     "answer": 0,
-    "ref": "Romanos 8:31"
+    "ref": "Atos 23:16"
    }
   ]
  },
@@ -2583,59 +2583,59 @@
   "day": 251,
   "questions": [
    {
-    "q": "Em Romanos 9, quem tem poder sobre o barro para fazer vasos?",
+    "q": "Qual era o nome do orador que acusou Paulo diante de Félix?",
     "options": [
-     "O pedreiro",
-     "O oleiro",
-     "O ferreiro",
-     "O carpinteiro"
+     "Lísias",
+     "Tértulo",
+     "Festo",
+     "Agripa"
     ],
     "answer": 1,
-    "ref": "Romanos 9:21"
+    "ref": "Atos 24:1"
    },
    {
-    "q": "Segundo Romanos 10:17, a fé vem pelo quê?",
+    "q": "Como se chamava a esposa de Félix, que era judia?",
     "options": [
-     "Pelo ver",
-     "Pelas obras",
-     "Pelo jejum",
-     "Pelo ouvir"
-    ],
-    "answer": 3,
-    "ref": "Romanos 10:17"
-   },
-   {
-    "q": "Que árvore Paulo usa para falar dos ramos enxertados em Romanos 11?",
-    "options": [
-     "Figueira",
-     "Videira",
-     "Oliveira",
-     "Cedro"
+     "Berenice",
+     "Priscila",
+     "Drusila",
+     "Lídia"
     ],
     "answer": 2,
-    "ref": "Romanos 11:17"
+    "ref": "Atos 24:24"
    },
    {
-    "q": "Segundo Romanos 12:21, como devemos vencer o mal?",
+    "q": "Quem sucedeu Félix depois de dois anos?",
     "options": [
-     "Com o bem",
-     "Com a força",
-     "Com vingança",
-     "Com silêncio"
+     "Pórcio Festo",
+     "Cláudio Lísias",
+     "Herodes",
+     "Pilatos"
     ],
     "answer": 0,
-    "ref": "Romanos 12:21"
+    "ref": "Atos 24:27"
    },
    {
-    "q": "Segundo Romanos 13:10, o amor é o cumprimento de quê?",
+    "q": "Para quem Paulo apelou para ser julgado?",
     "options": [
-     "Da promessa",
-     "Da profecia",
-     "Da lei",
-     "Do sábado"
+     "Para o sumo sacerdote",
+     "Para o Sinédrio",
+     "Para o rei Agripa",
+     "Para César"
     ],
-    "answer": 2,
-    "ref": "Romanos 13:10"
+    "answer": 3,
+    "ref": "Atos 25:12"
+   },
+   {
+    "q": "Quem chegou a Cesareia com Berenice para saudar Festo?",
+    "options": [
+     "O rei Agripa",
+     "Félix",
+     "Gálio",
+     "Tértulo"
+    ],
+    "answer": 0,
+    "ref": "Atos 25:13"
    }
   ]
  },
@@ -2643,59 +2643,59 @@
   "day": 252,
   "questions": [
    {
-    "q": "Segundo Romanos 14:12, a quem cada um dará conta de si mesmo?",
+    "q": "Diante de qual rei Paulo fez sua defesa em Atos 26?",
     "options": [
-     "Ao rei",
-     "A Deus",
-     "Aos apóstolos",
-     "Aos pais"
+     "Herodes",
+     "Agripa",
+     "César",
+     "Davi"
     ],
     "answer": 1,
-    "ref": "Romanos 14:12"
+    "ref": "Atos 26:2"
    },
    {
-    "q": "Quem era Febe, recomendada por Paulo em Romanos 16?",
+    "q": "De que grupo religioso Paulo disse que era?",
     "options": [
-     "Uma rainha",
-     "Uma profetisa de Roma",
-     "Mãe de Timóteo",
-     "Serva da igreja em Cencreia"
-    ],
-    "answer": 3,
-    "ref": "Romanos 16:1"
-   },
-   {
-    "q": "Qual casal Paulo chama de seus cooperadores em Romanos 16:3?",
-    "options": [
-     "Priscila e Áquila",
-     "Ananias e Safira",
-     "Zacarias e Isabel",
-     "Eunice e Lóide"
-    ],
-    "answer": 0,
-    "ref": "Romanos 16:3"
-   },
-   {
-    "q": "Em 1ª Coríntios 1, além de Paulo, quais nomes os coríntios usavam para se dividir?",
-    "options": [
-     "Tiago e João",
-     "Timóteo e Tito",
-     "Apolo e Cefas",
-     "Silas e Marcos"
+     "Saduceu",
+     "Essênio",
+     "Fariseu",
+     "Zelote"
     ],
     "answer": 2,
-    "ref": "1ª Coríntios 1:12"
+    "ref": "Atos 26:5"
    },
    {
-    "q": "Quem Paulo diz ter batizado em Corinto, em 1ª Coríntios 1:14?",
+    "q": "Como Paulo descreveu a luz que viu no caminho?",
     "options": [
-     "Crispo e Gaio",
-     "Apolo e Cefas",
-     "Áquila e Priscila",
-     "Timóteo e Tito"
+     "Fraca como uma vela",
+     "Azul como o céu",
+     "Vermelha como fogo",
+     "Mais resplandecente que o sol"
+    ],
+    "answer": 3,
+    "ref": "Atos 26:13"
+   },
+   {
+    "q": "O que Festo gritou durante a defesa de Paulo?",
+    "options": [
+     "Você está louco, Paulo!",
+     "Prendam este homem!",
+     "Eu creio!",
+     "Silêncio!"
     ],
     "answer": 0,
-    "ref": "1ª Coríntios 1:14"
+    "ref": "Atos 26:24"
+   },
+   {
+    "q": "O que Agripa disse que Paulo quase o persuadiu a se tornar?",
+    "options": [
+     "Fariseu",
+     "Cristão",
+     "Profeta",
+     "Soldado"
+    ],
+    "answer": 1,
+    "ref": "Atos 26:28"
    }
   ]
  },
@@ -2703,59 +2703,59 @@
   "day": 253,
   "questions": [
    {
-    "q": "Segundo 1ª Coríntios 3, Paulo plantou, Apolo regou, e quem deu o crescimento?",
+    "q": "Como Paulo se apresenta no início de Romanos?",
     "options": [
-     "Pedro",
-     "Deus",
-     "Timóteo",
-     "A igreja"
+     "Rei de Israel",
+     "Servo de Jesus Cristo",
+     "Sumo sacerdote",
+     "Profeta de Roma"
     ],
     "answer": 1,
-    "ref": "1ª Coríntios 3:6"
+    "ref": "Romanos 1:1"
    },
    {
-    "q": "Em 1ª Coríntios 3:16, Paulo diz que os crentes são o quê de Deus?",
+    "q": "Para os irmãos de que cidade Paulo escreveu esta carta?",
     "options": [
-     "Exército",
-     "Rebanho",
-     "Livro",
-     "Santuário"
-    ],
-    "answer": 3,
-    "ref": "1ª Coríntios 3:16"
-   },
-   {
-    "q": "O que se requer dos despenseiros, segundo 1ª Coríntios 4:2?",
-    "options": [
-     "Que sejam ricos",
-     "Que sejam fiéis",
-     "Que sejam famosos",
-     "Que sejam fortes"
-    ],
-    "answer": 1,
-    "ref": "1ª Coríntios 4:2"
-   },
-   {
-    "q": "Segundo 1ª Coríntios 5, um pouco de fermento leveda o quê?",
-    "options": [
-     "Toda a massa",
-     "Só um pão",
-     "Nada",
-     "A farinha seca"
-    ],
-    "answer": 0,
-    "ref": "1ª Coríntios 5:6"
-   },
-   {
-    "q": "Segundo 1ª Coríntios 7:19, o que realmente importa?",
-    "options": [
-     "Ser circuncidado",
-     "Ser rico",
-     "Observar as ordenanças de Deus",
-     "Ter muitos filhos"
+     "Corinto",
+     "Éfeso",
+     "Roma",
+     "Filipos"
     ],
     "answer": 2,
-    "ref": "1ª Coríntios 7:19"
+    "ref": "Romanos 1:7"
+   },
+   {
+    "q": "Do que Paulo disse que não se envergonha?",
+    "options": [
+     "Do evangelho",
+     "De suas viagens",
+     "De suas cadeias",
+     "De sua família"
+    ],
+    "answer": 0,
+    "ref": "Romanos 1:16"
+   },
+   {
+    "q": "Segundo Romanos 1:17, como viverá o justo?",
+    "options": [
+     "Pelas obras",
+     "Pela lei",
+     "Pela força",
+     "Pela fé"
+    ],
+    "answer": 3,
+    "ref": "Romanos 1:17"
+   },
+   {
+    "q": "Desde quando os atributos invisíveis de Deus podem ser percebidos?",
+    "options": [
+     "Desde o dilúvio",
+     "Desde a criação do mundo",
+     "Desde Moisés",
+     "Desde o templo"
+    ],
+    "answer": 1,
+    "ref": "Romanos 1:20"
    }
   ]
  },
@@ -2763,59 +2763,59 @@
   "day": 254,
   "questions": [
    {
-    "q": "Na corrida do estádio, quantos recebem o prêmio, segundo 1ª Coríntios 9?",
+    "q": "Como Paulo pede que apresentemos nossos corpos a Deus?",
     "options": [
-     "Todos",
-     "Três",
-     "Só um",
-     "Dez"
-    ],
-    "answer": 2,
-    "ref": "1ª Coríntios 9:24"
-   },
-   {
-    "q": "Segundo a lei citada em 1ª Coríntios 9:9, de que animal não se deve atar a boca?",
-    "options": [
-     "O jumento",
-     "O cavalo",
-     "O camelo",
-     "O boi"
-    ],
-    "answer": 3,
-    "ref": "1ª Coríntios 9:9"
-   },
-   {
-    "q": "Segundo 1ª Coríntios 10:4, quem era a pedra que seguia o povo?",
-    "options": [
-     "Cristo",
-     "Moisés",
-     "Arão",
-     "O anjo"
+     "Como sacrifício vivo",
+     "Como templo de pedra",
+     "Como servos cansados",
+     "Como soldados"
     ],
     "answer": 0,
-    "ref": "1ª Coríntios 10:4"
+    "ref": "Romanos 12:1"
    },
    {
-    "q": "Segundo 1ª Coríntios 10:31, fazemos tudo para quê?",
+    "q": "Segundo Romanos 12:5, nós que somos muitos formamos o quê em Cristo?",
     "options": [
-     "Para ficarmos ricos",
-     "Para a glória de Deus",
-     "Para agradar aos homens",
-     "Para sermos famosos"
+     "Muitas igrejas",
+     "Um só corpo",
+     "Um exército",
+     "Uma família rica"
     ],
     "answer": 1,
-    "ref": "1ª Coríntios 10:31"
+    "ref": "Romanos 12:5"
    },
    {
-    "q": "Na Ceia, Jesus disse: \"Fazei isto em ... de mim\".",
+    "q": "Segundo Paulo, o que fazer se o inimigo tiver fome?",
     "options": [
-     "Honra",
-     "Nome",
-     "Memória",
-     "Lugar"
+     "Ignorá-lo",
+     "Fugir dele",
+     "Dar-lhe de comer",
+     "Vingar-se"
     ],
     "answer": 2,
-    "ref": "1ª Coríntios 11:24"
+    "ref": "Romanos 12:20"
+   },
+   {
+    "q": "Como Paulo diz que devemos vencer o mal?",
+    "options": [
+     "Com a espada",
+     "Com raiva",
+     "Com silêncio",
+     "Com o bem"
+    ],
+    "answer": 3,
+    "ref": "Romanos 12:21"
+   },
+   {
+    "q": "Segundo Romanos 13:10, o cumprimento da lei é o quê?",
+    "options": [
+     "O amor",
+     "O jejum",
+     "O sacrifício",
+     "A riqueza"
+    ],
+    "answer": 0,
+    "ref": "Romanos 13:10"
    }
   ]
  },
@@ -2823,29 +2823,111 @@
   "day": 255,
   "questions": [
    {
-    "q": "Em 1ª Coríntios 12:12, o que é um só e tem muitos membros?",
+    "q": "Diante de que tribunal todos nós compareceremos?",
     "options": [
-     "O corpo",
-     "O exército",
-     "A casa",
-     "A árvore"
+     "De César",
+     "Do Sinédrio",
+     "De Deus",
+     "Dos anjos"
+    ],
+    "answer": 2,
+    "ref": "Romanos 14:10"
+   },
+   {
+    "q": "Segundo Romanos 14:17, o Reino de Deus é justiça, paz e...?",
+    "options": [
+     "Riqueza",
+     "Alegria no Espírito Santo",
+     "Comida farta",
+     "Poder"
+    ],
+    "answer": 1,
+    "ref": "Romanos 14:17"
+   },
+   {
+    "q": "Para que foi escrito tudo o que foi escrito no passado?",
+    "options": [
+     "Para nosso ensino",
+     "Para os reis",
+     "Para os sacerdotes",
+     "Para ser guardado"
     ],
     "answer": 0,
+    "ref": "Romanos 15:4"
+   },
+   {
+    "q": "Para que país Paulo planejava ir passando por Roma?",
+    "options": [
+     "Egito",
+     "Grécia",
+     "Arábia",
+     "Espanha"
+    ],
+    "answer": 3,
+    "ref": "Romanos 15:24"
+   },
+   {
+    "q": "A favor de quem foi feita a coleta da Macedônia e da Acaia?",
+    "options": [
+     "Dos apóstolos",
+     "Dos pobres entre os santos de Jerusalém",
+     "Dos soldados romanos",
+     "Da igreja de Roma"
+    ],
+    "answer": 1,
+    "ref": "Romanos 15:26"
+   }
+  ]
+ },
+ {
+  "day": 256,
+  "questions": [
+   {
+    "q": "Segundo Paulo, o corpo é um só, mas tem o quê?",
+    "options": [
+     "Uma cabeça só",
+     "Muitos membros",
+     "Dois corações",
+     "Nenhum membro"
+    ],
+    "answer": 1,
     "ref": "1ª Coríntios 12:12"
    },
    {
-    "q": "Segundo 1ª Coríntios 13:4, o amor é paciente e...",
+    "q": "O que acontece com os membros quando um membro sofre?",
+    "options": [
+     "Todos sofrem juntos",
+     "Ninguém percebe",
+     "Os outros se alegram",
+     "Ele é cortado"
+    ],
+    "answer": 0,
+    "ref": "1ª Coríntios 12:26"
+   },
+   {
+    "q": "Sem amor, quem fala línguas de anjos é como o quê?",
+    "options": [
+     "Uma harpa suave",
+     "Uma flauta",
+     "Um bronze que ressoa",
+     "Um trovão"
+    ],
+    "answer": 2,
+    "ref": "1ª Coríntios 13:1"
+   },
+   {
+    "q": "Segundo 1ª Coríntios 13:4, o amor é paciente e...?",
     "options": [
      "Orgulhoso",
      "Ciumento",
-     "Vaidoso",
+     "Apressado",
      "Benigno"
     ],
     "answer": 3,
     "ref": "1ª Coríntios 13:4"
    },
    {
-    "q": "Entre fé, esperança e amor, qual é o maior?",
+    "q": "Entre a fé, a esperança e o amor, qual é o maior?",
     "options": [
      "A fé",
      "A esperança",
@@ -2854,88 +2936,6 @@
     ],
     "answer": 2,
     "ref": "1ª Coríntios 13:13"
-   },
-   {
-    "q": "Segundo 1ª Coríntios 14:33, Deus não é Deus de confusão, mas de quê?",
-    "options": [
-     "De guerra",
-     "De paz",
-     "De silêncio",
-     "De medo"
-    ],
-    "answer": 1,
-    "ref": "1ª Coríntios 14:33"
-   },
-   {
-    "q": "Jesus ressuscitado apareceu de uma vez a mais de quantos irmãos?",
-    "options": [
-     "Cem",
-     "Doze",
-     "Mil",
-     "Quinhentos"
-    ],
-    "answer": 3,
-    "ref": "1ª Coríntios 15:6"
-   }
-  ]
- },
- {
-  "day": 256,
-  "questions": [
-   {
-    "q": "Em que dia os coríntios deviam separar sua oferta para a coleta?",
-    "options": [
-     "No sábado",
-     "No primeiro dia da semana",
-     "No fim do mês",
-     "Na Páscoa"
-    ],
-    "answer": 1,
-    "ref": "1ª Coríntios 16:2"
-   },
-   {
-    "q": "Quem escreve a 2ª Carta aos Coríntios junto com Paulo?",
-    "options": [
-     "Timóteo",
-     "Silas",
-     "Tito",
-     "Lucas"
-    ],
-    "answer": 0,
-    "ref": "2ª Coríntios 1:1"
-   },
-   {
-    "q": "Paulo diz que os coríntios eram uma carta escrita não com tinta, mas com o quê?",
-    "options": [
-     "Com sangue",
-     "Com ouro",
-     "Com o Espírito do Deus vivo",
-     "Com fogo"
-    ],
-    "answer": 2,
-    "ref": "2ª Coríntios 3:3"
-   },
-   {
-    "q": "Em 2ª Coríntios 4:7, temos um tesouro em que tipo de vasos?",
-    "options": [
-     "De ouro",
-     "De prata",
-     "De cristal",
-     "De barro"
-    ],
-    "answer": 3,
-    "ref": "2ª Coríntios 4:7"
-   },
-   {
-    "q": "Segundo 2ª Coríntios 5:17, quem está em Cristo é o quê?",
-    "options": [
-     "Nova criação",
-     "Um anjo",
-     "Um profeta",
-     "Um juiz"
-    ],
-    "answer": 0,
-    "ref": "2ª Coríntios 5:17"
    }
   ]
  },
@@ -2943,59 +2943,59 @@
   "day": 257,
   "questions": [
    {
-    "q": "Segundo 2ª Coríntios 6:14, com quem não se deve ter jugo desigual?",
+    "q": "Em que dia Cristo ressuscitou, conforme as Escrituras?",
     "options": [
-     "Com os pobres",
-     "Com os incrédulos",
-     "Com os irmãos",
-     "Com os mais velhos"
-    ],
-    "answer": 1,
-    "ref": "2ª Coríntios 6:14"
-   },
-   {
-    "q": "Segundo 2ª Coríntios 9:7, Deus ama a quem dá de que forma?",
-    "options": [
-     "Com tristeza",
-     "Por obrigação",
-     "Com alegria",
-     "Em segredo"
-    ],
-    "answer": 2,
-    "ref": "2ª Coríntios 9:7"
-   },
-   {
-    "q": "Quantas vezes Paulo recebeu dos judeus quarenta açoites menos um?",
-    "options": [
-     "Duas",
-     "Três",
-     "Sete",
-     "Cinco"
-    ],
-    "answer": 3,
-    "ref": "2ª Coríntios 11:24"
-   },
-   {
-    "q": "Quantas vezes Paulo sofreu naufrágio, segundo 2ª Coríntios 11?",
-    "options": [
-     "Três",
-     "Uma",
-     "Cinco",
-     "Sete"
+     "No terceiro dia",
+     "No sétimo dia",
+     "No primeiro dia",
+     "No quadragésimo dia"
     ],
     "answer": 0,
-    "ref": "2ª Coríntios 11:25"
+    "ref": "1ª Coríntios 15:4"
    },
    {
-    "q": "Como Paulo se livrou das mãos de seus inimigos em Damasco?",
+    "q": "Por quantos irmãos de uma vez Cristo ressuscitado foi visto?",
     "options": [
-     "Disfarçado de soldado",
-     "Num barco",
-     "Descido num cesto pela janela do muro",
-     "Num carro"
+     "Doze",
+     "Setenta",
+     "Cento e vinte",
+     "Mais de quinhentos"
+    ],
+    "answer": 3,
+    "ref": "1ª Coríntios 15:6"
+   },
+   {
+    "q": "Qual é o último inimigo a ser destruído?",
+    "options": [
+     "O pecado",
+     "A morte",
+     "A doença",
+     "O medo"
+    ],
+    "answer": 1,
+    "ref": "1ª Coríntios 15:26"
+   },
+   {
+    "q": "Segundo Paulo, o que corrompe os bons costumes?",
+    "options": [
+     "As conversas ruins",
+     "O trabalho",
+     "O estudo",
+     "As viagens"
+    ],
+    "answer": 0,
+    "ref": "1ª Coríntios 15:33"
+   },
+   {
+    "q": "Ao som de quê os mortos ressuscitarão incorruptíveis?",
+    "options": [
+     "De uma harpa",
+     "De um sino",
+     "Da última trombeta",
+     "De um trovão"
     ],
     "answer": 2,
-    "ref": "2ª Coríntios 11:33"
+    "ref": "1ª Coríntios 15:52"
    }
   ]
  },
@@ -3003,59 +3003,59 @@
   "day": 258,
   "questions": [
    {
-    "q": "O que foi dado a Paulo para que ele não se exaltasse?",
+    "q": "Segundo Gálatas 5:16, como devemos andar?",
     "options": [
-     "Uma coroa",
-     "Um espinho na carne",
-     "Uma vara",
-     "Uma prisão"
-    ],
-    "answer": 1,
-    "ref": "2ª Coríntios 12:7"
-   },
-   {
-    "q": "O que o Senhor respondeu a Paulo em 2ª Coríntios 12:9?",
-    "options": [
-     "Tu serás curado",
-     "Vai para Roma",
-     "Espera mais um ano",
-     "A minha graça te basta"
-    ],
-    "answer": 3,
-    "ref": "2ª Coríntios 12:9"
-   },
-   {
-    "q": "Quantos dias Paulo ficou com Pedro em Jerusalém, segundo Gálatas 1?",
-    "options": [
-     "Quinze",
-     "Três",
-     "Quarenta",
-     "Sete"
+     "No Espírito",
+     "Na lei",
+     "Sozinhos",
+     "Com pressa"
     ],
     "answer": 0,
-    "ref": "Gálatas 1:18"
+    "ref": "Gálatas 5:16"
    },
    {
-    "q": "Em que cidade Paulo confrontou Pedro face a face?",
+    "q": "Qual destes faz parte do fruto do Espírito?",
     "options": [
-     "Jerusalém",
-     "Roma",
-     "Antioquia",
-     "Corinto"
+     "Inveja",
+     "Ira",
+     "Ciúmes",
+     "Alegria"
     ],
-    "answer": 2,
-    "ref": "Gálatas 2:11"
+    "answer": 3,
+    "ref": "Gálatas 5:22"
    },
    {
-    "q": "Segundo Gálatas 3:28, como são todos em Cristo Jesus?",
+    "q": "Levando as cargas uns dos outros, cumprimos a lei de quem?",
     "options": [
-     "Divididos",
-     "Um",
-     "Diferentes",
-     "Escravos"
+     "De Moisés",
+     "De Cristo",
+     "De César",
+     "Dos fariseus"
     ],
     "answer": 1,
-    "ref": "Gálatas 3:28"
+    "ref": "Gálatas 6:2"
+   },
+   {
+    "q": "Segundo Gálatas 6:7, o que o homem colherá?",
+    "options": [
+     "Mais do que plantou",
+     "Nada",
+     "Tudo o que semear",
+     "Só o que pedir"
+    ],
+    "answer": 2,
+    "ref": "Gálatas 6:7"
+   },
+   {
+    "q": "Do que não devemos nos cansar, segundo Gálatas 6:9?",
+    "options": [
+     "De fazer o bem",
+     "De dormir",
+     "De comer",
+     "De viajar"
+    ],
+    "answer": 0,
+    "ref": "Gálatas 6:9"
    }
   ]
  },
@@ -3063,59 +3063,59 @@
   "day": 259,
   "questions": [
    {
-    "q": "Segundo Gálatas 4, quantos filhos Abraão teve, um da escrava e outro da livre?",
+    "q": "Qual é o primeiro mandamento com promessa, segundo Efésios 6?",
     "options": [
-     "Um",
-     "Três",
-     "Doze",
-     "Dois"
-    ],
-    "answer": 3,
-    "ref": "Gálatas 4:22"
-   },
-   {
-    "q": "Qual destes é citado como fruto do Espírito em Gálatas 5:22?",
-    "options": [
-     "Riqueza",
-     "Fama",
-     "Alegria",
-     "Força física"
-    ],
-    "answer": 2,
-    "ref": "Gálatas 5:22"
-   },
-   {
-    "q": "Segundo Gálatas 6:7, tudo o que o homem semear, isso também...",
-    "options": [
-     "Colherá",
-     "Esquecerá",
-     "Venderá",
-     "Perderá"
-    ],
-    "answer": 0,
-    "ref": "Gálatas 6:7"
-   },
-   {
-    "q": "A carta aos Efésios foi escrita aos santos de qual cidade?",
-    "options": [
-     "Corinto",
-     "Éfeso",
-     "Roma",
-     "Filipos"
+     "Não furtarás",
+     "Honra teu pai e tua mãe",
+     "Não matarás",
+     "Guarda o sábado"
     ],
     "answer": 1,
-    "ref": "Efésios 1:1"
+    "ref": "Efésios 6:2"
    },
    {
-    "q": "Segundo Efésios 2:8, somos salvos pela graça, por meio de quê?",
+    "q": "Na armadura de Deus, qual é a espada do Espírito?",
     "options": [
-     "Das obras",
-     "Da lei",
-     "Da fé",
-     "Do dinheiro"
+     "A palavra de Deus",
+     "A oração",
+     "A fé",
+     "A verdade"
+    ],
+    "answer": 0,
+    "ref": "Efésios 6:17"
+   },
+   {
+    "q": "Com o escudo da fé podemos apagar o quê?",
+    "options": [
+     "As velas",
+     "O fogo do altar",
+     "As tochas",
+     "Os dardos inflamados do maligno"
+    ],
+    "answer": 3,
+    "ref": "Efésios 6:16"
+   },
+   {
+    "q": "Segundo Colossenses 3:14, acima de tudo devemos nos revestir de quê?",
+    "options": [
+     "De ouro",
+     "De coragem",
+     "De amor",
+     "De força"
     ],
     "answer": 2,
-    "ref": "Efésios 2:8"
+    "ref": "Colossenses 3:14"
+   },
+   {
+    "q": "Como devemos fazer tudo, segundo Colossenses 3:23?",
+    "options": [
+     "Com pressa",
+     "De todo o coração, como para o Senhor",
+     "Só quando alguém vê",
+     "Para ser elogiado"
+    ],
+    "answer": 1,
+    "ref": "Colossenses 3:23"
    }
   ]
  },
@@ -3123,59 +3123,59 @@
   "day": 260,
   "questions": [
    {
-    "q": "Segundo Efésios 4:26, o que não deve acontecer sobre a nossa ira?",
+    "q": "Com o que o Senhor descerá dos céus, segundo 1ª Tessalonicenses 4?",
     "options": [
-     "Que o sol se ponha",
-     "Que a chuva caia",
-     "Que alguém veja",
-     "Que ela seja dita"
+     "Com a trombeta de Deus",
+     "Com um carro de fogo",
+     "Com uma espada",
+     "Com um cajado"
     ],
     "answer": 0,
-    "ref": "Efésios 4:26"
+    "ref": "1ª Tessalonicenses 4:16"
    },
    {
-    "q": "A quem os filhos devem obedecer, segundo Efésios 6:1?",
+    "q": "Como virá o dia do Senhor?",
     "options": [
-     "Aos professores",
-     "Aos amigos",
-     "Aos reis",
-     "Aos pais"
-    ],
-    "answer": 3,
-    "ref": "Efésios 6:1"
-   },
-   {
-    "q": "Na armadura de Deus, o que apaga os dardos inflamados do maligno?",
-    "options": [
-     "O capacete",
-     "O escudo da fé",
-     "A couraça",
-     "O cinto"
+     "Como a chuva da tarde",
+     "Como um ladrão na noite",
+     "Como um rei em festa",
+     "Como um barco no mar"
     ],
     "answer": 1,
-    "ref": "Efésios 6:16"
+    "ref": "1ª Tessalonicenses 5:2"
    },
    {
-    "q": "Na armadura de Deus, o que é a espada do Espírito?",
+    "q": "De quem Paulo diz que todos somos filhos, em 1ª Tessalonicenses 5:5?",
     "options": [
-     "A oração",
-     "A fé",
-     "A palavra de Deus",
-     "A paz"
+     "Da noite",
+     "Das trevas",
+     "Da luz e do dia",
+     "Do mundo"
     ],
     "answer": 2,
-    "ref": "Efésios 6:17"
+    "ref": "1ª Tessalonicenses 5:5"
    },
    {
-    "q": "Filipenses 1:21: \"Para mim, viver é Cristo, e morrer é...\"",
+    "q": "Segundo 1ª Tessalonicenses 5:17, como devemos orar?",
     "options": [
-     "Perda",
-     "Fim",
-     "Medo",
-     "Lucro"
+     "Só aos sábados",
+     "Uma vez ao dia",
+     "Só em perigo",
+     "Sem parar"
     ],
     "answer": 3,
-    "ref": "Filipenses 1:21"
+    "ref": "1ª Tessalonicenses 5:17"
+   },
+   {
+    "q": "O que devemos fazer em tudo, segundo 1ª Tessalonicenses 5:18?",
+    "options": [
+     "Dar graças",
+     "Reclamar",
+     "Ter medo",
+     "Calar"
+    ],
+    "answer": 0,
+    "ref": "1ª Tessalonicenses 5:18"
    }
   ]
  },
@@ -3183,59 +3183,59 @@
   "day": 261,
   "questions": [
    {
-    "q": "Qual irmão e cooperador Paulo enviou de volta aos filipenses?",
+    "q": "Segundo 2ª Tessalonicenses 2:3, o que virá antes daquele dia?",
     "options": [
-     "Epafrodito",
-     "Tíquico",
-     "Onésimo",
-     "Demas"
+     "A paz",
+     "A apostasia",
+     "A colheita",
+     "O dilúvio"
+    ],
+    "answer": 1,
+    "ref": "2ª Tessalonicenses 2:3"
+   },
+   {
+    "q": "Como é chamado o homem da iniquidade em 2ª Tessalonicenses 2:3?",
+    "options": [
+     "Filho da perdição",
+     "Filho do trovão",
+     "Filho da luz",
+     "Filho de Davi"
     ],
     "answer": 0,
-    "ref": "Filipenses 2:25"
+    "ref": "2ª Tessalonicenses 2:3"
    },
    {
-    "q": "De qual tribo de Israel Paulo diz ser?",
+    "q": "Onde o homem da iniquidade se assentará, ostentando-se como Deus?",
     "options": [
-     "Judá",
-     "Levi",
-     "Benjamim",
-     "Dã"
+     "Num trono em Roma",
+     "Num monte alto",
+     "No santuário de Deus",
+     "No meio do mar"
     ],
     "answer": 2,
-    "ref": "Filipenses 3:5"
+    "ref": "2ª Tessalonicenses 2:4"
    },
    {
-    "q": "Segundo Filipenses 4:4, como devemos nos alegrar no Senhor?",
+    "q": "Por que os que perecem serão enganados, segundo 2ª Tessalonicenses 2:10?",
     "options": [
-     "Às vezes",
-     "Sempre",
-     "Só nas festas",
-     "Só aos sábados"
-    ],
-    "answer": 1,
-    "ref": "Filipenses 4:4"
-   },
-   {
-    "q": "Paulo diz: \"Posso todas as coisas por meio daquele que me dá...\"",
-    "options": [
-     "Ordens",
-     "Comida",
-     "Dinheiro",
-     "Força"
+     "Porque eram pobres",
+     "Porque não sabiam ler",
+     "Porque moravam longe",
+     "Porque não acolheram o amor da verdade"
     ],
     "answer": 3,
-    "ref": "Filipenses 4:13"
+    "ref": "2ª Tessalonicenses 2:10"
    },
    {
-    "q": "Com quem os colossenses aprenderam a graça de Deus?",
+    "q": "O que Paulo pede que os irmãos façam em 2ª Tessalonicenses 2:15?",
     "options": [
-     "Com Pedro",
-     "Com Epáfras",
-     "Com Apolo",
-     "Com Barnabé"
+     "Que fujam para o deserto",
+     "Que permaneçam firmes",
+     "Que parem de trabalhar",
+     "Que vendam tudo"
     ],
     "answer": 1,
-    "ref": "Colossenses 1:7"
+    "ref": "2ª Tessalonicenses 2:15"
    }
   ]
  },
@@ -3243,59 +3243,59 @@
   "day": 262,
   "questions": [
    {
-    "q": "Como Paulo chama Lucas em Colossenses 4?",
+    "q": "Segundo 1ª Timóteo 4:4, como é tudo o que Deus criou?",
     "options": [
-     "O médico amado",
-     "O pescador",
-     "O escriba",
-     "O soldado"
+     "Bom",
+     "Inútil",
+     "Perigoso",
+     "Velho"
     ],
     "answer": 0,
-    "ref": "Colossenses 4:14"
+    "ref": "1ª Timóteo 4:4"
    },
    {
-    "q": "Qual irmão fiel e amado foi com Tíquico até os colossenses?",
+    "q": "O que Paulo disse para ninguém desprezar em Timóteo?",
     "options": [
-     "Demas",
-     "Marcos",
-     "Onésimo",
-     "Silas"
+     "Sua família",
+     "Sua cidade",
+     "Sua juventude",
+     "Sua pobreza"
     ],
     "answer": 2,
-    "ref": "Colossenses 4:9"
+    "ref": "1ª Timóteo 4:12"
    },
    {
-    "q": "Segundo 1ª Tessalonicenses 4:16, quem ressuscitará primeiro?",
+    "q": "Segundo 1ª Timóteo 6:7, o que podemos levar deste mundo?",
     "options": [
-     "Os anjos",
-     "Os reis",
-     "Os vivos",
-     "Os mortos em Cristo"
+     "Nossas roupas",
+     "Nosso dinheiro",
+     "Nossa casa",
+     "Nada"
     ],
     "answer": 3,
-    "ref": "1ª Tessalonicenses 4:16"
+    "ref": "1ª Timóteo 6:7"
    },
    {
-    "q": "Como virá o dia do Senhor, segundo 1ª Tessalonicenses 5:2?",
+    "q": "O que é a raiz de todos os males, segundo Paulo?",
     "options": [
-     "Como ladrão de noite",
-     "Como chuva mansa",
-     "Com aviso prévio",
-     "Ao meio-dia"
-    ],
-    "answer": 0,
-    "ref": "1ª Tessalonicenses 5:2"
-   },
-   {
-    "q": "Segundo 1ª Tessalonicenses 5:17, como devemos orar?",
-    "options": [
-     "Só de manhã",
-     "Sem parar",
-     "Uma vez por semana",
-     "Só no templo"
+     "A preguiça",
+     "O amor ao dinheiro",
+     "A tristeza",
+     "A pobreza"
     ],
     "answer": 1,
-    "ref": "1ª Tessalonicenses 5:17"
+    "ref": "1ª Timóteo 6:10"
+   },
+   {
+    "q": "Que combate Paulo manda Timóteo lutar?",
+    "options": [
+     "O bom combate da fé",
+     "A guerra contra Roma",
+     "A luta contra os vizinhos",
+     "A disputa de palavras"
+    ],
+    "answer": 0,
+    "ref": "1ª Timóteo 6:12"
    }
   ]
  },
@@ -3303,59 +3303,59 @@
   "day": 263,
   "questions": [
    {
-    "q": "Segundo 2ª Tessalonicenses 3:10, quem não quer trabalhar também não deve...",
+    "q": "Como serão os últimos dias, segundo 2ª Timóteo 3:1?",
     "options": [
-     "Dormir",
-     "Falar",
-     "Comer",
-     "Viajar"
-    ],
-    "answer": 2,
-    "ref": "2ª Tessalonicenses 3:10"
-   },
-   {
-    "q": "Como Paulo chama Timóteo em 1ª Timóteo 1:2?",
-    "options": [
-     "Seu verdadeiro filho na fé",
-     "Seu irmão mais velho",
-     "Seu mestre",
-     "Seu servo"
-    ],
-    "answer": 0,
-    "ref": "1ª Timóteo 1:2"
-   },
-   {
-    "q": "Segundo 1ª Timóteo 1:15, Cristo veio ao mundo para salvar quem?",
-    "options": [
-     "Os justos",
-     "Os sábios",
-     "Os anjos",
-     "Os pecadores"
-    ],
-    "answer": 3,
-    "ref": "1ª Timóteo 1:15"
-   },
-   {
-    "q": "Segundo 1ª Timóteo 2:5, quantos mediadores há entre Deus e os homens?",
-    "options": [
-     "Muitos",
-     "Um só",
-     "Dois",
-     "Doze"
+     "Tempos de festa",
+     "Tempos difíceis",
+     "Tempos de descanso",
+     "Tempos de fartura"
     ],
     "answer": 1,
-    "ref": "1ª Timóteo 2:5"
+    "ref": "2ª Timóteo 3:1"
    },
    {
-    "q": "O que Paulo diz a Timóteo em 1ª Timóteo 4:12?",
+    "q": "Quem resistiu a Moisés, segundo 2ª Timóteo 3:8?",
     "options": [
-     "Fuja de todos",
-     "Fique calado",
-     "Ninguém despreze a sua juventude",
-     "Volte para casa"
+     "Faraó e Arão",
+     "Coré e Datã",
+     "Janes e Jambres",
+     "Balaão e Balaque"
     ],
     "answer": 2,
-    "ref": "1ª Timóteo 4:12"
+    "ref": "2ª Timóteo 3:8"
+   },
+   {
+    "q": "Em quais cidades Paulo sofreu perseguições, segundo 2ª Timóteo 3:11?",
+    "options": [
+     "Antioquia, Icônio e Listra",
+     "Roma, Corinto e Atenas",
+     "Jerusalém, Jope e Lida",
+     "Éfeso, Mileto e Trôade"
+    ],
+    "answer": 0,
+    "ref": "2ª Timóteo 3:11"
+   },
+   {
+    "q": "Desde quando Timóteo conhecia as sagradas letras?",
+    "options": [
+     "Desde a velhice",
+     "Desde que conheceu Paulo",
+     "Desde o ano passado",
+     "Desde a infância"
+    ],
+    "answer": 3,
+    "ref": "2ª Timóteo 3:15"
+   },
+   {
+    "q": "Segundo 2ª Timóteo 3:16, toda a Escritura é inspirada por quem?",
+    "options": [
+     "Pelos anjos",
+     "Pelos reis",
+     "Por Deus",
+     "Pelos sábios"
+    ],
+    "answer": 2,
+    "ref": "2ª Timóteo 3:16"
    }
   ]
  },
@@ -3363,59 +3363,59 @@
   "day": 264,
   "questions": [
    {
-    "q": "Segundo 1ª Timóteo 6:10, o amor ao dinheiro é raiz de quê?",
+    "q": "Segundo Hebreus 11:1, a fé é a certeza de quê?",
     "options": [
-     "De todos os males",
-     "Da sabedoria",
-     "Da alegria",
-     "Da paz"
+     "Das coisas que se esperam",
+     "Das coisas que já temos",
+     "Do dinheiro guardado",
+     "Das coisas do passado"
     ],
     "answer": 0,
-    "ref": "1ª Timóteo 6:10"
+    "ref": "Hebreus 11:1"
    },
    {
-    "q": "Por que Paulo aconselhou Timóteo a usar um pouco de vinho?",
+    "q": "Quem foi levado por Deus sem ver a morte?",
     "options": [
-     "Para festas",
-     "Por causa do estômago",
-     "Para a Ceia",
-     "Para dormir"
-    ],
-    "answer": 1,
-    "ref": "1ª Timóteo 5:23"
-   },
-   {
-    "q": "Como se chamavam a avó e a mãe de Timóteo?",
-    "options": [
-     "Maria e Marta",
-     "Priscila e Lídia",
-     "Lóide e Eunice",
-     "Ana e Isabel"
+     "Elias",
+     "Moisés",
+     "Enoque",
+     "Abel"
     ],
     "answer": 2,
-    "ref": "2ª Timóteo 1:5"
+    "ref": "Hebreus 11:5"
    },
    {
-    "q": "Desde quando Timóteo conhecia as Sagradas Escrituras?",
+    "q": "O que Noé preparou pela fé para salvar sua família?",
     "options": [
-     "Desde a juventude",
-     "Desde que conheceu Paulo",
-     "Desde o batismo",
-     "Desde a infância"
-    ],
-    "answer": 3,
-    "ref": "2ª Timóteo 3:15"
-   },
-   {
-    "q": "Para onde foi Demas, que abandonou Paulo por amar o presente século?",
-    "options": [
-     "Roma",
-     "Tessalônica",
-     "Éfeso",
-     "Corinto"
+     "Uma torre",
+     "Uma arca",
+     "Uma tenda",
+     "Um altar"
     ],
     "answer": 1,
-    "ref": "2ª Timóteo 4:10"
+    "ref": "Hebreus 11:7"
+   },
+   {
+    "q": "Por quantos dias os muros de Jericó foram cercados antes de ruírem?",
+    "options": [
+     "Três",
+     "Quarenta",
+     "Doze",
+     "Sete"
+    ],
+    "answer": 3,
+    "ref": "Hebreus 11:30"
+   },
+   {
+    "q": "Quem acolheu em paz os espiões e não foi condenada?",
+    "options": [
+     "Raabe",
+     "Rute",
+     "Débora",
+     "Ester"
+    ],
+    "answer": 0,
+    "ref": "Hebreus 11:31"
    }
   ]
  },
@@ -3423,59 +3423,59 @@
   "day": 265,
   "questions": [
    {
-    "q": "Em que ilha Paulo deixou Tito para organizar as igrejas?",
+    "q": "O que colocamos na boca dos cavalos para que nos obedeçam?",
     "options": [
-     "Creta",
-     "Chipre",
-     "Malta",
-     "Patmos"
+     "Freios",
+     "Cordas",
+     "Sinos",
+     "Flores"
     ],
     "answer": 0,
-    "ref": "Tito 1:5"
+    "ref": "Tiago 3:3"
    },
    {
-    "q": "Por qual filho, gerado em suas prisões, Paulo intercede a Filemom?",
+    "q": "Por meio de que um navio grande é guiado, segundo Tiago 3?",
     "options": [
-     "Timóteo",
-     "Tíquico",
-     "Onésimo",
-     "Tito"
-    ],
-    "answer": 2,
-    "ref": "Filemom 1:10"
-   },
-   {
-    "q": "Quem foi fiel em toda a casa de Deus como servo, segundo Hebreus 3?",
-    "options": [
-     "Arão",
-     "Davi",
-     "Abraão",
-     "Moisés"
-    ],
-    "answer": 3,
-    "ref": "Hebreus 3:5"
-   },
-   {
-    "q": "Segundo Hebreus 1:14, o que são os anjos?",
-    "options": [
-     "Espíritos ministradores",
-     "Reis do céu",
-     "Homens antigos",
-     "Estrelas"
-    ],
-    "answer": 0,
-    "ref": "Hebreus 1:14"
-   },
-   {
-    "q": "Segundo Hebreus 4:12, a palavra de Deus é mais cortante que o quê?",
-    "options": [
-     "Um machado",
-     "Uma espada de dois gumes",
-     "Uma lança",
-     "Uma faca de pedra"
+     "Por uma vela",
+     "Por um pequeníssimo leme",
+     "Pelos remos",
+     "Por uma âncora"
     ],
     "answer": 1,
-    "ref": "Hebreus 4:12"
+    "ref": "Tiago 3:4"
+   },
+   {
+    "q": "Segundo Tiago 3:6, a língua também é o quê?",
+    "options": [
+     "Água",
+     "Pedra",
+     "Fogo",
+     "Vento"
+    ],
+    "answer": 2,
+    "ref": "Tiago 3:6"
+   },
+   {
+    "q": "Segundo Tiago, o que a videira não pode dar?",
+    "options": [
+     "Uvas",
+     "Folhas",
+     "Sombra",
+     "Figos"
+    ],
+    "answer": 3,
+    "ref": "Tiago 3:12"
+   },
+   {
+    "q": "Como é primeiramente a sabedoria que vem do alto?",
+    "options": [
+     "Pura",
+     "Rica",
+     "Rápida",
+     "Escondida"
+    ],
+    "answer": 0,
+    "ref": "Tiago 3:17"
    }
   ]
  },
@@ -3483,59 +3483,59 @@
   "day": 266,
   "questions": [
    {
-    "q": "Em Hebreus 5:12, do que os leitores precisavam, em vez de alimento sólido?",
+    "q": "Que coroa receberão os presbíteros quando o Supremo Pastor se manifestar?",
     "options": [
-     "Mel",
-     "Água",
-     "Leite",
-     "Vinho"
+     "Coroa de ouro",
+     "Coroa de espinhos",
+     "Coroa imarcescível da glória",
+     "Coroa de flores"
     ],
     "answer": 2,
-    "ref": "Hebreus 5:12"
+    "ref": "1ª Pedro 5:4"
    },
    {
-    "q": "Em Hebreus 6:19, a esperança é comparada a quê?",
+    "q": "A quem Deus dá graça, segundo 1ª Pedro 5:5?",
     "options": [
-     "Uma âncora da alma",
-     "Uma vela",
-     "Uma torre",
-     "Um escudo"
-    ],
-    "answer": 0,
-    "ref": "Hebreus 6:19"
-   },
-   {
-    "q": "Melquisedeque era rei de qual cidade?",
-    "options": [
-     "Jericó",
-     "Ur",
-     "Sodoma",
-     "Salém"
-    ],
-    "answer": 3,
-    "ref": "Hebreus 7:1"
-   },
-   {
-    "q": "O que Abraão deu a Melquisedeque?",
-    "options": [
-     "Um cordeiro",
-     "O dízimo de tudo",
-     "Sua espada",
-     "Um anel"
+     "Aos ricos",
+     "Aos humildes",
+     "Aos fortes",
+     "Aos sábios"
     ],
     "answer": 1,
-    "ref": "Hebreus 7:2"
+    "ref": "1ª Pedro 5:5"
    },
    {
-    "q": "Segundo Hebreus 9:4, o que havia na arca da aliança, além das tábuas?",
+    "q": "Segundo 1ª Pedro 5:7, o que devemos lançar sobre Deus?",
     "options": [
-     "Uma coroa e um cetro",
-     "Ouro e prata",
-     "O maná e a vara de Arão",
-     "Azeite e pão"
+     "Toda a nossa preocupação",
+     "Nossas pedras",
+     "Nossas redes",
+     "Nossas roupas"
     ],
-    "answer": 2,
-    "ref": "Hebreus 9:4"
+    "answer": 0,
+    "ref": "1ª Pedro 5:7"
+   },
+   {
+    "q": "Como o diabo anda em derredor, segundo 1ª Pedro 5:8?",
+    "options": [
+     "Como uma serpente",
+     "Como um lobo",
+     "Como um urso",
+     "Como um leão que ruge"
+    ],
+    "answer": 3,
+    "ref": "1ª Pedro 5:8"
+   },
+   {
+    "q": "Por meio de qual irmão fiel Pedro escreveu esta carta?",
+    "options": [
+     "Timóteo",
+     "Silvano",
+     "Tito",
+     "Lucas"
+    ],
+    "answer": 1,
+    "ref": "1ª Pedro 5:12"
    }
   ]
  },
@@ -3543,209 +3543,29 @@
   "day": 267,
   "questions": [
    {
-    "q": "Segundo Hebreus 11:1, a fé é a certeza das coisas que se...",
+    "q": "O que os escarnecedores dirão nos últimos dias?",
     "options": [
-     "Esperam",
-     "Compram",
-     "Esquecem",
-     "Temem"
+     "Onde está a promessa de sua vinda?",
+     "Vamos ao templo",
+     "Queremos a paz",
+     "Deus é bom"
     ],
     "answer": 0,
-    "ref": "Hebreus 11:1"
+    "ref": "2ª Pedro 3:4"
    },
    {
-    "q": "Pela fé, quem foi levado por Deus para não ver a morte, segundo Hebreus 11?",
+    "q": "Como o mundo daquela época pereceu?",
     "options": [
-     "Noé",
-     "Abel",
-     "Enoque",
-     "Isaque"
-    ],
-    "answer": 2,
-    "ref": "Hebreus 11:5"
-   },
-   {
-    "q": "Pela fé, que mulher não foi condenada com os incrédulos, por acolher os espiões?",
-    "options": [
-     "Rute",
-     "Débora",
-     "Sara",
-     "Raabe"
+     "Pelo fogo",
+     "Por uma guerra",
+     "Pela fome",
+     "Submerso nas águas do dilúvio"
     ],
     "answer": 3,
-    "ref": "Hebreus 11:31"
+    "ref": "2ª Pedro 3:6"
    },
    {
-    "q": "Em Hebreus 12:1, estamos rodeados por uma grande nuvem de quê?",
-    "options": [
-     "Anjos",
-     "Testemunhas",
-     "Inimigos",
-     "Pássaros"
-    ],
-    "answer": 1,
-    "ref": "Hebreus 12:1"
-   },
-   {
-    "q": "Segundo Hebreus 13:2, praticando a hospitalidade, alguns hospedaram quem?",
-    "options": [
-     "Reis",
-     "Profetas",
-     "Anjos",
-     "Apóstolos"
-    ],
-    "answer": 2,
-    "ref": "Hebreus 13:2"
-   }
-  ]
- },
- {
-  "day": 268,
-  "questions": [
-   {
-    "q": "Segundo Tiago 1:5, quem tem falta de sabedoria deve pedir a quem?",
-    "options": [
-     "Aos anciãos",
-     "A Deus",
-     "Aos mestres",
-     "Aos pais"
-    ],
-    "answer": 1,
-    "ref": "Tiago 1:5"
-   },
-   {
-    "q": "Segundo Tiago 2:26, como é a fé sem obras?",
-    "options": [
-     "Forte",
-     "Viva",
-     "Suficiente",
-     "Morta"
-    ],
-    "answer": 3,
-    "ref": "Tiago 2:26"
-   },
-   {
-    "q": "Em Tiago 3:6, a língua é comparada a quê?",
-    "options": [
-     "Fogo",
-     "Água",
-     "Vento",
-     "Pedra"
-    ],
-    "answer": 0,
-    "ref": "Tiago 3:6"
-   },
-   {
-    "q": "Quanto tempo ficou sem chover depois que Elias orou?",
-    "options": [
-     "Sete anos",
-     "Um ano",
-     "Três anos e seis meses",
-     "Quarenta dias"
-    ],
-    "answer": 2,
-    "ref": "Tiago 5:17"
-   },
-   {
-    "q": "Em 1ª Pedro 1:16, por que devemos ser santos?",
-    "options": [
-     "Porque Deus é santo",
-     "Para ficar famosos",
-     "Para ser ricos",
-     "Porque é fácil"
-    ],
-    "answer": 0,
-    "ref": "1ª Pedro 1:16"
-   }
-  ]
- },
- {
-  "day": 269,
-  "questions": [
-   {
-    "q": "Como crianças recém-nascidas, o que devemos desejar, segundo 1ª Pedro 2?",
-    "options": [
-     "Pão",
-     "Leite espiritual",
-     "Mel",
-     "Água"
-    ],
-    "answer": 1,
-    "ref": "1ª Pedro 2:2"
-   },
-   {
-    "q": "Quantas pessoas foram salvas na arca, segundo 1ª Pedro 3:20?",
-    "options": [
-     "Doze",
-     "Sete",
-     "Duas",
-     "Oito"
-    ],
-    "answer": 3,
-    "ref": "1ª Pedro 3:20"
-   },
-   {
-    "q": "Segundo 1ª Pedro 5:7, o que devemos lançar sobre Deus?",
-    "options": [
-     "Toda a nossa preocupação",
-     "Nossas riquezas",
-     "Nossas roupas",
-     "Nossos inimigos"
-    ],
-    "answer": 0,
-    "ref": "1ª Pedro 5:7"
-   },
-   {
-    "q": "Em 1ª Pedro 5:8, o diabo anda ao redor como qual animal?",
-    "options": [
-     "Serpente",
-     "Lobo",
-     "Leão que ruge",
-     "Urso"
-    ],
-    "answer": 2,
-    "ref": "1ª Pedro 5:8"
-   },
-   {
-    "q": "Segundo 2ª Pedro 1:21, os homens falaram da parte de Deus movidos por quem?",
-    "options": [
-     "Pelos reis",
-     "Pelo Espírito Santo",
-     "Pelos anjos",
-     "Pela própria vontade"
-    ],
-    "answer": 1,
-    "ref": "2ª Pedro 1:21"
-   }
-  ]
- },
- {
-  "day": 270,
-  "questions": [
-   {
-    "q": "Como 2ª Pedro 2:5 chama Noé?",
-    "options": [
-     "Pregador da justiça",
-     "Rei da terra",
-     "Construtor de cidades",
-     "Profeta do fogo"
-    ],
-    "answer": 0,
-    "ref": "2ª Pedro 2:5"
-   },
-   {
-    "q": "Segundo 2ª Pedro 2:16, quem falou com voz humana e refreou o profeta Balaão?",
-    "options": [
-     "Um anjo",
-     "Um rei",
-     "Um profeta",
-     "Um animal de carga mudo"
-    ],
-    "answer": 3,
-    "ref": "2ª Pedro 2:16"
-   },
-   {
-    "q": "Segundo 2ª Pedro 3:8, para o Senhor um dia é como quantos anos?",
+    "q": "Para o Senhor, um dia é como quantos anos?",
     "options": [
      "Cem anos",
      "Mil anos",
@@ -3756,70 +3576,179 @@
     "ref": "2ª Pedro 3:8"
    },
    {
-    "q": "Segundo 1ª João 1:9, o que acontece se confessarmos nossos pecados?",
+    "q": "Segundo a promessa, o que esperamos em 2ª Pedro 3:13?",
     "options": [
-     "Seremos castigados",
-     "Nada muda",
-     "Deus é fiel e justo para perdoar",
-     "Teremos que pagar"
+     "Uma cidade de ouro na terra",
+     "Um novo templo",
+     "Novos céus e nova terra",
+     "Um novo rei humano"
     ],
     "answer": 2,
-    "ref": "1ª João 1:9"
+    "ref": "2ª Pedro 3:13"
    },
    {
-    "q": "Segundo 1ª João 3:1, por causa do amor do Pai, somos chamados de quê?",
+    "q": "Em que Pedro pede que cresçamos no fim da carta?",
     "options": [
-     "Servos",
-     "Estrangeiros",
-     "Soldados",
-     "Filhos de Deus"
+     "Na graça e no conhecimento de Jesus",
+     "Em riqueza",
+     "Em força física",
+     "Em fama"
     ],
-    "answer": 3,
-    "ref": "1ª João 3:1"
+    "answer": 0,
+    "ref": "2ª Pedro 3:18"
    }
   ]
  },
  {
-  "day": 271,
+  "day": 268,
   "questions": [
+   {
+    "q": "Quem é nosso Advogado junto ao Pai, segundo 1ª João 2:1?",
+    "options": [
+     "Moisés",
+     "Pedro",
+     "Jesus Cristo, o Justo",
+     "Um anjo"
+    ],
+    "answer": 2,
+    "ref": "1ª João 2:1"
+   },
+   {
+    "q": "Como sabemos que conhecemos a Deus, segundo 1ª João 2:3?",
+    "options": [
+     "Se formos ricos",
+     "Se guardamos os seus mandamentos",
+     "Se morarmos perto do templo",
+     "Se tivermos muitos amigos"
+    ],
+    "answer": 1,
+    "ref": "1ª João 2:3"
+   },
+   {
+    "q": "Onde vive aquele que ama seu irmão?",
+    "options": [
+     "Na luz",
+     "Nas trevas",
+     "No deserto",
+     "No mar"
+    ],
+    "answer": 0,
+    "ref": "1ª João 2:10"
+   },
+   {
+    "q": "Quem permanece eternamente, segundo 1ª João 2:17?",
+    "options": [
+     "Quem ama o mundo",
+     "Quem é famoso",
+     "Quem tem muitos bens",
+     "Quem faz a vontade de Deus"
+    ],
+    "answer": 3,
+    "ref": "1ª João 2:17"
+   },
+   {
+    "q": "Qual é a promessa que Deus nos fez, segundo 1ª João 2:25?",
+    "options": [
+     "Riquezas",
+     "Uma terra fértil",
+     "A vida eterna",
+     "Um reino terreno"
+    ],
+    "answer": 2,
+    "ref": "1ª João 2:25"
+   }
+  ]
+ },
+ {
+  "day": 269,
+  "questions": [
+   {
+    "q": "Segundo 1ª João 4:1, o que devemos fazer com os espíritos?",
+    "options": [
+     "Crer em todos",
+     "Provar se procedem de Deus",
+     "Ignorá-los",
+     "Temê-los"
+    ],
+    "answer": 1,
+    "ref": "1ª João 4:1"
+   },
    {
     "q": "Segundo 1ª João 4:8, Deus é o quê?",
     "options": [
      "Amor",
-     "Distante",
-     "Bravo",
-     "Silencioso"
+     "Fogo",
+     "Silêncio",
+     "Distante"
     ],
     "answer": 0,
     "ref": "1ª João 4:8"
    },
    {
-    "q": "A quem foi escrita a 3ª carta de João?",
+    "q": "O que o amor perfeito expulsa?",
     "options": [
-     "A Timóteo",
-     "A Gaio",
-     "A Tito",
-     "A Filemom"
+     "A alegria",
+     "A paz",
+     "A esperança",
+     "O medo"
     ],
-    "answer": 1,
-    "ref": "3ª João 1:1"
+    "answer": 3,
+    "ref": "1ª João 4:18"
    },
    {
-    "q": "Segundo Judas 9, qual arcanjo disputava com o diabo pelo corpo de Moisés?",
+    "q": "Por que nós amamos a Deus, segundo 1ª João 4:19?",
     "options": [
-     "Gabriel",
-     "Rafael",
-     "Miguel",
-     "Uriel"
+     "Porque somos fortes",
+     "Porque é obrigação",
+     "Porque Ele nos amou primeiro",
+     "Porque temos medo"
     ],
     "answer": 2,
-    "ref": "Judas 1:9"
+    "ref": "1ª João 4:19"
    },
    {
-    "q": "Em que ilha João estava quando recebeu o Apocalipse?",
+    "q": "Qual é a vitória que vence o mundo, segundo 1ª João 5:4?",
     "options": [
-     "Creta",
+     "A nossa fé",
+     "A nossa força",
+     "O nosso dinheiro",
+     "A nossa sabedoria"
+    ],
+    "answer": 0,
+    "ref": "1ª João 5:4"
+   }
+  ]
+ },
+ {
+  "day": 270,
+  "questions": [
+   {
+    "q": "Segundo Apocalipse 1:7, como Jesus virá?",
+    "options": [
+     "Escondido",
+     "Num barco",
+     "Com as nuvens",
+     "Montado num jumento"
+    ],
+    "answer": 2,
+    "ref": "Apocalipse 1:7"
+   },
+   {
+    "q": "O que o Senhor Deus diz ser em Apocalipse 1:8?",
+    "options": [
+     "O Alfa e o Ômega",
+     "O Leão e o Cordeiro",
+     "O Sol e a Lua",
+     "A Porta e o Caminho"
+    ],
+    "answer": 0,
+    "ref": "Apocalipse 1:8"
+   },
+   {
+    "q": "Em que ilha João estava quando recebeu a revelação?",
+    "options": [
      "Chipre",
+     "Creta",
      "Malta",
      "Patmos"
     ],
@@ -3827,15 +3756,86 @@
     "ref": "Apocalipse 1:9"
    },
    {
-    "q": "Em Apocalipse 1:20, o que significam os sete candeeiros?",
+    "q": "A quantas igrejas da Ásia João devia enviar o que viu?",
     "options": [
-     "Os sete anjos",
-     "As sete igrejas",
-     "Os sete dias",
-     "Os sete reis"
+     "Doze",
+     "Sete",
+     "Três",
+     "Dez"
     ],
     "answer": 1,
-    "ref": "Apocalipse 1:20"
+    "ref": "Apocalipse 1:11"
+   },
+   {
+    "q": "O que o Filho do Homem tinha na mão direita?",
+    "options": [
+     "Um cetro",
+     "Uma espada",
+     "Sete estrelas",
+     "Um livro"
+    ],
+    "answer": 2,
+    "ref": "Apocalipse 1:16"
+   }
+  ]
+ },
+ {
+  "day": 271,
+  "questions": [
+   {
+    "q": "O que Jesus tinha contra a igreja de Éfeso?",
+    "options": [
+     "Que era preguiçosa",
+     "Que deixou o seu primeiro amor",
+     "Que era pobre",
+     "Que não tinha anjo"
+    ],
+    "answer": 1,
+    "ref": "Apocalipse 2:4"
+   },
+   {
+    "q": "O que Jesus promete dar a quem for fiel até a morte, em Esmirna?",
+    "options": [
+     "A coroa da vida",
+     "Uma casa nova",
+     "Muitas riquezas",
+     "Uma espada"
+    ],
+    "answer": 0,
+    "ref": "Apocalipse 2:10"
+   },
+   {
+    "q": "O que Jesus prometeu ao vencedor em Pérgamo, além do maná escondido?",
+    "options": [
+     "Uma estrela",
+     "Um cetro",
+     "Uma pedrinha branca",
+     "Um anel"
+    ],
+    "answer": 2,
+    "ref": "Apocalipse 2:17"
+   },
+   {
+    "q": "Como Jesus descreve a igreja de Laodiceia?",
+    "options": [
+     "Fria",
+     "Quente",
+     "Corajosa",
+     "Morna"
+    ],
+    "answer": 3,
+    "ref": "Apocalipse 3:16"
+   },
+   {
+    "q": "Em Apocalipse 3:20, onde Jesus diz que está e bate?",
+    "options": [
+     "À janela",
+     "À porta",
+     "No portão da cidade",
+     "No templo"
+    ],
+    "answer": 1,
+    "ref": "Apocalipse 3:20"
    }
   ]
  },
@@ -3843,59 +3843,59 @@
   "day": 272,
   "questions": [
    {
-    "q": "Qual igreja abandonou o seu primeiro amor, em Apocalipse 2?",
+    "q": "Quantas estrelas havia na coroa da mulher vestida de sol?",
     "options": [
-     "Éfeso",
-     "Esmirna",
-     "Pérgamo",
-     "Sardes"
-    ],
-    "answer": 0,
-    "ref": "Apocalipse 2:1-4"
-   },
-   {
-    "q": "Qual igreja era morna, nem fria nem quente?",
-    "options": [
-     "Filadélfia",
-     "Tiatira",
-     "Laodiceia",
-     "Éfeso"
+     "Sete",
+     "Dez",
+     "Doze",
+     "Três"
     ],
     "answer": 2,
-    "ref": "Apocalipse 3:14-16"
+    "ref": "Apocalipse 12:1"
    },
    {
-    "q": "Em Apocalipse 3:20, Jesus diz: \"Eis que estou à porta e...\"",
+    "q": "De que cor era o grande dragão visto no céu?",
     "options": [
-     "Espero",
-     "Choro",
-     "Canto",
-     "Bato"
-    ],
-    "answer": 3,
-    "ref": "Apocalipse 3:20"
-   },
-   {
-    "q": "Quantos anciãos estavam sentados em tronos ao redor do trono?",
-    "options": [
-     "Doze",
-     "Vinte e quatro",
-     "Sete",
-     "Setenta"
-    ],
-    "answer": 1,
-    "ref": "Apocalipse 4:4"
-   },
-   {
-    "q": "Em Apocalipse 5:5, quem venceu para abrir o livro?",
-    "options": [
-     "O Leão da tribo de Judá",
-     "Um anjo forte",
-     "João",
-     "Um dos anciãos"
+     "Vermelho",
+     "Preto",
+     "Verde",
+     "Dourado"
     ],
     "answer": 0,
-    "ref": "Apocalipse 5:5"
+    "ref": "Apocalipse 12:3"
+   },
+   {
+    "q": "Quem pelejou com seus anjos contra o dragão?",
+    "options": [
+     "Gabriel",
+     "Elias",
+     "Moisés",
+     "Miguel"
+    ],
+    "answer": 3,
+    "ref": "Apocalipse 12:7"
+   },
+   {
+    "q": "Como os fiéis venceram o dragão, segundo Apocalipse 12:11?",
+    "options": [
+     "Com espadas",
+     "Pelo sangue do Cordeiro e pelo testemunho",
+     "Fugindo para o deserto",
+     "Com muito ouro"
+    ],
+    "answer": 1,
+    "ref": "Apocalipse 12:11"
+   },
+   {
+    "q": "De onde emergiu a segunda besta, que tinha dois chifres como de cordeiro?",
+    "options": [
+     "Do mar",
+     "Da terra",
+     "Do céu",
+     "Do abismo de fogo"
+    ],
+    "answer": 1,
+    "ref": "Apocalipse 13:11"
    }
   ]
  },
@@ -3903,59 +3903,59 @@
   "day": 273,
   "questions": [
    {
-    "q": "Quantos foram selados das tribos de Israel em Apocalipse 7?",
+    "q": "Quantos estavam com o Cordeiro no monte Sião?",
     "options": [
      "Doze mil",
      "Cento e quarenta e quatro mil",
-     "Mil",
-     "Sete mil"
+     "Sete mil",
+     "Setenta mil"
     ],
     "answer": 1,
-    "ref": "Apocalipse 7:4"
+    "ref": "Apocalipse 14:1"
    },
    {
-    "q": "O que foi dado aos sete anjos que estavam diante de Deus em Apocalipse 8?",
+    "q": "O que o anjo voando pelo meio do céu trazia?",
     "options": [
-     "Sete taças",
-     "Sete coroas",
-     "Sete trombetas",
-     "Sete espadas"
-    ],
-    "answer": 2,
-    "ref": "Apocalipse 8:2"
-   },
-   {
-    "q": "Como era o livrinho na boca de João, em Apocalipse 10?",
-    "options": [
-     "Amargo",
-     "Salgado",
-     "Sem gosto",
-     "Doce como mel"
-    ],
-    "answer": 3,
-    "ref": "Apocalipse 10:10"
-   },
-   {
-    "q": "Por quantos dias as duas testemunhas profetizariam?",
-    "options": [
-     "Mil duzentos e sessenta",
-     "Quarenta",
-     "Mil",
-     "Setenta"
+     "Um evangelho eterno",
+     "Uma espada",
+     "Uma taça",
+     "Uma trombeta"
     ],
     "answer": 0,
-    "ref": "Apocalipse 11:3"
+    "ref": "Apocalipse 14:6"
    },
    {
-    "q": "Quem lutou com seus anjos contra o dragão no céu?",
+    "q": "Segundo Apocalipse 14:12, o que fazem os santos que perseveram?",
     "options": [
-     "Gabriel",
-     "Miguel",
-     "João",
-     "Elias"
+     "Moram no deserto",
+     "Fazem muitos sacrifícios",
+     "Guardam os mandamentos e a fé em Jesus",
+     "Lutam com espadas"
     ],
-    "answer": 1,
-    "ref": "Apocalipse 12:7"
+    "answer": 2,
+    "ref": "Apocalipse 14:12"
+   },
+   {
+    "q": "O que o Filho de Homem sobre a nuvem tinha na cabeça?",
+    "options": [
+     "Uma coroa de espinhos",
+     "Um capacete",
+     "Um véu",
+     "Uma coroa de ouro"
+    ],
+    "answer": 3,
+    "ref": "Apocalipse 14:14"
+   },
+   {
+    "q": "Em que lugar os reis foram reunidos, em hebraico?",
+    "options": [
+     "Armagedom",
+     "Getsêmani",
+     "Gólgota",
+     "Betesda"
+    ],
+    "answer": 0,
+    "ref": "Apocalipse 16:16"
    }
   ]
  },
@@ -3963,59 +3963,59 @@
   "day": 274,
   "questions": [
    {
-    "q": "Quantas cabeças tinha a besta que subiu do mar?",
+    "q": "Que cidade o anjo anunciou que caiu, em Apocalipse 18:2?",
     "options": [
-     "Três",
-     "Dez",
-     "Sete",
-     "Doze"
-    ],
-    "answer": 2,
-    "ref": "Apocalipse 13:1"
-   },
-   {
-    "q": "Qual é o número da besta, segundo Apocalipse 13:18?",
-    "options": [
-     "Seiscentos e sessenta e seis",
-     "Setecentos e setenta e sete",
-     "Cento e quarenta e quatro",
-     "Mil"
-    ],
-    "answer": 0,
-    "ref": "Apocalipse 13:18"
-   },
-   {
-    "q": "O que tinha o anjo que voava pelo meio do céu em Apocalipse 14:6?",
-    "options": [
-     "Uma espada",
-     "Uma taça",
-     "Uma trombeta",
-     "O evangelho eterno"
-    ],
-    "answer": 3,
-    "ref": "Apocalipse 14:6"
-   },
-   {
-    "q": "Qual o nome, em hebraico, do lugar onde os reis foram reunidos?",
-    "options": [
-     "Megido",
-     "Armagedom",
-     "Sião",
-     "Gólgota"
-    ],
-    "answer": 1,
-    "ref": "Apocalipse 16:16"
-   },
-   {
-    "q": "Que nome estava escrito na testa da mulher em Apocalipse 17?",
-    "options": [
-     "A Grande Babilônia",
      "Jerusalém",
      "Roma",
-     "Sodoma"
+     "A grande Babilônia",
+     "Nínive"
+    ],
+    "answer": 2,
+    "ref": "Apocalipse 18:2"
+   },
+   {
+    "q": "O que a voz do céu disse ao povo de Deus sobre Babilônia?",
+    "options": [
+     "Retirai-vos dela, povo meu",
+     "Morai nela para sempre",
+     "Comprai suas riquezas",
+     "Construí seus muros"
     ],
     "answer": 0,
-    "ref": "Apocalipse 17:5"
+    "ref": "Apocalipse 18:4"
+   },
+   {
+    "q": "O que o anjo forte lançou no mar como sinal da queda de Babilônia?",
+    "options": [
+     "Uma espada",
+     "Uma coroa",
+     "Uma taça",
+     "Uma pedra como uma grande mó"
+    ],
+    "answer": 3,
+    "ref": "Apocalipse 18:21"
+   },
+   {
+    "q": "O que o anjo tinha na mão ao descer do céu em Apocalipse 20?",
+    "options": [
+     "Uma trombeta e um livro",
+     "A chave do abismo e uma corrente",
+     "Uma foice e uma coroa",
+     "Uma tocha e um escudo"
+    ],
+    "answer": 1,
+    "ref": "Apocalipse 20:1"
+   },
+   {
+    "q": "Por quanto tempo o dragão foi amarrado?",
+    "options": [
+     "Sete anos",
+     "Cem anos",
+     "Mil anos",
+     "Quarenta dias"
+    ],
+    "answer": 2,
+    "ref": "Apocalipse 20:2"
    }
   ]
  },
@@ -4023,59 +4023,59 @@
   "day": 275,
   "questions": [
    {
-    "q": "Segundo Apocalipse 19:7, de quem são as bodas que chegaram?",
-    "options": [
-     "Do rei",
-     "Do anjo",
-     "Do Cordeiro",
-     "De João"
-    ],
-    "answer": 2,
-    "ref": "Apocalipse 19:7"
-   },
-   {
-    "q": "Por quantos anos Satanás foi amarrado em Apocalipse 20?",
-    "options": [
-     "Cem",
-     "Mil",
-     "Sete",
-     "Quarenta"
-    ],
-    "answer": 1,
-    "ref": "Apocalipse 20:2"
-   },
-   {
-    "q": "Segundo Apocalipse 21:4, o que Deus enxugará dos olhos?",
+    "q": "O que Deus enxugará dos olhos do seu povo, segundo Apocalipse 21:4?",
     "options": [
      "Toda lágrima",
-     "A poeira",
-     "O suor",
-     "O sono"
+     "Toda poeira",
+     "Todo suor",
+     "Toda chuva"
     ],
     "answer": 0,
     "ref": "Apocalipse 21:4"
    },
    {
-    "q": "De que eram feitas as doze portas da nova Jerusalém?",
+    "q": "Quantas portas tinha a muralha da nova Jerusalém?",
     "options": [
-     "Ouro",
-     "Prata",
-     "Cristal",
-     "Pérolas"
+     "Sete",
+     "Quatro",
+     "Doze",
+     "Vinte e quatro"
     ],
-    "answer": 3,
+    "answer": 2,
+    "ref": "Apocalipse 21:12"
+   },
+   {
+    "q": "De que eram feitas as portas da cidade santa?",
+    "options": [
+     "De ouro",
+     "De pérolas",
+     "De jaspe",
+     "De cedro"
+    ],
+    "answer": 1,
     "ref": "Apocalipse 21:21"
    },
    {
-    "q": "Quantos frutos a árvore da vida produz, segundo Apocalipse 22:2?",
+    "q": "Quantos frutos produz a árvore da vida?",
     "options": [
      "Sete",
      "Três",
-     "Doze",
-     "Um"
+     "Quarenta",
+     "Doze"
     ],
-    "answer": 2,
+    "answer": 3,
     "ref": "Apocalipse 22:2"
+   },
+   {
+    "q": "Como termina o pedido de João em Apocalipse 22:20?",
+    "options": [
+     "Vem, Senhor Jesus!",
+     "Fica conosco!",
+     "Lembra-te de mim!",
+     "Salva-nos agora!"
+    ],
+    "answer": 0,
+    "ref": "Apocalipse 22:20"
    }
   ]
  }

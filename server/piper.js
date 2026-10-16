@@ -22,8 +22,8 @@ const VOICES = [
   },
   { id: 'pt-br-edresson-low', tarball: 'https://github.com/rhasspy/piper/releases/download/v0.0.2/voice-pt-br-edresson-low.tar.gz' },
 ];
-/** Um pouco mais devagar que o normal: leitura pausada, fácil de acompanhar. */
-const LENGTH_SCALE = process.env.PIPER_LENGTH_SCALE || '1.1';
+/** Velocidade natural (quem lê escolhe 1x, 1,25x, 1,5x ou 2x no aparelho). */
+const LENGTH_SCALE = process.env.PIPER_LENGTH_SCALE || '1.0';
 const LINE_TIMEOUT_MS = 60_000;
 
 export const piperDir = () => process.env.PIPER_DIR || path.join(DATA_DIR, 'piper');

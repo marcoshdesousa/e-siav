@@ -9,8 +9,8 @@ import { requireAuth } from '../auth.js';
 import { fail, int, validDate } from '../util.js';
 import { setSetting, setting } from '../fees.js';
 import {
-  AUDIO_DIR, PLAN, QUIZZES, TOTAL_DAYS, audioStatus, audioTimes, audioUrl, chapterText, chapterTitle, dateOfDay,
-  hasAudio, planStart, startAudioGenerator, todayBR, todayDay,
+  PLAN, QUIZZES, TOTAL_DAYS, VOICE_RE, audioStatus, chapterText, chapterTitle, dateOfDay, dayVoiceStatus, planStart,
+  rangesLabel, requestDayVoice, startAudioGenerator, todayBR, todayDay, verseNumbers, voiceFile, voiceName, voiceReady,
 } from '../bible.js';
 
 const r = Router();
@@ -103,10 +103,17 @@ r.get('/ano-biblico/dia/:n', member, (req, res) => {
   res.json({
     day: d.day, date: dateOfDay(d.day), label: d.label, status: dayStatus(d.day, t, row),
     best: row?.best || 0, attempts: row?.attempts || 0, completed: !!row?.completed_at, pass: PASS,
-    chapters: d.chapters.map(([b, c]) => ({
-      book: b, chapter: c, title: chapterTitle(b, c), verses: chapterText(b, c),
-      audio: hasAudio(b, c) ? { url: audioUrl(b, c), ...audioTimes(b, c) } : null,
-    })),
+    // Cada capítulo: só os versículos do dia (nums = número de cada um) e o nome do áudio de cada um.
+    chapters: d.chapters.map(([b, c, rg]) => {
+      const nums = verseNumbers(b, c, rg);
+      const text = chapterText(b, c);
+      return {
+        book: b, chapter: c, title: chapterTitle(b, c), part: rg ? `versículos ${rangesLabel(rg)}` : null,
+        verses: nums.map((n) => text[n - 1]), nums,
+        voice: { title: voiceName(b, c, 0), verses: nums.map((n) => voiceName(b, c, n)) },
+      };
+    }),
+    voice: dayVoiceStatus(d.day),
     quiz: quiz ? quiz.map((q) => ({ q: q.q, options: q.options })) : null,
   });
 });
@@ -144,13 +151,20 @@ r.post('/ano-biblico/dia/:n/quiz', member, async (req, res) => {
   });
 });
 
-r.get('/ano-biblico/audio/:name', member, (req, res) => {
-  const name = String(req.params.name);
-  if (!/^\d{2}-\d{3}\.mp3$/.test(name)) fail(404, 'Áudio não encontrado');
-  const file = path.join(AUDIO_DIR, name);
-  if (!fs.existsSync(file)) fail(404, 'Áudio ainda sendo preparado');
-  res.set('Cache-Control', 'private, max-age=2592000');
-  res.sendFile(file);
+// Voz do dia: põe os versículos do dia na frente da fila e diz quantos já estão prontos.
+r.post('/ano-biblico/dia/:n/voz', member, (req, res) => {
+  const d = planDay(req.params.n);
+  if (!openDay(d.day, todayDay())) fail(403, 'Este dia ainda não chegou');
+  res.json(requestDayVoice(d.day));
+});
+r.get('/ano-biblico/dia/:n/voz', member, (req, res) => res.json(dayVoiceStatus(planDay(req.params.n).day)));
+
+r.get('/ano-biblico/voz/:name', member, (req, res) => {
+  const name = String(req.params.name).replace(/\.mp3$/, '');
+  if (!VOICE_RE.test(name) || !voiceReady(name)) fail(404, 'Áudio ainda sendo preparado');
+  res.set('Cache-Control', 'private, max-age=2592000, immutable');
+  res.type('audio/mpeg');
+  res.sendFile(voiceFile(name));
 });
 
 // Admin: situação do áudio e dos quizzes, quem concluiu o Ano Bíblico (ganha o arganel) e data de início.

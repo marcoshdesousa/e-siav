@@ -1,5 +1,6 @@
 // Ano Bíblico: texto (Almeida 1911 Atualizada Livre, licença MIT), plano de leitura por dia,
-// quizzes e o áudio de cada capítulo (gerado antes, em segundo plano, com a voz do Piper).
+// quizzes e a voz (Piper), preparada versículo por versículo: primeiro o dia que alguém abriu,
+// depois, em segundo plano, os próximos dias.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -65,27 +66,45 @@ export function spokenBook(name, bookIdx) {
   return `${ORD[m[1]][bookIdx >= 39 ? 1 : 0]} ${m[2]}`;
 }
 export const chapterTitle = (b, c) => (b === 18 ? `Salmo ${c}` : `${BIBLE.books[b].name} ${c}`);
+/** Trechos: [[1, 19]] → "1–19"; [[2, 3], [17, 18]] → "2–3, 17–18" */
+export const rangesLabel = (rg) => rg.map(([a, z]) => (a === z ? a : `${a}–${z}`)).join(', ');
+/** Números dos versículos lidos no dia (capítulo inteiro ou só os trechos). */
+export function verseNumbers(b, c, rg) {
+  const n = chapterText(b, c)?.length || 0;
+  const all = Array.from({ length: n }, (_, i) => i + 1);
+  return rg ? all.filter((v) => rg.some(([a, z]) => v >= a && v <= z)) : all;
+}
 const spokenTitle = (b, c) => (b === 18 ? `Salmo ${c}.` : `${spokenBook(BIBLE.books[b].name, b)}, capítulo ${c}.`);
 
 export function chapterText(b, c) {
   return BIBLE.books[b]?.chapters[c - 1] || null;
 }
 
-// ───────────── Áudio ─────────────
+// ───────────── Voz (um arquivo por versículo) ─────────────
+// Cada versículo vira um MP3 pequeno (com a pausa no fim). Quando alguém abre um dia, os versículos
+// dele passam para a frente da fila; o celular toca um atrás do outro e já começa assim que os
+// primeiros ficam prontos. Sem nada pedido, a fila vai preparando os próximos dias do plano.
 
-export const AUDIO_DIR = path.join(DATA_DIR, 'biblia-audio');
+export const VOICE_DIR = path.join(DATA_DIR, 'biblia-voz');
 const MP3_KBPS = 24;
-const PAUSE_TITLE = 0.8;
-const PAUSE_VERSE = 0.45;
-/** Atraso do codificador MP3 no começo (o som começa um pouco depois do zero). */
-const ENCODER_DELAY = 0.05;
-const audioName = (b, c) => `${String(b + 1).padStart(2, '0')}-${String(c).padStart(3, '0')}`;
-export const audioFiles = (b, c) => ({ mp3: path.join(AUDIO_DIR, audioName(b, c) + '.mp3'), json: path.join(AUDIO_DIR, audioName(b, c) + '.json') });
-export const audioUrl = (b, c) => `/api/ano-biblico/audio/${audioName(b, c)}.mp3`;
-export const hasAudio = (b, c) => fs.existsSync(audioFiles(b, c).json);
-export function audioTimes(b, c) {
-  try { return readJson(audioFiles(b, c).json); } catch { return null; }
+const PAUSE_TITLE = 0.7;
+const PAUSE_VERSE = 0.35;
+const pad = (n, k) => String(n).padStart(k, '0');
+export const voiceName = (b, c, v) => `${pad(b + 1, 2)}-${pad(c, 3)}-${pad(v, 3)}`;
+export const voiceFile = (name) => path.join(VOICE_DIR, `${name}.mp3`);
+export const VOICE_RE = /^\d{2}-\d{3}-\d{3}$/;
+
+const ready = new Set();
+try { for (const f of fs.readdirSync(VOICE_DIR)) if (f.endsWith('.mp3')) ready.add(f.slice(0, -4)); } catch { /* ainda sem pasta */ }
+export const voiceReady = (name) => ready.has(name);
+
+/** O que é falado no dia, em ordem: o título de cada capítulo (v = 0) e os versículos. */
+export function dayVoiceItems(day) {
+  const d = PLAN.days[day - 1];
+  if (!d) return [];
+  return d.chapters.flatMap(([b, c, rg]) => [0, ...verseNumbers(b, c, rg)].map((v) => ({ name: voiceName(b, c, v), b, c, v })));
 }
+const textOf = ({ b, c, v }) => (v === 0 ? spokenTitle(b, c) : chapterText(b, c)[v - 1]);
 
 function pcmToMp3(pcm, rate) {
   const samples = new Int16Array(pcm.buffer.slice(pcm.byteOffset, pcm.byteOffset + pcm.length - (pcm.length % 2)));
@@ -100,7 +119,7 @@ function pcmToMp3(pcm, rate) {
   return Buffer.concat(out);
 }
 
-/** Corta o silêncio do começo e do fim de cada frase falada (as pausas são postas depois, iguais). */
+/** Corta o silêncio do começo e do fim da frase falada (a pausa é posta depois, sempre igual). */
 function trim(pcm, rate) {
   const n = Math.floor(pcm.length / 2);
   const win = Math.max(1, Math.floor(rate * 0.02));
@@ -120,74 +139,120 @@ function trim(pcm, rate) {
   return pcm.subarray(a * 2, z * 2);
 }
 
-/**
- * Gera o áudio de um capítulo: o título e cada versículo falados separadamente, emendados com
- * pausas. Guarda o MP3 e o momento exato em que cada versículo começa (para a marcação seguir a voz).
- */
-export async function generateChapterAudio(b, c) {
-  const verses = chapterText(b, c);
-  if (!verses) throw new Error('capítulo não existe');
-  const lines = [spokenTitle(b, c), ...verses];
-  const { rate, pcms } = await piperSpeak(lines);
-  const parts = [];
-  const times = [];
-  let at = 0;
-  pcms.forEach((p, i) => {
-    const t = trim(p, rate);
-    if (i > 0) times.push(Math.round((at / rate + ENCODER_DELAY) * 100) / 100);
-    parts.push(t);
-    at += t.length / 2;
-    const pause = Math.round(rate * (i === 0 ? PAUSE_TITLE : PAUSE_VERSE));
-    parts.push(Buffer.alloc(pause * 2));
-    at += pause;
-  });
-  const mp3 = pcmToMp3(Buffer.concat(parts), rate);
-  fs.mkdirSync(AUDIO_DIR, { recursive: true });
-  const f = audioFiles(b, c);
-  fs.writeFileSync(f.mp3 + '.part', mp3);
-  fs.renameSync(f.mp3 + '.part', f.mp3);
-  fs.writeFileSync(f.json, JSON.stringify({ times, duration: Math.round((at / rate) * 100) / 100, bytes: mp3.length }));
-  return { times, bytes: mp3.length };
+/** Fala um item (título ou versículo) e guarda o MP3. */
+export async function generateVoice(item) {
+  const { rate, pcms } = await piperSpeak([textOf(item)]);
+  const pause = Buffer.alloc(Math.round(rate * (item.v === 0 ? PAUSE_TITLE : PAUSE_VERSE)) * 2);
+  const mp3 = pcmToMp3(Buffer.concat([trim(pcms[0], rate), pause]), rate);
+  fs.mkdirSync(VOICE_DIR, { recursive: true });
+  const f = voiceFile(item.name);
+  fs.writeFileSync(f + '.part', mp3);
+  fs.renameSync(f + '.part', f);
+  ready.add(item.name);
 }
 
-/** Ordem de preparo: a partir de hoje (o que vai ser lido primeiro), depois o resto. */
-function chaptersInOrder() {
-  const t = Math.min(Math.max(todayDay(), 1), TOTAL_DAYS);
-  const order = [...PLAN.days.slice(t - 1), ...PLAN.days.slice(0, t - 1)];
-  return order.flatMap((d) => d.chapters);
+// Fila: os dias pedidos (na frente) e, quando ela esvazia, o próximo dia do plano ainda sem voz.
+const queue = [];
+const queued = new Map();
+export const audioState = { running: false, done: 0, current: null, error: null, failing: false };
+let fails = 0;
+let failedAt = 0;
+let bgDay = 0;
+
+function enqueue(items, front) {
+  const missing = items.filter((it) => !ready.has(it.name));
+  for (const it of missing) {
+    if (!queued.has(it.name)) { queued.set(it.name, it); if (!front) queue.push(it.name); }
+  }
+  if (front) {
+    const set = new Set(missing.map((it) => it.name));
+    const rest = queue.filter((n) => !set.has(n));
+    queue.length = 0;
+    queue.push(...missing.map((it) => it.name), ...rest);
+  }
 }
 
-export const audioState = { running: false, done: 0, total: 0, current: null, error: null, startedAt: null };
+/** Próximo dia (a partir de hoje) que ainda tem versículo sem voz. */
+function nextBackgroundDay() {
+  const start = Math.min(Math.max(todayDay(), 1), TOTAL_DAYS);
+  for (let k = 0; k < TOTAL_DAYS; k++) {
+    const day = ((start - 1 + bgDay + k) % TOTAL_DAYS) + 1;
+    if (dayVoiceItems(day).some((it) => !ready.has(it.name))) { bgDay = day - start + 1; return day; }
+  }
+  return 0;
+}
 
-/** Prepara, em segundo plano e um por vez, o áudio de todos os capítulos que ainda não têm. */
-export async function startAudioGenerator() {
-  if (audioState.running) return;
+let working = false;
+let background = false;
+async function work() {
+  if (working) return;
+  working = true;
   audioState.running = true;
-  audioState.startedAt = new Date().toISOString();
   try {
-    const all = chaptersInOrder();
-    audioState.total = all.length;
-    audioState.done = all.filter(([b, c]) => hasAudio(b, c)).length;
-    let fails = 0;
-    for (const [b, c] of all) {
-      if (hasAudio(b, c)) continue;
-      audioState.current = chapterTitle(b, c);
+    for (;;) {
+      if (!queue.length) {
+        const day = background ? nextBackgroundDay() : 0;
+        if (!day) break;
+        enqueue(dayVoiceItems(day), false);
+        if (!queue.length) break;
+      }
+      const name = queue.shift();
+      const item = queued.get(name);
+      queued.delete(name);
+      if (!item || ready.has(name)) continue;
+      audioState.current = `${chapterTitle(item.b, item.c)}${item.v ? `:${item.v}` : ''}`;
       try {
-        await generateChapterAudio(b, c);
+        await generateVoice(item);
         audioState.done++;
         fails = 0;
+        audioState.failing = false;
       } catch (e) {
-        audioState.error = `${chapterTitle(b, c)}: ${e.message}`;
-        console.error('[ano bíblico] áudio:', audioState.error);
-        if (++fails >= 3) break; // a voz não está funcionando: tenta de novo mais tarde
+        audioState.error = `${audioState.current}: ${e.message}`;
+        console.error('[ano bíblico] voz:', audioState.error);
+        if (++fails >= 3) {
+          // A voz não está funcionando: avisa quem está lendo (usa a voz do aparelho) e tenta mais tarde.
+          audioState.failing = true;
+          failedAt = Date.now();
+          queue.length = 0;
+          queued.clear();
+          break;
+        }
       }
-      await new Promise((r) => setTimeout(r, 200)); // respiro para o site
     }
   } finally {
+    working = false;
     audioState.running = false;
     audioState.current = null;
   }
-  if (audioState.done < audioState.total) setTimeout(() => startAudioGenerator(), 30 * 60_000).unref();
 }
 
-export const audioStatus = () => ({ ...audioState, piperError });
+/** Alguém abriu o dia: os versículos dele vão para a frente da fila. Devolve como está a voz do dia. */
+export function requestDayVoice(day) {
+  if (audioState.failing && Date.now() - failedAt > 2 * 60_000) { audioState.failing = false; fails = 0; }
+  const items = dayVoiceItems(day);
+  if (!audioState.failing) {
+    enqueue(items, true);
+    work().catch(() => {});
+  }
+  return dayVoiceStatus(day, items);
+}
+export function dayVoiceStatus(day, items = dayVoiceItems(day)) {
+  const bits = items.map((it) => (ready.has(it.name) ? '1' : '0')).join('');
+  const done = bits.split('1').length - 1;
+  return { total: items.length, done, ready: bits, failing: audioState.failing, error: audioState.failing ? audioState.error || piperError : null };
+}
+
+/** Em segundo plano (no ar): vai preparando os próximos dias, um versículo por vez. */
+export async function startAudioGenerator() {
+  background = true;
+  if (audioState.failing) { audioState.failing = false; fails = 0; }
+  await work();
+  // parou (sem nada para fazer ou com erro): tenta de novo mais tarde
+  setTimeout(() => startAudioGenerator().catch(() => {}), 30 * 60_000).unref();
+}
+
+export const audioStatus = () => {
+  const total = PLAN.days.reduce((n, d) => n + dayVoiceItems(d.day).length, 0);
+  const done = PLAN.days.reduce((n, d) => n + dayVoiceItems(d.day).filter((it) => ready.has(it.name)).length, 0);
+  return { ...audioState, done, total, queue: queue.length, piperError };
+};

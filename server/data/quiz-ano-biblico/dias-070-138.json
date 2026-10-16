@@ -3,59 +3,59 @@
     "day": 70,
     "questions": [
       {
-        "q": "O que Saul estava procurando quando foi ao encontro de Samuel?",
+        "q": "Como se chamavam as duas mulheres de Elcana?",
         "options": [
-          "Ovelhas perdidas",
-          "Seu irmão desaparecido",
-          "Um poço de água",
-          "As jumentas de seu pai"
-        ],
-        "answer": 3,
-        "ref": "1ª Samuel 9:3"
-      },
-      {
-        "q": "Onde Saul estava escondido quando foi escolhido rei em Mispá?",
-        "options": [
-          "Numa caverna",
-          "Atrás do altar",
-          "Debaixo de uma árvore",
-          "Entre a bagagem"
-        ],
-        "answer": 3,
-        "ref": "1ª Samuel 10:22"
-      },
-      {
-        "q": "O que Naás, o amonita, queria arrancar dos homens de Jabes-Gileade?",
-        "options": [
-          "O olho direito",
-          "Os cabelos",
-          "A mão esquerda",
-          "Todo o seu ouro"
+          "Ana e Penina",
+          "Rute e Orfa",
+          "Raquel e Lia",
+          "Sara e Agar"
         ],
         "answer": 0,
-        "ref": "1ª Samuel 11:2"
+        "ref": "1ª Samuel 1:2"
       },
       {
-        "q": "O que o Senhor enviou quando Samuel clamou, no tempo da colheita?",
+        "q": "Para qual cidade Elcana subia todos os anos para adorar ao Senhor?",
         "options": [
-          "Fogo do céu",
-          "Gafanhotos",
-          "Um terremoto",
-          "Trovões e chuva"
+          "Jerusalém",
+          "Belém",
+          "Siló",
+          "Hebrom"
         ],
-        "answer": 3,
-        "ref": "1ª Samuel 12:18"
+        "answer": 2,
+        "ref": "1ª Samuel 1:3"
       },
       {
-        "q": "Que pergunta se tornou provérbio depois que Saul profetizou?",
+        "q": "O que Eli pensou de Ana enquanto ela orava em silêncio?",
         "options": [
-          "Quem é o filho de Quis?",
-          "Está também Saul entre os profetas?",
-          "Onde estão as jumentas?",
-          "Quem nos salvará?"
+          "Que estava doente",
+          "Que estava embriagada",
+          "Que estava dormindo",
+          "Que estava com raiva"
         ],
         "answer": 1,
-        "ref": "1ª Samuel 10:12"
+        "ref": "1ª Samuel 1:13"
+      },
+      {
+        "q": "Que nome Ana deu ao filho que recebeu do Senhor?",
+        "options": [
+          "Davi",
+          "Saul",
+          "Eli",
+          "Samuel"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 1:20"
+      },
+      {
+        "q": "Por que Ana deu ao menino o nome que deu?",
+        "options": [
+          "Porque era o primeiro filho",
+          "Porque o pediu ao Senhor",
+          "Porque nasceu em Siló",
+          "Porque Eli escolheu"
+        ],
+        "answer": 1,
+        "ref": "1ª Samuel 1:20"
       }
     ]
   },
@@ -63,59 +63,59 @@
     "day": 71,
     "questions": [
       {
-        "q": "O que Saul fez em Gilgal sem esperar Samuel chegar?",
+        "q": "Segundo a oração de Ana, não existe rocha como quem?",
         "options": [
-          "Fugiu para casa",
-          "Dividiu o despojo",
-          "Ofereceu o holocausto",
-          "Ungiu Jônatas como rei"
+          "O monte Sião",
+          "O templo",
+          "O rei de Israel",
+          "O nosso Deus"
         ],
-        "answer": 2,
-        "ref": "1ª Samuel 13:9"
+        "answer": 3,
+        "ref": "1ª Samuel 2:2"
       },
       {
-        "q": "Por que os israelitas não tinham espadas nem lanças?",
+        "q": "Quem era o sacerdote diante de quem o menino Samuel ficou servindo?",
         "options": [
-          "Não havia ferreiro em Israel",
-          "Deus as proibiu",
-          "Foram roubadas pelos amonitas",
-          "Eles as venderam"
+          "Eli",
+          "Arão",
+          "Finéias",
+          "Elcana"
         ],
         "answer": 0,
-        "ref": "1ª Samuel 13:19"
+        "ref": "1ª Samuel 2:11"
       },
       {
-        "q": "O que Jônatas provou sem saber do juramento de seu pai?",
+        "q": "O que a mãe de Samuel fazia para ele todos os anos?",
         "options": [
-          "Vinho",
-          "Pão",
-          "Figos secos",
-          "Um pouco de mel"
-        ],
-        "answer": 3,
-        "ref": "1ª Samuel 14:27"
-      },
-      {
-        "q": "Segundo Samuel, o que é melhor do que sacrificar?",
-        "options": [
-          "Jejuar",
-          "Dar presentes",
-          "Cantar",
-          "Obedecer"
-        ],
-        "answer": 3,
-        "ref": "1ª Samuel 15:22"
-      },
-      {
-        "q": "Quem era o comandante do exército de Saul?",
-        "options": [
-          "Jônatas",
-          "Aías",
-          "Abner",
-          "Agague"
+          "Um par de sandálias",
+          "Um cinto de couro",
+          "Uma túnica pequena",
+          "Um manto de lã"
         ],
         "answer": 2,
-        "ref": "1ª Samuel 14:50"
+        "ref": "1ª Samuel 2:19"
+      },
+      {
+        "q": "Quantos filhos e filhas Ana teve depois de Samuel?",
+        "options": [
+          "Dois filhos e uma filha",
+          "Um filho e uma filha",
+          "Quatro filhos",
+          "Três filhos e duas filhas"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 2:21"
+      },
+      {
+        "q": "Segundo o Senhor, a quem Ele honrará?",
+        "options": [
+          "Aos mais velhos",
+          "Aos mais ricos",
+          "Aos sacerdotes",
+          "Aos que o honram"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 2:30"
       }
     ]
   },
@@ -123,31 +123,522 @@
     "day": 72,
     "questions": [
       {
-        "q": "Segundo o Senhor, o homem vê o exterior, mas o Senhor vê o quê?",
+        "q": "Quantas vezes o Senhor chamou Samuel antes de Eli entender que era Deus?",
         "options": [
-          "A força",
-          "A riqueza",
-          "A família",
-          "O coração"
+          "Uma vez",
+          "Duas vezes",
+          "Três vezes",
+          "Cinco vezes"
+        ],
+        "answer": 2,
+        "ref": "1ª Samuel 3:8"
+      },
+      {
+        "q": "O que Samuel respondeu quando o Senhor o chamou de novo?",
+        "options": [
+          "Quem és tu, Senhor?",
+          "Chama outra pessoa",
+          "Estou com medo",
+          "Fala, pois o Teu servo ouve"
         ],
         "answer": 3,
+        "ref": "1ª Samuel 3:10"
+      },
+      {
+        "q": "O que aconteceu com a arca de Deus na batalha contra os filisteus?",
+        "options": [
+          "Foi queimada",
+          "Ficou em Siló",
+          "Foi escondida numa caverna",
+          "Foi capturada"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 4:11"
+      },
+      {
+        "q": "Quantos anos Eli tinha quando recebeu a notícia da batalha?",
+        "options": [
+          "Oitenta e cinco",
+          "Setenta",
+          "Cem",
+          "Noventa e oito"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 4:15"
+      },
+      {
+        "q": "Que nome a mulher de Finéias deu ao seu filho?",
+        "options": [
+          "Ebenézer",
+          "Icabô",
+          "Hofni",
+          "Samuel"
+        ],
+        "answer": 1,
+        "ref": "1ª Samuel 4:21"
+      }
+    ]
+  },
+  {
+    "day": 73,
+    "questions": [
+      {
+        "q": "Na casa de qual deus os filisteus colocaram a arca?",
+        "options": [
+          "Baal",
+          "Moloque",
+          "Dagom",
+          "Astarote"
+        ],
+        "answer": 2,
+        "ref": "1ª Samuel 5:2"
+      },
+      {
+        "q": "O que aconteceu com a estátua de Dagom diante da arca?",
+        "options": [
+          "Começou a brilhar",
+          "Caiu com o rosto em terra",
+          "Desapareceu",
+          "Ficou de ouro"
+        ],
+        "answer": 1,
+        "ref": "1ª Samuel 5:3"
+      },
+      {
+        "q": "Quanto tempo a arca ficou na terra dos filisteus?",
+        "options": [
+          "Quarenta dias",
+          "Três dias",
+          "Um ano",
+          "Sete meses"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 6:1"
+      },
+      {
+        "q": "Que animais levaram o carro com a arca de volta?",
+        "options": [
+          "Dois cavalos",
+          "Dois camelos",
+          "Quatro jumentos",
+          "Duas vacas"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 6:10"
+      },
+      {
+        "q": "Para qual cidade as vacas foram direto, sem se desviar?",
+        "options": [
+          "Gaza",
+          "Asdode",
+          "Ecrom",
+          "Bete-Semes"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 6:12"
+      }
+    ]
+  },
+  {
+    "day": 74,
+    "questions": [
+      {
+        "q": "Quantos anos a arca ficou em Quiriate-Jearim?",
+        "options": [
+          "Sete",
+          "Quarenta",
+          "Vinte",
+          "Dez"
+        ],
+        "answer": 2,
+        "ref": "1ª Samuel 7:2"
+      },
+      {
+        "q": "Onde Samuel reuniu todo o Israel para orar por eles?",
+        "options": [
+          "Jericó",
+          "Siló",
+          "Belém",
+          "Mispá"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 7:5"
+      },
+      {
+        "q": "Como o Senhor derrotou os filisteus enquanto Samuel oferecia o holocausto?",
+        "options": [
+          "Com uma chuva de pedras",
+          "Com um terremoto",
+          "Com gafanhotos",
+          "Com um forte trovão"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 7:10"
+      },
+      {
+        "q": "Que nome Samuel deu à pedra, dizendo 'Até aqui nos ajudou o Senhor'?",
+        "options": [
+          "Betel",
+          "Mispá",
+          "Gilgal",
+          "Ebenézer"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 7:12"
+      },
+      {
+        "q": "O que os anciãos de Israel pediram a Samuel?",
+        "options": [
+          "Um novo templo",
+          "Um exército",
+          "Um rei",
+          "Mais sacerdotes"
+        ],
+        "answer": 2,
+        "ref": "1ª Samuel 8:5"
+      }
+    ]
+  },
+  {
+    "day": 75,
+    "questions": [
+      {
+        "q": "Como se chamava o pai de Saul?",
+        "options": [
+          "Abner",
+          "Jessé",
+          "Elcana",
+          "Quis"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 9:1"
+      },
+      {
+        "q": "O que Saul saiu para procurar a pedido de seu pai?",
+        "options": [
+          "Ovelhas",
+          "Camelos",
+          "As jumentas",
+          "Um tesouro"
+        ],
+        "answer": 2,
+        "ref": "1ª Samuel 9:3"
+      },
+      {
+        "q": "Como o profeta era chamado antigamente em Israel?",
+        "options": [
+          "Juiz",
+          "Mestre",
+          "Levita",
+          "Vidente"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 9:9"
+      },
+      {
+        "q": "De qual tribo era Saul?",
+        "options": [
+          "Judá",
+          "Levi",
+          "Efraim",
+          "Benjamim"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 9:21"
+      },
+      {
+        "q": "Há quantos dias as jumentas tinham se perdido, segundo Samuel?",
+        "options": [
+          "Sete dias",
+          "Dez dias",
+          "Um mês",
+          "Três dias"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 9:20"
+      }
+    ]
+  },
+  {
+    "day": 76,
+    "questions": [
+      {
+        "q": "O que Samuel derramou sobre a cabeça de Saul?",
+        "options": [
+          "Água",
+          "Vinho",
+          "Azeite",
+          "Mel"
+        ],
+        "answer": 2,
+        "ref": "1ª Samuel 10:1"
+      },
+      {
+        "q": "Perto do sepulcro de quem Saul encontraria dois homens?",
+        "options": [
+          "Moisés",
+          "Sara",
+          "Abraão",
+          "Raquel"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 10:2"
+      },
+      {
+        "q": "Que provérbio surgiu quando Saul profetizou?",
+        "options": [
+          "Saul é o maior rei",
+          "Saul venceu os filisteus",
+          "Saul encontrou as jumentas",
+          "Está também Saul entre os profetas?"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 10:12"
+      },
+      {
+        "q": "Onde Saul estava escondido quando foi escolhido rei?",
+        "options": [
+          "Numa caverna",
+          "No templo",
+          "Debaixo de uma árvore",
+          "Entre a bagagem"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 10:22"
+      },
+      {
+        "q": "Em qual cidade o povo proclamou Saul como rei diante do Senhor?",
+        "options": [
+          "Gilgal",
+          "Jerusalém",
+          "Siló",
+          "Hebrom"
+        ],
+        "answer": 0,
+        "ref": "1ª Samuel 11:15"
+      }
+    ]
+  },
+  {
+    "day": 77,
+    "questions": [
+      {
+        "q": "Qual era a aparência de Samuel quando falou ao povo, segundo ele mesmo?",
+        "options": [
+          "Jovem e forte",
+          "Cego e doente",
+          "Velho e de cabelos brancos",
+          "Alto e bonito"
+        ],
+        "answer": 2,
+        "ref": "1ª Samuel 12:2"
+      },
+      {
+        "q": "O que o Senhor enviou em tempo de colheita quando Samuel clamou?",
+        "options": [
+          "Granizo e gelo",
+          "Trovões e chuva",
+          "Gafanhotos",
+          "Fogo do céu"
+        ],
+        "answer": 1,
+        "ref": "1ª Samuel 12:18"
+      },
+      {
+        "q": "Samuel disse que seria pecado contra o Senhor deixar de fazer o quê?",
+        "options": [
+          "Orar pelo povo",
+          "Oferecer sacrifícios",
+          "Viajar por Israel",
+          "Ungir reis"
+        ],
+        "answer": 0,
+        "ref": "1ª Samuel 12:23"
+      },
+      {
+        "q": "Quantos dias Saul esperou por Samuel em Gilgal?",
+        "options": [
+          "Três",
+          "Dez",
+          "Quarenta",
+          "Sete"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 13:8"
+      },
+      {
+        "q": "Por que não havia ferreiro em toda a terra de Israel?",
+        "options": [
+          "Todos tinham morrido",
+          "O rei proibiu",
+          "Não havia ferro",
+          "Os filisteus não deixavam"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 13:19"
+      }
+    ]
+  },
+  {
+    "day": 78,
+    "questions": [
+      {
+        "q": "Contra qual povo o Senhor mandou Saul lutar?",
+        "options": [
+          "Filisteus",
+          "Amalequitas",
+          "Moabitas",
+          "Egípcios"
+        ],
+        "answer": 1,
+        "ref": "1ª Samuel 15:3"
+      },
+      {
+        "q": "Como se chamava o rei dos amalequitas que Saul capturou?",
+        "options": [
+          "Faraó",
+          "Golias",
+          "Agague",
+          "Naás"
+        ],
+        "answer": 2,
+        "ref": "1ª Samuel 15:8"
+      },
+      {
+        "q": "O que Samuel ouviu que mostrou que Saul não obedeceu?",
+        "options": [
+          "Balido de ovelhas e mugido de bois",
+          "Toque de trombetas",
+          "Gritos de guerra",
+          "Cânticos de vitória"
+        ],
+        "answer": 0,
+        "ref": "1ª Samuel 15:14"
+      },
+      {
+        "q": "Segundo Samuel, o que é melhor do que sacrificar?",
+        "options": [
+          "Jejuar",
+          "Cantar",
+          "Dar ofertas",
+          "Obedecer"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 15:22"
+      },
+      {
+        "q": "O que se rasgou quando Saul o segurou?",
+        "options": [
+          "A túnica de Saul",
+          "O manto de Samuel",
+          "A cortina do templo",
+          "Uma bandeira"
+        ],
+        "answer": 1,
+        "ref": "1ª Samuel 15:27"
+      }
+    ]
+  },
+  {
+    "day": 79,
+    "questions": [
+      {
+        "q": "Para a casa de quem o Senhor enviou Samuel para ungir um novo rei?",
+        "options": [
+          "Quis",
+          "Abner",
+          "Eli",
+          "Jessé"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 16:1"
+      },
+      {
+        "q": "Segundo o Senhor, o que Ele contempla no ser humano?",
+        "options": [
+          "A altura",
+          "A roupa",
+          "O coração",
+          "A força"
+        ],
+        "answer": 2,
         "ref": "1ª Samuel 16:7"
       },
       {
-        "q": "Que instrumento Davi tocava para aliviar Saul?",
+        "q": "O que o filho mais novo de Jessé estava fazendo quando Samuel chegou?",
         "options": [
-          "Harpa",
-          "Flauta",
-          "Trombeta",
-          "Tambor"
+          "Apascentando as ovelhas",
+          "Lutando na guerra",
+          "Estudando a lei",
+          "Trabalhando no campo"
         ],
         "answer": 0,
+        "ref": "1ª Samuel 16:11"
+      },
+      {
+        "q": "Qual instrumento Davi tocava para aliviar Saul?",
+        "options": [
+          "Flauta",
+          "Trombeta",
+          "Tambor",
+          "Harpa"
+        ],
+        "answer": 3,
         "ref": "1ª Samuel 16:23"
+      },
+      {
+        "q": "Que função Saul deu a Davi quando passou a amá-lo?",
+        "options": [
+          "Comandante",
+          "Cozinheiro",
+          "Sacerdote",
+          "Escudeiro"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 16:21"
+      }
+    ]
+  },
+  {
+    "day": 80,
+    "questions": [
+      {
+        "q": "Como se chamava o gigante filisteu de Gate?",
+        "options": [
+          "Golias",
+          "Agague",
+          "Dagom",
+          "Abner"
+        ],
+        "answer": 0,
+        "ref": "1ª Samuel 17:4"
+      },
+      {
+        "q": "Durante quantos dias o filisteu desafiou Israel?",
+        "options": [
+          "Sete",
+          "Doze",
+          "Quarenta",
+          "Três"
+        ],
+        "answer": 2,
+        "ref": "1ª Samuel 17:16"
+      },
+      {
+        "q": "Que animais Davi disse ter matado enquanto cuidava das ovelhas?",
+        "options": [
+          "Lobo e raposa",
+          "Leão e urso",
+          "Cobra e leão",
+          "Urso e lobo"
+        ],
+        "answer": 1,
+        "ref": "1ª Samuel 17:36"
       },
       {
         "q": "Quantas pedras lisas Davi escolheu no ribeiro?",
         "options": [
-          "Duas",
+          "Uma",
           "Três",
           "Sete",
           "Cinco"
@@ -156,152 +647,174 @@
         "ref": "1ª Samuel 17:40"
       },
       {
-        "q": "Em que parte do corpo a pedra de Davi atingiu Golias?",
+        "q": "Em que parte do corpo a pedra de Davi atingiu o filisteu?",
         "options": [
           "No peito",
+          "Na perna",
           "Na testa",
-          "No ombro",
-          "Na perna"
-        ],
-        "answer": 1,
-        "ref": "1ª Samuel 17:49"
-      },
-      {
-        "q": "Qual filha de Saul foi dada por mulher a Davi?",
-        "options": [
-          "Merabe",
-          "Ahinoã",
-          "Mical",
-          "Abigail"
+          "No braço"
         ],
         "answer": 2,
-        "ref": "1ª Samuel 18:27"
+        "ref": "1ª Samuel 17:49"
       }
     ]
   },
   {
-    "day": 73,
+    "day": 81,
     "questions": [
       {
-        "q": "Como Mical ajudou Davi a escapar dos mensageiros de Saul?",
+        "q": "Quem amou Davi como a sua própria alma?",
         "options": [
-          "Desceu-o por uma janela",
-          "Escondeu-o no telhado",
-          "Vestiu-o de mulher",
-          "Levou-o ao templo"
-        ],
-        "answer": 0,
-        "ref": "1ª Samuel 19:12"
-      },
-      {
-        "q": "O que Mical colocou na cama para enganar os mensageiros?",
-        "options": [
-          "Um saco de trigo",
-          "Um servo dormindo",
-          "Uma pilha de roupas",
-          "Um ídolo do lar coberto com um manto"
+          "Abner",
+          "Merabe",
+          "Samuel",
+          "Jônatas"
         ],
         "answer": 3,
-        "ref": "1ª Samuel 19:13"
+        "ref": "1ª Samuel 18:1"
       },
       {
-        "q": "O que Jônatas combinou atirar como sinal para Davi?",
+        "q": "O que Jônatas deu a Davi, junto com a armadura?",
         "options": [
-          "Pedras",
-          "Moedas",
-          "Lanças",
-          "Flechas"
+          "Sua capa e suas vestes",
+          "Um cavalo",
+          "Uma coroa",
+          "Um anel de ouro"
+        ],
+        "answer": 0,
+        "ref": "1ª Samuel 18:4"
+      },
+      {
+        "q": "O que as mulheres cantavam sobre Davi?",
+        "options": [
+          "Davi é o novo rei",
+          "Davi venceu o leão",
+          "Davi toca a harpa",
+          "Davi feriu os seus dez milhares"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 18:7"
+      },
+      {
+        "q": "O que Saul arremessou contra Davi enquanto ele tocava harpa?",
+        "options": [
+          "Uma pedra",
+          "Uma espada",
+          "Uma lança",
+          "Uma flecha"
+        ],
+        "answer": 2,
+        "ref": "1ª Samuel 18:11"
+      },
+      {
+        "q": "Por que Davi agia com sabedoria e se saía bem?",
+        "options": [
+          "Era muito forte",
+          "Tinha muitos soldados",
+          "O Senhor estava com ele",
+          "Era filho do rei"
+        ],
+        "answer": 2,
+        "ref": "1ª Samuel 18:14"
+      }
+    ]
+  },
+  {
+    "day": 82,
+    "questions": [
+      {
+        "q": "Que festa ia acontecer quando Davi se escondeu no campo?",
+        "options": [
+          "Páscoa",
+          "Festa da Lua Nova",
+          "Festa dos Tabernáculos",
+          "Pentecostes"
+        ],
+        "answer": 1,
+        "ref": "1ª Samuel 20:5"
+      },
+      {
+        "q": "Para qual cidade Davi disse que tinha ido, segundo o combinado?",
+        "options": [
+          "Ramá",
+          "Hebrom",
+          "Belém",
+          "Gibeá"
+        ],
+        "answer": 2,
+        "ref": "1ª Samuel 20:6"
+      },
+      {
+        "q": "Junto a qual pedra Davi deveria esperar o sinal de Jônatas?",
+        "options": [
+          "Ezel",
+          "Ebenézer",
+          "Betel",
+          "Sião"
+        ],
+        "answer": 0,
+        "ref": "1ª Samuel 20:19"
+      },
+      {
+        "q": "Que sinal Jônatas combinou para avisar Davi?",
+        "options": [
+          "Tocar uma trombeta",
+          "Acender uma fogueira",
+          "Mandar uma carta",
+          "Atirar flechas"
         ],
         "answer": 3,
         "ref": "1ª Samuel 20:20"
       },
       {
-        "q": "Que espada o sacerdote Aimeleque entregou a Davi?",
+        "q": "O que Saul lançou contra Jônatas quando ele defendeu Davi?",
         "options": [
-          "A espada de Saul",
-          "A espada de Jônatas",
-          "A espada de Golias",
-          "Uma espada nova"
+          "Uma pedra",
+          "Um copo",
+          "Uma lança",
+          "Uma cadeira"
         ],
         "answer": 2,
-        "ref": "1ª Samuel 21:9"
-      },
-      {
-        "q": "O que Davi fez diante de Aquis, rei de Gate, por ter medo?",
-        "options": [
-          "Fingiu-se de louco",
-          "Ofereceu ouro",
-          "Lutou contra os guardas",
-          "Pediu para ser servo"
-        ],
-        "answer": 0,
-        "ref": "1ª Samuel 21:13"
+        "ref": "1ª Samuel 20:33"
       }
     ]
   },
   {
-    "day": 74,
+    "day": 83,
     "questions": [
       {
-        "q": "Em que caverna Davi se refugiou no início de 1ª Samuel 22?",
+        "q": "Onde Davi e seus homens estavam escondidos quando Saul entrou?",
         "options": [
-          "Caverna de Macpela",
-          "Caverna de En-Gedi",
-          "Caverna de Maom",
-          "Caverna de Adulão"
+          "Numa torre",
+          "Num poço",
+          "No fundo de uma caverna",
+          "Atrás de um muro"
         ],
-        "answer": 3,
-        "ref": "1ª Samuel 22:1"
+        "answer": 2,
+        "ref": "1ª Samuel 24:3"
       },
       {
-        "q": "Qual filho de Aimeleque escapou da matança e fugiu para Davi?",
+        "q": "O que Davi cortou de Saul na caverna?",
         "options": [
-          "Abiatar",
-          "Doegue",
-          "Aitube",
-          "Gade"
+          "A orla do manto",
+          "O cabelo",
+          "A correia da sandália",
+          "A ponta da lança"
         ],
         "answer": 0,
-        "ref": "1ª Samuel 22:20"
-      },
-      {
-        "q": "Que cidade Davi livrou dos filisteus depois de consultar o Senhor?",
-        "options": [
-          "Gibeá",
-          "Zife",
-          "Nobe",
-          "Queila"
-        ],
-        "answer": 3,
-        "ref": "1ª Samuel 23:5"
-      },
-      {
-        "q": "O que Davi cortou do manto de Saul dentro da caverna?",
-        "options": [
-          "A manga",
-          "A orla",
-          "O cinto",
-          "O capuz"
-        ],
-        "answer": 1,
         "ref": "1ª Samuel 24:4"
       },
       {
-        "q": "Por que Davi não quis matar Saul na caverna?",
+        "q": "Por que Davi não quis fazer mal a Saul?",
         "options": [
-          "Tinha medo dos soldados",
-          "Saul era seu sogro rico",
-          "Saul era o ungido do Senhor",
-          "Jônatas o proibiu"
+          "Tinha medo dele",
+          "Saul era seu sogro",
+          "Saul estava armado",
+          "Saul era o ungido do Senhor"
         ],
-        "answer": 2,
+        "answer": 3,
         "ref": "1ª Samuel 24:6"
-      }
-    ]
-  },
-  {
-    "day": 75,
-    "questions": [
+      },
       {
         "q": "Como se chamava a mulher sensata e formosa de Nabal?",
         "options": [
@@ -314,18 +827,45 @@
         "ref": "1ª Samuel 25:3"
       },
       {
-        "q": "O que aconteceu com Nabal cerca de dez dias depois?",
+        "q": "Quantos pães Abigail levou para Davi?",
         "options": [
-          "O Senhor o feriu e ele morreu",
-          "Fugiu para o Egito",
-          "Tornou-se servo de Davi",
-          "Ficou cego"
+          "Duzentos",
+          "Cem",
+          "Cinquenta",
+          "Dez"
         ],
         "answer": 0,
-        "ref": "1ª Samuel 25:38"
+        "ref": "1ª Samuel 25:18"
+      }
+    ]
+  },
+  {
+    "day": 84,
+    "questions": [
+      {
+        "q": "Quantos homens escolhidos Saul levou para buscar Davi no deserto de Zife?",
+        "options": [
+          "Seiscentos",
+          "Mil",
+          "Três mil",
+          "Dez mil"
+        ],
+        "answer": 2,
+        "ref": "1ª Samuel 26:2"
       },
       {
-        "q": "O que Davi levou da cabeceira de Saul no acampamento?",
+        "q": "Quem desceu com Davi ao acampamento de Saul à noite?",
+        "options": [
+          "Abisai",
+          "Jônatas",
+          "Abner",
+          "Joabe"
+        ],
+        "answer": 0,
+        "ref": "1ª Samuel 26:6"
+      },
+      {
+        "q": "O que Davi levou da cabeceira de Saul?",
         "options": [
           "A coroa e o manto",
           "A espada e o escudo",
@@ -336,566 +876,26 @@
         "ref": "1ª Samuel 26:12"
       },
       {
-        "q": "Que cidade Aquis deu a Davi para morar?",
+        "q": "Por que ninguém acordou no acampamento de Saul?",
         "options": [
-          "Gate",
-          "Ecrom",
-          "Hebrom",
-          "Ziclague"
-        ],
-        "answer": 3,
-        "ref": "1ª Samuel 27:6"
-      },
-      {
-        "q": "Onde morava a médium que Saul foi consultar?",
-        "options": [
-          "Ramá",
-          "Gilboa",
-          "Suném",
-          "En-Dor"
-        ],
-        "answer": 3,
-        "ref": "1ª Samuel 28:7"
-      }
-    ]
-  },
-  {
-    "day": 76,
-    "questions": [
-      {
-        "q": "O que Davi encontrou ao voltar a Ziclague?",
-        "options": [
-          "Uma festa preparada",
-          "A cidade queimada e as famílias levadas",
-          "Saul esperando por ele",
-          "A cidade cheia de filisteus"
-        ],
-        "answer": 1,
-        "ref": "1ª Samuel 30:3"
-      },
-      {
-        "q": "Quem guiou Davi até o bando dos amalequitas?",
-        "options": [
-          "Um sacerdote",
-          "Um filisteu de Gate",
-          "Abiatar",
-          "Um egípcio, servo de um amalequita"
-        ],
-        "answer": 3,
-        "ref": "1ª Samuel 30:13"
-      },
-      {
-        "q": "Em que monte Saul e seus três filhos morreram?",
-        "options": [
-          "Monte Gilboa",
-          "Monte Carmelo",
-          "Monte Sião",
-          "Monte Tabor"
-        ],
-        "answer": 0,
-        "ref": "1ª Samuel 31:8"
-      },
-      {
-        "q": "Em que cidade os homens de Judá ungiram Davi como rei?",
-        "options": [
-          "Belém",
-          "Jerusalém",
-          "Hebrom",
-          "Gibeão"
+          "Estavam embriagados",
+          "Era muito tarde",
+          "O Senhor lhes deu um sono profundo",
+          "Estavam cansados da guerra"
         ],
         "answer": 2,
-        "ref": "2ª Samuel 2:4"
+        "ref": "1ª Samuel 26:12"
       },
       {
-        "q": "Asael, irmão de Joabe, era ligeiro de pés como o quê?",
-        "options": [
-          "Uma águia",
-          "Um leão",
-          "Um cavalo",
-          "Uma gazela selvagem"
-        ],
-        "answer": 3,
-        "ref": "2ª Samuel 2:18"
-      }
-    ]
-  },
-  {
-    "day": 77,
-    "questions": [
-      {
-        "q": "Quem matou Abner em Hebrom, vingando a morte de Asael?",
-        "options": [
-          "Davi",
-          "Isbosete",
-          "Joabe",
-          "Recabe"
-        ],
-        "answer": 2,
-        "ref": "2ª Samuel 3:27"
-      },
-      {
-        "q": "Qual era o nome do filho de Jônatas que ficou manco?",
-        "options": [
-          "Mefibosete",
-          "Isbosete",
-          "Amnom",
-          "Adonias"
-        ],
-        "answer": 0,
-        "ref": "2ª Samuel 4:4"
-      },
-      {
-        "q": "Quantos anos Davi tinha quando começou a reinar?",
-        "options": [
-          "Vinte",
-          "Quarenta",
-          "Vinte e cinco",
-          "Trinta"
-        ],
-        "answer": 3,
-        "ref": "2ª Samuel 5:4"
-      },
-      {
-        "q": "Que fortaleza Davi conquistou e chamou de Cidade de Davi?",
-        "options": [
-          "Fortaleza de Hebrom",
-          "Fortaleza de Sião",
-          "Fortaleza de Gezer",
-          "Fortaleza de Tiro"
-        ],
-        "answer": 1,
-        "ref": "2ª Samuel 5:7"
-      },
-      {
-        "q": "Qual rei enviou madeira de cedro e artesãos para construir a casa de Davi?",
-        "options": [
-          "Aquis, rei de Gate",
-          "Talmai, rei de Gesur",
-          "Hirão, rei de Tiro",
-          "O rei de Moabe"
-        ],
-        "answer": 2,
-        "ref": "2ª Samuel 5:11"
-      }
-    ]
-  },
-  {
-    "day": 78,
-    "questions": [
-      {
-        "q": "Por que Uzá morreu junto à arca de Deus?",
-        "options": [
-          "Ele a segurou com a mão",
-          "Ele fugiu da batalha",
-          "Ele roubou ouro",
-          "Ele dançou diante dela"
-        ],
-        "answer": 0,
-        "ref": "2ª Samuel 6:6-7"
-      },
-      {
-        "q": "Na casa de quem a arca ficou três meses, trazendo bênção?",
-        "options": [
-          "Abinadabe",
-          "Natã",
-          "Zadoque",
-          "Obede-Edom, o geteu"
-        ],
-        "answer": 3,
-        "ref": "2ª Samuel 6:11"
-      },
-      {
-        "q": "Qual profeta levou a Davi a promessa de Deus sobre sua casa e reino?",
-        "options": [
-          "Samuel",
-          "Elias",
-          "Gade",
-          "Natã"
-        ],
-        "answer": 3,
-        "ref": "2ª Samuel 7:4-5"
-      },
-      {
-        "q": "Por amor de quem Davi foi bondoso com Mefibosete?",
-        "options": [
-          "De Saul",
-          "De Mical",
-          "De Jônatas",
-          "De Abner"
-        ],
-        "answer": 2,
-        "ref": "2ª Samuel 9:7"
-      },
-      {
-        "q": "O que Hanum fez com os servos que Davi enviou?",
-        "options": [
-          "Deu-lhes presentes",
-          "Rapou metade da barba deles",
-          "Prendeu-os na cadeia",
-          "Fez deles soldados"
-        ],
-        "answer": 1,
-        "ref": "2ª Samuel 10:4"
-      }
-    ]
-  },
-  {
-    "day": 79,
-    "questions": [
-      {
-        "q": "Quem era o marido de Bate-Seba?",
+        "q": "Quem era o comandante do exército de Saul que Davi repreendeu?",
         "options": [
           "Joabe",
-          "Natã",
+          "Abner",
           "Abisai",
-          "Urias, o heteu"
-        ],
-        "answer": 3,
-        "ref": "2ª Samuel 11:3"
-      },
-      {
-        "q": "Na história de Natã, o que o homem pobre possuía?",
-        "options": [
-          "Uma pequena cordeirinha",
-          "Um jumento velho",
-          "Um campo de trigo",
-          "Dois bois"
-        ],
-        "answer": 0,
-        "ref": "2ª Samuel 12:3"
-      },
-      {
-        "q": "O que Natã disse a Davi depois de contar a história do homem rico?",
-        "options": [
-          "Deus te abençoe!",
-          "Vai em paz!",
-          "Tu és o homem!",
-          "O rico morrerá!"
-        ],
-        "answer": 2,
-        "ref": "2ª Samuel 12:7"
-      },
-      {
-        "q": "Que nome Davi deu ao filho de Bate-Seba que o Senhor amou?",
-        "options": [
-          "Absalão",
-          "Natã",
-          "Amnom",
-          "Salomão"
-        ],
-        "answer": 3,
-        "ref": "2ª Samuel 12:24"
-      },
-      {
-        "q": "Para onde Absalão fugiu, ficando lá três anos?",
-        "options": [
-          "Gesur",
-          "Egito",
-          "Moabe",
-          "Tiro"
-        ],
-        "answer": 0,
-        "ref": "2ª Samuel 13:38"
-      }
-    ]
-  },
-  {
-    "day": 80,
-    "questions": [
-      {
-        "q": "De que cidade Joabe trouxe a mulher sábia para falar com o rei?",
-        "options": [
-          "Belém",
-          "Tecoa",
-          "Hebrom",
-          "Gilo"
+          "Aimeleque"
         ],
         "answer": 1,
-        "ref": "2ª Samuel 14:2"
-      },
-      {
-        "q": "O que Absalão mandou fazer para obrigar Joabe a vir até ele?",
-        "options": [
-          "Pôr fogo no campo de cevada de Joabe",
-          "Roubar os bois de Joabe",
-          "Prender o filho de Joabe",
-          "Fechar as portas da cidade"
-        ],
-        "answer": 0,
-        "ref": "2ª Samuel 14:30"
-      },
-      {
-        "q": "Como Absalão conquistava o coração dos homens de Israel?",
-        "options": [
-          "Dando-lhes ouro",
-          "Fazendo grandes festas",
-          "Prometendo justiça e beijando-os à porta",
-          "Vencendo guerras"
-        ],
-        "answer": 2,
-        "ref": "2ª Samuel 15:5-6"
-      },
-      {
-        "q": "Qual estrangeiro jurou seguir Davi na vida ou na morte?",
-        "options": [
-          "Husai, o arquita",
-          "Ziba",
-          "Aitofel, o gilonita",
-          "Itai, o geteu"
-        ],
-        "answer": 3,
-        "ref": "2ª Samuel 15:21"
-      },
-      {
-        "q": "O que Simei fazia enquanto amaldiçoava Davi?",
-        "options": [
-          "Tocava trombeta",
-          "Corria para Absalão",
-          "Chorava alto",
-          "Atirava pedras"
-        ],
-        "answer": 3,
-        "ref": "2ª Samuel 16:6"
-      }
-    ]
-  },
-  {
-    "day": 81,
-    "questions": [
-      {
-        "q": "Onde Jônatas e Aimaás se esconderam dos servos de Absalão?",
-        "options": [
-          "Numa caverna",
-          "Num poço no pátio de uma casa",
-          "Debaixo de um carvalho",
-          "No templo"
-        ],
-        "answer": 1,
-        "ref": "2ª Samuel 17:18-19"
-      },
-      {
-        "q": "Como Absalão ficou preso durante a batalha na floresta de Efraim?",
-        "options": [
-          "Caiu numa cova",
-          "Foi amarrado por soldados",
-          "Sua cabeça ficou presa num carvalho",
-          "Seu mulo caiu num rio"
-        ],
-        "answer": 2,
-        "ref": "2ª Samuel 18:9"
-      },
-      {
-        "q": "Quem cravou três dardos no coração de Absalão?",
-        "options": [
-          "Joabe",
-          "Abisai",
-          "Itai",
-          "Cusi"
-        ],
-        "answer": 0,
-        "ref": "2ª Samuel 18:14"
-      },
-      {
-        "q": "Quantos anos tinha Barzilai, que sustentou Davi em Maanaim?",
-        "options": [
-          "Cinquenta",
-          "Setenta",
-          "Cem",
-          "Oitenta"
-        ],
-        "answer": 3,
-        "ref": "2ª Samuel 19:32"
-      },
-      {
-        "q": "Quem pediu perdão a Davi junto ao Jordão por tê-lo amaldiçoado?",
-        "options": [
-          "Ziba",
-          "Aitofel",
-          "Amasa",
-          "Simei"
-        ],
-        "answer": 3,
-        "ref": "2ª Samuel 19:18-19"
-      }
-    ]
-  },
-  {
-    "day": 82,
-    "questions": [
-      {
-        "q": "Quem tocou a trombeta e disse: 'Não temos parte com Davi'?",
-        "options": [
-          "Amasa",
-          "Simei",
-          "Seba, filho de Bicri",
-          "Absalão"
-        ],
-        "answer": 2,
-        "ref": "2ª Samuel 20:1"
-      },
-      {
-        "q": "Quem convenceu Joabe a não destruir a cidade de Abel-Bete-Maaca?",
-        "options": [
-          "Uma mulher sábia",
-          "Um profeta",
-          "O rei da cidade",
-          "Abisai"
-        ],
-        "answer": 0,
-        "ref": "2ª Samuel 20:16-22"
-      },
-      {
-        "q": "Por quantos anos seguidos durou a fome nos dias de Davi?",
-        "options": [
-          "Sete anos",
-          "Um ano",
-          "Dez anos",
-          "Três anos"
-        ],
-        "answer": 3,
-        "ref": "2ª Samuel 21:1"
-      },
-      {
-        "q": "Quantos dedos tinha, no total, o homem gigante de Gate?",
-        "options": [
-          "Vinte",
-          "Vinte e quatro",
-          "Doze",
-          "Trinta"
-        ],
-        "answer": 1,
-        "ref": "2ª Samuel 21:20"
-      },
-      {
-        "q": "No cântico de Davi, o Senhor é a sua rocha, seu refúgio e seu...",
-        "options": [
-          "Rei",
-          "Pastor",
-          "Libertador",
-          "Juiz"
-        ],
-        "answer": 2,
-        "ref": "2ª Samuel 22:2"
-      }
-    ]
-  },
-  {
-    "day": 83,
-    "questions": [
-      {
-        "q": "De que poço os três valentes trouxeram água para Davi?",
-        "options": [
-          "Do poço de Berseba",
-          "Do poço de Siquém",
-          "Do poço de Harã",
-          "Do poço junto à porta de Belém"
-        ],
-        "answer": 3,
-        "ref": "2ª Samuel 23:15-16"
-      },
-      {
-        "q": "Benaia desceu a uma cova e matou que animal no tempo da neve?",
-        "options": [
-          "Um urso",
-          "Um lobo",
-          "Um leão",
-          "Uma serpente"
-        ],
-        "answer": 2,
-        "ref": "2ª Samuel 23:20"
-      },
-      {
-        "q": "Depois do censo, que castigo veio sobre Israel?",
-        "options": [
-          "Uma peste",
-          "Sete anos de fome",
-          "Uma invasão filisteia",
-          "Um dilúvio"
-        ],
-        "answer": 0,
-        "ref": "2ª Samuel 24:15"
-      },
-      {
-        "q": "Por que Davi não aceitou a eira de Araúna de graça?",
-        "options": [
-          "Era pequena demais",
-          "Araúna era estrangeiro",
-          "Gade proibiu",
-          "Não queria oferecer o que nada lhe custasse"
-        ],
-        "answer": 3,
-        "ref": "2ª Samuel 24:24"
-      },
-      {
-        "q": "Que filho de Davi se exaltou dizendo: 'Eu reinarei'?",
-        "options": [
-          "Salomão",
-          "Adonias",
-          "Absalão",
-          "Amnom"
-        ],
-        "answer": 1,
-        "ref": "1ª Reis 1:5"
-      }
-    ]
-  },
-  {
-    "day": 84,
-    "questions": [
-      {
-        "q": "Por quantos anos Davi reinou sobre Israel?",
-        "options": [
-          "Trinta",
-          "Vinte",
-          "Cinquenta",
-          "Quarenta"
-        ],
-        "answer": 3,
-        "ref": "1ª Reis 2:11"
-      },
-      {
-        "q": "Quem Salomão colocou como sacerdote no lugar de Abiatar?",
-        "options": [
-          "Natã",
-          "Benaia",
-          "Aimaás",
-          "Zadoque"
-        ],
-        "answer": 3,
-        "ref": "1ª Reis 2:35"
-      },
-      {
-        "q": "Por que Simei foi morto?",
-        "options": [
-          "Saiu de Jerusalém e foi a Gate",
-          "Amaldiçoou Salomão",
-          "Roubou o templo",
-          "Ajudou Adonias"
-        ],
-        "answer": 0,
-        "ref": "1ª Reis 2:40-46"
-      },
-      {
-        "q": "O que Salomão pediu a Deus no sonho em Gibeão?",
-        "options": [
-          "Riquezas",
-          "Vida longa",
-          "Um coração sábio para julgar o povo",
-          "A morte dos inimigos"
-        ],
-        "answer": 2,
-        "ref": "1ª Reis 3:9"
-      },
-      {
-        "q": "O que Salomão mandou trazer para resolver a briga das duas mulheres?",
-        "options": [
-          "Uma balança",
-          "Uma espada",
-          "Um sacerdote",
-          "Um livro da Lei"
-        ],
-        "answer": 1,
-        "ref": "1ª Reis 3:24"
+        "ref": "1ª Samuel 26:15"
       }
     ]
   },
@@ -903,37 +903,577 @@
     "day": 85,
     "questions": [
       {
+        "q": "Em qual monte os israelitas caíram diante dos filisteus?",
+        "options": [
+          "Carmelo",
+          "Sinai",
+          "Gilboa",
+          "Moriá"
+        ],
+        "answer": 2,
+        "ref": "1ª Samuel 31:1"
+      },
+      {
+        "q": "Qual filho de Saul, amigo de Davi, morreu na batalha?",
+        "options": [
+          "Jônatas",
+          "Abner",
+          "Isboset",
+          "Joabe"
+        ],
+        "answer": 0,
+        "ref": "1ª Samuel 31:2"
+      },
+      {
+        "q": "Onde os filisteus colocaram as armas de Saul?",
+        "options": [
+          "No palácio de Gate",
+          "No templo de Astarote",
+          "Num rio",
+          "No altar de Dagom"
+        ],
+        "answer": 1,
+        "ref": "1ª Samuel 31:10"
+      },
+      {
+        "q": "Quem retirou os corpos de Saul e seus filhos do muro de Bete-Seã?",
+        "options": [
+          "Os homens de Belém",
+          "Os filisteus",
+          "Os sacerdotes",
+          "Os moradores de Jabes-Gileade"
+        ],
+        "answer": 3,
+        "ref": "1ª Samuel 31:12"
+      },
+      {
+        "q": "Por quantos dias os homens de Jabes jejuaram?",
+        "options": [
+          "Três",
+          "Sete",
+          "Quarenta",
+          "Um"
+        ],
+        "answer": 1,
+        "ref": "1ª Samuel 31:13"
+      }
+    ]
+  },
+  {
+    "day": 86,
+    "questions": [
+      {
+        "q": "Em que cidade Davi estava quando chegou a notícia da morte de Saul?",
+        "options": [
+          "Hebrom",
+          "Belém",
+          "Ziclague",
+          "Jerusalém"
+        ],
+        "answer": 2,
+        "ref": "2ª Samuel 1:1"
+      },
+      {
+        "q": "De que povo era o jovem que trouxe a notícia a Davi?",
+        "options": [
+          "Amalequita",
+          "Filisteu",
+          "Moabita",
+          "Egípcio"
+        ],
+        "answer": 0,
+        "ref": "2ª Samuel 1:8"
+      },
+      {
+        "q": "O que o jovem trouxe de Saul para Davi?",
+        "options": [
+          "A espada e o escudo",
+          "A lança e o manto",
+          "O arco de Jônatas",
+          "A coroa e o bracelete"
+        ],
+        "answer": 3,
+        "ref": "2ª Samuel 1:10"
+      },
+      {
+        "q": "O que Davi e seus homens fizeram ao ouvir a notícia?",
+        "options": [
+          "Fizeram uma festa",
+          "Rasgaram as vestes e choraram",
+          "Foram para a guerra",
+          "Fugiram para o deserto"
+        ],
+        "answer": 1,
+        "ref": "2ª Samuel 1:11"
+      },
+      {
+        "q": "No lamento de Davi, Saul e Jônatas eram mais ligeiros do que quem?",
+        "options": [
+          "Os cavalos",
+          "As águias",
+          "Os leões",
+          "Os cervos"
+        ],
+        "answer": 1,
+        "ref": "2ª Samuel 1:23"
+      }
+    ]
+  },
+  {
+    "day": 87,
+    "questions": [
+      {
+        "q": "Quantos anos Davi tinha quando começou a reinar?",
+        "options": [
+          "Vinte",
+          "Trinta",
+          "Quarenta",
+          "Dezoito"
+        ],
+        "answer": 1,
+        "ref": "2ª Samuel 5:4"
+      },
+      {
+        "q": "Qual fortaleza Davi capturou e chamou de Cidade de Davi?",
+        "options": [
+          "Sião",
+          "Jericó",
+          "Hebrom",
+          "Gibeá"
+        ],
+        "answer": 0,
+        "ref": "2ª Samuel 5:7"
+      },
+      {
+        "q": "Quem enviou madeira de cedro e carpinteiros para fazer a casa de Davi?",
+        "options": [
+          "Faraó",
+          "Saul",
+          "Hirão, rei de Tiro",
+          "Natã"
+        ],
+        "answer": 2,
+        "ref": "2ª Samuel 5:11"
+      },
+      {
+        "q": "Qual profeta falou com Davi sobre construir uma casa para Deus?",
+        "options": [
+          "Samuel",
+          "Elias",
+          "Gade",
+          "Natã"
+        ],
+        "answer": 3,
+        "ref": "2ª Samuel 7:2"
+      },
+      {
+        "q": "Segundo Deus, quem edificaria uma casa para o Seu nome?",
+        "options": [
+          "O próprio Davi",
+          "Um descendente de Davi",
+          "O profeta Natã",
+          "Hirão"
+        ],
+        "answer": 1,
+        "ref": "2ª Samuel 7:13"
+      }
+    ]
+  },
+  {
+    "day": 88,
+    "questions": [
+      {
+        "q": "Quantos homens corriam à frente do carro de Absalão?",
+        "options": [
+          "Dez",
+          "Cinquenta",
+          "Cem",
+          "Mil"
+        ],
+        "answer": 1,
+        "ref": "2ª Samuel 15:1"
+      },
+      {
+        "q": "Para qual cidade Absalão pediu para ir, dizendo que ia cumprir um voto?",
+        "options": [
+          "Hebrom",
+          "Belém",
+          "Siló",
+          "Jericó"
+        ],
+        "answer": 0,
+        "ref": "2ª Samuel 15:7"
+      },
+      {
+        "q": "Que estrangeiro disse que iria com Davi para a vida ou para a morte?",
+        "options": [
+          "Husai",
+          "Zadoque",
+          "Aitofel",
+          "Itai, o geteu"
+        ],
+        "answer": 3,
+        "ref": "2ª Samuel 15:21"
+      },
+      {
+        "q": "O que Davi mandou Zadoque levar de volta para a cidade?",
+        "options": [
+          "Os soldados",
+          "O tesouro",
+          "A arca de Deus",
+          "As concubinas"
+        ],
+        "answer": 2,
+        "ref": "2ª Samuel 15:25"
+      },
+      {
+        "q": "Como Davi subia a ladeira das Oliveiras?",
+        "options": [
+          "Cantando e dançando",
+          "Chorando, de cabeça coberta e descalço",
+          "Montado num cavalo",
+          "Correndo com a espada"
+        ],
+        "answer": 1,
+        "ref": "2ª Samuel 15:30"
+      }
+    ]
+  },
+  {
+    "day": 89,
+    "questions": [
+      {
+        "q": "Quantos homens Aitofel quis escolher para perseguir Davi?",
+        "options": [
+          "Doze mil",
+          "Mil",
+          "Três mil",
+          "Seiscentos"
+        ],
+        "answer": 0,
+        "ref": "2ª Samuel 17:1"
+      },
+      {
+        "q": "Husai comparou Davi e seus homens a qual animal irritado?",
+        "options": [
+          "Um leão faminto",
+          "Um lobo",
+          "Uma ursa que perdeu os filhotes",
+          "Um touro bravo"
+        ],
+        "answer": 2,
+        "ref": "2ª Samuel 17:8"
+      },
+      {
+        "q": "Qual conselho Absalão e os homens de Israel acharam melhor?",
+        "options": [
+          "O de Aitofel",
+          "O de Joabe",
+          "O de Amasa",
+          "O de Husai"
+        ],
+        "answer": 3,
+        "ref": "2ª Samuel 17:14"
+      },
+      {
+        "q": "Onde Jônatas e Aimaás se esconderam em Baurim?",
+        "options": [
+          "Num poço",
+          "Numa caverna",
+          "Num celeiro",
+          "Debaixo de uma ponte"
+        ],
+        "answer": 0,
+        "ref": "2ª Samuel 17:18"
+      },
+      {
+        "q": "Qual rio Davi e todo o povo atravessaram durante a noite?",
+        "options": [
+          "Nilo",
+          "Jordão",
+          "Eufrates",
+          "Quisom"
+        ],
+        "answer": 1,
+        "ref": "2ª Samuel 17:22"
+      }
+    ]
+  },
+  {
+    "day": 90,
+    "questions": [
+      {
+        "q": "Entre quantos comandantes Davi dividiu o povo para a batalha?",
+        "options": [
+          "Dois",
+          "Quatro",
+          "Três",
+          "Cinco"
+        ],
+        "answer": 2,
+        "ref": "2ª Samuel 18:2"
+      },
+      {
+        "q": "O que Davi pediu aos comandantes sobre Absalão?",
+        "options": [
+          "Que o prendessem",
+          "Que o tratassem com brandura",
+          "Que o expulsassem",
+          "Que o trouxessem ferido"
+        ],
+        "answer": 1,
+        "ref": "2ª Samuel 18:5"
+      },
+      {
+        "q": "Em que floresta aconteceu a batalha?",
+        "options": [
+          "Floresta do Líbano",
+          "Floresta de Basã",
+          "Floresta de Carmelo",
+          "Floresta de Efraim"
+        ],
+        "answer": 3,
+        "ref": "2ª Samuel 18:6"
+      },
+      {
+        "q": "Onde a cabeça de Absalão ficou presa?",
+        "options": [
+          "Nos ramos de um grande carvalho",
+          "Numa rede",
+          "Entre duas pedras",
+          "Na porta da cidade"
+        ],
+        "answer": 0,
+        "ref": "2ª Samuel 18:9"
+      },
+      {
+        "q": "Qual foi a reação de Davi ao saber da morte de Absalão?",
+        "options": [
+          "Comemorou a vitória",
+          "Ficou indiferente",
+          "Chorou por seu filho",
+          "Castigou Joabe na hora"
+        ],
+        "answer": 2,
+        "ref": "2ª Samuel 18:33"
+      }
+    ]
+  },
+  {
+    "day": 91,
+    "questions": [
+      {
+        "q": "Qual filho de Davi foi escolhido para reinar depois dele?",
+        "options": [
+          "Adonias",
+          "Absalão",
+          "Salomão",
+          "Natã"
+        ],
+        "answer": 2,
+        "ref": "1ª Reis 1:30"
+      },
+      {
+        "q": "Em que animal do rei Davi Salomão foi montado até Giom?",
+        "options": [
+          "Na mula",
+          "No cavalo",
+          "No camelo",
+          "No jumento"
+        ],
+        "answer": 0,
+        "ref": "1ª Reis 1:38"
+      },
+      {
+        "q": "Onde Adonias se agarrou por medo de Salomão?",
+        "options": [
+          "Na porta da cidade",
+          "Nas pontas do altar",
+          "Na arca",
+          "No trono"
+        ],
+        "answer": 1,
+        "ref": "1ª Reis 1:50"
+      },
+      {
+        "q": "Em qual cidade o Senhor apareceu a Salomão em sonho?",
+        "options": [
+          "Belém",
+          "Hebrom",
+          "Jerusalém",
+          "Gibeão"
+        ],
+        "answer": 3,
+        "ref": "1ª Reis 3:5"
+      },
+      {
+        "q": "O que Salomão pediu a Deus?",
+        "options": [
+          "Riquezas",
+          "Vida longa",
+          "Um coração compreensivo para julgar",
+          "Vitória sobre os inimigos"
+        ],
+        "answer": 2,
+        "ref": "1ª Reis 3:9"
+      }
+    ]
+  },
+  {
+    "day": 92,
+    "questions": [
+      {
+        "q": "Debaixo de que plantas o povo habitava em segurança nos dias de Salomão?",
+        "options": [
+          "Videira e figueira",
+          "Palmeira e oliveira",
+          "Cedro e cipreste",
+          "Carvalho e salgueiro"
+        ],
+        "answer": 0,
+        "ref": "1ª Reis 4:25"
+      },
+      {
+        "q": "Quantos cavalos Salomão tinha em estrebarias?",
+        "options": [
+          "Mil",
+          "Doze mil",
+          "Quarenta mil",
+          "Cem mil"
+        ],
+        "answer": 2,
+        "ref": "1ª Reis 4:26"
+      },
+      {
+        "q": "A sabedoria de Salomão foi comparada a quê?",
+        "options": [
+          "Às estrelas do céu",
+          "À areia da beira do mar",
+          "Às gotas de chuva",
+          "Às folhas das árvores"
+        ],
+        "answer": 1,
+        "ref": "1ª Reis 4:29"
+      },
+      {
         "q": "Quantos provérbios Salomão pronunciou?",
         "options": [
           "Mil",
-          "Quinhentos",
-          "Três mil",
-          "Dez mil"
+          "Cem",
+          "Dez mil",
+          "Três mil"
         ],
-        "answer": 2,
+        "answer": 3,
         "ref": "1ª Reis 4:32"
       },
       {
-        "q": "Que madeira Hirão enviou do Líbano para a construção do templo?",
+        "q": "Quem vinha para ouvir a sabedoria de Salomão?",
         "options": [
-          "Cedro e cipreste",
-          "Carvalho e pinho",
-          "Acácia e oliveira",
-          "Figueira e palmeira"
+          "Só os israelitas",
+          "Gente de todos os povos",
+          "Só os sacerdotes",
+          "Só os egípcios"
         ],
-        "answer": 0,
-        "ref": "1ª Reis 5:8-10"
+        "answer": 1,
+        "ref": "1ª Reis 4:34"
+      }
+    ]
+  },
+  {
+    "day": 93,
+    "questions": [
+      {
+        "q": "Qual rei de Tiro era amigo de Davi?",
+        "options": [
+          "Faraó",
+          "Hirão",
+          "Naás",
+          "Agague"
+        ],
+        "answer": 1,
+        "ref": "1ª Reis 5:1"
       },
       {
-        "q": "Por que não se ouviu martelo nem machado durante a construção do templo?",
+        "q": "Por que Davi não pôde edificar a casa do Senhor?",
         "options": [
-          "Era proibido trabalhar de dia",
-          "Usavam só madeira",
-          "As pedras já vinham preparadas",
-          "Os anjos construíram"
+          "Por causa das guerras",
+          "Por falta de dinheiro",
+          "Por falta de madeira",
+          "Por estar doente"
+        ],
+        "answer": 0,
+        "ref": "1ª Reis 5:3"
+      },
+      {
+        "q": "Que madeira Salomão pediu que cortassem no Líbano?",
+        "options": [
+          "Carvalho",
+          "Acácia",
+          "Oliveira",
+          "Cedro"
+        ],
+        "answer": 3,
+        "ref": "1ª Reis 5:6"
+      },
+      {
+        "q": "Como a madeira foi levada pelo mar?",
+        "options": [
+          "Em navios de guerra",
+          "Em carroças",
+          "Em jangadas",
+          "Em camelos"
+        ],
+        "answer": 2,
+        "ref": "1ª Reis 5:9"
+      },
+      {
+        "q": "Quantos trabalhadores eram enviados ao Líbano por mês?",
+        "options": [
+          "Dez mil",
+          "Mil",
+          "Trinta mil",
+          "Setenta mil"
+        ],
+        "answer": 0,
+        "ref": "1ª Reis 5:14"
+      }
+    ]
+  },
+  {
+    "day": 94,
+    "questions": [
+      {
+        "q": "Em que ano do seu reinado Salomão começou a edificar a Casa do Senhor?",
+        "options": [
+          "No primeiro",
+          "No quarto",
+          "No décimo",
+          "No sétimo"
+        ],
+        "answer": 1,
+        "ref": "1ª Reis 6:1"
+      },
+      {
+        "q": "Que barulho não se ouviu na casa enquanto a construíam?",
+        "options": [
+          "De vozes",
+          "De música",
+          "De martelo e machado",
+          "De animais"
         ],
         "answer": 2,
         "ref": "1ª Reis 6:7"
+      },
+      {
+        "q": "Com que madeira foram revestidas as paredes do templo por dentro?",
+        "options": [
+          "Cedro",
+          "Pinho",
+          "Acácia",
+          "Carvalho"
+        ],
+        "answer": 0,
+        "ref": "1ª Reis 6:15"
       },
       {
         "q": "De que madeira foram feitos os dois querubins do Santo dos Santos?",
@@ -949,43 +1489,54 @@
       {
         "q": "Em quantos anos Salomão edificou o templo?",
         "options": [
-          "Três anos",
-          "Vinte anos",
-          "Doze anos",
-          "Sete anos"
+          "Sete",
+          "Três",
+          "Treze",
+          "Vinte"
         ],
-        "answer": 3,
+        "answer": 0,
         "ref": "1ª Reis 6:38"
       }
     ]
   },
   {
-    "day": 86,
+    "day": 95,
     "questions": [
       {
         "q": "Em quantos anos Salomão construiu seus palácios?",
         "options": [
           "Sete",
+          "Vinte",
           "Treze",
-          "Quarenta",
-          "Três"
+          "Quarenta"
         ],
-        "answer": 1,
+        "answer": 2,
         "ref": "1ª Reis 7:1"
       },
       {
-        "q": "Que nomes Salomão deu às duas colunas de bronze do pórtico?",
+        "q": "Em que material Hirão de Tiro era especialista?",
+        "options": [
+          "Ouro",
+          "Bronze",
+          "Madeira",
+          "Pedra"
+        ],
+        "answer": 1,
+        "ref": "1ª Reis 7:14"
+      },
+      {
+        "q": "Que nomes foram dados às duas colunas do pórtico?",
         "options": [
           "Jaquim e Boaz",
           "Sião e Moriá",
-          "Ebenézer e Betel",
-          "Hirão e Davi"
+          "Davi e Salomão",
+          "Aliança e Lei"
         ],
         "answer": 0,
         "ref": "1ª Reis 7:21"
       },
       {
-        "q": "Sobre quantos bois estava apoiado o mar de fundição?",
+        "q": "Sobre quantos bois se apoiava o mar de fundição?",
         "options": [
           "Quatro",
           "Sete",
@@ -996,236 +1547,345 @@
         "ref": "1ª Reis 7:25"
       },
       {
-        "q": "O que havia dentro da arca levada ao templo?",
+        "q": "Quantos castiçais de ouro havia diante do Santo dos Santos?",
         "options": [
-          "O maná e a vara de Arão",
-          "O livro da Lei",
-          "As duas tábuas de pedra",
-          "Ouro e prata"
+          "Sete",
+          "Dois",
+          "Dez",
+          "Doze"
         ],
         "answer": 2,
-        "ref": "1ª Reis 8:9"
-      },
-      {
-        "q": "O que encheu a Casa do Senhor quando os sacerdotes saíram do santuário?",
-        "options": [
-          "Um fogo",
-          "Um som de trombeta",
-          "Um vento forte",
-          "Uma nuvem"
-        ],
-        "answer": 3,
-        "ref": "1ª Reis 8:10"
+        "ref": "1ª Reis 7:49"
       }
     ]
   },
   {
-    "day": 87,
+    "day": 96,
     "questions": [
       {
-        "q": "Que rainha veio provar Salomão com perguntas difíceis?",
+        "q": "Onde os sacerdotes colocaram a arca da Aliança?",
         "options": [
-          "A rainha do Egito",
-          "A rainha de Sabá",
-          "A rainha de Tiro",
-          "A rainha de Moabe"
+          "No pátio",
+          "No Santo dos Santos",
+          "Na casa do rei",
+          "Na porta do templo"
         ],
         "answer": 1,
+        "ref": "1ª Reis 8:6"
+      },
+      {
+        "q": "O que havia dentro da arca?",
+        "options": [
+          "As duas tábuas de pedra",
+          "O maná e a vara de Arão",
+          "Ouro e prata",
+          "Nada"
+        ],
+        "answer": 0,
+        "ref": "1ª Reis 8:9"
+      },
+      {
+        "q": "O que encheu a Casa do Senhor quando os sacerdotes saíram?",
+        "options": [
+          "Fogo",
+          "Fumaça de incenso",
+          "Uma nuvem",
+          "Água"
+        ],
+        "answer": 2,
+        "ref": "1ª Reis 8:10"
+      },
+      {
+        "q": "Segundo Salomão, o que não pode conter a Deus?",
+        "options": [
+          "Nem o mar",
+          "Nem as montanhas",
+          "Nem a terra",
+          "Nem o céu dos céus"
+        ],
+        "answer": 3,
+        "ref": "1ª Reis 8:27"
+      },
+      {
+        "q": "Qual festa Salomão celebrou ao consagrar o templo?",
+        "options": [
+          "Festa dos Tabernáculos",
+          "Páscoa",
+          "Lua Nova",
+          "Pentecostes"
+        ],
+        "answer": 0,
+        "ref": "1ª Reis 8:65"
+      }
+    ]
+  },
+  {
+    "day": 97,
+    "questions": [
+      {
+        "q": "Qual rainha veio provar Salomão com perguntas difíceis?",
+        "options": [
+          "Rainha do Egito",
+          "Rainha Ester",
+          "Rainha de Sabá",
+          "Rainha Jezabel"
+        ],
+        "answer": 2,
         "ref": "1ª Reis 10:1"
+      },
+      {
+        "q": "O que a rainha disse sobre a fama de Salomão?",
+        "options": [
+          "Que era exagerada",
+          "Que não lhe contaram nem a metade",
+          "Que era mentira",
+          "Que era igual à dela"
+        ],
+        "answer": 1,
+        "ref": "1ª Reis 10:7"
       },
       {
         "q": "De que material era o grande trono de Salomão, coberto de ouro?",
         "options": [
-          "Marfim",
           "Cedro",
+          "Pedra",
           "Bronze",
-          "Pedra"
+          "Marfim"
         ],
-        "answer": 0,
+        "answer": 3,
         "ref": "1ª Reis 10:18"
       },
       {
-        "q": "O que as mulheres estrangeiras fizeram com Salomão na velhice?",
+        "q": "Quantos leões havia sobre os seis degraus do trono?",
         "options": [
-          "Deram-lhe muitos filhos",
-          "Ensinaram-lhe sabedoria",
-          "Desviaram seu coração para outros deuses",
-          "Fizeram-no rico"
+          "Doze",
+          "Dois",
+          "Seis",
+          "Sete"
         ],
-        "answer": 2,
-        "ref": "1ª Reis 11:4"
+        "answer": 0,
+        "ref": "1ª Reis 10:20"
       },
       {
-        "q": "Em quantos pedaços o profeta Aías rasgou seu manto novo?",
+        "q": "Por que não havia prata nos utensílios de Salomão?",
         "options": [
-          "Dois",
-          "Dez",
-          "Sete",
-          "Doze"
+          "Era proibida",
+          "Tinha acabado",
+          "Não se dava valor a ela",
+          "Era muito pesada"
         ],
-        "answer": 3,
+        "answer": 2,
+        "ref": "1ª Reis 10:21"
+      }
+    ]
+  },
+  {
+    "day": 98,
+    "questions": [
+      {
+        "q": "Por que o Senhor se indignou contra Salomão?",
+        "options": [
+          "Porque não construiu o templo",
+          "Porque desviou o coração para outros deuses",
+          "Porque perdeu uma guerra",
+          "Porque não pagou Hirão"
+        ],
+        "answer": 1,
+        "ref": "1ª Reis 11:9"
+      },
+      {
+        "q": "Em quantos pedaços o profeta Aías rasgou o manto novo?",
+        "options": [
+          "Dez",
+          "Dois",
+          "Doze",
+          "Sete"
+        ],
+        "answer": 2,
         "ref": "1ª Reis 11:30"
       },
       {
-        "q": "Quem reinou no lugar de Salomão após sua morte?",
+        "q": "Quantos pedaços Aías mandou Jeroboão pegar?",
         "options": [
-          "Jeroboão",
-          "Hadade",
-          "Roboão",
-          "Rezom"
+          "Dez",
+          "Doze",
+          "Um",
+          "Dois"
         ],
-        "answer": 2,
-        "ref": "1ª Reis 11:43"
+        "answer": 0,
+        "ref": "1ª Reis 11:31"
+      },
+      {
+        "q": "Para onde Jeroboão fugiu quando Salomão quis matá-lo?",
+        "options": [
+          "Para Edom",
+          "Para a Síria",
+          "Para Moabe",
+          "Para o Egito"
+        ],
+        "answer": 3,
+        "ref": "1ª Reis 11:40"
+      },
+      {
+        "q": "Quantos anos Salomão reinou sobre todo o Israel?",
+        "options": [
+          "Vinte",
+          "Quarenta",
+          "Trinta",
+          "Sete"
+        ],
+        "answer": 1,
+        "ref": "1ª Reis 11:42"
       }
     ]
   },
   {
-    "day": 88,
+    "day": 99,
     "questions": [
       {
-        "q": "Qual conselho Roboão seguiu ao responder ao povo?",
+        "q": "Em que cidade todo o Israel se reuniu para fazer Roboão rei?",
         "options": [
-          "O dos anciãos",
-          "O dos profetas",
-          "O dos jovens que cresceram com ele",
-          "O de Jeroboão"
+          "Siquém",
+          "Jerusalém",
+          "Betel",
+          "Hebrom"
         ],
-        "answer": 2,
-        "ref": "1ª Reis 12:8-13"
+        "answer": 0,
+        "ref": "1ª Reis 12:1"
       },
       {
-        "q": "O que Jeroboão fez para o povo não subir a Jerusalém?",
+        "q": "De quem foi o conselho que Roboão desprezou?",
+        "options": [
+          "Dos sacerdotes",
+          "Dos jovens",
+          "Dos anciãos",
+          "Dos profetas"
+        ],
+        "answer": 2,
+        "ref": "1ª Reis 12:8"
+      },
+      {
+        "q": "Com o que Roboão disse que castigaria o povo, em vez de açoites?",
+        "options": [
+          "Varas",
+          "Pedras",
+          "Correntes",
+          "Escorpiões"
+        ],
+        "answer": 3,
+        "ref": "1ª Reis 12:14"
+      },
+      {
+        "q": "Qual tribo permaneceu fiel à casa de Davi?",
+        "options": [
+          "Efraim",
+          "Judá",
+          "Dã",
+          "Levi"
+        ],
+        "answer": 1,
+        "ref": "1ª Reis 12:20"
+      },
+      {
+        "q": "O que Jeroboão fez para que o povo não fosse a Jerusalém?",
         "options": [
           "Dois bezerros de ouro",
-          "Um novo templo de cedro",
-          "Uma muralha na fronteira",
-          "Uma lei proibindo viagens"
+          "Um novo templo de pedra",
+          "Uma muralha",
+          "Uma festa de casamento"
         ],
         "answer": 0,
         "ref": "1ª Reis 12:28"
-      },
-      {
-        "q": "Em quais cidades Jeroboão colocou os bezerros?",
-        "options": [
-          "Siquém e Penuel",
-          "Betel e Dã",
-          "Jerusalém e Hebrom",
-          "Samaria e Jezreel"
-        ],
-        "answer": 1,
-        "ref": "1ª Reis 12:29"
-      },
-      {
-        "q": "O que aconteceu com a mão de Jeroboão quando mandou prender o homem de Deus?",
-        "options": [
-          "Ficou leprosa",
-          "Pegou fogo",
-          "Foi cortada",
-          "Secou"
-        ],
-        "answer": 3,
-        "ref": "1ª Reis 13:4"
-      },
-      {
-        "q": "Que animal matou o homem de Deus que desobedeceu ao Senhor?",
-        "options": [
-          "Um urso",
-          "Um leão",
-          "Uma serpente",
-          "Um lobo"
-        ],
-        "answer": 1,
-        "ref": "1ª Reis 13:24"
       }
     ]
   },
   {
-    "day": 89,
+    "day": 100,
     "questions": [
       {
-        "q": "Por que a mulher de Jeroboão foi disfarçada ao profeta Aías?",
+        "q": "O que Elias disse a Acabe que não haveria naqueles anos?",
         "options": [
-          "Para pedir chuva",
-          "Para saber o que aconteceria ao filho doente",
-          "Para fugir do rei",
-          "Para comprar terras"
+          "Pão nem vinho",
+          "Orvalho nem chuva",
+          "Paz nem guerra",
+          "Sol nem lua"
         ],
         "answer": 1,
-        "ref": "1ª Reis 14:2-3"
+        "ref": "1ª Reis 17:1"
       },
       {
-        "q": "O que Sisaque, rei do Egito, levou de Jerusalém?",
-        "options": [
-          "A arca da aliança",
-          "O rei Roboão",
-          "Os tesouros e os escudos de ouro",
-          "Os sacerdotes"
-        ],
-        "answer": 2,
-        "ref": "1ª Reis 14:25-26"
-      },
-      {
-        "q": "O que o rei Asa fez com a imagem abominável de sua mãe Maaca?",
-        "options": [
-          "Destruiu e queimou no vale de Cedrom",
-          "Colocou no templo",
-          "Enviou para a Síria",
-          "Vendeu por prata"
-        ],
-        "answer": 0,
-        "ref": "1ª Reis 15:13"
-      },
-      {
-        "q": "Por quantos dias Zinri reinou em Tirza?",
-        "options": [
-          "Dois anos",
-          "Um mês",
-          "Doze dias",
-          "Sete dias"
-        ],
-        "answer": 3,
-        "ref": "1ª Reis 16:15"
-      },
-      {
-        "q": "Com quem Acabe se casou, passando a servir a Baal?",
-        "options": [
-          "Jezabel",
-          "Maaca",
-          "Naamá",
-          "Atalia"
-        ],
-        "answer": 0,
-        "ref": "1ª Reis 16:31"
-      }
-    ]
-  },
-  {
-    "day": 90,
-    "questions": [
-      {
-        "q": "Que aves levavam pão e carne a Elias junto ao ribeiro de Querite?",
+        "q": "Que aves levavam pão e carne para Elias junto ao ribeiro?",
         "options": [
           "Pombas",
           "Águias",
           "Corvos",
-          "Codornizes"
+          "Pardais"
         ],
         "answer": 2,
         "ref": "1ª Reis 17:6"
       },
       {
-        "q": "O que não se acabou na casa da viúva de Sarepta?",
+        "q": "Para qual cidade Deus mandou Elias depois que o ribeiro secou?",
         "options": [
-          "A farinha e o azeite",
-          "O vinho e o pão",
-          "A água e o mel",
-          "O trigo e a cevada"
+          "Sarepta",
+          "Samaria",
+          "Jericó",
+          "Betel"
         ],
         "answer": 0,
-        "ref": "1ª Reis 17:16"
+        "ref": "1ª Reis 17:9"
       },
       {
-        "q": "Quantas pedras Elias usou para reconstruir o altar no Carmelo?",
+        "q": "O que a viúva tinha em casa quando Elias chegou?",
+        "options": [
+          "Muito pão e vinho",
+          "Só água",
+          "Nada",
+          "Um punhado de farinha e um pouco de azeite"
+        ],
+        "answer": 3,
+        "ref": "1ª Reis 17:12"
+      },
+      {
+        "q": "O que aconteceu com a farinha e o azeite da viúva?",
+        "options": [
+          "Acabaram no dia seguinte",
+          "Não se esgotaram",
+          "Estragaram",
+          "Foram roubados"
+        ],
+        "answer": 1,
+        "ref": "1ª Reis 17:16"
+      }
+    ]
+  },
+  {
+    "day": 101,
+    "questions": [
+      {
+        "q": "Quantos profetas do Senhor Obadias escondeu em covas?",
+        "options": [
+          "Cem",
+          "Doze",
+          "Cinquenta",
+          "Mil"
+        ],
+        "answer": 0,
+        "ref": "1ª Reis 18:13"
+      },
+      {
+        "q": "Em qual monte Elias reuniu o povo e os profetas de Baal?",
+        "options": [
+          "Sinai",
+          "Carmelo",
+          "Sião",
+          "Horebe"
+        ],
+        "answer": 1,
+        "ref": "1ª Reis 18:20"
+      },
+      {
+        "q": "Quantas pedras Elias usou para reconstruir o altar?",
         "options": [
           "Sete",
           "Dez",
@@ -1236,686 +1896,26 @@
         "ref": "1ª Reis 18:31"
       },
       {
-        "q": "O que o fogo do Senhor consumiu no monte Carmelo?",
+        "q": "O que o povo exclamou ao ver o fogo do Senhor cair?",
         "options": [
-          "Só o novilho",
-          "O holocausto, a lenha, as pedras e a água",
-          "O altar de Baal",
-          "Os profetas de Baal"
-        ],
-        "answer": 1,
-        "ref": "1ª Reis 18:38"
-      },
-      {
-        "q": "No monte Horebe, como o Senhor se manifestou a Elias depois do fogo?",
-        "options": [
-          "Num grande vento",
-          "Num terremoto",
-          "Num cicio tranquilo e suave",
-          "Numa nuvem escura"
+          "Viva o rei Acabe!",
+          "Baal é grande!",
+          "O Senhor é Deus!",
+          "Elias é rei!"
         ],
         "answer": 2,
-        "ref": "1ª Reis 19:12"
-      }
-    ]
-  },
-  {
-    "day": 91,
-    "questions": [
-      {
-        "q": "Os sírios disseram que o Deus de Israel era Deus de quê?",
-        "options": [
-          "Dos mares",
-          "Dos montes",
-          "Dos desertos",
-          "Das cidades"
-        ],
-        "answer": 1,
-        "ref": "1ª Reis 20:23"
+        "ref": "1ª Reis 18:39"
       },
       {
-        "q": "O que Acabe queria de Nabote, o jezreelita?",
+        "q": "Na sétima vez, o que o servo de Elias viu subir do mar?",
         "options": [
-          "Sua casa",
-          "Seus bois",
-          "Sua vinha",
-          "Seu poço"
-        ],
-        "answer": 2,
-        "ref": "1ª Reis 21:2"
-      },
-      {
-        "q": "Quem planejou a morte de Nabote usando falsas testemunhas?",
-        "options": [
-          "Jezabel",
-          "Acabe",
-          "Os anciãos de Samaria",
-          "Elias"
-        ],
-        "answer": 0,
-        "ref": "1ª Reis 21:8-10"
-      },
-      {
-        "q": "Qual profeta Acabe odiava porque só profetizava o mal sobre ele?",
-        "options": [
-          "Zedequias",
-          "Elias",
-          "Eliseu",
-          "Micaías, filho de Inlá"
-        ],
-        "answer": 3,
-        "ref": "1ª Reis 22:8"
-      },
-      {
-        "q": "Como Acabe foi ferido na batalha de Ramote-Gileade?",
-        "options": [
-          "Por uma lança de Ben-Hadade",
-          "Por uma flecha atirada ao acaso",
-          "Caiu do carro",
-          "Por uma pedra de funda"
-        ],
-        "answer": 1,
-        "ref": "1ª Reis 22:34"
-      }
-    ]
-  },
-  {
-    "day": 92,
-    "questions": [
-      {
-        "q": "Que deus o rei Acazias mandou consultar quando ficou doente?",
-        "options": [
-          "Baal-Zebube, deus de Ecrom",
-          "Dagom",
-          "Quemos",
-          "Moloque"
-        ],
-        "answer": 0,
-        "ref": "2ª Reis 1:2"
-      },
-      {
-        "q": "Como os mensageiros descreveram Elias ao rei?",
-        "options": [
-          "Alto e de barba branca",
-          "Vestido de linho fino",
-          "Vestido de peles, com cinto de couro",
-          "Montado num jumento"
-        ],
-        "answer": 2,
-        "ref": "2ª Reis 1:8"
-      },
-      {
-        "q": "O que Eliseu pediu a Elias antes de ele ser levado?",
-        "options": [
-          "Seu manto",
-          "Riquezas",
-          "Ser rei de Israel",
-          "Porção dobrada do seu espírito"
-        ],
-        "answer": 3,
-        "ref": "2ª Reis 2:9"
-      },
-      {
-        "q": "Como Elias foi levado ao céu?",
-        "options": [
-          "Numa nuvem",
-          "Num redemoinho",
-          "Numa escada",
-          "Nas asas de um anjo"
-        ],
-        "answer": 1,
-        "ref": "2ª Reis 2:11"
-      },
-      {
-        "q": "O que Eliseu lançou no manancial para curar as águas de Jericó?",
-        "options": [
-          "Farinha",
-          "Óleo",
-          "Sal",
-          "Areia"
-        ],
-        "answer": 2,
-        "ref": "2ª Reis 2:21"
-      }
-    ]
-  },
-  {
-    "day": 93,
-    "questions": [
-      {
-        "q": "O que a viúva tinha em casa quando pediu ajuda a Eliseu?",
-        "options": [
-          "Um saco de trigo",
-          "Uma botija de azeite",
-          "Duas moedas",
-          "Um jumento"
-        ],
-        "answer": 1,
-        "ref": "2ª Reis 4:2"
-      },
-      {
-        "q": "Quantas vezes o filho da sunamita espirrou ao voltar à vida?",
-        "options": [
-          "Três",
-          "Uma",
-          "Sete",
-          "Doze"
-        ],
-        "answer": 2,
-        "ref": "2ª Reis 4:35"
-      },
-      {
-        "q": "Quantas vezes Naamã devia se lavar no rio Jordão?",
-        "options": [
-          "Sete",
-          "Três",
-          "Dez",
-          "Uma"
-        ],
-        "answer": 0,
-        "ref": "2ª Reis 5:10"
-      },
-      {
-        "q": "O que aconteceu com Geazi por ter mentido e aceitado os presentes de Naamã?",
-        "options": [
-          "Ficou cego",
-          "Foi preso",
-          "Ficou mudo",
-          "Ficou leproso"
-        ],
-        "answer": 3,
-        "ref": "2ª Reis 5:27"
-      },
-      {
-        "q": "O que o servo de Eliseu viu quando seus olhos foram abertos?",
-        "options": [
-          "Anjos cantando",
-          "Cavalos e carros de fogo",
-          "Um mar de cristal",
-          "A cidade em chamas"
-        ],
-        "answer": 1,
-        "ref": "2ª Reis 6:17"
-      }
-    ]
-  },
-  {
-    "day": 94,
-    "questions": [
-      {
-        "q": "Quantos leprosos foram ao acampamento dos sírios e o encontraram vazio?",
-        "options": [
-          "Dois",
-          "Dez",
-          "Quatro",
-          "Sete"
-        ],
-        "answer": 2,
-        "ref": "2ª Reis 7:3-5"
-      },
-      {
-        "q": "Por que os sírios fugiram e deixaram o acampamento?",
-        "options": [
-          "O Senhor os fez ouvir barulho de um grande exército",
-          "Houve um terremoto",
-          "Eliseu os cegou",
-          "Choveu fogo do céu"
-        ],
-        "answer": 0,
-        "ref": "2ª Reis 7:6-7"
-      },
-      {
-        "q": "Por quantos anos a sunamita morou na terra dos filisteus por causa da fome?",
-        "options": [
-          "Três",
-          "Sete",
-          "Dez",
-          "Doze"
-        ],
-        "answer": 1,
-        "ref": "2ª Reis 8:2"
-      },
-      {
-        "q": "Quem foi ungido rei sobre Israel por um discípulo dos profetas em Ramote-Gileade?",
-        "options": [
-          "Hazael",
-          "Jorão",
-          "Acazias",
-          "Jeú"
-        ],
-        "answer": 3,
-        "ref": "2ª Reis 9:6"
-      },
-      {
-        "q": "Como o atalaia reconheceu que quem vinha era Jeú?",
-        "options": [
-          "Pela bandeira",
-          "Pelo cavalo branco",
-          "Pelo modo impetuoso de guiar o carro",
-          "Pela voz"
-        ],
-        "answer": 2,
-        "ref": "2ª Reis 9:20"
-      }
-    ]
-  },
-  {
-    "day": 95,
-    "questions": [
-      {
-        "q": "Quem Jeú convidou a subir no seu carro para ver seu zelo pelo Senhor?",
-        "options": [
-          "Eliseu",
-          "Jonadabe, filho de Recabe",
-          "Bidcar",
-          "Joiada"
-        ],
-        "answer": 1,
-        "ref": "2ª Reis 10:15-16"
-      },
-      {
-        "q": "Como Jeú reuniu todos os adoradores de Baal para destruí-los?",
-        "options": [
-          "Fingiu que faria um grande sacrifício a Baal",
-          "Prometeu-lhes ouro",
-          "Convidou-os para um casamento",
-          "Mandou prendê-los um a um"
-        ],
-        "answer": 0,
-        "ref": "2ª Reis 10:19"
-      },
-      {
-        "q": "Por quantos anos o menino Joás ficou escondido na Casa do Senhor?",
-        "options": [
-          "Três",
-          "Sete",
-          "Doze",
-          "Seis"
-        ],
-        "answer": 3,
-        "ref": "2ª Reis 11:3"
-      },
-      {
-        "q": "Quantos anos Joás tinha quando foi feito rei?",
-        "options": [
-          "Cinco",
-          "Dez",
-          "Sete",
-          "Doze"
-        ],
-        "answer": 2,
-        "ref": "2ª Reis 11:21"
-      },
-      {
-        "q": "Onde o sacerdote Joiada fez um buraco para recolher o dinheiro do templo?",
-        "options": [
-          "Na tampa de uma caixa",
-          "Numa parede",
-          "No chão do pátio",
-          "Num jarro de barro"
-        ],
-        "answer": 0,
-        "ref": "2ª Reis 12:9"
-      }
-    ]
-  },
-  {
-    "day": 96,
-    "questions": [
-      {
-        "q": "Quantas vezes o rei Jeoás feriu a terra com as flechas diante de Eliseu?",
-        "options": [
-          "Uma",
-          "Três",
-          "Cinco",
-          "Sete"
-        ],
-        "answer": 1,
-        "ref": "2ª Reis 13:18"
-      },
-      {
-        "q": "O que aconteceu quando um morto tocou os ossos de Eliseu?",
-        "options": [
-          "Os ossos brilharam",
-          "A terra tremeu",
-          "Choveu na terra",
-          "O homem reviveu"
-        ],
-        "answer": 3,
-        "ref": "2ª Reis 13:21"
-      },
-      {
-        "q": "Na parábola de Jeoás a Amazias, o cardo do Líbano falou com quem?",
-        "options": [
-          "Com o cedro",
-          "Com a oliveira",
-          "Com a videira",
-          "Com a figueira"
-        ],
-        "answer": 0,
-        "ref": "2ª Reis 14:9"
-      },
-      {
-        "q": "Qual profeta, filho de Amitai, é citado no reinado de Jeroboão II?",
-        "options": [
-          "Eliseu",
-          "Isaías",
-          "Jonas",
-          "Oseias"
-        ],
-        "answer": 2,
-        "ref": "2ª Reis 14:25"
-      },
-      {
-        "q": "Com que doença o Senhor feriu o rei Azarias?",
-        "options": [
-          "Cegueira",
-          "Lepra",
-          "Febre",
-          "Paralisia"
-        ],
-        "answer": 1,
-        "ref": "2ª Reis 15:5"
-      }
-    ]
-  },
-  {
-    "day": 97,
-    "questions": [
-      {
-        "q": "Onde Acaz viu o altar que mandou o sacerdote Urias copiar?",
-        "options": [
-          "Em Damasco",
-          "Em Nínive",
-          "Em Samaria",
-          "No Egito"
-        ],
-        "answer": 0,
-        "ref": "2ª Reis 16:10"
-      },
-      {
-        "q": "Qual império tomou Samaria e levou Israel cativo?",
-        "options": [
-          "Egito",
-          "Babilônia",
-          "Assíria",
-          "Pérsia"
-        ],
-        "answer": 2,
-        "ref": "2ª Reis 17:6"
-      },
-      {
-        "q": "O que o Senhor enviou contra os povos que não o temiam nas cidades de Samaria?",
-        "options": [
-          "Gafanhotos",
-          "Ursos",
-          "Uma seca",
-          "Leões"
-        ],
-        "answer": 3,
-        "ref": "2ª Reis 17:25"
-      },
-      {
-        "q": "Que objeto feito por Moisés o rei Ezequias destruiu?",
-        "options": [
-          "A arca",
-          "A serpente de bronze",
-          "O candelabro",
-          "As tábuas da Lei"
-        ],
-        "answer": 1,
-        "ref": "2ª Reis 18:4"
-      },
-      {
-        "q": "Segundo Rabsaqué, o Egito era como um bordão de quê?",
-        "options": [
-          "De ferro",
-          "De ouro",
-          "De cedro",
-          "De cana esmagada"
-        ],
-        "answer": 3,
-        "ref": "2ª Reis 18:21"
-      }
-    ]
-  },
-  {
-    "day": 98,
-    "questions": [
-      {
-        "q": "O que Ezequias fez com as cartas ameaçadoras do rei da Assíria?",
-        "options": [
-          "Queimou-as",
-          "Estendeu-as perante o Senhor no templo",
-          "Devolveu-as ao mensageiro",
-          "Leu-as ao povo"
-        ],
-        "answer": 1,
-        "ref": "2ª Reis 19:14"
-      },
-      {
-        "q": "Quantos o anjo do Senhor feriu no acampamento assírio numa noite?",
-        "options": [
-          "Cento e oitenta e cinco mil",
-          "Dez mil",
-          "Setenta mil",
-          "Quarenta mil"
-        ],
-        "answer": 0,
-        "ref": "2ª Reis 19:35"
-      },
-      {
-        "q": "Quantos anos o Senhor acrescentou à vida de Ezequias?",
-        "options": [
-          "Dez",
-          "Vinte",
-          "Cinco",
-          "Quinze"
-        ],
-        "answer": 3,
-        "ref": "2ª Reis 20:6"
-      },
-      {
-        "q": "Qual foi o sinal dado a Ezequias de que seria curado?",
-        "options": [
+          "Uma pequena nuvem como a palma da mão",
+          "Um grande navio",
           "Um arco-íris",
-          "Chuva fora de época",
-          "A sombra retrocedeu dez graus",
-          "O sol escureceu"
-        ],
-        "answer": 2,
-        "ref": "2ª Reis 20:10-11"
-      },
-      {
-        "q": "Quantos anos Manassés tinha quando começou a reinar?",
-        "options": [
-          "Oito",
-          "Doze",
-          "Dezesseis",
-          "Vinte"
-        ],
-        "answer": 1,
-        "ref": "2ª Reis 21:1"
-      }
-    ]
-  },
-  {
-    "day": 99,
-    "questions": [
-      {
-        "q": "Quantos anos Josias tinha quando começou a reinar?",
-        "options": [
-          "Oito",
-          "Doze",
-          "Dezoito",
-          "Vinte e cinco"
+          "Uma tempestade de areia"
         ],
         "answer": 0,
-        "ref": "2ª Reis 22:1"
-      },
-      {
-        "q": "O que o sumo sacerdote Hilquias encontrou na Casa do Senhor?",
-        "options": [
-          "A arca perdida",
-          "Um tesouro de ouro",
-          "O Livro da Lei",
-          "A vara de Arão"
-        ],
-        "answer": 2,
-        "ref": "2ª Reis 22:8"
-      },
-      {
-        "q": "Qual profetisa foi consultada sobre as palavras do livro encontrado?",
-        "options": [
-          "Débora",
-          "Hulda",
-          "Miriã",
-          "Ana"
-        ],
-        "answer": 1,
-        "ref": "2ª Reis 22:14"
-      },
-      {
-        "q": "Que festa Josias mandou celebrar como nunca antes desde os juízes?",
-        "options": [
-          "Festa dos Tabernáculos",
-          "Festa da Colheita",
-          "Festa da Lua Nova",
-          "Páscoa"
-        ],
-        "answer": 3,
-        "ref": "2ª Reis 23:21-22"
-      },
-      {
-        "q": "Qual rei da Babilônia levou Joaquim cativo?",
-        "options": [
-          "Nabucodonosor",
-          "Merodaque-Baladã",
-          "Senaqueribe",
-          "Neco"
-        ],
-        "answer": 0,
-        "ref": "2ª Reis 24:11-12"
-      }
-    ]
-  },
-  {
-    "day": 100,
-    "questions": [
-      {
-        "q": "O que os babilônios fizeram com o rei Zedequias depois de capturá-lo?",
-        "options": [
-          "Fizeram-no governador",
-          "Libertaram-no",
-          "Cegaram-no e o levaram à Babilônia",
-          "Mandaram-no ao Egito"
-        ],
-        "answer": 2,
-        "ref": "2ª Reis 25:7"
-      },
-      {
-        "q": "Quem queimou a casa do Senhor e a casa do rei em Jerusalém?",
-        "options": [
-          "Gedalias",
-          "Nebuzaradã, chefe da guarda",
-          "Ismael",
-          "Evil-Merodaque"
-        ],
-        "answer": 1,
-        "ref": "2ª Reis 25:8-9"
-      },
-      {
-        "q": "Quem foi nomeado governador do povo que ficou em Judá?",
-        "options": [
-          "Gedalias",
-          "Seraías",
-          "Joaquim",
-          "Jazanias"
-        ],
-        "answer": 0,
-        "ref": "2ª Reis 25:22"
-      },
-      {
-        "q": "Segundo 1ª Crônicas, quem foram os filhos de Noé?",
-        "options": [
-          "Caim, Abel e Sete",
-          "Abraão, Naor e Harã",
-          "Isaque e Ismael",
-          "Sem, Cam e Jafé"
-        ],
-        "answer": 3,
-        "ref": "1ª Crônicas 1:4"
-      },
-      {
-        "q": "Segundo 1ª Crônicas, qual filho de Jessé era Davi?",
-        "options": [
-          "O primeiro",
-          "O terceiro",
-          "O sétimo",
-          "O décimo"
-        ],
-        "answer": 2,
-        "ref": "1ª Crônicas 2:15"
-      }
-    ]
-  },
-  {
-    "day": 101,
-    "questions": [
-      {
-        "q": "Quem orou: 'Tomara que me abençoes e alargues o meu território'?",
-        "options": [
-          "Calebe",
-          "Otniel",
-          "Jabes",
-          "Simei"
-        ],
-        "answer": 2,
-        "ref": "1ª Crônicas 4:10"
-      },
-      {
-        "q": "Por que Rúben perdeu o direito de primogenitura?",
-        "options": [
-          "Profanou o leito de seu pai",
-          "Vendeu-o por comida",
-          "Fugiu para o Egito",
-          "Matou um irmão"
-        ],
-        "answer": 0,
-        "ref": "1ª Crônicas 5:1"
-      },
-      {
-        "q": "Por que os rubenitas e gaditas venceram os hagarenos?",
-        "options": [
-          "Tinham mais cavalos",
-          "Os hagarenos fugiram",
-          "Fizeram uma emboscada",
-          "Clamaram a Deus e confiaram nele"
-        ],
-        "answer": 3,
-        "ref": "1ª Crônicas 5:20"
-      },
-      {
-        "q": "Quem foram os filhos de Levi?",
-        "options": [
-          "Arão, Moisés e Miriã",
-          "Gérson, Coate e Merari",
-          "Nadabe e Abiú",
-          "Eleazar e Itamar"
-        ],
-        "answer": 1,
-        "ref": "1ª Crônicas 6:1"
-      },
-      {
-        "q": "Para que ministério Davi designou os levitas depois que a arca teve repouso?",
-        "options": [
-          "Guarda das portas",
-          "Ministério do canto",
-          "Cobrança de tributos",
-          "Construção de muros"
-        ],
-        "answer": 1,
-        "ref": "1ª Crônicas 6:31"
+        "ref": "1ª Reis 18:44"
       }
     ]
   },
@@ -1923,59 +1923,59 @@
     "day": 102,
     "questions": [
       {
-        "q": "Segundo a genealogia de Efraim, qual famoso líder era filho de Num?",
+        "q": "Quem ameaçou tirar a vida de Elias?",
         "options": [
-          "Calebe",
-          "Josué",
-          "Gideão",
-          "Samuel"
+          "Acabe",
+          "Jezabel",
+          "Obadias",
+          "Hazael"
         ],
         "answer": 1,
-        "ref": "1ª Crônicas 7:27"
+        "ref": "1ª Reis 19:2"
       },
       {
-        "q": "Por que os de Judá foram levados ao exílio na Babilônia?",
+        "q": "Debaixo de que árvore Elias se deitou e dormiu no deserto?",
         "options": [
-          "Por causa de suas transgressões",
-          "Por falta de chuva",
-          "Porque perderam o rei",
-          "Porque quiseram"
-        ],
-        "answer": 0,
-        "ref": "1ª Crônicas 9:1"
-      },
-      {
-        "q": "Em quantas direções ficavam os porteiros da casa do Senhor?",
-        "options": [
-          "Duas",
-          "Três",
-          "Sete",
-          "Quatro"
-        ],
-        "answer": 3,
-        "ref": "1ª Crônicas 9:24"
-      },
-      {
-        "q": "Onde os filisteus penduraram a cabeça de Saul?",
-        "options": [
-          "No muro de Gate",
-          "No monte Gilboa",
-          "Na casa de Dagom",
-          "Na porta de Ecrom"
+          "Uma figueira",
+          "Um carvalho",
+          "Um zimbro",
+          "Uma oliveira"
         ],
         "answer": 2,
-        "ref": "1ª Crônicas 10:10"
+        "ref": "1ª Reis 19:5"
       },
       {
-        "q": "Segundo 1ª Crônicas 10, por que Saul morreu?",
+        "q": "O que o anjo deixou na cabeceira de Elias?",
         "options": [
-          "Por causa de sua transgressão e por consultar uma necromante",
-          "Por uma doença",
-          "Por traição de Abner",
-          "Por velhice"
+          "Pão assado e um jarro de água",
+          "Carne e vinho",
+          "Frutas e mel",
+          "Leite e queijo"
         ],
         "answer": 0,
-        "ref": "1ª Crônicas 10:13"
+        "ref": "1ª Reis 19:6"
+      },
+      {
+        "q": "Depois do vento, do terremoto e do fogo, o que Elias ouviu?",
+        "options": [
+          "Um trovão",
+          "Uma trombeta",
+          "Um grito",
+          "Um cicio tranquilo e suave"
+        ],
+        "answer": 3,
+        "ref": "1ª Reis 19:12"
+      },
+      {
+        "q": "O que Eliseu estava fazendo quando Elias lançou o manto sobre ele?",
+        "options": [
+          "Pescando",
+          "Lavrando com bois",
+          "Cuidando de ovelhas",
+          "Construindo uma casa"
+        ],
+        "answer": 1,
+        "ref": "1ª Reis 19:19"
       }
     ]
   },
@@ -1983,59 +1983,59 @@
     "day": 103,
     "questions": [
       {
-        "q": "Quem subiu primeiro contra os jebuseus e se tornou chefe?",
+        "q": "O que Nabote possuía ao lado do palácio de Acabe?",
         "options": [
-          "Abisai",
-          "Benaías",
-          "Joabe",
-          "Asael"
-        ],
-        "answer": 2,
-        "ref": "1ª Crônicas 11:6"
-      },
-      {
-        "q": "Os guerreiros gaditas tinham rostos como de que animal?",
-        "options": [
-          "Leões",
-          "Águias",
-          "Lobos",
-          "Ursos"
-        ],
-        "answer": 0,
-        "ref": "1ª Crônicas 12:8"
-      },
-      {
-        "q": "Os homens de Issacar eram conhecidos por serem sábios em quê?",
-        "options": [
-          "Na construção",
-          "Na música",
-          "Na agricultura",
-          "No conhecimento dos tempos"
-        ],
-        "answer": 3,
-        "ref": "1ª Crônicas 12:32"
-      },
-      {
-        "q": "Segundo Davi, quem podia transportar a arca de Deus?",
-        "options": [
-          "Os reis",
-          "Somente os levitas",
-          "Os soldados",
-          "Qualquer israelita"
+          "Um poço",
+          "Uma vinha",
+          "Um rebanho",
+          "Uma casa de cedro"
         ],
         "answer": 1,
-        "ref": "1ª Crônicas 15:2"
+        "ref": "1ª Reis 21:1"
       },
       {
-        "q": "Como os levitas levaram a arca na segunda vez?",
+        "q": "Por que Nabote não quis vender sua vinha?",
         "options": [
-          "Num carro novo",
-          "Puxada por bois",
-          "Sobre os ombros, com as varas",
-          "Num barco"
+          "Era a herança de seus pais",
+          "Queria mais dinheiro",
+          "Não gostava de Acabe",
+          "Já tinha vendido"
+        ],
+        "answer": 0,
+        "ref": "1ª Reis 21:3"
+      },
+      {
+        "q": "Como Acabe reagiu quando Nabote recusou?",
+        "options": [
+          "Foi para a guerra",
+          "Mandou prendê-lo",
+          "Ficou desgostoso e não comeu",
+          "Ofereceu ouro"
         ],
         "answer": 2,
-        "ref": "1ª Crônicas 15:15"
+        "ref": "1ª Reis 21:4"
+      },
+      {
+        "q": "Quem escreveu cartas em nome de Acabe contra Nabote?",
+        "options": [
+          "Elias",
+          "Os anciãos",
+          "Obadias",
+          "Jezabel"
+        ],
+        "answer": 3,
+        "ref": "1ª Reis 21:8"
+      },
+      {
+        "q": "Qual profeta o Senhor enviou para falar com Acabe na vinha?",
+        "options": [
+          "Eliseu",
+          "Elias",
+          "Natã",
+          "Aías"
+        ],
+        "answer": 1,
+        "ref": "1ª Reis 21:18"
       }
     ]
   },
@@ -2043,59 +2043,59 @@
     "day": 104,
     "questions": [
       {
-        "q": "Quem Davi encarregou pela primeira vez de louvar ao Senhor com hinos?",
+        "q": "Qual deus de Ecrom o rei Acazias mandou consultar?",
         "options": [
-          "Natã",
-          "Asafe e seus irmãos",
-          "Zadoque",
-          "Joabe"
+          "Dagom",
+          "Baal-Zebube",
+          "Moloque",
+          "Quemos"
         ],
         "answer": 1,
-        "ref": "1ª Crônicas 16:7"
+        "ref": "2ª Reis 1:2"
       },
       {
-        "q": "Segundo o salmo de Davi, por que devemos render graças ao Senhor?",
+        "q": "Como era a roupa do homem que falou com os mensageiros?",
         "options": [
-          "Porque ele é bom; sua misericórdia é eterna",
-          "Porque somos fortes",
-          "Porque temos muitas riquezas",
-          "Porque vencemos guerras"
-        ],
-        "answer": 0,
-        "ref": "1ª Crônicas 16:34"
-      },
-      {
-        "q": "De onde Deus disse que tirou Davi para ser príncipe sobre Israel?",
-        "options": [
-          "Do palácio de Saul",
-          "Do templo",
-          "De uma caverna",
-          "De detrás das ovelhas"
-        ],
-        "answer": 3,
-        "ref": "1ª Crônicas 17:7"
-      },
-      {
-        "q": "O que Salomão fez com o bronze que Davi tomou das cidades de Hadadezer?",
-        "options": [
-          "Escudos para o exército",
-          "O mar de bronze, as colunas e os utensílios",
-          "Uma estátua de Davi",
-          "Moedas para o povo"
-        ],
-        "answer": 1,
-        "ref": "1ª Crônicas 18:8"
-      },
-      {
-        "q": "Onde os servos humilhados de Davi deviam esperar até a barba crescer?",
-        "options": [
-          "Em Hebrom",
-          "Em Belém",
-          "Em Jericó",
-          "Em Gibeão"
+          "Manto de linho branco",
+          "Túnica colorida",
+          "Vestido de peles e cinto de couro",
+          "Armadura de bronze"
         ],
         "answer": 2,
-        "ref": "1ª Crônicas 19:5"
+        "ref": "2ª Reis 1:8"
+      },
+      {
+        "q": "Como Elias e Eliseu atravessaram o rio Jordão?",
+        "options": [
+          "De barco",
+          "Por uma ponte",
+          "Nadando",
+          "Elias feriu as águas com a capa"
+        ],
+        "answer": 3,
+        "ref": "2ª Reis 2:8"
+      },
+      {
+        "q": "O que Eliseu pediu a Elias?",
+        "options": [
+          "Uma porção dobrada do seu espírito",
+          "Muitas riquezas",
+          "Um carro de fogo",
+          "Vida longa"
+        ],
+        "answer": 0,
+        "ref": "2ª Reis 2:9"
+      },
+      {
+        "q": "O que Eliseu colocou na fonte para curar as águas de Jericó?",
+        "options": [
+          "Açúcar",
+          "Sal",
+          "Farinha",
+          "Azeite"
+        ],
+        "answer": 1,
+        "ref": "2ª Reis 2:21"
       }
     ]
   },
@@ -2103,59 +2103,59 @@
     "day": 105,
     "questions": [
       {
-        "q": "Elanã, filho de Jair, matou Lami, que era irmão de quem?",
+        "q": "O que a viúva tinha em casa quando pediu ajuda a Eliseu?",
         "options": [
-          "De Saf",
-          "De Golias, o geteu",
-          "De Hanum",
-          "De Aquis"
-        ],
-        "answer": 1,
-        "ref": "1ª Crônicas 20:5"
-      },
-      {
-        "q": "Em 1ª Crônicas 21, quanto Davi pagou a Ornã pelo lugar da eira?",
-        "options": [
-          "Cinquenta siclos de prata",
-          "Mil talentos de prata",
-          "Seiscentos siclos de ouro",
-          "Nada"
+          "Um saco de farinha",
+          "Uma moeda",
+          "Uma botija de azeite",
+          "Um jarro de vinho"
         ],
         "answer": 2,
-        "ref": "1ª Crônicas 21:25"
+        "ref": "2ª Reis 4:2"
       },
       {
-        "q": "Como o Senhor respondeu à oferta de Davi no altar da eira de Ornã?",
+        "q": "Quando o azeite da viúva parou de correr?",
         "options": [
-          "Com um trovão",
-          "Com chuva",
-          "Com uma voz do céu",
-          "Com fogo do céu"
-        ],
-        "answer": 3,
-        "ref": "1ª Crônicas 21:26"
-      },
-      {
-        "q": "Por que Davi não pôde edificar a casa do Senhor?",
-        "options": [
-          "Derramou muito sangue em guerras",
-          "Era pobre demais",
-          "Morreu jovem",
-          "Não tinha madeira"
+          "Quando acabaram os vasos",
+          "Depois de sete dias",
+          "Ao pôr do sol",
+          "Quando ela vendeu"
         ],
         "answer": 0,
-        "ref": "1ª Crônicas 22:8"
+        "ref": "2ª Reis 4:6"
       },
       {
-        "q": "Em quantos turnos foram sorteados os sacerdotes filhos de Arão?",
+        "q": "O que a sunamita e o marido fizeram para Eliseu?",
         "options": [
-          "Doze",
-          "Sete",
-          "Quarenta",
-          "Vinte e quatro"
+          "Uma tenda",
+          "Um altar",
+          "Um poço",
+          "Um pequeno quarto"
         ],
         "answer": 3,
-        "ref": "1ª Crônicas 24:7-18"
+        "ref": "2ª Reis 4:10"
+      },
+      {
+        "q": "Quantas vezes o menino espirrou antes de abrir os olhos?",
+        "options": [
+          "Três",
+          "Sete",
+          "Uma",
+          "Doze"
+        ],
+        "answer": 1,
+        "ref": "2ª Reis 4:35"
+      },
+      {
+        "q": "O que Eliseu colocou na panela para tirar o mal do ensopado?",
+        "options": [
+          "Sal",
+          "Água",
+          "Farinha",
+          "Mel"
+        ],
+        "answer": 2,
+        "ref": "2ª Reis 4:41"
       }
     ]
   },
@@ -2163,59 +2163,59 @@
     "day": 106,
     "questions": [
       {
-        "q": "Com que instrumentos os filhos de Asafe, Hemã e Jedutum profetizavam?",
+        "q": "Quem falou à mulher de Naamã sobre o profeta de Samaria?",
         "options": [
-          "Trombetas e tambores",
-          "Flautas e pandeiros",
-          "Harpas, alaúdes e címbalos",
-          "Sinos e chifres"
-        ],
-        "answer": 2,
-        "ref": "1ª Crônicas 25:1"
-      },
-      {
-        "q": "Quantos filhos Deus deu a Hemã, o vidente do rei?",
-        "options": [
-          "Quatorze filhos e três filhas",
-          "Doze filhos",
-          "Sete filhos e sete filhas",
-          "Dois filhos"
+          "Uma menina israelita",
+          "O rei da Síria",
+          "Geazi",
+          "Um soldado"
         ],
         "answer": 0,
-        "ref": "1ª Crônicas 25:5"
+        "ref": "2ª Reis 5:3"
       },
       {
-        "q": "Quantos homens havia em cada divisão mensal que servia ao rei?",
+        "q": "Quantas vezes Naamã deveria se lavar no Jordão?",
         "options": [
-          "Doze mil",
-          "Mil",
-          "Cem mil",
-          "Vinte e quatro mil"
+          "Três",
+          "Uma",
+          "Doze",
+          "Sete"
         ],
         "answer": 3,
-        "ref": "1ª Crônicas 27:1"
+        "ref": "2ª Reis 5:10"
       },
       {
-        "q": "Quem era o amigo do rei Davi, segundo 1ª Crônicas 27?",
+        "q": "Como ficou a pele de Naamã depois de mergulhar no Jordão?",
         "options": [
-          "Aitofel",
-          "Husai, o arquita",
-          "Joabe",
-          "Abiatar"
+          "Vermelha",
+          "Como a de uma criança",
+          "Branca como a neve",
+          "Do mesmo jeito"
         ],
         "answer": 1,
-        "ref": "1ª Crônicas 27:33"
+        "ref": "2ª Reis 5:14"
       },
       {
-        "q": "Davi disse a Salomão: se buscares o Senhor, ele...",
+        "q": "O que aconteceu com Geazi por mentir e aceitar os presentes?",
         "options": [
-          "Te dará ouro",
-          "Te fará vencer guerras",
-          "Se deixará encontrar por ti",
-          "Te dará muitos filhos"
+          "Ficou cego",
+          "Foi expulso para o Egito",
+          "Ficou leproso",
+          "Perdeu a voz"
         ],
         "answer": 2,
-        "ref": "1ª Crônicas 28:9"
+        "ref": "2ª Reis 5:27"
+      },
+      {
+        "q": "O que Eliseu fez flutuar no rio Jordão?",
+        "options": [
+          "Um machado de ferro",
+          "Uma pedra",
+          "Uma panela",
+          "Uma moeda"
+        ],
+        "answer": 0,
+        "ref": "2ª Reis 6:6"
       }
     ]
   },
@@ -2223,59 +2223,59 @@
     "day": 107,
     "questions": [
       {
-        "q": "Como o povo ofereceu ouro e prata para a casa de Deus?",
+        "q": "Quantos anos Ezequias tinha quando começou a reinar?",
         "options": [
-          "Obrigado pelo rei",
-          "Voluntariamente e de coração íntegro",
-          "Em troca de terras",
-          "Por medo dos profetas"
-        ],
-        "answer": 1,
-        "ref": "1ª Crônicas 29:9"
-      },
-      {
-        "q": "Davi disse que nossos dias sobre a terra são como o quê?",
-        "options": [
-          "Uma sombra",
-          "Uma flor",
-          "Um rio",
-          "Uma pedra"
-        ],
-        "answer": 0,
-        "ref": "1ª Crônicas 29:15"
-      },
-      {
-        "q": "O que Salomão pediu a Deus em Gibeão, segundo 2ª Crônicas?",
-        "options": [
-          "Ouro e prata",
-          "Vitória sobre os inimigos",
-          "Longos dias de vida",
-          "Sabedoria e conhecimento"
-        ],
-        "answer": 3,
-        "ref": "2ª Crônicas 1:10"
-      },
-      {
-        "q": "Até qual porto Hurão levaria a madeira em jangadas pelo mar?",
-        "options": [
-          "Tiro",
-          "Sidom",
-          "Jope",
-          "Gaza"
+          "Doze",
+          "Trinta",
+          "Vinte e cinco",
+          "Dezoito"
         ],
         "answer": 2,
-        "ref": "2ª Crônicas 2:16"
+        "ref": "2ª Reis 18:2"
       },
       {
-        "q": "Em que monte Salomão começou a edificar a casa do Senhor?",
+        "q": "O que Ezequias destruiu porque o povo queimava incenso a ela?",
         "options": [
-          "Monte Sião",
-          "Monte Carmelo",
-          "Monte das Oliveiras",
-          "Monte Moriá"
+          "A arca",
+          "A serpente de bronze",
+          "O altar de ouro",
+          "As tábuas da lei"
+        ],
+        "answer": 1,
+        "ref": "2ª Reis 18:4"
+      },
+      {
+        "q": "Em quem Ezequias confiou como nenhum outro rei de Judá?",
+        "options": [
+          "No Egito",
+          "No seu exército",
+          "No rei da Assíria",
+          "No Senhor, Deus de Israel"
         ],
         "answer": 3,
-        "ref": "2ª Crônicas 3:1"
+        "ref": "2ª Reis 18:5"
+      },
+      {
+        "q": "Qual rei da Assíria subiu contra as cidades de Judá?",
+        "options": [
+          "Senaqueribe",
+          "Nabucodonosor",
+          "Ciro",
+          "Faraó"
+        ],
+        "answer": 0,
+        "ref": "2ª Reis 18:13"
+      },
+      {
+        "q": "O que o povo fez quando Rabsaqué falou das muralhas?",
+        "options": [
+          "Atacou",
+          "Ficou em silêncio",
+          "Fugiu",
+          "Aplaudiu"
+        ],
+        "answer": 1,
+        "ref": "2ª Reis 18:36"
       }
     ]
   },
@@ -2283,59 +2283,59 @@
     "day": 108,
     "questions": [
       {
-        "q": "Para que servia o mar de bronze, segundo 2ª Crônicas 4?",
+        "q": "A qual profeta Ezequias enviou mensageiros pedindo oração?",
         "options": [
-          "Para guardar água de beber",
-          "Para os sacerdotes se lavarem",
-          "Para regar o jardim",
-          "Para batizar o povo"
-        ],
-        "answer": 1,
-        "ref": "2ª Crônicas 4:6"
-      },
-      {
-        "q": "Quantos candelabros de ouro Salomão colocou no templo?",
-        "options": [
-          "Sete",
-          "Doze",
-          "Um",
-          "Dez"
-        ],
-        "answer": 3,
-        "ref": "2ª Crônicas 4:7"
-      },
-      {
-        "q": "Quantos sacerdotes tocavam trombetas na dedicação do templo?",
-        "options": [
-          "Cento e vinte",
-          "Doze",
-          "Setenta",
-          "Mil"
+          "Isaías",
+          "Jeremias",
+          "Elias",
+          "Eliseu"
         ],
         "answer": 0,
-        "ref": "2ª Crônicas 5:12"
+        "ref": "2ª Reis 19:2"
       },
       {
-        "q": "Quando os cantores louvaram a uma só voz, o que encheu a Casa do Senhor?",
+        "q": "O que Ezequias fez com as cartas ameaçadoras do rei da Assíria?",
         "options": [
-          "Fogo",
-          "Luz",
-          "Uma nuvem",
-          "Fumaça de incenso"
+          "Queimou-as",
+          "Respondeu com outra carta",
+          "Estendeu-as perante o Senhor",
+          "Escondeu-as"
         ],
         "answer": 2,
-        "ref": "2ª Crônicas 5:13"
+        "ref": "2ª Reis 19:14"
       },
       {
-        "q": "Sobre o que Salomão se ajoelhou para orar diante do povo?",
+        "q": "Na oração de Ezequias, os deuses das nações eram feitos de quê?",
         "options": [
-          "Uma pedra grande",
-          "O altar de ouro",
-          "Uma tribuna de bronze",
-          "Os degraus do trono"
+          "Ouro e prata",
+          "Bronze e ferro",
+          "Barro",
+          "Madeira e pedra"
         ],
-        "answer": 2,
-        "ref": "2ª Crônicas 6:13"
+        "answer": 3,
+        "ref": "2ª Reis 19:18"
+      },
+      {
+        "q": "Quantos assírios o anjo do Senhor feriu naquela noite?",
+        "options": [
+          "Cento e oitenta e cinco mil",
+          "Dez mil",
+          "Mil",
+          "Cinquenta mil"
+        ],
+        "answer": 0,
+        "ref": "2ª Reis 19:35"
+      },
+      {
+        "q": "Para qual cidade Senaqueribe voltou?",
+        "options": [
+          "Babilônia",
+          "Nínive",
+          "Damasco",
+          "Laquis"
+        ],
+        "answer": 1,
+        "ref": "2ª Reis 19:36"
       }
     ]
   },
@@ -2343,59 +2343,59 @@
     "day": 109,
     "questions": [
       {
-        "q": "O que desceu do céu quando Salomão terminou sua oração?",
+        "q": "O que Ezequias fez quando Isaías disse que ele morreria?",
         "options": [
-          "Chuva",
-          "Fogo",
-          "Maná",
-          "Uma pomba"
-        ],
-        "answer": 1,
-        "ref": "2ª Crônicas 7:1"
-      },
-      {
-        "q": "Segundo Deus, o que o povo devia fazer para Ele curar a sua terra?",
-        "options": [
-          "Construir mais altares",
-          "Pagar tributos",
-          "Fazer guerra",
-          "Humilhar-se, orar, buscá-lo e converter-se"
-        ],
-        "answer": 3,
-        "ref": "2ª Crônicas 7:14"
-      },
-      {
-        "q": "De onde os navios de Hirão e Salomão trouxeram 450 talentos de ouro?",
-        "options": [
-          "De Ofir",
-          "Do Egito",
-          "De Sabá",
-          "De Tiro"
-        ],
-        "answer": 0,
-        "ref": "2ª Crônicas 8:18"
-      },
-      {
-        "q": "De quanto em quanto tempo os navios do rei voltavam de Társis?",
-        "options": [
-          "Todo mês",
-          "Todo ano",
-          "A cada três anos",
-          "A cada sete anos"
+          "Fugiu da cidade",
+          "Chamou os médicos",
+          "Virou o rosto para a parede e orou",
+          "Fez um testamento"
         ],
         "answer": 2,
-        "ref": "2ª Crônicas 9:21"
+        "ref": "2ª Reis 20:2"
       },
       {
-        "q": "Por que os levitas de Israel foram para Judá e Jerusalém?",
+        "q": "Quantos anos Deus acrescentou à vida de Ezequias?",
         "options": [
-          "Por causa da fome",
-          "Jeroboão os expulsou do ministério",
-          "Roboão os convocou à guerra",
-          "Queriam ser reis"
+          "Dez",
+          "Quinze",
+          "Vinte",
+          "Cinco"
         ],
         "answer": 1,
-        "ref": "2ª Crônicas 11:14"
+        "ref": "2ª Reis 20:6"
+      },
+      {
+        "q": "O que puseram sobre a ferida de Ezequias?",
+        "options": [
+          "Azeite",
+          "Uma compressa de figos",
+          "Mel",
+          "Sal"
+        ],
+        "answer": 1,
+        "ref": "2ª Reis 20:7"
+      },
+      {
+        "q": "Quantos graus a sombra voltou no relógio de sol de Acaz?",
+        "options": [
+          "Três",
+          "Sete",
+          "Doze",
+          "Dez"
+        ],
+        "answer": 3,
+        "ref": "2ª Reis 20:11"
+      },
+      {
+        "q": "De onde vieram os mensageiros a quem Ezequias mostrou seus tesouros?",
+        "options": [
+          "Babilônia",
+          "Egito",
+          "Assíria",
+          "Tiro"
+        ],
+        "answer": 0,
+        "ref": "2ª Reis 20:14"
       }
     ]
   },
@@ -2403,59 +2403,59 @@
     "day": 110,
     "questions": [
       {
-        "q": "O que Roboão e os príncipes fizeram ao ouvir o profeta Semaías?",
+        "q": "Quantos anos Josias tinha quando começou a reinar?",
         "options": [
-          "Fugiram para o Egito",
-          "Prenderam o profeta",
-          "Humilharam-se e disseram: 'O Senhor é justo'",
-          "Fizeram guerra a Sisaque"
+          "Doze",
+          "Dezoito",
+          "Oito",
+          "Vinte"
         ],
         "answer": 2,
-        "ref": "2ª Crônicas 12:6"
+        "ref": "2ª Reis 22:1"
       },
       {
-        "q": "Por que Judá venceu Israel na batalha de Abias contra Jeroboão?",
+        "q": "O que o sumo sacerdote Hilquias achou na Casa do Senhor?",
         "options": [
-          "Confiaram no Senhor",
-          "Tinham mais soldados",
-          "Usaram carros de ferro",
-          "O Egito os ajudou"
+          "O Livro da Lei",
+          "Um tesouro de ouro",
+          "A arca perdida",
+          "Uma espada"
         ],
         "answer": 0,
-        "ref": "2ª Crônicas 13:18"
+        "ref": "2ª Reis 22:8"
       },
       {
-        "q": "Quem saiu contra Asa com um exército de um milhão de homens?",
+        "q": "O que o rei fez ao ouvir as palavras do livro da Lei?",
         "options": [
-          "Baasa, rei de Israel",
-          "Sisaque, rei do Egito",
-          "Ben-Hadade",
-          "Zera, o etíope"
-        ],
-        "answer": 3,
-        "ref": "2ª Crônicas 14:9"
-      },
-      {
-        "q": "Segundo o profeta Azarias, o Senhor estaria com Asa enquanto...",
-        "options": [
-          "Ele tivesse ouro",
-          "Ele estivesse com o Senhor",
-          "Ele vencesse guerras",
-          "Ele morasse em Jerusalém"
+          "Fez uma festa",
+          "Rasgou suas vestes",
+          "Queimou o livro",
+          "Foi dormir"
         ],
         "answer": 1,
-        "ref": "2ª Crônicas 15:2"
+        "ref": "2ª Reis 22:11"
       },
       {
-        "q": "Quando Asa adoeceu dos pés, em quem ele confiou em vez do Senhor?",
+        "q": "Qual profetisa foi consultada sobre o livro?",
         "options": [
-          "Nos médicos",
-          "Nos profetas",
-          "Nos sacerdotes",
-          "Nos ídolos"
+          "Débora",
+          "Miriã",
+          "Ana",
+          "Hulda"
+        ],
+        "answer": 3,
+        "ref": "2ª Reis 22:14"
+      },
+      {
+        "q": "Quantos anos Jeoaquim reinou em Jerusalém?",
+        "options": [
+          "Onze",
+          "Três",
+          "Vinte e cinco",
+          "Quarenta"
         ],
         "answer": 0,
-        "ref": "2ª Crônicas 16:12"
+        "ref": "2ª Reis 23:36"
       }
     ]
   },
@@ -2463,59 +2463,59 @@
     "day": 111,
     "questions": [
       {
-        "q": "O que os príncipes e levitas de Josafá levavam ao ensinar nas cidades de Judá?",
+        "q": "Qual rei da Babilônia subiu contra Jeoaquim?",
         "options": [
-          "Uma harpa",
-          "A arca",
-          "O livro da lei do Senhor",
-          "Uma espada"
+          "Ciro",
+          "Senaqueribe",
+          "Nabucodonosor",
+          "Dario"
         ],
         "answer": 2,
-        "ref": "2ª Crônicas 17:9"
+        "ref": "2ª Reis 24:1"
       },
       {
-        "q": "Quando os sírios cercaram Josafá na batalha, o que aconteceu?",
+        "q": "Quanto tempo Joaquim reinou em Jerusalém?",
         "options": [
-          "Josafá clamou e o Senhor o ajudou",
-          "Josafá foi morto",
-          "Josafá se rendeu",
-          "Josafá fugiu a pé"
+          "Três meses",
+          "Onze anos",
+          "Um ano",
+          "Sete anos"
         ],
         "answer": 0,
-        "ref": "2ª Crônicas 18:31"
+        "ref": "2ª Reis 24:8"
       },
       {
-        "q": "Josafá disse aos juízes que eles julgavam em nome de quem?",
+        "q": "Qual novo nome o rei da Babilônia deu a Matanias?",
         "options": [
-          "Do rei",
-          "Do povo",
-          "Dos anciãos",
-          "Do Senhor"
+          "Jeoacaz",
+          "Josias",
+          "Gedalias",
+          "Zedequias"
         ],
         "answer": 3,
-        "ref": "2ª Crônicas 19:6"
+        "ref": "2ª Reis 24:17"
       },
       {
-        "q": "O que o profeta Jaaziel disse sobre a batalha contra Moabe e Amom?",
+        "q": "Quem queimou a casa do Senhor e as casas de Jerusalém?",
         "options": [
-          "Que Judá perderia",
-          "Que a batalha pertencia a Deus",
-          "Que deviam fugir",
-          "Que deviam pagar tributo"
+          "Faraó Neco",
+          "Nebuzaradã",
+          "Senaqueribe",
+          "Rabsaqué"
         ],
         "answer": 1,
-        "ref": "2ª Crônicas 20:15"
+        "ref": "2ª Reis 25:9"
       },
       {
-        "q": "Que nome recebeu o vale onde Judá louvou ao Senhor depois da vitória?",
+        "q": "Quem foi nomeado governador do povo que ficou em Judá?",
         "options": [
-          "Vale de Elá",
-          "Vale do Sal",
-          "Vale de Bênção",
-          "Vale de Refaim"
+          "Seraías",
+          "Sofonias",
+          "Gedalias",
+          "Matanias"
         ],
         "answer": 2,
-        "ref": "2ª Crônicas 20:26"
+        "ref": "2ª Reis 25:22"
       }
     ]
   },
@@ -2523,59 +2523,59 @@
     "day": 112,
     "questions": [
       {
-        "q": "De qual profeta o rei Jeorão recebeu uma carta de advertência?",
+        "q": "Quantos meses Jeoacaz reinou em Jerusalém?",
         "options": [
-          "Eliseu",
-          "Isaías",
-          "Elias",
-          "Jeú"
-        ],
-        "answer": 2,
-        "ref": "2ª Crônicas 21:12"
-      },
-      {
-        "q": "Quem era o marido de Jeoseba, que escondeu o menino Joás?",
-        "options": [
-          "O sacerdote Joiada",
-          "O rei Jeorão",
-          "O profeta Zacarias",
-          "Matã"
+          "Três",
+          "Seis",
+          "Doze",
+          "Um"
         ],
         "answer": 0,
-        "ref": "2ª Crônicas 22:11"
+        "ref": "2ª Crônicas 36:2"
       },
       {
-        "q": "Quem gritou 'Traição! Traição!' ao ver Joás coroado?",
+        "q": "Diante de qual profeta Zedequias não se humilhou?",
         "options": [
-          "Jeoseba",
-          "Joiada",
-          "Matã",
-          "Atalia"
-        ],
-        "answer": 3,
-        "ref": "2ª Crônicas 23:13"
-      },
-      {
-        "q": "Com quantos anos morreu o sacerdote Joiada?",
-        "options": [
-          "Oitenta",
-          "Cento e trinta",
-          "Cem",
-          "Cento e vinte"
+          "Isaías",
+          "Jeremias",
+          "Elias",
+          "Daniel"
         ],
         "answer": 1,
-        "ref": "2ª Crônicas 24:15"
+        "ref": "2ª Crônicas 36:12"
       },
       {
-        "q": "O que aconteceu com Zacarias, filho de Joiada, ao advertir o povo?",
+        "q": "O que o povo fazia com os mensageiros de Deus?",
         "options": [
-          "Foi feito rei",
-          "Foi exilado",
-          "Foi apedrejado a mando do rei",
-          "Fugiu para o Egito"
+          "Obedecia",
+          "Escondia",
+          "Zombava deles",
+          "Pagava salário"
         ],
         "answer": 2,
-        "ref": "2ª Crônicas 24:20-21"
+        "ref": "2ª Crônicas 36:16"
+      },
+      {
+        "q": "Por quantos anos a terra ficou desolada, segundo Jeremias?",
+        "options": [
+          "Quarenta",
+          "Cem",
+          "Sete",
+          "Setenta"
+        ],
+        "answer": 3,
+        "ref": "2ª Crônicas 36:21"
+      },
+      {
+        "q": "Qual rei da Pérsia mandou edificar uma casa ao Senhor em Jerusalém?",
+        "options": [
+          "Ciro",
+          "Dario",
+          "Assuero",
+          "Artaxerxes"
+        ],
+        "answer": 0,
+        "ref": "2ª Crônicas 36:23"
       }
     ]
   },
@@ -2583,59 +2583,59 @@
     "day": 113,
     "questions": [
       {
-        "q": "O que o homem de Deus disse a Amazias sobre os cem talentos de prata pagos a Israel?",
+        "q": "Qual profeta havia anunciado a palavra que se cumpriu no primeiro ano de Ciro?",
         "options": [
-          "Que pedisse de volta",
-          "O Senhor pode te dar muito mais do que isso",
-          "Que desse ao templo",
-          "Que estavam perdidos para sempre"
-        ],
-        "answer": 1,
-        "ref": "2ª Crônicas 25:9"
-      },
-      {
-        "q": "Que erro Amazias cometeu ao voltar da vitória sobre os edomitas?",
-        "options": [
-          "Adorou os deuses dos filhos de Seir",
-          "Matou o profeta",
-          "Destruiu o templo",
-          "Fugiu da batalha"
-        ],
-        "answer": 0,
-        "ref": "2ª Crônicas 25:14"
-      },
-      {
-        "q": "Por que o rei Uzias ficou leproso?",
-        "options": [
-          "Roubou o tesouro",
-          "Matou um sacerdote",
-          "Desobedeceu a Isaías",
-          "Entrou no templo para queimar incenso"
-        ],
-        "answer": 3,
-        "ref": "2ª Crônicas 26:16-19"
-      },
-      {
-        "q": "Segundo o texto, Uzias era amigo de quê?",
-        "options": [
-          "Da guerra",
-          "Da música",
-          "Da agricultura",
-          "Do comércio"
+          "Isaías",
+          "Ezequiel",
+          "Jeremias",
+          "Daniel"
         ],
         "answer": 2,
-        "ref": "2ª Crônicas 26:10"
+        "ref": "Esdras 1:1"
       },
       {
-        "q": "Para que cidade os israelitas levaram os prisioneiros de Judá depois de cuidar deles?",
+        "q": "Ciro disse que o Senhor o encarregou de construir o quê?",
         "options": [
-          "Samaria",
-          "Jericó, a cidade das palmeiras",
-          "Damasco",
-          "Betel"
+          "Uma casa em Jerusalém",
+          "Um palácio na Pérsia",
+          "Uma muralha",
+          "Um navio"
+        ],
+        "answer": 0,
+        "ref": "Esdras 1:2"
+      },
+      {
+        "q": "Com o que os vizinhos ajudaram os que subiram a Jerusalém?",
+        "options": [
+          "Com soldados",
+          "Com prata, ouro, bens e gado",
+          "Com cavalos",
+          "Com nada"
         ],
         "answer": 1,
-        "ref": "2ª Crônicas 28:15"
+        "ref": "Esdras 1:6"
+      },
+      {
+        "q": "Quem havia levado os utensílios da casa do Senhor para a Babilônia?",
+        "options": [
+          "Ciro",
+          "Faraó",
+          "Senaqueribe",
+          "Nabucodonosor"
+        ],
+        "answer": 3,
+        "ref": "Esdras 1:7"
+      },
+      {
+        "q": "A quem foram entregues os utensílios do templo?",
+        "options": [
+          "Mitredate",
+          "Sesbazar",
+          "Esdras",
+          "Neemias"
+        ],
+        "answer": 1,
+        "ref": "Esdras 1:8"
       }
     ]
   },
@@ -2643,59 +2643,59 @@
     "day": 114,
     "questions": [
       {
-        "q": "O que Ezequias fez no primeiro mês do primeiro ano de seu reinado?",
+        "q": "O que Jesua e Zorobabel ergueram primeiro em Jerusalém?",
         "options": [
-          "Fez guerra à Assíria",
-          "Abriu e reparou as portas da Casa do Senhor",
-          "Construiu um palácio",
-          "Mudou a capital"
+          "As muralhas",
+          "O altar do Deus de Israel",
+          "Um palácio",
+          "As portas da cidade"
         ],
         "answer": 1,
-        "ref": "2ª Crônicas 29:3"
+        "ref": "Esdras 3:2"
       },
       {
-        "q": "Para onde os levitas levaram a imundícia retirada do templo?",
+        "q": "Que festa o povo celebrou no sétimo mês?",
         "options": [
-          "Para o ribeiro de Cedrom",
-          "Para o rio Jordão",
-          "Para o deserto",
-          "Para o mar"
+          "Festa dos Tabernáculos",
+          "Páscoa",
+          "Purim",
+          "Pentecostes"
         ],
         "answer": 0,
-        "ref": "2ª Crônicas 29:16"
+        "ref": "Esdras 3:4"
       },
       {
-        "q": "Como muitos de Efraim e Manassés reagiram aos mensageiros da Páscoa?",
+        "q": "De onde veio a madeira de cedro para o templo?",
         "options": [
-          "Choraram de alegria",
-          "Pagaram tributo",
-          "Riram-se e zombaram deles",
-          "Prenderam os mensageiros"
+          "Do Egito",
+          "De Basã",
+          "Do Líbano",
+          "Da Babilônia"
         ],
         "answer": 2,
-        "ref": "2ª Crônicas 30:10"
+        "ref": "Esdras 3:7"
       },
       {
-        "q": "Quantos dias a mais a congregação decidiu celebrar a festa com alegria?",
+        "q": "O que os idosos que viram a primeira casa fizeram ao ver os novos alicerces?",
         "options": [
-          "Três",
-          "Quarenta",
-          "Um",
-          "Sete"
+          "Dançaram",
+          "Ficaram calados",
+          "Foram embora",
+          "Choraram em alta voz"
         ],
         "answer": 3,
-        "ref": "2ª Crônicas 30:23"
+        "ref": "Esdras 3:12"
       },
       {
-        "q": "O que o povo trouxe em abundância, formando montões?",
+        "q": "Até quando a obra da Casa de Deus ficou interrompida?",
         "options": [
-          "Pedras para o muro",
-          "Armas",
-          "Primícias e dízimos",
-          "Ídolos quebrados"
+          "Até o segundo ano de Dario",
+          "Até a morte de Ciro",
+          "Para sempre",
+          "Até o ano seguinte"
         ],
-        "answer": 2,
-        "ref": "2ª Crônicas 31:5-6"
+        "answer": 0,
+        "ref": "Esdras 4:24"
       }
     ]
   },
@@ -2703,59 +2703,59 @@
     "day": 115,
     "questions": [
       {
-        "q": "O que Ezequias e o povo taparam para dificultar a vinda dos assírios?",
+        "q": "Quais profetas profetizaram aos judeus para retomarem a obra?",
         "options": [
-          "As portas da cidade",
-          "As fontes de água fora da cidade",
-          "As estradas",
-          "Os poços do templo"
+          "Isaías e Jeremias",
+          "Ageu e Zacarias",
+          "Elias e Eliseu",
+          "Daniel e Ezequiel"
         ],
         "answer": 1,
-        "ref": "2ª Crônicas 32:3-4"
+        "ref": "Esdras 5:1"
       },
       {
-        "q": "Ezequias disse que com o rei da Assíria estava o braço do homem, mas conosco está...",
+        "q": "Quem era o governador além do Eufrates que questionou a obra?",
         "options": [
-          "O Senhor, nosso Deus",
-          "O exército do Egito",
-          "Um grande muro",
-          "O ouro do templo"
-        ],
-        "answer": 0,
-        "ref": "2ª Crônicas 32:8"
-      },
-      {
-        "q": "Para onde Manassés foi levado preso com ganchos e cadeias?",
-        "options": [
-          "Para o Egito",
-          "Para Nínive",
-          "Para Damasco",
-          "Para a Babilônia"
+          "Reum",
+          "Sinsai",
+          "Sesbazar",
+          "Tatenai"
         ],
         "answer": 3,
-        "ref": "2ª Crônicas 33:11"
+        "ref": "Esdras 5:3"
       },
       {
-        "q": "O que aconteceu quando Manassés se humilhou e orou a Deus na angústia?",
+        "q": "Onde foi encontrado o rolo com o decreto de Ciro?",
         "options": [
-          "Morreu na prisão",
-          "Ficou leproso",
-          "Deus o ouviu e o trouxe de volta a Jerusalém",
-          "Tornou-se profeta"
+          "Em Jerusalém",
+          "Em Nínive",
+          "Em Acmetá, na Média",
+          "No Egito"
         ],
         "answer": 2,
-        "ref": "2ª Crônicas 33:12-13"
+        "ref": "Esdras 6:2"
       },
       {
-        "q": "Em que ano do reinado o jovem Josias começou a buscar o Deus de Davi?",
+        "q": "Quantos cabritos foram oferecidos, um por tribo de Israel?",
         "options": [
-          "No primeiro",
-          "No oitavo",
-          "No vigésimo",
-          "No trigésimo"
+          "Doze",
+          "Sete",
+          "Dez",
+          "Quarenta"
         ],
-        "answer": 1,
-        "ref": "2ª Crônicas 34:3"
+        "answer": 0,
+        "ref": "Esdras 6:17"
+      },
+      {
+        "q": "Que festa os que voltaram do cativeiro celebraram no dia catorze do primeiro mês?",
+        "options": [
+          "Tabernáculos",
+          "Lua Nova",
+          "Páscoa",
+          "Purim"
+        ],
+        "answer": 2,
+        "ref": "Esdras 6:19"
       }
     ]
   },
@@ -2763,59 +2763,59 @@
     "day": 116,
     "questions": [
       {
-        "q": "Que profeta compôs uma lamentação sobre a morte de Josias?",
+        "q": "De onde Esdras subiu para Jerusalém?",
         "options": [
-          "Isaías",
-          "Jeremias",
-          "Ezequiel",
-          "Hulda"
+          "Do Egito",
+          "Da Babilônia",
+          "De Nínive",
+          "De Damasco"
         ],
         "answer": 1,
-        "ref": "2ª Crônicas 35:25"
+        "ref": "Esdras 7:6"
       },
       {
-        "q": "Por quantos anos a terra descansou durante a desolação, conforme Jeremias?",
+        "q": "Em que Esdras era versado?",
         "options": [
-          "Quarenta",
-          "Sete",
-          "Setenta",
-          "Cem"
-        ],
-        "answer": 2,
-        "ref": "2ª Crônicas 36:21"
-      },
-      {
-        "q": "Qual rei da Pérsia mandou edificar a casa do Senhor em Jerusalém?",
-        "options": [
-          "Ciro",
-          "Dario",
-          "Artaxerxes",
-          "Assuero"
+          "Na Lei de Moisés",
+          "Na arte da guerra",
+          "Na construção",
+          "Na música"
         ],
         "answer": 0,
-        "ref": "Esdras 1:1-2"
+        "ref": "Esdras 7:6"
       },
       {
-        "q": "A quem foram entregues os utensílios do templo que Nabucodonosor levara?",
+        "q": "Em que mês Esdras chegou a Jerusalém?",
         "options": [
-          "A Zorobabel",
-          "A Esdras",
-          "A Neemias",
-          "A Sesbazar, príncipe de Judá"
+          "No primeiro",
+          "No sétimo",
+          "No décimo",
+          "No quinto"
         ],
         "answer": 3,
-        "ref": "Esdras 1:8"
+        "ref": "Esdras 7:9"
       },
       {
-        "q": "Quantas pessoas tinha a congregação que voltou do cativeiro, sem contar servos?",
+        "q": "Para que Esdras havia disposto o coração?",
         "options": [
-          "Doze mil",
-          "Quarenta e dois mil trezentos e sessenta",
-          "Cem mil",
-          "Setenta mil"
+          "Para ficar rico",
+          "Para ser rei",
+          "Para buscar, cumprir e ensinar a Lei do Senhor",
+          "Para lutar contra os inimigos"
         ],
-        "answer": 1,
-        "ref": "Esdras 2:64"
+        "answer": 2,
+        "ref": "Esdras 7:10"
+      },
+      {
+        "q": "Qual rei deu uma carta ao sacerdote Esdras?",
+        "options": [
+          "Artaxerxes",
+          "Ciro",
+          "Dario",
+          "Nabucodonosor"
+        ],
+        "answer": 0,
+        "ref": "Esdras 7:11"
       }
     ]
   },
@@ -2823,59 +2823,59 @@
     "day": 117,
     "questions": [
       {
-        "q": "Por que os idosos choraram ao ver os alicerces do novo templo?",
+        "q": "O que Neemias soube sobre os muros de Jerusalém?",
         "options": [
-          "Estavam doentes",
-          "Tinham visto a primeira casa",
-          "Tinham medo dos inimigos",
-          "Não gostavam de Zorobabel"
-        ],
-        "answer": 1,
-        "ref": "Esdras 3:12"
-      },
-      {
-        "q": "O que Zorobabel respondeu aos adversários que queriam ajudar na obra?",
-        "options": [
-          "Que pagassem tributo",
-          "Que trouxessem madeira",
-          "Que nós mesmos edificaríamos ao Senhor",
-          "Que esperassem o rei"
-        ],
-        "answer": 2,
-        "ref": "Esdras 4:3"
-      },
-      {
-        "q": "Quais profetas animaram os judeus a voltar a edificar a Casa de Deus?",
-        "options": [
-          "Ageu e Zacarias",
-          "Isaías e Jeremias",
-          "Elias e Eliseu",
-          "Natã e Gade"
+          "Estavam derrubados",
+          "Eram novos",
+          "Estavam sendo pintados",
+          "Eram de ouro"
         ],
         "answer": 0,
-        "ref": "Esdras 5:1"
+        "ref": "Neemias 1:3"
       },
       {
-        "q": "Onde foi encontrado o rolo com o decreto de Ciro sobre o templo?",
+        "q": "O que Neemias fez ao ouvir a notícia?",
         "options": [
-          "Em Jerusalém",
-          "Em Susã",
-          "Na Babilônia",
-          "Em Acmetá, na Média"
-        ],
-        "answer": 3,
-        "ref": "Esdras 6:2"
-      },
-      {
-        "q": "No reinado de qual rei a casa de Deus foi finalizada?",
-        "options": [
-          "Ciro",
-          "Dario",
-          "Nabucodonosor",
-          "Assuero"
+          "Foi para a guerra",
+          "Chorou, jejuou e orou",
+          "Fez uma festa",
+          "Escreveu ao rei do Egito"
         ],
         "answer": 1,
-        "ref": "Esdras 6:15"
+        "ref": "Neemias 1:4"
+      },
+      {
+        "q": "Qual era o trabalho de Neemias para o rei?",
+        "options": [
+          "Soldado",
+          "Escriba",
+          "Cozinheiro",
+          "Copeiro"
+        ],
+        "answer": 3,
+        "ref": "Neemias 1:11"
+      },
+      {
+        "q": "O que Neemias fez antes de responder ao pedido do rei?",
+        "options": [
+          "Consultou a rainha",
+          "Saiu da sala",
+          "Orou ao Deus dos céus",
+          "Pediu um dia"
+        ],
+        "answer": 2,
+        "ref": "Neemias 2:4"
+      },
+      {
+        "q": "Quem ficou irritado porque alguém buscava o bem de Israel?",
+        "options": [
+          "Esdras e Zorobabel",
+          "Sambalate e Tobias",
+          "Asafe e Hanani",
+          "O rei e a rainha"
+        ],
+        "answer": 1,
+        "ref": "Neemias 2:10"
       }
     ]
   },
@@ -2883,59 +2883,59 @@
     "day": 118,
     "questions": [
       {
-        "q": "Esdras era um escriba versado em quê?",
+        "q": "Segundo Tobias, que animal derrubaria o muro dos judeus?",
         "options": [
-          "Na Lei de Moisés",
-          "Na língua persa",
-          "Em astronomia",
-          "Na arte da guerra"
+          "Uma raposa",
+          "Um lobo",
+          "Um leão",
+          "Um camelo"
         ],
         "answer": 0,
-        "ref": "Esdras 7:6"
+        "ref": "Neemias 4:3"
       },
       {
-        "q": "Esdras dispôs o coração para buscar a Lei, cumpri-la e...",
+        "q": "Por que o muro chegou rápido até a metade da altura?",
         "options": [
-          "Ficar rico",
-          "Ser rei",
-          "Ensiná-la em Israel",
-          "Escrever novos livros"
+          "Tinham muitos escravos",
+          "O rei mandou soldados",
+          "O povo estava animado para trabalhar",
+          "Usaram máquinas"
         ],
         "answer": 2,
-        "ref": "Esdras 7:10"
+        "ref": "Neemias 4:6"
       },
       {
-        "q": "Por que Esdras não pediu soldados ao rei para a viagem?",
+        "q": "O que fizeram quando os inimigos planejaram atacar?",
         "options": [
-          "O rei recusaria",
-          "Não havia perigo",
-          "Os soldados estavam em guerra",
-          "Teve vergonha, pois disse que Deus protege quem o busca"
+          "Fugiram",
+          "Desistiram da obra",
+          "Pagaram tributo",
+          "Oraram e puseram guardas dia e noite"
         ],
         "answer": 3,
-        "ref": "Esdras 8:22"
+        "ref": "Neemias 4:9"
       },
       {
-        "q": "O que Esdras proclamou junto ao rio Ahava antes da viagem?",
+        "q": "Como os construtores trabalhavam no muro?",
         "options": [
-          "Uma festa",
-          "Um jejum",
-          "Uma guerra",
-          "Um censo"
+          "Com uma mão na obra e outra na arma",
+          "Só durante a noite",
+          "De olhos fechados",
+          "Sem ferramentas"
+        ],
+        "answer": 0,
+        "ref": "Neemias 4:17"
+      },
+      {
+        "q": "O que o povo devia fazer ao ouvir o som da trombeta?",
+        "options": [
+          "Parar de trabalhar",
+          "Correr para se juntar ali",
+          "Esconder-se",
+          "Voltar para casa"
         ],
         "answer": 1,
-        "ref": "Esdras 8:21"
-      },
-      {
-        "q": "O que Esdras fez ao saber que o povo se misturara com outros povos?",
-        "options": [
-          "Fugiu",
-          "Escreveu ao rei",
-          "Rasgou as vestes e sentou-se atônito",
-          "Fez uma festa"
-        ],
-        "answer": 2,
-        "ref": "Esdras 9:3"
+        "ref": "Neemias 4:20"
       }
     ]
   },
@@ -2943,59 +2943,59 @@
     "day": 119,
     "questions": [
       {
-        "q": "Por que o povo reunido em Jerusalém tremia, segundo Esdras 10?",
+        "q": "O que os nobres estavam cobrando de seus irmãos, segundo Neemias?",
         "options": [
-          "Pelo frio da neve",
-          "Por causa do pecado e das grandes chuvas",
-          "Pelo exército inimigo",
-          "Por um terremoto"
-        ],
-        "answer": 1,
-        "ref": "Esdras 10:9"
-      },
-      {
-        "q": "Qual era a função de Neemias no palácio do rei?",
-        "options": [
-          "Escriba",
-          "Soldado",
-          "Copeiro do rei",
-          "Tesoureiro"
-        ],
-        "answer": 2,
-        "ref": "Neemias 1:11"
-      },
-      {
-        "q": "O que Neemias fez antes de responder ao rei o que desejava pedir?",
-        "options": [
-          "Orou ao Deus dos céus",
-          "Consultou os sábios",
-          "Chorou alto",
-          "Pediu um dia para pensar"
+          "Juros",
+          "Impostos do templo",
+          "Aluguel de cavalos",
+          "Multas"
         ],
         "answer": 0,
-        "ref": "Neemias 2:4"
+        "ref": "Neemias 5:7"
       },
       {
-        "q": "Tobias zombou dizendo que o muro cairia se nele subisse que animal?",
+        "q": "Por quantos anos Neemias não comeu do pão reservado ao governador?",
         "options": [
-          "Um rato",
-          "Um cão",
-          "Um jumento",
-          "Uma raposa"
+          "Três",
+          "Sete",
+          "Vinte",
+          "Doze"
         ],
         "answer": 3,
-        "ref": "Neemias 4:3"
+        "ref": "Neemias 5:14"
       },
       {
-        "q": "Como os construtores trabalhavam no muro por causa dos inimigos?",
+        "q": "O que Neemias respondeu quando o chamaram ao vale de Ono?",
         "options": [
-          "Só à noite",
-          "Com uma mão na obra e outra segurando a arma",
-          "Escondidos atrás de cortinas",
-          "Apenas aos sábados"
+          "Que estava doente",
+          "Que estava fazendo uma grande obra",
+          "Que iria no dia seguinte",
+          "Que tinha medo"
         ],
         "answer": 1,
-        "ref": "Neemias 4:17"
+        "ref": "Neemias 6:3"
+      },
+      {
+        "q": "Por que Semaías tentou assustar Neemias?",
+        "options": [
+          "Era seu inimigo antigo",
+          "Queria ser governador",
+          "Foi subornado por Tobias e Sambalate",
+          "Tinha uma visão de Deus"
+        ],
+        "answer": 2,
+        "ref": "Neemias 6:12"
+      },
+      {
+        "q": "Em quantos dias o muro foi finalizado?",
+        "options": [
+          "Cinquenta e dois",
+          "Quarenta",
+          "Sete",
+          "Cem"
+        ],
+        "answer": 0,
+        "ref": "Neemias 6:15"
       }
     ]
   },
@@ -3003,59 +3003,59 @@
     "day": 120,
     "questions": [
       {
-        "q": "Por que Neemias ficou muito aborrecido com os nobres e magistrados?",
+        "q": "Diante de qual porta o povo se ajuntou para ouvir a Lei?",
         "options": [
-          "Não queriam trabalhar no muro",
-          "Cobravam juros dos irmãos pobres",
-          "Adoravam ídolos",
-          "Fugiram da cidade"
+          "Porta do Vale",
+          "Porta das Águas",
+          "Porta das Ovelhas",
+          "Porta de Efraim"
         ],
         "answer": 1,
-        "ref": "Neemias 5:6-7"
+        "ref": "Neemias 8:1"
       },
       {
-        "q": "O que Neemias não exigiu durante os doze anos em que foi governador?",
+        "q": "Onde Esdras ficou para ler o Livro da Lei?",
         "options": [
-          "O pão reservado ao governador",
-          "O sábado",
-          "Os sacrifícios",
-          "As armas do povo"
+          "No telhado do templo",
+          "Num púlpito de madeira",
+          "Numa carruagem",
+          "Sobre o muro"
         ],
-        "answer": 0,
-        "ref": "Neemias 5:14"
+        "answer": 1,
+        "ref": "Neemias 8:4"
       },
       {
-        "q": "O que Neemias respondeu ao convite para ir ao vale de Ono?",
+        "q": "O que o povo fez quando Esdras abriu o livro?",
         "options": [
-          "Que iria no dia seguinte",
-          "Que mandaria seu irmão",
-          "Que eles viessem a Jerusalém",
-          "Estou fazendo uma grande obra e não posso descer"
-        ],
-        "answer": 3,
-        "ref": "Neemias 6:3"
-      },
-      {
-        "q": "Em quantos dias o muro de Jerusalém foi concluído?",
-        "options": [
-          "Quarenta",
-          "Sete",
-          "Cinquenta e dois",
-          "Cem"
+          "Sentou-se",
+          "Saiu correndo",
+          "Se levantou",
+          "Começou a cantar"
         ],
         "answer": 2,
-        "ref": "Neemias 6:15"
+        "ref": "Neemias 8:5"
       },
       {
-        "q": "Por que Neemias escolheu Hananias para cuidar de Jerusalém?",
+        "q": "Segundo Neemias, o que é a força do povo?",
         "options": [
-          "Era muito rico",
-          "Era fiel e temente a Deus",
-          "Era seu irmão",
-          "Era o mais forte"
+          "As armas",
+          "O muro",
+          "O ouro",
+          "A alegria do Senhor"
         ],
-        "answer": 1,
-        "ref": "Neemias 7:2"
+        "answer": 3,
+        "ref": "Neemias 8:10"
+      },
+      {
+        "q": "O que o povo fez com ramos durante a festa do sétimo mês?",
+        "options": [
+          "Cabanas",
+          "Coroas",
+          "Fogueiras",
+          "Tapetes"
+        ],
+        "answer": 0,
+        "ref": "Neemias 8:16"
       }
     ]
   },
@@ -3063,59 +3063,59 @@
     "day": 121,
     "questions": [
       {
-        "q": "Sobre o que Esdras estava quando leu o Livro da Lei ao povo?",
+        "q": "Sobre quantas províncias reinava o rei Assuero?",
         "options": [
-          "Um púlpito de madeira",
-          "O altar",
-          "Um monte",
-          "Uma carroça"
+          "Cento e vinte e sete",
+          "Doze",
+          "Setenta",
+          "Mil"
         ],
         "answer": 0,
-        "ref": "Neemias 8:4"
+        "ref": "Ester 1:1"
       },
       {
-        "q": "Segundo Neemias, qual é a força do povo?",
+        "q": "Qual rainha se recusou a ir à presença do rei?",
         "options": [
-          "O seu exército",
-          "Os seus muros",
-          "A alegria do Senhor",
-          "O seu ouro"
-        ],
-        "answer": 2,
-        "ref": "Neemias 8:10"
-      },
-      {
-        "q": "Em que o povo habitou durante a festa do sétimo mês?",
-        "options": [
-          "Em cavernas",
-          "Em tendas de couro",
-          "No templo",
-          "Em cabanas de ramos"
-        ],
-        "answer": 3,
-        "ref": "Neemias 8:16-17"
-      },
-      {
-        "q": "Por quantos anos Deus sustentou Israel no deserto sem que nada faltasse?",
-        "options": [
-          "Sete",
-          "Quarenta",
-          "Setenta",
-          "Doze"
+          "Ester",
+          "Vasti",
+          "Jezabel",
+          "Zeres"
         ],
         "answer": 1,
-        "ref": "Neemias 9:21"
+        "ref": "Ester 1:12"
       },
       {
-        "q": "O povo prometeu não aceitar mercadorias para vender em que dia?",
+        "q": "Qual era o outro nome de Ester?",
         "options": [
-          "No sábado",
-          "No primeiro dia do mês",
-          "No dia da colheita",
-          "No dia da Páscoa"
+          "Hadassa",
+          "Abigail",
+          "Mical",
+          "Noemi"
         ],
         "answer": 0,
-        "ref": "Neemias 10:31"
+        "ref": "Ester 2:7"
+      },
+      {
+        "q": "O que Mardoqueu pediu que Ester não revelasse?",
+        "options": [
+          "Sua idade",
+          "Seu nome",
+          "Seu povo e sua linhagem",
+          "Sua cidade"
+        ],
+        "answer": 2,
+        "ref": "Ester 2:10"
+      },
+      {
+        "q": "O que Mardoqueu descobriu sobre os eunucos Bigtã e Teres?",
+        "options": [
+          "Que roubavam o tesouro",
+          "Que eram judeus",
+          "Que eram espiões do Egito",
+          "Que tramavam matar o rei"
+        ],
+        "answer": 3,
+        "ref": "Ester 2:21"
       }
     ]
   },
@@ -3123,59 +3123,59 @@
     "day": 122,
     "questions": [
       {
-        "q": "Como foi decidido quem moraria em Jerusalém?",
+        "q": "Diante de quem Mardoqueu não se inclinava?",
         "options": [
-          "O rei escolheu",
-          "Lançaram sortes: um de cada dez",
-          "Só os sacerdotes",
-          "Quem pagasse mais"
+          "Do rei",
+          "De Hamã",
+          "De Ester",
+          "Dos sacerdotes"
         ],
         "answer": 1,
-        "ref": "Neemias 11:1"
+        "ref": "Ester 3:2"
       },
       {
-        "q": "O que Neemias fez com os móveis de Tobias que estavam numa câmara do templo?",
+        "q": "O que o rei entregou a Hamã para selar o decreto?",
         "options": [
-          "Vendeu-os",
-          "Guardou-os",
-          "Jogou-os para fora da câmara",
-          "Queimou-os no altar"
-        ],
-        "answer": 2,
-        "ref": "Neemias 13:8"
-      },
-      {
-        "q": "O que Neemias mandou fazer para impedir o comércio no sábado?",
-        "options": [
-          "Fechar as portas de Jerusalém",
-          "Prender os comerciantes",
-          "Cobrar impostos",
-          "Construir um mercado fora"
-        ],
-        "answer": 0,
-        "ref": "Neemias 13:19"
-      },
-      {
-        "q": "Sobre quantas províncias reinava o rei Assuero?",
-        "options": [
-          "Doze",
-          "Setenta",
-          "Cem",
-          "Cento e vinte e sete"
+          "Sua coroa",
+          "Sua espada",
+          "Seu cetro",
+          "Seu anel"
         ],
         "answer": 3,
-        "ref": "Ester 1:1"
+        "ref": "Ester 3:10"
       },
       {
-        "q": "Por que o rei Assuero se enfureceu com a rainha Vasti?",
+        "q": "O que Mardoqueu vestiu ao saber do decreto?",
         "options": [
-          "Ela fugiu do palácio",
-          "Ela recusou-se a vir quando ele mandou chamar",
-          "Ela roubou a coroa",
-          "Ela insultou os príncipes"
+          "Pano de saco e cinza",
+          "Roupas reais",
+          "Uma armadura",
+          "Um manto azul"
+        ],
+        "answer": 0,
+        "ref": "Ester 4:1"
+      },
+      {
+        "q": "O que o rei precisava estender para que alguém não chamado vivesse?",
+        "options": [
+          "A mão",
+          "O anel",
+          "O cetro de ouro",
+          "A espada"
+        ],
+        "answer": 2,
+        "ref": "Ester 4:11"
+      },
+      {
+        "q": "Por quantos dias Ester pediu que os judeus jejuassem por ela?",
+        "options": [
+          "Sete",
+          "Três",
+          "Um",
+          "Quarenta"
         ],
         "answer": 1,
-        "ref": "Ester 1:12"
+        "ref": "Ester 4:16"
       }
     ]
   },
@@ -3183,59 +3183,59 @@
     "day": 123,
     "questions": [
       {
-        "q": "Qual era o outro nome de Ester?",
+        "q": "O que Ester tocou quando o rei lhe estendeu o cetro?",
         "options": [
-          "Hadassa",
-          "Vasti",
-          "Zeres",
-          "Abiail"
-        ],
-        "answer": 0,
-        "ref": "Ester 2:7"
-      },
-      {
-        "q": "Que plano contra o rei Mardoqueu descobriu e revelou?",
-        "options": [
-          "Um roubo do tesouro",
-          "Uma fuga de prisioneiros",
-          "Dois eunucos queriam matar o rei",
-          "Um ataque dos medos"
-        ],
-        "answer": 2,
-        "ref": "Ester 2:21-22"
-      },
-      {
-        "q": "Por que Hamã ficou furioso com Mardoqueu?",
-        "options": [
-          "Mardoqueu o roubou",
-          "Mardoqueu não se inclinava diante dele",
-          "Mardoqueu casou com sua filha",
-          "Mardoqueu falou mal do rei"
+          "A coroa",
+          "A ponta do cetro",
+          "O trono",
+          "A mão do rei"
         ],
         "answer": 1,
-        "ref": "Ester 3:5"
+        "ref": "Ester 5:2"
       },
       {
-        "q": "Quantos dias Ester pediu que os judeus jejuassem por ela?",
+        "q": "Para onde Ester convidou o rei e Hamã?",
         "options": [
-          "Um",
-          "Sete",
-          "Quarenta",
-          "Três"
-        ],
-        "answer": 3,
-        "ref": "Ester 4:16"
-      },
-      {
-        "q": "O que o rei estendeu a Ester quando ela entrou sem ser chamada?",
-        "options": [
-          "A mão direita",
-          "Um anel",
-          "O cetro de ouro",
-          "Uma coroa"
+          "Para um passeio",
+          "Para o templo",
+          "Para um banquete",
+          "Para uma caçada"
         ],
         "answer": 2,
-        "ref": "Ester 5:2"
+        "ref": "Ester 5:4"
+      },
+      {
+        "q": "O que o rei mandou ler quando perdeu o sono?",
+        "options": [
+          "O Livro das Crônicas",
+          "As cartas de Hamã",
+          "Os Salmos",
+          "A lei dos persas"
+        ],
+        "answer": 0,
+        "ref": "Ester 6:1"
+      },
+      {
+        "q": "Que honra Mardoqueu tinha recebido por salvar o rei?",
+        "options": [
+          "Uma casa",
+          "Ouro e prata",
+          "Um cargo de príncipe",
+          "Nenhuma"
+        ],
+        "answer": 3,
+        "ref": "Ester 6:3"
+      },
+      {
+        "q": "Quem levou Mardoqueu a cavalo pela praça da cidade?",
+        "options": [
+          "O rei",
+          "Hamã",
+          "Ester",
+          "Harbona"
+        ],
+        "answer": 1,
+        "ref": "Ester 6:11"
       }
     ]
   },
@@ -3243,59 +3243,59 @@
     "day": 124,
     "questions": [
       {
-        "q": "O que o rei mandou ler na noite em que não conseguiu dormir?",
+        "q": "O que Ester pediu ao rei no banquete?",
         "options": [
-          "O Livro das Crônicas",
-          "As cartas de Hamã",
-          "A Lei de Moisés",
-          "Os salmos de Davi"
+          "Sua vida e a do seu povo",
+          "Metade do reino",
+          "Uma coroa nova",
+          "A casa de Hamã"
         ],
         "answer": 0,
-        "ref": "Ester 6:1"
+        "ref": "Ester 7:3"
       },
       {
-        "q": "Quem teve de levar Mardoqueu a cavalo pela praça, honrando-o?",
+        "q": "Quem Ester apontou como o inimigo do seu povo?",
         "options": [
-          "O próprio rei",
+          "Mardoqueu",
           "Harbona",
           "Hamã",
-          "Hegai"
+          "Bigtã"
         ],
         "answer": 2,
-        "ref": "Ester 6:10-11"
+        "ref": "Ester 7:6"
       },
       {
-        "q": "Onde Hamã foi enforcado?",
+        "q": "O que o rei deu à rainha Ester naquele mesmo dia?",
         "options": [
-          "Na porta do rei",
-          "No jardim do palácio",
-          "Na praça de Susã",
-          "Na forca que preparara para Mardoqueu"
+          "Um palácio novo",
+          "Um cavalo",
+          "Mil talentos",
+          "A casa de Hamã"
         ],
         "answer": 3,
-        "ref": "Ester 7:10"
+        "ref": "Ester 8:1"
       },
       {
-        "q": "Por que a festa dos judeus foi chamada Purim?",
+        "q": "A quem o rei deu o anel que antes era de Hamã?",
         "options": [
-          "Por causa do nome do rei",
-          "Por causa do Pur, isto é, sortes",
-          "Por causa de uma cidade",
-          "Por causa do mês de Adar"
+          "A Ester",
+          "A Mardoqueu",
+          "A Harbona",
+          "A Zeres"
         ],
         "answer": 1,
-        "ref": "Ester 9:24-26"
+        "ref": "Ester 8:2"
       },
       {
-        "q": "O que Jó disse ao perder seus bens e filhos?",
+        "q": "O que houve para os judeus depois do novo decreto?",
         "options": [
-          "Por que eu, Senhor?",
-          "Vou me vingar dos sabeus",
-          "O Senhor deu e o Senhor tomou; bendito seja o nome do Senhor",
-          "Deus me abandonou"
+          "Luz, alegria e honra",
+          "Fome e tristeza",
+          "Guerra imediata",
+          "Exílio"
         ],
-        "answer": 2,
-        "ref": "Jó 1:21"
+        "answer": 0,
+        "ref": "Ester 8:16"
       }
     ]
   },
@@ -3303,59 +3303,59 @@
     "day": 125,
     "questions": [
       {
-        "q": "Com que Satanás feriu Jó desde os pés até a cabeça?",
+        "q": "Em que mês aconteceu o dia em que os judeus venceram seus inimigos?",
         "options": [
-          "Com cegueira",
-          "Com tumores malignos",
-          "Com febre",
-          "Com paralisia"
+          "Nisã",
+          "Adar",
+          "Sivã",
+          "Tebete"
         ],
         "answer": 1,
-        "ref": "Jó 2:7"
+        "ref": "Ester 9:1"
       },
       {
-        "q": "O que Jó usou para se raspar, sentado nas cinzas?",
+        "q": "O que os judeus deviam dar aos pobres nos dias de festa?",
         "options": [
-          "Uma pedra",
-          "Uma faca",
-          "Um caco",
-          "Um pedaço de pau"
+          "Roupas velhas",
+          "Dinheiro emprestado",
+          "Dádivas",
+          "Terras"
         ],
         "answer": 2,
-        "ref": "Jó 2:8"
+        "ref": "Ester 9:22"
       },
       {
-        "q": "Quantos dias os amigos ficaram sentados com Jó sem dizer nada?",
+        "q": "O que significa a palavra 'Pur'?",
         "options": [
-          "Sete dias e sete noites",
-          "Três dias",
-          "Um dia",
-          "Quarenta dias"
+          "Sortes",
+          "Festa",
+          "Vitória",
+          "Luz"
         ],
         "answer": 0,
-        "ref": "Jó 2:13"
+        "ref": "Ester 9:24"
       },
       {
-        "q": "Qual dos amigos de Jó era o temanita, o primeiro a responder?",
+        "q": "Que nome recebeu a festa que lembra esse livramento?",
         "options": [
-          "Bildade",
-          "Zofar",
-          "Eliú",
-          "Elifaz"
+          "Páscoa",
+          "Tabernáculos",
+          "Lua Nova",
+          "Purim"
         ],
         "answer": 3,
-        "ref": "Jó 4:1"
+        "ref": "Ester 9:26"
       },
       {
-        "q": "Jó disse que seus dias são mais rápidos do que o quê?",
+        "q": "Que posição Mardoqueu ocupava no reino de Assuero?",
         "options": [
-          "O vento do deserto",
-          "A lançadeira do tecelão",
-          "Um cavalo veloz",
-          "Uma flecha"
+          "Chefe da guarda",
+          "Era o segundo após o rei",
+          "Escrivão",
+          "Porteiro"
         ],
         "answer": 1,
-        "ref": "Jó 7:6"
+        "ref": "Ester 10:3"
       }
     ]
   },
@@ -3363,59 +3363,59 @@
     "day": 126,
     "questions": [
       {
-        "q": "Qual amigo de Jó era o suíta?",
+        "q": "Em que terra vivia Jó?",
         "options": [
-          "Elifaz",
-          "Bildade",
-          "Zofar",
-          "Eliú"
-        ],
-        "answer": 1,
-        "ref": "Jó 8:1"
-      },
-      {
-        "q": "Bildade compara a confiança do ímpio a quê?",
-        "options": [
-          "Uma teia de aranha",
-          "Uma rocha",
-          "Um muro alto",
-          "Um rio profundo"
+          "Uz",
+          "Canaã",
+          "Egito",
+          "Moabe"
         ],
         "answer": 0,
-        "ref": "Jó 8:14"
+        "ref": "Jó 1:1"
       },
       {
-        "q": "Jó diz a Deus: 'Lembra-te de que me formaste como...'",
+        "q": "Quantos filhos e filhas Jó tinha no começo?",
         "options": [
-          "Pedra",
-          "Madeira",
-          "Ferro",
-          "Barro"
-        ],
-        "answer": 3,
-        "ref": "Jó 10:9"
-      },
-      {
-        "q": "Segundo Jó, o que podemos perguntar aos animais e às aves?",
-        "options": [
-          "O caminho de casa",
-          "Nada, pois não falam",
-          "Eles nos ensinarão que a mão do Senhor fez isso",
-          "Onde há comida"
+          "Dois filhos e uma filha",
+          "Doze filhos",
+          "Sete filhos e três filhas",
+          "Cinco filhos e cinco filhas"
         ],
         "answer": 2,
-        "ref": "Jó 12:7-9"
+        "ref": "Jó 1:2"
       },
       {
-        "q": "Segundo Jó, há esperança para que coisa que, cortada, volta a brotar?",
+        "q": "O que Jó disse depois de perder tudo?",
         "options": [
-          "A árvore",
-          "A flor",
-          "A pedra",
-          "O rio"
+          "Por que eu, Senhor?",
+          "Vou me vingar",
+          "Deus me abandonou",
+          "O Senhor deu e o Senhor tomou; bendito seja"
+        ],
+        "answer": 3,
+        "ref": "Jó 1:21"
+      },
+      {
+        "q": "Quantos amigos vieram consolar Jó?",
+        "options": [
+          "Dois",
+          "Três",
+          "Sete",
+          "Dez"
+        ],
+        "answer": 1,
+        "ref": "Jó 2:11"
+      },
+      {
+        "q": "Por quanto tempo os amigos ficaram em silêncio com Jó?",
+        "options": [
+          "Sete dias e sete noites",
+          "Três dias",
+          "Um mês",
+          "Quarenta dias"
         ],
         "answer": 0,
-        "ref": "Jó 14:7"
+        "ref": "Jó 2:13"
       }
     ]
   },
@@ -3423,59 +3423,59 @@
     "day": 127,
     "questions": [
       {
-        "q": "Como Jó chamou seus amigos em Jó 16?",
+        "q": "O que Jó disse que agora seus olhos faziam?",
         "options": [
-          "Sábios conselheiros",
-          "Consoladores molestos",
-          "Irmãos fiéis",
-          "Profetas de Deus"
+          "Choravam",
+          "Viam a Deus",
+          "Estavam cegos",
+          "Viam seus filhos"
         ],
         "answer": 1,
-        "ref": "Jó 16:2"
+        "ref": "Jó 42:5"
       },
       {
-        "q": "Onde Jó disse que estava a sua testemunha?",
+        "q": "Quantos novilhos e carneiros os amigos de Jó deviam oferecer?",
         "options": [
-          "No céu",
-          "Em Uz",
-          "No templo",
-          "Entre os anciãos"
+          "Sete e sete",
+          "Dois e dois",
+          "Doze e doze",
+          "Um e um"
         ],
         "answer": 0,
-        "ref": "Jó 16:19"
+        "ref": "Jó 42:8"
       },
       {
-        "q": "Quantas vezes, segundo Jó, os amigos o insultaram?",
+        "q": "Quando o Senhor restaurou a sorte de Jó?",
         "options": [
-          "Três",
-          "Sete",
-          "Cem",
-          "Dez"
-        ],
-        "answer": 3,
-        "ref": "Jó 19:3"
-      },
-      {
-        "q": "Que famosa afirmação de fé Jó fez em Jó 19?",
-        "options": [
-          "O Senhor é meu pastor",
-          "Deus é amor",
-          "Eu sei que o meu Redentor vive",
-          "A fé move montanhas"
+          "Quando ele ficou rico",
+          "Quando ele viajou",
+          "Quando ele orava por seus amigos",
+          "Quando ele se casou"
         ],
         "answer": 2,
-        "ref": "Jó 19:25"
+        "ref": "Jó 42:10"
       },
       {
-        "q": "Segundo Zofar, como é a alegria dos ímpios?",
+        "q": "Quanto o Senhor deu a Jó em comparação ao que tinha antes?",
         "options": [
-          "Passageira",
-          "Eterna",
-          "Contagiante",
-          "Silenciosa"
+          "A metade",
+          "O mesmo",
+          "O triplo",
+          "O dobro"
         ],
-        "answer": 0,
-        "ref": "Jó 20:5"
+        "answer": 3,
+        "ref": "Jó 42:10"
+      },
+      {
+        "q": "Como se chamava a primeira filha de Jó depois da restauração?",
+        "options": [
+          "Quezia",
+          "Jemima",
+          "Ester",
+          "Rute"
+        ],
+        "answer": 1,
+        "ref": "Jó 42:14"
       }
     ]
   },
@@ -3483,59 +3483,59 @@
     "day": 128,
     "questions": [
       {
-        "q": "Que pergunta Jó faz sobre os ímpios em Jó 21?",
+        "q": "Segundo o Salmo 1, onde está o prazer do homem bem-aventurado?",
         "options": [
-          "Por que eles vivem, envelhecem e ficam mais poderosos?",
-          "Por que eles oram tanto?",
-          "Por que eles moram no deserto?",
-          "Por que eles têm poucos filhos?"
-        ],
-        "answer": 0,
-        "ref": "Jó 21:7"
-      },
-      {
-        "q": "Segundo Jó, se Deus o provar, ele sairá como o quê?",
-        "options": [
-          "Como a prata",
-          "Como o vento",
-          "Como o ouro",
-          "Como a água"
-        ],
-        "answer": 2,
-        "ref": "Jó 23:10"
-      },
-      {
-        "q": "Segundo Jó 26, sobre o que Deus faz a terra pairar?",
-        "options": [
-          "Sobre colunas",
-          "Sobre as águas",
-          "Sobre um elefante",
-          "Sobre o nada"
-        ],
-        "answer": 3,
-        "ref": "Jó 26:7"
-      },
-      {
-        "q": "Até a morte, Jó disse que nunca renunciaria a quê?",
-        "options": [
-          "Às suas riquezas",
-          "À sua integridade",
-          "Aos seus amigos",
-          "À sua casa"
+          "Nas riquezas",
+          "Na lei do Senhor",
+          "Nas festas",
+          "Na fama"
         ],
         "answer": 1,
-        "ref": "Jó 27:5"
+        "ref": "Salmos 1:2"
       },
       {
-        "q": "Segundo Jó 28, o que é a sabedoria?",
+        "q": "O Salmo 1 compara o justo a quê?",
         "options": [
-          "O temor do Senhor",
-          "Saber muitas línguas",
-          "Ter ouro e prata",
-          "Viver muitos anos"
+          "Uma árvore junto a ribeiros",
+          "Uma pedra no deserto",
+          "Uma flor do campo",
+          "Uma estrela"
         ],
         "answer": 0,
-        "ref": "Jó 28:28"
+        "ref": "Salmos 1:3"
+      },
+      {
+        "q": "Segundo o Salmo 1, os ímpios são como o quê?",
+        "options": [
+          "Ouro",
+          "Água",
+          "A palha que o vento dispersa",
+          "Uma rocha"
+        ],
+        "answer": 2,
+        "ref": "Salmos 1:4"
+      },
+      {
+        "q": "Segundo o Salmo 19, o que anuncia a glória de Deus?",
+        "options": [
+          "Os mares",
+          "Os reis",
+          "As montanhas",
+          "Os céus"
+        ],
+        "answer": 3,
+        "ref": "Salmos 19:1"
+      },
+      {
+        "q": "Segundo o Salmo 19, os juízos do Senhor são mais doces do que o quê?",
+        "options": [
+          "O mel",
+          "O açúcar",
+          "O vinho",
+          "As frutas"
+        ],
+        "answer": 0,
+        "ref": "Salmos 19:10"
       }
     ]
   },
@@ -3543,59 +3543,59 @@
     "day": 129,
     "questions": [
       {
-        "q": "Jó disse que antes era os olhos de quem e os pés de quem?",
+        "q": "Segundo o Salmo 23, o Senhor é o meu...",
         "options": [
-          "Do rei e do príncipe",
-          "Do cego e do coxo",
-          "Dos filhos e das filhas",
-          "Do pobre e do rico"
-        ],
-        "answer": 1,
-        "ref": "Jó 29:15"
-      },
-      {
-        "q": "Segundo Jó 30, quem agora zombava de Jó?",
-        "options": [
-          "Os mais jovens do que ele",
-          "Os reis da terra",
-          "Seus servos",
-          "Os sacerdotes"
-        ],
-        "answer": 0,
-        "ref": "Jó 30:1"
-      },
-      {
-        "q": "O que Jó fazia com o estrangeiro e o viajante?",
-        "options": [
-          "Expulsava da cidade",
-          "Cobrava pedágio",
-          "Ignorava",
-          "Abria-lhe as portas da casa"
-        ],
-        "answer": 3,
-        "ref": "Jó 31:32"
-      },
-      {
-        "q": "Por que Eliú esperou para falar com Jó?",
-        "options": [
-          "Estava doente",
-          "Não sabia o que dizer",
-          "Os outros eram mais velhos",
-          "Tinha medo de Jó"
+          "Rei",
+          "Juiz",
+          "Pastor",
+          "Guarda"
         ],
         "answer": 2,
-        "ref": "Jó 32:4"
+        "ref": "Salmos 23:1"
       },
       {
-        "q": "Segundo Eliú, Deus retribui ao homem conforme o quê?",
+        "q": "No Salmo 23, o que conforta quem anda pelo vale da sombra da morte?",
         "options": [
-          "As suas obras",
-          "A sua riqueza",
-          "A sua idade",
-          "A sua família"
+          "A espada e o escudo",
+          "A vara e o cajado",
+          "A lâmpada e o azeite",
+          "O pão e a água"
+        ],
+        "answer": 1,
+        "ref": "Salmos 23:4"
+      },
+      {
+        "q": "Segundo o Salmo 24, de quem é a terra e tudo o que nela existe?",
+        "options": [
+          "Dos reis",
+          "Dos ricos",
+          "Do povo",
+          "Do Senhor"
+        ],
+        "answer": 3,
+        "ref": "Salmos 24:1"
+      },
+      {
+        "q": "Segundo o Salmo 24, quem subirá ao monte do Senhor?",
+        "options": [
+          "O limpo de mãos e puro de coração",
+          "O mais forte",
+          "O mais rico",
+          "O mais velho"
         ],
         "answer": 0,
-        "ref": "Jó 34:11"
+        "ref": "Salmos 24:4"
+      },
+      {
+        "q": "Segundo o Salmo 27, o Senhor é a minha luz e a minha...",
+        "options": [
+          "Riqueza",
+          "Salvação",
+          "Espada",
+          "Coroa"
+        ],
+        "answer": 1,
+        "ref": "Salmos 27:1"
       }
     ]
   },
@@ -3603,59 +3603,59 @@
     "day": 130,
     "questions": [
       {
-        "q": "Segundo Eliú, Deus nos ensina mais do que a quem?",
+        "q": "O Salmo 37 diz para não ter inveja de quem?",
         "options": [
-          "Aos reis da terra",
-          "Aos anjos",
-          "Aos animais da terra e às aves",
-          "Aos sábios do Egito"
+          "Dos que cometem iniquidade",
+          "Dos amigos",
+          "Dos pais",
+          "Dos professores"
+        ],
+        "answer": 0,
+        "ref": "Salmos 37:1"
+      },
+      {
+        "q": "Segundo o Salmo 37, o que devemos entregar ao Senhor?",
+        "options": [
+          "Nosso dinheiro",
+          "Nossa casa",
+          "O nosso caminho",
+          "Nossos inimigos"
         ],
         "answer": 2,
-        "ref": "Jó 35:11"
+        "ref": "Salmos 37:5"
       },
       {
-        "q": "Segundo Eliú, Deus é grande, mas a ninguém...",
+        "q": "Segundo o Salmo 37, quem herdará a terra e terá paz?",
         "options": [
-          "Despreza",
-          "Escuta",
-          "Perdoa",
-          "Visita"
-        ],
-        "answer": 0,
-        "ref": "Jó 36:5"
-      },
-      {
-        "q": "De onde o Senhor respondeu a Jó?",
-        "options": [
-          "De uma sarça ardente",
-          "Do templo",
-          "De um sonho",
-          "Do meio de um redemoinho"
+          "Os orgulhosos",
+          "Os ricos",
+          "Os guerreiros",
+          "Os humildes"
         ],
         "answer": 3,
-        "ref": "Jó 38:1"
+        "ref": "Salmos 37:11"
       },
       {
-        "q": "Qual foi uma das primeiras perguntas de Deus a Jó?",
+        "q": "O salmista disse que nunca viu o justo...",
         "options": [
-          "Por que você está triste?",
-          "Onde estavas quando eu lançava os fundamentos da terra?",
-          "Quantos filhos você tem?",
-          "Quem são seus amigos?"
+          "Doente",
+          "Desamparado",
+          "Triste",
+          "Cansado"
         ],
         "answer": 1,
-        "ref": "Jó 38:4"
+        "ref": "Salmos 37:25"
       },
       {
-        "q": "Que ave, segundo Deus, deixa os ovos na terra e se esquece deles?",
+        "q": "Segundo o Salmo 37, o que está no coração do justo?",
         "options": [
-          "A avestruz",
-          "A águia",
-          "O corvo",
-          "O gavião"
+          "A lei de seu Deus",
+          "O medo",
+          "A ira",
+          "O ouro"
         ],
         "answer": 0,
-        "ref": "Jó 39:13-15"
+        "ref": "Salmos 37:31"
       }
     ]
   },
@@ -3663,59 +3663,59 @@
     "day": 131,
     "questions": [
       {
-        "q": "Quando o Senhor restaurou a sorte de Jó?",
+        "q": "No Salmo 39, o salmista quis vigiar para não pecar com o quê?",
         "options": [
-          "Quando ele orava por seus amigos",
-          "Quando vendeu seu gado",
-          "Quando foi ao templo",
-          "Quando seus filhos voltaram"
-        ],
-        "answer": 0,
-        "ref": "Jó 42:10"
-      },
-      {
-        "q": "Quantos anos Jó viveu depois de ser restaurado?",
-        "options": [
-          "Setenta",
-          "Cem",
-          "Cento e quarenta",
-          "Duzentos"
-        ],
-        "answer": 2,
-        "ref": "Jó 42:16"
-      },
-      {
-        "q": "Segundo o Salmo 1, o justo é como uma árvore plantada junto a quê?",
-        "options": [
-          "Uma rocha",
-          "Um muro",
-          "Um deserto",
-          "Ribeiros de águas"
+          "Com as mãos",
+          "Com os pés",
+          "Com os olhos",
+          "Com a língua"
         ],
         "answer": 3,
-        "ref": "Salmos 1:3"
+        "ref": "Salmos 39:1"
       },
       {
-        "q": "No Salmo 3, o salmista diz que se deitou, dormiu e acordou porque...",
+        "q": "No Salmo 39, o salmista diz que sua esperança está em quem?",
         "options": [
-          "Estava cansado",
-          "O Senhor o sustentou",
-          "Os inimigos fugiram",
-          "O sol nasceu"
+          "Nos amigos",
+          "No Senhor",
+          "No rei",
+          "Nas riquezas"
         ],
         "answer": 1,
-        "ref": "Salmos 3:5"
+        "ref": "Salmos 39:7"
       },
       {
-        "q": "No Salmo 8, a lua e as estrelas são chamadas obra de quê?",
+        "q": "No Salmo 42, a alma suspira por Deus como qual animal suspira pelas águas?",
         "options": [
-          "Dos dedos de Deus",
-          "Dos anjos",
-          "Do acaso",
-          "Dos homens"
+          "O cervo",
+          "O leão",
+          "O camelo",
+          "A ovelha"
         ],
         "answer": 0,
-        "ref": "Salmos 8:3"
+        "ref": "Salmos 42:1"
+      },
+      {
+        "q": "Segundo o Salmo 46, Deus é nosso refúgio e...",
+        "options": [
+          "Juiz",
+          "Rei",
+          "Fortaleza",
+          "Pastor"
+        ],
+        "answer": 2,
+        "ref": "Salmos 46:1"
+      },
+      {
+        "q": "O Salmo 46 diz: 'Acalmem-se e reconheçam que eu sou...'",
+        "options": [
+          "Rei",
+          "Deus",
+          "Forte",
+          "Santo"
+        ],
+        "answer": 1,
+        "ref": "Salmos 46:10"
       }
     ]
   },
@@ -3723,59 +3723,59 @@
     "day": 132,
     "questions": [
       {
-        "q": "No Salmo 9, o Senhor é um alto refúgio para quem?",
+        "q": "O Salmo 67 pede que quem louve a Deus?",
         "options": [
-          "Os ricos",
-          "Os reis",
-          "Os oprimidos",
-          "Os guerreiros"
+          "Só os sacerdotes",
+          "Só Israel",
+          "Todos os povos",
+          "Só os anjos"
         ],
         "answer": 2,
-        "ref": "Salmos 9:9"
+        "ref": "Salmos 67:3"
       },
       {
-        "q": "Segundo o Salmo 12, as palavras do Senhor são como prata refinada quantas vezes?",
+        "q": "No Salmo 73, quando o salmista entendeu o fim dos ímpios?",
         "options": [
-          "Três",
-          "Sete",
-          "Dez",
-          "Doze"
-        ],
-        "answer": 1,
-        "ref": "Salmos 12:6"
-      },
-      {
-        "q": "Segundo o Salmo 14, o que disse o insensato em seu coração?",
-        "options": [
-          "Não há Deus",
-          "Deus é bom",
-          "Eu sou rei",
-          "Amanhã choverá"
+          "Quando entrou no santuário de Deus",
+          "Quando ficou rico",
+          "Quando viajou",
+          "Quando dormiu"
         ],
         "answer": 0,
-        "ref": "Salmos 14:1"
+        "ref": "Salmos 73:17"
       },
       {
-        "q": "Segundo o Salmo 16, o que há na presença de Deus?",
+        "q": "Segundo o Salmo 73, o que é bom para o salmista?",
         "options": [
-          "Medo e tremor",
-          "Silêncio",
-          "Muito ouro",
-          "Plenitude de alegria"
+          "Ter muitas riquezas",
+          "Ser famoso",
+          "Vencer os inimigos",
+          "Estar próximo de Deus"
         ],
         "answer": 3,
-        "ref": "Salmos 16:11"
+        "ref": "Salmos 73:28"
       },
       {
-        "q": "No Salmo 17, o salmista pede: 'Guarda-me como a menina dos...'",
+        "q": "No Salmo 84, que aves encontraram casa e ninho junto aos altares?",
         "options": [
-          "Teus braços",
-          "Olhos",
-          "Céus",
-          "Montes"
+          "Pomba e águia",
+          "Pardal e andorinha",
+          "Corvo e coruja",
+          "Galo e galinha"
         ],
         "answer": 1,
-        "ref": "Salmos 17:8"
+        "ref": "Salmos 84:3"
+      },
+      {
+        "q": "Segundo o Salmo 84, um dia nos átrios de Deus vale mais do que...",
+        "options": [
+          "Mil",
+          "Cem",
+          "Dez",
+          "Sete"
+        ],
+        "answer": 0,
+        "ref": "Salmos 84:10"
       }
     ]
   },
@@ -3783,59 +3783,59 @@
     "day": 133,
     "questions": [
       {
-        "q": "Segundo o Salmo 19, o que os céus anunciam?",
+        "q": "Segundo o Salmo 90, mil anos aos olhos de Deus são como...",
         "options": [
-          "A chegada da chuva",
-          "A glória de Deus",
-          "O fim do mundo",
-          "A força do sol"
+          "Um século",
+          "O dia de ontem",
+          "Uma semana",
+          "Um minuto"
         ],
         "answer": 1,
-        "ref": "Salmos 19:1"
+        "ref": "Salmos 90:4"
       },
       {
-        "q": "No Salmo 20, uns confiam em carros e cavalos, mas nós nos gloriamos em quê?",
+        "q": "O Salmo 90 pede: 'Ensina-nos a contar os nossos dias, para que alcancemos...'",
         "options": [
-          "No nome do Senhor",
-          "Nos nossos muros",
-          "No nosso rei",
-          "Nas nossas armas"
-        ],
-        "answer": 0,
-        "ref": "Salmos 20:7"
-      },
-      {
-        "q": "Como começa o Salmo 23?",
-        "options": [
-          "Os céus anunciam a glória de Deus",
-          "Bem-aventurado o homem",
-          "O Senhor é a minha luz",
-          "O Senhor é o meu pastor; nada me faltará"
-        ],
-        "answer": 3,
-        "ref": "Salmos 23:1"
-      },
-      {
-        "q": "Segundo o Salmo 24, quem subirá ao monte do Senhor?",
-        "options": [
-          "O mais forte",
-          "O mais rico",
-          "O limpo de mãos e puro de coração",
-          "O mais velho"
+          "Riquezas",
+          "Muitos anos",
+          "Coração sábio",
+          "Vitória"
         ],
         "answer": 2,
-        "ref": "Salmos 24:3-4"
+        "ref": "Salmos 90:12"
       },
       {
-        "q": "No Salmo 27, o Senhor é a minha luz e a minha...",
+        "q": "Segundo o Salmo 91, Deus nos cobrirá com o quê?",
         "options": [
-          "Salvação",
-          "Riqueza",
-          "Comida",
-          "Casa"
+          "Suas penas",
+          "Um manto",
+          "Uma nuvem",
+          "Um escudo de ouro"
         ],
         "answer": 0,
-        "ref": "Salmos 27:1"
+        "ref": "Salmos 91:4"
+      },
+      {
+        "q": "Segundo o Salmo 91, a quem Deus dará ordens para nos guardar?",
+        "options": [
+          "Aos reis",
+          "Aos soldados",
+          "Aos sacerdotes",
+          "Aos seus anjos"
+        ],
+        "answer": 3,
+        "ref": "Salmos 91:11"
+      },
+      {
+        "q": "Segundo o Salmo 92, o justo florescerá como qual árvore?",
+        "options": [
+          "A figueira",
+          "A palmeira",
+          "O salgueiro",
+          "A videira"
+        ],
+        "answer": 1,
+        "ref": "Salmos 92:12"
       }
     ]
   },
@@ -3843,59 +3843,59 @@
     "day": 134,
     "questions": [
       {
-        "q": "Segundo o Salmo 30, o choro pode durar uma noite, mas a alegria vem quando?",
+        "q": "Segundo o Salmo 97, como os montes ficam na presença do Senhor?",
         "options": [
-          "Pela manhã",
-          "Ao meio-dia",
-          "No sábado",
-          "Depois de um ano"
+          "Derretem como cera",
+          "Ficam mais altos",
+          "Cantam",
+          "Viram pó"
         ],
         "answer": 0,
-        "ref": "Salmos 30:5"
+        "ref": "Salmos 97:5"
       },
       {
-        "q": "No Salmo 32, o que o salmista fez para ser perdoado?",
+        "q": "O Salmo 98 convida a cantar ao Senhor um cântico...",
         "options": [
-          "Ofereceu ouro",
-          "Fugiu para o deserto",
-          "Confessou o seu pecado",
-          "Ficou em silêncio"
+          "Antigo",
+          "Triste",
+          "Novo",
+          "Curto"
         ],
         "answer": 2,
-        "ref": "Salmos 32:5"
+        "ref": "Salmos 98:1"
       },
       {
-        "q": "No Salmo 32, não devemos ser como que animais sem entendimento?",
+        "q": "No Salmo 98, o que os rios fazem de alegria?",
         "options": [
-          "O leão e o urso",
-          "O cavalo e a mula",
-          "A ovelha e o bode",
-          "O corvo e a pomba"
-        ],
-        "answer": 1,
-        "ref": "Salmos 32:9"
-      },
-      {
-        "q": "Segundo o Salmo 34, o anjo do Senhor se acampa ao redor de quem?",
-        "options": [
-          "Dos reis",
-          "Dos soldados",
-          "Dos ricos",
-          "Dos que o temem"
+          "Cantam",
+          "Secam",
+          "Correm",
+          "Batem palmas"
         ],
         "answer": 3,
-        "ref": "Salmos 34:7"
+        "ref": "Salmos 98:8"
       },
       {
-        "q": "Salmo 37: 'Entrega o teu caminho ao Senhor; confia nele, e...'",
+        "q": "Segundo o Salmo 103, a juventude se renova como a de qual ave?",
         "options": [
-          "O mais ele fará",
-          "Ficarás rico",
-          "Nunca sofrerás",
-          "Serás rei"
+          "Pomba",
+          "Águia",
+          "Pardal",
+          "Coruja"
         ],
-        "answer": 0,
-        "ref": "Salmos 37:5"
+        "answer": 1,
+        "ref": "Salmos 103:5"
+      },
+      {
+        "q": "No Salmo 103, o Senhor se compadece dos que o temem como quem?",
+        "options": [
+          "Um rei de seus servos",
+          "Um pastor de lobos",
+          "Um pai de seus filhos",
+          "Um juiz dos réus"
+        ],
+        "answer": 2,
+        "ref": "Salmos 103:13"
       }
     ]
   },
@@ -3903,59 +3903,59 @@
     "day": 135,
     "questions": [
       {
-        "q": "No Salmo 39, o salmista diz que Deus fez seus dias do comprimento de quê?",
+        "q": "Segundo o Salmo 119, como o jovem pode manter puro o seu caminho?",
         "options": [
-          "Um rio",
-          "Um palmo",
-          "Uma estrada",
-          "Um ano"
+          "Estudando muito",
+          "Observando-o conforme a palavra de Deus",
+          "Ficando sozinho",
+          "Trabalhando duro"
         ],
         "answer": 1,
-        "ref": "Salmos 39:5"
+        "ref": "Salmos 119:9"
       },
       {
-        "q": "No Salmo 40, de onde o Senhor tirou o salmista?",
+        "q": "Onde o salmista guardou a palavra de Deus para não pecar?",
         "options": [
-          "De uma prisão",
-          "De um navio",
-          "De um poço de perdição, de um lamaçal",
-          "De um incêndio"
-        ],
-        "answer": 2,
-        "ref": "Salmos 40:2"
-      },
-      {
-        "q": "Segundo o Salmo 41, quem é bem-aventurado?",
-        "options": [
-          "Aquele que assiste o necessitado",
-          "Aquele que é rico",
-          "Aquele que é forte",
-          "Aquele que é famoso"
+          "No coração",
+          "Num baú",
+          "No templo",
+          "Na memória dos pais"
         ],
         "answer": 0,
-        "ref": "Salmos 41:1"
+        "ref": "Salmos 119:11"
       },
       {
-        "q": "No Salmo 42, a alma suspira por Deus como que animal suspira pelas águas?",
+        "q": "O salmista se alegra mais nos testemunhos de Deus do que em quê?",
         "options": [
-          "O leão",
-          "A ovelha",
-          "O camelo",
-          "O cervo"
+          "Nas festas",
+          "Nos amigos",
+          "Em todas as riquezas",
+          "Nos banquetes"
+        ],
+        "answer": 2,
+        "ref": "Salmos 119:14"
+      },
+      {
+        "q": "A que horas o salmista disse que se levantaria para agradecer a Deus?",
+        "options": [
+          "Ao meio-dia",
+          "Ao pôr do sol",
+          "De manhã cedo",
+          "À meia-noite"
         ],
         "answer": 3,
-        "ref": "Salmos 42:1"
+        "ref": "Salmos 119:62"
       },
       {
-        "q": "No Salmo 44, por meio de que Israel NÃO possuiu a terra?",
+        "q": "Segundo o salmista, a lei de Deus é melhor do que o quê?",
         "options": [
-          "Pela mão direita de Deus",
-          "Pela espada deles",
-          "Pelo braço de Deus",
-          "Pelo favor de Deus"
+          "Milhares de ouro ou prata",
+          "Um reino",
+          "Muitos amigos",
+          "Uma casa grande"
         ],
-        "answer": 1,
-        "ref": "Salmos 44:3"
+        "answer": 0,
+        "ref": "Salmos 119:72"
       }
     ]
   },
@@ -3963,59 +3963,59 @@
     "day": 136,
     "questions": [
       {
-        "q": "Segundo o Salmo 46, Deus é o nosso refúgio e...",
+        "q": "Onde a palavra do Senhor está firmada para sempre?",
         "options": [
-          "Fortaleza",
-          "Juiz",
-          "Tesouro",
-          "Mestre"
+          "No templo",
+          "Nos céus",
+          "Nas pedras",
+          "No mar"
         ],
-        "answer": 0,
-        "ref": "Salmos 46:1"
+        "answer": 1,
+        "ref": "Salmos 119:89"
       },
       {
-        "q": "No Salmo 50, Deus diz que são seus todos os animais da floresta e o gado de quantas montanhas?",
+        "q": "Segundo o salmista, as palavras de Deus são mais doces do que o quê?",
         "options": [
-          "Sete",
-          "Doze",
-          "Mil",
-          "Cem"
+          "Açúcar",
+          "Frutas",
+          "Mel",
+          "Leite"
         ],
         "answer": 2,
-        "ref": "Salmos 50:10"
+        "ref": "Salmos 119:103"
       },
       {
-        "q": "No Salmo 51, o salmista pede: 'Cria em mim, ó Deus, um coração...'",
+        "q": "A palavra de Deus é lâmpada para os meus pés e...",
         "options": [
-          "Forte",
-          "Rico",
-          "Alegre",
-          "Puro"
+          "Luz para o meu caminho",
+          "Pão para a minha boca",
+          "Força para os braços",
+          "Água para a sede"
+        ],
+        "answer": 0,
+        "ref": "Salmos 119:105"
+      },
+      {
+        "q": "Quantas vezes ao dia o salmista louvava a Deus?",
+        "options": [
+          "Três",
+          "Doze",
+          "Uma",
+          "Sete"
         ],
         "answer": 3,
-        "ref": "Salmos 51:10"
+        "ref": "Salmos 119:164"
       },
       {
-        "q": "No Salmo 52, o salmista se compara a que árvore na casa de Deus?",
+        "q": "Com o que o salmista se compara no último versículo do Salmo 119?",
         "options": [
-          "Figueira",
-          "Oliveira verdejante",
-          "Cedro",
-          "Palmeira"
+          "Um leão",
+          "Uma árvore",
+          "Uma ovelha perdida",
+          "Um pássaro"
         ],
-        "answer": 1,
-        "ref": "Salmos 52:8"
-      },
-      {
-        "q": "No Salmo 55, o salmista deseja ter asas como as de que ave?",
-        "options": [
-          "Águia",
-          "Pomba",
-          "Gavião",
-          "Corvo"
-        ],
-        "answer": 1,
-        "ref": "Salmos 55:6"
+        "answer": 2,
+        "ref": "Salmos 119:176"
       }
     ]
   },
@@ -4023,59 +4023,59 @@
     "day": 137,
     "questions": [
       {
-        "q": "No Salmo 57, o salmista diz que se abrigará à sombra de quê?",
+        "q": "Segundo o Salmo 121, de onde vem o meu socorro?",
         "options": [
-          "De uma árvore",
-          "Das asas de Deus",
-          "De um monte",
-          "Do templo"
+          "Dos montes",
+          "Do Senhor",
+          "Dos amigos",
+          "Do rei"
         ],
         "answer": 1,
-        "ref": "Salmos 57:1"
+        "ref": "Salmos 121:2"
       },
       {
-        "q": "No Salmo 59, os inimigos uivam ao anoitecer como que animais?",
+        "q": "Segundo o Salmo 121, o que o guarda de Israel nunca faz?",
         "options": [
-          "Lobos",
-          "Leões",
-          "Cães",
-          "Chacais"
-        ],
-        "answer": 2,
-        "ref": "Salmos 59:6"
-      },
-      {
-        "q": "Segundo o Salmo 62, de onde vem a salvação da alma?",
-        "options": [
-          "Somente de Deus",
-          "Dos reis",
-          "Das riquezas",
-          "Dos amigos"
+          "Dormir",
+          "Falar",
+          "Ouvir",
+          "Andar"
         ],
         "answer": 0,
-        "ref": "Salmos 62:1"
+        "ref": "Salmos 121:4"
       },
       {
-        "q": "No Salmo 63, o que é melhor do que a vida?",
+        "q": "O Salmo 125 compara quem confia no Senhor a qual monte?",
         "options": [
-          "O ouro",
-          "A paz",
-          "A força",
-          "A graça de Deus"
+          "Monte Sinai",
+          "Monte Carmelo",
+          "Monte Sião",
+          "Monte das Oliveiras"
+        ],
+        "answer": 2,
+        "ref": "Salmos 125:1"
+      },
+      {
+        "q": "Segundo o Salmo 148, quais astros devem louvar ao Senhor?",
+        "options": [
+          "Só o sol",
+          "Só as estrelas",
+          "Nenhum",
+          "Sol, lua e estrelas"
         ],
         "answer": 3,
-        "ref": "Salmos 63:3"
+        "ref": "Salmos 148:3"
       },
       {
-        "q": "Segundo o Salmo 68, Deus é Pai de quem e juiz de quem?",
+        "q": "Segundo o Salmo 148, quem deve louvar ao Senhor?",
         "options": [
-          "Dos reis e dos príncipes",
-          "Dos órfãos e das viúvas",
-          "Dos ricos e dos pobres",
-          "Dos sacerdotes e levitas"
+          "Só os adultos",
+          "Só os sacerdotes",
+          "Jovens, idosos e crianças",
+          "Só os reis"
         ],
-        "answer": 1,
-        "ref": "Salmos 68:5"
+        "answer": 2,
+        "ref": "Salmos 148:12"
       }
     ]
   },
@@ -4083,59 +4083,59 @@
     "day": 138,
     "questions": [
       {
-        "q": "No Salmo 69, o que deram ao salmista para beber na sua sede?",
+        "q": "De quem são os provérbios do livro de Provérbios?",
         "options": [
-          "Água",
-          "Leite",
-          "Vinagre",
-          "Vinho doce"
-        ],
-        "answer": 2,
-        "ref": "Salmos 69:21"
-      },
-      {
-        "q": "No Salmo 71, o salmista pede que Deus não o rejeite em que fase da vida?",
-        "options": [
-          "Na velhice",
-          "Na infância",
-          "Na guerra",
-          "Na viagem"
-        ],
-        "answer": 0,
-        "ref": "Salmos 71:9"
-      },
-      {
-        "q": "Como termina o Salmo 72?",
-        "options": [
-          "Aleluia!",
-          "Louvai ao Senhor!",
-          "Assim seja!",
-          "Terminam aqui as orações de Davi"
-        ],
-        "answer": 3,
-        "ref": "Salmos 72:20"
-      },
-      {
-        "q": "No Salmo 73, quando o salmista entendeu qual era o fim dos ímpios?",
-        "options": [
-          "Quando ficou rico",
-          "Quando entrou no santuário de Deus",
-          "Quando viajou",
-          "Quando sonhou"
+          "Davi",
+          "Salomão",
+          "Moisés",
+          "Samuel"
         ],
         "answer": 1,
-        "ref": "Salmos 73:17"
+        "ref": "Provérbios 1:1"
       },
       {
-        "q": "Segundo o Salmo 74, quem fez o verão e o inverno?",
+        "q": "Segundo Provérbios, o que é o princípio do conhecimento?",
         "options": [
-          "Deus",
-          "O sol",
-          "Os homens",
-          "Os anjos"
+          "O temor do Senhor",
+          "A escola",
+          "A riqueza",
+          "A idade"
         ],
         "answer": 0,
-        "ref": "Salmos 74:17"
+        "ref": "Provérbios 1:7"
+      },
+      {
+        "q": "O filho deve ouvir o ensino do pai e não abandonar a instrução de quem?",
+        "options": [
+          "Do professor",
+          "Do rei",
+          "Do irmão",
+          "Da mãe"
+        ],
+        "answer": 3,
+        "ref": "Provérbios 1:8"
+      },
+      {
+        "q": "O que o filho deve fazer se os pecadores tentarem seduzi-lo?",
+        "options": [
+          "Ir com eles",
+          "Não consentir",
+          "Pedir dinheiro",
+          "Ficar calado"
+        ],
+        "answer": 1,
+        "ref": "Provérbios 1:10"
+      },
+      {
+        "q": "Segundo Provérbios 1, quem ouve a sabedoria habitará como?",
+        "options": [
+          "Rico e famoso",
+          "Sozinho",
+          "Seguro e tranquilo",
+          "Longe da cidade"
+        ],
+        "answer": 2,
+        "ref": "Provérbios 1:33"
       }
     ]
   }

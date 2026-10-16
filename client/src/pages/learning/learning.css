@@ -131,3 +131,13 @@
 .lesson-verse { margin: .8rem 0; padding: .7rem .9rem; border-left: 4px solid var(--primary); background: var(--surface-2, var(--surface)); border-radius: 0 12px 12px 0; font-style: italic; }
 .lesson-q textarea { width: 100%; box-sizing: border-box; margin-top: .3rem; }
 .lesson-q small { display: inline-flex; align-items: center; gap: .3rem; margin-top: .25rem; }
+/* Voz: barra de carregamento em cima do botão Ouvir */
+.voice-load { position: relative; margin: 0 auto .45rem; max-width: 300px; height: 24px; border-radius: 999px; background: var(--surface-2, #eef2f7); overflow: hidden; text-align: center; font-size: .78rem; font-weight: 800; line-height: 24px; color: var(--text); }
+.voice-load i { position: absolute; inset: 0 auto 0 0; background: linear-gradient(90deg, #fde68a, #f59e0b); transition: width .4s; }
+.voice-load span { position: relative; z-index: 1; }
+.play-btn.wait { background: #b45309; }
+.play-spin { width: 18px; height: 18px; border-radius: 50%; border: 3px solid rgba(255,255,255,.35); border-top-color: #fff; animation: play-spin .8s linear infinite; }
+@keyframes play-spin { to { transform: rotate(360deg); } }
+.bible-chapter small { display: block; font-size: .55em; font-weight: 600; opacity: .7; margin-top: .15em; }
+.bible-chapter.reading { color: #b45309; }
+.bible-controls .icon-btn:disabled { opacity: .3; }

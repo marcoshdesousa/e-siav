@@ -3,59 +3,59 @@
     "day": 139,
     "questions": [
       {
-        "q": "Por meio de quem Deus conduziu o seu povo como um rebanho, segundo Salmos 77?",
+        "q": "Segundo Provérbios 3, devemos confiar no Senhor de que forma?",
         "options": [
-          "Moisés e Arão",
-          "Davi e Salomão",
-          "Josué e Calebe",
-          "Elias e Eliseu"
-        ],
-        "answer": 0,
-        "ref": "Salmos 77:20"
-      },
-      {
-        "q": "O que Deus fez chover sobre o povo no deserto para que se alimentassem?",
-        "options": [
-          "Pedras de saraiva",
-          "Maná",
-          "Fogo do céu",
-          "Figos e uvas"
+          "Com metade do coração",
+          "De todo o coração",
+          "Só nos dias difíceis",
+          "Apenas aos sábados"
         ],
         "answer": 1,
-        "ref": "Salmos 78:24"
+        "ref": "Provérbios 3:5"
       },
       {
-        "q": "De onde Deus retirou Davi para apascentar o seu povo?",
+        "q": "Com o que devemos honrar o Senhor, segundo Provérbios 3:9?",
         "options": [
-          "Do palácio do rei",
-          "Do templo de Siló",
-          "Dos campos das ovelhas",
-          "Das margens do Jordão"
-        ],
-        "answer": 2,
-        "ref": "Salmos 78:70"
-      },
-      {
-        "q": "Os filhos de qual tribo, armados de arco, recuaram no dia da batalha?",
-        "options": [
-          "Judá",
-          "Benjamim",
-          "Levi",
-          "Efraim"
+          "Com roupas caras",
+          "Com muitas palavras",
+          "Com festas e banquetes",
+          "Com os bens e as primícias da renda"
         ],
         "answer": 3,
-        "ref": "Salmos 78:9"
+        "ref": "Provérbios 3:9"
       },
       {
-        "q": "Em qual festa o Salmo 81 manda tocar a trombeta?",
+        "q": "Segundo Provérbios 3, o Senhor disciplina a quem?",
         "options": [
-          "Festa da Lua Nova",
-          "Festa da Colheita",
-          "Festa dos Pães",
-          "Festa do Rei"
+          "A quem ama",
+          "A quem é rico",
+          "A quem está longe",
+          "A quem é forte"
         ],
         "answer": 0,
-        "ref": "Salmos 81:3"
+        "ref": "Provérbios 3:12"
+      },
+      {
+        "q": "A sabedoria é mais preciosa do que o quê, segundo Provérbios 3:15?",
+        "options": [
+          "Ferro",
+          "Madeira",
+          "Pérolas",
+          "Trigo"
+        ],
+        "answer": 2,
+        "ref": "Provérbios 3:15"
+      },
+      {
+        "q": "Segundo Provérbios 3:34, o Senhor concede graça a quem?",
+        "options": [
+          "Aos orgulhosos",
+          "Aos violentos",
+          "Aos humildes",
+          "Aos escarnecedores"
+        ],
+        "answer": 2,
+        "ref": "Provérbios 3:34"
       }
     ]
   },
@@ -63,59 +63,59 @@
     "day": 140,
     "questions": [
       {
-        "q": "Segundo Salmos 84, um dia nos átrios de Deus vale mais do que quantos?",
+        "q": "Segundo Provérbios 4:7, qual é a principal coisa?",
         "options": [
-          "Cem",
-          "Mil",
-          "Dez",
-          "Sete"
-        ],
-        "answer": 1,
-        "ref": "Salmos 84:10"
-      },
-      {
-        "q": "Segundo Salmos 90, os dias da nossa vida chegam a quantos anos?",
-        "options": [
-          "Cem",
-          "Cinquenta",
-          "Setenta",
-          "Cento e vinte"
-        ],
-        "answer": 2,
-        "ref": "Salmos 90:10"
-      },
-      {
-        "q": "Quais aves encontraram casa e ninho, segundo Salmos 84?",
-        "options": [
-          "A águia e o corvo",
-          "A pomba e a rola",
-          "A coruja e o pelicano",
-          "O pardal e a andorinha"
-        ],
-        "answer": 3,
-        "ref": "Salmos 84:3"
-      },
-      {
-        "q": "Quem Deus ungiu com o seu óleo santo, segundo Salmos 89?",
-        "options": [
-          "Davi",
-          "Saul",
-          "Arão",
-          "Samuel"
+          "A sabedoria",
+          "O dinheiro",
+          "A fama",
+          "A força"
         ],
         "answer": 0,
-        "ref": "Salmos 89:20"
+        "ref": "Provérbios 4:7"
       },
       {
-        "q": "Segundo Salmos 90, mil anos aos olhos de Deus são como o quê?",
+        "q": "A senda dos justos é como o quê, segundo Provérbios 4:18?",
         "options": [
-          "Um grão de areia",
-          "O dia de ontem que se foi",
-          "Uma gota de chuva",
-          "Um ano inteiro"
+          "A escuridão da noite",
+          "Um deserto seco",
+          "Uma tempestade",
+          "A luz da aurora"
+        ],
+        "answer": 3,
+        "ref": "Provérbios 4:18"
+      },
+      {
+        "q": "O que devemos guardar acima de tudo, segundo Provérbios 4:23?",
+        "options": [
+          "O dinheiro",
+          "O coração",
+          "As roupas",
+          "A casa"
         ],
         "answer": 1,
-        "ref": "Salmos 90:4"
+        "ref": "Provérbios 4:23"
+      },
+      {
+        "q": "Segundo Provérbios 10:1, o filho sábio alegra a quem?",
+        "options": [
+          "Aos vizinhos",
+          "Aos inimigos",
+          "Ao rei",
+          "A seu pai"
+        ],
+        "answer": 3,
+        "ref": "Provérbios 10:1"
+      },
+      {
+        "q": "Segundo Provérbios 10:12, o que o amor cobre?",
+        "options": [
+          "As casas",
+          "Todas as transgressões",
+          "Os campos",
+          "Apenas as riquezas"
+        ],
+        "answer": 1,
+        "ref": "Provérbios 10:12"
       }
     ]
   },
@@ -123,59 +123,59 @@
     "day": 141,
     "questions": [
       {
-        "q": "Segundo Salmos 91, mil cairão ao teu lado e quantos à tua direita?",
+        "q": "Segundo Provérbios 15:1, o que desvia a ira?",
         "options": [
-          "Cem",
-          "Dois mil",
-          "Dez mil",
-          "Cem mil"
+          "O silêncio irritado",
+          "A palavra dura",
+          "A resposta suave",
+          "O grito"
         ],
         "answer": 2,
-        "ref": "Salmos 91:7"
+        "ref": "Provérbios 15:1"
       },
       {
-        "q": "Segundo Salmos 92, o justo florescerá como qual árvore?",
+        "q": "Onde estão os olhos do Senhor, segundo Provérbios 15:3?",
         "options": [
-          "A palmeira",
-          "A oliveira",
-          "A figueira",
-          "O salgueiro"
+          "Em toda parte",
+          "Só no templo",
+          "Só em Jerusalém",
+          "Só no céu"
         ],
         "answer": 0,
-        "ref": "Salmos 92:12"
+        "ref": "Provérbios 15:3"
       },
       {
-        "q": "Por quantos anos Deus esteve descontente com a geração do deserto?",
+        "q": "Segundo Provérbios 15, melhor é um prato de quê onde há amor?",
         "options": [
-          "Sete",
-          "Doze",
-          "Setenta",
-          "Quarenta"
-        ],
-        "answer": 3,
-        "ref": "Salmos 95:10"
-      },
-      {
-        "q": "Quem é citado com Moisés e Arão entre os que invocavam o Senhor?",
-        "options": [
-          "Elias",
-          "Samuel",
-          "Davi",
-          "Josué"
+          "Peixe assado",
+          "Verduras",
+          "Pão doce",
+          "Carne de boi"
         ],
         "answer": 1,
-        "ref": "Salmos 99:6"
+        "ref": "Provérbios 15:17"
       },
       {
-        "q": "Em Salmos 102, o salmista diz ser semelhante a qual ave no deserto?",
+        "q": "O que embeleza o rosto, segundo Provérbios 15:13?",
         "options": [
-          "À águia",
-          "Ao corvo",
-          "Ao pelicano",
-          "À pomba"
+          "A riqueza",
+          "A ira",
+          "O coração alegre",
+          "A tristeza"
         ],
         "answer": 2,
-        "ref": "Salmos 102:6"
+        "ref": "Provérbios 15:13"
+      },
+      {
+        "q": "Segundo Provérbios 15:33, o que antecede a honra?",
+        "options": [
+          "A humildade",
+          "O orgulho",
+          "A força",
+          "A riqueza"
+        ],
+        "answer": 0,
+        "ref": "Provérbios 15:33"
       }
     ]
   },
@@ -183,59 +183,59 @@
     "day": 142,
     "questions": [
       {
-        "q": "Segundo Salmos 103, a juventude se renova como a de qual ave?",
+        "q": "Quem transcreveu os provérbios de Salomão em Provérbios 25?",
         "options": [
-          "Da águia",
-          "Do pardal",
-          "Da pomba",
-          "Da andorinha"
-        ],
-        "answer": 0,
-        "ref": "Salmos 103:5"
-      },
-      {
-        "q": "Deus afasta de nós as transgressões como o Oriente se distancia do quê?",
-        "options": [
-          "Do Norte",
-          "Do mar",
-          "Do céu",
-          "Do Ocidente"
+          "Os sacerdotes de Arão",
+          "Os soldados de Saul",
+          "Os homens de Davi",
+          "Os homens de Ezequias"
         ],
         "answer": 3,
-        "ref": "Salmos 103:12"
+        "ref": "Provérbios 25:1"
       },
       {
-        "q": "Quem Deus enviou à frente do seu povo, vendido como escravo?",
+        "q": "A palavra dita a seu tempo é como maçãs de ouro em salvas de quê?",
         "options": [
-          "Moisés",
-          "José",
-          "Daniel",
-          "Jacó"
+          "Madeira",
+          "Prata",
+          "Bronze",
+          "Barro"
         ],
         "answer": 1,
-        "ref": "Salmos 105:17"
+        "ref": "Provérbios 25:11"
       },
       {
-        "q": "Quem se levantou, fez justiça e fez a praga cessar?",
+        "q": "Se o teu inimigo tiver fome, o que Provérbios 25 manda dar?",
         "options": [
-          "Arão",
-          "Josué",
-          "Finéias",
-          "Calebe"
+          "Pedras",
+          "Nada",
+          "Pão para comer",
+          "Apenas conselhos"
         ],
         "answer": 2,
-        "ref": "Salmos 106:30"
+        "ref": "Provérbios 25:21"
       },
       {
-        "q": "O que o povo fez em Horebe e adorou?",
+        "q": "As boas notícias de terra remota são como o quê?",
         "options": [
-          "Uma serpente",
-          "Um altar a Baal",
-          "Uma torre",
-          "Um bezerro"
+          "Água fria para a alma sedenta",
+          "Vinagre nos dentes",
+          "Fumaça nos olhos",
+          "Vento sem chuva"
+        ],
+        "answer": 0,
+        "ref": "Provérbios 25:25"
+      },
+      {
+        "q": "Quem não domina o próprio espírito é como uma cidade sem quê?",
+        "options": [
+          "Árvores",
+          "Rei",
+          "Rio",
+          "Muros"
         ],
         "answer": 3,
-        "ref": "Salmos 106:19"
+        "ref": "Provérbios 25:28"
       }
     ]
   },
@@ -243,59 +243,59 @@
     "day": 143,
     "questions": [
       {
-        "q": "Segundo Salmos 108, Moabe será para Deus o quê?",
+        "q": "O valor da mulher virtuosa é maior do que o de quê?",
         "options": [
-          "A sua coroa",
-          "A sua bacia de lavar",
-          "O seu escudo",
-          "O seu cetro"
-        ],
-        "answer": 1,
-        "ref": "Salmos 108:9"
-      },
-      {
-        "q": "Segundo Salmos 110, o Senhor jurou: Tu és sacerdote segundo a ordem de quem?",
-        "options": [
-          "Arão",
-          "Levi",
-          "Melquisedeque",
-          "Samuel"
-        ],
-        "answer": 2,
-        "ref": "Salmos 110:4"
-      },
-      {
-        "q": "Segundo Salmos 115, o que os ídolos das nações têm, mas não usam para falar?",
-        "options": [
-          "Boca",
-          "Mãos",
-          "Asas",
-          "Coroa"
-        ],
-        "answer": 0,
-        "ref": "Salmos 115:5"
-      },
-      {
-        "q": "Na saída do Egito, o que viu e fugiu, e o Jordão retrocedeu?",
-        "options": [
-          "O Egito",
-          "O monte Sinai",
-          "O deserto",
-          "O mar"
+          "Um cavalo",
+          "Uma casa",
+          "Um campo de trigo",
+          "Finas joias"
         ],
         "answer": 3,
-        "ref": "Salmos 114:3"
+        "ref": "Provérbios 31:10"
       },
       {
-        "q": "A pedra que os construtores rejeitaram tornou-se o quê?",
+        "q": "Quando a mulher virtuosa se levanta, segundo Provérbios 31:15?",
         "options": [
-          "Um altar",
-          "A pedra angular",
-          "Uma coluna",
-          "Uma muralha"
+          "Só depois de todos",
+          "Ainda de noite",
+          "Ao meio-dia",
+          "À tarde"
         ],
         "answer": 1,
-        "ref": "Salmos 118:22"
+        "ref": "Provérbios 31:15"
+      },
+      {
+        "q": "Com a renda do seu trabalho, o que a mulher virtuosa planta?",
+        "options": [
+          "Um pomar de figos",
+          "Um jardim de flores",
+          "Uma vinha",
+          "Um trigal"
+        ],
+        "answer": 2,
+        "ref": "Provérbios 31:16"
+      },
+      {
+        "q": "De que estão vestidos todos na casa dela, segundo Provérbios 31:21?",
+        "options": [
+          "Lã escarlate",
+          "Seda branca",
+          "Pele de camelo",
+          "Couro"
+        ],
+        "answer": 0,
+        "ref": "Provérbios 31:21"
+      },
+      {
+        "q": "Segundo Provérbios 31:30, que mulher será louvada?",
+        "options": [
+          "A mais famosa",
+          "A que teme ao Senhor",
+          "A mais bonita",
+          "A mais rica"
+        ],
+        "answer": 1,
+        "ref": "Provérbios 31:30"
       }
     ]
   },
@@ -303,59 +303,59 @@
     "day": 144,
     "questions": [
       {
-        "q": "Segundo Salmos 119, como o jovem pode guardar puro o seu caminho?",
+        "q": "Segundo Eclesiastes 5:2, como devem ser nossas palavras diante de Deus?",
         "options": [
-          "Observando a palavra de Deus",
-          "Ficando sozinho",
-          "Fazendo muitos amigos",
-          "Trabalhando muito"
-        ],
-        "answer": 0,
-        "ref": "Salmos 119:9"
-      },
-      {
-        "q": "Segundo Salmos 119:105, a palavra de Deus é lâmpada para quê?",
-        "options": [
-          "Para a casa",
-          "Para os olhos",
-          "Para os meus pés",
-          "Para a noite escura"
-        ],
-        "answer": 2,
-        "ref": "Salmos 119:105"
-      },
-      {
-        "q": "Quantas vezes por dia o salmista louvava a Deus, segundo Salmos 119?",
-        "options": [
-          "Três",
-          "Doze",
-          "Duas",
-          "Sete"
+          "Muitas",
+          "Gritadas",
+          "Apressadas",
+          "Poucas"
         ],
         "answer": 3,
-        "ref": "Salmos 119:164"
+        "ref": "Eclesiastes 5:2"
       },
       {
-        "q": "Segundo Salmos 121, de onde vem o socorro do salmista?",
+        "q": "Quando fizermos um voto a Deus, o que Eclesiastes 5 diz?",
         "options": [
-          "Dos reis da terra",
-          "Do Senhor, que fez o céu e a terra",
-          "Dos seus amigos",
-          "Do exército de Israel"
-        ],
-        "answer": 1,
-        "ref": "Salmos 121:2"
-      },
-      {
-        "q": "Segundo Salmos 122, o que o salmista disse quando o chamaram?",
-        "options": [
-          "Vamos à casa do Senhor",
-          "Vamos à batalha",
-          "Vamos ao mar",
-          "Vamos ao campo"
+          "Não tardar em cumpri-lo",
+          "Contar a todos",
+          "Mudá-lo sempre",
+          "Esquecê-lo depois"
         ],
         "answer": 0,
-        "ref": "Salmos 122:1"
+        "ref": "Eclesiastes 5:4"
+      },
+      {
+        "q": "Segundo Eclesiastes 5:10, quem ama o dinheiro...",
+        "options": [
+          "Dorme tranquilo",
+          "Não trabalha",
+          "Nunca se sacia dele",
+          "Sempre fica feliz"
+        ],
+        "answer": 2,
+        "ref": "Eclesiastes 5:10"
+      },
+      {
+        "q": "De quem é doce o sono, segundo Eclesiastes 5:12?",
+        "options": [
+          "Do rei",
+          "Do rico",
+          "Do trabalhador",
+          "Do preguiçoso"
+        ],
+        "answer": 2,
+        "ref": "Eclesiastes 5:12"
+      },
+      {
+        "q": "Segundo Eclesiastes 5:15, como o homem volta ao partir desta vida?",
+        "options": [
+          "Com seus campos",
+          "Com todo o seu ouro",
+          "Com suas roupas finas",
+          "Nu, como veio"
+        ],
+        "answer": 3,
+        "ref": "Eclesiastes 5:15"
       }
     ]
   },
@@ -363,59 +363,59 @@
     "day": 145,
     "questions": [
       {
-        "q": "Segundo Salmos 127, se o Senhor não edificar a casa, o que acontece?",
+        "q": "Segundo Eclesiastes 7:1, a boa fama é melhor do que o quê?",
         "options": [
-          "Ela cai na chuva",
-          "Em vão trabalham os que a edificam",
-          "Ela fica pequena",
-          "Ninguém mora nela"
+          "O ouro fino",
+          "O unguento precioso",
+          "Um banquete",
+          "Uma casa grande"
         ],
         "answer": 1,
-        "ref": "Salmos 127:1"
+        "ref": "Eclesiastes 7:1"
       },
       {
-        "q": "Junto aos rios de qual cidade os cativos se assentaram e choraram?",
+        "q": "É melhor ouvir a repreensão do sábio do que ouvir o quê?",
         "options": [
-          "Nínive",
-          "Jerusalém",
-          "Babilônia",
-          "Damasco"
+          "A canção do insensato",
+          "Os pássaros",
+          "O silêncio",
+          "O vento"
+        ],
+        "answer": 0,
+        "ref": "Eclesiastes 7:5"
+      },
+      {
+        "q": "Onde se abriga a ira, segundo Eclesiastes 7:9?",
+        "options": [
+          "No íntimo dos insensatos",
+          "No coração dos sábios",
+          "Nos campos",
+          "Na casa de Deus"
+        ],
+        "answer": 0,
+        "ref": "Eclesiastes 7:9"
+      },
+      {
+        "q": "A sabedoria fortalece o sábio mais do que quantos poderosos?",
+        "options": [
+          "Cem",
+          "Mil",
+          "Dez",
+          "Dois"
         ],
         "answer": 2,
-        "ref": "Salmos 137:1"
+        "ref": "Eclesiastes 7:19"
       },
       {
-        "q": "Onde os cativos penduraram as suas harpas?",
+        "q": "Segundo Eclesiastes 7:29, como Deus fez o homem?",
         "options": [
-          "Nos salgueiros",
-          "Nas portas",
-          "Nas palmeiras",
-          "No templo"
+          "Orgulhoso",
+          "Reto",
+          "Fraco",
+          "Mau"
         ],
-        "answer": 0,
-        "ref": "Salmos 137:2"
-      },
-      {
-        "q": "Segundo Salmos 133, a união dos irmãos é como o óleo derramado sobre a barba de quem?",
-        "options": [
-          "Davi",
-          "Moisés",
-          "Salomão",
-          "Arão"
-        ],
-        "answer": 3,
-        "ref": "Salmos 133:2"
-      },
-      {
-        "q": "Segundo Salmos 128, os filhos são como o quê ao redor da mesa?",
-        "options": [
-          "Rebentos da oliveira",
-          "Flores do campo",
-          "Estrelas do céu",
-          "Pedras preciosas"
-        ],
-        "answer": 0,
-        "ref": "Salmos 128:3"
+        "answer": 1,
+        "ref": "Eclesiastes 7:29"
       }
     ]
   },
@@ -423,59 +423,59 @@
     "day": 146,
     "questions": [
       {
-        "q": "Segundo Salmos 147, o que o Senhor conta e nomeia uma por uma?",
+        "q": "Segundo Eclesiastes 11:1, onde devemos repartir o pão?",
         "options": [
-          "As ovelhas",
-          "Os grãos de areia",
-          "As estrelas",
-          "As cidades"
-        ],
-        "answer": 2,
-        "ref": "Salmos 147:4"
-      },
-      {
-        "q": "Segundo o fim de Salmos 150, quem deve louvar ao Senhor?",
-        "options": [
-          "Tudo que tem vida",
-          "Só os sacerdotes",
-          "Só os anjos",
-          "Só os reis"
-        ],
-        "answer": 0,
-        "ref": "Salmos 150:6"
-      },
-      {
-        "q": "Segundo Provérbios 1:1, de quem são os provérbios?",
-        "options": [
-          "De Davi, rei de Israel",
-          "De Moisés",
-          "De Samuel",
-          "De Salomão, filho de Davi"
+          "Na areia",
+          "No telhado",
+          "No fogo",
+          "Sobre as águas"
         ],
         "answer": 3,
-        "ref": "Provérbios 1:1"
+        "ref": "Eclesiastes 11:1"
       },
       {
-        "q": "Segundo Provérbios 1, o temor do Senhor é o princípio do quê?",
+        "q": "Quem observa o vento nunca fará o quê, segundo Eclesiastes 11:4?",
         "options": [
-          "Da riqueza",
-          "Do conhecimento",
-          "Da guerra",
-          "Da colheita"
+          "Dormirá",
+          "Semeará",
+          "Falará",
+          "Comerá"
         ],
         "answer": 1,
-        "ref": "Provérbios 1:7"
+        "ref": "Eclesiastes 11:4"
       },
       {
-        "q": "Em Salmos 141, o salmista pede que sua oração suba a Deus como o quê?",
+        "q": "De quem devemos lembrar nos dias da juventude, segundo Eclesiastes 12:1?",
         "options": [
-          "Fumaça",
-          "Uma pomba",
-          "Incenso",
-          "Um cântico"
+          "Do Criador",
+          "Dos amigos",
+          "Dos reis",
+          "Das riquezas"
+        ],
+        "answer": 0,
+        "ref": "Eclesiastes 12:1"
+      },
+      {
+        "q": "Segundo Eclesiastes 12:7, para onde retorna o espírito?",
+        "options": [
+          "Para os montes",
+          "Para as estrelas",
+          "Para Deus, que o deu",
+          "Para o mar"
         ],
         "answer": 2,
-        "ref": "Salmos 141:2"
+        "ref": "Eclesiastes 12:7"
+      },
+      {
+        "q": "Qual é o dever de todo homem, segundo Eclesiastes 12:13?",
+        "options": [
+          "Ficar rico",
+          "Escrever muitos livros",
+          "Ser famoso",
+          "Temer a Deus e guardar seus mandamentos"
+        ],
+        "answer": 3,
+        "ref": "Eclesiastes 12:13"
       }
     ]
   },
@@ -483,59 +483,59 @@
     "day": 147,
     "questions": [
       {
-        "q": "O preguiçoso deve observar os caminhos de qual animal para ser sábio?",
+        "q": "Em Isaías 5, o dono da vinha esperava uvas boas, mas ela produziu o quê?",
         "options": [
-          "Da abelha",
-          "Da formiga",
-          "Do leão",
-          "Da águia"
-        ],
-        "answer": 1,
-        "ref": "Provérbios 6:6"
-      },
-      {
-        "q": "Confie no Senhor de todo o coração e não se apoie em quê?",
-        "options": [
-          "Nos seus amigos",
-          "Nas suas riquezas",
-          "No rei",
-          "No seu próprio entendimento"
+          "Figos",
+          "Nada",
+          "Azeitonas",
+          "Uvas bravas"
         ],
         "answer": 3,
-        "ref": "Provérbios 3:5"
+        "ref": "Isaías 5:2"
       },
       {
-        "q": "Quantas coisas o Senhor detesta, sendo que a sétima a sua alma abomina?",
+        "q": "O que o dono edificou no meio da vinha, segundo Isaías 5:2?",
         "options": [
-          "Seis",
-          "Cinco",
-          "Três",
-          "Dez"
-        ],
-        "answer": 0,
-        "ref": "Provérbios 6:16"
-      },
-      {
-        "q": "O que devemos guardar sobre tudo, porque dele procedem as fontes da vida?",
-        "options": [
-          "A casa",
-          "O dinheiro",
-          "O coração",
-          "A boca"
-        ],
-        "answer": 2,
-        "ref": "Provérbios 4:23"
-      },
-      {
-        "q": "Segundo Provérbios 4, a senda dos justos é como o quê?",
-        "options": [
-          "Uma estrada de pedras",
-          "A luz da aurora",
-          "Um rio caudaloso",
-          "A sombra da noite"
+          "Um palácio",
+          "Uma torre",
+          "Um templo",
+          "Uma ponte"
         ],
         "answer": 1,
-        "ref": "Provérbios 4:18"
+        "ref": "Isaías 5:2"
+      },
+      {
+        "q": "Segundo Isaías 5:7, a vinha do Senhor dos Exércitos é o quê?",
+        "options": [
+          "O Egito",
+          "A Babilônia",
+          "A casa de Israel",
+          "A Assíria"
+        ],
+        "answer": 2,
+        "ref": "Isaías 5:7"
+      },
+      {
+        "q": "Isaías 5:20 diz: ai dos que chamam o mal de quê?",
+        "options": [
+          "Bem",
+          "Pecado",
+          "Trevas",
+          "Amargo"
+        ],
+        "answer": 0,
+        "ref": "Isaías 5:20"
+      },
+      {
+        "q": "Segundo Isaías 5:29, o rugido das nações que viriam é como o de quê?",
+        "options": [
+          "Um urso",
+          "Um leão",
+          "Um touro",
+          "Um lobo"
+        ],
+        "answer": 1,
+        "ref": "Isaías 5:29"
       }
     ]
   },
@@ -543,59 +543,59 @@
     "day": 148,
     "questions": [
       {
-        "q": "Quantas colunas a Sabedoria lavrou para a sua casa?",
+        "q": "Segundo Isaías 11:1, de que tronco surgirá um rebento?",
         "options": [
-          "Doze",
-          "Três",
-          "Quatro",
-          "Sete"
-        ],
-        "answer": 3,
-        "ref": "Provérbios 9:1"
-      },
-      {
-        "q": "Segundo Provérbios 10:1, o filho sábio alegra a quem?",
-        "options": [
-          "A seu pai",
-          "Ao rei",
-          "Aos vizinhos",
-          "Aos irmãos"
-        ],
-        "answer": 0,
-        "ref": "Provérbios 10:1"
-      },
-      {
-        "q": "A mulher formosa sem discernimento é como um anel de ouro onde?",
-        "options": [
-          "No dedo de um rei",
-          "No fundo do mar",
-          "Na narina de um porco",
-          "No pescoço de um boi"
+          "De Moisés",
+          "De Saul",
+          "De Jessé",
+          "De Abraão"
         ],
         "answer": 2,
-        "ref": "Provérbios 11:22"
+        "ref": "Isaías 11:1"
       },
       {
-        "q": "Segundo Provérbios 12, a mulher virtuosa é o quê do seu marido?",
+        "q": "Em Isaías 11:6, o lobo habitará com quem?",
         "options": [
-          "A serva",
-          "A coroa",
-          "O tesouro escondido",
-          "A sombra"
-        ],
-        "answer": 1,
-        "ref": "Provérbios 12:4"
-      },
-      {
-        "q": "Segundo Provérbios 13, quem caminha com os sábios se tornará o quê?",
-        "options": [
-          "Rico",
-          "Famoso",
-          "Rei",
-          "Sábio"
+          "A águia",
+          "O leão",
+          "O urso",
+          "O cordeiro"
         ],
         "answer": 3,
-        "ref": "Provérbios 13:20"
+        "ref": "Isaías 11:6"
+      },
+      {
+        "q": "Quem guiará os animais, segundo Isaías 11:6?",
+        "options": [
+          "Um pequenino",
+          "Um rei",
+          "Um pastor velho",
+          "Um soldado"
+        ],
+        "answer": 0,
+        "ref": "Isaías 11:6"
+      },
+      {
+        "q": "Segundo Isaías 11:7, o leão comerá o quê?",
+        "options": [
+          "Mel",
+          "Palha, como o boi",
+          "Carne",
+          "Peixe"
+        ],
+        "answer": 1,
+        "ref": "Isaías 11:7"
+      },
+      {
+        "q": "A terra se encherá do conhecimento do Senhor assim como as águas cobrem o quê?",
+        "options": [
+          "Os montes",
+          "As cidades",
+          "O mar",
+          "Os desertos"
+        ],
+        "answer": 2,
+        "ref": "Isaías 11:9"
       }
     ]
   },
@@ -603,59 +603,59 @@
     "day": 149,
     "questions": [
       {
-        "q": "Segundo Provérbios 15, a resposta suave desvia o quê?",
+        "q": "Segundo Isaías 26:3, quem o Senhor manterá em plena paz?",
         "options": [
-          "A ira",
-          "O inimigo",
-          "A chuva",
-          "A pobreza"
+          "Quem confia nele",
+          "Quem é forte",
+          "Quem é rico",
+          "Quem é famoso"
         ],
         "answer": 0,
-        "ref": "Provérbios 15:1"
+        "ref": "Isaías 26:3"
       },
       {
-        "q": "Segundo Provérbios 17, o coração alegre é como o quê?",
+        "q": "Em Isaías 26:4, o Senhor Deus é chamado de quê?",
         "options": [
-          "Uma festa",
-          "Um tesouro",
-          "Um bom remédio",
-          "Uma lâmpada"
-        ],
-        "answer": 2,
-        "ref": "Provérbios 17:22"
-      },
-      {
-        "q": "Segundo Provérbios 18, o que é a torre forte onde o justo fica seguro?",
-        "options": [
-          "O palácio do rei",
-          "O nome do Senhor",
-          "A muralha da cidade",
-          "A casa do pai"
-        ],
-        "answer": 1,
-        "ref": "Provérbios 18:10"
-      },
-      {
-        "q": "Segundo Provérbios 17, a coroa dos idosos são quem?",
-        "options": [
-          "Os reis",
-          "Os servos",
-          "Os amigos",
-          "Os netos"
+          "Nuvem passageira",
+          "Rio seco",
+          "Torre de areia",
+          "Rocha eterna"
         ],
         "answer": 3,
-        "ref": "Provérbios 17:6"
+        "ref": "Isaías 26:4"
       },
       {
-        "q": "Segundo Provérbios 16, o que precede a ruína?",
+        "q": "Segundo Isaías 35:1, o deserto florescerá como o quê?",
         "options": [
-          "A pobreza",
-          "A soberba",
-          "A preguiça",
-          "A tristeza"
+          "O cacto",
+          "O trigo",
+          "A oliveira",
+          "O narciso"
+        ],
+        "answer": 3,
+        "ref": "Isaías 35:1"
+      },
+      {
+        "q": "Em Isaías 35:6, os coxos saltarão como o quê?",
+        "options": [
+          "Coelhos",
+          "Cervos",
+          "Leões",
+          "Cavalos"
         ],
         "answer": 1,
-        "ref": "Provérbios 16:18"
+        "ref": "Isaías 35:6"
+      },
+      {
+        "q": "Como se chamará o caminho em Isaías 35:8?",
+        "options": [
+          "Caminho Real",
+          "Caminho do Mar",
+          "Caminho Santo",
+          "Caminho Largo"
+        ],
+        "answer": 2,
+        "ref": "Isaías 35:8"
       }
     ]
   },
@@ -663,59 +663,59 @@
     "day": 150,
     "questions": [
       {
-        "q": "Quem é ensinado no caminho em que deve andar, quando velho, o que fará?",
+        "q": "Segundo Isaías 40:3, a voz no deserto diz para preparar o quê?",
         "options": [
-          "Esquecerá tudo",
-          "Ensinará os reis",
-          "Não se desviará dele",
-          "Mudará de caminho"
-        ],
-        "answer": 2,
-        "ref": "Provérbios 22:6"
-      },
-      {
-        "q": "Segundo Provérbios 22, melhor é ter um bom nome do que o quê?",
-        "options": [
-          "Muitas riquezas",
-          "Muitos filhos",
-          "Muitos amigos",
-          "Uma casa grande"
+          "O caminho do Senhor",
+          "Uma casa",
+          "Uma festa",
+          "Um exército"
         ],
         "answer": 0,
-        "ref": "Provérbios 22:1"
+        "ref": "Isaías 40:3"
       },
       {
-        "q": "Quem se compadece do pobre empresta a quem?",
+        "q": "O que permanece eternamente, segundo Isaías 40:8?",
         "options": [
-          "Ao rei",
-          "Ao vizinho",
-          "Ao sacerdote",
-          "Ao Senhor"
-        ],
-        "answer": 3,
-        "ref": "Provérbios 19:17"
-      },
-      {
-        "q": "Que desculpa o preguiçoso dá em Provérbios 22?",
-        "options": [
-          "Está chovendo",
-          "Um leão está lá fora",
-          "Estou doente",
-          "A estrada é longa"
+          "Os montes",
+          "A palavra do nosso Deus",
+          "A erva",
+          "As flores"
         ],
         "answer": 1,
-        "ref": "Provérbios 22:13"
+        "ref": "Isaías 40:8"
       },
       {
-        "q": "A riqueza faz para si asas e voa como qual ave?",
+        "q": "Em Isaías 40:11, o Senhor apascentará seu rebanho como quem?",
         "options": [
-          "O pardal",
-          "A pomba",
-          "A águia",
-          "O corvo"
+          "Um rei",
+          "Um pescador",
+          "Um soldado",
+          "Um pastor"
+        ],
+        "answer": 3,
+        "ref": "Isaías 40:11"
+      },
+      {
+        "q": "Segundo Isaías 40:15, as nações são para Deus como uma gota de quê?",
+        "options": [
+          "A chuva",
+          "O mar",
+          "Um balde",
+          "Um rio"
         ],
         "answer": 2,
-        "ref": "Provérbios 23:5"
+        "ref": "Isaías 40:15"
+      },
+      {
+        "q": "Segundo Isaías 40:31, os que esperam no Senhor sobem com asas como...",
+        "options": [
+          "Águias",
+          "Pardais",
+          "Corujas",
+          "Pombas"
+        ],
+        "answer": 0,
+        "ref": "Isaías 40:31"
       }
     ]
   },
@@ -723,59 +723,59 @@
     "day": 151,
     "questions": [
       {
-        "q": "Os provérbios de Salomão do capítulo 25 foram transcritos pelos homens de qual rei?",
+        "q": "Segundo Isaías 42:3, o que o Servo do Senhor não esmagará?",
         "options": [
-          "Davi",
-          "Ezequias",
-          "Josias",
-          "Roboão"
-        ],
-        "answer": 1,
-        "ref": "Provérbios 25:1"
-      },
-      {
-        "q": "Como maçãs de ouro em salvas de prata é o quê?",
-        "options": [
-          "A palavra dita a seu tempo",
-          "O presente de um rei",
-          "A mulher sábia",
-          "O ouro bem guardado"
-        ],
-        "answer": 0,
-        "ref": "Provérbios 25:11"
-      },
-      {
-        "q": "Segundo Provérbios 24, quantas vezes o justo cai e se levanta?",
-        "options": [
-          "Três",
-          "Dez",
-          "Setenta",
-          "Sete"
+          "Os montes",
+          "Os inimigos",
+          "As pedras",
+          "A cana quebrada"
         ],
         "answer": 3,
-        "ref": "Provérbios 24:16"
+        "ref": "Isaías 42:3"
       },
       {
-        "q": "Como o ferro afia o ferro, o homem aperfeiçoa o quê?",
+        "q": "Em Isaías 42:6, o Servo será luz para quem?",
         "options": [
-          "A sua espada",
-          "O seu trabalho",
-          "O caráter do seu amigo",
-          "A sua casa"
-        ],
-        "answer": 2,
-        "ref": "Provérbios 27:17"
-      },
-      {
-        "q": "Segundo Provérbios 25, se o teu inimigo tiver fome, o que deves fazer?",
-        "options": [
-          "Fugir dele",
-          "Dar-lhe pão para comer",
-          "Rir dele",
-          "Chamar o rei"
+          "As estrelas",
+          "Os gentios",
+          "Os anjos",
+          "Os animais"
         ],
         "answer": 1,
-        "ref": "Provérbios 25:21"
+        "ref": "Isaías 42:6"
+      },
+      {
+        "q": "Que cântico Isaías 42:10 manda cantar ao Senhor?",
+        "options": [
+          "Um cântico novo",
+          "Um cântico de guerra",
+          "Um cântico antigo",
+          "Um cântico triste"
+        ],
+        "answer": 0,
+        "ref": "Isaías 42:10"
+      },
+      {
+        "q": "Segundo Isaías 43:2, quando passarmos pelo fogo, o que acontecerá?",
+        "options": [
+          "Ficaremos cegos",
+          "Perderemos tudo",
+          "Não nos queimaremos",
+          "Fugiremos"
+        ],
+        "answer": 2,
+        "ref": "Isaías 43:2"
+      },
+      {
+        "q": "Em Isaías 43:19, Deus diz que abrirá um caminho onde?",
+        "options": [
+          "No deserto",
+          "No palácio",
+          "Na montanha",
+          "No céu"
+        ],
+        "answer": 0,
+        "ref": "Isaías 43:19"
       }
     ]
   },
@@ -783,59 +783,59 @@
     "day": 152,
     "questions": [
       {
-        "q": "De quem são as palavras de Provérbios 30?",
+        "q": "Segundo Isaías 53:5, pelas feridas dele fomos o quê?",
         "options": [
-          "De Salomão",
-          "De Lemuel",
-          "De Agur, filho de Jaque",
-          "De Ezequias"
+          "Condenados",
+          "Separados",
+          "Curados",
+          "Esquecidos"
         ],
         "answer": 2,
-        "ref": "Provérbios 30:1"
+        "ref": "Isaías 53:5"
       },
       {
-        "q": "O valor da mulher virtuosa é muito maior do que o de quê?",
+        "q": "Em Isaías 53:6, como andávamos todos nós?",
         "options": [
-          "Finas joias",
-          "Muitos camelos",
-          "Uma casa",
-          "Um campo"
-        ],
-        "answer": 0,
-        "ref": "Provérbios 31:10"
-      },
-      {
-        "q": "Quais animais pequenos, sem força, preparam sua comida no verão?",
-        "options": [
-          "As abelhas",
-          "Os gafanhotos",
-          "As lebres",
-          "As formigas"
+          "Voando como águias",
+          "Dormindo como leões",
+          "Firmes como rochas",
+          "Desgarrados como ovelhas"
         ],
         "answer": 3,
-        "ref": "Provérbios 30:25"
+        "ref": "Isaías 53:6"
       },
       {
-        "q": "Qual é a frase do Pregador no início de Eclesiastes?",
+        "q": "Isaías 53:7 diz que ele foi levado ao matadouro como o quê?",
         "options": [
-          "Tudo é alegria",
-          "Vaidade de vaidades, tudo é vaidade",
-          "Tudo é novo",
-          "Bendito seja o rei"
+          "Um camelo",
+          "Um cordeiro",
+          "Um leão",
+          "Um boi"
         ],
         "answer": 1,
-        "ref": "Eclesiastes 1:2"
+        "ref": "Isaías 53:7"
       },
       {
-        "q": "Segundo Eclesiastes 3, para tudo há o quê?",
+        "q": "Em Isaías 54:9, Deus compara sua promessa às águas de quem?",
         "options": [
-          "Um preço",
-          "Um rei",
-          "Um tempo designado",
-          "Uma lei"
+          "Moisés",
+          "Jonas",
+          "Elias",
+          "Noé"
+        ],
+        "answer": 3,
+        "ref": "Isaías 54:9"
+      },
+      {
+        "q": "Segundo Isaías 54:17, o que acontecerá com toda arma forjada contra o povo de Deus?",
+        "options": [
+          "Vencerá",
+          "Ficará guardada",
+          "Não prosperará",
+          "Será vendida"
         ],
         "answer": 2,
-        "ref": "Eclesiastes 3:1"
+        "ref": "Isaías 54:17"
       }
     ]
   },
@@ -843,59 +843,59 @@
     "day": 153,
     "questions": [
       {
-        "q": "Segundo Eclesiastes 4, se um de dois cair, o que o outro faz?",
+        "q": "Isaías 60:1 começa com qual ordem?",
         "options": [
-          "O levanta",
-          "Vai embora",
-          "Ri dele",
-          "Chama o rei"
+          "Senta-te e chora",
+          "Levanta-te, brilha",
+          "Dorme em paz",
+          "Foge depressa"
+        ],
+        "answer": 1,
+        "ref": "Isaías 60:1"
+      },
+      {
+        "q": "Segundo Isaías 60:6, o que trarão os que vêm de Sabá?",
+        "options": [
+          "Ouro e incenso",
+          "Peixes e pães",
+          "Espadas e lanças",
+          "Trigo e cevada"
         ],
         "answer": 0,
-        "ref": "Eclesiastes 4:10"
+        "ref": "Isaías 60:6"
       },
       {
-        "q": "O cordão de quantas dobras não se rompe facilmente?",
+        "q": "Segundo Isaías 60:19, quem será a luz eterna do povo?",
         "options": [
-          "Duas",
-          "Sete",
-          "Três",
-          "Dez"
-        ],
-        "answer": 2,
-        "ref": "Eclesiastes 4:12"
-      },
-      {
-        "q": "Segundo Eclesiastes 5, melhor é não fazer votos do que o quê?",
-        "options": [
-          "Fazer votos em segredo",
-          "Fazer votos e não cumprir",
-          "Fazer votos ao rei",
-          "Fazer muitos votos"
-        ],
-        "answer": 1,
-        "ref": "Eclesiastes 5:5"
-      },
-      {
-        "q": "Segundo Eclesiastes 5, o sono de quem é doce?",
-        "options": [
-          "Do rico",
-          "Do rei",
-          "Do preguiçoso",
-          "Do trabalhador"
+          "A lua",
+          "O sol",
+          "As estrelas",
+          "O Senhor"
         ],
         "answer": 3,
-        "ref": "Eclesiastes 5:12"
+        "ref": "Isaías 60:19"
       },
       {
-        "q": "Segundo Eclesiastes 7, melhor é a boa fama do que o quê?",
+        "q": "Em Isaías 61:1, o Senhor ungiu o profeta para anunciar boas-novas a quem?",
         "options": [
-          "O ouro",
-          "O unguento precioso",
-          "Um banquete",
-          "Um palácio"
+          "Aos soldados",
+          "Aos quebrantados",
+          "Aos reis",
+          "Aos ricos"
         ],
         "answer": 1,
-        "ref": "Eclesiastes 7:1"
+        "ref": "Isaías 61:1"
+      },
+      {
+        "q": "Como serão chamados os tristes de Sião, segundo Isaías 61:3?",
+        "options": [
+          "Flores do campo",
+          "Filhos do vento",
+          "Carvalhos de justiça",
+          "Pedras do caminho"
+        ],
+        "answer": 2,
+        "ref": "Isaías 61:3"
       }
     ]
   },
@@ -903,59 +903,59 @@
     "day": 154,
     "questions": [
       {
-        "q": "Segundo Eclesiastes 9, melhor é um cão vivo do que o quê?",
+        "q": "Segundo Jeremias 9:24, em que devemos nos gloriar?",
         "options": [
-          "Um rei morto",
-          "Um lobo forte",
-          "Um leão morto",
-          "Um cavalo cansado"
-        ],
-        "answer": 2,
-        "ref": "Eclesiastes 9:4"
-      },
-      {
-        "q": "Quem livrou a pequena cidade sitiada por um grande rei?",
-        "options": [
-          "Um exército",
-          "Um homem pobre e sábio",
-          "Um profeta",
-          "O rei da cidade"
-        ],
-        "answer": 1,
-        "ref": "Eclesiastes 9:15"
-      },
-      {
-        "q": "Segundo Eclesiastes 12, quando devemos lembrar do nosso Criador?",
-        "options": [
-          "Só na velhice",
-          "Só no sábado",
-          "Só na tristeza",
-          "Nos dias da juventude"
-        ],
-        "answer": 3,
-        "ref": "Eclesiastes 12:1"
-      },
-      {
-        "q": "Em Cantares 2:1, como a amada se descreve?",
-        "options": [
-          "A rosa de Sarom, o lírio dos vales",
-          "A palmeira do deserto",
-          "A estrela da manhã",
-          "A pomba do templo"
+          "Em conhecer o Senhor",
+          "Nas riquezas",
+          "Na nossa força",
+          "Na nossa sabedoria"
         ],
         "answer": 0,
-        "ref": "Cantares 2:1"
+        "ref": "Jeremias 9:24"
       },
       {
-        "q": "Quantos valentes estavam ao redor da liteira de Salomão?",
+        "q": "Em Jeremias 10:5, os ídolos são comparados a quê?",
         "options": [
-          "Doze",
-          "Sessenta",
-          "Cem",
-          "Mil"
+          "Um rio caudaloso",
+          "Um leão no deserto",
+          "Um espantalho num campo de pepinos",
+          "Uma árvore frutífera"
+        ],
+        "answer": 2,
+        "ref": "Jeremias 10:5"
+      },
+      {
+        "q": "Segundo Jeremias 10:10, o Senhor é o Deus vivo e o quê?",
+        "options": [
+          "Rei da Babilônia",
+          "Sacerdote do templo",
+          "Profeta antigo",
+          "Rei eterno"
+        ],
+        "answer": 3,
+        "ref": "Jeremias 10:10"
+      },
+      {
+        "q": "Segundo Jeremias 10:12, como Deus fez a terra?",
+        "options": [
+          "Pelo seu poder",
+          "Com ajuda dos homens",
+          "Com ferramentas de ouro",
+          "Por acaso"
+        ],
+        "answer": 0,
+        "ref": "Jeremias 10:12"
+      },
+      {
+        "q": "Por que os pastores não prosperaram, segundo Jeremias 10:21?",
+        "options": [
+          "Não tinham ovelhas",
+          "Não buscaram o Senhor",
+          "Eram poucos",
+          "Moravam longe"
         ],
         "answer": 1,
-        "ref": "Cantares 3:7"
+        "ref": "Jeremias 10:21"
       }
     ]
   },
@@ -963,59 +963,59 @@
     "day": 155,
     "questions": [
       {
-        "q": "Segundo Cantares 8, o que não poderia apagar o amor?",
+        "q": "No reinado de qual rei começa Jeremias 26?",
         "options": [
-          "O vento forte",
-          "As muitas águas",
-          "O fogo",
-          "O tempo"
-        ],
-        "answer": 1,
-        "ref": "Cantares 8:7"
-      },
-      {
-        "q": "Como a amada é chamada em Cantares 6:13?",
-        "options": [
-          "Sulamita",
-          "Rainha de Sabá",
-          "Filha de Faraó",
-          "Rosa de Jericó"
+          "Jeoaquim",
+          "Ezequias",
+          "Davi",
+          "Zedequias"
         ],
         "answer": 0,
-        "ref": "Cantares 6:13"
+        "ref": "Jeremias 26:1"
       },
       {
-        "q": "Segundo Isaías 1, qual animal sabe onde está a sua manjedoura?",
+        "q": "Deus disse que o templo ficaria como qual lugar, em Jeremias 26:6?",
         "options": [
-          "O cavalo",
-          "O camelo",
-          "A ovelha",
-          "O jumento"
+          "Jericó",
+          "Belém",
+          "Nazaré",
+          "Siló"
         ],
         "answer": 3,
-        "ref": "Isaías 1:3"
+        "ref": "Jeremias 26:6"
       },
       {
-        "q": "Ainda que os pecados sejam como a escarlata, ficarão brancos como o quê?",
+        "q": "O que os sacerdotes, profetas e o povo disseram a Jeremias, em Jeremias 26:8?",
         "options": [
-          "O leite",
-          "As nuvens",
-          "A neve",
-          "O linho"
+          "Vai em paz",
+          "Tu és rei",
+          "Certamente morrerás",
+          "Fica conosco"
         ],
         "answer": 2,
-        "ref": "Isaías 1:18"
+        "ref": "Jeremias 26:8"
       },
       {
-        "q": "Segundo Isaías 2, as nações transformarão as espadas em quê?",
+        "q": "Para onde fugiu o profeta Urias, segundo Jeremias 26:21?",
         "options": [
-          "Relhas de arados",
-          "Coroas",
-          "Escudos",
-          "Trombetas"
+          "Para Nínive",
+          "Para o Egito",
+          "Para a Babilônia",
+          "Para Moabe"
         ],
-        "answer": 0,
-        "ref": "Isaías 2:4"
+        "answer": 1,
+        "ref": "Jeremias 26:21"
+      },
+      {
+        "q": "Quem ajudou Jeremias a não ser entregue ao povo, segundo Jeremias 26:24?",
+        "options": [
+          "O rei Jeoaquim",
+          "Elnatã, filho de Acbor",
+          "Aicão, filho de Safã",
+          "Urias, filho de Semaías"
+        ],
+        "answer": 2,
+        "ref": "Jeremias 26:24"
       }
     ]
   },
@@ -1023,59 +1023,59 @@
     "day": 156,
     "questions": [
       {
-        "q": "Em que ano Isaías viu o Senhor assentado sobre um alto trono?",
+        "q": "Quantos anos Zedequias tinha quando começou a reinar?",
         "options": [
-          "No ano da morte do rei Uzias",
-          "No ano da coroação de Acaz",
-          "No ano do grande terremoto",
-          "No ano da festa da Páscoa"
-        ],
-        "answer": 0,
-        "ref": "Isaías 6:1"
-      },
-      {
-        "q": "Quantas asas tinha cada serafim que Isaías viu?",
-        "options": [
-          "Duas",
-          "Quatro",
-          "Seis",
+          "Vinte e um",
+          "Quarenta",
+          "Trinta",
           "Doze"
         ],
-        "answer": 2,
-        "ref": "Isaías 6:2"
+        "answer": 0,
+        "ref": "Jeremias 52:1"
       },
       {
-        "q": "Na parábola da vinha, em vez de uvas boas, o que ela produziu?",
+        "q": "Qual rei da Babilônia veio contra Jerusalém em Jeremias 52:4?",
         "options": [
-          "Figos",
-          "Espinhos",
-          "Nada",
-          "Uvas bravas"
-        ],
-        "answer": 3,
-        "ref": "Isaías 5:2"
-      },
-      {
-        "q": "O que Isaías respondeu quando o Senhor perguntou: A quem enviarei?",
-        "options": [
-          "Envia outro",
-          "Eis-me aqui, envia-me a mim",
-          "Não sei falar",
-          "Sou muito jovem"
+          "Ciro",
+          "Nabucodonosor",
+          "Belsazar",
+          "Dario"
         ],
         "answer": 1,
-        "ref": "Isaías 6:8"
+        "ref": "Jeremias 52:4"
       },
       {
-        "q": "Que nome a virgem poria no filho, segundo Isaías 7?",
+        "q": "Onde o exército dos caldeus alcançou o rei Zedequias?",
         "options": [
-          "Davi",
-          "Samuel",
-          "Jessé",
-          "Emanuel"
+          "Em Belém",
+          "No monte Sião",
+          "No rio Jordão",
+          "Nas campinas de Jericó"
         ],
         "answer": 3,
-        "ref": "Isaías 7:14"
+        "ref": "Jeremias 52:8"
+      },
+      {
+        "q": "O que Nebuzaradã queimou, segundo Jeremias 52:13?",
+        "options": [
+          "Somente as muralhas",
+          "Apenas os campos",
+          "A casa do Senhor e a casa do rei",
+          "Os navios do rei"
+        ],
+        "answer": 2,
+        "ref": "Jeremias 52:13"
+      },
+      {
+        "q": "Qual rei da Babilônia libertou Jeconias da prisão?",
+        "options": [
+          "Dario",
+          "Evil-Merodaque",
+          "Belsazar",
+          "Nabucodonosor"
+        ],
+        "answer": 1,
+        "ref": "Jeremias 52:31"
       }
     ]
   },
@@ -1083,59 +1083,59 @@
     "day": 157,
     "questions": [
       {
-        "q": "Qual destes é um dos nomes do menino em Isaías 9:6?",
+        "q": "Que nome babilônico recebeu Daniel, segundo Daniel 1:7?",
         "options": [
-          "Rei dos Exércitos",
-          "Príncipe da Paz",
-          "Filho do Trovão",
-          "Leão de Judá"
-        ],
-        "answer": 1,
-        "ref": "Isaías 9:6"
-      },
-      {
-        "q": "Segundo Isaías 11, de que tronco surgirá um rebento?",
-        "options": [
-          "De Jessé",
-          "De Abraão",
-          "De Moisés",
-          "De Arão"
+          "Beltessazar",
+          "Mesaque",
+          "Abede-Nego",
+          "Sadraque"
         ],
         "answer": 0,
-        "ref": "Isaías 11:1"
+        "ref": "Daniel 1:7"
       },
       {
-        "q": "Segundo Isaías 11, o lobo habitará com quem?",
+        "q": "O que Daniel decidiu em seu coração, segundo Daniel 1:8?",
         "options": [
-          "Com o leão",
-          "Com o urso",
-          "Com o cordeiro",
-          "Com a águia"
-        ],
-        "answer": 2,
-        "ref": "Isaías 11:6"
-      },
-      {
-        "q": "Que nome o Senhor mandou dar ao filho da profetisa em Isaías 8?",
-        "options": [
-          "Um-Resto-Volverá",
-          "Emanuel",
-          "Jezreel",
-          "Rápido-Despojo-Presa-Segura"
+          "Esquecer Jerusalém",
+          "Ser o rei",
+          "Fugir da Babilônia",
+          "Não se contaminar com as iguarias do rei"
         ],
         "answer": 3,
-        "ref": "Isaías 8:3"
+        "ref": "Daniel 1:8"
       },
       {
-        "q": "Contra qual cidade é a profecia de Isaías 13?",
+        "q": "Por quantos dias Daniel pediu para ser testado?",
         "options": [
-          "Nínive",
-          "Babilônia",
-          "Tiro",
-          "Damasco"
+          "Sete",
+          "Dez",
+          "Quarenta",
+          "Três"
         ],
         "answer": 1,
-        "ref": "Isaías 13:1"
+        "ref": "Daniel 1:12"
+      },
+      {
+        "q": "O que Daniel pediu para comer e beber, segundo Daniel 1:12?",
+        "options": [
+          "Pão e leite",
+          "Carne e vinho",
+          "Legumes e água",
+          "Mel e suco"
+        ],
+        "answer": 2,
+        "ref": "Daniel 1:12"
+      },
+      {
+        "q": "Quantas vezes mais sábios o rei achou os quatro jovens?",
+        "options": [
+          "Dez vezes",
+          "Cem vezes",
+          "Sete vezes",
+          "Duas vezes"
+        ],
+        "answer": 0,
+        "ref": "Daniel 1:20"
       }
     ]
   },
@@ -1143,59 +1143,59 @@
     "day": 158,
     "questions": [
       {
-        "q": "Como Isaías 14 chama aquele que caiu do céu?",
+        "q": "Por que o rei mandou matar os sábios da Babilônia, em Daniel 2?",
         "options": [
-          "Estrela da manhã, filho da alva",
-          "Sol do meio-dia",
-          "Lua cheia",
-          "Rei do Egito"
-        ],
-        "answer": 0,
-        "ref": "Isaías 14:12"
-      },
-      {
-        "q": "Isaías 15 é uma profecia sobre qual povo?",
-        "options": [
-          "Edom",
-          "Filístia",
-          "Moabe",
-          "Egito"
-        ],
-        "answer": 2,
-        "ref": "Isaías 15:1"
-      },
-      {
-        "q": "Qual cidade deixaria de ser cidade e viraria um montão de ruínas?",
-        "options": [
-          "Jerusalém",
-          "Damasco",
-          "Tiro",
-          "Nínive"
-        ],
-        "answer": 1,
-        "ref": "Isaías 17:1"
-      },
-      {
-        "q": "Segundo Isaías 19, as águas de qual rio do Egito secariam?",
-        "options": [
-          "Jordão",
-          "Eufrates",
-          "Tigre",
-          "Nilo"
+          "Fugiram do reino",
+          "Adoraram outro rei",
+          "Roubaram o palácio",
+          "Não revelaram o sonho"
         ],
         "answer": 3,
-        "ref": "Isaías 19:5"
+        "ref": "Daniel 2:12"
       },
       {
-        "q": "Segundo Isaías 19, haveria uma estrada do Egito até onde?",
+        "q": "A quem Daniel pediu que orassem com ele, segundo Daniel 2:17-18?",
         "options": [
-          "Até a Assíria",
-          "Até Roma",
-          "Até a Grécia",
-          "Até a Pérsia"
+          "Hananias, Misael e Azarias",
+          "O rei e a rainha",
+          "Os magos e caldeus",
+          "Arioque e Aspenaz"
         ],
         "answer": 0,
-        "ref": "Isaías 19:23"
+        "ref": "Daniel 2:17"
+      },
+      {
+        "q": "De que era a cabeça da estátua do sonho?",
+        "options": [
+          "Prata",
+          "Ferro",
+          "Bronze",
+          "Ouro fino"
+        ],
+        "answer": 3,
+        "ref": "Daniel 2:32"
+      },
+      {
+        "q": "O que feriu a estátua nos pés, segundo Daniel 2:34?",
+        "options": [
+          "Um exército",
+          "Um raio",
+          "Uma pedra cortada sem mãos",
+          "Uma espada"
+        ],
+        "answer": 2,
+        "ref": "Daniel 2:34"
+      },
+      {
+        "q": "Que cargo o rei deu a Daniel no final de Daniel 2?",
+        "options": [
+          "Rei de Judá",
+          "Governador da província da Babilônia",
+          "Chefe do exército",
+          "Sumo sacerdote"
+        ],
+        "answer": 1,
+        "ref": "Daniel 2:48"
       }
     ]
   },
@@ -1203,59 +1203,59 @@
     "day": 159,
     "questions": [
       {
-        "q": "Por quantos anos Isaías andou despido e descalço como sinal?",
+        "q": "Onde Nabucodonosor levantou a estátua de ouro?",
         "options": [
-          "Sete",
-          "Um",
-          "Três",
-          "Quarenta"
-        ],
-        "answer": 2,
-        "ref": "Isaías 20:3"
-      },
-      {
-        "q": "Em Isaías 21, que cidade a sentinela anunciou: Caiu, caiu?",
-        "options": [
-          "Babilônia",
-          "Samaria",
-          "Damasco",
-          "Tiro"
-        ],
-        "answer": 0,
-        "ref": "Isaías 21:9"
-      },
-      {
-        "q": "Sobre o ombro de quem Deus colocaria a chave da casa de Davi?",
-        "options": [
-          "Sebna",
-          "Ezequias",
-          "Hilquias",
-          "Eliakim"
+          "Às margens do Nilo",
+          "Em Jerusalém",
+          "No monte Sião",
+          "No campo de Dura"
         ],
         "answer": 3,
-        "ref": "Isaías 22:20-22"
+        "ref": "Daniel 3:1"
       },
       {
-        "q": "Por quantos anos Tiro seria esquecida, segundo Isaías 23?",
+        "q": "Qual era o castigo para quem não adorasse a imagem?",
         "options": [
-          "Dez",
-          "Setenta",
-          "Quarenta",
-          "Cem"
+          "A fornalha de fogo ardente",
+          "A prisão",
+          "O exílio",
+          "A cova dos leões"
         ],
-        "answer": 1,
-        "ref": "Isaías 23:15"
+        "answer": 0,
+        "ref": "Daniel 3:6"
       },
       {
-        "q": "Segundo Isaías 25, o Senhor Deus enxugará o quê de todos os rostos?",
+        "q": "Quantas vezes mais a fornalha foi aquecida?",
         "options": [
-          "O suor",
-          "A poeira",
-          "As lágrimas",
-          "O sangue"
+          "Duas vezes",
+          "Três vezes",
+          "Sete vezes",
+          "Dez vezes"
         ],
         "answer": 2,
-        "ref": "Isaías 25:8"
+        "ref": "Daniel 3:19"
+      },
+      {
+        "q": "Quantos homens o rei viu andando no meio do fogo?",
+        "options": [
+          "Cinco",
+          "Quatro",
+          "Dois",
+          "Três"
+        ],
+        "answer": 1,
+        "ref": "Daniel 3:25"
+      },
+      {
+        "q": "Segundo Daniel 3:27, o que aconteceu com o cabelo dos três jovens?",
+        "options": [
+          "Ficou todo queimado",
+          "Caiu",
+          "Ficou branco",
+          "Nem um fio foi chamuscado"
+        ],
+        "answer": 3,
+        "ref": "Daniel 3:27"
       }
     ]
   },
@@ -1263,59 +1263,59 @@
     "day": 160,
     "questions": [
       {
-        "q": "Segundo Isaías 26, o Senhor manterá em plena paz quem?",
+        "q": "O que Nabucodonosor viu no sonho de Daniel 4?",
         "options": [
-          "Quem é rico",
-          "Quem é forte",
-          "Quem mora em Sião",
-          "Quem confia nele"
+          "Um carneiro",
+          "Uma estátua de ouro",
+          "Uma árvore muito alta",
+          "Quatro animais"
         ],
-        "answer": 3,
-        "ref": "Isaías 26:3"
+        "answer": 2,
+        "ref": "Daniel 4:10"
       },
       {
-        "q": "Qual serpente o Senhor castigaria com a sua espada em Isaías 27?",
+        "q": "Quem desceu do céu no sonho, segundo Daniel 4:13?",
         "options": [
-          "Leviatã",
-          "Golias",
-          "Dagom",
-          "Baal"
-        ],
-        "answer": 0,
-        "ref": "Isaías 27:1"
-      },
-      {
-        "q": "O que o Senhor diz que colocaria em Sião, em Isaías 28?",
-        "options": [
-          "Um trono de ouro",
-          "Uma pedra preciosa e angular",
-          "Uma torre alta",
-          "Um altar novo"
+          "Uma águia",
+          "Um vigilante, um santo",
+          "Um profeta",
+          "Um leão alado"
         ],
         "answer": 1,
-        "ref": "Isaías 28:16"
+        "ref": "Daniel 4:13"
       },
       {
-        "q": "O povo honrava a Deus com os lábios, mas como estava o seu coração?",
+        "q": "Segundo Daniel 4:22, quem era a árvore do sonho?",
         "options": [
-          "Alegre",
-          "Puro",
-          "Longe de Deus",
-          "Cheio de fé"
+          "O próprio rei Nabucodonosor",
+          "Daniel",
+          "O reino da Pérsia",
+          "O povo de Judá"
         ],
-        "answer": 2,
-        "ref": "Isaías 29:13"
+        "answer": 0,
+        "ref": "Daniel 4:22"
       },
       {
-        "q": "Em Isaías 29, o vaso que diz que seu artífice nada sabe fala com quem?",
+        "q": "Após quantos meses o sonho começou a se cumprir?",
         "options": [
-          "Com o rei",
-          "Com o ferreiro",
-          "Com o oleiro",
-          "Com o pastor"
+          "Três",
+          "Seis",
+          "Vinte",
+          "Doze"
         ],
-        "answer": 2,
-        "ref": "Isaías 29:16"
+        "answer": 3,
+        "ref": "Daniel 4:29"
+      },
+      {
+        "q": "O que Nabucodonosor passou a comer, segundo Daniel 4:33?",
+        "options": [
+          "Erva como os bois",
+          "Frutas",
+          "Carne crua",
+          "Pão e mel"
+        ],
+        "answer": 0,
+        "ref": "Daniel 4:33"
       }
     ]
   },
@@ -1323,59 +1323,59 @@
     "day": 161,
     "questions": [
       {
-        "q": "Que palavra os ouvidos ouviriam atrás de ti, segundo Isaías 30?",
+        "q": "Para quantos nobres Belsazar ofereceu um banquete?",
         "options": [
-          "Corre depressa",
-          "Volta para casa",
-          "Este é o caminho, anda por ele",
-          "Descansa agora"
+          "Cem",
+          "Quinhentos",
+          "Mil",
+          "Dez"
         ],
         "answer": 2,
-        "ref": "Isaías 30:21"
+        "ref": "Daniel 5:1"
       },
       {
-        "q": "Ai dos que descem a qual país em busca de socorro, segundo Isaías 31?",
+        "q": "De onde vieram os utensílios usados no banquete de Belsazar?",
         "options": [
-          "Egito",
-          "Assíria",
-          "Babilônia",
-          "Edom"
-        ],
-        "answer": 0,
-        "ref": "Isaías 31:1"
-      },
-      {
-        "q": "Segundo Isaías 35, os coxos saltarão como o quê?",
-        "options": [
-          "Leões",
-          "Cabritos",
-          "Gafanhotos",
-          "Cervos"
-        ],
-        "answer": 3,
-        "ref": "Isaías 35:6"
-      },
-      {
-        "q": "Como se chamaria o caminho descrito em Isaías 35?",
-        "options": [
-          "Caminho Real",
-          "Caminho Santo",
-          "Caminho do Mar",
-          "Caminho Antigo"
+          "De Nínive",
+          "Do templo em Jerusalém",
+          "Do Egito",
+          "Do palácio de Dario"
         ],
         "answer": 1,
-        "ref": "Isaías 35:8"
+        "ref": "Daniel 5:2"
       },
       {
-        "q": "Segundo Isaías 32, um Rei reinará com o quê?",
+        "q": "O que apareceu escrevendo na parede do palácio?",
         "options": [
-          "Com espada",
-          "Com riqueza",
-          "Com justiça",
-          "Com medo"
+          "Dedos de uma mão humana",
+          "Uma nuvem de fogo",
+          "Um pássaro",
+          "Um anjo com espada"
         ],
-        "answer": 2,
-        "ref": "Isaías 32:1"
+        "answer": 0,
+        "ref": "Daniel 5:5"
+      },
+      {
+        "q": "Quem sugeriu que chamassem Daniel, em Daniel 5:10-12?",
+        "options": [
+          "O sumo sacerdote",
+          "A rainha-mãe",
+          "Um dos magos",
+          "O chefe da guarda"
+        ],
+        "answer": 1,
+        "ref": "Daniel 5:10"
+      },
+      {
+        "q": "Quem se apoderou do reino depois da morte de Belsazar?",
+        "options": [
+          "Nabucodonosor",
+          "Ciro, o persa",
+          "Alexandre",
+          "Dario, o medo"
+        ],
+        "answer": 3,
+        "ref": "Daniel 5:31"
       }
     ]
   },
@@ -1383,2271 +1383,29 @@
     "day": 162,
     "questions": [
       {
-        "q": "Qual rei da Assíria subiu contra as cidades fortificadas de Judá?",
+        "q": "Quantos sátrapas Dario colocou sobre o reino?",
         "options": [
-          "Nabucodonosor",
-          "Senaqueribe",
-          "Faraó",
-          "Ciro"
-        ],
-        "answer": 1,
-        "ref": "Isaías 36:1"
-      },
-      {
-        "q": "Rabsaqué comparou o Egito a quê?",
-        "options": [
-          "Um bastão de cana quebrada",
-          "Um leão forte",
-          "Um muro alto",
-          "Uma rocha firme"
-        ],
-        "answer": 0,
-        "ref": "Isaías 36:6"
-      },
-      {
-        "q": "Quantos o anjo do Senhor feriu no acampamento dos assírios?",
-        "options": [
-          "Dez mil",
+          "Setenta",
           "Mil",
-          "Cinquenta mil",
-          "Cento e oitenta e cinco mil"
-        ],
-        "answer": 3,
-        "ref": "Isaías 37:36"
-      },
-      {
-        "q": "Quantos anos Deus acrescentou à vida de Ezequias?",
-        "options": [
-          "Dez",
-          "Sete",
-          "Quinze",
-          "Vinte"
+          "Cento e vinte",
+          "Doze"
         ],
         "answer": 2,
-        "ref": "Isaías 38:5"
+        "ref": "Daniel 6:1"
       },
       {
-        "q": "Ezequias mostrou todos os seus tesouros a mensageiros de onde?",
+        "q": "Por quantos dias valia o decreto que proibia orar a outro deus?",
         "options": [
-          "Do Egito",
-          "Da Babilônia",
-          "De Tiro",
-          "Da Etiópia"
-        ],
-        "answer": 1,
-        "ref": "Isaías 39:2-3"
-      }
-    ]
-  },
-  {
-    "day": 163,
-    "questions": [
-      {
-        "q": "A voz que clama no deserto diz: Preparai o quê?",
-        "options": [
-          "O caminho do Senhor",
-          "As armas",
-          "O templo",
-          "Os celeiros"
-        ],
-        "answer": 0,
-        "ref": "Isaías 40:3"
-      },
-      {
-        "q": "A erva murcha e as flores caem, mas o que permanece eternamente?",
-        "options": [
-          "Os montes",
-          "A palavra do nosso Deus",
-          "O trono do rei",
-          "O mar"
-        ],
-        "answer": 1,
-        "ref": "Isaías 40:8"
-      },
-      {
-        "q": "Os que esperam no Senhor sobem com asas como quais aves?",
-        "options": [
-          "Pombas",
-          "Andorinhas",
-          "Corujas",
-          "Águias"
-        ],
-        "answer": 3,
-        "ref": "Isaías 40:31"
-      },
-      {
-        "q": "O Servo de Deus não esmagará a cana quebrada nem apagará o quê?",
-        "options": [
-          "O fogo do altar",
-          "A lâmpada do templo",
-          "O pavio que fumega",
-          "A estrela da manhã"
-        ],
-        "answer": 2,
-        "ref": "Isaías 42:3"
-      },
-      {
-        "q": "Segundo Isaías 43, quando passares pelo fogo, o que acontecerá?",
-        "options": [
-          "Não te queimarás",
-          "Ficarás ferido",
-          "Fugirás",
-          "Perderás tudo"
-        ],
-        "answer": 0,
-        "ref": "Isaías 43:2"
-      }
-    ]
-  },
-  {
-    "day": 164,
-    "questions": [
-      {
-        "q": "De quem o Senhor diz: Ele é meu pastor e cumprirá tudo o que me agrada?",
-        "options": [
-          "Davi",
-          "Ciro",
-          "Moisés",
-          "Ezequias"
-        ],
-        "answer": 1,
-        "ref": "Isaías 44:28"
-      },
-      {
-        "q": "O homem queima metade da madeira e, do restante, faz o quê?",
-        "options": [
-          "Uma mesa",
-          "Um barco",
-          "Um deus, uma imagem esculpida",
-          "Uma cerca"
-        ],
-        "answer": 2,
-        "ref": "Isaías 44:16-17"
-      },
-      {
-        "q": "Quais ídolos se encurvam e se abaixam em Isaías 46?",
-        "options": [
-          "Bel e Nebo",
-          "Baal e Aserá",
-          "Dagom e Moloque",
-          "Camos e Milcom"
-        ],
-        "answer": 0,
-        "ref": "Isaías 46:1"
-      },
-      {
-        "q": "Se Israel ouvisse os mandamentos, sua paz seria como o quê?",
-        "options": [
-          "Uma torre",
-          "Uma montanha",
-          "Uma estrela",
-          "Um rio"
-        ],
-        "answer": 3,
-        "ref": "Isaías 48:18"
-      },
-      {
-        "q": "Quem deveria descer e assentar-se no pó, sem trono, em Isaías 47?",
-        "options": [
-          "A filha de Sião",
-          "A virgem filha de Babilônia",
-          "A rainha do Egito",
-          "A cidade de Tiro"
-        ],
-        "answer": 1,
-        "ref": "Isaías 47:1"
-      }
-    ]
-  },
-  {
-    "day": 165,
-    "questions": [
-      {
-        "q": "Onde o Senhor diz que tem Sião gravada?",
-        "options": [
-          "Numa pedra",
-          "No templo",
-          "Nas palmas das minhas mãos",
-          "No céu"
-        ],
-        "answer": 2,
-        "ref": "Isaías 49:16"
-      },
-      {
-        "q": "Segundo Isaías 49, de quem uma mulher dificilmente se esqueceria?",
-        "options": [
-          "Do filho que ainda mama",
-          "Da sua casa",
-          "Do marido",
-          "Da sua cidade"
-        ],
-        "answer": 0,
-        "ref": "Isaías 49:15"
-      },
-      {
-        "q": "Quão formosos sobre os montes são os pés de quem?",
-        "options": [
-          "Do rei vitorioso",
-          "Do pastor",
-          "Do sacerdote",
-          "Daquele que traz as boas-novas"
-        ],
-        "answer": 3,
-        "ref": "Isaías 52:7"
-      },
-      {
-        "q": "Segundo Isaías 53, como o Servo foi levado ao matadouro?",
-        "options": [
-          "Como um leão",
-          "Como cordeiro",
-          "Como um rei",
-          "Como um soldado"
-        ],
-        "answer": 1,
-        "ref": "Isaías 53:7"
-      },
-      {
-        "q": "Segundo Isaías 51, para quem o povo devia olhar como seu pai?",
-        "options": [
-          "Moisés",
-          "Davi",
-          "Abraão",
-          "Noé"
-        ],
-        "answer": 2,
-        "ref": "Isaías 51:2"
-      }
-    ]
-  },
-  {
-    "day": 166,
-    "questions": [
-      {
-        "q": "Deus compara o seu juramento de paz às águas de quem?",
-        "options": [
-          "De Moisés",
-          "De Noé",
-          "Do Jordão",
-          "De Elias"
-        ],
-        "answer": 1,
-        "ref": "Isaías 54:9"
-      },
-      {
-        "q": "Quem é convidado a vir às águas em Isaías 55?",
-        "options": [
-          "Os reis",
-          "Os sacerdotes",
-          "Os ricos",
-          "Todos os que têm sede"
-        ],
-        "answer": 3,
-        "ref": "Isaías 55:1"
-      },
-      {
-        "q": "Segundo Isaías 55, como a palavra de Deus não voltará para ele?",
-        "options": [
-          "Vazia",
-          "Cansada",
-          "Atrasada",
-          "Esquecida"
-        ],
-        "answer": 0,
-        "ref": "Isaías 55:11"
-      },
-      {
-        "q": "Como seria chamada a casa de Deus, segundo Isaías 56?",
-        "options": [
-          "Casa do Rei",
-          "Casa de Tesouros",
-          "Casa de Oração para todos os povos",
-          "Casa de Sacrifícios"
-        ],
-        "answer": 2,
-        "ref": "Isaías 56:7"
-      },
-      {
-        "q": "O que o Senhor colocou na cabeça, segundo Isaías 59?",
-        "options": [
-          "Uma coroa de ouro",
-          "O capacete da salvação",
-          "Um véu de linho",
-          "Cinzas"
-        ],
-        "answer": 1,
-        "ref": "Isaías 59:17"
-      }
-    ]
-  },
-  {
-    "day": 167,
-    "questions": [
-      {
-        "q": "Levanta-te, brilha, porque chegou o quê?",
-        "options": [
-          "O rei",
-          "A chuva",
-          "A tua luz",
-          "O exército"
-        ],
-        "answer": 2,
-        "ref": "Isaías 60:1"
-      },
-      {
-        "q": "Segundo Isaías 60, quem seria a luz eterna em lugar do sol?",
-        "options": [
-          "O Senhor",
-          "Uma grande estrela",
-          "O fogo do altar",
-          "A lua"
-        ],
-        "answer": 0,
-        "ref": "Isaías 60:19"
-      },
-      {
-        "q": "Em Isaías 61, o ungido foi enviado a anunciar boas-novas a quem?",
-        "options": [
-          "Aos reis",
-          "Aos sacerdotes",
-          "Aos soldados",
-          "Aos quebrantados"
-        ],
-        "answer": 3,
-        "ref": "Isaías 61:1"
-      },
-      {
-        "q": "Segundo Isaías 64, nós somos o barro e o Senhor é o quê?",
-        "options": [
-          "O pastor",
-          "O oleiro",
-          "O ferreiro",
-          "O lavrador"
-        ],
-        "answer": 1,
-        "ref": "Isaías 64:8"
-      },
-      {
-        "q": "De onde vem aquele com vestes tingidas de Bozra, em Isaías 63?",
-        "options": [
-          "De Moabe",
-          "Do Egito",
-          "De Edom",
-          "De Tiro"
-        ],
-        "answer": 2,
-        "ref": "Isaías 63:1"
-      }
-    ]
-  },
-  {
-    "day": 168,
-    "questions": [
-      {
-        "q": "O que o Senhor diz que vai criar, em Isaías 65?",
-        "options": [
-          "Novos céus e nova terra",
-          "Um novo templo",
-          "Um novo rei",
-          "Um novo mar"
-        ],
-        "answer": 0,
-        "ref": "Isaías 65:17"
-      },
-      {
-        "q": "Segundo Isaías 66, a terra é o quê para o Senhor?",
-        "options": [
-          "O seu trono",
-          "A sua casa",
-          "O seu jardim",
-          "O estrado dos seus pés"
-        ],
-        "answer": 3,
-        "ref": "Isaías 66:1"
-      },
-      {
-        "q": "Que desculpa Jeremias deu quando Deus o chamou?",
-        "options": [
-          "Sou velho demais",
-          "Sou apenas uma criança",
-          "Sou muito pobre",
-          "Estou doente"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 1:6"
-      },
-      {
-        "q": "Que vara Jeremias viu na primeira visão?",
-        "options": [
-          "De oliveira",
-          "De cedro",
-          "De amendoeira",
-          "De figueira"
-        ],
-        "answer": 2,
-        "ref": "Jeremias 1:11"
-      },
-      {
-        "q": "O povo abandonou o manancial de águas vivas e cavou o quê?",
-        "options": [
-          "Cisternas rotas",
-          "Poços profundos",
-          "Rios novos",
-          "Canais de pedra"
-        ],
-        "answer": 0,
-        "ref": "Jeremias 2:13"
-      }
-    ]
-  },
-  {
-    "day": 169,
-    "questions": [
-      {
-        "q": "O que Deus mandou procurar nas ruas e praças de Jerusalém?",
-        "options": [
-          "Um tesouro",
-          "Um profeta",
-          "Um homem que pratique a justiça",
-          "Um rei"
-        ],
-        "answer": 2,
-        "ref": "Jeremias 5:1"
-      },
-      {
-        "q": "Segundo Jeremias 4, o povo não deveria semear entre o quê?",
-        "options": [
-          "Pedras",
-          "Espinhos",
-          "Areia",
-          "Ervas"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 4:3"
-      },
-      {
-        "q": "O que Deus estabeleceu como limite para o mar?",
-        "options": [
-          "Montanhas",
-          "Muralhas",
-          "Rochas",
-          "A areia"
-        ],
-        "answer": 3,
-        "ref": "Jeremias 5:22"
-      },
-      {
-        "q": "Deus prometeu dar ao povo pastores conforme o quê?",
-        "options": [
-          "O meu coração",
-          "A vontade do rei",
-          "A lei de Moisés",
-          "O desejo do povo"
-        ],
-        "answer": 0,
-        "ref": "Jeremias 3:15"
-      },
-      {
-        "q": "Os cavalos do inimigo vindo do norte eram mais velozes que o quê?",
-        "options": [
-          "O vento",
-          "As águias",
-          "Os leões",
-          "Os relâmpagos"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 4:13"
-      }
-    ]
-  },
-  {
-    "day": 170,
-    "questions": [
-      {
-        "q": "Deus perguntou se sua casa tinha se tornado um covil de quê?",
-        "options": [
-          "Leões",
-          "Raposas",
-          "Salteadores",
-          "Serpentes"
-        ],
-        "answer": 2,
-        "ref": "Jeremias 7:11"
-      },
-      {
-        "q": "Jeremias pergunta: Não há bálsamo em qual lugar?",
-        "options": [
-          "Gileade",
-          "Basã",
-          "Carmelo",
-          "Líbano"
-        ],
-        "answer": 0,
-        "ref": "Jeremias 8:22"
-      },
-      {
-        "q": "Qual ave do céu, segundo Jeremias 8, conhece as suas estações?",
-        "options": [
-          "O corvo",
-          "A águia",
-          "O pardal",
-          "A cegonha"
-        ],
-        "answer": 3,
-        "ref": "Jeremias 8:7"
-      },
-      {
-        "q": "Segundo Jeremias 9, em que quem se gloria deve se gloriar?",
-        "options": [
-          "Em sua força",
-          "Em conhecer o Senhor",
-          "Em suas riquezas",
-          "Em sua sabedoria"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 9:23-24"
-      },
-      {
-        "q": "Os falsos profetas diziam 'Paz, paz', mas qual era a verdade?",
-        "options": [
-          "Não havia paz",
-          "Havia festa",
-          "O rei venceu",
-          "A chuva veio"
-        ],
-        "answer": 0,
-        "ref": "Jeremias 6:14"
-      }
-    ]
-  },
-  {
-    "day": 171,
-    "questions": [
-      {
-        "q": "Que objeto o Senhor mandou Jeremias comprar e pôr nos lombos?",
-        "options": [
-          "Uma túnica",
-          "Uma espada",
-          "Um cinto de linho",
-          "Um manto"
-        ],
-        "answer": 2,
-        "ref": "Jeremias 13:1"
-      },
-      {
-        "q": "Junto a qual rio Jeremias escondeu o cinto?",
-        "options": [
-          "Jordão",
-          "Nilo",
-          "Quisom",
-          "Eufrates"
-        ],
-        "answer": 3,
-        "ref": "Jeremias 13:4-5"
-      },
-      {
-        "q": "Segundo Jeremias 13, o leopardo pode mudar o quê?",
-        "options": [
-          "Suas manchas",
-          "Seus dentes",
-          "Seu rugido",
-          "Sua toca"
-        ],
-        "answer": 0,
-        "ref": "Jeremias 13:23"
-      },
-      {
-        "q": "Os ídolos são como espantalho em um campo de quê?",
-        "options": [
-          "Trigo",
-          "Pepinos",
-          "Uvas",
-          "Cevada"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 10:5"
-      },
-      {
-        "q": "Os homens de qual cidade buscavam a morte de Jeremias?",
-        "options": [
-          "Jerusalém",
-          "Belém",
-          "Anatote",
-          "Siló"
-        ],
-        "answer": 2,
-        "ref": "Jeremias 11:21"
-      }
-    ]
-  },
-  {
-    "day": 172,
-    "questions": [
-      {
-        "q": "A palavra do Senhor em Jeremias 14 é sobre qual problema?",
-        "options": [
-          "Uma grande enchente",
-          "Uma praga de gafanhotos",
-          "Um terremoto",
-          "A grande seca"
-        ],
-        "answer": 3,
-        "ref": "Jeremias 14:1"
-      },
-      {
-        "q": "Mesmo que quais dois homens intercedessem, Deus não se inclinaria ao povo?",
-        "options": [
-          "Abraão e Isaque",
-          "Moisés e Samuel",
-          "Davi e Salomão",
-          "Elias e Eliseu"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 15:1"
-      },
-      {
-        "q": "O que o Senhor disse a Jeremias em Jeremias 16:2?",
-        "options": [
-          "Não te casarás nem terás filhos",
-          "Vai ao Egito",
-          "Constrói um altar",
-          "Fala ao rei"
-        ],
-        "answer": 0,
-        "ref": "Jeremias 16:2"
-      },
-      {
-        "q": "O homem que confia no Senhor será como o quê?",
-        "options": [
-          "Erva no deserto",
-          "Pedra no caminho",
-          "Árvore plantada junto às águas",
-          "Nuvem sem chuva"
-        ],
-        "answer": 2,
-        "ref": "Jeremias 17:7-8"
-      },
-      {
-        "q": "Em qual dia o povo não devia carregar fardos pelas portas?",
-        "options": [
-          "Lua nova",
-          "Dia da colheita",
-          "Primeiro dia",
-          "Sábado"
-        ],
-        "answer": 3,
-        "ref": "Jeremias 17:21"
-      }
-    ]
-  },
-  {
-    "day": 173,
-    "questions": [
-      {
-        "q": "A que lugar o Senhor mandou Jeremias descer para ouvir suas palavras?",
-        "options": [
-          "Ao rio Jordão",
-          "À casa do oleiro",
-          "Ao palácio",
-          "Ao deserto"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 18:2"
-      },
-      {
-        "q": "O que Jeremias devia quebrar na presença dos homens, em Jeremias 19?",
-        "options": [
-          "Um altar",
-          "Uma espada",
-          "Uma coroa",
-          "A botija de oleiro"
-        ],
-        "answer": 3,
-        "ref": "Jeremias 19:1,10"
-      },
-      {
-        "q": "Quem feriu Jeremias e o colocou no tronco?",
-        "options": [
-          "Pasur",
-          "Hananias",
-          "Zedequias",
-          "Baruque"
-        ],
-        "answer": 0,
-        "ref": "Jeremias 20:2"
-      },
-      {
-        "q": "Segundo Jeremias 20, a palavra do Senhor era como o quê em seus ossos?",
-        "options": [
-          "Mel doce",
-          "Água fria",
-          "Um fogo ardente",
-          "Um peso leve"
-        ],
-        "answer": 2,
-        "ref": "Jeremias 20:9"
-      },
-      {
-        "q": "Qual rei da Babilônia guerreava contra Judá em Jeremias 21?",
-        "options": [
-          "Ciro",
-          "Senaqueribe",
-          "Nabucodonosor",
-          "Belsazar"
-        ],
-        "answer": 2,
-        "ref": "Jeremias 21:2"
-      }
-    ]
-  },
-  {
-    "day": 174,
-    "questions": [
-      {
-        "q": "O Senhor prometeu levantar para Davi um quê justo?",
-        "options": [
-          "Templo",
-          "Renovo",
-          "Exército",
-          "Altar"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 23:5"
-      },
-      {
-        "q": "A palavra de Deus é fogo e martelo que esmiúça o quê?",
-        "options": [
-          "A penha",
-          "O ferro",
-          "O trono",
-          "A muralha"
-        ],
-        "answer": 0,
-        "ref": "Jeremias 23:29"
-      },
-      {
-        "q": "O que Jeremias viu colocado diante do templo em Jeremias 24?",
-        "options": [
-          "Dois leões",
-          "Duas tábuas",
-          "Dois cestos de uvas",
-          "Dois cestos de figos"
-        ],
-        "answer": 3,
-        "ref": "Jeremias 24:1"
-      },
-      {
-        "q": "Por quantos anos as nações serviriam ao rei da Babilônia?",
-        "options": [
+          "Trinta",
           "Quarenta",
           "Sete",
-          "Setenta",
           "Cem"
         ],
-        "answer": 2,
-        "ref": "Jeremias 25:11"
-      },
-      {
-        "q": "O que Jeremias devia tomar da mão do Senhor e dar às nações?",
-        "options": [
-          "Um pão",
-          "O cálice do vinho do furor",
-          "Uma vara",
-          "Um rolo"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 25:15"
-      }
-    ]
-  },
-  {
-    "day": 175,
-    "questions": [
-      {
-        "q": "O que Jeremias fez e pôs sobre o próprio pescoço, em Jeremias 27?",
-        "options": [
-          "Correias e jugos",
-          "Um colar de ouro",
-          "Uma corda",
-          "Uma pedra"
-        ],
         "answer": 0,
-        "ref": "Jeremias 27:2"
+        "ref": "Daniel 6:7"
       },
       {
-        "q": "Qual profeta quebrou o jugo que estava no pescoço de Jeremias?",
-        "options": [
-          "Urias",
-          "Semaías",
-          "Pasur",
-          "Hananias"
-        ],
-        "answer": 3,
-        "ref": "Jeremias 28:10"
-      },
-      {
-        "q": "Em lugar dos jugos de madeira, o Senhor faria jugos de quê?",
-        "options": [
-          "Bronze",
-          "Pedra",
-          "Ferro",
-          "Ouro"
-        ],
-        "answer": 2,
-        "ref": "Jeremias 28:13"
-      },
-      {
-        "q": "Na carta de Jeremias, os exilados deviam buscar a paz de quê?",
-        "options": [
-          "De Jerusalém",
-          "Da cidade para onde foram enviados",
-          "Do Egito",
-          "Do templo"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 29:7"
-      },
-      {
-        "q": "Qual antigo profeta os anciãos lembraram para defender Jeremias?",
-        "options": [
-          "Miquéias, o morastita",
-          "Elias, o tesbita",
-          "Natã",
-          "Isaías"
-        ],
-        "answer": 0,
-        "ref": "Jeremias 26:18"
-      }
-    ]
-  },
-  {
-    "day": 176,
-    "questions": [
-      {
-        "q": "O que o Senhor mandou Jeremias fazer em Jeremias 30:2?",
-        "options": [
-          "Ir ao Egito",
-          "Escrever num livro todas as palavras",
-          "Construir um altar",
-          "Ficar em silêncio"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 30:2"
-      },
-      {
-        "q": "Com que tipo de amor o Senhor diz ter amado o seu povo?",
-        "options": [
-          "Amor eterno",
-          "Amor passageiro",
-          "Amor de irmão",
-          "Amor de rei"
-        ],
-        "answer": 0,
-        "ref": "Jeremias 31:3"
-      },
-      {
-        "q": "Quem chorava por seus filhos em Ramá?",
-        "options": [
-          "Lia",
-          "Sara",
-          "Rebeca",
-          "Raquel"
-        ],
-        "answer": 3,
-        "ref": "Jeremias 31:15"
-      },
-      {
-        "q": "O que o Senhor prometeu estabelecer com Israel e Judá em Jeremias 31?",
-        "options": [
-          "Um novo templo",
-          "Um novo reino",
-          "Uma nova aliança",
-          "Uma nova cidade"
-        ],
-        "answer": 2,
-        "ref": "Jeremias 31:31"
-      },
-      {
-        "q": "Na nova aliança, onde Deus inscreveria as suas leis?",
-        "options": [
-          "Em tábuas de pedra",
-          "No coração",
-          "Nas portas",
-          "Num rolo"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 31:33"
-      }
-    ]
-  },
-  {
-    "day": 177,
-    "questions": [
-      {
-        "q": "Em que cidade ficava o campo que Jeremias comprou de Hanameel?",
-        "options": [
-          "Belém",
-          "Siló",
-          "Anatote",
-          "Ramá"
-        ],
-        "answer": 2,
-        "ref": "Jeremias 32:8-9"
-      },
-      {
-        "q": "Quanto Jeremias pagou pelo campo de Hanameel?",
-        "options": [
-          "Dezessete siclos de prata",
-          "Trinta siclos de prata",
-          "Cem siclos de ouro",
-          "Dez talentos"
-        ],
-        "answer": 0,
-        "ref": "Jeremias 32:9"
-      },
-      {
-        "q": "Onde os documentos da compra deviam ser guardados?",
-        "options": [
-          "No templo",
-          "Numa caverna",
-          "No palácio",
-          "Num vaso de barro"
-        ],
-        "answer": 3,
-        "ref": "Jeremias 32:14"
-      },
-      {
-        "q": "Clama a mim, e eu te responderei; e te anunciarei o quê?",
-        "options": [
-          "O nome do rei",
-          "Coisas grandes e ocultas",
-          "O dia da guerra",
-          "Os segredos dos caldeus"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 33:3"
-      },
-      {
-        "q": "O que os recabitas se recusaram a beber?",
-        "options": [
-          "Água",
-          "Leite",
-          "Vinho",
-          "Azeite"
-        ],
-        "answer": 2,
-        "ref": "Jeremias 35:5-6"
-      }
-    ]
-  },
-  {
-    "day": 178,
-    "questions": [
-      {
-        "q": "Quem escreveu no rolo as palavras ditadas por Jeremias?",
-        "options": [
-          "Baruque",
-          "Jehudi",
-          "Gemarias",
-          "Elisama"
-        ],
-        "answer": 0,
-        "ref": "Jeremias 36:4"
-      },
-      {
-        "q": "O que o rei Jeoaquim fez com o rolo?",
-        "options": [
-          "Guardou no templo",
-          "Enviou ao Egito",
-          "Cortou-o e lançou no fogo",
-          "Leu e se arrependeu"
-        ],
-        "answer": 2,
-        "ref": "Jeremias 36:23"
-      },
-      {
-        "q": "O que davam a Jeremias todo dia no átrio da guarda?",
-        "options": [
-          "Um copo de vinho",
-          "Um pão da Rua dos Padeiros",
-          "Carne e mel",
-          "Figos secos"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 37:21"
-      },
-      {
-        "q": "O que havia na cisterna onde lançaram Jeremias?",
-        "options": [
-          "Água limpa",
-          "Serpentes",
-          "Pedras",
-          "Lama"
-        ],
-        "answer": 3,
-        "ref": "Jeremias 38:6"
-      },
-      {
-        "q": "Quem pediu ao rei e tirou Jeremias da cisterna?",
-        "options": [
-          "Baruque",
-          "Ebed-Meleque, o etíope",
-          "Pasur",
-          "Gedalias"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 38:7-13"
-      }
-    ]
-  },
-  {
-    "day": 179,
-    "questions": [
-      {
-        "q": "O que o rei da Babilônia fez com os olhos de Zedequias?",
-        "options": [
-          "Cegou-os",
-          "Curou-os",
-          "Vendou-os",
-          "Nada fez"
-        ],
-        "answer": 0,
-        "ref": "Jeremias 39:7"
-      },
-      {
-        "q": "A quem Jeremias foi entregue quando saiu do átrio da guarda?",
-        "options": [
-          "Ismael",
-          "Baruque",
-          "Gedalias",
-          "Joanã"
-        ],
-        "answer": 2,
-        "ref": "Jeremias 39:14"
-      },
-      {
-        "q": "Quem matou o governador Gedalias em Mispa?",
-        "options": [
-          "Joanã, filho de Careá",
-          "Nebuzaradã",
-          "Baalis",
-          "Ismael, filho de Netanias"
-        ],
-        "answer": 3,
-        "ref": "Jeremias 41:2"
-      },
-      {
-        "q": "Depois de quantos dias a palavra do Senhor veio a Jeremias em Jeremias 42?",
-        "options": [
-          "Três",
-          "Dez",
-          "Sete",
-          "Quarenta"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 42:7"
-      },
-      {
-        "q": "Para onde o povo foi, desobedecendo à voz do Senhor?",
-        "options": [
-          "Para a Babilônia",
-          "Para Moabe",
-          "Para o Egito",
-          "Para Edom"
-        ],
-        "answer": 2,
-        "ref": "Jeremias 43:7"
-      }
-    ]
-  },
-  {
-    "day": 180,
-    "questions": [
-      {
-        "q": "No Egito, a quem o povo queria continuar queimando incenso?",
-        "options": [
-          "A Baal",
-          "À Rainha dos Céus",
-          "A Dagom",
-          "Ao sol"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 44:17"
-      },
-      {
-        "q": "Jeremias 45 traz uma mensagem do Senhor para quem?",
-        "options": [
-          "Zedequias",
-          "Faraó",
-          "Gedalias",
-          "Baruque"
-        ],
-        "answer": 3,
-        "ref": "Jeremias 45:1-2"
-      },
-      {
-        "q": "Junto a qual rio estava o exército de Faraó-Neco, em Carquemis?",
-        "options": [
-          "Eufrates",
-          "Nilo",
-          "Jordão",
-          "Tigre"
-        ],
-        "answer": 0,
-        "ref": "Jeremias 46:2"
-      },
-      {
-        "q": "Qual faraó o Senhor disse que entregaria nas mãos dos seus inimigos?",
-        "options": [
-          "Neco",
-          "Hofra",
-          "Sisaque",
-          "Tiraca"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 44:30"
-      },
-      {
-        "q": "Jeremias 47 traz a palavra do Senhor a respeito de qual povo?",
-        "options": [
-          "Os amonitas",
-          "Os egípcios",
-          "Os filisteus",
-          "Os edomitas"
-        ],
-        "answer": 2,
-        "ref": "Jeremias 47:1"
-      }
-    ]
-  },
-  {
-    "day": 181,
-    "questions": [
-      {
-        "q": "Jeremias 48 traz a palavra do Senhor contra qual povo?",
-        "options": [
-          "Moabe",
-          "Amom",
-          "Edom",
-          "Elão"
-        ],
-        "answer": 0,
-        "ref": "Jeremias 48:1"
-      },
-      {
-        "q": "Qual deus de Moabe iria para o cativeiro com seus sacerdotes?",
-        "options": [
-          "Baal",
-          "Milcom",
-          "Dagom",
-          "Quemos"
-        ],
-        "answer": 3,
-        "ref": "Jeremias 48:7"
-      },
-      {
-        "q": "Na palavra contra Edom: Acaso não há mais sabedoria em qual lugar?",
-        "options": [
-          "Bozra",
-          "Temã",
-          "Dedã",
-          "Seir"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 49:7"
-      },
-      {
-        "q": "O fogo em Damasco consumiria os palácios de quem?",
-        "options": [
-          "De Hazael",
-          "De Rezim",
-          "De Ben-Hadade",
-          "De Naamã"
-        ],
-        "answer": 2,
-        "ref": "Jeremias 49:27"
-      },
-      {
-        "q": "Qual cidade é chamada de martelo de toda a terra, que foi despedaçado?",
-        "options": [
-          "Nínive",
-          "Tiro",
-          "Babilônia",
-          "Damasco"
-        ],
-        "answer": 2,
-        "ref": "Jeremias 50:23"
-      }
-    ]
-  },
-  {
-    "day": 182,
-    "questions": [
-      {
-        "q": "Segundo Jeremias 51, a Babilônia era como o quê na mão do Senhor?",
-        "options": [
-          "Uma espada de ferro",
-          "Um cálice de ouro",
-          "Uma coroa de prata",
-          "Um martelo de bronze"
-        ],
-        "answer": 1,
-        "ref": "Jeremias 51:7"
-      },
-      {
-        "q": "O que Seraías devia fazer com o livro depois de lê-lo na Babilônia?",
-        "options": [
-          "Queimá-lo",
-          "Entregá-lo ao rei",
-          "Guardá-lo num vaso",
-          "Atar-lhe uma pedra e lançá-lo no Eufrates"
-        ],
-        "answer": 3,
-        "ref": "Jeremias 51:63"
-      },
-      {
-        "q": "Quantos anos Zedequias reinou em Jerusalém?",
-        "options": [
-          "Onze",
-          "Sete",
-          "Vinte e um",
-          "Quarenta"
-        ],
-        "answer": 0,
-        "ref": "Jeremias 52:1"
-      },
-      {
-        "q": "O que Nebuzaradã queimou em Jerusalém, além da casa do rei?",
-        "options": [
-          "Apenas os muros",
-          "Só os campos",
-          "A casa do Senhor",
-          "Os navios"
-        ],
-        "answer": 2,
-        "ref": "Jeremias 52:13"
-      },
-      {
-        "q": "Qual rei da Babilônia tirou Jeconias da prisão?",
-        "options": [
-          "Nabucodonosor",
-          "Belsazar",
-          "Ciro",
-          "Evil-Merodaque"
-        ],
-        "answer": 3,
-        "ref": "Jeremias 52:31"
-      }
-    ]
-  },
-  {
-    "day": 183,
-    "questions": [
-      {
-        "q": "Em Lamentações 1:1, a cidade que foi grande se tornou como quem?",
-        "options": [
-          "Uma rainha",
-          "Uma viúva",
-          "Uma noiva",
-          "Uma guerreira"
-        ],
-        "answer": 1,
-        "ref": "Lamentações 1:1"
-      },
-      {
-        "q": "Segundo Lamentações 3, as misericórdias do Senhor se renovam quando?",
-        "options": [
-          "A cada ano",
-          "Só no sábado",
-          "A cada manhã",
-          "Na lua nova"
-        ],
-        "answer": 2,
-        "ref": "Lamentações 3:22-23"
-      },
-      {
-        "q": "Completa: O Senhor é a minha ___, declara a minha alma.",
-        "options": [
-          "Porção",
-          "Espada",
-          "Riqueza",
-          "Torre"
-        ],
-        "answer": 0,
-        "ref": "Lamentações 3:24"
-      },
-      {
-        "q": "Segundo Lamentações 3, como é bom aguardar a salvação do Senhor?",
-        "options": [
-          "Gritando",
-          "Correndo",
-          "Com medo",
-          "Em silêncio"
-        ],
-        "answer": 3,
-        "ref": "Lamentações 3:26"
-      },
-      {
-        "q": "Qual cidade era chamada a perfeição da formosura, a alegria de toda a terra?",
-        "options": [
-          "Babilônia",
-          "Jerusalém",
-          "Samaria",
-          "Tiro"
-        ],
-        "answer": 1,
-        "ref": "Lamentações 2:15"
-      }
-    ]
-  },
-  {
-    "day": 184,
-    "questions": [
-      {
-        "q": "Junto a qual rio Ezequiel estava quando teve visões de Deus?",
-        "options": [
-          "Jordão",
-          "Eufrates",
-          "Quebar",
-          "Nilo"
-        ],
-        "answer": 2,
-        "ref": "Ezequiel 1:1"
-      },
-      {
-        "q": "Quantos rostos tinha cada um dos seres viventes da visão?",
-        "options": [
-          "Quatro",
-          "Dois",
-          "Seis",
-          "Um"
-        ],
-        "answer": 0,
-        "ref": "Ezequiel 1:6"
-      },
-      {
-        "q": "Que sabor tinha o rolo que Ezequiel comeu?",
-        "options": [
-          "Amargo como fel",
-          "Salgado",
-          "Sem sabor",
-          "Doce como mel"
-        ],
-        "answer": 3,
-        "ref": "Ezequiel 3:3"
-      },
-      {
-        "q": "Deus constituiu Ezequiel como o quê sobre a casa de Israel?",
-        "options": [
-          "Rei",
-          "Atalaia",
-          "Juiz",
-          "Sacerdote"
-        ],
-        "answer": 1,
-        "ref": "Ezequiel 3:17"
-      },
-      {
-        "q": "Segundo Lamentações 5, que animais percorrem o monte Sião assolado?",
-        "options": [
-          "Leões",
-          "Lobos",
-          "Raposas",
-          "Ursos"
-        ],
-        "answer": 2,
-        "ref": "Lamentações 5:18"
-      }
-    ]
-  },
-  {
-    "day": 185,
-    "questions": [
-      {
-        "q": "Em que objeto Ezequiel devia gravar a cidade de Jerusalém?",
-        "options": [
-          "Numa pedra",
-          "Num tijolo",
-          "Num rolo",
-          "Numa tábua de madeira"
-        ],
-        "answer": 1,
-        "ref": "Ezequiel 4:1"
-      },
-      {
-        "q": "Por quantos dias Ezequiel se deitaria do lado direito pela iniquidade de Judá?",
-        "options": [
-          "Sete",
-          "Trezentos e noventa",
-          "Quarenta",
-          "Setenta"
-        ],
-        "answer": 2,
-        "ref": "Ezequiel 4:6"
-      },
-      {
-        "q": "Com o que Ezequiel devia raspar a cabeça e a barba?",
-        "options": [
-          "Uma espada afiada",
-          "Uma faca de pedra",
-          "Uma tesoura",
-          "Um machado"
-        ],
-        "answer": 0,
-        "ref": "Ezequiel 5:1"
-      },
-      {
-        "q": "Por quem as mulheres choravam à porta da casa do Senhor?",
-        "options": [
-          "Por Baal",
-          "Por Dagom",
-          "Por Moloque",
-          "Por Tamuz"
-        ],
-        "answer": 3,
-        "ref": "Ezequiel 8:14"
-      },
-      {
-        "q": "O que os vinte e cinco homens adoravam, virados para o oriente?",
-        "options": [
-          "A lua",
-          "O sol",
-          "As estrelas",
-          "Um bezerro"
-        ],
-        "answer": 1,
-        "ref": "Ezequiel 8:16"
-      }
-    ]
-  },
-  {
-    "day": 186,
-    "questions": [
-      {
-        "q": "Onde o homem vestido de linho devia pôr um sinal nos que gemiam?",
-        "options": [
-          "Na mão",
-          "Na porta",
-          "Na testa",
-          "No manto"
-        ],
-        "answer": 2,
-        "ref": "Ezequiel 9:4"
-      },
-      {
-        "q": "O que o homem vestido de linho trazia à cintura?",
-        "options": [
-          "Um tinteiro de escrivão",
-          "Uma espada",
-          "Uma trombeta",
-          "Uma bolsa de prata"
-        ],
-        "answer": 0,
-        "ref": "Ezequiel 9:2"
-      },
-      {
-        "q": "Deus tiraria o coração de pedra e daria que coração?",
-        "options": [
-          "De ouro",
-          "De leão",
-          "De ferro",
-          "De carne"
-        ],
-        "answer": 3,
-        "ref": "Ezequiel 11:19"
-      },
-      {
-        "q": "Quem morreu enquanto Ezequiel profetizava, em Ezequiel 11?",
-        "options": [
-          "Jazanias",
-          "Pelatias",
-          "Safã",
-          "Benaías"
-        ],
-        "answer": 1,
-        "ref": "Ezequiel 11:13"
-      },
-      {
-        "q": "Por onde Ezequiel retirou seus objetos, como sinal do exílio?",
-        "options": [
-          "Pela janela",
-          "Pela porta principal",
-          "Por um buraco na parede",
-          "Pelo telhado"
-        ],
-        "answer": 2,
-        "ref": "Ezequiel 12:5,7"
-      }
-    ]
-  },
-  {
-    "day": 187,
-    "questions": [
-      {
-        "q": "Os falsos profetas de Israel são como o quê entre as ruínas?",
-        "options": [
-          "Raposas",
-          "Lobos",
-          "Corvos",
-          "Serpentes"
-        ],
-        "answer": 0,
-        "ref": "Ezequiel 13:4"
-      },
-      {
-        "q": "Quais três homens justos são citados em Ezequiel 14?",
-        "options": [
-          "Abraão, Isaque e Jacó",
-          "Moisés, Arão e Josué",
-          "Noé, Daniel e Jó",
-          "Davi, Samuel e Elias"
-        ],
-        "answer": 2,
-        "ref": "Ezequiel 14:14"
-      },
-      {
-        "q": "Em Ezequiel 15, os moradores de Jerusalém são comparados ao sarmento de quê?",
-        "options": [
-          "Da oliveira",
-          "Do cedro",
-          "Da figueira",
-          "Da videira"
-        ],
-        "answer": 3,
-        "ref": "Ezequiel 15:6"
-      },
-      {
-        "q": "Que provérbio se diria a respeito de Jerusalém em Ezequiel 16?",
-        "options": [
-          "Quem planta colhe",
-          "Assim é a mãe, assim é a filha",
-          "Tal pai, tal filho",
-          "Pedra que rola não cria limo"
-        ],
-        "answer": 1,
-        "ref": "Ezequiel 16:44"
-      },
-      {
-        "q": "Quem é chamada irmã mais nova de Jerusalém em Ezequiel 16?",
-        "options": [
-          "Samaria",
-          "Sodoma",
-          "Gomorra",
-          "Babilônia"
-        ],
-        "answer": 1,
-        "ref": "Ezequiel 16:46"
-      }
-    ]
-  },
-  {
-    "day": 188,
-    "questions": [
-      {
-        "q": "Na parábola, a grande águia levou a ponta de qual árvore do Líbano?",
-        "options": [
-          "Oliveira",
-          "Cedro",
-          "Palmeira",
-          "Figueira"
-        ],
-        "answer": 1,
-        "ref": "Ezequiel 17:3"
-      },
-      {
-        "q": "Segundo Ezequiel 18, o que acontece com a alma que pecar?",
-        "options": [
-          "Será perdoada sempre",
-          "Ficará rica",
-          "Essa morrerá",
-          "Irá ao templo"
-        ],
-        "answer": 2,
-        "ref": "Ezequiel 18:4"
-      },
-      {
-        "q": "Qual provérbio Deus disse que não se usaria mais em Israel?",
-        "options": [
-          "Os pais comeram uvas verdes...",
-          "Quem semeia ventos colhe tempestades",
-          "Assim é a mãe, assim é a filha",
-          "O sábio edifica a casa"
-        ],
-        "answer": 0,
-        "ref": "Ezequiel 18:2-3"
-      },
-      {
-        "q": "Em Ezequiel 19, a mãe dos príncipes de Israel é comparada a quê?",
-        "options": [
-          "Uma águia",
-          "Uma ursa",
-          "Uma pomba",
-          "Uma leoa"
-        ],
-        "answer": 3,
-        "ref": "Ezequiel 19:2"
-      },
-      {
-        "q": "Deus não tem prazer na morte de quem morre. O que Ele pede?",
-        "options": [
-          "Voltem-se para mim e vivam",
-          "Ofereçam mais sacrifícios",
-          "Fujam para o Egito",
-          "Construam um templo"
-        ],
-        "answer": 0,
-        "ref": "Ezequiel 18:32"
-      }
-    ]
-  },
-  {
-    "day": 189,
-    "questions": [
-      {
-        "q": "Segundo Ezequiel 20, Deus deu os sábados ao povo como o quê?",
-        "options": [
-          "Um castigo",
-          "Um sinal entre Ele e o povo",
-          "Um dia de festa ao rei",
-          "Um imposto"
-        ],
-        "answer": 1,
-        "ref": "Ezequiel 20:12"
-      },
-      {
-        "q": "Como Ezequiel 20 descreve a terra prometida?",
-        "options": [
-          "Terra de ouro e prata",
-          "Terra de muitos rios",
-          "Terra onde mana leite e mel",
-          "Terra de cedros"
-        ],
-        "answer": 2,
-        "ref": "Ezequiel 20:6"
-      },
-      {
-        "q": "Deus procurou um homem que se colocasse onde, mas não achou?",
-        "options": [
-          "No trono",
-          "No templo",
-          "No deserto",
-          "Na brecha"
-        ],
-        "answer": 3,
-        "ref": "Ezequiel 22:30"
-      },
-      {
-        "q": "Em Ezequiel 22, a casa de Israel se tornou como o quê para Deus?",
-        "options": [
-          "Escória",
-          "Ouro puro",
-          "Pedra preciosa",
-          "Trigo bom"
-        ],
-        "answer": 0,
-        "ref": "Ezequiel 22:18"
-      },
-      {
-        "q": "Onde o rei da Babilônia parou para consultar os oráculos?",
-        "options": [
-          "No templo de Bel",
-          "Na encruzilhada",
-          "No rio Eufrates",
-          "No monte Sião"
-        ],
-        "answer": 1,
-        "ref": "Ezequiel 21:21"
-      }
-    ]
-  },
-  {
-    "day": 190,
-    "questions": [
-      {
-        "q": "Na parábola de Ezequiel 23, quem é representada por Oolá?",
-        "options": [
-          "Jerusalém",
-          "Babilônia",
-          "Samaria",
-          "Tiro"
-        ],
-        "answer": 2,
-        "ref": "Ezequiel 23:4"
-      },
-      {
-        "q": "Quais eram os nomes das duas irmãs de Ezequiel 23?",
-        "options": [
-          "Raquel e Lia",
-          "Oolá e Oolibá",
-          "Marta e Maria",
-          "Rute e Orfa"
-        ],
-        "answer": 1,
-        "ref": "Ezequiel 23:4"
-      },
-      {
-        "q": "Na parábola de Ezequiel 24, o que o profeta devia pôr ao fogo?",
-        "options": [
-          "Uma panela",
-          "Um rolo",
-          "Um ídolo",
-          "Uma espada"
-        ],
-        "answer": 0,
-        "ref": "Ezequiel 24:3"
-      },
-      {
-        "q": "O que aconteceu à esposa de Ezequiel, a delícia dos seus olhos?",
-        "options": [
-          "Foi levada cativa",
-          "Ficou doente",
-          "Fugiu para o Egito",
-          "Morreu à tarde"
-        ],
-        "answer": 3,
-        "ref": "Ezequiel 24:16,18"
-      },
-      {
-        "q": "Segundo Ezequiel 26, Tiro se tornaria lugar para enxugar o quê?",
-        "options": [
-          "Roupas",
-          "Peixes",
-          "Redes",
-          "Velas de navio"
-        ],
-        "answer": 2,
-        "ref": "Ezequiel 26:5,14"
-      }
-    ]
-  },
-  {
-    "day": 191,
-    "questions": [
-      {
-        "q": "De onde vieram os cedros usados nos mastros dos navios de Tiro?",
-        "options": [
-          "Do Egito",
-          "De Basã",
-          "Do Líbano",
-          "De Társis"
-        ],
-        "answer": 2,
-        "ref": "Ezequiel 27:5"
-      },
-      {
-        "q": "O que o príncipe de Tiro dizia de si mesmo no seu coração?",
-        "options": [
-          "Eu sou Deus",
-          "Sou um servo",
-          "Sou pobre",
-          "Sou um profeta"
-        ],
-        "answer": 0,
-        "ref": "Ezequiel 28:2"
-      },
-      {
-        "q": "Segundo Ezequiel 28, o príncipe de Tiro se achava mais sábio do que quem?",
-        "options": [
-          "Salomão",
-          "Moisés",
-          "José",
-          "Daniel"
-        ],
-        "answer": 3,
-        "ref": "Ezequiel 28:3"
-      },
-      {
-        "q": "Em Ezequiel 29, o Faraó é chamado de grande o quê, deitado nos rios?",
-        "options": [
-          "Leão",
-          "Crocodilo",
-          "Hipopótamo",
-          "Serpente"
-        ],
-        "answer": 1,
-        "ref": "Ezequiel 29:3"
-      },
-      {
-        "q": "Por quantos anos a terra do Egito ficaria desolada?",
-        "options": [
-          "Setenta",
-          "Sete",
-          "Quarenta",
-          "Cem"
-        ],
-        "answer": 2,
-        "ref": "Ezequiel 29:12"
-      }
-    ]
-  },
-  {
-    "day": 192,
-    "questions": [
-      {
-        "q": "O que o Senhor diz ter quebrado do Faraó, rei do Egito?",
-        "options": [
-          "A coroa",
-          "O trono",
-          "O cetro",
-          "O braço"
-        ],
-        "answer": 3,
-        "ref": "Ezequiel 30:21"
-      },
-      {
-        "q": "Em Ezequiel 31, a Assíria era como qual árvore no Líbano?",
-        "options": [
-          "Um cedro",
-          "Uma palmeira",
-          "Uma oliveira",
-          "Um salgueiro"
-        ],
-        "answer": 0,
-        "ref": "Ezequiel 31:3"
-      },
-      {
-        "q": "O que o atalaia deve fazer quando vê a espada se aproximar?",
-        "options": [
-          "Fugir sozinho",
-          "Fechar as portas",
-          "Tocar a trombeta",
-          "Esconder-se"
-        ],
-        "answer": 2,
-        "ref": "Ezequiel 33:3"
-      },
-      {
-        "q": "Que notícia trouxe o homem que escapou de Jerusalém?",
-        "options": [
-          "O rei voltou",
-          "A cidade caiu",
-          "O templo foi salvo",
-          "A guerra acabou"
-        ],
-        "answer": 1,
-        "ref": "Ezequiel 33:21"
-      },
-      {
-        "q": "Para o povo, Ezequiel era como quem, segundo Ezequiel 33?",
-        "options": [
-          "Quem canta canções de amor",
-          "Um rei poderoso",
-          "Um juiz severo",
-          "Um soldado"
-        ],
-        "answer": 0,
-        "ref": "Ezequiel 33:32"
-      }
-    ]
-  },
-  {
-    "day": 193,
-    "questions": [
-      {
-        "q": "Ai dos pastores de Israel que fazem o quê?",
-        "options": [
-          "Cuidam das ovelhas",
-          "Apascentam a si mesmos",
-          "Buscam as perdidas",
-          "Curam as doentes"
-        ],
-        "answer": 1,
-        "ref": "Ezequiel 34:2"
-      },
-      {
-        "q": "Quem seria o único pastor sobre as ovelhas, segundo Ezequiel 34?",
-        "options": [
-          "Moisés",
-          "Arão",
-          "Meu servo Davi",
-          "Salomão"
-        ],
-        "answer": 2,
-        "ref": "Ezequiel 34:23"
-      },
-      {
-        "q": "Contra qual monte Ezequiel profetizou em Ezequiel 35?",
-        "options": [
-          "Monte Sinai",
-          "Monte Carmelo",
-          "Monte Sião",
-          "Monte Seir"
-        ],
-        "answer": 3,
-        "ref": "Ezequiel 35:2"
-      },
-      {
-        "q": "Deus prometeu dar um coração novo e o que mais novo?",
-        "options": [
-          "Um espírito novo",
-          "Um nome novo",
-          "Um rei novo",
-          "Uma terra nova"
-        ],
-        "answer": 0,
-        "ref": "Ezequiel 36:26"
-      },
-      {
-        "q": "Segundo Ezequiel 36, a terra desolada se tornaria como o quê?",
-        "options": [
-          "Um deserto",
-          "Um mar",
-          "O jardim do Éden",
-          "Uma fortaleza"
-        ],
-        "answer": 2,
-        "ref": "Ezequiel 36:35"
-      }
-    ]
-  },
-  {
-    "day": 194,
-    "questions": [
-      {
-        "q": "De que estava cheio o vale onde o Espírito deixou Ezequiel?",
-        "options": [
-          "Ossos secos",
-          "Pedras",
-          "Água",
-          "Árvores"
-        ],
-        "answer": 0,
-        "ref": "Ezequiel 37:1-2"
-      },
-      {
-        "q": "O que aconteceu quando o espírito entrou nos ossos?",
-        "options": [
-          "Viraram pó",
-          "Viraram pedras",
-          "Viveram e se levantaram, um grande exército",
-          "Nada aconteceu"
-        ],
-        "answer": 2,
-        "ref": "Ezequiel 37:10"
-      },
-      {
-        "q": "O que Ezequiel devia unir para que se tornassem um só na sua mão?",
-        "options": [
-          "Duas pedras",
-          "Dois rolos",
-          "Duas espadas",
-          "Dois pedaços de madeira"
-        ],
-        "answer": 3,
-        "ref": "Ezequiel 37:16-17"
-      },
-      {
-        "q": "Contra quem, da terra de Magogue, Ezequiel profetizou?",
-        "options": [
-          "Faraó",
-          "Gogue",
-          "Nabucodonosor",
-          "Hirão"
-        ],
-        "answer": 1,
-        "ref": "Ezequiel 38:2"
-      },
-      {
-        "q": "Por quantos meses Israel enterraria os mortos de Gogue?",
-        "options": [
-          "Três",
-          "Doze",
-          "Sete",
-          "Quarenta"
-        ],
-        "answer": 2,
-        "ref": "Ezequiel 39:12"
-      }
-    ]
-  },
-  {
-    "day": 195,
-    "questions": [
-      {
-        "q": "Como era a aparência do homem que Ezequiel viu na entrada?",
-        "options": [
-          "Como fogo",
-          "Como ouro",
-          "Como prata",
-          "Como bronze"
-        ],
-        "answer": 3,
-        "ref": "Ezequiel 40:3"
-      },
-      {
-        "q": "O que o homem tinha na mão em Ezequiel 40?",
-        "options": [
-          "Um cordel de linho e uma cana de medir",
-          "Uma espada e um escudo",
-          "Um rolo e uma pena",
-          "Uma chave e uma lâmpada"
-        ],
-        "answer": 0,
-        "ref": "Ezequiel 40:3"
-      },
-      {
-        "q": "Como o homem chamou o lugar de vinte por vinte côvados?",
-        "options": [
-          "Átrio exterior",
-          "Santo dos Santos",
-          "Vestíbulo",
-          "Câmara dos cantores"
-        ],
-        "answer": 1,
-        "ref": "Ezequiel 41:4"
-      },
-      {
-        "q": "O que estava esculpido nas paredes do templo da visão?",
-        "options": [
-          "Leões e touros",
-          "Águias e serpentes",
-          "Querubins e palmeiras",
-          "Estrelas e luas"
-        ],
-        "answer": 2,
-        "ref": "Ezequiel 41:18"
-      },
-      {
-        "q": "Os sacerdotes que guardavam o altar eram filhos de quem?",
-        "options": [
-          "Zadoque",
-          "Eli",
-          "Abiatar",
-          "Finéias"
-        ],
-        "answer": 0,
-        "ref": "Ezequiel 40:46"
-      }
-    ]
-  },
-  {
-    "day": 196,
-    "questions": [
-      {
-        "q": "A voz da glória do Deus de Israel era como o quê?",
-        "options": [
-          "Um trovão distante",
-          "Um sussurro",
-          "Uma trombeta",
-          "O ruído de muitas águas"
-        ],
-        "answer": 3,
-        "ref": "Ezequiel 43:2"
-      },
-      {
-        "q": "Por qual porta a glória do Senhor entrou no templo?",
-        "options": [
-          "Pela do norte",
-          "Pela que se abre para o oriente",
-          "Pela do sul",
-          "Pela do ocidente"
-        ],
-        "answer": 1,
-        "ref": "Ezequiel 43:4"
-      },
-      {
-        "q": "Por que a porta oriental ficaria sempre fechada?",
-        "options": [
-          "Porque estava quebrada",
-          "Por ordem do rei",
-          "Porque o Senhor entrou por ela",
-          "Por causa dos inimigos"
-        ],
-        "answer": 2,
-        "ref": "Ezequiel 44:2"
-      },
-      {
-        "q": "Que vestes os sacerdotes usariam no átrio interior?",
-        "options": [
-          "De linho",
-          "De lã",
-          "De seda",
-          "De couro"
-        ],
-        "answer": 0,
-        "ref": "Ezequiel 44:17"
-      },
-      {
-        "q": "Que festa seria celebrada no dia catorze do primeiro mês?",
-        "options": [
-          "Pentecostes",
-          "Tabernáculos",
-          "Lua Nova",
-          "Páscoa"
-        ],
-        "answer": 3,
-        "ref": "Ezequiel 45:21"
-      }
-    ]
-  },
-  {
-    "day": 197,
-    "questions": [
-      {
-        "q": "As águas que saíam do templo cresceram até se tornar o quê?",
-        "options": [
-          "Um lago parado",
-          "Um rio que não se podia atravessar",
-          "Um poço",
-          "Um pântano"
-        ],
-        "answer": 1,
-        "ref": "Ezequiel 47:5"
-      },
-      {
-        "q": "Para que serviriam as folhas das árvores à margem do rio?",
-        "options": [
-          "Para remédio",
-          "Para fazer cestos",
-          "Para cobrir casas",
-          "Para enfeitar o templo"
-        ],
-        "answer": 0,
-        "ref": "Ezequiel 47:12"
-      },
-      {
-        "q": "Qual seria o nome da cidade, segundo o fim de Ezequiel?",
-        "options": [
-          "Nova Jerusalém",
-          "Cidade de Davi",
-          "Cidade da Paz",
-          "O SENHOR está ali"
-        ],
-        "answer": 3,
-        "ref": "Ezequiel 48:35"
-      },
-      {
-        "q": "O que Daniel pediu para comer e beber durante dez dias?",
-        "options": [
-          "Pão e vinho",
-          "Carne e mel",
-          "Legumes e água",
-          "Frutas e leite"
-        ],
-        "answer": 2,
-        "ref": "Daniel 1:12"
-      },
-      {
-        "q": "Que nome o chefe dos eunucos deu a Daniel?",
-        "options": [
-          "Beltessazar",
-          "Sadraque",
-          "Mesaque",
-          "Abede-Nego"
-        ],
-        "answer": 0,
-        "ref": "Daniel 1:7"
-      }
-    ]
-  },
-  {
-    "day": 198,
-    "questions": [
-      {
-        "q": "De que era a cabeça da estátua do sonho de Nabucodonosor?",
-        "options": [
-          "Prata",
-          "Bronze",
-          "Ferro",
-          "Ouro fino"
-        ],
-        "answer": 3,
-        "ref": "Daniel 2:32"
-      },
-      {
-        "q": "O que feriu e despedaçou a estátua no sonho?",
-        "options": [
-          "Um raio",
-          "Uma pedra cortada sem mãos",
-          "Um exército",
-          "Um terremoto"
-        ],
-        "answer": 1,
-        "ref": "Daniel 2:34"
-      },
-      {
-        "q": "Qual era a altura da estátua de ouro que Nabucodonosor levantou?",
-        "options": [
-          "Sessenta côvados",
-          "Doze côvados",
-          "Cem côvados",
-          "Seis côvados"
-        ],
-        "answer": 0,
-        "ref": "Daniel 3:1"
-      },
-      {
-        "q": "Quantas vezes mais do que o costume a fornalha foi aquecida?",
-        "options": [
-          "Duas",
-          "Três",
-          "Sete",
-          "Dez"
-        ],
-        "answer": 2,
-        "ref": "Daniel 3:19"
-      },
-      {
-        "q": "Quantos homens o rei viu andando soltos no meio do fogo?",
-        "options": [
-          "Três",
-          "Dois",
-          "Cinco",
-          "Quatro"
-        ],
-        "answer": 3,
-        "ref": "Daniel 3:25"
-      }
-    ]
-  },
-  {
-    "day": 199,
-    "questions": [
-      {
-        "q": "No sonho de Daniel 4, o que representava o rei Nabucodonosor?",
-        "options": [
-          "Um leão",
-          "Uma grande árvore",
-          "Uma montanha",
-          "Uma estátua"
-        ],
-        "answer": 1,
-        "ref": "Daniel 4:20-22"
-      },
-      {
-        "q": "O que Nabucodonosor comeu quando foi expulso de entre os homens?",
-        "options": [
-          "Erva como os bois",
-          "Mel silvestre",
-          "Pão do céu",
-          "Peixes do rio"
-        ],
-        "answer": 0,
-        "ref": "Daniel 4:33"
-      },
-      {
-        "q": "O que apareceu escrevendo na parede durante o banquete de Belsazar?",
-        "options": [
-          "Um anjo",
-          "Uma luz forte",
-          "Os dedos de uma mão humana",
-          "Uma nuvem"
-        ],
-        "answer": 2,
-        "ref": "Daniel 5:5"
-      },
-      {
-        "q": "A quem foi dado o reino dividido de Belsazar?",
-        "options": [
-          "Aos egípcios",
-          "Aos assírios",
-          "Aos gregos",
-          "Aos medos e aos persas"
-        ],
-        "answer": 3,
-        "ref": "Daniel 5:28"
-      },
-      {
-        "q": "Quantas vezes por dia Daniel se ajoelhava para orar?",
+        "q": "Quantas vezes ao dia Daniel orava, segundo Daniel 6:10?",
         "options": [
           "Uma",
           "Três",
@@ -3656,6 +1414,2248 @@
         ],
         "answer": 1,
         "ref": "Daniel 6:10"
+      },
+      {
+        "q": "Para qual cidade estavam voltadas as janelas do quarto de Daniel?",
+        "options": [
+          "Belém",
+          "Babilônia",
+          "Nínive",
+          "Jerusalém"
+        ],
+        "answer": 3,
+        "ref": "Daniel 6:10"
+      },
+      {
+        "q": "Segundo Daniel 6:22, quem fechou a boca dos leões?",
+        "options": [
+          "Os guardas",
+          "Os sátrapas",
+          "O anjo de Deus",
+          "O rei Dario"
+        ],
+        "answer": 2,
+        "ref": "Daniel 6:22"
+      }
+    ]
+  },
+  {
+    "day": 163,
+    "questions": [
+      {
+        "q": "Quantos grandes animais subiam do mar na visão de Daniel 7?",
+        "options": [
+          "Dois",
+          "Sete",
+          "Quatro",
+          "Três"
+        ],
+        "answer": 2,
+        "ref": "Daniel 7:3"
+      },
+      {
+        "q": "Como era o primeiro animal de Daniel 7?",
+        "options": [
+          "Um leão com asas de águia",
+          "Um urso com costelas",
+          "Um bode",
+          "Um leopardo com asas"
+        ],
+        "answer": 0,
+        "ref": "Daniel 7:4"
+      },
+      {
+        "q": "O que o urso trazia na boca, segundo Daniel 7:5?",
+        "options": [
+          "Dez chifres",
+          "Três costelas",
+          "Um peixe",
+          "Uma coroa"
+        ],
+        "answer": 1,
+        "ref": "Daniel 7:5"
+      },
+      {
+        "q": "Quantos chifres tinha o quarto animal?",
+        "options": [
+          "Sete",
+          "Quatro",
+          "Dois",
+          "Dez"
+        ],
+        "answer": 3,
+        "ref": "Daniel 7:7"
+      },
+      {
+        "q": "Como era a veste do Ancião de Dias?",
+        "options": [
+          "Dourada como o sol",
+          "Branca como a neve",
+          "Azul como o céu",
+          "Vermelha como sangue"
+        ],
+        "answer": 1,
+        "ref": "Daniel 7:9"
+      }
+    ]
+  },
+  {
+    "day": 164,
+    "questions": [
+      {
+        "q": "Junto a qual rio Daniel estava na visão de Daniel 8?",
+        "options": [
+          "Ulai",
+          "Eufrates",
+          "Jordão",
+          "Nilo"
+        ],
+        "answer": 0,
+        "ref": "Daniel 8:2"
+      },
+      {
+        "q": "Quantos chifres tinha o carneiro da visão?",
+        "options": [
+          "Quatro",
+          "Um",
+          "Dois",
+          "Dez"
+        ],
+        "answer": 2,
+        "ref": "Daniel 8:3"
+      },
+      {
+        "q": "Onde estava o chifre notável do bode?",
+        "options": [
+          "Nos pés",
+          "Nas costas",
+          "Na cauda",
+          "Entre os olhos"
+        ],
+        "answer": 3,
+        "ref": "Daniel 8:5"
+      },
+      {
+        "q": "Segundo Daniel 8:14, até quantas tardes e manhãs, e o santuário seria purificado?",
+        "options": [
+          "Duas mil e trezentas",
+          "Mil duzentas e sessenta",
+          "Quatrocentas",
+          "Setenta"
+        ],
+        "answer": 0,
+        "ref": "Daniel 8:14"
+      },
+      {
+        "q": "Quem foi chamado para explicar a visão a Daniel?",
+        "options": [
+          "Miguel",
+          "Elias",
+          "Moisés",
+          "Gabriel"
+        ],
+        "answer": 3,
+        "ref": "Daniel 8:16"
+      }
+    ]
+  },
+  {
+    "day": 165,
+    "questions": [
+      {
+        "q": "Por qual profeta Daniel entendeu que seriam setenta anos de assolação?",
+        "options": [
+          "Ezequiel",
+          "Jeremias",
+          "Jonas",
+          "Isaías"
+        ],
+        "answer": 1,
+        "ref": "Daniel 9:2"
+      },
+      {
+        "q": "Como Daniel buscou o Senhor, segundo Daniel 9:3?",
+        "options": [
+          "Com batalhas",
+          "Com festas e música",
+          "Com oração, súplicas e jejum",
+          "Com ofertas de ouro"
+        ],
+        "answer": 2,
+        "ref": "Daniel 9:3"
+      },
+      {
+        "q": "Em que Daniel confiava ao orar, segundo Daniel 9:18?",
+        "options": [
+          "Nas suas próprias justiças",
+          "Nos sábios da Babilônia",
+          "Na força do rei",
+          "Nas muitas misericórdias de Deus"
+        ],
+        "answer": 3,
+        "ref": "Daniel 9:18"
+      },
+      {
+        "q": "Quem veio voando e tocou Daniel enquanto ele orava?",
+        "options": [
+          "Gabriel",
+          "Um querubim",
+          "Elias",
+          "Miguel"
+        ],
+        "answer": 0,
+        "ref": "Daniel 9:21"
+      },
+      {
+        "q": "Quantas semanas estavam determinadas sobre o povo, segundo Daniel 9:24?",
+        "options": [
+          "Doze",
+          "Sete",
+          "Setenta",
+          "Quarenta"
+        ],
+        "answer": 2,
+        "ref": "Daniel 9:24"
+      }
+    ]
+  },
+  {
+    "day": 166,
+    "questions": [
+      {
+        "q": "Por quanto tempo Daniel pranteou, segundo Daniel 10:2?",
+        "options": [
+          "Um ano",
+          "Três semanas",
+          "Sete dias",
+          "Quarenta dias"
+        ],
+        "answer": 1,
+        "ref": "Daniel 10:2"
+      },
+      {
+        "q": "À borda de qual rio Daniel estava em Daniel 10:4?",
+        "options": [
+          "Tigre",
+          "Jordão",
+          "Ulai",
+          "Nilo"
+        ],
+        "answer": 0,
+        "ref": "Daniel 10:4"
+      },
+      {
+        "q": "Como era o rosto do homem vestido de linho?",
+        "options": [
+          "Era escuro como a noite",
+          "Reluzia como um relâmpago",
+          "Era igual ao de um leão",
+          "Era coberto por um véu"
+        ],
+        "answer": 1,
+        "ref": "Daniel 10:6"
+      },
+      {
+        "q": "Por quantos dias o príncipe da Pérsia se opôs ao mensageiro?",
+        "options": [
+          "Três",
+          "Sete",
+          "Vinte e um",
+          "Quarenta"
+        ],
+        "answer": 2,
+        "ref": "Daniel 10:13"
+      },
+      {
+        "q": "Quem veio ajudar o mensageiro contra o príncipe da Pérsia?",
+        "options": [
+          "Gabriel",
+          "Dario",
+          "Ciro",
+          "Miguel"
+        ],
+        "answer": 3,
+        "ref": "Daniel 10:13"
+      }
+    ]
+  },
+  {
+    "day": 167,
+    "questions": [
+      {
+        "q": "Segundo Daniel 11:2, quantos reis ainda se levantariam na Pérsia antes do quarto?",
+        "options": [
+          "Sete",
+          "Três",
+          "Dez",
+          "Dois"
+        ],
+        "answer": 1,
+        "ref": "Daniel 11:2"
+      },
+      {
+        "q": "Para onde o reino do rei poderoso seria repartido, segundo Daniel 11:4?",
+        "options": [
+          "Para um só herdeiro",
+          "Para o Egito apenas",
+          "Para seus filhos",
+          "Para os quatro ventos do céu"
+        ],
+        "answer": 3,
+        "ref": "Daniel 11:4"
+      },
+      {
+        "q": "Segundo Daniel 11:8, para onde o rei do Sul levaria os deuses e tesouros?",
+        "options": [
+          "Para a Pérsia",
+          "Para Jerusalém",
+          "Para o Egito",
+          "Para Roma"
+        ],
+        "answer": 2,
+        "ref": "Daniel 11:8"
+      },
+      {
+        "q": "Segundo Daniel 11:32, o povo que conhece ao seu Deus se tornará o quê?",
+        "options": [
+          "Forte",
+          "Escondido",
+          "Fraco",
+          "Esquecido"
+        ],
+        "answer": 0,
+        "ref": "Daniel 11:32"
+      },
+      {
+        "q": "Quais nações escaparão do poder do rei, segundo Daniel 11:41?",
+        "options": [
+          "Pérsia e Grécia",
+          "Egito, Líbia e Etiópia",
+          "Edom, Moabe e Amom",
+          "Assíria e Babilônia"
+        ],
+        "answer": 2,
+        "ref": "Daniel 11:41"
+      }
+    ]
+  },
+  {
+    "day": 168,
+    "questions": [
+      {
+        "q": "Quem se levantará naquele tempo, segundo Daniel 12:1?",
+        "options": [
+          "Gabriel, o mensageiro",
+          "Miguel, o grande príncipe",
+          "O rei do Sul",
+          "O rei do Norte"
+        ],
+        "answer": 1,
+        "ref": "Daniel 12:1"
+      },
+      {
+        "q": "Quem será salvo, segundo Daniel 12:1?",
+        "options": [
+          "Quem for rico",
+          "Quem morar na cidade",
+          "Quem for forte",
+          "Quem estiver inscrito no livro"
+        ],
+        "answer": 3,
+        "ref": "Daniel 12:1"
+      },
+      {
+        "q": "Os que conduzem muitos à justiça brilharão como o quê?",
+        "options": [
+          "As estrelas",
+          "A lua cheia",
+          "O fogo",
+          "Uma lâmpada"
+        ],
+        "answer": 0,
+        "ref": "Daniel 12:3"
+      },
+      {
+        "q": "O que Daniel deveria fazer com o livro até o tempo do fim?",
+        "options": [
+          "Rasgá-lo",
+          "Queimá-lo",
+          "Vendê-lo",
+          "Selá-lo"
+        ],
+        "answer": 3,
+        "ref": "Daniel 12:4"
+      },
+      {
+        "q": "Segundo Daniel 12:13, o que Daniel faria ao fim dos dias?",
+        "options": [
+          "Escreveria outro livro",
+          "Se levantaria para receber a herança",
+          "Viajaria ao Egito",
+          "Seria rei da Pérsia"
+        ],
+        "answer": 1,
+        "ref": "Daniel 12:13"
+      }
+    ]
+  },
+  {
+    "day": 169,
+    "questions": [
+      {
+        "q": "Onde deveria ser tocada a trombeta, segundo Joel 2:1?",
+        "options": [
+          "Em Sião",
+          "Na Babilônia",
+          "Em Nínive",
+          "No Egito"
+        ],
+        "answer": 0,
+        "ref": "Joel 2:1"
+      },
+      {
+        "q": "Segundo Joel 2:13, o que devemos rasgar?",
+        "options": [
+          "As roupas",
+          "As tendas",
+          "O coração, e não as vestes",
+          "Os livros"
+        ],
+        "answer": 2,
+        "ref": "Joel 2:13"
+      },
+      {
+        "q": "Segundo Joel 2:19, o que o Senhor enviaria ao povo?",
+        "options": [
+          "Cavalos e carros",
+          "Ouro e prata",
+          "Espadas e escudos",
+          "Cereal, vinho e azeite"
+        ],
+        "answer": 3,
+        "ref": "Joel 2:19"
+      },
+      {
+        "q": "Segundo Joel 2:28, sobre quem Deus derramaria o seu Espírito?",
+        "options": [
+          "Só sobre os reis",
+          "Só sobre os anjos",
+          "Sobre toda a carne",
+          "Só sobre os sacerdotes"
+        ],
+        "answer": 2,
+        "ref": "Joel 2:28"
+      },
+      {
+        "q": "Segundo Joel 2:32, quem será salvo?",
+        "options": [
+          "Somente os ricos",
+          "Todo aquele que invocar o nome do Senhor",
+          "Somente os guerreiros",
+          "Somente os sábios"
+        ],
+        "answer": 1,
+        "ref": "Joel 2:32"
+      }
+    ]
+  },
+  {
+    "day": 170,
+    "questions": [
+      {
+        "q": "O que o Senhor mostrou a Amós em Amós 8:1?",
+        "options": [
+          "Um cesto de frutos do verão",
+          "Um prumo",
+          "Uma vara de amendoeira",
+          "Um rolo voador"
+        ],
+        "answer": 0,
+        "ref": "Amós 8:1"
+      },
+      {
+        "q": "Segundo Amós 8:6, por que preço compravam os necessitados?",
+        "options": [
+          "Um par de sandálias",
+          "Um saco de ouro",
+          "Um camelo",
+          "Uma ovelha"
+        ],
+        "answer": 0,
+        "ref": "Amós 8:6"
+      },
+      {
+        "q": "Segundo Amós 8:9, o que Deus faria com o sol naquele dia?",
+        "options": [
+          "Faria brilhar à noite",
+          "Faria pôr-se ao meio-dia",
+          "Faria parar no céu",
+          "Faria voltar atrás"
+        ],
+        "answer": 1,
+        "ref": "Amós 8:9"
+      },
+      {
+        "q": "De que seria a fome enviada sobre a terra, segundo Amós 8:11?",
+        "options": [
+          "De pão",
+          "De carne",
+          "De água",
+          "De ouvir as palavras do Senhor"
+        ],
+        "answer": 3,
+        "ref": "Amós 8:11"
+      },
+      {
+        "q": "Segundo Amós 8:13, quem desmaiaria de sede?",
+        "options": [
+          "Os sacerdotes",
+          "Os reis e príncipes",
+          "As virgens formosas e os jovens",
+          "Os animais do campo"
+        ],
+        "answer": 2,
+        "ref": "Amós 8:13"
+      }
+    ]
+  },
+  {
+    "day": 171,
+    "questions": [
+      {
+        "q": "Para qual cidade Deus mandou Jonas ir?",
+        "options": [
+          "Babilônia",
+          "Jope",
+          "Társis",
+          "Nínive"
+        ],
+        "answer": 3,
+        "ref": "Jonas 1:2"
+      },
+      {
+        "q": "Para onde Jonas tentou fugir?",
+        "options": [
+          "Jerusalém",
+          "Egito",
+          "Társis",
+          "Damasco"
+        ],
+        "answer": 2,
+        "ref": "Jonas 1:3"
+      },
+      {
+        "q": "O que Jonas fazia no porão durante a tempestade?",
+        "options": [
+          "Dormia profundamente",
+          "Comia",
+          "Ajudava a remar",
+          "Orava em voz alta"
+        ],
+        "answer": 0,
+        "ref": "Jonas 1:5"
+      },
+      {
+        "q": "Quanto tempo Jonas ficou no ventre do grande peixe?",
+        "options": [
+          "Quarenta dias",
+          "Três dias e três noites",
+          "Um dia",
+          "Sete dias"
+        ],
+        "answer": 1,
+        "ref": "Jonas 1:17"
+      },
+      {
+        "q": "De onde Jonas orou ao Senhor, segundo Jonas 2:1?",
+        "options": [
+          "Da praia",
+          "Do ventre do peixe",
+          "Do templo",
+          "Do alto do navio"
+        ],
+        "answer": 1,
+        "ref": "Jonas 2:1"
+      }
+    ]
+  },
+  {
+    "day": 172,
+    "questions": [
+      {
+        "q": "Quantos dias Jonas anunciou que faltavam para Nínive ser subvertida?",
+        "options": [
+          "Sete",
+          "Três",
+          "Quarenta",
+          "Cem"
+        ],
+        "answer": 2,
+        "ref": "Jonas 3:4"
+      },
+      {
+        "q": "O que fizeram os habitantes de Nínive ao ouvir Jonas?",
+        "options": [
+          "Creram em Deus e jejuaram",
+          "Riram dele",
+          "Prenderam Jonas",
+          "Fugiram da cidade"
+        ],
+        "answer": 0,
+        "ref": "Jonas 3:5"
+      },
+      {
+        "q": "Onde o rei de Nínive se sentou, segundo Jonas 3:6?",
+        "options": [
+          "Num camelo",
+          "No portão",
+          "Num trono de ouro",
+          "Sobre cinzas"
+        ],
+        "answer": 3,
+        "ref": "Jonas 3:6"
+      },
+      {
+        "q": "O que Deus enviou para ferir a planta que dava sombra a Jonas?",
+        "options": [
+          "Um raio",
+          "Uma cabra",
+          "Um gafanhoto",
+          "Um verme"
+        ],
+        "answer": 3,
+        "ref": "Jonas 4:7"
+      },
+      {
+        "q": "Quantas pessoas havia em Nínive, segundo Jonas 4:11?",
+        "options": [
+          "Um milhão",
+          "Dez mil",
+          "Mais de cento e vinte mil",
+          "Mil"
+        ],
+        "answer": 2,
+        "ref": "Jonas 4:11"
+      }
+    ]
+  },
+  {
+    "day": 173,
+    "questions": [
+      {
+        "q": "Segundo Miquéias 4:2, de onde procederá a lei?",
+        "options": [
+          "De Sião",
+          "Do Egito",
+          "De Babilônia",
+          "De Nínive"
+        ],
+        "answer": 0,
+        "ref": "Miquéias 4:2"
+      },
+      {
+        "q": "Em Miquéias 4:3, em que as espadas serão convertidas?",
+        "options": [
+          "Coroas",
+          "Relhas de arados",
+          "Escudos",
+          "Lanças"
+        ],
+        "answer": 1,
+        "ref": "Miquéias 4:3"
+      },
+      {
+        "q": "Debaixo de que cada um se sentará, segundo Miquéias 4:4?",
+        "options": [
+          "De uma ponte",
+          "De uma tenda",
+          "Da sua videira e figueira",
+          "De um palácio"
+        ],
+        "answer": 2,
+        "ref": "Miquéias 4:4"
+      },
+      {
+        "q": "Segundo Miquéias 4:7, onde o Senhor reinará?",
+        "options": [
+          "No monte Sião",
+          "No monte Carmelo",
+          "No Egito",
+          "Em Nínive"
+        ],
+        "answer": 0,
+        "ref": "Miquéias 4:7"
+      },
+      {
+        "q": "Segundo Miquéias 4:10, onde a filha de Sião seria libertada?",
+        "options": [
+          "Em Moabe",
+          "No Egito",
+          "Em Edom",
+          "Na Babilônia"
+        ],
+        "answer": 3,
+        "ref": "Miquéias 4:10"
+      }
+    ]
+  },
+  {
+    "day": 174,
+    "questions": [
+      {
+        "q": "Quem era o governador de Judá em Ageu 2?",
+        "options": [
+          "Josué",
+          "Zorobabel",
+          "Esdras",
+          "Neemias"
+        ],
+        "answer": 1,
+        "ref": "Ageu 2:2"
+      },
+      {
+        "q": "Quem era o sumo sacerdote em Ageu 2:2?",
+        "options": [
+          "Josué, filho de Jozadaque",
+          "Zacarias",
+          "Eli",
+          "Arão"
+        ],
+        "answer": 0,
+        "ref": "Ageu 2:2"
+      },
+      {
+        "q": "Segundo Ageu 2:8, de quem são a prata e o ouro?",
+        "options": [
+          "Do rei Dario",
+          "Do Senhor dos Exércitos",
+          "Do povo",
+          "Dos sacerdotes"
+        ],
+        "answer": 1,
+        "ref": "Ageu 2:8"
+      },
+      {
+        "q": "Segundo Ageu 2:9, como seria a glória da última casa?",
+        "options": [
+          "Menor que a da primeira",
+          "Sem glória nenhuma",
+          "Maior do que a da primeira",
+          "Igual à da primeira"
+        ],
+        "answer": 2,
+        "ref": "Ageu 2:9"
+      },
+      {
+        "q": "Segundo Ageu 2:23, Deus faria Zorobabel como o quê?",
+        "options": [
+          "Uma espada",
+          "Uma torre",
+          "Uma coroa",
+          "Um anel de selar"
+        ],
+        "answer": 3,
+        "ref": "Ageu 2:23"
+      }
+    ]
+  },
+  {
+    "day": 175,
+    "questions": [
+      {
+        "q": "Que objeto de ouro o profeta viu em Zacarias 4?",
+        "options": [
+          "Uma mesa",
+          "Um candelabro",
+          "Uma coroa",
+          "Uma arca"
+        ],
+        "answer": 1,
+        "ref": "Zacarias 4:2"
+      },
+      {
+        "q": "Quantas lâmpadas tinha o candelabro?",
+        "options": [
+          "Três",
+          "Dez",
+          "Doze",
+          "Sete"
+        ],
+        "answer": 3,
+        "ref": "Zacarias 4:2"
+      },
+      {
+        "q": "Que árvores estavam ao lado do candelabro?",
+        "options": [
+          "Duas oliveiras",
+          "Duas figueiras",
+          "Dois cedros",
+          "Duas palmeiras"
+        ],
+        "answer": 0,
+        "ref": "Zacarias 4:3"
+      },
+      {
+        "q": "Segundo Zacarias 4:6, a obra seria feita não por força nem por poder, mas pelo quê?",
+        "options": [
+          "Pelo exército",
+          "Pela sabedoria humana",
+          "Pelo Espírito do Senhor",
+          "Pelo ouro do rei"
+        ],
+        "answer": 2,
+        "ref": "Zacarias 4:6"
+      },
+      {
+        "q": "Segundo Zacarias 4:9, quem lançou os fundamentos da casa e a completaria?",
+        "options": [
+          "Ageu",
+          "Salomão",
+          "Zorobabel",
+          "Davi"
+        ],
+        "answer": 2,
+        "ref": "Zacarias 4:9"
+      }
+    ]
+  },
+  {
+    "day": 176,
+    "questions": [
+      {
+        "q": "Segundo Malaquias 3:6, o que o Senhor diz sobre si mesmo?",
+        "options": [
+          "Eu durmo",
+          "Eu, o Senhor, não mudo",
+          "Eu me canso",
+          "Eu esqueço"
+        ],
+        "answer": 1,
+        "ref": "Malaquias 3:6"
+      },
+      {
+        "q": "Em que o povo estava roubando a Deus, segundo Malaquias 3:8?",
+        "options": [
+          "Nos animais do campo",
+          "Nas casas",
+          "Nas roupas",
+          "Nos dízimos e nas ofertas"
+        ],
+        "answer": 3,
+        "ref": "Malaquias 3:8"
+      },
+      {
+        "q": "O que Deus promete abrir para quem traz os dízimos?",
+        "options": [
+          "As janelas do céu",
+          "Os portões da cidade",
+          "Os celeiros do rei",
+          "As portas do templo"
+        ],
+        "answer": 0,
+        "ref": "Malaquias 3:10"
+      },
+      {
+        "q": "Segundo Malaquias 4:2, os que temem o nome do Senhor saltarão como o quê?",
+        "options": [
+          "Peixes no rio",
+          "Cervos no monte",
+          "Pássaros no céu",
+          "Bezerros soltos da estrebaria"
+        ],
+        "answer": 3,
+        "ref": "Malaquias 4:2"
+      },
+      {
+        "q": "Qual profeta Deus enviaria antes do grande Dia do Senhor?",
+        "options": [
+          "Elias",
+          "Eliseu",
+          "Jeremias",
+          "Jonas"
+        ],
+        "answer": 0,
+        "ref": "Malaquias 4:5"
+      }
+    ]
+  },
+  {
+    "day": 177,
+    "questions": [
+      {
+        "q": "Quem era o marido de Maria, segundo Mateus 1:16?",
+        "options": [
+          "José de Arimateia",
+          "Zacarias",
+          "José",
+          "Simeão"
+        ],
+        "answer": 2,
+        "ref": "Mateus 1:16"
+      },
+      {
+        "q": "Que nome o anjo mandou José dar ao menino?",
+        "options": [
+          "Davi",
+          "Jesus",
+          "Emanuel",
+          "João"
+        ],
+        "answer": 1,
+        "ref": "Mateus 1:21"
+      },
+      {
+        "q": "O que quer dizer o nome Emanuel?",
+        "options": [
+          "Príncipe da paz",
+          "Deus conosco",
+          "Deus é forte",
+          "Filho de Davi"
+        ],
+        "answer": 1,
+        "ref": "Mateus 1:23"
+      },
+      {
+        "q": "Que presentes os magos ofereceram ao menino?",
+        "options": [
+          "Ovelhas e cabritos",
+          "Roupas e sandálias",
+          "Prata, pão e vinho",
+          "Ouro, incenso e mirra"
+        ],
+        "answer": 3,
+        "ref": "Mateus 2:11"
+      },
+      {
+        "q": "Para onde José fugiu com o menino e sua mãe?",
+        "options": [
+          "Egito",
+          "Roma",
+          "Nínive",
+          "Babilônia"
+        ],
+        "answer": 0,
+        "ref": "Mateus 2:14"
+      }
+    ]
+  },
+  {
+    "day": 178,
+    "questions": [
+      {
+        "q": "Qual era a alimentação de João Batista?",
+        "options": [
+          "Frutas e leite",
+          "Pão e peixe",
+          "Gafanhotos e mel silvestre",
+          "Carne e vinho"
+        ],
+        "answer": 2,
+        "ref": "Mateus 3:4"
+      },
+      {
+        "q": "Em qual rio João batizava o povo?",
+        "options": [
+          "Nilo",
+          "Jordão",
+          "Tigre",
+          "Eufrates"
+        ],
+        "answer": 1,
+        "ref": "Mateus 3:6"
+      },
+      {
+        "q": "Como o Espírito de Deus desceu sobre Jesus no batismo?",
+        "options": [
+          "Como fogo",
+          "Como uma águia",
+          "Como uma nuvem",
+          "Como uma pomba"
+        ],
+        "answer": 3,
+        "ref": "Mateus 3:16"
+      },
+      {
+        "q": "Por quantos dias e noites Jesus jejuou no deserto?",
+        "options": [
+          "Três",
+          "Doze",
+          "Quarenta",
+          "Sete"
+        ],
+        "answer": 2,
+        "ref": "Mateus 4:2"
+      },
+      {
+        "q": "Qual era a profissão de Pedro e André?",
+        "options": [
+          "Pescadores",
+          "Pastores",
+          "Carpinteiros",
+          "Cobradores de impostos"
+        ],
+        "answer": 0,
+        "ref": "Mateus 4:18"
+      }
+    ]
+  },
+  {
+    "day": 179,
+    "questions": [
+      {
+        "q": "Segundo Mateus 5:5, os mansos herdarão o quê?",
+        "options": [
+          "A terra",
+          "O mar",
+          "O ouro",
+          "O templo"
+        ],
+        "answer": 0,
+        "ref": "Mateus 5:5"
+      },
+      {
+        "q": "Segundo Mateus 5:9, como serão chamados os pacificadores?",
+        "options": [
+          "Profetas",
+          "Reis da terra",
+          "Sábios",
+          "Filhos de Deus"
+        ],
+        "answer": 3,
+        "ref": "Mateus 5:9"
+      },
+      {
+        "q": "Em Mateus 5:13, Jesus diz que somos o quê da terra?",
+        "options": [
+          "A pedra",
+          "O fogo",
+          "O sal",
+          "O pão"
+        ],
+        "answer": 2,
+        "ref": "Mateus 5:13"
+      },
+      {
+        "q": "Segundo Mateus 5:41, se alguém te forçar a andar uma milha, vá quantas?",
+        "options": [
+          "Três",
+          "Duas",
+          "Dez",
+          "Uma"
+        ],
+        "answer": 1,
+        "ref": "Mateus 5:41"
+      },
+      {
+        "q": "O que Jesus manda fazer pelos que nos perseguem, em Mateus 5:44?",
+        "options": [
+          "Esquecê-los",
+          "Fugir deles",
+          "Orar por eles",
+          "Vingar-se"
+        ],
+        "answer": 2,
+        "ref": "Mateus 5:44"
+      }
+    ]
+  },
+  {
+    "day": 180,
+    "questions": [
+      {
+        "q": "Ao dar esmola, o que a mão esquerda não deve saber?",
+        "options": [
+          "O que faz a mão direita",
+          "Quem nos viu",
+          "Quanto dinheiro temos",
+          "O nome do pobre"
+        ],
+        "answer": 0,
+        "ref": "Mateus 6:3"
+      },
+      {
+        "q": "Segundo Mateus 6:6, onde devemos entrar para orar?",
+        "options": [
+          "Na esquina",
+          "No nosso quarto",
+          "Na praça",
+          "No mercado"
+        ],
+        "answer": 1,
+        "ref": "Mateus 6:6"
+      },
+      {
+        "q": "Como começa a oração que Jesus ensinou?",
+        "options": [
+          "Ó Rei dos reis",
+          "Senhor, meu pastor",
+          "Deus de Abraão",
+          "Pai nosso, que estás nos céus"
+        ],
+        "answer": 3,
+        "ref": "Mateus 6:9"
+      },
+      {
+        "q": "Onde devemos ajuntar tesouros, segundo Mateus 6:20?",
+        "options": [
+          "Na terra",
+          "Debaixo da cama",
+          "No banco",
+          "No céu"
+        ],
+        "answer": 3,
+        "ref": "Mateus 6:20"
+      },
+      {
+        "q": "Segundo Mateus 6:33, o que devemos buscar em primeiro lugar?",
+        "options": [
+          "A comida",
+          "As riquezas",
+          "O reino de Deus e a sua justiça",
+          "As roupas"
+        ],
+        "answer": 2,
+        "ref": "Mateus 6:33"
+      }
+    ]
+  },
+  {
+    "day": 181,
+    "questions": [
+      {
+        "q": "Em Mateus 7:3, o que há no olho do irmão e o que há no nosso?",
+        "options": [
+          "Pedra e areia",
+          "Argueiro e trave",
+          "Água e fogo",
+          "Luz e trevas"
+        ],
+        "answer": 1,
+        "ref": "Mateus 7:3"
+      },
+      {
+        "q": "Segundo Mateus 7:13-14, qual porta leva à vida?",
+        "options": [
+          "A porta estreita",
+          "A porta de ouro",
+          "A porta do palácio",
+          "A porta larga"
+        ],
+        "answer": 0,
+        "ref": "Mateus 7:14"
+      },
+      {
+        "q": "Onde o homem prudente edificou sua casa?",
+        "options": [
+          "Sobre a rocha",
+          "Sobre a areia",
+          "No vale",
+          "Na praia"
+        ],
+        "answer": 0,
+        "ref": "Mateus 7:24"
+      },
+      {
+        "q": "Quem disse a Jesus 'Senhor, não sou digno de que entres em minha casa'?",
+        "options": [
+          "Um leproso",
+          "Um escriba",
+          "Um centurião",
+          "Pedro"
+        ],
+        "answer": 2,
+        "ref": "Mateus 8:8"
+      },
+      {
+        "q": "Para onde foram os demônios que Jesus expulsou dos dois endemoniados?",
+        "options": [
+          "Para o templo",
+          "Para um rebanho de ovelhas",
+          "Para o deserto",
+          "Para uma manada de porcos"
+        ],
+        "answer": 3,
+        "ref": "Mateus 8:32"
+      }
+    ]
+  },
+  {
+    "day": 182,
+    "questions": [
+      {
+        "q": "Onde estava Mateus quando Jesus o chamou?",
+        "options": [
+          "Pescando no mar",
+          "Sentado na coletoria",
+          "No campo",
+          "No templo"
+        ],
+        "answer": 1,
+        "ref": "Mateus 9:9"
+      },
+      {
+        "q": "Segundo Mateus 9:12, quem precisa de médico?",
+        "options": [
+          "Os fariseus",
+          "Os doentes",
+          "Os ricos",
+          "Os sãos"
+        ],
+        "answer": 1,
+        "ref": "Mateus 9:12"
+      },
+      {
+        "q": "Há quantos anos a mulher que tocou a veste de Jesus estava doente?",
+        "options": [
+          "Dois",
+          "Cinco",
+          "Trinta",
+          "Doze"
+        ],
+        "answer": 3,
+        "ref": "Mateus 9:20"
+      },
+      {
+        "q": "O que Jesus disse sobre a filha do chefe da sinagoga?",
+        "options": [
+          "Vai ficar doente",
+          "Precisa de remédio",
+          "Não está morta, mas dormindo",
+          "Já está no céu"
+        ],
+        "answer": 2,
+        "ref": "Mateus 9:24"
+      },
+      {
+        "q": "Segundo Mateus 9:37, a colheita é grande, mas o que é pouco?",
+        "options": [
+          "Os trabalhadores",
+          "A chuva",
+          "As sementes",
+          "Os campos"
+        ],
+        "answer": 0,
+        "ref": "Mateus 9:37"
+      }
+    ]
+  },
+  {
+    "day": 183,
+    "questions": [
+      {
+        "q": "Quantos discípulos Jesus chamou e enviou em Mateus 10?",
+        "options": [
+          "Setenta",
+          "Doze",
+          "Sete",
+          "Três"
+        ],
+        "answer": 1,
+        "ref": "Mateus 10:1"
+      },
+      {
+        "q": "Qual discípulo é chamado de 'o publicano' em Mateus 10:3?",
+        "options": [
+          "Tomé",
+          "Filipe",
+          "André",
+          "Mateus"
+        ],
+        "answer": 3,
+        "ref": "Mateus 10:3"
+      },
+      {
+        "q": "Segundo Mateus 10:16, como Jesus enviou os discípulos?",
+        "options": [
+          "Como ovelhas no meio de lobos",
+          "Como leões fortes",
+          "Como reis em carros",
+          "Como soldados armados"
+        ],
+        "answer": 0,
+        "ref": "Mateus 10:16"
+      },
+      {
+        "q": "Segundo Mateus 10:30, o que está contado em nossa cabeça?",
+        "options": [
+          "As palavras",
+          "Os dias de vida",
+          "Todos os cabelos",
+          "Os pensamentos maus"
+        ],
+        "answer": 2,
+        "ref": "Mateus 10:30"
+      },
+      {
+        "q": "Quem der um copo de quê a um pequenino não perderá a recompensa?",
+        "options": [
+          "Leite",
+          "Azeite",
+          "Água fria",
+          "Vinho"
+        ],
+        "answer": 2,
+        "ref": "Mateus 10:42"
+      }
+    ]
+  },
+  {
+    "day": 184,
+    "questions": [
+      {
+        "q": "Onde estava João quando enviou discípulos a Jesus?",
+        "options": [
+          "No rio Jordão",
+          "No cárcere",
+          "No templo",
+          "No deserto"
+        ],
+        "answer": 1,
+        "ref": "Mateus 11:2"
+      },
+      {
+        "q": "O que Jesus mandou dizer a João, segundo Mateus 11:5?",
+        "options": [
+          "Que deveria fugir",
+          "Que esperasse outro",
+          "Que ele seria rei",
+          "Os cegos veem e os coxos andam"
+        ],
+        "answer": 3,
+        "ref": "Mateus 11:5"
+      },
+      {
+        "q": "Segundo Mateus 11:14, João é o quê que estava para vir?",
+        "options": [
+          "O Elias",
+          "O Davi",
+          "O Moisés",
+          "O Salomão"
+        ],
+        "answer": 0,
+        "ref": "Mateus 11:14"
+      },
+      {
+        "q": "Quais cidades Jesus reprovou em Mateus 11:21?",
+        "options": [
+          "Sodoma e Gomorra",
+          "Corazim e Betsaida",
+          "Tiro e Sidom",
+          "Nínive e Babilônia"
+        ],
+        "answer": 1,
+        "ref": "Mateus 11:21"
+      },
+      {
+        "q": "Segundo Mateus 11:30, como é o jugo de Jesus?",
+        "options": [
+          "Duro",
+          "Áspero",
+          "Suave",
+          "Pesado"
+        ],
+        "answer": 2,
+        "ref": "Mateus 11:30"
+      }
+    ]
+  },
+  {
+    "day": 185,
+    "questions": [
+      {
+        "q": "O que os discípulos colheram no sábado, em Mateus 12:1?",
+        "options": [
+          "Espigas",
+          "Azeitonas",
+          "Uvas",
+          "Figos"
+        ],
+        "answer": 0,
+        "ref": "Mateus 12:1"
+      },
+      {
+        "q": "Segundo Mateus 12:8, o Filho do Homem é Senhor do quê?",
+        "options": [
+          "Do exército",
+          "Do mar",
+          "Do templo",
+          "Do sábado"
+        ],
+        "answer": 3,
+        "ref": "Mateus 12:8"
+      },
+      {
+        "q": "O que o homem da sinagoga tinha, em Mateus 12:10?",
+        "options": [
+          "Os olhos cegos",
+          "Lepra",
+          "Febre",
+          "A mão ressequida"
+        ],
+        "answer": 3,
+        "ref": "Mateus 12:10"
+      },
+      {
+        "q": "Segundo Mateus 12:34, a boca fala do que transborda o quê?",
+        "options": [
+          "A casa",
+          "O coração",
+          "A mente",
+          "O estômago"
+        ],
+        "answer": 1,
+        "ref": "Mateus 12:34"
+      },
+      {
+        "q": "Qual sinal Jesus disse que seria dado à geração má?",
+        "options": [
+          "O sinal de Moisés",
+          "Uma estrela",
+          "O sinal do profeta Jonas",
+          "Fogo do céu"
+        ],
+        "answer": 2,
+        "ref": "Mateus 12:39"
+      }
+    ]
+  },
+  {
+    "day": 186,
+    "questions": [
+      {
+        "q": "Onde Jesus se assentou para ensinar as multidões em Mateus 13:2?",
+        "options": [
+          "Em um barco",
+          "Na sinagoga",
+          "Num monte",
+          "Debaixo de uma árvore"
+        ],
+        "answer": 0,
+        "ref": "Mateus 13:2"
+      },
+      {
+        "q": "Na parábola do semeador, o que comeu a semente da beira do caminho?",
+        "options": [
+          "Os gafanhotos",
+          "As ovelhas",
+          "Os ratos",
+          "As aves"
+        ],
+        "answer": 3,
+        "ref": "Mateus 13:4"
+      },
+      {
+        "q": "O que o inimigo semeou no meio do trigo?",
+        "options": [
+          "Joio",
+          "Espinhos",
+          "Mostarda",
+          "Pedras"
+        ],
+        "answer": 0,
+        "ref": "Mateus 13:25"
+      },
+      {
+        "q": "A que o reino dos céus é comparado em Mateus 13:31?",
+        "options": [
+          "Uma gota de chuva",
+          "Um grão de mostarda",
+          "Um grão de areia",
+          "Uma folha seca"
+        ],
+        "answer": 1,
+        "ref": "Mateus 13:31"
+      },
+      {
+        "q": "O que o negociante comprou depois de vender tudo?",
+        "options": [
+          "Um barco",
+          "Um campo de trigo",
+          "Uma pérola de grande valor",
+          "Uma casa"
+        ],
+        "answer": 2,
+        "ref": "Mateus 13:46"
+      }
+    ]
+  },
+  {
+    "day": 187,
+    "questions": [
+      {
+        "q": "O que a filha de Herodias pediu, instigada pela mãe?",
+        "options": [
+          "A cabeça de João Batista",
+          "Joias de ouro",
+          "Um palácio",
+          "Metade do reino"
+        ],
+        "answer": 0,
+        "ref": "Mateus 14:8"
+      },
+      {
+        "q": "Quantos pães e peixes os discípulos tinham para a multidão?",
+        "options": [
+          "Doze pães e um peixe",
+          "Cinco pães e dois peixes",
+          "Sete pães e três peixes",
+          "Dois pães e cinco peixes"
+        ],
+        "answer": 1,
+        "ref": "Mateus 14:17"
+      },
+      {
+        "q": "Quantos cestos sobraram depois que a multidão comeu?",
+        "options": [
+          "Sete",
+          "Cinco",
+          "Doze",
+          "Três"
+        ],
+        "answer": 2,
+        "ref": "Mateus 14:20"
+      },
+      {
+        "q": "Como Jesus se aproximou do barco na madrugada?",
+        "options": [
+          "Nadando",
+          "Voando",
+          "Num outro barco",
+          "Caminhando sobre o mar"
+        ],
+        "answer": 3,
+        "ref": "Mateus 14:25"
+      },
+      {
+        "q": "O que Pedro clamou ao começar a afundar?",
+        "options": [
+          "Socorro, amigos!",
+          "Senhor, salva-me!",
+          "Eu consigo!",
+          "Voltem o barco!"
+        ],
+        "answer": 1,
+        "ref": "Mateus 14:30"
+      }
+    ]
+  },
+  {
+    "day": 188,
+    "questions": [
+      {
+        "q": "Segundo Mateus 15:11, o que contamina o homem?",
+        "options": [
+          "O que entra pela boca",
+          "Comer sem lavar as mãos",
+          "O que sai da boca",
+          "Andar descalço"
+        ],
+        "answer": 2,
+        "ref": "Mateus 15:11"
+      },
+      {
+        "q": "De onde era a mulher que pediu pela filha endemoninhada?",
+        "options": [
+          "Era romana",
+          "Era egípcia",
+          "Era samaritana",
+          "Era cananeia"
+        ],
+        "answer": 3,
+        "ref": "Mateus 15:22"
+      },
+      {
+        "q": "Quantos pães Jesus usou para alimentar os quatro mil?",
+        "options": [
+          "Sete",
+          "Doze",
+          "Três",
+          "Cinco"
+        ],
+        "answer": 0,
+        "ref": "Mateus 15:34"
+      },
+      {
+        "q": "O que Pedro respondeu quando Jesus perguntou quem Ele era?",
+        "options": [
+          "Tu és um profeta",
+          "Tu és João Batista",
+          "Tu és Elias",
+          "Tu és o Cristo, o Filho do Deus vivo"
+        ],
+        "answer": 3,
+        "ref": "Mateus 16:16"
+      },
+      {
+        "q": "Segundo Mateus 16:26, de que adianta ganhar o mundo e perder o quê?",
+        "options": [
+          "Os amigos",
+          "A alma",
+          "A casa",
+          "O dinheiro"
+        ],
+        "answer": 1,
+        "ref": "Mateus 16:26"
+      }
+    ]
+  },
+  {
+    "day": 189,
+    "questions": [
+      {
+        "q": "Quais discípulos Jesus levou ao alto monte em Mateus 17?",
+        "options": [
+          "Mateus, Judas e Simão",
+          "Pedro, André e Mateus",
+          "Pedro, Tiago e João",
+          "André, Filipe e Tomé"
+        ],
+        "answer": 2,
+        "ref": "Mateus 17:1"
+      },
+      {
+        "q": "Como ficou o rosto de Jesus na transfiguração?",
+        "options": [
+          "Resplandecia como o sol",
+          "Ficou vermelho",
+          "Ficou triste",
+          "Ficou escuro"
+        ],
+        "answer": 0,
+        "ref": "Mateus 17:2"
+      },
+      {
+        "q": "Quem apareceu conversando com Jesus no monte?",
+        "options": [
+          "Isaías e Jeremias",
+          "Noé e Daniel",
+          "Moisés e Elias",
+          "Abraão e Davi"
+        ],
+        "answer": 2,
+        "ref": "Mateus 17:3"
+      },
+      {
+        "q": "Segundo Mateus 17:20, a fé como um grão de quê move montes?",
+        "options": [
+          "Mostarda",
+          "Trigo",
+          "Areia",
+          "Cevada"
+        ],
+        "answer": 0,
+        "ref": "Mateus 17:20"
+      },
+      {
+        "q": "Onde Pedro encontraria a moeda para pagar o imposto?",
+        "options": [
+          "No templo",
+          "Na boca de um peixe",
+          "Debaixo de uma pedra",
+          "Num cesto"
+        ],
+        "answer": 1,
+        "ref": "Mateus 17:27"
+      }
+    ]
+  },
+  {
+    "day": 190,
+    "questions": [
+      {
+        "q": "Quem Jesus colocou no meio dos discípulos em Mateus 18:2?",
+        "options": [
+          "Um cordeiro",
+          "Um soldado",
+          "Um fariseu",
+          "Uma criança"
+        ],
+        "answer": 3,
+        "ref": "Mateus 18:2"
+      },
+      {
+        "q": "Na parábola, quantas ovelhas o homem deixou para buscar a perdida?",
+        "options": [
+          "Noventa e nove",
+          "Cem",
+          "Dez",
+          "Cinquenta"
+        ],
+        "answer": 0,
+        "ref": "Mateus 18:12"
+      },
+      {
+        "q": "Segundo Mateus 18:20, onde dois ou três estiverem reunidos em seu nome, o que acontece?",
+        "options": [
+          "Ficarão ricos",
+          "Terão um templo",
+          "Jesus estará no meio deles",
+          "Serão reis"
+        ],
+        "answer": 2,
+        "ref": "Mateus 18:20"
+      },
+      {
+        "q": "Quantas vezes Jesus disse que devemos perdoar?",
+        "options": [
+          "Três vezes",
+          "Setenta vezes sete",
+          "Sete vezes",
+          "Uma vez"
+        ],
+        "answer": 1,
+        "ref": "Mateus 18:22"
+      },
+      {
+        "q": "Quanto o servo devia ao rei na parábola de Mateus 18?",
+        "options": [
+          "Cem denários",
+          "Um denário",
+          "Mil siclos",
+          "Dez mil talentos"
+        ],
+        "answer": 3,
+        "ref": "Mateus 18:24"
+      }
+    ]
+  },
+  {
+    "day": 191,
+    "questions": [
+      {
+        "q": "O que Jesus disse sobre as crianças em Mateus 19:14?",
+        "options": [
+          "Não as impeçam de vir a mim",
+          "Fiquem em silêncio",
+          "Voltem para casa",
+          "Mandem-nas embora"
+        ],
+        "answer": 0,
+        "ref": "Mateus 19:14"
+      },
+      {
+        "q": "Por que o jovem rico se afastou triste?",
+        "options": [
+          "Estava doente",
+          "Não tinha dinheiro",
+          "Perdeu a família",
+          "Tinha muitas posses"
+        ],
+        "answer": 3,
+        "ref": "Mateus 19:22"
+      },
+      {
+        "q": "É mais fácil um camelo passar pelo fundo de quê do que um rico entrar no Reino?",
+        "options": [
+          "De um poço",
+          "De uma agulha",
+          "De uma porta",
+          "De um muro"
+        ],
+        "answer": 1,
+        "ref": "Mateus 19:24"
+      },
+      {
+        "q": "Quanto cada trabalhador recebeu na parábola da vinha?",
+        "options": [
+          "Um talento",
+          "Nada",
+          "Um denário",
+          "Dez denários"
+        ],
+        "answer": 2,
+        "ref": "Mateus 20:9"
+      },
+      {
+        "q": "Segundo Mateus 20:28, o Filho do Homem veio para quê?",
+        "options": [
+          "Julgar Roma",
+          "Servir",
+          "Ser rei da terra",
+          "Ser servido"
+        ],
+        "answer": 1,
+        "ref": "Mateus 20:28"
+      }
+    ]
+  },
+  {
+    "day": 192,
+    "questions": [
+      {
+        "q": "Em que animal Jesus entrou em Jerusalém, segundo Mateus 21?",
+        "options": [
+          "Numa carruagem",
+          "Num camelo",
+          "Num cavalo",
+          "Num jumentinho"
+        ],
+        "answer": 3,
+        "ref": "Mateus 21:7"
+      },
+      {
+        "q": "O que a multidão clamava quando Jesus entrou em Jerusalém?",
+        "options": [
+          "Hosana ao Filho de Davi!",
+          "Glória a Herodes!",
+          "Viva César!",
+          "Crucifica-o!"
+        ],
+        "answer": 0,
+        "ref": "Mateus 21:9"
+      },
+      {
+        "q": "Segundo Mateus 21:13, como deveria ser chamada a casa de Deus?",
+        "options": [
+          "Casa do rei",
+          "Casa de festas",
+          "Casa de oração",
+          "Casa de comércio"
+        ],
+        "answer": 2,
+        "ref": "Mateus 21:13"
+      },
+      {
+        "q": "Que árvore secou depois que Jesus não achou frutos nela?",
+        "options": [
+          "Um cedro",
+          "Uma videira",
+          "Uma figueira",
+          "Uma oliveira"
+        ],
+        "answer": 2,
+        "ref": "Mateus 21:19"
+      },
+      {
+        "q": "Na parábola dos dois filhos, qual fez a vontade do pai?",
+        "options": [
+          "Nenhum dos dois",
+          "O segundo, que se arrependeu e foi",
+          "Os dois juntos",
+          "O primeiro, que disse sim"
+        ],
+        "answer": 1,
+        "ref": "Mateus 21:31"
+      }
+    ]
+  },
+  {
+    "day": 193,
+    "questions": [
+      {
+        "q": "Em Mateus 22, o rei celebrou um banquete de quê para seu filho?",
+        "options": [
+          "Casamento",
+          "Vitória",
+          "Aniversário",
+          "Colheita"
+        ],
+        "answer": 0,
+        "ref": "Mateus 22:2"
+      },
+      {
+        "q": "O que faltava ao homem que foi lançado fora do banquete?",
+        "options": [
+          "Um presente",
+          "O convite",
+          "Sandálias",
+          "A veste nupcial"
+        ],
+        "answer": 3,
+        "ref": "Mateus 22:11"
+      },
+      {
+        "q": "De quem era a imagem na moeda do tributo?",
+        "options": [
+          "De Davi",
+          "De Herodes",
+          "De Moisés",
+          "De César"
+        ],
+        "answer": 3,
+        "ref": "Mateus 22:21"
+      },
+      {
+        "q": "Segundo Mateus 22:37, como devemos amar ao Senhor?",
+        "options": [
+          "De todo o coração, alma e entendimento",
+          "Com medo",
+          "Só com palavras",
+          "Só no sábado"
+        ],
+        "answer": 0,
+        "ref": "Mateus 22:37"
+      },
+      {
+        "q": "Qual é o segundo mandamento, segundo Mateus 22:39?",
+        "options": [
+          "Guardar o dinheiro",
+          "Obedecer ao rei",
+          "Amar o próximo como a si mesmo",
+          "Fazer longas orações"
+        ],
+        "answer": 2,
+        "ref": "Mateus 22:39"
+      }
+    ]
+  },
+  {
+    "day": 194,
+    "questions": [
+      {
+        "q": "Segundo Mateus 23:11, quem será o maior entre vocês?",
+        "options": [
+          "O mais velho",
+          "O vosso servo",
+          "O mais forte",
+          "O mais rico"
+        ],
+        "answer": 1,
+        "ref": "Mateus 23:11"
+      },
+      {
+        "q": "Segundo Mateus 23:12, o que acontece com quem se humilha?",
+        "options": [
+          "Será exaltado",
+          "Será esquecido",
+          "Será humilhado",
+          "Ficará pobre"
+        ],
+        "answer": 0,
+        "ref": "Mateus 23:12"
+      },
+      {
+        "q": "Segundo Mateus 23:24, os guias cegos coam um mosquito e engolem o quê?",
+        "options": [
+          "Um peixe",
+          "Uma ovelha",
+          "Um camelo",
+          "Um cavalo"
+        ],
+        "answer": 2,
+        "ref": "Mateus 23:24"
+      },
+      {
+        "q": "A que Jesus comparou os escribas e fariseus hipócritas em Mateus 23:27?",
+        "options": [
+          "Árvores frutíferas",
+          "Sepulcros caiados",
+          "Casas novas",
+          "Pedras preciosas"
+        ],
+        "answer": 1,
+        "ref": "Mateus 23:27"
+      },
+      {
+        "q": "Jesus quis reunir os filhos de Jerusalém como que ave ajunta os pintinhos?",
+        "options": [
+          "A águia",
+          "A pomba",
+          "O pardal",
+          "A galinha"
+        ],
+        "answer": 3,
+        "ref": "Mateus 23:37"
+      }
+    ]
+  },
+  {
+    "day": 195,
+    "questions": [
+      {
+        "q": "Onde Jesus estava assentado quando os discípulos perguntaram sobre sua vinda?",
+        "options": [
+          "No monte das Oliveiras",
+          "No templo",
+          "Num barco",
+          "Em Betânia"
+        ],
+        "answer": 0,
+        "ref": "Mateus 24:3"
+      },
+      {
+        "q": "Segundo Mateus 24:14, o que será pregado em todo o mundo antes do fim?",
+        "options": [
+          "Os provérbios de Salomão",
+          "A história de Israel",
+          "As leis de Roma",
+          "Este evangelho do reino"
+        ],
+        "answer": 3,
+        "ref": "Mateus 24:14"
+      },
+      {
+        "q": "Segundo Mateus 24:27, a vinda do Filho do Homem será como o quê?",
+        "options": [
+          "Um ladrão no deserto",
+          "O relâmpago",
+          "Um terremoto",
+          "Uma neblina"
+        ],
+        "answer": 1,
+        "ref": "Mateus 24:27"
+      },
+      {
+        "q": "Segundo Mateus 24:35, o que não passará?",
+        "options": [
+          "O céu",
+          "A terra",
+          "As palavras de Jesus",
+          "O templo"
+        ],
+        "answer": 2,
+        "ref": "Mateus 24:35"
+      },
+      {
+        "q": "A vinda do Filho do Homem será como nos dias de quem?",
+        "options": [
+          "Moisés",
+          "Noé",
+          "Davi",
+          "Abraão"
+        ],
+        "answer": 1,
+        "ref": "Mateus 24:37"
+      }
+    ]
+  },
+  {
+    "day": 196,
+    "questions": [
+      {
+        "q": "Na parábola das dez virgens, o que as néscias não levaram?",
+        "options": [
+          "Lâmpadas",
+          "Roupas",
+          "Azeite",
+          "Pão"
+        ],
+        "answer": 2,
+        "ref": "Mateus 25:3"
+      },
+      {
+        "q": "O que fez o servo que recebeu um talento?",
+        "options": [
+          "Escondeu-o numa cova",
+          "Deu aos pobres",
+          "Comprou um campo",
+          "Ganhou mais dez"
+        ],
+        "answer": 0,
+        "ref": "Mateus 25:18"
+      },
+      {
+        "q": "Segundo Mateus 25:32, o pastor separa as ovelhas de quê?",
+        "options": [
+          "Dos camelos",
+          "Dos bois",
+          "Dos lobos",
+          "Dos bodes"
+        ],
+        "answer": 3,
+        "ref": "Mateus 25:32"
+      },
+      {
+        "q": "Por quantas moedas de prata Judas combinou entregar Jesus?",
+        "options": [
+          "Trinta",
+          "Dez",
+          "Cem",
+          "Vinte"
+        ],
+        "answer": 0,
+        "ref": "Mateus 26:15"
+      },
+      {
+        "q": "Quantas vezes Jesus disse que Pedro o negaria antes do galo cantar?",
+        "options": [
+          "Sete",
+          "Duas",
+          "Uma",
+          "Três"
+        ],
+        "answer": 3,
+        "ref": "Mateus 26:34"
+      }
+    ]
+  },
+  {
+    "day": 197,
+    "questions": [
+      {
+        "q": "A qual governador Jesus foi entregue?",
+        "options": [
+          "Herodes",
+          "Caifás",
+          "Pôncio Pilatos",
+          "César"
+        ],
+        "answer": 2,
+        "ref": "Mateus 27:2"
+      },
+      {
+        "q": "Qual prisioneiro a multidão pediu que fosse solto?",
+        "options": [
+          "Pedro",
+          "Barrabás",
+          "Judas",
+          "Simão"
+        ],
+        "answer": 1,
+        "ref": "Mateus 27:21"
+      },
+      {
+        "q": "Quem foi obrigado a carregar a cruz de Jesus?",
+        "options": [
+          "Pedro",
+          "João",
+          "José de Arimateia",
+          "Simão, o cireneu"
+        ],
+        "answer": 3,
+        "ref": "Mateus 27:32"
+      },
+      {
+        "q": "Quem pediu a Pilatos o corpo de Jesus?",
+        "options": [
+          "Maria Madalena",
+          "Pedro",
+          "José de Arimateia",
+          "Nicodemos"
+        ],
+        "answer": 2,
+        "ref": "Mateus 27:58"
+      },
+      {
+        "q": "O que o anjo fez no sepulcro, segundo Mateus 28:2?",
+        "options": [
+          "Chamou os soldados",
+          "Rolou a pedra e sentou-se sobre ela",
+          "Fechou o túmulo",
+          "Acendeu uma lâmpada"
+        ],
+        "answer": 1,
+        "ref": "Mateus 28:2"
+      }
+    ]
+  },
+  {
+    "day": 198,
+    "questions": [
+      {
+        "q": "De onde Jesus veio para ser batizado por João, segundo Marcos 1:9?",
+        "options": [
+          "De Nazaré da Galileia",
+          "De Belém",
+          "De Jerusalém",
+          "De Cafarnaum"
+        ],
+        "answer": 0,
+        "ref": "Marcos 1:9"
+      },
+      {
+        "q": "Por quantos dias Jesus ficou no deserto sendo tentado, segundo Marcos 1:13?",
+        "options": [
+          "Quarenta",
+          "Sete",
+          "Doze",
+          "Três"
+        ],
+        "answer": 0,
+        "ref": "Marcos 1:13"
+      },
+      {
+        "q": "Quem estava acamada com febre na casa de Simão?",
+        "options": [
+          "A esposa de André",
+          "A filha de Jairo",
+          "A sogra de Simão",
+          "A mãe de Jesus"
+        ],
+        "answer": 2,
+        "ref": "Marcos 1:30"
+      },
+      {
+        "q": "Por quantas pessoas o paralítico era carregado em Marcos 2:3?",
+        "options": [
+          "Seis",
+          "Quatro",
+          "Doze",
+          "Duas"
+        ],
+        "answer": 1,
+        "ref": "Marcos 2:3"
+      },
+      {
+        "q": "Segundo Marcos 2:27, o sábado foi instituído em favor de quem?",
+        "options": [
+          "Dos sacerdotes",
+          "Dos animais",
+          "Dos reis",
+          "Do homem"
+        ],
+        "answer": 3,
+        "ref": "Marcos 2:27"
+      }
+    ]
+  },
+  {
+    "day": 199,
+    "questions": [
+      {
+        "q": "Que nome Jesus deu a Tiago e João, segundo Marcos 3:17?",
+        "options": [
+          "Boanerges, Filhos do trovão",
+          "Pedras vivas",
+          "Pescadores de homens",
+          "Filhos da luz"
+        ],
+        "answer": 0,
+        "ref": "Marcos 3:17"
+      },
+      {
+        "q": "Quantos Jesus designou para estarem com ele e pregar, em Marcos 3:14?",
+        "options": [
+          "Três",
+          "Sete",
+          "Doze",
+          "Setenta"
+        ],
+        "answer": 2,
+        "ref": "Marcos 3:14"
+      },
+      {
+        "q": "Segundo Marcos 3:35, quem é irmão e mãe de Jesus?",
+        "options": [
+          "Quem é rico",
+          "Quem é sacerdote",
+          "Quem nasceu em Nazaré",
+          "Quem faz a vontade de Deus"
+        ],
+        "answer": 3,
+        "ref": "Marcos 3:35"
+      },
+      {
+        "q": "Em Marcos 4:31, o reino de Deus é como um grão de quê?",
+        "options": [
+          "Trigo",
+          "Mostarda",
+          "Arroz",
+          "Milho"
+        ],
+        "answer": 1,
+        "ref": "Marcos 4:31"
+      },
+      {
+        "q": "Onde Jesus estava dormindo durante a tempestade, segundo Marcos 4:38?",
+        "options": [
+          "No alto do mastro",
+          "Na popa, sobre o travesseiro",
+          "Na casa de Pedro",
+          "Na praia"
+        ],
+        "answer": 1,
+        "ref": "Marcos 4:38"
       }
     ]
   },
@@ -3663,59 +3663,59 @@
     "day": 200,
     "questions": [
       {
-        "q": "Como era o primeiro animal que Daniel viu subir do mar?",
+        "q": "Qual nome o espírito imundo disse ter em Marcos 5:9?",
         "options": [
-          "Um urso com três costelas",
-          "Um leopardo com quatro cabeças",
-          "Um leão com asas de águia",
-          "Um bode com um chifre"
+          "Beelzebu",
+          "Golias",
+          "Legião",
+          "Faraó"
         ],
         "answer": 2,
-        "ref": "Daniel 7:4"
+        "ref": "Marcos 5:9"
       },
       {
-        "q": "Como era a veste do Ancião de Dias?",
+        "q": "Cerca de quantos porcos se lançaram no mar, segundo Marcos 5:13?",
         "options": [
-          "Vermelha como sangue",
-          "Branca como a neve",
-          "Dourada como o sol",
-          "Azul como o céu"
-        ],
-        "answer": 1,
-        "ref": "Daniel 7:9"
-      },
-      {
-        "q": "O carneiro de dois chifres representava os reis de onde?",
-        "options": [
-          "Da Média e da Pérsia",
-          "Do Egito e da Etiópia",
-          "Da Grécia",
-          "Da Assíria"
+          "Dois mil",
+          "Quinhentos",
+          "Cem",
+          "Dez mil"
         ],
         "answer": 0,
-        "ref": "Daniel 8:20"
+        "ref": "Marcos 5:13"
       },
       {
-        "q": "Qual anjo foi mandado explicar a visão a Daniel em Daniel 8?",
+        "q": "Qual era o nome do chefe da sinagoga cuja filha estava à morte?",
         "options": [
-          "Miguel",
-          "Rafael",
-          "Uriel",
-          "Gabriel"
+          "Nicodemos",
+          "Lázaro",
+          "Zaqueu",
+          "Jairo"
         ],
         "answer": 3,
-        "ref": "Daniel 8:16"
+        "ref": "Marcos 5:22"
       },
       {
-        "q": "Pelos livros, Daniel entendeu que a desolação de Jerusalém duraria quantos anos?",
+        "q": "O que significa 'Talita cumi'?",
         "options": [
-          "Quarenta",
-          "Setenta",
-          "Sete",
-          "Cem"
+          "Vai em paz",
+          "Paz seja contigo",
+          "Abre-te",
+          "Menininha, levanta-te"
         ],
-        "answer": 1,
-        "ref": "Daniel 9:2"
+        "answer": 3,
+        "ref": "Marcos 5:41"
+      },
+      {
+        "q": "Como Jesus enviou os doze em Marcos 6:7?",
+        "options": [
+          "Todos juntos",
+          "De três em três",
+          "De dois em dois",
+          "Um por um"
+        ],
+        "answer": 2,
+        "ref": "Marcos 6:7"
       }
     ]
   },
@@ -3723,59 +3723,59 @@
     "day": 201,
     "questions": [
       {
-        "q": "Por quantas semanas Daniel pranteou e jejuou em Daniel 10?",
+        "q": "Por que os fariseus censuraram os discípulos em Marcos 7:2?",
         "options": [
-          "Uma",
-          "Sete",
-          "Três",
-          "Dez"
-        ],
-        "answer": 2,
-        "ref": "Daniel 10:2-3"
-      },
-      {
-        "q": "Quem veio ajudar o mensageiro contra o príncipe da Pérsia?",
-        "options": [
-          "Miguel",
-          "Gabriel",
-          "Ciro",
-          "Dario"
-        ],
-        "answer": 0,
-        "ref": "Daniel 10:13"
-      },
-      {
-        "q": "Os que conduzem muitos à justiça brilharão como o quê?",
-        "options": [
-          "O sol",
-          "A lua",
-          "O fogo",
-          "As estrelas"
-        ],
-        "answer": 3,
-        "ref": "Daniel 12:3"
-      },
-      {
-        "q": "Com quem o profeta Oséias se casou?",
-        "options": [
-          "Raabe",
-          "Gômer",
-          "Diná",
-          "Rute"
+          "Não guardavam o sábado",
+          "Comiam sem lavar as mãos",
+          "Não oravam",
+          "Falavam alto"
         ],
         "answer": 1,
-        "ref": "Oséias 1:3"
+        "ref": "Marcos 7:2"
       },
       {
-        "q": "Que nome o Senhor mandou dar ao primeiro filho de Oséias?",
+        "q": "De que origem era a mulher que pediu pela filha em Marcos 7:26?",
         "options": [
-          "Jezreel",
-          "Não-meu-Povo",
-          "Desfavorecida",
-          "Emanuel"
+          "Siro-fenícia",
+          "Romana",
+          "Samaritana",
+          "Egípcia"
         ],
         "answer": 0,
-        "ref": "Oséias 1:4"
+        "ref": "Marcos 7:26"
+      },
+      {
+        "q": "O que significa 'Efatá', a palavra que Jesus disse ao surdo?",
+        "options": [
+          "Levanta-te",
+          "Abre-te",
+          "Fica limpo",
+          "Vai em paz"
+        ],
+        "answer": 1,
+        "ref": "Marcos 7:34"
+      },
+      {
+        "q": "Quantos cestos sobraram quando Jesus alimentou os quatro mil?",
+        "options": [
+          "Sete",
+          "Dois",
+          "Cinco",
+          "Doze"
+        ],
+        "answer": 0,
+        "ref": "Marcos 8:8"
+      },
+      {
+        "q": "Como o cego de Betsaida viu os homens no começo, em Marcos 8:24?",
+        "options": [
+          "Como sombras",
+          "Como anjos",
+          "Como estrelas",
+          "Como árvores que caminham"
+        ],
+        "answer": 3,
+        "ref": "Marcos 8:24"
       }
     ]
   },
@@ -3783,59 +3783,59 @@
     "day": 202,
     "questions": [
       {
-        "q": "Por quanta prata Oséias adquiriu a mulher em Oséias 3?",
+        "q": "Como ficaram as vestes de Jesus na transfiguração, segundo Marcos 9:3?",
         "options": [
-          "Trinta peças",
-          "Dez peças",
-          "Quinze peças",
-          "Cem peças"
+          "Vermelhas",
+          "Douradas",
+          "Extremamente brancas",
+          "Rasgadas"
         ],
         "answer": 2,
-        "ref": "Oséias 3:2"
+        "ref": "Marcos 9:3"
       },
       {
-        "q": "Segundo Oséias 4, por que o povo de Deus está sendo destruído?",
+        "q": "O que o pai do menino exclamou em Marcos 9:24?",
         "options": [
-          "Por falta de pão",
-          "Por falta de conhecimento",
-          "Por falta de rei",
-          "Por falta de armas"
+          "Não acredito!",
+          "Vou embora!",
+          "Eu creio! Ajuda-me na minha falta de fé!",
+          "Chamem os médicos!"
+        ],
+        "answer": 2,
+        "ref": "Marcos 9:24"
+      },
+      {
+        "q": "Sobre o que os discípulos discutiram no caminho, segundo Marcos 9:34?",
+        "options": [
+          "Onde iam comer",
+          "Quem era o maior",
+          "Quanto dinheiro tinham",
+          "Quem era o mais velho"
         ],
         "answer": 1,
-        "ref": "Oséias 4:6"
+        "ref": "Marcos 9:34"
       },
       {
-        "q": "Segundo Oséias 6, o que Deus deseja e não o sacrifício?",
+        "q": "Segundo Marcos 10:15, como devemos receber o reino de Deus?",
         "options": [
-          "Ouro",
-          "Festas",
-          "Holocaustos",
-          "Misericórdia"
+          "Como um sábio",
+          "Como um soldado",
+          "Como um rei",
+          "Como uma criança"
         ],
         "answer": 3,
-        "ref": "Oséias 6:6"
+        "ref": "Marcos 10:15"
       },
       {
-        "q": "Efraim é como um pão que não foi o quê?",
+        "q": "Qual era o nome do cego mendigo de Jericó?",
         "options": [
-          "Virado",
-          "Assado",
-          "Partido",
-          "Comido"
+          "Bartimeu",
+          "Zaqueu",
+          "Jairo",
+          "Lázaro"
         ],
         "answer": 0,
-        "ref": "Oséias 7:8"
-      },
-      {
-        "q": "Segundo Oséias 8, quem semeia ventos colherá o quê?",
-        "options": [
-          "Trigo",
-          "Flores",
-          "Tormentas",
-          "Chuva"
-        ],
-        "answer": 2,
-        "ref": "Oséias 8:7"
+        "ref": "Marcos 10:46"
       }
     ]
   },
@@ -3843,59 +3843,59 @@
     "day": 203,
     "questions": [
       {
-        "q": "Segundo Oséias 11, de onde Deus chamou o seu filho?",
+        "q": "Em que animal Jesus montou ao entrar em Jerusalém, segundo Marcos 11?",
         "options": [
-          "Da Babilônia",
-          "Do deserto",
-          "De Canaã",
-          "Do Egito"
-        ],
-        "answer": 3,
-        "ref": "Oséias 11:1"
-      },
-      {
-        "q": "Com que Deus atraiu Israel, segundo Oséias 11?",
-        "options": [
-          "Com laços de amor",
-          "Com correntes de ferro",
-          "Com ouro e prata",
-          "Com ameaças"
-        ],
-        "answer": 0,
-        "ref": "Oséias 11:4"
-      },
-      {
-        "q": "Em Joel 1, que pragas comeram tudo o que havia na terra?",
-        "options": [
-          "Ratos e moscas",
-          "Rãs e piolhos",
-          "A lagarta e os gafanhotos",
-          "Serpentes"
+          "Num cavalo branco",
+          "Num boi",
+          "Num jumentinho",
+          "Num camelo"
         ],
         "answer": 2,
-        "ref": "Joel 1:4"
+        "ref": "Marcos 11:7"
       },
       {
-        "q": "Segundo Joel 2, rasgai o coração e não o quê?",
+        "q": "O que aconteceu com a figueira que Jesus amaldiçoou?",
         "options": [
-          "Os livros",
-          "As vestes",
-          "As tendas",
-          "Os muros"
-        ],
-        "answer": 1,
-        "ref": "Joel 2:13"
-      },
-      {
-        "q": "Sobre quem Deus prometeu derramar o seu Espírito em Joel 2?",
-        "options": [
-          "Só sobre os reis",
-          "Só sobre os sacerdotes",
-          "Só sobre os velhos",
-          "Sobre toda a carne"
+          "Deu muitos frutos",
+          "Floresceu",
+          "Foi cortada",
+          "Secou desde a raiz"
         ],
         "answer": 3,
-        "ref": "Joel 2:28"
+        "ref": "Marcos 11:20"
+      },
+      {
+        "q": "Segundo Marcos 11:25, o que devemos fazer quando estivermos orando?",
+        "options": [
+          "Perdoar",
+          "Jejuar sempre",
+          "Gritar",
+          "Ficar em pé na praça"
+        ],
+        "answer": 0,
+        "ref": "Marcos 11:25"
+      },
+      {
+        "q": "Segundo Marcos 12:30, com o que devemos amar a Deus?",
+        "options": [
+          "Com metade do coração",
+          "Com todo o coração, alma, entendimento e forças",
+          "Só com as palavras",
+          "Só com ofertas"
+        ],
+        "answer": 1,
+        "ref": "Marcos 12:30"
+      },
+      {
+        "q": "Quantas pequenas moedas a viúva pobre depositou no gazofilácio?",
+        "options": [
+          "Uma",
+          "Dez",
+          "Cinco",
+          "Duas"
+        ],
+        "answer": 3,
+        "ref": "Marcos 12:42"
       }
     ]
   },
@@ -3903,59 +3903,59 @@
     "day": 204,
     "questions": [
       {
-        "q": "Para qual vale o Senhor faria descer todas as nações?",
+        "q": "Segundo Marcos 13:10, o que deve ser anunciado primeiro a todas as nações?",
         "options": [
-          "Vale de Josafá",
-          "Vale de Hinom",
-          "Vale de Acor",
-          "Vale do Jordão"
+          "O evangelho",
+          "A lei de Roma",
+          "Os mandamentos de Herodes",
+          "As guerras"
         ],
         "answer": 0,
-        "ref": "Joel 3:2"
+        "ref": "Marcos 13:10"
       },
       {
-        "q": "Em Joel 3, as nações deviam forjar espadas de quê?",
+        "q": "Segundo Marcos 13:31, o que não passará?",
         "options": [
-          "De moedas",
-          "De relhas de arado",
-          "De coroas",
-          "De panelas"
+          "O céu",
+          "As palavras de Jesus",
+          "A terra",
+          "O templo"
         ],
         "answer": 1,
-        "ref": "Joel 3:10"
+        "ref": "Marcos 13:31"
       },
       {
-        "q": "Amós estava entre os pastores de qual lugar?",
+        "q": "De que era o perfume derramado sobre Jesus em Betânia?",
         "options": [
-          "Belém",
-          "Betel",
-          "Tecoa",
-          "Siló"
+          "Óleo de oliva",
+          "Mirra",
+          "Nardo puro",
+          "Incenso"
         ],
         "answer": 2,
-        "ref": "Amós 1:1"
+        "ref": "Marcos 14:3"
       },
       {
-        "q": "Segundo Amós 3, andarão dois juntos se o quê?",
+        "q": "O que levaria o homem que guiaria os discípulos à sala da Páscoa?",
         "options": [
-          "Se forem irmãos",
-          "Se tiverem dinheiro",
-          "Se for de dia",
-          "Se estiverem de acordo"
-        ],
-        "answer": 3,
-        "ref": "Amós 3:3"
-      },
-      {
-        "q": "Como Amós chama as que oprimem os pobres no monte de Samaria?",
-        "options": [
-          "Vacas de Basã",
-          "Raposas do deserto",
-          "Leoas de Judá",
-          "Pombas do vale"
+          "Um cântaro de água",
+          "Uma ovelha",
+          "Uma lâmpada",
+          "Um cesto de pão"
         ],
         "answer": 0,
-        "ref": "Amós 4:1"
+        "ref": "Marcos 14:13"
+      },
+      {
+        "q": "Quantas vezes o galo cantaria antes de Pedro negar Jesus três vezes?",
+        "options": [
+          "Uma",
+          "Sete",
+          "Três",
+          "Duas"
+        ],
+        "answer": 3,
+        "ref": "Marcos 14:30"
       }
     ]
   },
@@ -3963,59 +3963,59 @@
     "day": 205,
     "questions": [
       {
-        "q": "Corra o juízo como as águas, e a justiça como o quê?",
+        "q": "Qual prisioneiro Pilatos soltou, segundo Marcos 15:15?",
         "options": [
-          "Um mar agitado",
-          "Um ribeiro perene",
-          "Uma chuva forte",
-          "Uma fonte seca"
-        ],
-        "answer": 1,
-        "ref": "Amós 5:24"
-      },
-      {
-        "q": "O que o Senhor tinha na mão quando estava sobre o muro, em Amós 7?",
-        "options": [
-          "Uma espada",
-          "Uma vara",
-          "Um prumo",
-          "Um rolo"
+          "Simão",
+          "Judas",
+          "Barrabás",
+          "Pedro"
         ],
         "answer": 2,
-        "ref": "Amós 7:7-8"
+        "ref": "Marcos 15:15"
       },
       {
-        "q": "Qual era o trabalho de Amós antes de profetizar?",
+        "q": "Quem eram os filhos de Simão Cireneu, segundo Marcos 15:21?",
         "options": [
-          "Sacerdote em Betel",
-          "Pescador",
-          "Soldado do rei",
-          "Boieiro e colhedor de sicômoros"
-        ],
-        "answer": 3,
-        "ref": "Amós 7:14"
-      },
-      {
-        "q": "Segundo Amós 8, o Senhor enviaria fome de quê?",
-        "options": [
-          "De ouvir as palavras do Senhor",
-          "De pão",
-          "De carne",
-          "De água"
-        ],
-        "answer": 0,
-        "ref": "Amós 8:11"
-      },
-      {
-        "q": "A visão de Obadias é a respeito de qual povo?",
-        "options": [
-          "Moabe",
-          "Edom",
-          "Amom",
-          "Filístia"
+          "Tiago e João",
+          "Alexandre e Rufo",
+          "Pedro e André",
+          "Lázaro e Marta"
         ],
         "answer": 1,
-        "ref": "Obadias 1:1"
+        "ref": "Marcos 15:21"
+      },
+      {
+        "q": "O que significa Gólgota?",
+        "options": [
+          "Monte das Oliveiras",
+          "Lugar da Caveira",
+          "Casa do Pão",
+          "Jardim de Deus"
+        ],
+        "answer": 1,
+        "ref": "Marcos 15:22"
+      },
+      {
+        "q": "O que aconteceu com o véu do templo quando Jesus expirou?",
+        "options": [
+          "Rasgou-se de cima para baixo",
+          "Pegou fogo",
+          "Ficou branco",
+          "Caiu no chão"
+        ],
+        "answer": 0,
+        "ref": "Marcos 15:38"
+      },
+      {
+        "q": "A quem Jesus ressuscitado apareceu primeiro, segundo Marcos 16:9?",
+        "options": [
+          "Salomé",
+          "Pedro",
+          "João",
+          "Maria Madalena"
+        ],
+        "answer": 3,
+        "ref": "Marcos 16:9"
       }
     ]
   },
@@ -4023,59 +4023,59 @@
     "day": 206,
     "questions": [
       {
-        "q": "Para onde Jonas tentou fugir da presença do Senhor?",
+        "q": "Qual era o nome do sacerdote, marido de Isabel?",
         "options": [
-          "Para Nínive",
-          "Para o Egito",
-          "Para Társis",
-          "Para Babilônia"
+          "Simeão",
+          "Arão",
+          "Zacarias",
+          "José"
         ],
         "answer": 2,
-        "ref": "Jonas 1:3"
+        "ref": "Lucas 1:5"
       },
       {
-        "q": "Quanto tempo Jonas ficou no ventre do grande peixe?",
+        "q": "Qual anjo apareceu a Zacarias e a Maria?",
         "options": [
-          "Três dias e três noites",
-          "Sete dias",
-          "Um dia",
-          "Quarenta dias"
+          "Querubim",
+          "Miguel",
+          "Gabriel",
+          "Rafael"
         ],
-        "answer": 0,
-        "ref": "Jonas 1:17"
+        "answer": 2,
+        "ref": "Lucas 1:19"
       },
       {
-        "q": "Jonas pregou que Nínive seria subvertida dentro de quantos dias?",
+        "q": "O que aconteceu com Zacarias por não crer nas palavras do anjo?",
         "options": [
-          "Sete",
-          "Três",
-          "Cem",
-          "Quarenta"
-        ],
-        "answer": 3,
-        "ref": "Jonas 3:4"
-      },
-      {
-        "q": "O que Deus enviou para ferir a planta que dava sombra a Jonas?",
-        "options": [
-          "Um gafanhoto",
-          "Um verme",
-          "Uma tempestade",
-          "Um fogo"
+          "Ficou doente",
+          "Ficou mudo",
+          "Ficou surdo",
+          "Ficou cego"
         ],
         "answer": 1,
-        "ref": "Jonas 4:7"
+        "ref": "Lucas 1:20"
       },
       {
-        "q": "Segundo Miquéias 4, cada um se sentará debaixo da sua videira e da sua quê?",
+        "q": "Em qual cidade da Galileia morava Maria quando o anjo a visitou?",
         "options": [
-          "Oliveira",
-          "Palmeira",
-          "Figueira",
-          "Tenda"
+          "Nazaré",
+          "Jerusalém",
+          "Belém",
+          "Cafarnaum"
         ],
-        "answer": 2,
-        "ref": "Miquéias 4:4"
+        "answer": 0,
+        "ref": "Lucas 1:26"
+      },
+      {
+        "q": "Que nome Zacarias escreveu na tabuinha para o menino?",
+        "options": [
+          "Elias",
+          "Jesus",
+          "Zacarias",
+          "João"
+        ],
+        "answer": 3,
+        "ref": "Lucas 1:63"
       }
     ]
   },
@@ -4083,59 +4083,59 @@
     "day": 207,
     "questions": [
       {
-        "q": "De qual cidade pequena de Judá sairia aquele que reinaria em Israel?",
+        "q": "Onde Maria deitou o menino Jesus, segundo Lucas 2:7?",
         "options": [
-          "Belém",
-          "Nazaré",
-          "Hebrom",
-          "Betel"
-        ],
-        "answer": 0,
-        "ref": "Miquéias 5:2"
-      },
-      {
-        "q": "O Senhor pede justiça, misericórdia e que andemos como com Deus?",
-        "options": [
-          "Com pressa",
-          "Com orgulho",
-          "Sozinhos",
-          "Humildemente"
-        ],
-        "answer": 3,
-        "ref": "Miquéias 6:8"
-      },
-      {
-        "q": "Segundo Miquéias 7, onde Deus lançará todos os nossos pecados?",
-        "options": [
-          "No fogo",
-          "Nas profundezas do mar",
-          "No deserto",
-          "Atrás dos montes"
+          "Numa cama",
+          "Numa manjedoura",
+          "Num berço de ouro",
+          "Num barco"
         ],
         "answer": 1,
-        "ref": "Miquéias 7:19"
+        "ref": "Lucas 2:7"
       },
       {
-        "q": "A sentença do livro de Naum é sobre qual cidade?",
+        "q": "A quem o anjo anunciou o nascimento de Jesus em Lucas 2?",
         "options": [
-          "Babilônia",
-          "Jerusalém",
-          "Nínive",
-          "Tiro"
-        ],
-        "answer": 2,
-        "ref": "Naum 1:1"
-      },
-      {
-        "q": "O Senhor é bom, é fortaleza no dia do quê?",
-        "options": [
-          "Da festa",
-          "Da colheita",
-          "Do sábado",
-          "Da angústia"
+          "Aos sacerdotes",
+          "Aos reis",
+          "Aos soldados",
+          "Aos pastores"
         ],
         "answer": 3,
-        "ref": "Naum 1:7"
+        "ref": "Lucas 2:8"
+      },
+      {
+        "q": "Que idade tinha Jesus quando ficou no templo entre os doutores?",
+        "options": [
+          "Dez anos",
+          "Sete anos",
+          "Doze anos",
+          "Trinta anos"
+        ],
+        "answer": 2,
+        "ref": "Lucas 2:42"
+      },
+      {
+        "q": "Segundo Lucas 3:11, o que deve fazer quem tem duas túnicas?",
+        "options": [
+          "Compartilhar com quem não tem",
+          "Vender uma delas",
+          "Queimar uma",
+          "Guardar as duas"
+        ],
+        "answer": 0,
+        "ref": "Lucas 3:11"
+      },
+      {
+        "q": "Quantos anos tinha Jesus aproximadamente ao começar seu ministério?",
+        "options": [
+          "Doze",
+          "Vinte",
+          "Trinta",
+          "Quarenta"
+        ],
+        "answer": 2,
+        "ref": "Lucas 3:23"
       }
     ]
   }

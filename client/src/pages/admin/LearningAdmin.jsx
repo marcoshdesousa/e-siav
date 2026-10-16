@@ -140,7 +140,7 @@ export default function LearningAdmin() {
                 </Section>
                 <Section title="Áudio (voz Piper)">
                   <Card className="small">
-                    <p>Capítulos com áudio: <b>{d.audio.done}</b>{d.audio.total ? ` de ${d.audio.total}` : ''}.{d.audio.running ? ` Preparando agora: ${d.audio.current || '...'}` : ' Parado.'}</p>
+                    <p>Versículos com voz: <b>{d.audio.done}</b>{d.audio.total ? ` de ${d.audio.total}` : ''}.{d.audio.running ? ` Preparando agora: ${d.audio.current || '...'}` : ' Parado.'}</p>
                     {d.audio.error && <p className="muted">Último erro: {d.audio.error}</p>}
                     <p className="muted">O áudio é preparado sozinho em segundo plano, começando pela leitura de hoje. Fica salvo no disco do servidor (cerca de 1 GB para a Bíblia inteira).</p>
                     <Button small busy={busy} disabled={d.audio.running} onClick={gen}>Preparar agora</Button>

@@ -1,0 +1,277 @@
+# Plano do Ano Bíblico (1/mar a 30/nov), um dia por linha, na ordem do cartão.
+# "e" ou ";" separam leituras; "Livro C" = capítulo inteiro; "Livro C:1-19" = trecho; "C:2,3,17,18" = versículos.
+Gênesis 1; Gênesis 2
+Gênesis 3; Gênesis 4:1-16
+Gênesis 6; Gênesis 7
+Gênesis 8; Gênesis 9:1-19
+Gênesis 11:1-19; Gênesis 12:1-13
+Gênesis 14; Gênesis 15
+Gênesis 17:1-22; Gênesis 18
+Gênesis 19:1-29; Gênesis 21:1-21
+Gênesis 22:1-19; Gênesis 23
+Gênesis 24
+Gênesis 27
+Gênesis 28; Gênesis 29:1-30; Gênesis 31:2-3,17-18
+Gênesis 32
+Gênesis 33
+Gênesis 35:1-20
+Gênesis 37
+Gênesis 39; Gênesis 40
+Gênesis 41
+Gênesis 42
+Gênesis 43
+Gênesis 44
+Gênesis 45; Gênesis 46:1-7,28-34
+Gênesis 47
+Gênesis 48; Gênesis 49
+Gênesis 50
+Êxodo 1; Êxodo 2
+Êxodo 3; Êxodo 4:1-17,27-31
+Êxodo 5
+Êxodo 7
+Êxodo 8
+Êxodo 9
+Êxodo 10; Êxodo 11
+Êxodo 12
+Êxodo 13:17-22; Êxodo 14
+Êxodo 15:22-27; Êxodo 16
+Êxodo 17; Êxodo 18
+Êxodo 19
+Êxodo 20
+Êxodo 24
+Êxodo 32
+Êxodo 33; Êxodo 34:1-14,21-25
+Êxodo 35:1-29; Êxodo 40
+Levítico 11
+Números 9:15-23; Números 11
+Números 13
+Números 14
+Números 16
+Números 17; Números 20
+Números 21
+Números 22
+Números 23
+Números 24
+Números 35
+Deuteronômio 1:1-17; Deuteronômio 5
+Deuteronômio 32
+Deuteronômio 33; Deuteronômio 34
+Josué 1
+Josué 2; Josué 3
+Josué 4
+Josué 5:10-15; Josué 6
+Josué 7
+Josué 8; Josué 10:1-27
+Josué 24
+Juízes 6
+Juízes 7
+Juízes 13; Juízes 14
+Juízes 15; Juízes 16
+Rute 1; Rute 2
+Rute 3; Rute 4
+1ª Samuel 1
+1ª Samuel 2
+1ª Samuel 3; 1ª Samuel 4
+1ª Samuel 5; 1ª Samuel 6
+1ª Samuel 7; 1ª Samuel 8
+1ª Samuel 9
+1ª Samuel 10; 1ª Samuel 11:12-15
+1ª Samuel 12; 1ª Samuel 13
+1ª Samuel 15
+1ª Samuel 16
+1ª Samuel 17
+1ª Samuel 18:1-19
+1ª Samuel 20
+1ª Samuel 24; 1ª Samuel 25
+1ª Samuel 26
+1ª Samuel 31
+2ª Samuel 1
+2ª Samuel 5; 2ª Samuel 7
+2ª Samuel 15
+2ª Samuel 17
+2ª Samuel 18
+1ª Reis 1:28-53; 1ª Reis 3
+1ª Reis 4:20-34
+1ª Reis 5
+1ª Reis 6
+1ª Reis 7
+1ª Reis 8
+1ª Reis 10
+1ª Reis 11:6-43
+1ª Reis 12
+1ª Reis 17
+1ª Reis 18
+1ª Reis 19
+1ª Reis 21
+2ª Reis 1; 2ª Reis 2
+2ª Reis 4
+2ª Reis 5; 2ª Reis 6:1-7
+2ª Reis 18
+2ª Reis 19
+2ª Reis 20
+2ª Reis 22; 2ª Reis 23:36-37
+2ª Reis 24; 2ª Reis 25:1-22
+2ª Crônicas 36
+Esdras 1
+Esdras 3; Esdras 4
+Esdras 5; Esdras 6
+Esdras 7
+Neemias 1; Neemias 2
+Neemias 4
+Neemias 5; Neemias 6
+Neemias 8
+Ester 1; Ester 2
+Ester 3; Ester 4
+Ester 5; Ester 6
+Ester 7; Ester 8
+Ester 9; Ester 10
+Jó 1; Jó 2
+Jó 42
+Salmos 1; Salmos 15; Salmos 19
+Salmos 23; Salmos 24; Salmos 27
+Salmos 37
+Salmos 39; Salmos 42; Salmos 46
+Salmos 67; Salmos 73; Salmos 84
+Salmos 90; Salmos 91; Salmos 92
+Salmos 97; Salmos 98; Salmos 103; Salmos 117
+Salmos 119:1-80
+Salmos 119:81-176
+Salmos 121; Salmos 125; Salmos 148
+Provérbios 1
+Provérbios 3
+Provérbios 4; Provérbios 10
+Provérbios 15
+Provérbios 25
+Provérbios 31:10-31
+Eclesiastes 5
+Eclesiastes 7
+Eclesiastes 11; Eclesiastes 12
+Isaías 5
+Isaías 11
+Isaías 26; Isaías 35
+Isaías 40
+Isaías 42; Isaías 43
+Isaías 53; Isaías 54
+Isaías 60; Isaías 61
+Jeremias 9:23-26; Jeremias 10
+Jeremias 26
+Jeremias 52
+Daniel 1
+Daniel 2
+Daniel 3
+Daniel 4
+Daniel 5
+Daniel 6
+Daniel 7
+Daniel 8
+Daniel 9
+Daniel 10
+Daniel 11
+Daniel 12
+Joel 2
+Amós 8
+Jonas 1; Jonas 2
+Jonas 3; Jonas 4
+Miquéias 4
+Ageu 2
+Zacarias 4
+Malaquias 3; Malaquias 4
+Mateus 1; Mateus 2
+Mateus 3; Mateus 4
+Mateus 5
+Mateus 6
+Mateus 7; Mateus 8
+Mateus 9
+Mateus 10
+Mateus 11
+Mateus 12
+Mateus 13
+Mateus 14
+Mateus 15; Mateus 16
+Mateus 17
+Mateus 18
+Mateus 19; Mateus 20
+Mateus 21
+Mateus 22
+Mateus 23
+Mateus 24
+Mateus 25; Mateus 26
+Mateus 27; Mateus 28
+Marcos 1; Marcos 2
+Marcos 3; Marcos 4
+Marcos 5; Marcos 6
+Marcos 7; Marcos 8
+Marcos 9; Marcos 10
+Marcos 11; Marcos 12
+Marcos 13; Marcos 14
+Marcos 15; Marcos 16
+Lucas 1
+Lucas 2; Lucas 3
+Lucas 4; Lucas 5
+Lucas 6; Lucas 7
+Lucas 8
+Lucas 9; Lucas 10
+Lucas 11
+Lucas 12
+Lucas 13; Lucas 14
+Lucas 15; Lucas 16
+Lucas 17; Lucas 18
+Lucas 19; Lucas 20
+Lucas 21
+Lucas 22
+Lucas 23; Lucas 24
+João 1
+João 2; João 3
+João 4; João 5
+João 6
+João 7
+João 8
+João 9
+João 10
+João 11
+João 12
+João 13
+João 14; João 15
+João 16; João 17
+João 18; João 19
+João 20; João 21
+Atos 1
+Atos 2
+Atos 3; Atos 4
+Atos 5; Atos 6
+Atos 7
+Atos 8; Atos 9
+Atos 10
+Atos 11; Atos 12
+Atos 13
+Atos 14; Atos 15
+Atos 16; Atos 17
+Atos 18; Atos 19
+Atos 20
+Atos 21
+Atos 22; Atos 23
+Atos 24; Atos 25
+Atos 26
+Romanos 1
+Romanos 12; Romanos 13
+Romanos 14; Romanos 15
+1ª Coríntios 12:12-31; 1ª Coríntios 13
+1ª Coríntios 15
+Gálatas 5:16-26; Gálatas 6
+Efésios 6; Colossenses 3:12-25
+1ª Tessalonicenses 4:13-18; 1ª Tessalonicenses 5
+2ª Tessalonicenses 2
+1ª Timóteo 4; 1ª Timóteo 6
+2ª Timóteo 3
+Hebreus 11
+Tiago 3
+1ª Pedro 5
+2ª Pedro 3
+1ª João 2
+1ª João 4; 1ª João 5:1-5
+Apocalipse 1
+Apocalipse 2; Apocalipse 3
+Apocalipse 12; Apocalipse 13
+Apocalipse 14; Apocalipse 16
+Apocalipse 18; Apocalipse 20
+Apocalipse 21; Apocalipse 22
