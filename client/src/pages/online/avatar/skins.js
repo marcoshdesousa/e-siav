@@ -1,43 +1,46 @@
 // Skins dos jogos: 10 de menino e 10 de menina (valem para o Surf DBV e o Stumble DBV) e 30 skates
-// para o Surf DBV. Roupas comportadas: saias e vestidos no joelho ou abaixo, sem brincos nem colares.
+// para o Surf DBV. Os personagens são modelos de verdade (Universal Base Characters, de Quaternius,
+// CC0): roupa de aventureiro (ranger) ou de camisa e calça (casual). Aqui só se escolhe a roupa,
+// o cabelo e as cores (a cor da roupa "tinge" o tecido do modelo).
 //
-// hair: curto | espetado | lateral | cacheado | black | raspado | topete | longo | rabo | coque | trancas | chanel | maria | ondulado
-// top: camiseta | manga | moletom | jaqueta | uniforme | polo | colete | vestido | regata-sem (não usado) ...
-// bottom: calca | bermuda | saia | saia-longa | (vestido usa a cor do top)
-// hat: bone | bone-tras | gorro | faixa | chapeu | boina | capacete | null
-// acc: mochila | oculos | lenco | fone | cachecol | null
+// outfit: ranger | casual · hair: curto | raspado | longo | coque | raspado-f
 import { api } from '../../../api.js';
 
-const TONES = ['#f8d5b8', '#efc39e', '#d9a07a', '#b97a52', '#8d5a3b', '#5e3a24'];
-const M = (id, name, o) => ({ id, name, g: 'm', skin: TONES[1], hair: 'curto', hairColor: '#2b1a10', eyes: '#3b2a1a', shoes: '#f8fafc', shoes2: '#ef4444', bottom: { type: 'calca', color: '#1e3a8a' }, ...o });
-const F = (id, name, o) => ({ id, name, g: 'f', skin: TONES[0], hair: 'longo', hairColor: '#3b2314', eyes: '#3b2a1a', shoes: '#f8fafc', shoes2: '#ec4899', bottom: { type: 'saia', color: '#1e3a8a' }, ...o });
-const top = (type, color, color2 = '#ffffff', extra = {}) => ({ type, color, color2, ...extra });
+const PELE = { clara: '#ffffff', media: '#f1d2b8', morena: '#d9a07a', parda: '#b98059', negra: '#8d5a3b', escura: '#6a4128' };
+const CABELO = { preto: '#1b120c', castanho: '#3b2314', castanhoClaro: '#6b3a1f', ruivo: '#9a3b16', loiro: '#c79a3f' };
+const M = (id, name, o) => ({ id, name, g: 'm', outfit: 'ranger', hair: 'curto', hairColor: CABELO.castanho, skin: PELE.media, cloth: '#ffffff', ...o });
+const F = (id, name, o) => ({ id, name, g: 'f', outfit: 'ranger', hair: 'longo', hairColor: CABELO.castanho, skin: PELE.clara, cloth: '#ffffff', ...o });
 
 export const SKINS = [
   // ───────────── Meninos ─────────────
-  M('m01', 'Desbravador de gala', { top: top('uniforme', '#c9a66b', '#facc15'), bottom: { type: 'calca', color: '#1f4d33' }, hat: { type: 'chapeu', color: '#8b6b3d' }, acc: { type: 'lenco', color: '#facc15' }, shoes: '#111827', shoes2: '#111827' }),
-  M('m03', 'Skatista', { top: top('moletom', '#f97316', '#1f2937'), bottom: { type: 'calca', color: '#334155' }, hat: { type: 'bone-tras', color: '#0ea5e9' }, hair: 'espetado', hairColor: '#7c2d12' }),
-  M('m07', 'Campista', { top: top('jaqueta', '#ea580c', '#fde68a'), bottom: { type: 'calca', color: '#78350f' }, hat: { type: 'gorro', color: '#dc2626' }, acc: { type: 'mochila', color: '#166534' } }),
-  M('m09', 'Músico', { top: top('jaqueta', '#7c3aed', '#111827'), bottom: { type: 'calca', color: '#111827' }, acc: { type: 'fone', color: '#e11d48' }, hair: 'cacheado', skin: TONES[4] }),
-  M('m13', 'Piloto', { top: top('jaqueta', '#1e3a8a', '#facc15'), bottom: { type: 'calca', color: '#1e293b' }, hat: { type: 'bone', color: '#1e3a8a' }, acc: { type: 'oculos', color: '#0f172a' } }),
-  M('m15', 'Inverno', { top: top('moletom', '#2563eb', '#ffffff'), bottom: { type: 'calca', color: '#1e293b' }, hat: { type: 'gorro', color: '#ffffff' }, acc: { type: 'cachecol', color: '#dc2626' } }),
-  M('m17', 'Noite de gala', { top: top('terno', '#111827', '#ffffff'), bottom: { type: 'calca', color: '#111827' }, shoes: '#111827', shoes2: '#111827', hair: 'lateral' }),
-  M('m22', 'Robótica', { top: top('camiseta', '#475569', '#22d3ee', { logo: true }), bottom: { type: 'calca', color: '#1e293b' }, acc: { type: 'oculos', color: '#22d3ee' }, hair: 'espetado', hairColor: '#111827', skin: TONES[5] }),
-  M('m27', 'Artista', { top: top('camiseta', '#ffffff', '#ec4899', { paint: true }), bottom: { type: 'calca', color: '#3b82f6' }, hat: { type: 'boina', color: '#dc2626' }, hair: 'cacheado', hairColor: '#111827' }),
-  M('m28', 'Líder DBV', { top: top('polo', '#1e3a8a', '#facc15', { logo: true }), bottom: { type: 'calca', color: '#334155' }, acc: { type: 'lenco', color: '#facc15' }, hair: 'lateral', skin: TONES[2] }),
+  M('m01', 'Desbravador', { outfit: 'ranger', cloth: '#ffffff', hairColor: CABELO.castanho, skin: PELE.media }),
+  M('m03', 'Skatista', { outfit: 'casual', cloth: '#ffb28a', hair: 'curto', hairColor: CABELO.ruivo, skin: PELE.clara }),
+  M('m07', 'Campista', { outfit: 'ranger', cloth: '#ffd29a', hair: 'raspado', hairColor: CABELO.preto, skin: PELE.morena }),
+  M('m09', 'Músico', { outfit: 'casual', cloth: '#c9b6ff', hair: 'raspado', hairColor: CABELO.preto, skin: PELE.negra }),
+  M('m13', 'Piloto', { outfit: 'casual', cloth: '#9ec2ff', hair: 'curto', hairColor: CABELO.preto, skin: PELE.parda }),
+  M('m15', 'Inverno', { outfit: 'ranger', cloth: '#a8d4ff', hair: 'curto', hairColor: CABELO.loiro, skin: PELE.clara }),
+  M('m17', 'Noite de gala', { outfit: 'casual', cloth: '#8a8fa3', hair: 'curto', hairColor: CABELO.castanho, skin: PELE.media }),
+  M('m22', 'Robótica', { outfit: 'casual', cloth: '#b6f0ef', hair: 'raspado', hairColor: CABELO.preto, skin: PELE.escura }),
+  M('m27', 'Artista', { outfit: 'ranger', cloth: '#ffb7d0', hair: 'curto', hairColor: CABELO.castanhoClaro, skin: PELE.media }),
+  M('m28', 'Líder DBV', { outfit: 'casual', cloth: '#fff1a8', hair: 'curto', hairColor: CABELO.castanho, skin: PELE.morena }),
 
   // ───────────── Meninas ─────────────
-  F('f01', 'Desbravadora de gala', { legs: '#e7e5e4', top: top('uniforme', '#c9a66b', '#facc15'), bottom: { type: 'saia', color: '#1f4d33' }, hat: { type: 'boina', color: '#14532d' }, acc: { type: 'lenco', color: '#facc15' }, hair: 'coque', shoes: '#111827', shoes2: '#111827' }),
-  F('f03', 'Skatista', { top: top('moletom', '#a855f7', '#fdf4ff'), bottom: { type: 'calca', color: '#334155' }, hat: { type: 'bone-tras', color: '#ec4899' }, hair: 'rabo', hairColor: '#7c2d12' }),
-  F('f05', 'Jogadora de basquete', { top: top('camiseta', '#7c3aed', '#ffffff', { number: '23' }), bottom: { type: 'calca', color: '#7c3aed' }, hat: { type: 'faixa', color: '#ffffff' }, hair: 'trancas', hairColor: '#111827', skin: TONES[4] }),
-  F('f07', 'Campista', { top: top('jaqueta', '#f97316', '#fde68a'), bottom: { type: 'calca', color: '#78350f' }, hat: { type: 'gorro', color: '#ec4899' }, acc: { type: 'mochila', color: '#166534' }, hair: 'trancas' }),
-  F('f12', 'Cientista', { top: top('jaleco', '#ffffff', '#a855f7'), bottom: { type: 'calca', color: '#334155' }, acc: { type: 'oculos', color: '#0f172a' }, hair: 'rabo', hairColor: '#ea580c' }),
-  F('f15', 'Inverno', { top: top('moletom', '#f472b6', '#ffffff'), bottom: { type: 'calca', color: '#1e293b' }, hat: { type: 'gorro', color: '#ffffff' }, acc: { type: 'cachecol', color: '#7c3aed' }, hair: 'longo' }),
-  F('f17', 'Noite de gala', { top: top('vestido', '#1e3a8a', '#93c5fd'), bottom: { type: 'saia-longa', color: '#1e3a8a' }, hair: 'coque', hairColor: '#111827', shoes: '#111827', shoes2: '#111827' }),
-  F('f24', 'Florista', { legs: '#fecdd3', top: top('vestido', '#fda4af', '#fff1f2', { flower: true }), bottom: { type: 'vestido', color: '#fda4af' }, hair: 'maria', hairColor: '#7c2d12' }),
-  F('f28', 'Líder DBV', { legs: '#1f2937', top: top('polo', '#1e3a8a', '#facc15', { logo: true }), bottom: { type: 'saia', color: '#334155' }, acc: { type: 'lenco', color: '#facc15' }, hair: 'coque', skin: TONES[2] }),
-  F('f30', 'Estrela', { top: top('jaqueta', '#e11d48', '#fde047'), bottom: { type: 'calca', color: '#1f2937' }, hair: 'longo', hairColor: '#b91c1c', acc: { type: 'oculos', color: '#fde047' } }),
+  F('f01', 'Desbravadora', { outfit: 'ranger', cloth: '#ffffff', hair: 'longo', hairColor: CABELO.castanhoClaro, skin: PELE.clara }),
+  F('f03', 'Skatista', { outfit: 'casual', cloth: '#d6b8ff', hair: 'coque', hairColor: CABELO.ruivo, skin: PELE.clara }),
+  F('f05', 'Jogadora de basquete', { outfit: 'casual', cloth: '#ffcf9e', hair: 'coque', hairColor: CABELO.preto, skin: PELE.negra }),
+  F('f07', 'Campista', { outfit: 'ranger', cloth: '#ffd29a', hair: 'longo', hairColor: CABELO.castanho, skin: PELE.morena }),
+  F('f12', 'Cientista', { outfit: 'casual', cloth: '#ffffff', hair: 'coque', hairColor: CABELO.loiro, skin: PELE.clara }),
+  F('f15', 'Inverno', { outfit: 'ranger', cloth: '#ffc3e1', hair: 'longo', hairColor: CABELO.loiro, skin: PELE.media }),
+  F('f17', 'Noite de gala', { outfit: 'casual', cloth: '#9fb4ff', hair: 'longo', hairColor: CABELO.preto, skin: PELE.parda }),
+  F('f24', 'Florista', { outfit: 'casual', cloth: '#ffb3cf', hair: 'coque', hairColor: CABELO.castanho, skin: PELE.media }),
+  F('f28', 'Líder DBV', { outfit: 'ranger', cloth: '#fff1a8', hair: 'coque', hairColor: CABELO.preto, skin: PELE.escura }),
+  F('f30', 'Estrela', { outfit: 'casual', cloth: '#ff9e9e', hair: 'raspado-f', hairColor: CABELO.ruivo, skin: PELE.morena }),
 ];
+// Cor que aparece no fundo da foto de cada skin
+for (const s of SKINS) s.top = { color: s.cloth === '#ffffff' ? (s.outfit === 'ranger' ? '#86efac' : '#e2e8f0') : s.cloth };
+
+/** O guarda que corre atrás no Surf DBV. */
+export const GUARD = { id: 'guarda', name: 'Guarda', g: 'm', outfit: 'casual', cloth: '#5a78c8', hair: 'raspado', hairColor: CABELO.preto, skin: PELE.morena, top: { color: '#1e3a8a' } };
 
 export const skinById = (id) => SKINS.find((s) => s.id === id) || SKINS[0];
 

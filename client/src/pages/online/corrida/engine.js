@@ -8,13 +8,8 @@ import { makeCoin, makeTrain, toon, TRAIN_H } from './models.js';
 import { bodyPoint, buildAvatar, poseAvatar, studioEnv } from '../avatar/build.js';
 import { createParticles, makePogo, makePowerup, makeRocket, POWERS, POWER_TYPES } from './powerups.js';
 import { buildBoard, poseBoard, standOnBoard } from '../avatar/board.js';
-import { boardById, skinById } from '../avatar/skins.js';
+import { boardById, GUARD as OFFICER, skinById } from '../avatar/skins.js';
 
-/** O guarda que corre atrás. */
-const OFFICER = {
-  id: 'guarda', name: 'Guarda', g: 'm', skin: '#d9a07a', hair: 'curto', hairColor: '#1f2937', eyes: '#3b2a1a', shoes: '#111827', shoes2: '#111827',
-  top: { type: 'jaqueta', color: '#1e3a8a', color2: '#facc15' }, bottom: { type: 'calca', color: '#172554' }, hat: { type: 'bone', color: '#172554' },
-};
 
 const LANE_W = 2.4;
 const GRAVITY = 40;

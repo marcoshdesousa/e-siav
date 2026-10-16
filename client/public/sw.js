@@ -40,8 +40,8 @@ self.addEventListener('fetch', (e) => {
       .catch(() => caches.match('/')));
     return;
   }
-  // Arquivos do build e imagens do app têm nome fixo por versão: vêm do cache.
-  if (url.pathname.startsWith('/assets/') || url.pathname.startsWith('/uploads/') || url.pathname.startsWith('/img/')) {
+  // Arquivos do build, imagens e modelos 3D dos jogos têm nome fixo por versão: vêm do cache.
+  if (url.pathname.startsWith('/assets/') || url.pathname.startsWith('/uploads/') || url.pathname.startsWith('/img/') || url.pathname.startsWith('/models/')) {
     e.respondWith(caches.match(e.request).then((hit) => hit || fetch(e.request).then((res) => save(e.request, res))));
     return;
   }
