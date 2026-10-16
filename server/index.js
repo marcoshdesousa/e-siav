@@ -116,4 +116,9 @@ app.use((err, _req, res, _next) => {
 const server = http.createServer(app);
 attachOnline(server);
 const PORT = Number(process.env.PORT) || 3000;
+// Um erro inesperado fica registrado no log, mas não derruba o app (senão todo mundo vê
+// "Sistema em atualização" enquanto o Render reinicia o servidor).
+process.on('uncaughtException', (e) => console.error('[erro não tratado]', e));
+process.on('unhandledRejection', (e) => console.error('[promessa rejeitada]', e));
+
 server.listen(PORT, () => console.log(`App do DBV rodando em http://localhost:${PORT}`));

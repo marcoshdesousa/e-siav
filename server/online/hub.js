@@ -75,7 +75,9 @@ function lobbyUpdate() {
   if (lobbyTimer) return;
   lobbyTimer = setTimeout(() => {
     lobbyTimer = null;
-    for (const c of conns.values()) if (c.lobby) send(c.actor.id, { t: 'lobby', game: c.lobby, rooms: lobbyList(c.lobby), online: online(c.lobby) });
+    try {
+      for (const c of conns.values()) if (c.lobby) send(c.actor.id, { t: 'lobby', game: c.lobby, rooms: lobbyList(c.lobby), online: online(c.lobby) });
+    } catch (err) { console.error('[online] lobby', err); }
   }, 300);
 }
 
@@ -277,7 +279,9 @@ function handle(actor, msg) {
 // Relógio: vez que passou do tempo e jogadores que caíram e não voltaram.
 setInterval(() => {
   const now = Date.now();
-  for (const room of rooms.values()) {
+  for (const room of [...rooms.values()]) {
+    // Um erro numa sala não pode derrubar o servidor inteiro: fecha só aquela sala.
+    try {
     for (const p of [...room.players.values()]) {
       if (p.connected || !p.goneAt) continue;
       const limit = room.status === 'playing' ? LEAVE_PLAYING_MS : LEAVE_WAITING_MS;
@@ -310,6 +314,10 @@ setInterval(() => {
     }
     // Sala esquecida há mais de 6 horas some.
     if (now - room.createdAt > 6 * 3600_000 && room.status !== 'playing') closeRoom(room);
+    } catch (e) {
+      console.error('[online] sala', room.game, e);
+      try { closeRoom(room); } catch { rooms.delete(room.id); }
+    }
   }
 }, 1000).unref();
 
