@@ -1,11 +1,15 @@
-// Stumble DBV: corrida de obstáculos com até 10 jogadores. Cada partida tem 3 fases sorteadas entre 20.
+// Stumble DBV: corrida de obstáculos com até 10 jogadores. Cada partida tem 3 fases sorteadas entre 30
+// (cada sorteio aparece numa roleta antes da apresentação da fase).
 // Fase 1 e 2: os primeiros que cruzarem a chegada passam; quem sobra é eliminado. Fase 3 (final):
 // quem chegar primeiro vence. O movimento roda em cada celular; o servidor controla o tempo,
 // quem chegou e em que ordem.
 import crypto from 'node:crypto';
 
 export const STAGE_COUNT = 30;
-const INTRO_MS = 5000;
+const ROULETTE_MS = 3000; // sorteio da fase (roleta na tela) antes da apresentação
+const INTRO_MS = 5000; // apresentação da pista + contagem 3, 2, 1
+/** Tempo total entre o anúncio da fase e a largada. */
+export const INTRO_TOTAL = ROULETTE_MS + INTRO_MS;
 const RACE_MAX_S = 120; // nenhuma fase passa de 2 minutos
 const RESULTS_MS = 4500;
 const MIN_RACE_MS = 9000; // ninguém termina uma fase em menos que isso
@@ -43,7 +47,7 @@ function botPlan(s) {
 export function start(ids, now = Date.now()) {
   const s = {
     players: [...ids], alive: [...ids], stages: pickStages(), round: 0, phase: 'intro',
-    phaseEndsAt: now + INTRO_MS, raceStartAt: now + INTRO_MS, finished: [], progress: {},
+    phaseEndsAt: now + INTRO_TOTAL, raceStartAt: now + INTRO_TOTAL, rouletteEndsAt: now + ROULETTE_MS, finished: [], progress: {},
     qualify: qualifyCount(ids.length, 0), eliminated: [], winner: null, done: false, seed: crypto.randomInt(1e9),
   };
   botPlan(s);
@@ -113,8 +117,9 @@ export function tick(s, now = Date.now()) {
     s.progress = {};
     s.eliminated = [];
     s.qualify = qualifyCount(s.alive.length, s.round);
-    s.phaseEndsAt = now + INTRO_MS;
+    s.phaseEndsAt = now + INTRO_TOTAL;
     s.raceStartAt = s.phaseEndsAt;
+    s.rouletteEndsAt = now + ROULETTE_MS;
     botPlan(s);
     return true;
   }
@@ -150,7 +155,7 @@ export function removePlayer(s, id) {
 export function view(s) {
   return {
     stage: s.stages[s.round], stages: s.stages, round: s.round, phase: s.phase, phaseEndsAt: s.phaseEndsAt,
-    raceStartAt: s.raceStartAt, alive: s.alive, finished: s.finished, qualify: s.qualify, eliminated: s.eliminated,
+    raceStartAt: s.raceStartAt, rouletteEndsAt: s.rouletteEndsAt || 0, rouletteMs: ROULETTE_MS, alive: s.alive, finished: s.finished, qualify: s.qualify, eliminated: s.eliminated,
     winner: s.winner, now: Date.now(), seed: s.seed + s.round, botT: s.botT || {}, stageLen: stageLen(s),
   };
 }

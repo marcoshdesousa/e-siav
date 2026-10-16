@@ -53,7 +53,9 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
   scene.environment = studioEnv(renderer);
   scene.environmentIntensity = 0.5;
   const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 420);
-  scene.add(new THREE.HemisphereLight('#eaf6ff', '#c2a98a', 0.9));
+  // Luz do céu (pega a cor do céu e da água de cada fase) + sol com a única sombra da cena
+  const hemi = new THREE.HemisphereLight('#eaf6ff', '#c2a98a', 0.95);
+  scene.add(hemi);
   const sun = new THREE.DirectionalLight('#fff1dc', 2);
   sun.castShadow = true;
   sun.shadow.mapSize.set(1024, 1024);
@@ -128,6 +130,101 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
       p.s.scale.setScalar(p.size * (1.6 - k));
       p.s.material.opacity = k * 0.9;
     }
+  }
+
+  // ───────────── Confete na chegada (um InstancedMesh só = 1 desenho) ─────────────
+  const CONF_N = 140;
+  const confGeo = new THREE.PlaneGeometry(0.16, 0.26);
+  const confMat = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, fog: false });
+  const conf = new THREE.InstancedMesh(confGeo, confMat, CONF_N);
+  conf.frustumCulled = false;
+  conf.visible = false;
+  const confP = Array.from({ length: CONF_N }, (_, i) => {
+    conf.setColorAt(i, new THREE.Color().setHSL((i * 0.137) % 1, 0.9, 0.58));
+    return { x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, rx: 0, ry: 0, sx: 0, sy: 0, life: 0 };
+  });
+  scene.add(conf);
+  let confLife = 0;
+  const _m = new THREE.Object3D();
+  function confetti(x, y, z) {
+    for (const p of confP) {
+      const a = Math.random() * Math.PI * 2;
+      const v = 3 + Math.random() * 6;
+      Object.assign(p, { x, y, z, vx: Math.cos(a) * v, vz: Math.sin(a) * v - 2, vy: 7 + Math.random() * 8, rx: Math.random() * 6, ry: Math.random() * 6, sx: 4 + Math.random() * 8, sy: 3 + Math.random() * 7, life: 2.6 + Math.random() * 1.6 });
+    }
+    confLife = 4.4;
+    conf.visible = true;
+  }
+  function stepConfetti(dt) {
+    if (confLife <= 0) return;
+    confLife -= dt;
+    for (let i = 0; i < CONF_N; i++) {
+      const p = confP[i];
+      p.life -= dt;
+      // Cai devagar e balança como papel
+      p.vy = Math.max(p.vy - 14 * dt, -2.4);
+      p.vx *= 1 - Math.min(1, dt * 1.6);
+      p.vz *= 1 - Math.min(1, dt * 1.6);
+      p.x += (p.vx + Math.sin(p.rx * 2) * 0.8) * dt;
+      p.y += p.vy * dt;
+      p.z += p.vz * dt;
+      p.rx += p.sx * dt;
+      p.ry += p.sy * dt;
+      _m.position.set(p.x, p.y, p.z);
+      _m.rotation.set(p.rx, p.ry, 0);
+      _m.scale.setScalar(p.life > 0 ? Math.min(1, p.life * 2) : 0);
+      _m.updateMatrix();
+      conf.setMatrixAt(i, _m.matrix);
+    }
+    conf.instanceMatrix.needsUpdate = true;
+    if (confLife <= 0) conf.visible = false;
+  }
+
+  // ───────────── Linhas de velocidade (mergulho e quedas rápidas) ─────────────
+  const LINE_N = 18;
+  const lineGeo = new THREE.BoxGeometry(0.025, 0.025, 1);
+  const lineMat = new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.6, depthWrite: false, fog: false });
+  const lines = new THREE.InstancedMesh(lineGeo, lineMat, LINE_N);
+  lines.frustumCulled = false;
+  lines.visible = false;
+  scene.add(lines);
+  const lineP = Array.from({ length: LINE_N }, () => ({ x: 0, y: 0, z: 0, ry: 0, len: 1, life: 0 }));
+  let lineI = 0;
+  let lineAcc = 0;
+  let linesOn = 0;
+  function stepLines(dt, fast) {
+    if (fast) {
+      lineAcc += dt * 40;
+      while (lineAcc >= 1) {
+        lineAcc -= 1;
+        const p = lineP[lineI++ % LINE_N];
+        const a = Math.random() * Math.PI * 2;
+        const rr = 0.7 + Math.random() * 0.9;
+        // Nasce em volta do boneco, um pouco atrás do movimento
+        const vl = Math.hypot(st.vx, st.vz) || 1;
+        const back = 0.6 + Math.random();
+        p.x = st.x + Math.cos(a) * rr - (st.vx / vl) * back;
+        p.y = st.y + 0.9 + Math.sin(a) * rr * 0.8;
+        p.z = st.z + Math.sin(a) * rr * 0.3 - (st.vz / vl) * back;
+        p.ry = Math.atan2(st.vx, st.vz);
+        p.len = 0.8 + Math.random() * 1.2;
+        p.life = 0.22;
+      }
+    }
+    let any = false;
+    for (let i = 0; i < LINE_N; i++) {
+      const p = lineP[i];
+      if (p.life > 0) { p.life -= dt; any = true; }
+      const k = Math.max(0, p.life / 0.22);
+      _m.position.set(p.x, p.y, p.z);
+      _m.rotation.set(0, p.ry, 0);
+      _m.scale.set(k, k, p.len * k);
+      _m.updateMatrix();
+      lines.setMatrixAt(i, _m.matrix);
+    }
+    lines.instanceMatrix.needsUpdate = any || linesOn > 0;
+    linesOn = any ? 1 : 0;
+    lines.visible = any;
   }
 
   let stage = null;
@@ -229,6 +326,10 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
   function loadStage(index, seed, slot, count) {
     clearStage();
     stage = buildStage(scene, index, seed);
+    if (stage.theme) {
+      hemi.color.set('#eaf6ff').lerp(new THREE.Color(stage.theme.skyTop), 0.22);
+      hemi.groundColor.set('#c2a98a').lerp(new THREE.Color(stage.theme.water), 0.35);
+    }
     buildPath();
     const cols = Math.min(count, 5);
     const row = Math.floor(slot / 5);
@@ -273,7 +374,7 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
     st.dive = st.recover = 0;
     st.grounded = false;
     st.coyote = 0;
-    onSound?.('hit');
+    onSound?.('stbBump');
     burst(st.x, st.y + 1, st.z, 6, SPARK, 4, 0.4);
   }
 
@@ -327,7 +428,8 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
       st.grounded = false;
       st.coyote = 0;
       st.jumpBuf = 0;
-      onSound?.('jump');
+      onSound?.('stbJump');
+      burst(st.x, st.y + 0.1, st.z, 5, DUST, 2, 0.4);
     }
     // Vento dos ventiladores
     if (stage.winds) {
@@ -377,11 +479,11 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
       if (ground.kind === 'bounce') {
         st.vy = BOUNCE;
         st.dive = 0;
-        onSound?.('jump');
+        onSound?.('stbBounce');
         burst(st.x, st.y + 0.2, st.z, 10, SPARK, 5.5, 0.35);
         ground.squash = 1;
       } else {
-        if (!wasGrounded && impact < -9) burst(st.x, st.y + 0.1, st.z, 7, DUST, 2.6, 0.55);
+        if (!wasGrounded && impact < -9) { burst(st.x, st.y + 0.1, st.z, 7, DUST, 2.6, 0.55); onSound?.('stbLand'); }
         if (st.dive > 0) { st.dive = 0; st.recover = 0.32; } // caiu de barriga: escorrega e levanta
         st.vy = 0;
         st.grounded = true;
@@ -401,7 +503,7 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
       let dz = st.z - cz;
       let d = Math.hypot(dx, dz);
       if (d >= R) continue;
-      if (w.fake) { w.gone = true; w.mesh.visible = false; onSound?.('pop'); burst(wx, 1.3, wz, 8, SPARK, 4, 0.5); continue; }
+      if (w.fake) { w.gone = true; w.mesh.visible = false; onSound?.('stbDoor'); burst(wx, 1.3, wz, 8, SPARK, 4, 0.5); continue; }
       let px = cx;
       let pz = cz;
       if (d < 1e-4) {
@@ -464,9 +566,14 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
       physicsStep(h, t, 1 / n, fw);
     }
     // Pontos seguros
-    for (const c of stage.checkpoints) if (st.z < c - 0.5 && c < st.cp) st.cp = c;
+    for (const c of stage.checkpoints) {
+      if (!(st.z < c - 0.5 && c < st.cp)) continue;
+      st.cp = c;
+      onSound?.('stbCheckpoint');
+      burst(st.x, st.y + 1.2, st.z, 8, SPARK, 3.5, 0.35);
+    }
     // Caiu na água: volta no último ponto seguro
-    if (st.y < -6 && !st.respawn) { st.respawn = 0.8; onSound?.('error'); burst(st.x, -11.5, st.z, 10, SPLASH, 6, 1.2); }
+    if (st.y < -6 && !st.respawn) { st.respawn = 0.8; onSound?.('stbFall'); burst(st.x, -11.5, st.z, 10, SPLASH, 6, 1.2); }
     if (st.respawn) {
       st.respawn -= dt;
       if (st.respawn <= 0) {
@@ -485,8 +592,9 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
     // Chegada
     if (!st.finished && st.z < stage.finishZ && st.y > -1) {
       st.finished = true;
-      onSound?.('win');
+      onSound?.('stbQualify');
       burst(st.x, st.y + 1.5, st.z, 16, SPARK, 7, 0.5);
+      confetti(st.x, st.y + 2, st.z);
       onFinish?.();
     }
     // Vira suave para onde está andando
@@ -502,6 +610,7 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
     const dt = Math.min(0.06, (now - (last || now)) / 1000);
     last = now;
     st.animT += dt;
+    if (st.hidden) return; // roleta cobrindo a tela: não desenha o 3D (economiza bateria no celular)
     if (!stage) { renderer.render(scene, camera); return; }
     const t = getTime();
     // Obstáculos e plataformas móveis (mesmo tempo para todos)
@@ -537,6 +646,12 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
     stepPuffs(dt);
     const racing = st.mode === 'race' && t >= 0;
     if (racing) physics(dt, t);
+    stepConfetti(dt);
+    const fast = racing && !st.respawn && (st.dive > 0 || st.vy < -15 || Math.hypot(st.vx, st.vz) > 10.5);
+    stepLines(dt, fast);
+    // Câmera abre um pouco quando está rápido (mergulho, queda, cama elástica) e volta suave
+    const fov = fast || st.vy > 14 ? 66 : 60;
+    if (Math.abs(camera.fov - fov) > 0.05) { camera.fov += (fov - camera.fov) * Math.min(1, dt * 5); camera.updateProjectionMatrix(); }
     // Meu boneco
     me.position.set(st.x, st.y, st.z);
     me.rotation.y += angDiff(me.rotation.y, st.yaw) * Math.min(1, dt * 16);
@@ -639,7 +754,8 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
       camPos.z += (st.z + 8.4 - camPos.z) * kxz;
       camPos.y += (gy + 5.6 - camPos.y) * ky;
       camera.position.copy(camPos);
-      camLookNow.lerp(camLook.set(st.x * 0.8, gy + 1.2, st.z - 5), Math.min(1, dt * 10));
+      // Olha um pouquinho para onde está indo (a câmera fica mais viva sem sacudir)
+      camLookNow.lerp(camLook.set(st.x * 0.8 + st.vx * 0.12, gy + 1.2, st.z - 5 + Math.min(0, st.vz) * 0.12), Math.min(1, dt * 7));
       camera.lookAt(camLookNow);
     }
     // Clarão ao voltar da água
@@ -669,6 +785,7 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
     loadStage,
     setMode(m) { st.mode = m; },
     setIntro(k) { st.introK = k; },
+    setHidden(v) { st.hidden = !!v; },
     setOutfit(o) {
       const pos = me.position.clone();
       scene.remove(me);
@@ -728,7 +845,8 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
         st.grounded = false;
         st.coyote = 0;
         st.dive = 0.5;
-        onSound?.('move');
+        onSound?.('stbDive');
+        burst(st.x, st.y + 0.2, st.z, 5, DUST, 2.2, 0.45);
       },
     },
     get finished() { return st.finished; },
@@ -740,6 +858,8 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
       ro.disconnect();
       clearStage();
       for (const p of puffs) p.s.material.dispose();
+      confGeo.dispose(); confMat.dispose(); conf.dispose();
+      lineGeo.dispose(); lineMat.dispose(); lines.dispose();
       puffTex.dispose();
       flash.geometry.dispose();
       flash.material.dispose();

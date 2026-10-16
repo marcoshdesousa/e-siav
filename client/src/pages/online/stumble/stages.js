@@ -1,4 +1,4 @@
-// As 20 fases do Stumble DBV. Cada fase é uma sequência de trechos montados com peças arredondadas
+// As 30 fases do Stumble DBV. Cada fase é uma sequência de trechos montados com peças arredondadas
 // de brinquedo (plataformas com borda, barras listradas, pêndulos, pistões, plataformas móveis,
 // esteiras, portas, cama elástica, pisos que caem...). Tudo se move em função do tempo da corrida,
 // igual em todos os celulares. As geometrias e materiais ficam em cache (uma por tamanho) e a
@@ -19,7 +19,7 @@ export function rng(seed) {
 }
 
 // Paletas: chão, borda (rim), cores de destaque, obstáculos, céu (topo/horizonte), água e grama.
-const THEMES = [
+export const THEMES = [
   { floor: '#ffb330', trim: '#fff3da', alt: '#ff7a3d', acc: '#ff4f8b', obs: '#7b4dff', skyTop: '#3d9df3', skyBot: '#cdeefe', water: '#3cc8ea', grass: '#7fd65a', rock: '#c9a27a' },
   { floor: '#46d39f', trim: '#effff8', alt: '#1fb07c', acc: '#ff5470', obs: '#3d6bff', skyTop: '#28b2e6', skyBot: '#dcfbff', water: '#33b6dc', grass: '#93e26a', rock: '#b9a48c' },
   { floor: '#5ea7ff', trim: '#f2f7ff', alt: '#3a7cf0', acc: '#ffcf3a', obs: '#ff4d5e', skyTop: '#ff8f70', skyBot: '#ffe6b5', water: '#3ea4dc', grass: '#9fd65a', rock: '#c79a7a' },
@@ -1336,7 +1336,8 @@ export function buildStage(scene, index, seed) {
   scenery(ctx, index);
   ctx.flush();
   scene.background = skyTex(theme);
-  scene.fog = new THREE.Fog(theme.skyBot, 110, 360);
+  // Névoa leve: dá profundidade (o fim da pista some suave no horizonte)
+  scene.fog = new THREE.Fog(theme.skyBot, 75, 330);
   const owned = ctx.owned;
   return { ...ctx, name: st.name, theme, dispose: () => owned.forEach((o) => o.dispose()) };
 }

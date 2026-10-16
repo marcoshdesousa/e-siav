@@ -69,7 +69,42 @@ function noise(start, dur, vol = 0.25) {
   s.start(a.currentTime + start);
 }
 
+/** Ruído filtrado (vento, arrasto, passo): o filtro desliza de f0 para f1. */
+function swish(start, dur, { vol = 0.2, f0 = 800, f1 = 2400, q = 1.2, type = 'bandpass' } = {}) {
+  const a = audio();
+  if (!a || muted) return;
+  const len = Math.floor(a.sampleRate * dur);
+  const buf = a.createBuffer(1, len, a.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  const s = a.createBufferSource();
+  const f = a.createBiquadFilter();
+  const g = a.createGain();
+  const t0 = a.currentTime + start;
+  f.type = type; f.Q.value = q;
+  f.frequency.setValueAtTime(f0, t0);
+  f.frequency.exponentialRampToValueAtTime(f1, t0 + dur);
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(vol, t0 + dur * 0.3);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  s.buffer = buf; s.connect(f); f.connect(g); g.connect(master);
+  s.start(t0); s.stop(t0 + dur + 0.02);
+}
+/** Sininho (moeda): som de metal com harmônicos. */
+function bell(freq, start, dur, vol = 0.16) {
+  tone(freq, start, dur, { type: 'sine', vol });
+  tone(freq * 2.01, start, dur * 0.6, { type: 'sine', vol: vol * 0.45 });
+  tone(freq * 3.98, start, dur * 0.35, { type: 'sine', vol: vol * 0.18 });
+}
+
 const SFX = {
+  // Surf DBV: troca de trilho (vento curto), pulo, rolar, cair no chão e moedas que vão subindo de tom
+  lane: () => swish(0, 0.16, { vol: 0.16, f0: 700, f1: 2600, q: 0.9 }),
+  hop: () => { swish(0, 0.18, { vol: 0.12, f0: 500, f1: 1800 }); tone(260, 0, 0.14, { type: 'sine', vol: 0.12, to: 520 }); },
+  slide: () => swish(0, 0.35, { vol: 0.18, f0: 1800, f1: 500, q: 0.7 }),
+  land: () => { tone(120, 0, 0.12, { type: 'sine', vol: 0.22, to: 55 }); swish(0, 0.1, { vol: 0.08, f0: 400, f1: 200, type: 'lowpass' }); },
+  coinstreak: (k = 0) => { const f = 1046 * 2 ** ((Math.min(k, 12) % 13) / 12); bell(f, 0, 0.22); bell(f * 1.5, 0.045, 0.2, 0.1); },
+
   tap: () => tone(660, 0, 0.05, { type: 'triangle', vol: 0.2 }),
   move: () => tone(440, 0, 0.04, { type: 'triangle', vol: 0.15 }),
   flip: () => tone(520, 0, 0.06, { type: 'sine', vol: 0.2, to: 780 }),
@@ -92,11 +127,35 @@ const SFX = {
   power: () => [523, 784, 1047, 1568].forEach((f, i) => tone(f, i * 0.06, 0.16, { type: 'triangle', vol: 0.2 })),
   rocket: () => { noise(0, 0.9, 0.18); tone(140, 0, 0.8, { type: 'sawtooth', vol: 0.08, to: 320 }); },
   boing: () => tone(180, 0, 0.28, { type: 'sine', vol: 0.25, to: 900 }),
+  // Stumble DBV: pulo, mergulho, pancada, queda na água, ponto seguro, classificação e a roleta das fases
+  stbJump: () => { tone(330, 0, 0.13, { type: 'sine', vol: 0.2, to: 760 }); tone(660, 0.02, 0.08, { type: 'triangle', vol: 0.06, to: 1300 }); },
+  stbBounce: () => { tone(160, 0, 0.32, { type: 'sine', vol: 0.26, to: 980 }); tone(320, 0.03, 0.22, { type: 'triangle', vol: 0.07, to: 1500 }); },
+  stbDive: () => { noise(0, 0.22, 0.1); tone(520, 0, 0.18, { type: 'triangle', vol: 0.12, to: 220 }); },
+  stbLand: () => { tone(110, 0, 0.1, { type: 'sine', vol: 0.22, to: 55 }); noise(0, 0.06, 0.06); },
+  stbBump: () => { tone(220, 0, 0.12, { type: 'square', vol: 0.12, to: 90 }); tone(90, 0, 0.18, { type: 'sine', vol: 0.3, to: 45 }); noise(0, 0.08, 0.18); },
+  stbFall: () => { tone(900, 0, 0.5, { type: 'sine', vol: 0.14, to: 160 }); noise(0.42, 0.3, 0.2); },
+  stbDoor: () => { tone(500, 0, 0.08, { type: 'sine', vol: 0.22, to: 1300 }); noise(0, 0.1, 0.12); },
+  stbCheckpoint: () => [784, 988, 1175].forEach((f, i) => tone(f, i * 0.06, 0.12, { type: 'triangle', vol: 0.16 })),
+  stbQualify: () => { [523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, i * 0.07, 0.16, { type: 'square', vol: 0.12 })); noise(0.3, 0.5, 0.06); },
+  stbTick: () => tone(1800, 0, 0.025, { type: 'square', vol: 0.06, to: 1200 }),
+  stbDing: () => { tone(1568, 0, 0.5, { type: 'sine', vol: 0.22 }); tone(2093, 0.05, 0.45, { type: 'sine', vol: 0.12 }); tone(3136, 0.05, 0.25, { type: 'sine', vol: 0.05 }); },
+  stbGo: () => { tone(880, 0, 0.3, { type: 'square', vol: 0.12 }); tone(1320, 0, 0.3, { type: 'triangle', vol: 0.1 }); },
+  stbCount: () => tone(660, 0, 0.12, { type: 'square', vol: 0.12 }),
+  // Uno DBV: jogar carta, comprar, embaralhar, gritar UNO, pular, inverter, +2/+4, ser pego, sua vez
+  unoPlay: () => { swish(0, 0.09, { vol: 0.2, f0: 2600, f1: 900, q: 0.8 }); tone(180, 0.06, 0.06, { type: 'sine', vol: 0.18, to: 90 }); },
+  unoDraw: () => swish(0, 0.14, { vol: 0.16, f0: 900, f1: 2800, q: 1 }),
+  unoShuffle: () => { for (let k = 0; k < 9; k++) swish(k * 0.045, 0.05, { vol: 0.13, f0: 1800 + (k % 3) * 400, f1: 3200, q: 1.4 }); },
+  unoCall: () => { [784, 988, 1319].forEach((f, i) => tone(f, i * 0.07, 0.14, { type: 'square', vol: 0.13 })); tone(1568, 0.21, 0.25, { type: 'triangle', vol: 0.15 }); },
+  unoSkip: () => { tone(700, 0, 0.09, { type: 'square', vol: 0.12, to: 350 }); tone(350, 0.1, 0.12, { type: 'square', vol: 0.12, to: 175 }); },
+  unoReverse: () => { tone(400, 0, 0.14, { type: 'triangle', vol: 0.18, to: 900 }); tone(900, 0.14, 0.14, { type: 'triangle', vol: 0.18, to: 400 }); },
+  unoPlus: () => { [0, 0.07, 0.14, 0.21].forEach((t) => swish(t, 0.07, { vol: 0.14, f0: 1200, f1: 3000 })); tone(220, 0, 0.3, { type: 'sawtooth', vol: 0.08, to: 110 }); },
+  unoCaught: () => { tone(300, 0, 0.12, { type: 'square', vol: 0.14 }); tone(220, 0.12, 0.25, { type: 'square', vol: 0.14, to: 150 }); },
+  unoTurn: () => { tone(988, 0, 0.08, { type: 'sine', vol: 0.16 }); tone(1319, 0.08, 0.12, { type: 'sine', vol: 0.14 }); },
 };
 
 /** Efeito sonoro: tap, move, flip, point, coin, jump, shoot, pop, hit, error, win, lose, record, whistle, whoosh, crash, explode, skate, spray, power, rocket, boing. */
-export function sfx(name) {
-  try { SFX[name]?.(); } catch { /* sem som */ }
+export function sfx(name, v) {
+  try { SFX[name]?.(v); } catch { /* sem som */ }
 }
 
 // ---------- Música: cada jogo tem a sua (escala, andamento e melodia tirados do id) ----------

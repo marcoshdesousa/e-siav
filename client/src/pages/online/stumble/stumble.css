@@ -105,3 +105,28 @@
 .stb-btn:active { transform: translateY(5px) scale(.96); filter: brightness(1.1); }
 .stb-btn.jump:active { box-shadow: 0 1px 0 #166534, 0 4px 10px rgba(22, 101, 52, .4), inset 0 -6px 12px rgba(0, 0, 0, .15), inset 0 0 0 3px rgba(255, 255, 255, .5); }
 .stb-btn.dive:active { box-shadow: 0 1px 0 #9a3412, 0 4px 8px rgba(154, 52, 18, .35), inset 0 -5px 10px rgba(0, 0, 0, .15), inset 0 0 0 3px rgba(255, 255, 255, .5); }
+
+/* Roleta das fases: cartões passando rápido e freando até a fase sorteada */
+.stb-hud { z-index: 3; }
+.stb-roul { position: absolute; inset: 0; z-index: 2; display: grid; align-content: center; justify-items: center; gap: .3rem; color: #fff; text-align: center; background: radial-gradient(circle at 50% 42%, #4f46e5, #1e1b4b 70%); animation: stb-fade .3s ease-out; pointer-events: none; }
+.stb-roul.final { background: radial-gradient(circle at 50% 42%, #ea580c, #4c0519 70%); }
+.stb-roul::before { content: ''; position: absolute; inset: -40%; background: repeating-conic-gradient(from 0deg, rgba(255, 255, 255, .045) 0 10deg, transparent 10deg 20deg); animation: stb-rays 9s linear infinite; }
+.stb-roul > * { position: relative; }
+.stb-roul small { color: #fde047; font-weight: 900; text-transform: uppercase; letter-spacing: .12em; font-size: .75rem; }
+.stb-roul > b { font-size: 1.7rem; font-weight: 900; text-shadow: 0 3px 0 rgba(0, 0, 0, .3); margin-bottom: .6rem; }
+@keyframes stb-fade { from { opacity: 0; } }
+@keyframes stb-rays { to { transform: rotate(360deg); } }
+.stb-reel { position: relative; width: 100%; height: 196px; overflow: hidden; -webkit-mask: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); mask: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); }
+.stb-reel-strip { position: absolute; top: 14px; left: 0; display: flex; gap: 10px; will-change: transform; }
+.stb-rcard { width: 128px; flex: none; display: grid; gap: .35rem; padding: 6px 6px 8px; border-radius: 18px; background: linear-gradient(180deg, #fff, #e2e8f0); color: #1e1b4b; box-shadow: 0 6px 0 rgba(15, 23, 42, .35), 0 10px 18px rgba(0, 0, 0, .3); transform-origin: 50% 50%; }
+.stb-rcard em { font-style: normal; font-weight: 900; font-size: .78rem; line-height: 1.1; min-height: 2.2em; display: grid; place-items: center; }
+.stb-reel.landed .stb-rcard.pick { background: linear-gradient(180deg, #fef9c3, #fde047); box-shadow: 0 6px 0 #a16207, 0 0 0 4px #fff, 0 0 30px 6px rgba(253, 224, 71, .75); animation: stb-land .45s cubic-bezier(.2, 1.6, .4, 1); }
+@keyframes stb-land { 40% { filter: brightness(1.35); } }
+.stb-reel-mark { position: absolute; left: 50%; top: 0; transform: translateX(-50%); width: 0; height: 0; border-left: 12px solid transparent; border-right: 12px solid transparent; border-top: 16px solid #fde047; filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .4)); }
+.stb-reel-mark::after { content: ''; position: absolute; left: -12px; top: 162px; border-left: 12px solid transparent; border-right: 12px solid transparent; border-bottom: 16px solid #fde047; }
+/* Miniatura da fase: céu, água, a pista em perspectiva e o ícone */
+.stb-thumb { position: relative; display: block; height: 104px; border-radius: 13px; overflow: hidden; background: linear-gradient(180deg, var(--sky1), var(--sky2) 58%, var(--water) 58%); box-shadow: inset 0 0 0 2px rgba(0, 0, 0, .08); }
+.stb-thumb::before { content: ''; position: absolute; top: 14px; left: 12px; width: 26px; height: 9px; border-radius: 9px; background: #fff; box-shadow: 14px -4px 0 2px #fff, 62px 6px 0 -1px rgba(255, 255, 255, .8); opacity: .9; }
+.stb-thumb-track { position: absolute; left: 50%; bottom: -6px; width: 74px; height: 70px; transform: translateX(-50%) perspective(70px) rotateX(38deg); transform-origin: 50% 100%; border-radius: 8px 8px 0 0; background: repeating-linear-gradient(180deg, var(--floor) 0 12px, color-mix(in srgb, var(--floor), #fff 28%) 12px 24px); box-shadow: 0 0 0 4px var(--trim), 0 -2px 10px rgba(0, 0, 0, .2); }
+.stb-thumb-track::after { content: ''; position: absolute; left: 10%; right: 10%; top: 38%; height: 7px; border-radius: 6px; background: repeating-linear-gradient(90deg, var(--obs) 0 8px, #fff 8px 14px); }
+.stb-thumb-ico { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; color: #fff; background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--acc), #fff 35%), var(--acc)); box-shadow: 0 3px 0 rgba(0, 0, 0, .25), inset 0 0 0 2px rgba(255, 255, 255, .5); }

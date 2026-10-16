@@ -14,6 +14,7 @@ import SkinPreview from '../avatar/SkinPreview.jsx';
 import { loadRig, rigLoaded } from '../avatar/build.js';
 import SkinThumb from '../avatar/SkinThumb.jsx';
 import { STAGES } from './stages.js';
+import Roulette from './Roulette.jsx';
 import './stumble.css';
 
 export default function StumblePage({ base }) {
@@ -119,6 +120,9 @@ function Waiting({ net, base, voice }) {
   const [, force] = useState(0);
   useEffect(() => { const t = setInterval(() => force((n) => n + 1), 500); return () => clearInterval(t); }, []);
   const left = room.startAt ? Math.max(0, Math.ceil((room.startAt - clock()) / 1000)) : null;
+  // Espera total vem do servidor (hoje 20 s): usa o maior valor visto para o anel de progresso
+  const total = useRef(20);
+  if (left != null && left > total.current) total.current = left;
   const copy = () => window.navigator.clipboard?.writeText(room.code).catch(() => {});
   return (
     <>
@@ -128,7 +132,7 @@ function Waiting({ net, base, voice }) {
         <div className="stb-count"><Users size={16} /> {room.players.length}/{room.size}</div>
         {room.quick && left != null && (
           <div className="stb-countdown">
-            <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28" pathLength="100" strokeDasharray={`${Math.min(100, (left / 60) * 100)} 100`} /></svg>
+            <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28" pathLength="100" strokeDasharray={`${Math.min(100, (left / total.current) * 100)} 100`} /></svg>
             <b>{left}</b><small>segundos</small>
           </div>
         )}
@@ -253,8 +257,11 @@ function Match({ net, outfit, base, voice }) {
   });
   useEffect(() => {
     const i = g.finished.indexOf(me);
-    if (i >= 0 && myPlace == null) { setMyPlace(i + 1); sfx('record'); }
+    if (i >= 0 && myPlace == null) setMyPlace(i + 1); // o som de classificado toca na hora em que cruza a chegada
   }, [g.finished, me, myPlace]);
+  // Contagem 3, 2, 1 e VAI! com som
+  const beat = g.phase === 'intro' && toStart <= 3.2 && toStart > 0 ? Math.ceil(toStart) : g.phase === 'race' && toStart > -1 ? 0 : null;
+  useEffect(() => { if (beat != null) sfx(beat ? 'stbCount' : 'stbGo'); }, [beat, g.round]);
   useEffect(() => { if (room.status === 'over') sfx(room.result?.winner === me ? 'win' : 'lose'); }, [room.status]);
 
   // Teclado
@@ -280,6 +287,8 @@ function Match({ net, outfit, base, voice }) {
 
   const stage = STAGES[g.stage % STAGES.length];
   const over = room.status === 'over';
+  const spinning = g.phase === 'intro' && g.rouletteEndsAt > now;
+  useEffect(() => { eng.current?.setHidden(spinning); }, [spinning]);
   const raceLeft = g.phase === 'race' ? Math.max(0, Math.ceil((g.phaseEndsAt - now) / 1000)) : null;
   return (
     <div className="stb-match">
@@ -293,7 +302,8 @@ function Match({ net, outfit, base, voice }) {
         <button type="button" className="stb-pill btn" onClick={() => setLeave(true)}><LogOut size={14} /></button>
       </div>
 
-      {g.phase === 'intro' && (
+      {spinning && <Roulette key={g.round} g={g} clock={clock} />}
+      {g.phase === 'intro' && !spinning && (
         <div className={'stb-banner' + (g.round >= 2 ? ' final' : '')}>
           <div className="stb-rounds">{[0, 1, 2].map((r) => <i key={r} className={r < g.round ? 'done' : r === g.round ? 'now' : ''}>{r === 2 ? <Crown size={12} /> : r + 1}</i>)}</div>
           <small>{g.round >= 2 ? 'Fase final' : `Fase ${g.round + 1} de 3`}</small>

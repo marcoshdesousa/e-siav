@@ -12,7 +12,10 @@ test('stumble: 3 fases sorteadas, classificação por rodada e só o 1º da fina
   assert.equal(new Set(s.stages).size, 3);
   assert.ok(s.stages.every((x) => x >= 0 && x < stb.STAGE_COUNT));
   assert.equal(s.phase, 'intro');
-  now += 5000; stb.tick(s, now);
+  assert.ok(s.rouletteEndsAt > now && s.rouletteEndsAt < s.raceStartAt, 'roleta antes da apresentação');
+  stb.tick(s, now + stb.INTRO_TOTAL - 1);
+  assert.equal(s.phase, 'intro');
+  now += stb.INTRO_TOTAL; stb.tick(s, now);
   assert.equal(s.phase, 'race');
   assert.ok(stb.act(s, 1, { type: 'finish' }, {}, now + 1000).error, 'rápido demais');
   now += 20_000;
@@ -23,7 +26,7 @@ test('stumble: 3 fases sorteadas, classificação por rodada e só o 1º da fina
   now += 6000; stb.tick(s, now);
   assert.equal(s.round, 1);
   assert.equal(s.qualify, 3);
-  now += 5000; stb.tick(s, now);
+  now += stb.INTRO_TOTAL; stb.tick(s, now);
   now += 20_000;
   // Tempo acabou com só 1 chegando: passam os que foram mais longe
   stb.act(s, 2, { type: 'finish' }, {}, now);
@@ -52,7 +55,7 @@ test('stumble: tempo da fase depende do tamanho da pista e os robôs não segura
   // 1 pessoa e 4 robôs: a pessoa não chega e mesmo assim a fase acaba cedo
   const s = stb.start([1, -1, -2, -3, -4], now);
   const len = stb.STAGE_LEN[s.stages[0]];
-  now += 5000; stb.tick(s, now);
+  now += stb.INTRO_TOTAL; stb.tick(s, now);
   assert.equal(s.phase, 'race');
   assert.equal(s.phaseEndsAt - s.raceStartAt, stb.raceSeconds(len) * 1000);
   assert.ok(Object.values(s.botT).every((t) => t >= len / 6 && t <= len / 4.2 + 4));
