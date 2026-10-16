@@ -1,5 +1,5 @@
-// Uno DBV: regras oficiais do jogo de cartas (108 cartas, 7 na mão, comprar 1, inverter, pular,
-// +2, coringa e coringa +4, gritar "UNO" com 1 carta). Ganha quem zerar a mão primeiro.
+// Uno DBV: regras oficiais do UNO (108 cartas, 7 na mão, comprar 1, inverter, pular, +2, coringa e
+// coringa +4, gritar "UNO" com 1 carta). Ganha quem zerar a mão primeiro.
 // Tudo roda no servidor: cada jogador só recebe a própria mão e quantas cartas os outros têm.
 import crypto from 'node:crypto';
 
@@ -31,28 +31,55 @@ function shuffle(a) {
   return a;
 }
 
-const isNumber = (c) => /^\d$/.test(c.value);
+/** Acontecimento para o cliente tocar som e animar (play, draw, uno, caught, skip, reverse, shuffle). */
+function event(s, e) {
+  s.seq = (s.seq || 0) + 1;
+  s.events.push({ ...e, seq: s.seq, at: Date.now() });
+  if (s.events.length > 12) s.events.shift();
+}
 
-/** Começa a partida: 7 cartas para cada um e uma carta de número virada na mesa. */
+/** Começa a partida: 7 cartas para cada um e a primeira carta virada na mesa (regra oficial). */
 export function start(playerIds) {
   const deck = newDeck();
   const hands = Object.fromEntries(playerIds.map((id) => [id, deck.splice(0, 7)]));
-  // A primeira carta da mesa é sempre um número (as especiais voltam para o monte).
-  const i = deck.findIndex(isNumber);
-  const [first] = deck.splice(i, 1);
-  return {
+  // Coringa na primeira carta volta para o monte (simplificação: ninguém precisa escolher cor antes de começar).
+  let first = deck.pop();
+  while (first.color === 'w') {
+    deck.splice(crypto.randomInt(deck.length + 1), 0, first);
+    first = deck.pop();
+  }
+  const s = {
     order: [...playerIds], hands, deck, discard: [first], color: first.color, turn: 0, dir: 1,
     drawn: null, // carta que o jogador da vez acabou de comprar (pode jogar ou passar)
     unoSaid: {}, unoPending: null, // quem ficou com 1 carta sem gritar UNO (pode ser pego)
-    turnEndsAt: Date.now() + TURN_SECONDS * 1000, winner: null, log: [], moves: 0, lastPlay: null,
+    turnEndsAt: Date.now() + TURN_SECONDS * 1000, winner: null, log: [], moves: 0, lastPlay: null, events: [], seq: 0,
   };
+  // Carta de ação virada no começo vale para o primeiro jogador.
+  const n = s.order.length;
+  if (first.value === 'skip') { s.turn = 1 % n; say(s, 'Primeira carta: Pular! O primeiro jogador perdeu a vez'); }
+  if (first.value === 'reverse') {
+    if (n === 2) s.turn = 1;
+    else { s.dir = -1; s.turn = n - 1; }
+    say(s, 'Primeira carta: Inverter!');
+  }
+  if (first.value === 'draw2') {
+    draw(s, s.order[0], 2);
+    s.turn = 1 % n;
+    say(s, 'Primeira carta: +2! O primeiro jogador comprou 2');
+  }
+  return s;
 }
 
 const top = (s) => s.discard[s.discard.length - 1];
 const current = (s) => s.order[s.turn];
 
-export function canPlay(s, card) {
+/**
+ * Pode jogar a carta? Mesma cor, mesmo número/símbolo, ou coringa.
+ * O coringa +4 só vale se você não tiver nenhuma carta da cor da mesa (regra oficial).
+ */
+export function canPlay(s, card, hand) {
   const t = top(s);
+  if (card.value === 'wild4' && hand && hand.some((c) => c.id !== card.id && c.color === s.color)) return false;
   return card.color === 'w' || card.color === s.color || card.value === t.value;
 }
 
@@ -64,6 +91,7 @@ function draw(s, id, n) {
       const keep = s.discard.pop();
       s.deck = shuffle(s.discard.map((c) => (c.color === 'w' || c.wild ? { id: c.id, color: 'w', value: c.value } : c)));
       s.discard = [keep];
+      if (s.deck.length) event(s, { type: 'shuffle' });
       if (!s.deck.length) break;
     }
     const c = s.deck.pop();
@@ -85,7 +113,7 @@ const say = (s, text) => { s.log.push(text); if (s.log.length > 30) s.log.shift(
 
 /**
  * Ação de um jogador. Devolve { ok } ou { error }. Tipos:
- * play {card, color?} · draw · pass · uno · catch {target}
+ * play {card, color?} · draw · pass · uno · catch
  */
 export function act(s, id, a, names = {}) {
   if (s.winner) return { error: 'A partida acabou' };
@@ -95,40 +123,45 @@ export function act(s, id, a, names = {}) {
     if (!hand) return { error: 'Você não está na partida' };
     // Vale gritar com 2 cartas na sua vez (antes de jogar) ou logo depois de ficar com 1.
     if (hand.length === 1 || (hand.length === 2 && current(s) === id)) {
+      if (s.unoSaid[id]) return { ok: true, quiet: true };
       s.unoSaid[id] = true;
       if (s.unoPending === id) s.unoPending = null;
-      say(s, `${nm(id)} gritou ÚLTIMA!`);
-      s.lastEvent = { type: 'uno', who: id, at: Date.now() };
+      say(s, `${nm(id)} gritou UNO!`);
+      event(s, { type: 'uno', who: id });
       return { ok: true };
     }
-    return { error: 'Só dá para gritar ÚLTIMA com 2 cartas na sua vez ou com 1 carta' };
+    return { error: 'Só dá para gritar UNO com 2 cartas na sua vez ou com 1 carta' };
   }
   if (a.type === 'catch') {
     const t = s.unoPending;
-    if (!t || t === id || s.hands[t]?.length !== 1 || s.unoSaid[t]) return { error: 'Não dá para pegar ninguém agora' };
+    if (!s.hands[id] || !t || t === id || s.hands[t]?.length !== 1 || s.unoSaid[t]) return { error: 'Não dá para pegar ninguém agora' };
     draw(s, t, UNO_PENALTY);
     s.unoPending = null;
-    say(s, `${nm(id)} pegou ${nm(t)} sem gritar ÚLTIMA: +${UNO_PENALTY} cartas!`);
-    s.lastEvent = { type: 'caught', who: t, by: id, at: Date.now() };
+    say(s, `${nm(id)} pegou ${nm(t)} sem gritar UNO: +${UNO_PENALTY} cartas!`);
+    event(s, { type: 'caught', who: t, by: id, n: UNO_PENALTY });
     return { ok: true };
   }
   if (current(s) !== id) return { error: 'Não é a sua vez' };
   const hand = s.hands[id];
+  // Quem ficou com 1 carta sem gritar e não foi pego antes do próximo jogar ou comprar escapou.
+  const escape = () => { if (s.unoPending != null && s.unoPending !== id) s.unoPending = null; };
   if (a.type === 'draw') {
     if (s.drawn != null) return { error: 'Você já comprou nesta vez' };
+    escape();
     const [c] = draw(s, id, 1);
     s.unoSaid[id] = false;
     s.moves++;
-    if (!c) { nextTurn(s); return { ok: true }; }
+    if (!c) { say(s, `${nm(id)} passou (monte vazio)`); nextTurn(s); return { ok: true }; }
     say(s, `${nm(id)} comprou uma carta`);
+    event(s, { type: 'draw', who: id, n: 1 });
     // A carta comprada pode ser jogada na hora; se não servir, a vez passa sozinha.
-    if (canPlay(s, c)) s.drawn = c.id;
+    if (canPlay(s, c, hand)) s.drawn = c.id;
     else nextTurn(s);
-    s.lastEvent = { type: 'draw', who: id, n: 1, at: Date.now() };
     return { ok: true };
   }
   if (a.type === 'pass') {
     if (s.drawn == null) return { error: 'Compre uma carta antes de passar' };
+    say(s, `${nm(id)} passou a vez`);
     nextTurn(s);
     return { ok: true };
   }
@@ -137,15 +170,17 @@ export function act(s, id, a, names = {}) {
   if (idx < 0) return { error: 'Carta inválida' };
   const card = hand[idx];
   if (s.drawn != null && card.id !== s.drawn) return { error: 'Depois de comprar, só dá para jogar a carta comprada' };
-  if (!canPlay(s, card)) return { error: 'Essa carta não combina com a da mesa' };
+  if (card.value === 'wild4' && !canPlay(s, card, hand)) return { error: 'O +4 só pode ser jogado se você não tiver carta da cor da mesa' };
+  if (!canPlay(s, card, hand)) return { error: 'Essa carta não combina com a da mesa' };
   if (card.color === 'w' && !COLORS.includes(a.color)) return { error: 'Escolha a cor' };
+  escape();
   hand.splice(idx, 1);
   s.discard.push(card.color === 'w' ? { ...card, wild: true, chosen: a.color } : card);
   s.color = card.color === 'w' ? a.color : card.color;
   s.moves++;
-  s.lastPlay = { who: id, card: card.color === 'w' ? { ...card, chosen: a.color } : card, at: Date.now() };
-  // Quem tinha ficado com 1 carta sem gritar e não foi pego até aqui escapou.
-  if (s.unoPending && s.unoPending !== id) s.unoPending = null;
+  const shown = card.color === 'w' ? { ...card, chosen: a.color } : card;
+  s.lastPlay = { who: id, card: shown, at: Date.now() };
+  event(s, { type: 'play', who: id, card: shown });
   if (hand.length === 1) {
     if (!s.unoSaid[id]) s.unoPending = id;
   } else s.unoSaid[id] = false;
@@ -153,14 +188,26 @@ export function act(s, id, a, names = {}) {
     s.winner = id;
     s.done = true;
     say(s, `${nm(id)} venceu!`);
+    event(s, { type: 'win', who: id });
     return { ok: true, win: true };
   }
   const two = s.order.length === 2;
   let skip = 0;
-  if (card.value === 'skip') { skip = 1; say(s, `${nm(s.order[step(s, 1)])} foi pulado`); }
+  if (card.value === 'skip') {
+    skip = 1;
+    const victim = s.order[step(s, 1)];
+    say(s, `${nm(victim)} foi pulado`);
+    event(s, { type: 'skip', who: victim });
+  }
   if (card.value === 'reverse') {
-    if (two) skip = 1; // com 2 jogadores, inverter = pular
-    else { s.dir *= -1; say(s, 'O sentido mudou'); }
+    if (two) { // com 2 jogadores, inverter = pular
+      skip = 1;
+      say(s, `${nm(s.order[step(s, 1)])} foi pulado`);
+    } else {
+      s.dir *= -1;
+      say(s, 'O sentido mudou');
+    }
+    event(s, { type: 'reverse', dir: s.dir });
   }
   if (card.value === 'draw2' || card.value === 'wild4') {
     const victim = s.order[step(s, 1)];
@@ -168,9 +215,10 @@ export function act(s, id, a, names = {}) {
     draw(s, victim, n);
     s.unoSaid[victim] = false;
     say(s, `${nm(victim)} comprou ${n} e perdeu a vez`);
-    s.lastEvent = { type: 'draw', who: victim, n, at: Date.now() };
+    event(s, { type: 'draw', who: victim, n, penalty: true });
     skip = 1;
   }
+  if (card.color === 'w') say(s, `${nm(id)} escolheu ${{ r: 'vermelho', y: 'amarelo', g: 'verde', b: 'azul' }[a.color]}`);
   nextTurn(s, skip);
   return { ok: true };
 }
@@ -182,7 +230,7 @@ export function tick(s, now, names) {
   return true;
 }
 
-/** Tempo da vez acabou: compra 1 e, se der, joga; senão passa (a partida nunca trava). */
+/** Tempo da vez acabou: compra 1 (se ainda não comprou) e passa (a partida nunca trava). */
 export function timeout(s, names) {
   const id = current(s);
   if (s.drawn == null) act(s, id, { type: 'draw' }, names);
@@ -211,29 +259,31 @@ export function removePlayer(s, id) {
 /** O que cada jogador vê: a própria mão e só a quantidade de cartas dos outros. */
 export function view(s, me) {
   const hand = s.hands[me] || [];
+  const mine = current(s) === me;
   return {
     order: s.order, counts: Object.fromEntries(s.order.map((id) => [id, s.hands[id].length])),
-    hand: hand.map((c) => ({ ...c, playable: current(s) === me && (s.drawn == null ? canPlay(s, c) : c.id === s.drawn) })),
-    top: top(s), color: s.color, turn: current(s), dir: s.dir, deck: s.deck.length, drawn: current(s) === me ? s.drawn : null,
-    turnEndsAt: s.turnEndsAt, winner: s.winner, log: s.log.slice(-4), unoPending: s.unoPending, unoSaid: s.unoSaid,
-    lastPlay: s.lastPlay, lastEvent: s.lastEvent || null,
+    hand: hand.map((c) => ({ ...c, playable: mine && (s.drawn == null ? canPlay(s, c, hand) : c.id === s.drawn) })),
+    top: top(s), pile: s.discard.slice(-4, -1), color: s.color, turn: current(s), dir: s.dir, deck: s.deck.length,
+    drawn: mine ? s.drawn : null, turnEndsAt: s.turnEndsAt, winner: s.winner, log: s.log.slice(-4),
+    unoPending: s.unoPending, unoSaid: s.unoSaid, lastPlay: s.lastPlay, events: s.events || [], seq: s.seq || 0,
   };
 }
 
 /**
- * Robôs (jogadores com número negativo). Jogam de um jeito simples, para a pessoa ter boa chance
- * de ganhar: às vezes compram mesmo podendo jogar e às vezes esquecem de gritar ÚLTIMA.
+ * Robôs (jogadores com número negativo). Sempre jogam cartas válidas, escolhem a cor que mais têm
+ * e gritam UNO. Jogam de um jeito simples para a pessoa ter boa chance: às vezes compram mesmo
+ * podendo jogar (vale pela regra) e às vezes esquecem de gritar UNO.
  */
 export function bot(s, now, names) {
   if (s.winner) return false;
   let changed = false;
-  // Pegar uma pessoa que esqueceu de gritar UNO (nem sempre)
+  // Pegar uma pessoa que esqueceu de gritar UNO (nem sempre, e só se ela não gritar antes)
   if (s.unoPending != null && s.unoPending > 0) {
-    if (s.catchFor !== s.unoPending) { s.catchFor = s.unoPending; s.catchAt = now + 1800 + Math.random() * 2500; }
+    if (s.catchFor !== s.unoPending) { s.catchFor = s.unoPending; s.catchAt = now + 1500 + Math.random() * 2500; }
     else if (s.catchAt && now >= s.catchAt) {
       s.catchAt = null;
       const catcher = s.order.find((id) => id < 0);
-      if (catcher && Math.random() < 0.45) { act(s, catcher, { type: 'catch' }, names); changed = true; }
+      if (catcher && Math.random() < 0.5) { act(s, catcher, { type: 'catch' }, names); changed = true; }
     }
   } else s.catchFor = null;
   const cur = s.order[s.turn];
@@ -242,24 +292,26 @@ export function bot(s, now, names) {
   if (now < s.botAt) return changed;
   s.botAt = null;
   const hand = s.hands[cur];
-  const colorFor = () => {
+  const colorFor = (played) => {
     const n = { r: 0, y: 0, g: 0, b: 0 };
-    for (const c of hand) if (c.color !== 'w') n[c.color]++;
-    return Object.entries(n).sort((a, b) => b[1] - a[1])[0][0];
+    for (const c of hand) if (c.color !== 'w' && c.id !== played.id) n[c.color]++;
+    const best = Math.max(...Object.values(n));
+    const top = COLORS.filter((c) => n[c] === best);
+    return top[Math.floor(Math.random() * top.length)];
   };
   const play = (c) => {
-    if (hand.length === 2 && Math.random() < 0.8) act(s, cur, { type: 'uno' }, names);
-    act(s, cur, { type: 'play', card: c.id, color: colorFor() }, names);
+    if (hand.length === 2 && Math.random() < 0.85) act(s, cur, { type: 'uno' }, names);
+    act(s, cur, { type: 'play', card: c.id, color: colorFor(c) }, names);
   };
   if (s.drawn != null) {
     const c = hand.find((x) => x.id === s.drawn);
-    if (c && Math.random() < 0.75) play(c);
+    if (c && Math.random() < 0.8) play(c);
     else act(s, cur, { type: 'pass' }, names);
     return true;
   }
-  const ok = hand.filter((c) => canPlay(s, c));
+  const ok = hand.filter((c) => canPlay(s, c, hand));
   // Com poucas cartas o robô "vacila" mais vezes (fica mais fácil ganhar dele)
-  if (ok.length && Math.random() < (hand.length <= 3 ? 0.55 : 0.85)) {
+  if (ok.length && Math.random() < (hand.length <= 3 ? 0.6 : 0.88)) {
     const plain = ok.filter((c) => c.color !== 'w');
     play(plain.length ? plain[Math.floor(Math.random() * plain.length)] : ok.find((c) => c.value === 'wild') || ok[0]);
   } else act(s, cur, { type: 'draw' }, names);

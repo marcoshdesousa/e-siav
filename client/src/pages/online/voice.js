@@ -9,6 +9,7 @@ const ICE = [{ urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:1
 export function useVoice({ me, players, send, listen }) {
   const peers = useRef(new Map()); // id -> { pc, audio, sender }
   const micRef = useRef(null);
+  const micMeter = useRef(null); // volume do meu microfone
   const [mic, setMic] = useState(false);
   const [micError, setMicError] = useState('');
   const [mutedPeers, setMutedPeers] = useState(() => new Set()); // não ouço
@@ -27,6 +28,7 @@ export function useVoice({ me, players, send, listen }) {
     if (!p) return;
     p.pc.close();
     p.audio.srcObject = null;
+    p.meter?.stop();
     peers.current.delete(id);
   };
 
@@ -36,10 +38,15 @@ export function useVoice({ me, players, send, listen }) {
     const audio = new window.Audio();
     audio.autoplay = true;
     audio.muted = state.current.mutedPeers.has(id);
-    const p = { pc, audio, sender: null };
+    const p = { pc, audio, sender: null, ice: [] }; // ice: candidatos que chegaram antes da descrição remota
     peers.current.set(id, p);
     pc.onicecandidate = (e) => e.candidate && send({ t: 'rtc', to: id, data: { kind: 'ice', candidate: e.candidate } });
-    pc.ontrack = (e) => { audio.srcObject = e.streams[0] || new window.MediaStream([e.track]); audio.play().catch(() => {}); };
+    pc.ontrack = (e) => {
+      const stream = e.streams[0] || new window.MediaStream([e.track]);
+      audio.srcObject = stream;
+      audio.play().catch(() => {});
+      p.meter = meter(stream);
+    };
     pc.onconnectionstatechange = () => {
       if (pc.connectionState === 'failed' && offerer && peers.current.get(id)?.pc === pc) create(id, true);
     };
@@ -50,6 +57,11 @@ export function useVoice({ me, players, send, listen }) {
       pc.createOffer().then((o) => pc.setLocalDescription(o)).then(() => send({ t: 'rtc', to: id, data: { kind: 'offer', sdp: pc.localDescription } })).catch(() => {});
     }
     return p;
+  };
+
+  // Candidatos guardados: só podem entrar depois da descrição remota (senão se perdiam e a voz não conectava).
+  const flushIce = async (p) => {
+    for (const c of p.ice.splice(0)) await p.pc.addIceCandidate(c).catch(() => {});
   };
 
   // Sinais vindos dos outros jogadores.
@@ -64,15 +76,20 @@ export function useVoice({ me, players, send, listen }) {
       if (kind === 'offer') {
         const p = create(m.from, false);
         await p.pc.setRemoteDescription(m.data.sdp);
+        await flushIce(p);
         const tr = p.pc.getTransceivers()[0];
         if (tr) { tr.direction = 'sendrecv'; p.sender = tr.sender; applyOut(m.from, p); }
         const ans = await p.pc.createAnswer();
         await p.pc.setLocalDescription(ans);
         send({ t: 'rtc', to: m.from, data: { kind: 'answer', sdp: p.pc.localDescription } });
       } else if (kind === 'answer') {
-        await peers.current.get(m.from)?.pc.setRemoteDescription(m.data.sdp);
+        const p = peers.current.get(m.from);
+        if (p && p.pc.signalingState === 'have-local-offer') { await p.pc.setRemoteDescription(m.data.sdp); await flushIce(p); }
       } else if (kind === 'ice') {
-        await peers.current.get(m.from)?.pc.addIceCandidate(m.data.candidate);
+        const p = peers.current.get(m.from);
+        if (!p) return;
+        if (p.pc.remoteDescription) await p.pc.addIceCandidate(m.data.candidate);
+        else p.ice.push(m.data.candidate);
       }
     } catch { /* sinal fora de ordem: a conexão se refaz sozinha */ }
   }), [listen, send]);
@@ -91,9 +108,26 @@ export function useVoice({ me, players, send, listen }) {
     }
   }, [me, players]);
 
+  // Quem entrou depois precisa saber que o meu microfone está ligado.
+  const roster = (players || []).filter((p) => p.connected).map((p) => p.id).join(',');
+  useEffect(() => { if (state.current.mic && roster) send({ t: 'voice', on: true }); }, [roster, send]);
+
+  // Quem está falando agora (volume do áudio de cada um, inclusive o meu).
+  const [speaking, setSpeaking] = useState(() => new Set());
+  useEffect(() => {
+    const t = setInterval(() => {
+      const n = new Set();
+      for (const [id, p] of peers.current) if (!p.audio.muted && p.meter?.level() > 0.04) n.add(id);
+      if (micRef.current && micMeter.current?.level() > 0.04) n.add(me);
+      setSpeaking((s) => (s.size === n.size && [...n].every((x) => s.has(x)) ? s : n));
+    }, 250);
+    return () => clearInterval(t);
+  }, [me]);
+
   useEffect(() => () => {
     for (const id of [...peers.current.keys()]) close(id);
     micRef.current?.getTracks().forEach((t) => t.stop());
+    micMeter.current?.stop();
   }, []);
 
   const toggleMic = async () => {
@@ -101,6 +135,8 @@ export function useVoice({ me, players, send, listen }) {
     if (mic) {
       micRef.current?.getTracks().forEach((t) => t.stop());
       micRef.current = null;
+      micMeter.current?.stop();
+      micMeter.current = null;
       state.current.mic = false;
       setMic(false);
       for (const [id, p] of peers.current) applyOut(id, p);
@@ -109,6 +145,7 @@ export function useVoice({ me, players, send, listen }) {
     }
     try {
       micRef.current = await window.navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+      micMeter.current = meter(micRef.current);
       state.current.mic = true;
       setMic(true);
       for (const [id, p] of peers.current) applyOut(id, p);
@@ -132,5 +169,28 @@ export function useVoice({ me, players, send, listen }) {
     if (p) applyOut(id, p);
     return n;
   });
-  return { mic, micError, toggleMic, mutedPeers, toggleMute, blocked, toggleBlock, talking };
+  return { mic, micError, toggleMic, mutedPeers, toggleMute, blocked, toggleBlock, talking, speaking };
+}
+
+// Medidor de volume (para mostrar quem está falando). Um contexto de áudio só para isso.
+let meterCtx = null;
+function meter(stream) {
+  try {
+    meterCtx = meterCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (meterCtx.state === 'suspended') meterCtx.resume().catch(() => {});
+    const src = meterCtx.createMediaStreamSource(stream);
+    const an = meterCtx.createAnalyser();
+    an.fftSize = 512;
+    src.connect(an);
+    const buf = new Uint8Array(an.fftSize);
+    return {
+      level() {
+        an.getByteTimeDomainData(buf);
+        let sum = 0;
+        for (const v of buf) sum += ((v - 128) / 128) ** 2;
+        return Math.sqrt(sum / buf.length);
+      },
+      stop() { try { src.disconnect(); } catch { /* já desligado */ } },
+    };
+  } catch { return null; }
 }
