@@ -167,7 +167,7 @@ r.delete('/club/patrimonio/:id', club, (req, res) => {
 r.get('/club/biblioteca', club, (req, res) => {
   const members = all(`SELECT id, name, photo, code, birth_date, unit_id FROM members WHERE club_id = ? AND status <> 'inativo' ORDER BY name`, req.actor.id);
   const ach = all(
-    `SELECT a.member_id, a.date, ct.id, ct.type, ct.name, ct.icon, ct.image, ct.category FROM achievements a
+    `SELECT a.member_id, a.date, ct.id, ct.type, ct.name, ct.icon, NULL AS image, ct.category FROM achievements a
      JOIN content ct ON ct.id = a.content_id JOIN members m ON m.id = a.member_id
      WHERE m.club_id = ? AND ct.type IN ('especialidade','classe') ORDER BY ct.type, ct.name`,
     req.actor.id,
@@ -203,7 +203,7 @@ r.post('/club/biblioteca/entregar', club, (req, res) => {
 /** Dados do certificado (gerado automaticamente) de uma especialidade ou guia. */
 r.get('/club/certificado/:memberId/:contentId', club, (req, res) => {
   const c = get(
-    `SELECT m.name AS member_name, ct.name AS content_name, ct.type, ct.image, ct.icon, a.date, cl.name AS club_name, cl.logo AS club_logo, cl.director_name
+    `SELECT m.name AS member_name, ct.name AS content_name, ct.type, NULL AS image, ct.icon, a.date, cl.name AS club_name, cl.logo AS club_logo, cl.director_name
      FROM achievements a JOIN members m ON m.id = a.member_id JOIN content ct ON ct.id = a.content_id JOIN clubs cl ON cl.id = m.club_id
      WHERE a.member_id = ? AND a.content_id = ? AND m.club_id = ?`,
     int(req.params.memberId), int(req.params.contentId), req.actor.id,

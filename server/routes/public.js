@@ -3,6 +3,7 @@ import { all, get } from '../db.js';
 import { clubProfile, unitProfile, memberProfile } from '../profiles.js';
 import { clubsRanking } from '../rankings.js';
 import { fail, int } from '../util.js';
+import { TOTAL_DAYS, todayDay } from '../bible.js';
 
 const r = Router();
 
@@ -70,8 +71,27 @@ r.get('/public/members/:code', (req, res) => {
   // Link do perfil: /p/membro/123456 (código do membro).
   const m = memberProfile('code', String(req.params.code).trim());
   if (!m) fail(404, 'Membro não encontrado');
+  // Classes e especialidades aparecem só pelo nome (sem fotos: o perfil fica leve).
+  for (const c of [...m.classes, ...m.specialties]) c.image = null;
+  m.bible = bibleStreak(m.id);
   delete m.id;
   res.json(m);
 });
+
+/**
+ * Sequência do Ano Bíblico (dias seguidos lidos no próprio dia) e a melhor sequência,
+ * para todo mundo ver no link do perfil. Mesma conta da Aprendizagem Diária.
+ */
+export function bibleStreak(memberId) {
+  const days = all('SELECT day FROM bible_progress WHERE member_id = ? AND on_time = 1 ORDER BY day', memberId).map((x) => x.day);
+  const set = new Set(days);
+  let d = Math.min(todayDay(), TOTAL_DAYS);
+  if (!set.has(d)) d--; // hoje ainda sem ler não quebra a sequência
+  let streak = 0;
+  while (d >= 1 && set.has(d)) { streak++; d--; }
+  let best = 0, cur = 0;
+  days.forEach((x, i) => { cur = i && days[i - 1] === x - 1 ? cur + 1 : 1; best = Math.max(best, cur); });
+  return { streak, best_streak: best, done: days.length };
+}
 
 export default r;

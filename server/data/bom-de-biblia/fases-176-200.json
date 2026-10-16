@@ -1,0 +1,2902 @@
+[
+ {
+  "phase": 176,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Quantos anos viveu Matusalém?",
+    "options": [
+     "930",
+     "969",
+     "950",
+     "912"
+    ],
+    "answer": 1,
+    "ref": "Gênesis 5:27"
+   },
+   {
+    "q": "Quantos anos tinha Noé quando o dilúvio veio sobre a terra?",
+    "options": [
+     "600",
+     "500",
+     "950",
+     "120"
+    ],
+    "answer": 0,
+    "ref": "Gênesis 7:6"
+   },
+   {
+    "q": "Quem foi o pai de Matusalém?",
+    "options": [
+     "Enoque",
+     "Lameque",
+     "Jarede",
+     "Metusael"
+    ],
+    "answer": 0,
+    "ref": "Gênesis 5:21"
+   },
+   {
+    "q": "Quantos foram todos os dias de Enoque antes de Deus o tomar?",
+    "options": [
+     "777",
+     "300",
+     "430",
+     "365"
+    ],
+    "answer": 3,
+    "ref": "Gênesis 5:23-24"
+   },
+   {
+    "q": "Quantos anos tinha Abrão quando saiu de Harã?",
+    "options": [
+     "99",
+     "100",
+     "75",
+     "86"
+    ],
+    "answer": 2,
+    "ref": "Gênesis 12:4"
+   },
+   {
+    "q": "Quantos anos tinha Abrão quando Agar lhe deu Ismael?",
+    "options": [
+     "75",
+     "86",
+     "99",
+     "90"
+    ],
+    "answer": 1,
+    "ref": "Gênesis 16:16"
+   },
+   {
+    "q": "Quantos servos treinados, nascidos em sua casa, Abrão levou para libertar Ló?",
+    "options": [
+     "300",
+     "120",
+     "318",
+     "400"
+    ],
+    "answer": 2,
+    "ref": "Gênesis 14:14"
+   },
+   {
+    "q": "Com quantos anos Sara morreu?",
+    "options": [
+     "127",
+     "90",
+     "100",
+     "175"
+    ],
+    "answer": 0,
+    "ref": "Gênesis 23:1"
+   },
+   {
+    "q": "Em qual caverna Abraão sepultou Sara?",
+    "options": [
+     "Adulão",
+     "En-Gedi",
+     "Maquedá",
+     "Macpela"
+    ],
+    "answer": 3,
+    "ref": "Gênesis 23:19"
+   },
+   {
+    "q": "De quem Abraão comprou o campo com a caverna onde sepultou Sara?",
+    "options": [
+     "De Abimeleque",
+     "De Efrom, o heteu",
+     "De Melquisedeque",
+     "De Bera, rei de Sodoma"
+    ],
+    "answer": 1,
+    "ref": "Gênesis 23:10-17"
+   }
+  ]
+ },
+ {
+  "phase": 177,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Quantos anos viveu Abraão?",
+    "options": [
+     "127",
+     "175",
+     "180",
+     "147"
+    ],
+    "answer": 1,
+    "ref": "Gênesis 25:7"
+   },
+   {
+    "q": "Quantos anos tinha Isaque quando tomou Rebeca por mulher?",
+    "options": [
+     "60",
+     "30",
+     "25",
+     "40"
+    ],
+    "answer": 3,
+    "ref": "Gênesis 25:20"
+   },
+   {
+    "q": "Quem era o irmão de Rebeca, que depois foi sogro de Jacó?",
+    "options": [
+     "Labão",
+     "Betuel",
+     "Naor",
+     "Eliézer"
+    ],
+    "answer": 0,
+    "ref": "Gênesis 24:29"
+   },
+   {
+    "q": "Qual era o nome da ama de Rebeca, sepultada debaixo de um carvalho perto de Betel?",
+    "options": [
+     "Zilpa",
+     "Bila",
+     "Débora",
+     "Agar"
+    ],
+    "answer": 2,
+    "ref": "Gênesis 35:8"
+   },
+   {
+    "q": "Quantos anos Jacó serviu a Labão pelas suas duas filhas?",
+    "options": [
+     "7",
+     "20",
+     "21",
+     "14"
+    ],
+    "answer": 3,
+    "ref": "Gênesis 31:41"
+   },
+   {
+    "q": "Qual serva de Raquel foi mãe de Dã e Naftali?",
+    "options": [
+     "Zilpa",
+     "Bila",
+     "Agar",
+     "Quetura"
+    ],
+    "answer": 1,
+    "ref": "Gênesis 30:3-8"
+   },
+   {
+    "q": "Qual destes filhos de Jacó nasceu de Zilpa, serva de Lia?",
+    "options": [
+     "Dã",
+     "Naftali",
+     "Gade",
+     "Issacar"
+    ],
+    "answer": 2,
+    "ref": "Gênesis 30:10-11"
+   },
+   {
+    "q": "Que nome Raquel, ao morrer no parto, deu ao filho que Jacó chamou Benjamim?",
+    "options": [
+     "Benoni",
+     "Benaia",
+     "Icabode",
+     "Perez"
+    ],
+    "answer": 0,
+    "ref": "Gênesis 35:18"
+   },
+   {
+    "q": "Que nome Jacó deu ao lugar onde lutou e viu Deus face a face?",
+    "options": [
+     "Peniel",
+     "Betel",
+     "Maanaim",
+     "Sucote"
+    ],
+    "answer": 0,
+    "ref": "Gênesis 32:30"
+   },
+   {
+    "q": "Qual era o nome da filha de Jacó e Lia?",
+    "options": [
+     "Tamar",
+     "Mical",
+     "Diná",
+     "Quetura"
+    ],
+    "answer": 2,
+    "ref": "Gênesis 30:21"
+   }
+  ]
+ },
+ {
+  "phase": 178,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Por quantas moedas de prata José foi vendido aos ismaelitas?",
+    "options": [
+     "Trinta",
+     "Vinte",
+     "Quarenta",
+     "Cinquenta"
+    ],
+    "answer": 1,
+    "ref": "Gênesis 37:28"
+   },
+   {
+    "q": "Qual oficial de Faraó, capitão da guarda, comprou José?",
+    "options": [
+     "Potífera",
+     "Zafenate",
+     "Faraó-Neco",
+     "Potifar"
+    ],
+    "answer": 3,
+    "ref": "Gênesis 39:1"
+   },
+   {
+    "q": "Qual era o nome da esposa egípcia de José?",
+    "options": [
+     "Zípora",
+     "Asenate",
+     "Agar",
+     "Quetura"
+    ],
+    "answer": 1,
+    "ref": "Gênesis 41:45"
+   },
+   {
+    "q": "Que nome Faraó deu a José ao torná-lo governador?",
+    "options": [
+     "Zafenate-Paneia",
+     "Beltessazar",
+     "Potífera",
+     "Jerubaal"
+    ],
+    "answer": 0,
+    "ref": "Gênesis 41:45"
+   },
+   {
+    "q": "Quantos anos tinha José quando se apresentou diante de Faraó?",
+    "options": [
+     "17",
+     "40",
+     "25",
+     "30"
+    ],
+    "answer": 3,
+    "ref": "Gênesis 41:46"
+   },
+   {
+    "q": "Qual irmão José mandou amarrar e manteve preso no Egito?",
+    "options": [
+     "Rúben",
+     "Judá",
+     "Simeão",
+     "Levi"
+    ],
+    "answer": 2,
+    "ref": "Gênesis 42:24"
+   },
+   {
+    "q": "No saco de qual irmão foi posto o copo de prata de José?",
+    "options": [
+     "Judá",
+     "Rúben",
+     "Benjamim",
+     "Simeão"
+    ],
+    "answer": 2,
+    "ref": "Gênesis 44:2, 12"
+   },
+   {
+    "q": "Segundo Gênesis 46:27, quantas almas da casa de Jacó entraram no Egito?",
+    "options": [
+     "66",
+     "75",
+     "12",
+     "70"
+    ],
+    "answer": 3,
+    "ref": "Gênesis 46:27"
+   },
+   {
+    "q": "Que idade Jacó disse a Faraó que tinha ao chegar ao Egito?",
+    "options": [
+     "130",
+     "147",
+     "110",
+     "120"
+    ],
+    "answer": 0,
+    "ref": "Gênesis 47:9"
+   },
+   {
+    "q": "Com quantos anos José morreu?",
+    "options": [
+     "120",
+     "110",
+     "130",
+     "100"
+    ],
+    "answer": 1,
+    "ref": "Gênesis 50:26"
+   }
+  ]
+ },
+ {
+  "phase": 179,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Como se chamava o pai de Moisés?",
+    "options": [
+     "Coate",
+     "Levi",
+     "Jetro",
+     "Anrão"
+    ],
+    "answer": 3,
+    "ref": "Êxodo 6:20"
+   },
+   {
+    "q": "Como se chamava a mãe de Moisés?",
+    "options": [
+     "Miriã",
+     "Zípora",
+     "Joquebede",
+     "Isabel"
+    ],
+    "answer": 2,
+    "ref": "Êxodo 6:20"
+   },
+   {
+    "q": "Quais eram as duas parteiras hebreias que temiam a Deus no Egito?",
+    "options": [
+     "Bila e Zilpa",
+     "Sifrá e Puá",
+     "Lia e Raquel",
+     "Orfa e Rute"
+    ],
+    "answer": 1,
+    "ref": "Êxodo 1:15-17"
+   },
+   {
+    "q": "Como se chamavam os dois filhos de Moisés e Zípora?",
+    "options": [
+     "Gérson e Eliézer",
+     "Nadabe e Abiú",
+     "Efraim e Manassés",
+     "Malom e Quiliom"
+    ],
+    "answer": 0,
+    "ref": "Êxodo 18:3-4"
+   },
+   {
+    "q": "Quantos anos tinha Moisés quando falou a Faraó?",
+    "options": [
+     "80",
+     "40",
+     "120",
+     "60"
+    ],
+    "answer": 0,
+    "ref": "Êxodo 7:7"
+   },
+   {
+    "q": "Segundo Êxodo 12:40, quanto tempo os filhos de Israel habitaram no Egito?",
+    "options": [
+     "400 anos",
+     "210 anos",
+     "300 anos",
+     "430 anos"
+    ],
+    "answer": 3,
+    "ref": "Êxodo 12:40"
+   },
+   {
+    "q": "Qual foi o lugar de águas amargas encontrado após a travessia do mar Vermelho?",
+    "options": [
+     "Elim",
+     "Refidim",
+     "Mara",
+     "Meribá"
+    ],
+    "answer": 2,
+    "ref": "Êxodo 15:23"
+   },
+   {
+    "q": "O que havia em Elim, onde Israel acampou junto às águas?",
+    "options": [
+     "7 fontes e 12 palmeiras",
+     "12 fontes e 70 palmeiras",
+     "70 fontes e 12 palmeiras",
+     "10 fontes e 40 palmeiras"
+    ],
+    "answer": 1,
+    "ref": "Êxodo 15:27"
+   },
+   {
+    "q": "Quem sustentou as mãos de Moisés na batalha contra Amaleque?",
+    "options": [
+     "Josué e Calebe",
+     "Arão e Josué",
+     "Arão e Hur",
+     "Eleazar e Hur"
+    ],
+    "answer": 2,
+    "ref": "Êxodo 17:12"
+   },
+   {
+    "q": "Que nome Moisés deu ao altar após a vitória sobre Amaleque?",
+    "options": [
+     "O Senhor é minha bandeira",
+     "O Senhor proverá",
+     "O Senhor é paz",
+     "Ebenézer"
+    ],
+    "answer": 0,
+    "ref": "Êxodo 17:15"
+   }
+  ]
+ },
+ {
+  "phase": 180,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Quais artífices Deus encheu do seu Espírito para fazer a obra do tabernáculo?",
+    "options": [
+     "Hur e Arão",
+     "Nadabe e Abiú",
+     "Eldade e Medade",
+     "Bezaleel e Aoliabe"
+    ],
+    "answer": 3,
+    "ref": "Êxodo 31:2-6"
+   },
+   {
+    "q": "Quais filhos de Arão morreram por oferecer fogo estranho perante o Senhor?",
+    "options": [
+     "Eleazar e Itamar",
+     "Nadabe e Abiú",
+     "Hofni e Fineias",
+     "Datã e Abirão"
+    ],
+    "answer": 1,
+    "ref": "Levítico 10:1-2"
+   },
+   {
+    "q": "Quais dois homens profetizaram no arraial, e Josué pediu que Moisés os proibisse?",
+    "options": [
+     "Bezaleel e Aoliabe",
+     "Eldade e Medade",
+     "Datã e Abirão",
+     "Hur e Calebe"
+    ],
+    "answer": 1,
+    "ref": "Números 11:26-28"
+   },
+   {
+    "q": "Quantos dias os espias passaram espiando a terra de Canaã?",
+    "options": [
+     "7",
+     "30",
+     "3",
+     "40"
+    ],
+    "answer": 3,
+    "ref": "Números 13:25"
+   },
+   {
+    "q": "Em que vale os espias cortaram um cacho de uvas levado por dois homens numa vara?",
+    "options": [
+     "Escol",
+     "Acor",
+     "Soreque",
+     "Elá"
+    ],
+    "answer": 0,
+    "ref": "Números 13:23-24"
+   },
+   {
+    "q": "Quem liderou a rebelião contra Moisés e Arão junto com Datã e Abirão?",
+    "options": [
+     "Acã",
+     "Zinri",
+     "Coré",
+     "Balaão"
+    ],
+    "answer": 2,
+    "ref": "Números 16:1-3"
+   },
+   {
+    "q": "A vara de qual tribo brotou, floresceu e deu amêndoas?",
+    "options": [
+     "Judá",
+     "Efraim",
+     "Rúben",
+     "Levi"
+    ],
+    "answer": 3,
+    "ref": "Números 17:8"
+   },
+   {
+    "q": "Que nome recebeu o lugar onde Moisés feriu a rocha e o povo contendeu com o Senhor?",
+    "options": [
+     "Mara",
+     "Meribá",
+     "Elim",
+     "Taberá"
+    ],
+    "answer": 1,
+    "ref": "Números 20:11-13"
+   },
+   {
+    "q": "Em que monte morreu Arão?",
+    "options": [
+     "Nebo",
+     "Sinai",
+     "Hor",
+     "Gerizim"
+    ],
+    "answer": 2,
+    "ref": "Números 20:28"
+   },
+   {
+    "q": "Qual rei de Moabe mandou chamar Balaão para amaldiçoar Israel?",
+    "options": [
+     "Balaque",
+     "Eglom",
+     "Seom",
+     "Ogue"
+    ],
+    "answer": 0,
+    "ref": "Números 22:4-6"
+   }
+  ]
+ },
+ {
+  "phase": 181,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Quem era o pai do profeta Balaão?",
+    "options": [
+     "Beor",
+     "Zipor",
+     "Peor",
+     "Seom"
+    ],
+    "answer": 0,
+    "ref": "Números 22:5"
+   },
+   {
+    "q": "Quantos altares Balaão pediu que Balaque edificasse?",
+    "options": [
+     "Doze",
+     "Três",
+     "Sete",
+     "Dez"
+    ],
+    "answer": 2,
+    "ref": "Números 23:1"
+   },
+   {
+    "q": "Qual sacerdote, neto de Arão, deteve a praga ao matar Zinri e a midianita?",
+    "options": [
+     "Eleazar",
+     "Fineias",
+     "Itamar",
+     "Abiú"
+    ],
+    "answer": 1,
+    "ref": "Números 25:7-14"
+   },
+   {
+    "q": "Quantas filhas tinha Zelofeade, que pediram herança na terra?",
+    "options": [
+     "Três",
+     "Sete",
+     "Quatro",
+     "Cinco"
+    ],
+    "answer": 3,
+    "ref": "Números 27:1-7"
+   },
+   {
+    "q": "De qual monte Moisés contemplou a terra prometida antes de morrer?",
+    "options": [
+     "Hor",
+     "Nebo",
+     "Carmelo",
+     "Gerizim"
+    ],
+    "answer": 1,
+    "ref": "Deuteronômio 34:1"
+   },
+   {
+    "q": "Com quantos anos Moisés morreu?",
+    "options": [
+     "120",
+     "110",
+     "130",
+     "100"
+    ],
+    "answer": 0,
+    "ref": "Deuteronômio 34:7"
+   },
+   {
+    "q": "Por quantos dias os filhos de Israel choraram Moisés nas campinas de Moabe?",
+    "options": [
+     "7",
+     "40",
+     "70",
+     "30"
+    ],
+    "answer": 3,
+    "ref": "Deuteronômio 34:8"
+   },
+   {
+    "q": "Em quais montes deviam ser proclamadas a bênção e a maldição?",
+    "options": [
+     "Sinai e Horebe",
+     "Nebo e Hor",
+     "Gerizim e Ebal",
+     "Carmelo e Tabor"
+    ],
+    "answer": 2,
+    "ref": "Deuteronômio 11:29"
+   },
+   {
+    "q": "Quantas cidades de refúgio deveriam ser separadas ao todo?",
+    "options": [
+     "Três",
+     "Doze",
+     "Seis",
+     "Sete"
+    ],
+    "answer": 2,
+    "ref": "Números 35:13"
+   },
+   {
+    "q": "Quantas cidades, ao todo, os levitas deveriam receber?",
+    "options": [
+     "12",
+     "40",
+     "70",
+     "48"
+    ],
+    "answer": 3,
+    "ref": "Números 35:7"
+   }
+  ]
+ },
+ {
+  "phase": 182,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Em que vale Acã foi apedrejado após esconder despojos de Jericó?",
+    "options": [
+     "Acor",
+     "Escol",
+     "Elá",
+     "Aijalom"
+    ],
+    "answer": 0,
+    "ref": "Josué 7:24-26"
+   },
+   {
+    "q": "Qual povo enganou Josué fingindo ter vindo de uma terra muito distante?",
+    "options": [
+     "Os jebuseus",
+     "Os gibeonitas",
+     "Os filisteus",
+     "Os amalequitas"
+    ],
+    "answer": 1,
+    "ref": "Josué 9:3-15"
+   },
+   {
+    "q": "Josué disse: \"Lua, detém-te no vale de...\":",
+    "options": [
+     "Acor",
+     "Escol",
+     "Jezreel",
+     "Aijalom"
+    ],
+    "answer": 3,
+    "ref": "Josué 10:12"
+   },
+   {
+    "q": "Quantos anos tinha Calebe quando pediu a Josué a montanha de Hebrom?",
+    "options": [
+     "40",
+     "80",
+     "85",
+     "120"
+    ],
+    "answer": 2,
+    "ref": "Josué 14:10-12"
+   },
+   {
+    "q": "Com quantos anos Josué morreu?",
+    "options": [
+     "120",
+     "110",
+     "100",
+     "130"
+    ],
+    "answer": 1,
+    "ref": "Josué 24:29"
+   },
+   {
+    "q": "Qual filho de Quenaz, irmão mais novo de Calebe, foi o primeiro libertador em Juízes?",
+    "options": [
+     "Otniel",
+     "Eúde",
+     "Sangar",
+     "Tola"
+    ],
+    "answer": 0,
+    "ref": "Juízes 3:9"
+   },
+   {
+    "q": "Com que objeto Sangar feriu seiscentos filisteus?",
+    "options": [
+     "Uma aguilhada de bois",
+     "Uma queixada de jumento",
+     "Uma funda",
+     "Uma estaca"
+    ],
+    "answer": 0,
+    "ref": "Juízes 3:31"
+   },
+   {
+    "q": "Qual era o nome do pai de Sansão?",
+    "options": [
+     "Elcana",
+     "Joás",
+     "Jefoné",
+     "Manoá"
+    ],
+    "answer": 3,
+    "ref": "Juízes 13:2, 24"
+   },
+   {
+    "q": "Quantos homens Sansão matou com uma queixada de jumento?",
+    "options": [
+     "300",
+     "600",
+     "Mil",
+     "Cem"
+    ],
+    "answer": 2,
+    "ref": "Juízes 15:15"
+   },
+   {
+    "q": "Quantas raposas Sansão apanhou para queimar as searas dos filisteus?",
+    "options": [
+     "100",
+     "300",
+     "50",
+     "30"
+    ],
+    "answer": 1,
+    "ref": "Juízes 15:4-5"
+   }
+  ]
+ },
+ {
+  "phase": 183,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Quantas moedas de prata cada príncipe dos filisteus prometeu a Dalila?",
+    "options": [
+     "30",
+     "500",
+     "1.100",
+     "1.000"
+    ],
+    "answer": 2,
+    "ref": "Juízes 16:5"
+   },
+   {
+    "q": "Qual era o nome do pai de Gideão?",
+    "options": [
+     "Joás",
+     "Manoá",
+     "Jefoné",
+     "Elcana"
+    ],
+    "answer": 0,
+    "ref": "Juízes 6:11"
+   },
+   {
+    "q": "Que nome Gideão recebeu depois de derrubar o altar de Baal?",
+    "options": [
+     "Jedidias",
+     "Ebenézer",
+     "Beltessazar",
+     "Jerubaal"
+    ],
+    "answer": 3,
+    "ref": "Juízes 6:32"
+   },
+   {
+    "q": "Qual filho de Gideão matou seus setenta irmãos sobre uma pedra?",
+    "options": [
+     "Jotão",
+     "Abimeleque",
+     "Jefté",
+     "Tola"
+    ],
+    "answer": 1,
+    "ref": "Juízes 9:5"
+   },
+   {
+    "q": "Qual filho caçula de Gideão escapou e contou a parábola das árvores?",
+    "options": [
+     "Abimeleque",
+     "Jotão",
+     "Jair",
+     "Ibsã"
+    ],
+    "answer": 1,
+    "ref": "Juízes 9:5-15"
+   },
+   {
+    "q": "Como Abimeleque foi ferido de morte em Tebez?",
+    "options": [
+     "Foi atingido por uma flecha",
+     "Caiu do cavalo",
+     "Foi picado por uma serpente",
+     "Uma mulher lançou um pedaço de mó"
+    ],
+    "answer": 3,
+    "ref": "Juízes 9:53"
+   },
+   {
+    "q": "Qual juiz tinha trinta filhos que cavalgavam sobre trinta jumentos?",
+    "options": [
+     "Jair",
+     "Ibsã",
+     "Abdom",
+     "Elom"
+    ],
+    "answer": 0,
+    "ref": "Juízes 10:3-4"
+   },
+   {
+    "q": "Na história de Rute, qual era o nome do marido de Noemi?",
+    "options": [
+     "Boaz",
+     "Malom",
+     "Elimeleque",
+     "Quiliom"
+    ],
+    "answer": 2,
+    "ref": "Rute 1:2"
+   },
+   {
+    "q": "Com qual filho de Noemi Rute havia se casado?",
+    "options": [
+     "Quiliom",
+     "Elimeleque",
+     "Obede",
+     "Malom"
+    ],
+    "answer": 3,
+    "ref": "Rute 4:10"
+   },
+   {
+    "q": "Qual era o nome do filho de Boaz e Rute?",
+    "options": [
+     "Jessé",
+     "Obede",
+     "Perez",
+     "Salmom"
+    ],
+    "answer": 1,
+    "ref": "Rute 4:13-17"
+   }
+  ]
+ },
+ {
+  "phase": 184,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Segundo a genealogia de Mateus, quem era a mãe de Boaz?",
+    "options": [
+     "Rute",
+     "Tamar",
+     "Raabe",
+     "Ana"
+    ],
+    "answer": 2,
+    "ref": "Mateus 1:5"
+   },
+   {
+    "q": "Segundo Rute 4, quem era o pai de Boaz?",
+    "options": [
+     "Salmom",
+     "Obede",
+     "Naassom",
+     "Esrom"
+    ],
+    "answer": 0,
+    "ref": "Rute 4:21"
+   },
+   {
+    "q": "Que nome a nora de Eli deu ao filho, dizendo \"foi-se a glória de Israel\"?",
+    "options": [
+     "Icabode",
+     "Benoni",
+     "Ebenézer",
+     "Aitube"
+    ],
+    "answer": 0,
+    "ref": "1 Samuel 4:19-22"
+   },
+   {
+    "q": "Com quantos anos morreu o sacerdote Eli?",
+    "options": [
+     "90",
+     "100",
+     "98",
+     "120"
+    ],
+    "answer": 2,
+    "ref": "1 Samuel 4:15-18"
+   },
+   {
+    "q": "Em que templo filisteu a arca foi colocada, e o ídolo caiu diante dela?",
+    "options": [
+     "De Baal",
+     "De Dagom",
+     "De Moloque",
+     "De Astarote"
+    ],
+    "answer": 1,
+    "ref": "1 Samuel 5:2-4"
+   },
+   {
+    "q": "Quantos meses a arca do Senhor ficou na terra dos filisteus?",
+    "options": [
+     "Três",
+     "Doze",
+     "Seis",
+     "Sete"
+    ],
+    "answer": 3,
+    "ref": "1 Samuel 6:1"
+   },
+   {
+    "q": "Que nome Samuel deu à pedra que levantou, dizendo \"Até aqui nos ajudou o Senhor\"?",
+    "options": [
+     "Betel",
+     "Ebenézer",
+     "Gilgal",
+     "Mispa"
+    ],
+    "answer": 1,
+    "ref": "1 Samuel 7:12"
+   },
+   {
+    "q": "Quem era o pai de Saul?",
+    "options": [
+     "Quis",
+     "Ner",
+     "Jessé",
+     "Elcana"
+    ],
+    "answer": 0,
+    "ref": "1 Samuel 9:1-2"
+   },
+   {
+    "q": "O que Saul estava procurando quando encontrou o profeta Samuel?",
+    "options": [
+     "Ovelhas perdidas",
+     "Um vidente para a guerra",
+     "Água para os servos",
+     "As jumentas de seu pai"
+    ],
+    "answer": 3,
+    "ref": "1 Samuel 9:3-6"
+   },
+   {
+    "q": "Qual rei dos amalequitas Saul poupou contra a ordem de Deus?",
+    "options": [
+     "Ogue",
+     "Seom",
+     "Agague",
+     "Eglom"
+    ],
+    "answer": 2,
+    "ref": "1 Samuel 15:8-9"
+   }
+  ]
+ },
+ {
+  "phase": 185,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Segundo 1 Samuel 17:4, qual era a altura de Golias?",
+    "options": [
+     "Quatro côvados",
+     "Dez côvados",
+     "Seis côvados e um palmo",
+     "Sete côvados e meio"
+    ],
+    "answer": 2,
+    "ref": "1 Samuel 17:4"
+   },
+   {
+    "q": "Quantas pedras lisas Davi escolheu do ribeiro antes de enfrentar Golias?",
+    "options": [
+     "Três",
+     "Sete",
+     "Uma",
+     "Cinco"
+    ],
+    "answer": 3,
+    "ref": "1 Samuel 17:40"
+   },
+   {
+    "q": "Em que vale Israel estava acampado quando Davi enfrentou Golias?",
+    "options": [
+     "Elá",
+     "Acor",
+     "Aijalom",
+     "Hinom"
+    ],
+    "answer": 0,
+    "ref": "1 Samuel 17:2"
+   },
+   {
+    "q": "De qual cidade filisteia era Golias?",
+    "options": [
+     "Gaza",
+     "Gate",
+     "Asdode",
+     "Ecrom"
+    ],
+    "answer": 1,
+    "ref": "1 Samuel 17:4"
+   },
+   {
+    "q": "Quantos filisteus Davi matou para apresentar a Saul como dote por Mical?",
+    "options": [
+     "100",
+     "50",
+     "300",
+     "200"
+    ],
+    "answer": 3,
+    "ref": "1 Samuel 18:25-27"
+   },
+   {
+    "q": "Qual sacerdote de Nobe deu a Davi os pães sagrados e a espada de Golias?",
+    "options": [
+     "Abiatar",
+     "Zadoque",
+     "Aimeleque",
+     "Eli"
+    ],
+    "answer": 2,
+    "ref": "1 Samuel 21:1-9"
+   },
+   {
+    "q": "Em qual caverna Davi se refugiou e reuniu cerca de quatrocentos homens?",
+    "options": [
+     "Macpela",
+     "Adulão",
+     "Betel",
+     "Maquedá"
+    ],
+    "answer": 1,
+    "ref": "1 Samuel 22:1-2"
+   },
+   {
+    "q": "Qual rei filisteu deu a cidade de Ziclague a Davi?",
+    "options": [
+     "Aquis",
+     "Abimeleque",
+     "Golias",
+     "Agague"
+    ],
+    "answer": 0,
+    "ref": "1 Samuel 27:6"
+   },
+   {
+    "q": "Em qual monte Saul e Jônatas morreram na batalha contra os filisteus?",
+    "options": [
+     "Gilboa",
+     "Carmelo",
+     "Tabor",
+     "Moriá"
+    ],
+    "answer": 0,
+    "ref": "1 Samuel 31:1-8"
+   },
+   {
+    "q": "Com quantos anos Davi começou a reinar?",
+    "options": [
+     "20",
+     "33",
+     "40",
+     "30"
+    ],
+    "answer": 3,
+    "ref": "2 Samuel 5:4"
+   }
+  ]
+ },
+ {
+  "phase": 186,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Quanto tempo Davi reinou em Hebrom sobre Judá?",
+    "options": [
+     "Três anos",
+     "Doze anos",
+     "Sete anos e seis meses",
+     "Quarenta anos"
+    ],
+    "answer": 2,
+    "ref": "2 Samuel 5:5"
+   },
+   {
+    "q": "Qual valente de Davi desceu numa cova e matou um leão num dia de neve?",
+    "options": [
+     "Abisai",
+     "Benaia",
+     "Joabe",
+     "Asael"
+    ],
+    "answer": 1,
+    "ref": "2 Samuel 23:20"
+   },
+   {
+    "q": "Qual era o nome da mãe de Joabe, Abisai e Asael?",
+    "options": [
+     "Abigail",
+     "Bate-Seba",
+     "Zeruia",
+     "Mical"
+    ],
+    "answer": 2,
+    "ref": "2 Samuel 2:18"
+   },
+   {
+    "q": "Qual irmão de Joabe era \"ligeiro de pés como uma gazela\" e foi morto por Abner?",
+    "options": [
+     "Asael",
+     "Abisai",
+     "Amasa",
+     "Itai"
+    ],
+    "answer": 0,
+    "ref": "2 Samuel 2:18-23"
+   },
+   {
+    "q": "Qual concubina de Saul guardou os corpos de seus filhos das aves e dos animais?",
+    "options": [
+     "Mical",
+     "Merabe",
+     "Ainoã",
+     "Rispa"
+    ],
+    "answer": 3,
+    "ref": "2 Samuel 21:8-10"
+   },
+   {
+    "q": "Qual geteu jurou seguir Davi, na vida ou na morte, na fuga de Absalão?",
+    "options": [
+     "Husai",
+     "Itai",
+     "Zibá",
+     "Barzilai"
+    ],
+    "answer": 1,
+    "ref": "2 Samuel 15:19-21"
+   },
+   {
+    "q": "Qual homem de oitenta anos sustentou Davi enquanto ele esteve em Maanaim?",
+    "options": [
+     "Simei",
+     "Barzilai",
+     "Aitofel",
+     "Zibá"
+    ],
+    "answer": 1,
+    "ref": "2 Samuel 19:32"
+   },
+   {
+    "q": "Quantos anos Davi reinou sobre Israel ao todo?",
+    "options": [
+     "33",
+     "30",
+     "50",
+     "40"
+    ],
+    "answer": 3,
+    "ref": "1 Reis 2:11"
+   },
+   {
+    "q": "Segundo 1 Reis 11:3, quantas mulheres e concubinas Salomão teve?",
+    "options": [
+     "700 mulheres e 300 concubinas",
+     "300 mulheres e 700 concubinas",
+     "1.000 mulheres e 100 concubinas",
+     "60 mulheres e 80 concubinas"
+    ],
+    "answer": 0,
+    "ref": "1 Reis 11:3"
+   },
+   {
+    "q": "Quantos provérbios Salomão compôs, segundo 1 Reis 4:32?",
+    "options": [
+     "1.005",
+     "1.000",
+     "3.000",
+     "500"
+    ],
+    "answer": 2,
+    "ref": "1 Reis 4:32"
+   }
+  ]
+ },
+ {
+  "phase": 187,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Em que lugar o Senhor apareceu a Salomão em sonho, e ele pediu sabedoria?",
+    "options": [
+     "Betel",
+     "Siló",
+     "Hebrom",
+     "Gibeom"
+    ],
+    "answer": 3,
+    "ref": "1 Reis 3:4-9"
+   },
+   {
+    "q": "Quantos anos Salomão reinou em Jerusalém sobre todo o Israel?",
+    "options": [
+     "30",
+     "40",
+     "20",
+     "52"
+    ],
+    "answer": 1,
+    "ref": "1 Reis 11:42"
+   },
+   {
+    "q": "Qual rei do Egito subiu contra Jerusalém e levou os tesouros no tempo de Roboão?",
+    "options": [
+     "Neco",
+     "Hofra",
+     "Sisaque",
+     "Tiraca"
+    ],
+    "answer": 2,
+    "ref": "1 Reis 14:25-26"
+   },
+   {
+    "q": "Por quanto tempo Zinri reinou em Tirza?",
+    "options": [
+     "Sete dias",
+     "Trinta dias",
+     "Dois anos",
+     "Três meses"
+    ],
+    "answer": 0,
+    "ref": "1 Reis 16:15"
+   },
+   {
+    "q": "Qual rei de Judá foi com Acabe à batalha de Ramote-Gileade?",
+    "options": [
+     "Josafá",
+     "Asa",
+     "Ezequias",
+     "Acaz"
+    ],
+    "answer": 0,
+    "ref": "1 Reis 22:2-4, 29"
+   },
+   {
+    "q": "Qual rei de Israel caiu pelas grades de um quarto alto e mandou consultar Baal-Zebube?",
+    "options": [
+     "Acabe",
+     "Jorão",
+     "Acazias",
+     "Jeú"
+    ],
+    "answer": 2,
+    "ref": "2 Reis 1:2"
+   },
+   {
+    "q": "Quantos capitães de cinquenta foram consumidos com seus homens pelo fogo, ao chamar Elias?",
+    "options": [
+     "Três",
+     "Dois",
+     "Um",
+     "Sete"
+    ],
+    "answer": 1,
+    "ref": "2 Reis 1:9-14"
+   },
+   {
+    "q": "Qual rei de Moabe pagava a Israel tributo de cem mil cordeiros?",
+    "options": [
+     "Balaque",
+     "Eglom",
+     "Agague",
+     "Messa"
+    ],
+    "answer": 3,
+    "ref": "2 Reis 3:4"
+   },
+   {
+    "q": "Qual rei da Síria foi morto por Hazael, que lhe estendeu um cobertor molhado no rosto?",
+    "options": [
+     "Rezim",
+     "Ben-Hadade",
+     "Naamã",
+     "Hirão"
+    ],
+    "answer": 1,
+    "ref": "2 Reis 8:7-15"
+   },
+   {
+    "q": "Por quantos anos, segundo Eliseu disse à sunamita, haveria fome na terra?",
+    "options": [
+     "Sete",
+     "Três",
+     "Três e meio",
+     "Dez"
+    ],
+    "answer": 0,
+    "ref": "2 Reis 8:1"
+   }
+  ]
+ },
+ {
+  "phase": 188,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Quantas vezes Joás, rei de Israel, feriu a terra com as flechas diante de Eliseu?",
+    "options": [
+     "Cinco",
+     "Seis",
+     "Sete",
+     "Três"
+    ],
+    "answer": 3,
+    "ref": "2 Reis 13:18-19"
+   },
+   {
+    "q": "Qual foi o último rei de Israel, no reinado do qual Samaria foi tomada pela Assíria?",
+    "options": [
+     "Peca",
+     "Menaém",
+     "Oseias",
+     "Zacarias"
+    ],
+    "answer": 2,
+    "ref": "2 Reis 17:1-6"
+   },
+   {
+    "q": "Qual rei de Israel reinou apenas um mês e foi morto por Menaém?",
+    "options": [
+     "Zinri",
+     "Zacarias",
+     "Salum",
+     "Pecaías"
+    ],
+    "answer": 2,
+    "ref": "2 Reis 15:13-14"
+   },
+   {
+    "q": "Qual rei de Judá mandou fazer um altar igual ao que viu em Damasco?",
+    "options": [
+     "Manassés",
+     "Amom",
+     "Jeorão",
+     "Acaz"
+    ],
+    "answer": 3,
+    "ref": "2 Reis 16:10-11"
+   },
+   {
+    "q": "Que objeto, chamado Neustã, Ezequias despedaçou porque o povo lhe queimava incenso?",
+    "options": [
+     "A serpente de bronze",
+     "Um bezerro de ouro",
+     "A arca",
+     "O altar de Baal"
+    ],
+    "answer": 0,
+    "ref": "2 Reis 18:4"
+   },
+   {
+    "q": "Qual oficial assírio falou ao povo em judaico junto ao muro de Jerusalém?",
+    "options": [
+     "Tartã",
+     "Rabsaqué",
+     "Senaqueribe",
+     "Hazael"
+    ],
+    "answer": 1,
+    "ref": "2 Reis 18:26-28"
+   },
+   {
+    "q": "Josias profanou Tofete, que ficava em qual vale?",
+    "options": [
+     "De Elá",
+     "De Aijalom",
+     "De Escol",
+     "Dos filhos de Hinom"
+    ],
+    "answer": 3,
+    "ref": "2 Reis 23:10"
+   },
+   {
+    "q": "Qual faraó matou o rei Josias em Megido?",
+    "options": [
+     "Sisaque",
+     "Hofra",
+     "Neco",
+     "Tiraca"
+    ],
+    "answer": 2,
+    "ref": "2 Reis 23:29"
+   },
+   {
+    "q": "Que novo nome o rei da Babilônia deu a Matanias ao fazê-lo rei de Judá?",
+    "options": [
+     "Jeoaquim",
+     "Zedequias",
+     "Joacaz",
+     "Jeconias"
+    ],
+    "answer": 1,
+    "ref": "2 Reis 24:17"
+   },
+   {
+    "q": "O que Zedequias viu antes de ter os olhos vazados pelos babilônios?",
+    "options": [
+     "A morte de seus filhos",
+     "O incêndio do templo",
+     "A queda dos muros",
+     "A coroação de Gedalias"
+    ],
+    "answer": 0,
+    "ref": "2 Reis 25:7"
+   }
+  ]
+ },
+ {
+  "phase": 189,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Quem foi posto sobre o povo que ficou em Judá, e depois foi assassinado em Mispa?",
+    "options": [
+     "Gedalias",
+     "Zorobabel",
+     "Baruque",
+     "Seraías"
+    ],
+    "answer": 0,
+    "ref": "2 Reis 25:22-25"
+   },
+   {
+    "q": "Quem assassinou Gedalias?",
+    "options": [
+     "Joanã, filho de Careá",
+     "Nebuzaradã",
+     "Baruque",
+     "Ismael, filho de Netanias"
+    ],
+    "answer": 3,
+    "ref": "2 Reis 25:25"
+   },
+   {
+    "q": "Qual rei de Judá Evil-Merodaque tirou da prisão e fez comer à sua mesa?",
+    "options": [
+     "Zedequias",
+     "Jeoaquim",
+     "Joaquim",
+     "Joacaz"
+    ],
+    "answer": 2,
+    "ref": "2 Reis 25:27-29"
+   },
+   {
+    "q": "Qual capitão da guarda de Nabucodonosor queimou a casa do Senhor?",
+    "options": [
+     "Arioque",
+     "Nebuzaradã",
+     "Aspenaz",
+     "Rabsaqué"
+    ],
+    "answer": 1,
+    "ref": "2 Reis 25:8-9"
+   },
+   {
+    "q": "Qual chefe dos eunucos de Nabucodonosor recebeu Daniel e seus amigos?",
+    "options": [
+     "Arioque",
+     "Nebuzaradã",
+     "Aspenaz",
+     "Tartã"
+    ],
+    "answer": 2,
+    "ref": "Daniel 1:3-7"
+   },
+   {
+    "q": "Qual capitão da guarda saiu para matar os sábios da Babilônia, no episódio do sonho da estátua?",
+    "options": [
+     "Arioque",
+     "Aspenaz",
+     "Nebuzaradã",
+     "Hamã"
+    ],
+    "answer": 0,
+    "ref": "Daniel 2:14"
+   },
+   {
+    "q": "Qual foi o nome babilônico dado a Azarias, amigo de Daniel?",
+    "options": [
+     "Sadraque",
+     "Mesaque",
+     "Beltessazar",
+     "Abede-Nego"
+    ],
+    "answer": 3,
+    "ref": "Daniel 1:7"
+   },
+   {
+    "q": "Em qual campo Nabucodonosor levantou a estátua de ouro?",
+    "options": [
+     "Sinar",
+     "Dura",
+     "Quebar",
+     "Ulai"
+    ],
+    "answer": 1,
+    "ref": "Daniel 3:1"
+   },
+   {
+    "q": "Qual era a altura da estátua de ouro que Nabucodonosor levantou?",
+    "options": [
+     "30 côvados",
+     "60 côvados",
+     "100 côvados",
+     "12 côvados"
+    ],
+    "answer": 1,
+    "ref": "Daniel 3:1"
+   },
+   {
+    "q": "Quanto tempo depois do sonho da árvore Nabucodonosor foi tirado do meio dos homens?",
+    "options": [
+     "Sete dias",
+     "Três anos",
+     "Quarenta dias",
+     "Doze meses"
+    ],
+    "answer": 3,
+    "ref": "Daniel 4:28-33"
+   }
+  ]
+ },
+ {
+  "phase": 190,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Na visão de Daniel 8, quantos chifres tinha o carneiro?",
+    "options": [
+     "Dois",
+     "Um",
+     "Quatro",
+     "Dez"
+    ],
+    "answer": 0,
+    "ref": "Daniel 8:3"
+   },
+   {
+    "q": "Junto a qual rio Daniel teve a visão do carneiro e do bode?",
+    "options": [
+     "Hidequel",
+     "Quebar",
+     "Ulai",
+     "Eufrates"
+    ],
+    "answer": 2,
+    "ref": "Daniel 8:2"
+   },
+   {
+    "q": "Quantos chifres tinha o quarto animal da visão de Daniel 7?",
+    "options": [
+     "Sete",
+     "Quatro",
+     "Doze",
+     "Dez"
+    ],
+    "answer": 3,
+    "ref": "Daniel 7:7"
+   },
+   {
+    "q": "Por quanto tempo Daniel esteve triste e sem comer manjar desejável em Daniel 10?",
+    "options": [
+     "Sete dias",
+     "Três semanas",
+     "Quarenta dias",
+     "Dez dias"
+    ],
+    "answer": 1,
+    "ref": "Daniel 10:2-3"
+   },
+   {
+    "q": "Qual príncipe resistiu ao anjo por vinte e um dias, segundo Daniel 10?",
+    "options": [
+     "O da Grécia",
+     "O do Egito",
+     "O do reino da Pérsia",
+     "O de Babilônia"
+    ],
+    "answer": 2,
+    "ref": "Daniel 10:13"
+   },
+   {
+    "q": "Segundo Daniel 9:24, quantas semanas estavam determinadas sobre o povo?",
+    "options": [
+     "70",
+     "62",
+     "7",
+     "2.300"
+    ],
+    "answer": 0,
+    "ref": "Daniel 9:24"
+   },
+   {
+    "q": "Junto a qual rio, na terra dos caldeus, Ezequiel teve as visões de Deus?",
+    "options": [
+     "Quebar",
+     "Ulai",
+     "Jordão",
+     "Nilo"
+    ],
+    "answer": 0,
+    "ref": "Ezequiel 1:1-3"
+   },
+   {
+    "q": "Quem era o pai do sacerdote e profeta Ezequiel?",
+    "options": [
+     "Hilquias",
+     "Amoz",
+     "Buzi",
+     "Berequias"
+    ],
+    "answer": 2,
+    "ref": "Ezequiel 1:3"
+   },
+   {
+    "q": "Quem era o pai do profeta Isaías?",
+    "options": [
+     "Amós",
+     "Amoz",
+     "Buzi",
+     "Petuel"
+    ],
+    "answer": 1,
+    "ref": "Isaías 1:1"
+   },
+   {
+    "q": "Junto a qual grande rio Daniel estava quando teve a visão de Daniel 10?",
+    "options": [
+     "Ulai",
+     "Quebar",
+     "Jordão",
+     "Hidequel"
+    ],
+    "answer": 3,
+    "ref": "Daniel 10:4"
+   }
+  ]
+ },
+ {
+  "phase": 191,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Quem era o pai do profeta Oseias?",
+    "options": [
+     "Petuel",
+     "Beeri",
+     "Amoz",
+     "Hilquias"
+    ],
+    "answer": 1,
+    "ref": "Oseias 1:1"
+   },
+   {
+    "q": "Quem era o pai do profeta Joel?",
+    "options": [
+     "Petuel",
+     "Amoz",
+     "Buzi",
+     "Beeri"
+    ],
+    "answer": 0,
+    "ref": "Joel 1:1"
+   },
+   {
+    "q": "De qual cidade era o profeta Amós?",
+    "options": [
+     "Anatote",
+     "Belém",
+     "Tisbe",
+     "Tecoa"
+    ],
+    "answer": 3,
+    "ref": "Amós 1:1"
+   },
+   {
+    "q": "De qual cidade, na terra de Benjamim, era Jeremias?",
+    "options": [
+     "Tecoa",
+     "Siló",
+     "Anatote",
+     "Nobe"
+    ],
+    "answer": 2,
+    "ref": "Jeremias 1:1"
+   },
+   {
+    "q": "De qual cidade era o profeta Jonas, filho de Amitai?",
+    "options": [
+     "Tecoa",
+     "Anatote",
+     "Gate-Hefer",
+     "Tisbe"
+    ],
+    "answer": 2,
+    "ref": "2 Reis 14:25"
+   },
+   {
+    "q": "Qual era o nome do pai do profeta Jonas?",
+    "options": [
+     "Amoz",
+     "Beeri",
+     "Petuel",
+     "Amitai"
+    ],
+    "answer": 3,
+    "ref": "Jonas 1:1"
+   },
+   {
+    "q": "Em qual porto Jonas achou um navio para fugir para Társis?",
+    "options": [
+     "Jope",
+     "Tiro",
+     "Cesareia",
+     "Sidom"
+    ],
+    "answer": 0,
+    "ref": "Jonas 1:3"
+   },
+   {
+    "q": "Que planta Deus fez nascer para fazer sombra sobre a cabeça de Jonas?",
+    "options": [
+     "Uma figueira",
+     "Uma aboboreira",
+     "Uma videira",
+     "Um zimbro"
+    ],
+    "answer": 1,
+    "ref": "Jonas 4:6"
+   },
+   {
+    "q": "Quantas pessoas que não sabiam discernir a mão direita da esquerda havia em Nínive?",
+    "options": [
+     "40.000",
+     "70.000",
+     "185.000",
+     "Mais de 120.000"
+    ],
+    "answer": 3,
+    "ref": "Jonas 4:11"
+   },
+   {
+    "q": "Nínive era uma cidade muito grande, de quantos dias de caminho?",
+    "options": [
+     "Um",
+     "Sete",
+     "Três",
+     "Quarenta"
+    ],
+    "answer": 2,
+    "ref": "Jonas 3:3"
+   }
+  ]
+ },
+ {
+  "phase": 192,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Quem era o pai do profeta Jeremias?",
+    "options": [
+     "Amoz",
+     "Hilquias",
+     "Buzi",
+     "Beeri"
+    ],
+    "answer": 1,
+    "ref": "Jeremias 1:1"
+   },
+   {
+    "q": "Nos dias de qual rei de Judá veio a palavra do Senhor a Sofonias?",
+    "options": [
+     "Josias",
+     "Ezequias",
+     "Uzias",
+     "Acaz"
+    ],
+    "answer": 0,
+    "ref": "Sofonias 1:1"
+   },
+   {
+    "q": "No segundo ano de qual rei a palavra do Senhor veio por Ageu?",
+    "options": [
+     "Dario",
+     "Ciro",
+     "Artaxerxes",
+     "Assuero"
+    ],
+    "answer": 0,
+    "ref": "Ageu 1:1"
+   },
+   {
+    "q": "Quem era o pai do sumo sacerdote Josué, no tempo de Ageu?",
+    "options": [
+     "Hilquias",
+     "Seraías",
+     "Joiada",
+     "Jozadaque"
+    ],
+    "answer": 3,
+    "ref": "Ageu 1:1"
+   },
+   {
+    "q": "Quem era o pai de Zorobabel, governador de Judá?",
+    "options": [
+     "Jozadaque",
+     "Hacalias",
+     "Sealtiel",
+     "Berequias"
+    ],
+    "answer": 2,
+    "ref": "Ageu 1:1"
+   },
+   {
+    "q": "Na primeira visão noturna de Zacarias, o homem estava montado num cavalo de que cor?",
+    "options": [
+     "Branco",
+     "Vermelho",
+     "Preto",
+     "Amarelo"
+    ],
+    "answer": 1,
+    "ref": "Zacarias 1:8"
+   },
+   {
+    "q": "Na visão de Zacarias 4, quantas oliveiras estavam junto ao castiçal de ouro?",
+    "options": [
+     "Sete",
+     "Uma",
+     "Duas",
+     "Doze"
+    ],
+    "answer": 2,
+    "ref": "Zacarias 4:2-3"
+   },
+   {
+    "q": "Segundo Malaquias 2:16, o que o Senhor, Deus de Israel, diz que aborrece?",
+    "options": [
+     "O repúdio",
+     "O jejum",
+     "A pobreza",
+     "O sacrifício"
+    ],
+    "answer": 0,
+    "ref": "Malaquias 2:16"
+   },
+   {
+    "q": "Qual profeta é datado \"dois anos antes do terremoto\", nos dias de Uzias?",
+    "options": [
+     "Oseias",
+     "Joel",
+     "Miqueias",
+     "Amós"
+    ],
+    "answer": 3,
+    "ref": "Amós 1:1"
+   },
+   {
+    "q": "Além de Isaías, qual profeta fala de converter espadas em enxadões?",
+    "options": [
+     "Joel",
+     "Miqueias",
+     "Amós",
+     "Naum"
+    ],
+    "answer": 1,
+    "ref": "Miqueias 4:3"
+   }
+  ]
+ },
+ {
+  "phase": 193,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Quantas almas foram acrescentadas à igreja no dia de Pentecostes?",
+    "options": [
+     "5.000",
+     "Quase 3.000",
+     "500",
+     "120"
+    ],
+    "answer": 1,
+    "ref": "Atos 2:41"
+   },
+   {
+    "q": "Quantas pessoas estavam reunidas quando Pedro propôs escolher o substituto de Judas?",
+    "options": [
+     "70",
+     "12",
+     "500",
+     "Quase 120"
+    ],
+    "answer": 3,
+    "ref": "Atos 1:15"
+   },
+   {
+    "q": "Após a cura do coxo, a quantos chegou o número dos homens que creram?",
+    "options": [
+     "Quase 5.000",
+     "3.000",
+     "7.000",
+     "1.000"
+    ],
+    "answer": 0,
+    "ref": "Atos 4:4"
+   },
+   {
+    "q": "Quantos homens de boa reputação foram escolhidos para servir às mesas em Atos 6?",
+    "options": [
+     "Doze",
+     "Setenta",
+     "Sete",
+     "Três"
+    ],
+    "answer": 2,
+    "ref": "Atos 6:3"
+   },
+   {
+    "q": "Qual destes NÃO estava entre os escolhidos para servir às mesas em Atos 6?",
+    "options": [
+     "Filipe",
+     "Nicanor",
+     "Pármenas",
+     "Barnabé"
+    ],
+    "answer": 3,
+    "ref": "Atos 6:5"
+   },
+   {
+    "q": "Nicolau, um dos sete escolhidos em Atos 6, era prosélito de qual cidade?",
+    "options": [
+     "Alexandria",
+     "Antioquia",
+     "Cirene",
+     "Tarso"
+    ],
+    "answer": 1,
+    "ref": "Atos 6:5"
+   },
+   {
+    "q": "Barnabé era o sobrenome dado pelos apóstolos a um levita chamado:",
+    "options": [
+     "Judas",
+     "Simeão",
+     "José",
+     "Lúcio"
+    ],
+    "answer": 2,
+    "ref": "Atos 4:36"
+   },
+   {
+    "q": "Qual o significado do nome Barnabé, segundo Atos?",
+    "options": [
+     "Filho da consolação",
+     "Filho do trovão",
+     "Pedra",
+     "Gazela"
+    ],
+    "answer": 0,
+    "ref": "Atos 4:36"
+   },
+   {
+    "q": "Como se chamava o paralítico curado por Pedro em Lida?",
+    "options": [
+     "Eneias",
+     "Êutico",
+     "Tíquico",
+     "Estéfanas"
+    ],
+    "answer": 0,
+    "ref": "Atos 9:32-34"
+   },
+   {
+    "q": "Há quantos anos Eneias estava deitado numa cama?",
+    "options": [
+     "Doze",
+     "38",
+     "Oito",
+     "Dezoito"
+    ],
+    "answer": 2,
+    "ref": "Atos 9:33"
+   }
+  ]
+ },
+ {
+  "phase": 194,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Na casa de quem Pedro ficou hospedado em Jope?",
+    "options": [
+     "De Cornélio",
+     "De Simão, o curtidor",
+     "De Tabita",
+     "De João Marcos"
+    ],
+    "answer": 1,
+    "ref": "Atos 9:43"
+   },
+   {
+    "q": "Na visão de Pedro em Jope, quantas vezes aquilo aconteceu antes de o vaso subir ao céu?",
+    "options": [
+     "Uma",
+     "Sete",
+     "Duas",
+     "Três"
+    ],
+    "answer": 3,
+    "ref": "Atos 10:16"
+   },
+   {
+    "q": "Por volta de que hora Pedro subiu ao terraço para orar em Jope?",
+    "options": [
+     "Terceira",
+     "Sexta",
+     "Nona",
+     "Primeira"
+    ],
+    "answer": 1,
+    "ref": "Atos 10:9"
+   },
+   {
+    "q": "Qual profeta anunciou uma grande fome, que aconteceu no tempo de Cláudio?",
+    "options": [
+     "Ágabo",
+     "Silas",
+     "Judas Barsabás",
+     "Manaém"
+    ],
+    "answer": 0,
+    "ref": "Atos 11:27-28"
+   },
+   {
+    "q": "Qual profeta ou mestre de Antioquia havia sido criado com Herodes, o tetrarca?",
+    "options": [
+     "Lúcio",
+     "Simeão Níger",
+     "Ágabo",
+     "Manaém"
+    ],
+    "answer": 3,
+    "ref": "Atos 13:1"
+   },
+   {
+    "q": "Qual era o outro nome do mago Barjesus, que resistiu a Paulo em Chipre?",
+    "options": [
+     "Simão",
+     "Bar-Jonas",
+     "Elimas",
+     "Ceva"
+    ],
+    "answer": 2,
+    "ref": "Atos 13:6-8"
+   },
+   {
+    "q": "Quantos filhos de Ceva tentaram expulsar demônios usando o nome de Jesus?",
+    "options": [
+     "Dois",
+     "Doze",
+     "Sete",
+     "Três"
+    ],
+    "answer": 2,
+    "ref": "Atos 19:14"
+   },
+   {
+    "q": "Em qual cidade João Marcos se apartou de Paulo e Barnabé e voltou a Jerusalém?",
+    "options": [
+     "Pafos",
+     "Antioquia",
+     "Listra",
+     "Perge, da Panfília"
+    ],
+    "answer": 3,
+    "ref": "Atos 13:13"
+   },
+   {
+    "q": "Qual o valor dos livros de magia queimados publicamente em Éfeso?",
+    "options": [
+     "50.000 moedas de prata",
+     "30 moedas de prata",
+     "10.000 talentos",
+     "1.000 denários"
+    ],
+    "answer": 0,
+    "ref": "Atos 19:19"
+   },
+   {
+    "q": "Em qual escola Paulo ensinou diariamente durante dois anos em Éfeso?",
+    "options": [
+     "De Gamaliel",
+     "De Tirano",
+     "De Demétrio",
+     "De Apolo"
+    ],
+    "answer": 1,
+    "ref": "Atos 19:9-10"
+   }
+  ]
+ },
+ {
+  "phase": 195,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Quantas filhas donzelas, que profetizavam, tinha Filipe, o evangelista?",
+    "options": [
+     "Duas",
+     "Sete",
+     "Três",
+     "Quatro"
+    ],
+    "answer": 3,
+    "ref": "Atos 21:9"
+   },
+   {
+    "q": "Em que cidade Paulo se hospedou na casa de Filipe, o evangelista?",
+    "options": [
+     "Samaria",
+     "Jope",
+     "Cesareia",
+     "Azoto"
+    ],
+    "answer": 2,
+    "ref": "Atos 21:8"
+   },
+   {
+    "q": "Quem avisou Paulo da conspiração dos judeus para matá-lo em Jerusalém?",
+    "options": [
+     "Timóteo",
+     "O filho de sua irmã",
+     "João Marcos",
+     "Tito"
+    ],
+    "answer": 1,
+    "ref": "Atos 23:16"
+   },
+   {
+    "q": "Quantos judeus juraram não comer nem beber até matar Paulo?",
+    "options": [
+     "Mais de 40",
+     "12",
+     "70",
+     "Cerca de 20"
+    ],
+    "answer": 0,
+    "ref": "Atos 23:12-13"
+   },
+   {
+    "q": "Qual tribuno escreveu uma carta ao governador Félix enviando Paulo?",
+    "options": [
+     "Cláudio Lísias",
+     "Júlio",
+     "Cornélio",
+     "Públio"
+    ],
+    "answer": 0,
+    "ref": "Atos 23:26"
+   },
+   {
+    "q": "Qual era a mulher de Félix, que era judia?",
+    "options": [
+     "Berenice",
+     "Herodias",
+     "Candace",
+     "Drusila"
+    ],
+    "answer": 3,
+    "ref": "Atos 24:24"
+   },
+   {
+    "q": "Quem veio com o rei Agripa, com muita pompa, para ouvir Paulo?",
+    "options": [
+     "Drusila",
+     "Herodias",
+     "Berenice",
+     "Candace"
+    ],
+    "answer": 2,
+    "ref": "Atos 25:23"
+   },
+   {
+    "q": "Que insígnia tinha o navio de Alexandria que levou Paulo de Malta?",
+    "options": [
+     "Júpiter",
+     "Castor e Pólux",
+     "Netuno",
+     "Diana"
+    ],
+    "answer": 1,
+    "ref": "Atos 28:11"
+   },
+   {
+    "q": "Quantas pessoas, ao todo, estavam no navio que naufragou com Paulo?",
+    "options": [
+     "120",
+     "300",
+     "276",
+     "70"
+    ],
+    "answer": 2,
+    "ref": "Atos 27:37"
+   },
+   {
+    "q": "Quantas âncoras os marinheiros lançaram da popa, temendo os rochedos?",
+    "options": [
+     "Quatro",
+     "Duas",
+     "Sete",
+     "Três"
+    ],
+    "answer": 0,
+    "ref": "Atos 27:29"
+   }
+  ]
+ },
+ {
+  "phase": 196,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Quantas vezes Paulo recebeu dos judeus quarenta açoites menos um?",
+    "options": [
+     "Três",
+     "Duas",
+     "Sete",
+     "Cinco"
+    ],
+    "answer": 3,
+    "ref": "2 Coríntios 11:24"
+   },
+   {
+    "q": "Três anos após sua conversão, quantos dias Paulo ficou com Pedro em Jerusalém?",
+    "options": [
+     "40",
+     "15",
+     "7",
+     "3"
+    ],
+    "answer": 1,
+    "ref": "Gálatas 1:18"
+   },
+   {
+    "q": "Depois de quantos anos Paulo subiu outra vez a Jerusalém com Barnabé e Tito?",
+    "options": [
+     "3",
+     "14",
+     "7",
+     "10"
+    ],
+    "answer": 1,
+    "ref": "Gálatas 2:1"
+   },
+   {
+    "q": "Até qual céu Paulo diz que um homem em Cristo foi arrebatado?",
+    "options": [
+     "Sétimo",
+     "Segundo",
+     "Quarto",
+     "Terceiro"
+    ],
+    "answer": 3,
+    "ref": "2 Coríntios 12:2"
+   },
+   {
+    "q": "Quantas vezes Paulo pediu ao Senhor que o espinho na carne se desviasse dele?",
+    "options": [
+     "Três",
+     "Sete",
+     "Duas",
+     "Uma"
+    ],
+    "answer": 0,
+    "ref": "2 Coríntios 12:7-8"
+   },
+   {
+    "q": "Paulo pediu que a carta aos Colossenses fosse lida também em qual igreja?",
+    "options": [
+     "Éfeso",
+     "Filipos",
+     "Laodiceia",
+     "Tessalônica"
+    ],
+    "answer": 2,
+    "ref": "Colossenses 4:16"
+   },
+   {
+    "q": "Qual irmã, serva da igreja em Cencreia, Paulo recomenda em Romanos 16?",
+    "options": [
+     "Priscila",
+     "Júnia",
+     "Trifena",
+     "Febe"
+    ],
+    "answer": 3,
+    "ref": "Romanos 16:1"
+   },
+   {
+    "q": "Quem escreveu materialmente a carta aos Romanos e enviou sua saudação?",
+    "options": [
+     "Tíquico",
+     "Tércio",
+     "Silvano",
+     "Lucas"
+    ],
+    "answer": 1,
+    "ref": "Romanos 16:22"
+   },
+   {
+    "q": "Qual procurador da cidade envia saudações no final de Romanos?",
+    "options": [
+     "Gaio",
+     "Quarto",
+     "Erasto",
+     "Tércio"
+    ],
+    "answer": 2,
+    "ref": "Romanos 16:23"
+   },
+   {
+    "q": "Quais duas mulheres de Filipos Paulo roga que \"sintam o mesmo no Senhor\"?",
+    "options": [
+     "Evódia e Síntique",
+     "Trifena e Trifosa",
+     "Loide e Eunice",
+     "Priscila e Febe"
+    ],
+    "answer": 0,
+    "ref": "Filipenses 4:2"
+   }
+  ]
+ },
+ {
+  "phase": 197,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Segundo Mateus 1:17, quantas gerações há de Abraão até Davi?",
+    "options": [
+     "14",
+     "12",
+     "10",
+     "7"
+    ],
+    "answer": 0,
+    "ref": "Mateus 1:17"
+   },
+   {
+    "q": "Segundo a genealogia de Mateus, quem gerou José, marido de Maria?",
+    "options": [
+     "Matã",
+     "Joaquim",
+     "Jacó",
+     "Zorobabel"
+    ],
+    "answer": 2,
+    "ref": "Mateus 1:16"
+   },
+   {
+    "q": "Quantas mulheres, além de Maria, são citadas na genealogia de Jesus em Mateus 1?",
+    "options": [
+     "Duas",
+     "Quatro",
+     "Três",
+     "Cinco"
+    ],
+    "answer": 1,
+    "ref": "Mateus 1:3-6"
+   },
+   {
+    "q": "Segundo Lucas, com que idade aproximada Jesus começou o seu ministério?",
+    "options": [
+     "12 anos",
+     "33 anos",
+     "40 anos",
+     "Cerca de 30 anos"
+    ],
+    "answer": 3,
+    "ref": "Lucas 3:23"
+   },
+   {
+    "q": "Até quem a genealogia de Jesus em Lucas 3 é traçada?",
+    "options": [
+     "Abraão",
+     "Adão, filho de Deus",
+     "Davi",
+     "Noé"
+    ],
+    "answer": 1,
+    "ref": "Lucas 3:38"
+   },
+   {
+    "q": "No décimo quinto ano de qual imperador veio a palavra de Deus a João Batista?",
+    "options": [
+     "Tibério",
+     "Augusto",
+     "Cláudio",
+     "Nero"
+    ],
+    "answer": 0,
+    "ref": "Lucas 3:1-2"
+   },
+   {
+    "q": "Quem era o governador da Síria quando se fez o alistamento do nascimento de Jesus?",
+    "options": [
+     "Pilatos",
+     "Félix",
+     "Sérgio Paulo",
+     "Cirênio"
+    ],
+    "answer": 3,
+    "ref": "Lucas 2:2"
+   },
+   {
+    "q": "Quando completaram quantos dias o menino foi circuncidado e chamado Jesus?",
+    "options": [
+     "Sete",
+     "Quarenta",
+     "Oito",
+     "Doze"
+    ],
+    "answer": 2,
+    "ref": "Lucas 2:21"
+   },
+   {
+    "q": "Segundo Lucas 2:37, a profetisa Ana era viúva de quase quantos anos?",
+    "options": [
+     "70",
+     "90",
+     "84",
+     "60"
+    ],
+    "answer": 2,
+    "ref": "Lucas 2:37"
+   },
+   {
+    "q": "Qual era o nome do pai de Ana, a profetisa?",
+    "options": [
+     "Simeão",
+     "Zacarias",
+     "Elcana",
+     "Fanuel"
+    ],
+    "answer": 3,
+    "ref": "Lucas 2:36"
+   }
+  ]
+ },
+ {
+  "phase": 198,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Quantos porcos, aproximadamente, se precipitaram no mar após Jesus libertar o gadareno?",
+    "options": [
+     "Cerca de 2.000",
+     "200",
+     "500",
+     "1.000"
+    ],
+    "answer": 0,
+    "ref": "Marcos 5:13"
+   },
+   {
+    "q": "Quantos cestos cheios sobraram na alimentação dos quatro mil homens?",
+    "options": [
+     "Doze",
+     "Sete",
+     "Quatro",
+     "Cinco"
+    ],
+    "answer": 1,
+    "ref": "Mateus 15:37-38"
+   },
+   {
+    "q": "Quantos grandes peixes havia na rede, na pesca após a ressurreição?",
+    "options": [
+     "144",
+     "120",
+     "200",
+     "153"
+    ],
+    "answer": 3,
+    "ref": "João 21:11"
+   },
+   {
+    "q": "A que distância da terra estavam os discípulos nessa pesca?",
+    "options": [
+     "100 côvados",
+     "50 côvados",
+     "Cerca de 200 côvados",
+     "1.000 côvados"
+    ],
+    "answer": 2,
+    "ref": "João 21:8"
+   },
+   {
+    "q": "Quantas talhas de pedra havia nas bodas de Caná?",
+    "options": [
+     "Sete",
+     "Seis",
+     "Doze",
+     "Quatro"
+    ],
+    "answer": 1,
+    "ref": "João 2:6"
+   },
+   {
+    "q": "Segundo os judeus em João 2, em quantos anos o templo havia sido edificado?",
+    "options": [
+     "46",
+     "40",
+     "20",
+     "7"
+    ],
+    "answer": 0,
+    "ref": "João 2:20"
+   },
+   {
+    "q": "Por volta de que hora Jesus se assentou junto à fonte de Jacó, em Samaria?",
+    "options": [
+     "Sexta",
+     "Terceira",
+     "Nona",
+     "Décima"
+    ],
+    "answer": 0,
+    "ref": "João 4:6"
+   },
+   {
+    "q": "Quantos maridos a mulher samaritana já havia tido?",
+    "options": [
+     "Sete",
+     "Três",
+     "Dois",
+     "Cinco"
+    ],
+    "answer": 3,
+    "ref": "João 4:18"
+   },
+   {
+    "q": "Em que hora a febre deixou o filho do oficial do rei em Cafarnaum?",
+    "options": [
+     "Sexta",
+     "Nona",
+     "Sétima",
+     "Terceira"
+    ],
+    "answer": 2,
+    "ref": "João 4:52"
+   },
+   {
+    "q": "Há quantos dias Lázaro estava no sepulcro quando Jesus chegou a Betânia?",
+    "options": [
+     "Três",
+     "Quatro",
+     "Dois",
+     "Sete"
+    ],
+    "answer": 1,
+    "ref": "João 11:17"
+   }
+  ]
+ },
+ {
+  "phase": 199,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Por quanto Judas Iscariotes disse que o unguento de nardo poderia ter sido vendido?",
+    "options": [
+     "30 moedas de prata",
+     "100 dinheiros",
+     "300 dinheiros",
+     "200 dinheiros"
+    ],
+    "answer": 2,
+    "ref": "João 12:5"
+   },
+   {
+    "q": "Quanto pesava a mistura de mirra e aloés que Nicodemos levou?",
+    "options": [
+     "Cerca de cem libras",
+     "Trinta libras",
+     "Dez libras",
+     "Cinquenta libras"
+    ],
+    "answer": 0,
+    "ref": "João 19:39"
+   },
+   {
+    "q": "Segundo Marcos, em que hora Jesus foi crucificado?",
+    "options": [
+     "Sexta",
+     "Nona",
+     "Primeira",
+     "Terceira"
+    ],
+    "answer": 3,
+    "ref": "Marcos 15:25"
+   },
+   {
+    "q": "Em quantas línguas estava escrito o título sobre a cruz de Jesus?",
+    "options": [
+     "Duas",
+     "Três",
+     "Uma",
+     "Quatro"
+    ],
+    "answer": 1,
+    "ref": "João 19:20"
+   },
+   {
+    "q": "Para qual aldeia, a sessenta estádios de Jerusalém, iam os dois discípulos com quem Jesus andou?",
+    "options": [
+     "Betânia",
+     "Emaús",
+     "Betfagé",
+     "Caná"
+    ],
+    "answer": 1,
+    "ref": "Lucas 24:13"
+   },
+   {
+    "q": "Qual era o nome de um dos dois discípulos no caminho de Emaús?",
+    "options": [
+     "Natanael",
+     "Alfeu",
+     "Tadeu",
+     "Cleopas"
+    ],
+    "answer": 3,
+    "ref": "Lucas 24:18"
+   },
+   {
+    "q": "Por quantos dias Jesus foi visto pelos apóstolos após a ressurreição, antes de subir ao céu?",
+    "options": [
+     "40",
+     "50",
+     "7",
+     "3"
+    ],
+    "answer": 0,
+    "ref": "Atos 1:3"
+   },
+   {
+    "q": "Segundo Paulo, Jesus ressuscitado foi visto de uma vez por quantos irmãos?",
+    "options": [
+     "120",
+     "70",
+     "Mais de 500",
+     "3.000"
+    ],
+    "answer": 2,
+    "ref": "1 Coríntios 15:6"
+   },
+   {
+    "q": "A quais apóstolos Jesus deu o nome de Boanerges?",
+    "options": [
+     "Pedro e André",
+     "Filipe e Bartolomeu",
+     "Simão e Judas",
+     "Tiago e João"
+    ],
+    "answer": 3,
+    "ref": "Marcos 3:17"
+   },
+   {
+    "q": "Qual apóstolo era também chamado Dídimo?",
+    "options": [
+     "Tadeu",
+     "Tomé",
+     "Natanael",
+     "Matias"
+    ],
+    "answer": 1,
+    "ref": "João 11:16"
+   }
+  ]
+ },
+ {
+  "phase": 200,
+  "level": "muito-dificil",
+  "questions": [
+   {
+    "q": "Na lista dos doze em Mateus 10, Tiago é chamado filho de quem, além de Tiago, filho de Zebedeu?",
+    "options": [
+     "Jonas",
+     "Cleopas",
+     "Alfeu",
+     "Jacó"
+    ],
+    "answer": 2,
+    "ref": "Mateus 10:2-3"
+   },
+   {
+    "q": "Jesus chamou Simão Pedro de \"Barjonas\", isto é, filho de:",
+    "options": [
+     "Jonas",
+     "Zebedeu",
+     "Alfeu",
+     "Jacó"
+    ],
+    "answer": 0,
+    "ref": "Mateus 16:17"
+   },
+   {
+    "q": "De qual cidade eram Filipe, André e Pedro?",
+    "options": [
+     "Betsaida",
+     "Cafarnaum",
+     "Caná",
+     "Nazaré"
+    ],
+    "answer": 0,
+    "ref": "João 1:44"
+   },
+   {
+    "q": "De qual cidade era Natanael?",
+    "options": [
+     "Betsaida",
+     "Nazaré",
+     "Caná da Galileia",
+     "Cafarnaum"
+    ],
+    "answer": 2,
+    "ref": "João 21:2"
+   },
+   {
+    "q": "Quantos estádios os discípulos haviam remado quando viram Jesus andando sobre o mar?",
+    "options": [
+     "Uns 10",
+     "Uns 25 ou 30",
+     "Uns 60",
+     "Uns 100"
+    ],
+    "answer": 1,
+    "ref": "João 6:19"
+   },
+   {
+    "q": "Na parábola do mordomo infiel, quanto azeite o primeiro devedor devia ao seu senhor?",
+    "options": [
+     "50 medidas",
+     "80 medidas",
+     "1.000 medidas",
+     "100 medidas"
+    ],
+    "answer": 3,
+    "ref": "Lucas 16:5-6"
+   },
+   {
+    "q": "Na parábola contada a Simão, o fariseu, um devedor devia 500 dinheiros e o outro:",
+    "options": [
+     "100",
+     "50",
+     "10",
+     "5.000"
+    ],
+    "answer": 1,
+    "ref": "Lucas 7:41"
+   },
+   {
+    "q": "Na parábola do servo sem misericórdia, quanto o servo devia ao rei?",
+    "options": [
+     "10.000 talentos",
+     "100 dinheiros",
+     "1.000 talentos",
+     "500 dinheiros"
+    ],
+    "answer": 0,
+    "ref": "Mateus 18:24"
+   },
+   {
+    "q": "Na parábola das minas, quantas minas o primeiro servo ganhou com a sua?",
+    "options": [
+     "Cinco",
+     "Duas",
+     "Uma",
+     "Dez"
+    ],
+    "answer": 3,
+    "ref": "Lucas 19:16"
+   },
+   {
+    "q": "Em Apocalipse 22:20, o que João responde a \"Certamente cedo venho\"?",
+    "options": [
+     "Aleluia! Glória a Deus",
+     "Santo, santo, santo",
+     "Amém. Ora vem, Senhor Jesus",
+     "Digno é o Cordeiro"
+    ],
+    "answer": 2,
+    "ref": "Apocalipse 22:20"
+   }
+  ]
+ }
+]

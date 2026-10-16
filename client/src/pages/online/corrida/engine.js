@@ -516,7 +516,7 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
     const bh = blockH(nl, st.z, 0.3);
     if (bh > 0.6 && st.y < bh - 0.35) { st.bump = d; hit('side', null); return; }
     st.lane = nl;
-    onSound?.('whoosh');
+    onSound?.('lane');
   }
   function jump() {
     if (!playing()) return;
@@ -525,7 +525,7 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
       const pg = st.power.pulapula > 0;
       st.vy = pg ? JUMP_V * 1.62 : JUMP_V;
       st.roll = 0;
-      onSound?.(pg ? 'boing' : 'jump');
+      onSound?.(pg ? 'boing' : 'hop');
       if (st.skate > 0) st.flip = 0;
       if (pg) burst(st.x, st.groundY + 0.1, st.z, 10, ['#86efac', '#ffffff'], 3, 0.45, 0.8, 4);
     }
@@ -534,7 +534,7 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
     if (!playing() || st.power.foguete > 0) return;
     st.roll = ROLL_TIME;
     if (st.y > st.groundY + 0.06) st.vy = -JUMP_V * 1.3;
-    onSound?.('whoosh');
+    onSound?.('slide');
   }
   const input = { left: () => move(-1), right: () => move(1), up: jump, down: roll };
   function useSkate() {
@@ -712,7 +712,7 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
       st.y += st.vy * dt;
     }
     if (st.power.foguete > 0) { /* no ar */ } else if (st.y <= st.groundY && st.vy <= 0) {
-      if (st.prevY > st.groundY + 0.5) burst(st.x, st.groundY + 0.05, st.z, 7, ['#f5f5f4', '#d6d3d1'], 2.2, 0.4, 0.9, 2);
+      if (st.prevY > st.groundY + 0.5) { burst(st.x, st.groundY + 0.05, st.z, 7, ['#f5f5f4', '#d6d3d1'], 2.2, 0.4, 0.9, 2); onSound?.('land'); }
       st.y = st.groundY; st.vy = 0;
     } else if (st.y < st.groundY) st.y = st.groundY; // subindo a rampa
     const h = st.roll > 0 ? 0.8 : 1.75;
@@ -754,7 +754,10 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
       }
       if (got) {
         st.coins += val;
-        onSound?.('coin');
+        // moedas seguidas vão subindo o tom (até dar meio segundo sem pegar nenhuma)
+        st.streak = st.t - (st.lastCoinAt ?? -9) < 0.5 ? (st.streak || 0) + 1 : 0;
+        st.lastCoinAt = st.t;
+        onSound?.('coinstreak', st.streak);
         burst(c.mesh.position.x, c.mesh.position.y, c.z, val > 1 ? 9 : 6, val > 1 ? ['#fde047', '#fb923c', '#ffffff'] : ['#fde047', '#fbbf24', '#ffffff'], 2.6, 0.4, 0.75, 2, true);
         dropCoin(c.mesh);
         coins.splice(i, 1);
@@ -864,6 +867,8 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
     raf = window.requestAnimationFrame(frame);
     const dt = Math.min(0.05, (now - (last || now)) / 1000);
     last = now;
+    // Pausado: a cena fica parada (só desenha de novo)
+    if (st.paused) { renderer.render(scene, camera); return; }
     clock += dt;
     if (st.phase === 'run') { if (st.alive) stepRun(dt); else st.t += dt; }
     fx.update(dt);
@@ -1056,6 +1061,8 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
       st, addTrain, addRamp, activate, addPowerup,
       clear() { for (const o of objects) scene.remove(o.mesh); objects.length = 0; st.nextRowZ = st.z - 400; },
     },
+    pause() { if (st.phase === 'run' && st.alive) st.paused = true; return st.paused; },
+    resume() { st.paused = false; },
     giveUp() { if (st.alive && st.phase === 'run') { st.alive = false; finish(); } },
     dispose() {
       window.cancelAnimationFrame(raf);

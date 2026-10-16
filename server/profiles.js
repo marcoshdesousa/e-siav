@@ -20,7 +20,7 @@ export function eventsOf(type, id) {
   ).map((e) => ({ ...e, attachments: JSON.parse(e.attachments || '[]') }));
 }
 
-const pos = (r) => (r ? { position: r.position, points: r.points } : null);
+const pos = (r) => (r ? { position: r.position, points: r.points, bible_points: r.bible_points } : null);
 
 /** Perfil público do clube: só a QUANTIDADE de membros, nunca os nomes. */
 export function clubProfile(id) {
@@ -37,8 +37,9 @@ export function clubProfile(id) {
     id,
   );
   c.unit_count = c.units.length;
-  c.ranking = pos(positionOf(clubsRanking(), c.id));
-  c.ranking_district = pos(positionOf(clubsRanking(c.district_id), c.id));
+  // Sem ranking geral de todos os distritos: a posição é no distrito do clube.
+  c.ranking = pos(positionOf(clubsRanking(c.district_id), c.id));
+  c.ranking_district = c.ranking;
   c.events = eventsOf('club', id);
   c.medals = medalsOf('club', id);
   return c;
@@ -54,7 +55,7 @@ export function unitProfile(id) {
   u.member_count = get(`SELECT COUNT(*) AS n FROM members WHERE unit_id = ? AND status = 'ativo'`, id).n;
   if (!u.is_leadership) {
     u.ranking_club = pos(positionOf(clubUnitsRanking(u.club_id), u.id));
-    u.ranking_general = pos(positionOf(unitsRanking(), u.id));
+    u.ranking_general = pos(positionOf(unitsRanking(u.district_id), u.id)); // no distrito
   }
   u.medals = medalsOf('unit', id);
   return u;
@@ -62,7 +63,7 @@ export function unitProfile(id) {
 
 export function memberProfile(where, value) {
   const m = get(
-    `SELECT m.id, m.name, m.photo, m.code, m.cargo, m.birth_date,
+    `SELECT m.id, m.name, m.photo, m.code, m.cargo, m.birth_date, c.district_id,
             m.club_id, c.code AS club_code, c.name AS club_name, c.logo AS club_logo, m.unit_id, u.name AS unit_name, u.number AS unit_number, u.is_leadership AS unit_is_leadership
      FROM members m JOIN clubs c ON c.id = m.club_id LEFT JOIN units u ON u.id = m.unit_id
      WHERE m.status = 'ativo' AND ${where === 'code' ? 'm.code = ?' : 'm.id = ?'}`,
@@ -83,7 +84,7 @@ export function memberProfile(where, value) {
   m.specialties = ach.filter((a) => a.type === 'especialidade');
   m.courses = ach.filter((a) => a.type === 'curso');
   // Desbravadores e liderança têm rankings separados.
-  m.ranking = pos(positionOf(m.kind === 'desbravador' ? membersRanking() : leadersRanking(), m.id));
+  m.ranking = pos(positionOf(m.kind === 'desbravador' ? membersRanking(m.district_id) : leadersRanking(m.district_id), m.id)); // no distrito
   m.events = eventsOf('member', m.id);
   m.medals = medalsOf('member', m.id);
   return m;

@@ -47,7 +47,7 @@ function ClubHome() {
               <h1>{c.name}</h1>
               <div className="chips"><span className="chip ico"><MapPin size={14} /> {c.district_name}</span><span className="chip ico"><KeyRound size={14} /> Código do clube: <b>{c.code}</b></span></div>
               {c.director_name && <p className="small" style={{ margin: '.2rem 0 .4rem' }}>Diretor(a): <b>{c.director_name}</b>{c.associate_directors ? <> · Associados: {c.associate_directors.split('\n').join(', ')}</> : ''}</p>}
-              {c.ranking && <PositionBadge position={c.ranking.position} points={c.ranking.points} label="no ranking de clubes" />}
+              {c.ranking && <PositionBadge position={c.ranking.position} points={c.ranking.points} label="no ranking de clubes do distrito" />}
               <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.5rem' }}>
                 <ShareButton path={`/clube/${c.code}`} title={c.name} />
                 <Link to={`${base}/ver/clube/${c.id}`}><Button variant="yellow" small>Ver perfil público</Button></Link>
@@ -170,7 +170,7 @@ function MemberForm({ member, units, onClose, onDone }) {
 }
 
 function AchievementsModal({ member, onClose, onDone }) {
-  const type = 'especialidade';
+  const [type, setType] = useState('especialidade');
   const catalogs = { classe: useLoad(() => api.get('/catalog?type=classe')), especialidade: useLoad(() => api.get('/catalog?type=especialidade')) };
   const detail = useLoad(() => api.get('/club/members/' + member.id));
   const [sel, setSel] = useState(null);
@@ -191,11 +191,16 @@ function AchievementsModal({ member, onClose, onDone }) {
   };
   const cat = catalogs[type];
   return (
-    <Modal title={`Especialidades · ${member.name.split(' ')[0]}`} onClose={onClose}
+    <Modal title={`Especialidades e classes · ${member.name.split(' ')[0]}`} onClose={onClose}
       footer={<><Button variant="secondary" onClick={onClose}>Cancelar</Button><Button busy={busy} onClick={save}>Salvar ({chosen.size})</Button></>}>
       <Loading data={cat.data && detail.data} loading={cat.loading || detail.loading} error={cat.error || detail.error}>
         {() => (
           <>
+            <div className="seg" style={{ marginBottom: '.8rem' }}>
+              {[['especialidade', 'Especialidades'], ['classe', 'Classes']].map(([k, l]) => (
+                <button key={k} type="button" className={type === k ? 'active' : ''} onClick={() => setType(k)}>{l}</button>
+              ))}
+            </div>
             <CatalogPicker key={type} type={type} items={cat.data.filter((c) => !(type === 'classe' && c.leader && member.kind !== 'lideranca'))} selected={chosen} onChange={setSel} />
             {type === 'especialidade' && (
               <div className="mt">
@@ -231,11 +236,11 @@ function ApprovalsPage() {
   const toggle = (id) => { const s = new Set(sel); s.has(id) ? s.delete(id) : s.add(id); setSel(s); };
   return (
     <>
-      <PageHeader title="Aprovações" subtitle="Especialidades que os membros dizem ter"
+      <PageHeader title="Aprovações" subtitle="Especialidades e classes que os membros dizem ter"
         action={<Button small onClick={() => setPicking(true)}><Plus size={15} /> Adicionar</Button>} />
       {picking && (
         <Modal title="Adicionar para qual membro?" onClose={() => setPicking(false)}>
-          <p className="muted small" style={{ marginBottom: '.6rem' }}>Registre especialidades mesmo que o membro não tenha pedido.</p>
+          <p className="muted small" style={{ marginBottom: '.6rem' }}>Registre especialidades e classes mesmo que o membro não tenha pedido.</p>
           <div className="list">
             {(members.data || []).map((m) => (
               <button key={m.id} type="button" className="list-item" style={{ font: 'inherit', textAlign: 'left', cursor: 'pointer' }} onClick={() => { setPicking(false); setAddFor(m); }}>
@@ -267,7 +272,7 @@ function ApprovalsPage() {
                   <label key={i.id} className={'approve-item' + (sel.has(i.id) ? ' on' : '')}>
                     {status === 'pendente' && <input type="checkbox" checked={sel.has(i.id)} onChange={() => toggle(i.id)} />}
                     <CatalogBadge c={i} size={40} />
-                    <span className="grow"><b>{i.name}</b><small>{i.category}</small></span>
+                    <span className="grow"><b>{i.name}</b><small>{i.type === 'classe' ? 'Classe' : i.category}</small></span>
                   </label>
                 ))}
               </div>

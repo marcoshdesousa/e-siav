@@ -2,7 +2,7 @@
 // Funciona sem internet; o ranking só vale quando a corrida termina com internet.
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ChevronsUp, Coins, Flag, Footprints, Magnet, Play, Rocket, RotateCcw, Shirt, Star, Trophy, Volume2, VolumeX, WifiOff } from 'lucide-react';
+import { ArrowLeft, ChevronsUp, Coins, Flag, Footprints, Magnet, Pause, Play, Rocket, RotateCcw, Shirt, Star, Trophy, Volume2, VolumeX, WifiOff } from 'lucide-react';
 import { api } from '../../../api.js';
 import { Button, Spinner } from '../../../ui.jsx';
 import { useOnline as useInternet } from '../../../offline.js';
@@ -71,6 +71,15 @@ export default function CorridaPage({ base }) {
   const [ready, setReady] = useState(false);
   const [loadErr, setLoadErr] = useState(false);
   const [mute, setMute] = useState(isMuted());
+  const [paused, setPaused] = useState(false);
+  const pause = () => { if (game.current?.pause()) { setPaused(true); stopMusic(); } };
+  const resume = () => { unlockAudio(); game.current?.resume(); setPaused(false); startMusic('corrida'); };
+  // Saiu do app (atendeu o telefone, trocou de tela): pausa sozinho
+  useEffect(() => {
+    const v = () => { if (document.visibilityState === 'hidden' && phase === 'run') pause(); };
+    document.addEventListener('visibilitychange', v);
+    return () => document.removeEventListener('visibilitychange', v);
+  });
   useEffect(() => onMuteChange(setMute), []);
 
   const loadMine = () => api.get('/jogos/meus').then((m) => setMine(m)).catch(() => {});
@@ -90,7 +99,7 @@ export default function CorridaPage({ base }) {
         if (h.warn) { setWarn({ text: h.warn, good: !!h.good, id: Date.now() }); setTimeout(() => setWarn((w) => (w && Date.now() - w.id >= 1500 ? null : w)), 1600); return; }
         setHud(h);
       },
-      onSound: (n) => sfx(n),
+      onSound: (n, v) => sfx(n, v),
       onEnd: async (r) => {
         stopMusic();
         setPhase('over');
@@ -127,6 +136,8 @@ export default function CorridaPage({ base }) {
     const k = (e) => {
       const g = game.current;
       if (!g || phase !== 'run') return;
+      if (e.key === 'p' || e.key === 'Escape') { if (paused) resume(); else pause(); return; }
+      if (paused) return;
       const map = { ArrowLeft: 'left', a: 'left', ArrowRight: 'right', d: 'right', ArrowUp: 'up', w: 'up', ' ': 'up', ArrowDown: 'down', s: 'down' };
       if (e.key === 'e' || e.key === 'Shift') { g.useSkate(); return; }
       const a = map[e.key];
@@ -134,7 +145,7 @@ export default function CorridaPage({ base }) {
     };
     window.addEventListener('keydown', k);
     return () => window.removeEventListener('keydown', k);
-  }, [phase]);
+  }, [phase, paused]);
 
   // Deslizar o dedo; dois toques rápidos = skate
   const touch = useRef(null);
@@ -167,7 +178,7 @@ export default function CorridaPage({ base }) {
     game.current?.story();
     setTimeout(() => { setPhase('run'); game.current?.start(); startMusic('corrida'); }, 2700);
   };
-  const again = () => { setReady(false); setRound((r) => r + 1); setPhase('menu'); setTimeout(play, 120); };
+  const again = () => { setPaused(false); setReady(false); setRound((r) => r + 1); setPhase('menu'); setTimeout(play, 120); };
 
   const wallet = mine?.['corrida-moedas']?.total || 0;
   const bestCoins = mine?.['corrida-moedas']?.best || 0;
@@ -185,7 +196,18 @@ export default function CorridaPage({ base }) {
             <span className="corrida-pill"><Footprints size={16} /> {hud.dist} m</span>
             <span className="grow" />
             <button type="button" className="corrida-btn" onPointerDown={(e) => e.stopPropagation()} onClick={() => { unlockAudio(); setMuted(!mute); }} aria-label="Som">{mute ? <VolumeX size={18} /> : <Volume2 size={18} />}</button>
-            <button type="button" className="corrida-btn" onPointerDown={(e) => e.stopPropagation()} onClick={() => game.current?.giveUp()}><Flag size={16} /> Desistir</button>
+            {phase === 'run' && <button type="button" className="corrida-btn" onPointerDown={(e) => e.stopPropagation()} onClick={pause} aria-label="Pausar"><Pause size={18} /></button>}
+          </div>
+        )}
+        {paused && phase === 'run' && (
+          <div className="game-over corrida-pause" onPointerDown={(e) => e.stopPropagation()}>
+            <div className="game-over-card">
+              <Pause size={34} />
+              <h2>Pausado</h2>
+              <p className="small muted">{hud.coins} moedas · {hud.dist} m</p>
+              <Button block onClick={resume}><Play size={16} /> Continuar</Button>
+              <Button block variant="secondary" onClick={() => { setPaused(false); game.current?.resume(); game.current?.giveUp(); }}><Flag size={16} /> Desistir</Button>
+            </div>
           </div>
         )}
         {phase === 'run' && <SkateButton skate={hud.skate} wait={hud.skateWait} onUse={() => game.current?.useSkate()} />}

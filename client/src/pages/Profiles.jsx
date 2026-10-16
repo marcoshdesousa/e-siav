@@ -1,13 +1,14 @@
 import { Link, useParams, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import {
-  Award, CalendarDays, ChevronRight, Compass, Flag, MapPin, Hash, Tent, Users,
+  Award, CalendarDays, ChevronDown, ChevronRight, ChevronUp, Compass, Flag, Flame, MapPin, Hash, Tent, Trophy, Users,
 } from 'lucide-react';
 import { Attachments } from './admin/Events.jsx';
 import { api } from '../api.js';
 import { fmtDate, plural } from '../format.js';
 import { useAuth, homeFor } from '../auth.jsx';
-import { Avatar, Button, Card, ContentIcon, Empty, Loading, LogoHorizontal, MedalList, Modal, PositionBadge, RowSection, Section, ShareButton, useLoad } from '../ui.jsx';
+import { AppIcon } from '../icons.jsx';
+import { Avatar, Button, Card, Empty, Loading, LogoHorizontal, MedalList, Modal, PositionBadge, RowSection, Section, ShareButton, useLoad } from '../ui.jsx';
 
 /** linkBase: "/p" (páginas públicas) ou "<app>/ver" (dentro do app). */
 // Links públicos: /clube/CÓDIGO (clube), /clube/CÓDIGO/Nº (unidade) e /CÓDIGO-DO-MEMBRO.
@@ -16,12 +17,16 @@ export const groupLink = (clubCode, number, isLeadership) => `/clube/${clubCode}
 // Dentro do app o perfil abre nas abas (base/ver/clube/ID); na página pública usa o link bonito.
 const to = (linkBase, kind, id, pretty) => (linkBase === '/p' && pretty ? pretty : `${linkBase}/${kind}/${id}`);
 
+/** Primeira foto do evento (os anexos podem ser fotos ou PDFs). */
+const coverOf = (e) => (e.attachments || []).find((a) => a.type !== 'pdf' && a.url)?.url || null;
+
 export function EventCard({ e }) {
   const [open, setOpen] = useState(false);
+  const cover = coverOf(e);
   return (
     <>
-      <button type="button" className="list-item event-card" onClick={() => setOpen(true)} style={{ font: 'inherit', textAlign: 'left', cursor: 'pointer' }}>
-        <span className="trophy-bg"><Tent size={22} /></span>
+      <button type="button" className="list-item event-card has-cover" onClick={() => setOpen(true)} style={{ font: 'inherit', textAlign: 'left', cursor: 'pointer' }}>
+        {cover ? <img src={cover} alt="" className="event-cover" loading="lazy" /> : <span className="event-cover empty"><Tent size={30} /></span>}
         <div className="grow">
           <div className="title ellipsis">{e.name}</div>
           <div className="sub ellipsis">{fmtDate(e.date)}{e.location ? ' · ' + e.location : ''}</div>
@@ -42,16 +47,57 @@ export const EventsList = ({ events }) => (
   <RowSection title="Eventos" items={events} empty="Nenhum evento registrado ainda." emptyIcon="tent" render={(e) => <EventCard key={e.id} e={e} />} />
 );
 
-const ChipRow = ({ title, items, empty, emptyIcon }) => (
-  <RowSection
-    title={title} items={items} empty={empty} emptyIcon={emptyIcon}
-    render={(c) => (
-      <span key={c.id} className="ach-chip" title={c.category || ''}>
-        <span className="ach-img"><ContentIcon c={c} size={16} /></span>{c.name}
-      </span>
-    )}
-  />
-);
+const PREVIEW = 2;
+
+/**
+ * Classes e especialidades do perfil: só o nome (com o ícone da área, sem foto).
+ * Mostra as 2 primeiras e o botão "Ver mais" abre todas.
+ */
+function NameList({ title, items = [], empty, emptyIcon }) {
+  const [open, setOpen] = useState(false);
+  const extra = items.length - PREVIEW;
+  const shown = open ? items : items.slice(0, PREVIEW);
+  return (
+    <Section title={`${title}${items.length ? ` (${items.length})` : ''}`}>
+      {items.length ? (
+        <>
+          <div className="name-list">
+            {shown.map((c) => (
+              <span key={c.id} className="name-item" title={c.category || ''}>
+                <span className="ach-img"><AppIcon name={c.icon} size={16} /></span>
+                <span className="grow ellipsis">{c.name}</span>
+              </span>
+            ))}
+          </div>
+          {extra > 0 && (
+            <button type="button" className="see-more name-more" onClick={() => setOpen((o) => !o)}>
+              {open ? <>Ver menos <ChevronUp size={14} /></> : <>Ver mais ({extra}) <ChevronDown size={14} /></>}
+            </button>
+          )}
+        </>
+      ) : <Empty icon={emptyIcon}>{empty}</Empty>}
+    </Section>
+  );
+}
+
+/** Sequência do Ano Bíblico, que todo mundo vê no link do perfil. */
+const dias = (n) => `${n} ${n === 1 ? 'dia' : 'dias'}`;
+function BibleStreak({ b }) {
+  return (
+    <Section title="Ano Bíblico">
+      <div className="streak-pub">
+        <div className={'streak-pub-box' + (b.streak ? ' on' : '')}>
+          <Flame size={22} />
+          <span><b>{dias(b.streak)}</b><small>Sequência atual</small></span>
+        </div>
+        <div className="streak-pub-box best">
+          <Trophy size={20} />
+          <span><b>{dias(b.best_streak)}</b><small>Melhor sequência</small></span>
+        </div>
+      </div>
+    </Section>
+  );
+}
 
 export function ClubProfileView({ club: c, linkBase }) {
   return (
@@ -66,7 +112,7 @@ export function ClubProfileView({ club: c, linkBase }) {
             <span className="chip ico"><Flag size={14} /> {plural(c.unit_count, 'unidade', 'unidades')}</span>
           </div>
           <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.4rem' }}>
-            {c.ranking && <PositionBadge position={c.ranking.position} points={c.ranking.points} label="no ranking de clubes" />}
+            {c.ranking && <PositionBadge position={c.ranking.position} points={c.ranking.points} label="no ranking de clubes do distrito" />}
           </div>
           {c.director_name && <p className="small" style={{ margin: '.5rem 0 0' }}>Diretor(a): <b>{c.director_name}</b>{c.associate_directors ? <><br />Diretores associados: <b>{c.associate_directors.split('\n').join(', ')}</b></> : ''}</p>}
           <div className="mt"><ShareButton path={clanLink(c.code)} title={c.name} /></div>
@@ -110,7 +156,7 @@ export function UnitProfileView({ unit: u, linkBase, hideBio = false, extra = nu
           </div>
           <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.4rem' }}>
             {u.ranking_club && <PositionBadge position={u.ranking_club.position} points={u.ranking_club.points} label="no clube" />}
-            {u.ranking_general && <PositionBadge position={u.ranking_general.position} points={u.ranking_general.points} label="no ranking geral" />}
+            {u.ranking_general && <PositionBadge position={u.ranking_general.position} points={u.ranking_general.points} label="no distrito" />}
           </div>
           <div className="mt"><ShareButton path={groupLink(u.club_code, u.number, u.is_leadership)} title={'Unidade ' + u.name} /></div>
         </div>
@@ -141,16 +187,17 @@ export function MemberProfileView({ member: m, linkBase, photoAction, extra }) {
             {m.unit_id ? <Link to={to(linkBase, 'unidade', m.unit_id, groupLink(m.club_code, m.unit_number, m.unit_is_leadership))} className="chip ico"><Flag size={14} /> {m.unit_name}</Link> : <span className="chip ico"><Flag size={14} /> Sem unidade</span>}
           </div>
           <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.4rem' }}>
-            {m.ranking && <PositionBadge position={m.ranking.position} points={m.ranking.points} label={m.kind === 'desbravador' ? 'no ranking de desbravadores' : 'no ranking da liderança'} />}
+            {m.ranking && <PositionBadge position={m.ranking.position} points={m.ranking.points} label={m.kind === 'desbravador' ? 'no ranking de desbravadores do distrito' : 'no ranking da liderança do distrito'} />}
           </div>
           <div className="mt"><ShareButton path={`/${m.code}`} title={m.name} /></div>
         </div>
       </div>
 
       {extra}
-      <ChipRow title="Especialidades" items={m.specialties} empty="Nenhuma especialidade ainda." emptyIcon="knot" />
-      {m.classes?.length ? <ChipRow title="Classes" items={m.classes} /> : null}
-      {m.courses?.length ? <ChipRow title="Cursos concluídos" items={m.courses} /> : null}
+      {m.bible && <BibleStreak b={m.bible} />}
+      <NameList title="Classes" items={m.classes} empty="Nenhuma classe ainda." emptyIcon="compass" />
+      <NameList title="Especialidades" items={m.specialties} empty="Nenhuma especialidade ainda." emptyIcon="knot" />
+      {m.courses?.length ? <NameList title="Cursos concluídos" items={m.courses} /> : null}
       <MedalList medals={m.medals} />
       <EventsList events={m.events} />
     </>

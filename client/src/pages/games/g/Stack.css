@@ -1,3 +1,0 @@
-.stack { width: 100%; max-width: 400px; margin: 0 auto; background: #0B1430; color: #fff; border-radius: 14px; padding: 8px; box-sizing: border-box; user-select: none; -webkit-user-select: none; }
-.stack-canvas { display: block; width: 100%; aspect-ratio: 300 / 440; border-radius: 10px; touch-action: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.stack-hint { text-align: center; font-size: 12px; opacity: .7; margin: 6px 0 0; }

@@ -1,1334 +1,1044 @@
 {
-  "2048": {
-    "objetivo": "Deslize as peças para juntar números iguais e chegar à peça 2048 (ou além).",
-    "celular": [
-      "Deslize o dedo no tabuleiro para cima, baixo, esquerda ou direita",
-      "Todas as peças andam juntas; iguais que se encostam viram uma só",
-      "O botão \"Desistir\" encerra a partida"
-    ],
-    "computador": [
-      "Setas ou W A S D para mover as peças"
-    ],
-    "pontos": "Cada junção soma o valor da nova peça (2+2 dá 4 pontos). Acaba quando não há mais nenhum movimento.",
-    "dicas": [
-      "Mantenha a maior peça num canto",
-      "Use quase sempre só duas ou três direções",
-      "Evite mover para o lado que tira a peça grande do canto"
-    ]
-  },
-  "cobrinha": {
-    "objetivo": "Guie a cobrinha para comer as frutas e crescer o máximo possível sem bater em nada.",
-    "celular": [
-      "Deslize o dedo sobre o tabuleiro para virar (cima, baixo, esquerda, direita)",
-      "Ou use as setas na tela, abaixo do tabuleiro",
-      "A cobrinha não vira de ré: escolha sempre um lado"
-    ],
-    "computador": [
-      "Setas ou W A S D para virar",
-      "Também dá para clicar nas setas na tela"
-    ],
-    "pontos": "Cada fruta vale 10 pontos. O jogo acaba se a cobrinha bater na parede ou no próprio corpo.",
-    "dicas": [
-      "Ela fica mais rápida a cada fruta: planeje a curva antes",
-      "Ande perto das bordas para deixar o meio livre",
-      "Não se enrole: deixe sempre uma saída"
-    ]
-  },
-  "aventura": {
-    "objetivo": "Corra para a direita o mais longe que conseguir, pegando moedas e pisando nos besouros.",
-    "celular": [
-      "Use os botões ◀ ▶ na tela para andar",
-      "Toque em \"Pular\" para pular",
-      "Segure \"Pular\" para ir mais alto; solte cedo para um pulo curto"
-    ],
-    "computador": [
-      "Setas ← → (ou A e D) para andar",
-      "Espaço, Enter, ↑ ou W para pular",
-      "Segure o pulo para saltar mais alto"
-    ],
-    "pontos": "1 ponto por passo de distância, 10 por moeda e 50 por besouro pisado. Você tem 3 vidas; cair no buraco ou encostar no besouro tira uma.",
-    "dicas": [
-      "Pise no besouro caindo em cima dele; segurar o pulo faz quicar mais alto",
-      "Buracos maiores pedem pulo longo e correndo",
-      "A tela não volta: não fique parado na beirada"
-    ]
-  },
-  "velha": {
-    "objetivo": "Você é o ✕. Faça uma linha de 3 (reta ou diagonal) antes do computador (◯).",
-    "celular": [
-      "Toque em uma casa vazia para colocar seu ✕",
-      "Espere o computador jogar e toque de novo"
-    ],
-    "computador": [
-      "Use o mouse para clicar na casa vazia"
-    ],
-    "pontos": "Vitória vale 3 pontos, empate (deu velha) 1 e derrota 0. A partida acaba com uma linha ou com o tabuleiro cheio.",
-    "dicas": [
-      "Começar no centro ou num canto é forte",
-      "Sempre bloqueie quando o computador tiver 2 em linha",
-      "Tente criar duas ameaças ao mesmo tempo"
-    ]
-  },
-  "domino": {
-    "objetivo": "Encaixe suas pedras nas pontas da mesa e fique sem pedras antes do computador (bater).",
-    "celular": [
-      "Toque numa pedra destacada da sua mão para jogá-la",
-      "Se ela encaixa nas duas pontas, toque em \"◀ Esquerda\" ou \"Direita ▶\"",
-      "Sem jogada? Toque em \"Comprar do monte\"; sem monte, \"Passar a vez\""
-    ],
-    "computador": [
-      "Use o mouse para clicar nas pedras e nos botões"
-    ],
-    "pontos": "Bater vale 3 pontos. Se o jogo trancar (ninguém joga), vence quem tiver menos pontos na mão; empate vale 1.",
-    "dicas": [
-      "Jogue primeiro as pedras de números altos e as duplas",
-      "Guarde pedras de números diferentes para ter opções",
-      "Olhe as pontas e veja quais números o computador não tem"
-    ]
-  },
-  "blocos": {
-    "objetivo": "Encaixe as peças que caem e complete linhas inteiras para elas sumirem.",
-    "celular": [
-      "Botões ◀ ▶ movem a peça (segure para repetir)",
-      "Botão de girar vira a peça",
-      "Botão ▼ desce mais rápido e \"Cair\" derruba de vez"
-    ],
-    "computador": [
-      "Setas ← → para mover",
-      "↑ para girar",
-      "↓ para descer mais rápido",
-      "Espaço para cair de vez"
-    ],
-    "pontos": "1 linha vale 100, 2 = 300, 3 = 500 e 4 = 800, vezes o nível. Descer rápido dá pontos extras. Acaba quando as peças chegam ao topo.",
-    "dicas": [
-      "Olhe a próxima peça no painel ao lado",
-      "Deixe uma coluna livre para a peça comprida (4 linhas de uma vez)",
-      "A sombra mostra onde a peça vai cair"
-    ]
-  },
-  "memoria": {
-    "objetivo": "Vire duas cartas por vez e encontre os 8 pares de figuras iguais.",
-    "celular": [
-      "Toque numa carta para virá-la",
-      "Toque em outra: se forem iguais ficam abertas; senão, viram de volta"
-    ],
-    "computador": [
-      "Use o mouse para clicar nas cartas"
-    ],
-    "pontos": "Começa com 1000 e perde 20 por jogada e 5 por segundo (mínimo 50). Acaba ao achar todos os pares.",
-    "dicas": [
-      "Preste atenção em cada carta que aparece",
-      "Vire primeiro uma carta nova; a segunda tente onde já viu o par",
-      "Jogue rápido: o tempo também conta"
-    ]
-  },
-  "passaro": {
-    "objetivo": "Faça o pássaro voar entre os canos sem bater neles nem no chão.",
-    "celular": [
-      "Toque na tela para começar e bater as asas",
-      "Cada toque dá um impulso para cima; sem tocar ele cai"
-    ],
-    "computador": [
-      "Espaço, Enter ou ↑ para bater as asas",
-      "Também dá para clicar na tela"
-    ],
-    "pontos": "Cada cano que você passa vale 1 ponto. Acaba ao bater num cano ou no chão.",
-    "dicas": [
-      "Toques curtos e ritmados funcionam melhor",
-      "Mire no meio da abertura do próximo cano",
-      "Com o tempo os canos ficam mais rápidos e a abertura menor"
-    ]
-  },
-  "tijolos": {
-    "objetivo": "Rebata a bola com a barra e quebre todos os tijolos para passar de fase.",
-    "celular": [
-      "Arraste o dedo na tela para mover a barra",
-      "Toque para lançar a bola (ela também sai sozinha)"
-    ],
-    "computador": [
-      "Setas ← → (ou A e D) para mover a barra",
-      "Espaço ou ↑ para lançar",
-      "Ou mova o mouse sobre o jogo"
-    ],
-    "pontos": "Cada tijolo quebrado vale 10 pontos. Você tem 3 vidas; perde uma quando a bola cai. A cada fase a bola fica mais rápida.",
-    "dicas": [
-      "Bater com a ponta da barra manda a bola mais de lado",
-      "Abra um buraco na lateral para a bola quebrar tudo por cima",
-      "A partir da fase 2, alguns tijolos precisam de 2 batidas"
-    ]
-  },
-  "minado": {
-    "objetivo": "Abra todos os quadrados sem bombas (são 10 bombas escondidas em 9x9).",
-    "celular": [
-      "Toque num quadrado para abri-lo",
-      "Segure o dedo para marcar uma bandeira 🚩",
-      "Ou ligue o \"Modo bandeira\" no botão abaixo do campo"
-    ],
-    "computador": [
-      "Clique com o botão esquerdo para abrir",
-      "Clique com o botão direito para marcar bandeira",
-      "Clique num número já cercado de bandeiras para abrir os vizinhos"
-    ],
-    "pontos": "Vencer vale 1000 menos 5 por segundo (mínimo 100). Se abrir uma bomba, acaba e vale o número de casas abertas.",
-    "dicas": [
-      "O primeiro toque nunca é bomba",
-      "O número mostra quantas bombas há nas 8 casas em volta",
-      "Marque bandeiras só quando tiver certeza"
-    ]
-  },
-  "genius": {
-    "objetivo": "Observe a sequência de cores que acende e repita na mesma ordem. A cada rodada ela cresce.",
-    "celular": [
-      "Espere a contagem e observe as cores acenderem",
-      "Quando aparecer \"Sua vez\", toque nas cores na mesma ordem"
-    ],
-    "computador": [
-      "Teclas 1, 2, 3 e 4 para as cores (o número aparece em cada cor)",
-      "Ou clique nas cores com o mouse"
-    ],
-    "pontos": "Cada sequência completa vale 1 ponto (o tamanho dela). Errou uma cor, acabou.",
-    "dicas": [
-      "Fale as cores baixinho para lembrar",
-      "Os sons ajudam: cada cor tem uma nota",
-      "A sequência fica mais rápida: concentre-se"
-    ]
-  },
-  "toupeira": {
-    "objetivo": "Acerte as toupeiras 🐹 antes que se escondam, durante 45 segundos, sem acertar as bombas.",
-    "celular": [
-      "Toque no buraco onde a toupeira apareceu",
-      "Não toque nas bombas 💣"
-    ],
-    "computador": [
-      "Teclas 1 a 9 no formato do teclado numérico (7 8 9 em cima, 1 2 3 embaixo)",
-      "Ou clique nos buracos com o mouse"
-    ],
-    "pontos": "Cada toupeira vale 10 pontos, mais bônus de combo seguido. Bomba tira 1 de 3 vidas. Acaba no fim do tempo ou sem vidas.",
-    "dicas": [
-      "Errar ou deixar uma toupeira fugir zera o combo",
-      "Olhe bem antes de tocar: bomba custa vida",
-      "No fim aparecem mais rápido e mais bombas"
-    ]
-  },
-  "pong": {
-    "objetivo": "Rebata a bola com sua raquete (embaixo) e faça a bola passar pela raquete do computador.",
-    "celular": [
-      "Arraste o dedo para os lados na tela para mover sua raquete (a de baixo)",
-      "Toque em qualquer ponto: a raquete vai para lá na hora"
-    ],
-    "computador": [
-      "Setas ← → (ou A e D) para mover",
-      "Ou mova o mouse sobre o jogo"
-    ],
-    "pontos": "Cada ponto que você faz conta 1. O jogo acaba quando o computador fizer 5 pontos.",
-    "dicas": [
-      "Bater com a ponta da raquete manda a bola na diagonal",
-      "O computador erra mais quando a bola está rápida",
-      "Volte para o meio depois de rebater"
-    ]
-  },
-  "forca": {
-    "objetivo": "Descubra a palavra escondida letra por letra antes de completar o boneco da forca.",
-    "celular": [
-      "Leia a dica no topo (ex.: Personagem bíblico)",
-      "Toque nas letras do teclado da tela para chutar"
-    ],
-    "computador": [
-      "Digite as letras no teclado",
-      "Ou clique nas letras na tela"
-    ],
-    "pontos": "Cada palavra acertada vale 10 + 5 por vida que sobrou. Você tem 6 erros por palavra; ao perder uma palavra, acaba.",
-    "dicas": [
-      "Comece pelas vogais A, E, O",
-      "Depois tente letras comuns como R, S, M, N",
-      "Acentos não contam: o A vale para Á e Ã"
-    ]
-  },
-  "quiz": {
-    "objetivo": "Responda certo o maior número de perguntas sobre a Bíblia e os Desbravadores.",
-    "celular": [
-      "Leia a pergunta e toque numa das 4 respostas (A, B, C ou D)",
-      "Cada pergunta tem 15 segundos: fique de olho na barra"
-    ],
-    "computador": [
-      "Teclas 1, 2, 3, 4 ou A, B, C, D para responder",
-      "Ou clique na resposta com o mouse"
-    ],
-    "pontos": "Cada acerto vale 10 pontos + 1 por segundo que sobrou. Errar ou deixar o tempo acabar tira 1 de 3 vidas; sem vidas, acaba.",
-    "dicas": [
-      "Responder rápido dá mais pontos",
-      "Quando errar, leia a resposta certa que aparece: ela pode voltar",
-      "Na dúvida, elimine as opções absurdas"
-    ]
-  },
-  "alvo": {
-    "objetivo": "Acerte o máximo de alvos que aparecem na tela em 30 segundos.",
-    "celular": [
-      "Espere a contagem de 3 segundos",
-      "Toque nos alvos antes que eles encolham e sumam"
-    ],
-    "computador": [
-      "Use o mouse para clicar nos alvos"
-    ],
-    "pontos": "Centro do alvo vale 10, meio vale 5 e borda 2. Tocar fora de um alvo tira 1 ponto. Acaba em 30 segundos.",
-    "dicas": [
-      "Mire no centro para ganhar 10",
-      "Não fique tocando à toa: erro tira ponto",
-      "No fim os alvos ficam menores e mais rápidos"
-    ]
-  },
-  "matematica": {
-    "objetivo": "Resolva as contas o mais rápido que puder antes do relógio zerar.",
-    "celular": [
-      "Veja a conta no meio da tela",
-      "Toque na resposta certa entre as 4 opções"
-    ],
-    "computador": [
-      "Teclas 1, 2, 3 e 4 escolhem a opção (o número aparece no botão)",
-      "Ou clique com o mouse"
-    ],
-    "pontos": "Cada acerto vale 10 pontos (mais em níveis altos) e dá +3 s. Errar tira 5 s. Acaba quando o tempo zera.",
-    "dicas": [
-      "A cada 4 acertos sobe o nível: aparecem −, × e ÷",
-      "Errar custa caro: pense meio segundo antes",
-      "Olhe o último algarismo para eliminar opções"
-    ]
-  },
-  "deslizante": {
-    "objetivo": "Coloque as peças em ordem de 1 a 15, com o espaço vazio no canto de baixo à direita.",
-    "celular": [
-      "Toque numa peça na mesma linha ou coluna do espaço vazio para deslizá-la",
-      "Ou deslize o dedo no tabuleiro na direção que a peça deve andar",
-      "O botão \"Desistir\" encerra a partida"
-    ],
-    "computador": [
-      "Setas ou W A S D movem a peça para o espaço vazio",
-      "Ou clique na peça com o mouse"
-    ],
-    "pontos": "Começa com 2000 e perde 5 por movimento e 3 por segundo (mínimo 50). Desistir vale 0.",
-    "dicas": [
-      "Monte primeiro a linha de cima (1 a 4)",
-      "Depois a segunda linha, e só então o resto",
-      "Peças no lugar certo ficam destacadas"
-    ]
-  },
-  "nave": {
-    "objetivo": "Mova a nave para destruir as ondas de invasores e desviar das bombas deles.",
-    "celular": [
-      "Arraste o dedo para os lados na tela para mover a nave",
-      "A nave atira sozinha"
-    ],
-    "computador": [
-      "Setas ← → (ou A e D) para mover",
-      "Ou mova o mouse sobre o jogo"
-    ],
-    "pontos": "Invasores de cima valem mais (10 a 50), e cada onda limpa dá +100. Você tem 3 vidas; bomba ou invasor que chega embaixo tira uma.",
-    "dicas": [
-      "Fique embaixo de um invasor só por pouco tempo e saia",
-      "Derrube primeiro as pontas do bloco",
-      "Com poucos invasores eles andam mais rápido"
-    ]
-  },
-  "lig4": {
-    "objetivo": "Ligue 4 peças suas em linha (de pé, deitada ou diagonal) antes do computador.",
-    "celular": [
-      "Toque numa coluna para soltar sua peça",
-      "A peça cai até o espaço mais baixo livre"
-    ],
-    "computador": [
-      "Teclas 1 a 7 escolhem a coluna",
-      "Ou clique na coluna com o mouse"
-    ],
-    "pontos": "Vitória vale 3 pontos, empate (tabuleiro cheio) 1 e derrota 0.",
-    "dicas": [
-      "A coluna do meio é a mais forte",
-      "Sempre veja se o computador tem 3 em linha para bloquear",
-      "Cuidado para não dar ao computador a casa em cima da sua"
-    ]
-  },
-  "empilhar": {
-    "objetivo": "Solte cada bloco em cima da torre na hora certa e suba o mais alto possível.",
-    "celular": [
-      "Observe o bloco que vai e vem em cima da torre",
-      "Toque na tela para soltá-lo quando estiver alinhado"
-    ],
-    "computador": [
-      "Espaço ou Enter para soltar",
-      "Ou clique na tela"
-    ],
-    "pontos": "Cada bloco empilhado vale 1 ponto. A parte que sobra para fora cai e o bloco fica menor. Errar a torre toda acaba o jogo.",
-    "dicas": [
-      "Acertar em cheio dá \"Perfeito!\"",
-      "3 perfeitos seguidos fazem o bloco crescer de novo",
-      "Os blocos ficam mais rápidos: mantenha o ritmo"
-    ]
-  },
-  "desvie": {
-    "objetivo": "Desvie das pedras que caem o máximo de tempo possível e pegue as estrelas.",
-    "celular": [
-      "Espere a contagem de 3 segundos",
-      "Arraste o dedo para os lados (em qualquer lugar da tela) para mover"
-    ],
-    "computador": [
-      "Setas ← → (ou A e D) para mover",
-      "Ou mova o mouse sobre o jogo"
-    ],
-    "pontos": "10 pontos por segundo vivo e 50 por estrela. Encostou numa pedra, acabou.",
-    "dicas": [
-      "Fique perto do meio para ter para onde fugir",
-      "Só vá atrás da estrela se o caminho estiver livre",
-      "Depois de 15 s as pedras caem tortas"
-    ]
-  },
-  "xadrez": {
-    "objetivo": "Você joga com as brancas e começa. Dê xeque-mate no rei preto do computador: ele fica atacado e sem saída.",
-    "celular": [
-      "Toque numa peça branca: aparecem pontinhos nas casas para onde ela pode ir",
-      "Toque numa casa marcada para mover (casa com anel = captura)",
-      "Toque em outra peça sua para trocar a escolha"
-    ],
-    "computador": [
-      "Use o mouse: clique na peça e depois na casa de destino"
-    ],
-    "pontos": "Vitória vale 3 pontos e empate 1 (afogamento, peças insuficientes ou 100 lances). O peão que chega ao fim vira dama.",
-    "dicas": [
-      "Só aparecem lances permitidos: se o rei está em xeque, proteja-o",
-      "Roque e en passant funcionam: escolha o rei e toque duas casas ao lado",
-      "Desenvolva cavalos e bispos cedo e não perca a dama à toa"
-    ]
-  },
-  "damas": {
-    "objetivo": "Você joga com as brancas e começa. Capture ou bloqueie todas as peças do computador.",
-    "celular": [
-      "Toque numa pedra sua e depois na casa escura destacada",
-      "Na captura em sequência, toque em cada casa do caminho, um pulo por vez",
-      "Quando é obrigatório comer, as pedras que podem capturar ficam marcadas"
-    ],
-    "computador": [
-      "Use o mouse: clique na pedra e depois na casa de destino"
-    ],
-    "pontos": "Vitória vale 3 pontos e empate 1. Regras brasileiras: pedra anda 1 casa para a frente na diagonal e come para a frente e para trás.",
-    "dicas": [
-      "Comer é obrigatório e pela maioria: vale o lance que captura mais peças",
-      "Pedra que chega à última linha vira dama ♛, que anda várias casas na diagonal",
-      "Mantenha as pedras juntas e a última fileira protegida"
-    ]
-  },
-  "reversi": {
-    "objetivo": "Você joga com as pretas. Termine com mais peças da sua cor no tabuleiro que o computador.",
-    "celular": [
-      "Toque numa casa marcada com pontinho para colocar sua peça",
-      "As peças brancas cercadas em linha entre a sua nova peça e outra sua viram pretas"
-    ],
-    "computador": [
-      "Use o mouse para clicar nas casas marcadas"
-    ],
-    "pontos": "Vitória vale 3 pontos e empate 1. Sem lance possível, a vez passa; acaba quando ninguém pode jogar.",
-    "dicas": [
-      "Os cantos nunca viram: tente pegá-los",
-      "Evite as casas ao lado dos cantos no começo",
-      "Virar muitas peças cedo nem sempre é bom: pense no fim"
-    ]
-  },
-  "trilha": {
-    "objetivo": "Você usa as peças azuis. Forme moinhos (3 em linha) para tirar peças do computador até ele ficar com 2 ou travado.",
-    "celular": [
-      "Fase 1: toque num ponto vazio para colocar suas 9 peças",
-      "Fase 2: toque numa peça sua e depois num ponto vizinho livre",
-      "Formou moinho? Toque numa peça vermelha destacada para removê-la"
-    ],
-    "computador": [
-      "Use o mouse para clicar nos pontos do tabuleiro"
-    ],
-    "pontos": "Vitória vale 3 pontos e empate 1 (limite de 150 jogadas). Com só 3 peças você pode \"voar\" para qualquer ponto livre.",
-    "dicas": [
-      "Peças dentro de um moinho só podem ser tiradas se não houver outras",
-      "Abra e feche o mesmo moinho para tirar várias peças",
-      "Bloqueie o computador quando ele tiver 2 em linha"
-    ]
-  },
-  "mancala": {
-    "objetivo": "Junte no seu depósito (à direita) mais sementes que o computador.",
-    "celular": [
-      "Toque numa das suas 6 casas de baixo para pegar todas as sementes dela",
-      "Elas são semeadas uma por casa, no sentido anti-horário, passando pelo seu depósito"
-    ],
-    "computador": [
-      "Teclas 1 a 6 escolhem suas casas (da esquerda para a direita)",
-      "Ou clique na casa com o mouse"
-    ],
-    "pontos": "Vitória vale 3 pontos e empate 1. Acaba quando um lado fica sem sementes; o que sobra vai para o dono.",
-    "dicas": [
-      "Se a última semente cair no seu depósito, jogue de novo",
-      "Se cair numa casa sua vazia, você captura ela e as sementes da casa em frente",
-      "Conte as sementes antes para acertar o depósito"
-    ]
-  },
-  "pontinhos": {
-    "objetivo": "Ligue os pontos com traços e feche mais quadrados (de 16) que o computador.",
-    "celular": [
-      "Toque no espaço entre dois pontos vizinhos para desenhar um traço",
-      "Fechou o 4º lado de um quadrado? Ele é seu (V) e você joga de novo"
-    ],
-    "computador": [
-      "Use o mouse para clicar entre dois pontos"
-    ],
-    "pontos": "Vitória vale 3 pontos e empate (8 a 8) vale 1. Acaba quando todos os traços forem desenhados.",
-    "dicas": [
-      "Não desenhe o 3º lado de um quadrado: o computador fecha",
-      "No fim, entregue a menor corrente de quadrados possível",
-      "Feche quadrados em sequência sempre que puder"
-    ]
-  },
-  "batalha-naval": {
-    "objetivo": "Afunde os 5 navios escondidos do computador antes que ele afunde a sua frota.",
-    "celular": [
-      "Toque numa casa do mar inimigo (grade de cima) para atirar",
-      "✹ é acerto e • é água; depois o computador atira na sua grade de baixo",
-      "Antes do 1º tiro, \"Sortear de novo\" muda a posição dos seus navios"
-    ],
-    "computador": [
-      "Use o mouse para clicar nas casas do mar inimigo"
-    ],
-    "pontos": "Vencer vale 1000 menos 10 por tiro (mínimo 100). Se sua frota afundar, ganha 5 por acerto.",
-    "dicas": [
-      "Acertou? Atire nas casas ao lado para achar o resto do navio",
-      "Os navios nunca se encostam, nem na diagonal",
-      "Atire em xadrez (pulando uma casa) para achar navios mais rápido"
-    ]
-  },
-  "paciencia": {
-    "objetivo": "Leve todas as cartas para as 4 pilhas de cima (fundações), uma por naipe, do Ás ao Rei.",
-    "celular": [
-      "Toque no monte (canto de cima) para virar uma carta",
-      "Toque numa carta e depois no destino para movê-la",
-      "Toque duas vezes na mesma carta para mandá-la sozinha à fundação ou a outra coluna"
-    ],
-    "computador": [
-      "Use o mouse: clique na carta e depois no destino",
-      "Clique duas vezes para mover automático"
-    ],
-    "pontos": "+10 por carta na fundação, +5 por carta virada nas colunas e bônus de tempo ao vencer. Acaba ao vencer ou sem jogadas.",
-    "dicas": [
-      "Nas colunas, coloque carta menor de cor diferente (ex.: 6 vermelho no 7 preto)",
-      "Só o Rei (K) vai para uma coluna vazia",
-      "Vire as cartas escondidas das colunas o quanto antes"
-    ]
-  },
-  "vinteum": {
-    "objetivo": "Faça a soma das suas cartas chegar mais perto de 21 que a banca, sem passar de 21.",
-    "celular": [
-      "Toque em \"Pedir\" para receber mais uma carta",
-      "Toque em \"Parar\" para ficar com o que tem e a banca joga",
-      "Toque em \"Próxima rodada\" para continuar"
-    ],
-    "computador": [
-      "↑ (ou W) para pedir carta",
-      "↓ (ou S) para parar",
-      "Espaço ou Enter: pedir ou ir para a próxima rodada"
-    ],
-    "pontos": "Vencer a rodada vale 10 pontos e 21 com as 2 primeiras cartas vale 15. Empate dá 0. Com 3 derrotas, acaba.",
-    "dicas": [
-      "J, Q e K valem 10; o Ás vale 1 ou 11",
-      "A banca sempre compra até ter 17 ou mais",
-      "Com 17 ou mais, normalmente é melhor parar"
-    ]
-  },
-  "cartas": {
-    "objetivo": "Fique sem cartas na mão antes do computador, jogando cartas da mesma cor ou do mesmo número/símbolo.",
-    "celular": [
-      "Toque numa carta destacada da sua mão para jogá-la",
-      "Sem carta que combine? Toque em \"Comprar\"; se a nova servir, jogue ou toque \"Passar a vez\"",
-      "Ao jogar coringa ★ ou +4, toque na cor que quer escolher"
-    ],
-    "computador": [
-      "Use o mouse para clicar nas cartas e botões"
-    ],
-    "pontos": "Vitória vale 3 pontos e derrota 0. O jogo acaba quando alguém fica sem cartas.",
-    "dicas": [
-      "+2 e +4 fazem o computador comprar, e você joga de novo",
-      "⊘ (pular) e ⇄ (inverter) também dão uma jogada extra",
-      "Guarde o coringa para quando não tiver outra saída"
-    ]
-  },
-  "general": {
-    "objetivo": "Em 13 rodadas, jogue 5 dados e marque cada combinação na tabela para fazer a maior pontuação.",
-    "celular": [
-      "Toque em \"Jogar os dados\" (até 3 vezes por rodada)",
-      "Entre as jogadas, toque nos dados que quer segurar",
-      "Toque numa casa da tabela para marcar os pontos mostrados"
-    ],
-    "computador": [
-      "Espaço ou Enter para jogar os dados",
-      "Use o mouse para segurar dados e escolher a casa"
-    ],
-    "pontos": "Cada casa só pode ser usada uma vez. General (5 iguais) vale 50; somar 63 nas casas de cima dá +35. Acaba após 13 rodadas.",
-    "dicas": [
-      "Na parte de cima, tente 3 dados iguais de cada número para o bônus",
-      "Use \"Chance\" quando nada mais servir",
-      "Às vezes vale marcar 0 numa casa difícil"
-    ]
-  },
-  "sudoku": {
-    "objetivo": "Complete a grade 9x9 para que cada linha, coluna e quadrado 3x3 tenha os números de 1 a 9 sem repetir.",
-    "celular": [
-      "Antes de começar, escolha Fácil ou Médio",
-      "Toque numa casa vazia e depois num número do teclado abaixo",
-      "Ligue \"Anotações\" para escrever palpites pequenos na casa"
-    ],
-    "computador": [
-      "Setas para escolher a casa e teclas 1 a 9 para o número",
-      "N liga/desliga anotações; Backspace apaga as notas",
-      "Ou use o mouse nas casas e botões"
-    ],
-    "pontos": "Resolver vale 2000 menos 2 por segundo e 100 por erro (Médio ×1,5). Com 3 erros acaba, valendo 5 por casa certa.",
-    "dicas": [
-      "Procure linhas ou quadrados que faltam poucos números",
-      "Tocar numa casa destaca os mesmos números no tabuleiro",
-      "O teclado mostra quantos de cada número ainda faltam"
-    ]
-  },
-  "nonograma": {
-    "objetivo": "Pinte as casas certas seguindo os números das linhas e colunas para revelar o desenho escondido.",
-    "celular": [
-      "Toque numa casa para pintá-la; toque de novo para apagar",
-      "Arraste o dedo para pintar várias casas de uma vez",
-      "Use \"✕ Marcar vazio\" para marcar casas que você sabe que ficam em branco"
-    ],
-    "computador": [
-      "Use o mouse: clique ou arraste para pintar",
-      "Clique em \"■ Pintar\" ou \"✕ Marcar vazio\" para trocar o modo"
-    ],
-    "pontos": "Cada desenho completo dá pontos pelo tamanho e pelo tempo que sobrou. Começa em 5x5 e passa a 7x7. Acaba se os 3 minutos de um desenho acabarem.",
-    "dicas": [
-      "Números como \"3 1\" querem dizer: 3 seguidas, um espaço, depois 1",
-      "Comece pelas linhas com números grandes",
-      "Os números ficam verdes quando a linha está certa"
-    ]
-  },
-  "senha": {
-    "objetivo": "Descubra a senha secreta de 4 cores (pode repetir cor) em até 10 tentativas.",
-    "celular": [
-      "Toque nas cores da paleta para montar sua tentativa",
-      "Toque numa cor já colocada (ou em \"Apagar\") para tirar",
-      "Toque em \"Testar\" para conferir"
-    ],
-    "computador": [
-      "Use o mouse para clicar nas cores e nos botões"
-    ],
-    "pontos": "Cada senha descoberta vale (11 − tentativas usadas) × 20 e aparece uma nova. Acaba quando as 10 tentativas acabam.",
-    "dicas": [
-      "Bolinha preta: cor certa no lugar certo; branca: cor certa em outro lugar",
-      "Teste cores repetidas no começo (ex.: 2 vermelhas e 2 azuis)",
-      "Use as respostas anteriores antes de chutar"
-    ]
-  },
-  "resta-um": {
-    "objetivo": "Pule uma peça por cima da vizinha até uma casa vazia para tirá-la. Tente deixar só uma peça.",
-    "celular": [
-      "Toque numa peça que pode pular (fica destacada)",
-      "Toque na casa vazia de destino, duas casas à frente",
-      "Se a peça pode pular de novo, ela continua selecionada"
-    ],
-    "computador": [
-      "Use o mouse: clique na peça e depois na casa vazia"
-    ],
-    "pontos": "10 pontos por peça tirada. Restar uma vale +500, e se ela ficar no centro, +1000. Acaba quando não há mais pulos.",
-    "dicas": [
-      "Pulos só valem na reta, nunca na diagonal",
-      "Não deixe peças isoladas longe das outras",
-      "Trabalhe de fora para dentro, deixando o centro para o fim"
-    ]
-  },
-  "hanoi": {
-    "objetivo": "Leve todos os discos para a última torre (🏁) sem nunca colocar um disco maior sobre um menor.",
-    "celular": [
-      "Toque numa torre para pegar o disco de cima",
-      "Toque em outra torre para soltar o disco lá",
-      "Toque na mesma torre para desistir do movimento"
-    ],
-    "computador": [
-      "Setas ← → para escolher a torre",
-      "Espaço, Enter, ↑ ou ↓ para pegar ou soltar o disco",
-      "Ou clique nas torres com o mouse"
-    ],
-    "pontos": "Cada torre completa dá pontos; fazer com o mínimo de movimentos dá mais. São 5 fases (3 a 7 discos).",
-    "dicas": [
-      "O mínimo de movimentos aparece no topo",
-      "O menor disco anda sempre no mesmo sentido, a cada duas jogadas",
-      "Para mover uma pilha, primeiro tire a de cima do caminho"
-    ]
-  },
-  "luzes": {
-    "objetivo": "Apague todas as luzes do tabuleiro em cada uma das 10 fases.",
-    "celular": [
-      "Toque numa casa: ela e as vizinhas (cima, baixo, lados) trocam de acesa para apagada",
-      "O botão \"↺ Recomeçar fase\" volta a fase ao início"
-    ],
-    "computador": [
-      "Setas para mover o cursor",
-      "Espaço ou Enter para apertar a casa",
-      "Ou clique com o mouse"
-    ],
-    "pontos": "Cada fase vale mais se usar perto do número \"meta\" de toques. Vencer tudo dá bônus de tempo. São 3 minutos no total.",
-    "dicas": [
-      "Tocar duas vezes na mesma casa desfaz o toque",
-      "Apague linha por linha: toque embaixo de cada luz acesa",
-      "A ordem dos toques não importa, só quais casas você toca"
-    ]
-  },
-  "pinte": {
-    "objetivo": "Escolha cores para a mancha do canto de cima, à esquerda, crescer até pintar o quadro todo.",
-    "celular": [
-      "Toque numa das 6 cores abaixo do quadro",
-      "A mancha vira essa cor e engole as casas vizinhas da mesma cor"
-    ],
-    "computador": [
-      "Teclas 1 a 6 escolhem a cor",
-      "Ou clique nas cores com o mouse"
-    ],
-    "pontos": "Cada quadro pintado vale 100 + 10 por jogada que sobrou (são 22). O primeiro quadro que não terminar acaba o jogo.",
-    "dicas": [
-      "Escolha a cor que pega mais casas de uma vez",
-      "Avance em direção ao canto oposto",
-      "Olhe também as cores que vêm logo atrás"
-    ]
-  },
-  "canos": {
-    "objetivo": "Gire os canos para a água sair da torneira 💧 (esquerda) e chegar até a bandeira 🏁 (direita).",
-    "celular": [
-      "Toque num cano para girá-lo 90°",
-      "Os canos com água ficam azuis: siga o caminho até a saída"
-    ],
-    "computador": [
-      "Setas para mover o cursor",
-      "Espaço ou Enter para girar o cano",
-      "Ou clique nos canos com o mouse"
-    ],
-    "pontos": "Cada fase completa dá pontos (mais se for rápido) e +20 s no relógio. Começa com 2 minutos; acaba quando o tempo zera.",
-    "dicas": [
-      "Comece pela torneira e vá seguindo a água",
-      "Alguns canos são enfeite e não precisam ser usados",
-      "Olhe também a ponta da saída e ligue de trás para a frente"
-    ]
-  },
-  "sokoban": {
-    "objetivo": "Empurre todas as caixas até os lugares marcados no chão. Você só pode empurrar, nunca puxar.",
-    "celular": [
-      "Deslize o dedo no tabuleiro ou use as setas na tela para andar",
-      "Ande contra uma caixa para empurrá-la",
-      "Use \"↶ Desfazer\" ou \"↺ Recomeçar\" se travar"
-    ],
-    "computador": [
-      "Setas ou W A S D para andar",
-      "Z, U ou Backspace para desfazer",
-      "R para recomeçar a fase"
-    ],
-    "pontos": "Cada fase vale 200 menos 1 por passo (mínimo 20). O jogo acaba ao terminar a última fase.",
-    "dicas": [
-      "Caixa no canto da parede não sai mais: cuidado",
-      "Pense antes de empurrar; desfazer é de graça",
-      "O contador 📦 mostra quantas caixas já estão no lugar"
-    ]
-  },
-  "ligue": {
-    "objetivo": "Ligue cada par de pontos da mesma cor com um caminho, sem cruzar, e preencha todas as casas.",
-    "celular": [
-      "Coloque o dedo num ponto colorido e arraste até o outro ponto da mesma cor",
-      "Toque num caminho no meio para cortá-lo dali e refazer"
-    ],
-    "computador": [
-      "Use o mouse: clique num ponto e arraste até o par dele"
-    ],
-    "pontos": "Cada fase vale pontos pelo tamanho e pela rapidez. São 3 minutos no total; acaba quando o tempo zera.",
-    "dicas": [
-      "Ligar tudo não basta: todas as casas precisam ficar pintadas",
-      "Comece pelas cores com pontos perto da borda",
-      "Passar por cima de outro caminho corta esse caminho"
-    ]
-  },
-  "mahjong": {
-    "objetivo": "Tire todas as 72 pedras do tabuleiro juntando pares de figuras iguais que estejam livres.",
-    "celular": [
-      "Toque numa pedra livre e depois em outra igual para tirar o par",
-      "Pedra livre: nada em cima e com o lado esquerdo ou direito livre",
-      "Sem pares? Toque em \"Embaralhar\" (custa 50 pontos)"
-    ],
-    "computador": [
-      "Use o mouse para clicar nas pedras"
-    ],
-    "pontos": "Cada par vale 10 pontos e limpar tudo dá bônus de tempo. Acaba quando o tabuleiro fica vazio.",
-    "dicas": [
-      "Tire primeiro as pedras de cima das pilhas",
-      "Pedras mais escuras estão presas",
-      "Se houver 3 iguais livres, escolha a que solta mais pedras"
-    ]
-  },
-  "labirinto": {
-    "objetivo": "Leve a bolinha até a saída no canto de baixo, à direita, antes do tempo acabar. Cada fase é maior.",
-    "celular": [
-      "Deslize o dedo sobre o labirinto: a bolinha corre pelo corredor até uma bifurcação",
-      "Ou use as setas na tela (segure para continuar andando)"
-    ],
-    "computador": [
-      "Setas ou W A S D para andar",
-      "Segure a tecla para continuar andando"
-    ],
-    "pontos": "Cada saída vale 100 + bônus por rapidez e dá +15 s. Começa com 1 minuto; acaba quando o tempo zera.",
-    "dicas": [
-      "Deslizar é mais rápido nos corredores compridos",
-      "O rastro mostra por onde você já passou",
-      "Em becos sem saída, volte até a última bifurcação"
-    ]
-  },
-  "joias": {
-    "objetivo": "Troque joias vizinhas para formar linhas de 3 ou mais iguais. Você tem 30 jogadas.",
-    "celular": [
-      "Deslize uma joia para o lado da vizinha que quer trocar",
-      "Ou toque numa joia e depois na vizinha"
-    ],
-    "computador": [
-      "Setas para mover o cursor e Espaço/Enter para escolher a joia",
-      "Com uma joia escolhida, a seta troca com a vizinha",
-      "Ou use o mouse (clique ou arraste)"
-    ],
-    "pontos": "10 pontos por joia, vezes o combo das quedas em cascata. 4 ou mais em linha limpam a fileira toda. Acaba após 30 jogadas.",
-    "dicas": [
-      "Faça jogadas embaixo para causar cascatas",
-      "Procure formar 4 em linha",
-      "Troca que não forma linha não gasta jogada"
-    ]
-  },
-  "bolhas": {
-    "objetivo": "Mire e atire bolhas para juntar 3 ou mais da mesma cor e estourá-las antes que cheguem à linha.",
-    "celular": [
-      "Toque e arraste na tela para mirar (aparece uma linha pontilhada)",
-      "Solte o dedo para atirar; soltar perto do canhão cancela",
-      "Toque na bolha pequena ao lado do canhão para trocar a cor"
-    ],
-    "computador": [
-      "Mova o mouse para mirar e clique para atirar",
-      "Setas ← → para girar a mira e Espaço para atirar",
-      "↑ ou ↓ trocam a bolha atual pela próxima"
-    ],
-    "pontos": "10 por bolha estourada e 20 por bolha que cai solta. Limpar o quadro dá +500. Se passar da linha, acaba.",
-    "dicas": [
-      "Use as paredes para tabelar a bolha",
-      "Estoure as bolhas que seguram outras: todas caem",
-      "A cada poucos tiros desce uma fileira nova"
-    ]
-  },
-  "caca-palavras": {
-    "objetivo": "Encontre todas as palavras da lista escondidas no quadro de letras antes dos 2 minutos acabarem.",
-    "celular": [
-      "Coloque o dedo na primeira letra da palavra e arraste até a última",
-      "Solte o dedo: se acertou, a palavra fica colorida e é riscada da lista"
-    ],
-    "computador": [
-      "Use o mouse: clique na primeira letra e arraste até a última"
-    ],
-    "pontos": "Cada palavra vale 10 + 2 por letra. Completar o quadro dá bônus de tempo e vem outro. Acaba quando o tempo zera.",
-    "dicas": [
-      "As palavras podem estar em 8 direções, até de trás para a frente e na diagonal",
-      "Procure letras menos comuns da palavra primeiro",
-      "Leia o tema no topo para ter ideia das palavras"
-    ]
-  },
-  "embaralhada": {
-    "objetivo": "Coloque as letras embaralhadas na ordem certa para formar a palavra da dica.",
-    "celular": [
-      "Leia a dica (ex.: Personagem bíblico)",
-      "Toque nas letras na ordem certa; elas sobem para os espaços",
-      "Toque num espaço preenchido para voltar dali, ou em \"Limpar\""
-    ],
-    "computador": [
-      "Digite as letras no teclado",
-      "Backspace apaga a última letra",
-      "Ou clique nas letras e botões com o mouse"
-    ],
-    "pontos": "Cada palavra vale 10 + 3 por letra e dá +5 s. \"Pular\" tira 3 s. Começa com 60 s; acaba quando o tempo zera.",
-    "dicas": [
-      "Ache primeiro a primeira letra ou um pedaço conhecido",
-      "Use a dica para pensar no tema",
-      "Não perca tempo: pule as muito difíceis"
-    ]
-  },
-  "termo": {
-    "objetivo": "Descubra a palavra secreta de 5 letras em até 6 tentativas.",
-    "celular": [
-      "Toque nas letras do teclado da tela para escrever",
-      "Toque em \"ENTRA\" para conferir e em ⌫ para apagar"
-    ],
-    "computador": [
-      "Digite as letras no teclado",
-      "Enter confere e Backspace apaga"
-    ],
-    "pontos": "Acertar vale (7 − tentativas) × 20 e vem outra palavra. Se errar as 6 tentativas, acaba.",
-    "dicas": [
-      "Verde: letra certa no lugar certo; amarelo: existe em outro lugar; cinza: não tem",
-      "Comece com palavras de várias vogais",
-      "Acentos não importam"
-    ]
-  },
-  "versiculo": {
-    "objetivo": "Monte o versículo bíblico tocando nas palavras na ordem certa.",
-    "celular": [
-      "Leia a referência (ex.: João 3:16)",
-      "Toque nas palavras embaralhadas na ordem do versículo"
-    ],
-    "computador": [
-      "Use o mouse para clicar nas palavras na ordem certa"
-    ],
-    "pontos": "Cada versículo vale 5 por palavra + bônus por rapidez. Cada palavra errada tira 1 de 3 vidas; sem vidas, acaba.",
-    "dicas": [
-      "Os primeiros versículos são curtos; depois ficam maiores",
-      "Leia as palavras todas antes de começar",
-      "Pense no sentido da frase para achar a próxima"
-    ]
-  },
-  "linha-tempo": {
-    "objetivo": "Coloque as histórias da Bíblia na ordem em que aconteceram, da mais antiga para a mais recente.",
-    "celular": [
-      "Toque nas cartas começando pela história mais antiga",
-      "Toque numa carta já numerada para desfazer a partir dela",
-      "Ao tocar a última, o jogo confere e mostra a ordem certa"
-    ],
-    "computador": [
-      "Use o mouse para clicar nas cartas na ordem"
-    ],
-    "pontos": "Cada rodada certa vale 10 por carta + bônus por rapidez. Cada rodada errada tira 1 de 3 vidas; sem vidas, acaba.",
-    "dicas": [
-      "Lembre: Antigo Testamento vem antes do Novo",
-      "Pense em quem viveu antes: Abraão, Moisés, Davi...",
-      "Veja a ordem certa quando errar para aprender"
-    ]
-  },
-  "livros": {
-    "objetivo": "Entre os dois livros mostrados, escolha qual vem primeiro na Bíblia, o mais rápido possível.",
-    "celular": [
-      "Leia os dois livros mostrados",
-      "Toque no que vem antes na Bíblia"
-    ],
-    "computador": [
-      "← (ou ↑ ou 1) escolhe o livro da esquerda",
-      "→ (ou ↓ ou 2) escolhe o da direita"
-    ],
-    "pontos": "Cada acerto vale 10 ou mais (bônus em sequência) e dá +2 s. Errar tira 5 s. Começa com 60 s; acaba quando zera.",
-    "dicas": [
-      "O Antigo Testamento (39 livros) vem antes do Novo",
-      "Decore os grupos: Lei, História, Poesia, Profetas, Evangelhos...",
-      "Acertos seguidos 🔥 dão pontos extras"
-    ]
-  },
-  "morse": {
-    "objetivo": "Veja o código Morse (pontos • e traços −) e escolha qual letra ou palavra ele forma.",
-    "celular": [
-      "Leia o código no meio da tela",
-      "Toque na resposta certa entre as 4 opções antes da barra de tempo acabar",
-      "Toque em \"Ver tabela\" se precisar de ajuda"
-    ],
-    "computador": [
-      "Teclas 1, 2, 3 e 4 escolhem a opção",
-      "Ou clique com o mouse"
-    ],
-    "pontos": "Cada acerto vale pontos + bônus pelo tempo que sobrou; palavras valem mais. Com a tabela aberta vale a metade. Errar ou demorar tira 1 de 3 vidas.",
-    "dicas": [
-      "Decore primeiro: E = •, T = −, A = •−, N = −•",
-      "SOS é • • •  − − −  • • •",
-      "Use a tabela no começo e vá largando aos poucos"
-    ]
-  },
-  "bussola": {
-    "objetivo": "A rosa dos ventos gira a cada pergunta. Toque na direção pedida antes do tempo acabar.",
-    "celular": [
-      "Ache a ponta vermelha com N: ela é o Norte",
-      "Toque na ponta da bússola da direção pedida (ex.: LESTE)"
-    ],
-    "computador": [
-      "Use o mouse para clicar na ponta certa da bússola"
-    ],
-    "pontos": "Cada acerto vale 10 + bônus por rapidez (+5 nas direções colaterais). Errou ou demorou, acabou.",
-    "dicas": [
-      "No sentido do relógio a partir do N: Norte, Leste, Sul, Oeste",
-      "Depois de 8 acertos aparecem Nordeste, Sudeste, Sudoeste e Noroeste",
-      "Nordeste fica entre o Norte e o Leste"
-    ]
-  },
-  "diferenca": {
-    "objetivo": "Ache o quadrado com a cor um pouquinho diferente dos outros. Você tem 60 segundos.",
-    "celular": [
-      "Toque no quadrado de cor diferente",
-      "A cada acerto a grade cresce e a diferença diminui"
-    ],
-    "computador": [
-      "Use o mouse para clicar no quadrado diferente"
-    ],
-    "pontos": "Cada acerto vale 1 ponto (1 nível). Errar tira 3 segundos. Acaba quando os 60 segundos acabam.",
-    "dicas": [
-      "Olhe a grade inteira, sem focar num quadrado só",
-      "Afaste um pouco o rosto da tela",
-      "Não chute: erro custa 3 segundos"
-    ]
-  },
-  "grade": {
-    "objetivo": "Memorize os quadrados que acendem por um instante e depois toque em todos eles.",
-    "celular": [
-      "Espere \"Memorize!\" e veja quais quadrados acendem",
-      "Quando aparecer \"Toque nos ... quadrados\", toque neles"
-    ],
-    "computador": [
-      "Use o mouse para clicar nos quadrados"
-    ],
-    "pontos": "10 por quadrado certo e bônus ao completar o nível. Cada quadrado errado tira 1 de 3 vidas; sem vidas, acaba.",
-    "dicas": [
-      "Imagine o desenho que os quadrados formam",
-      "Divida a grade em partes para lembrar melhor",
-      "A grade cresce a cada nível: concentre-se"
-    ]
-  },
-  "reacao": {
-    "objetivo": "Toque o mais rápido possível assim que a tela ficar verde. São 5 rodadas.",
-    "celular": [
-      "Espere com o dedo pronto enquanto aparece \"Espere…\"",
-      "Toque na tela assim que ela ficar verde (\"TOQUE!\")"
-    ],
-    "computador": [
-      "Espaço ou Enter quando ficar verde",
-      "Ou clique na área do jogo"
-    ],
-    "pontos": "Cada rodada vale 600 menos o seu tempo em milissegundos. Tocar antes do verde ou demorar mais de 1,5 s vale 0.",
-    "dicas": [
-      "Não tente adivinhar: o tempo de espera muda sempre",
-      "Fique só olhando para a cor",
-      "No computador, a tecla costuma ser mais rápida que o mouse"
-    ]
-  },
-  "schulte": {
-    "objetivo": "Toque nos números em ordem, do 1 até o último, o mais rápido que puder. São 2 tabuleiros (5x5 e 6x6).",
-    "celular": [
-      "Veja o \"Próximo\" número no topo",
-      "Toque nele na grade e siga em ordem crescente"
-    ],
-    "computador": [
-      "Use o mouse para clicar nos números em ordem"
-    ],
-    "pontos": "Cada tabuleiro vale 1500 menos 20 por segundo e 30 por erro (mínimo 50). Acaba após o 2º tabuleiro.",
-    "dicas": [
-      "Mantenha o olhar no centro e use a visão periférica",
-      "Enquanto toca um número, já procure o próximo",
-      "Tocar errado custa pontos: vá rápido, mas com calma"
-    ]
-  },
-  "asteroides": {
-    "objetivo": "Pilote a nave, atire nos asteroides e não deixe nenhum bater em você. Pedras grandes se partem em menores.",
-    "celular": [
-      "Segure os botões ⟲ e ⟳ para girar a nave",
-      "Segure \"Acelerar\" para ir para a frente",
-      "Segure \"Atirar\" para disparar"
-    ],
-    "computador": [
-      "Setas ← → (ou A e D) para girar",
-      "↑ (ou W) para acelerar",
-      "Espaço ou Enter para atirar (pode segurar)"
-    ],
-    "pontos": "Pedra pequena vale 100, média 50 e grande 20. Limpar a onda dá bônus. Você tem 3 vidas; bater numa pedra tira uma.",
-    "dicas": [
-      "A tela dá a volta: saiu de um lado, entra do outro",
-      "A nave desliza: acelere pouco e freie girando",
-      "Atire nas pedras pequenas e rápidas primeiro"
-    ]
-  },
-  "atravesse": {
-    "objetivo": "Leve o sapo pela rua e pelo rio até as 5 tocas lá em cima, sem ser atropelado nem cair na água.",
-    "celular": [
-      "Deslize o dedo na tela para pular (toque rápido pula para a frente)",
-      "Ou use as setas na tela, abaixo do jogo"
-    ],
-    "computador": [
-      "Setas ou W A S D para pular",
-      "Espaço ou Enter pula para a frente"
-    ],
-    "pontos": "10 por linha nova, 110 + bônus de tempo por toca. Encher as 5 tocas dá bônus e passa de fase. São 3 vidas; cada viagem tem 30 s.",
-    "dicas": [
-      "No rio, pule só em cima dos troncos",
-      "O tronco leva o sapo; não deixe ele sair da tela",
-      "Mire a toca vazia certinha para entrar"
-    ]
-  },
-  "comecome": {
-    "objetivo": "Coma todas as bolinhas do labirinto e fuja dos fantasmas.",
-    "celular": [
-      "Deslize o dedo no labirinto para virar",
-      "Ou use as setas na tela",
-      "Você pode virar antes da curva: o come-come vira quando der"
-    ],
-    "computador": [
-      "Setas ou W A S D para mudar de direção"
-    ],
-    "pontos": "Bolinha vale 10 e bolona 50. Depois da bolona, comer fantasmas vale 200, 400, 800... Limpar o labirinto dá bônus. São 3 vidas.",
-    "dicas": [
-      "Guarde as bolonas para quando os fantasmas estiverem perto",
-      "Fantasma azul piscando vai voltar ao normal logo",
-      "Use os túneis dos lados para escapar"
-    ]
-  },
-  "corrida": {
-    "objetivo": "Troque de faixa para desviar dos carros e pegar moedas. A estrada fica cada vez mais rápida.",
-    "celular": [
-      "Deslize o dedo para os lados para mudar de faixa",
-      "Ou toque no lado esquerdo ou direito da tela"
-    ],
-    "computador": [
-      "Setas ← → (ou A e D) para mudar de faixa",
-      "Ou clique no lado esquerdo ou direito da tela"
-    ],
-    "pontos": "Você ganha pontos pela distância e 25 por moeda. Bateu num carro, acabou.",
-    "dicas": [
-      "Olhe sempre mais à frente, não só perto do seu carro",
-      "Às vezes duas faixas ficam bloqueadas: vá logo para a livre",
-      "Só pegue moeda se o caminho estiver seguro"
-    ]
-  },
-  "caverna": {
-    "objetivo": "Voe pela caverna o mais longe possível sem bater nas paredes nem nas pedras.",
-    "celular": [
-      "Segure o dedo na tela para subir",
-      "Solte para descer"
-    ],
-    "computador": [
-      "Segure Espaço, Enter ou ↑ para subir; solte para descer",
-      "Ou segure o clique do mouse"
-    ],
-    "pontos": "Os pontos vêm da distância voada. A caverna fica mais estreita e rápida. Bateu, acabou.",
-    "dicas": [
-      "Toques curtos e seguidos deixam a nave mais estável",
-      "Fique no meio da caverna sempre que puder",
-      "Comece a desviar das pedras cedo"
-    ]
-  },
-  "pescaria": {
-    "objetivo": "Pesque o máximo de pontos em 60 segundos soltando o anzol na hora certa.",
-    "celular": [
-      "O anzol balança de um lado para o outro",
-      "Toque na tela para soltar a linha",
-      "O primeiro peixe (ou lixo) que encostar é fisgado"
-    ],
-    "computador": [
-      "Espaço, Enter, ↓ ou S para soltar a linha",
-      "Ou clique na tela"
-    ],
-    "pontos": "Peixes mais fundos valem mais (veja os números do lado: 10, 20, 35, 50). Lixo 👢 🥫 🧦 tira pontos. Acaba em 60 s.",
-    "dicas": [
-      "Espere o anzol ficar em cima de um peixe fundo e sem lixo no caminho",
-      "Peixe fundo demora mais para subir",
-      "O anzol balança mais rápido com o tempo"
-    ]
-  },
-  "basquete": {
-    "objetivo": "Arremesse a bola na cesta o máximo de vezes que conseguir em 60 segundos.",
-    "celular": [
-      "Coloque o dedo na tela e arraste para cima, na direção da cesta",
-      "Quanto mais longo o arraste, mais forte o arremesso; os pontinhos mostram a mira",
-      "Solte o dedo para arremessar"
-    ],
-    "computador": [
-      "Use o mouse: clique, arraste na direção da cesta e solte"
-    ],
-    "pontos": "Cesta vale 2 e cesta limpa (sem tocar no aro) vale 3. 3 ou mais seguidas dão bônus. Acaba em 60 segundos.",
-    "dicas": [
-      "Arremesso em arco alto entra mais fácil",
-      "A cada 3 cestas a cesta muda de lugar e depois começa a se mexer",
-      "Repita o mesmo gesto quando acertar"
-    ]
-  },
-  "penalti": {
-    "objetivo": "Escolha onde chutar no gol e faça o máximo de gols sem o goleiro defender.",
-    "celular": [
-      "Toque no gol e arraste para ajustar a mira",
-      "Solte o dedo para chutar"
-    ],
-    "computador": [
-      "Setas para mover a mira",
-      "Espaço ou Enter para chutar",
-      "Ou mova o mouse, clique e solte"
-    ],
-    "pontos": "Gol no meio vale 1, nos lados 2 e no ângulo (alto e no canto) 3. 3 gols seguidos dão +1. Com 3 erros ou defesas, acaba.",
-    "dicas": [
-      "Não chute sempre no mesmo lado: o goleiro aprende",
-      "Mirar muito no canto pode mandar a bola para fora",
-      "O chute fica menos preciso com o tempo"
-    ]
-  },
-  "boliche": {
-    "objetivo": "Derrube os 10 pinos em 10 jogadas (frames), fazendo strikes e spares para somar mais pontos.",
-    "celular": [
-      "A seta de mira balança: toque para travar a direção",
-      "A barra de força sobe e desce: toque de novo para lançar"
-    ],
-    "computador": [
-      "Espaço ou Enter para travar a mira e depois a força",
-      "Ou clique na tela"
-    ],
-    "pontos": "Contagem oficial: strike (10 na 1ª bola) e spare (10 em 2 bolas) dão bônus das próximas bolas. Acaba após o 10º frame.",
-    "dicas": [
-      "Mire um pouco fora do centro para acertar entre os pinos da frente",
-      "Força alta espalha melhor os pinos",
-      "Cuidado com a canaleta nas bordas"
-    ]
-  },
-  "arco": {
-    "objetivo": "Acerte o centro do alvo com 10 flechas, contando com a gravidade e o vento.",
-    "celular": [
-      "Coloque o dedo na tela e arraste para trás (para longe do alvo) para mirar",
-      "Quanto mais puxar, mais força",
-      "Solte para atirar"
-    ],
-    "computador": [
-      "↑ e ↓ para mudar o ângulo",
-      "Segure Espaço para carregar a força e solte para atirar",
-      "Ou use o mouse: clique, arraste para trás e solte"
-    ],
-    "pontos": "Os anéis valem de 10 (centro amarelo) a 1 (borda). Errar o alvo vale 0. Acaba após 10 flechas.",
-    "dicas": [
-      "Olhe a seta do vento no canto e mire para compensar",
-      "A flecha cai: mire um pouco acima do centro",
-      "Os pontinhos mostram a trajetória sem o vento"
-    ]
-  },
-  "estilingue": {
-    "objetivo": "Derrube todas as latas de cada fase usando no máximo 3 pedras.",
-    "celular": [
-      "Coloque o dedo na tela e puxe para trás, como um estilingue",
-      "Os pontinhos mostram para onde a pedra vai",
-      "Solte para lançar"
-    ],
-    "computador": [
-      "Use o mouse: clique, puxe para trás e solte"
-    ],
-    "pontos": "Cada lata derrubada vale 10. Pedras que sobram ao passar de fase valem +25 cada. Acaba se as pedras acabarem com latas de pé.",
-    "dicas": [
-      "Acerte a base das pilhas para derrubar tudo",
-      "Puxar menos dá um arremesso mais baixo e preciso",
-      "Caixas são pesadas: mire nas latas"
-    ]
-  },
-  "pulapula": {
-    "objetivo": "O desbravador pula sozinho. Incline para os lados e suba de plataforma em plataforma o mais alto possível.",
-    "celular": [
-      "Segure o dedo no lado esquerdo da tela para ir para a esquerda",
-      "Segure no lado direito para ir para a direita",
-      "Solte para cair reto"
-    ],
-    "computador": [
-      "Setas ← → (ou A e D) para inclinar"
-    ],
-    "pontos": "Os pontos vêm da altura máxima que você alcançar. Se cair abaixo da tela, acaba.",
-    "dicas": [
-      "Saiu por um lado da tela? Você aparece do outro",
-      "Pise na mola para um superpulo",
-      "Plataformas rachadas quebram: não confie nelas"
-    ]
-  },
-  "ritmo": {
-    "objetivo": "Toque em cada nota quando ela chegar na linha de baixo da sua pista. Não deixe passar!",
-    "celular": [
-      "As notas descem por 4 pistas coloridas",
-      "Toque na pista certa quando a nota estiver em cima da linha"
-    ],
-    "computador": [
-      "Teclas D, F, J e K para as 4 pistas (da esquerda para a direita)",
-      "Ou as setas ← ↓ ↑ →",
-      "Ou clique na pista"
-    ],
-    "pontos": "\"Perfeito!\" vale 3 e \"Bom\" vale 1, multiplicado pela sequência (até x4). Com 10 notas perdidas, acaba.",
-    "dicas": [
-      "Tocar fora de hora quebra a sequência",
-      "Use dois dedos de cada mão no teclado",
-      "O ritmo acelera aos poucos: siga as linhas da batida"
-    ]
-  },
-  "frutas": {
-    "objetivo": "Corte as frutas que são jogadas para cima antes que elas caiam, sem cortar as bombas.",
-    "celular": [
-      "Passe o dedo rápido sobre as frutas para cortá-las",
-      "Corte várias de uma vez num só movimento para fazer combo"
-    ],
-    "computador": [
-      "Use o mouse: segure o botão e arraste sobre as frutas"
-    ],
-    "pontos": "Cada fruta vale 1 ponto; 3 ou mais num só corte dão bônus. Cada fruta que cai inteira tira 1 de 3 vidas. Cortou bomba 💣, acabou.",
-    "dicas": [
-      "Espere as frutas subirem e cortem todas juntas no alto",
-      "Desvie o dedo das bombas",
-      "Movimentos curtos dão mais controle"
-    ]
-  },
-  "motos": {
-    "objetivo": "Sua moto (amarela) deixa um rastro. Desvie dos rastros e das bordas e faça as motos do computador baterem primeiro.",
-    "celular": [
-      "Deslize o dedo na tela para virar para aquela direção",
-      "Ou use os botões \"Esquerda\" e \"Direita\" para virar em relação à moto"
-    ],
-    "computador": [
-      "Setas ou W A S D para virar"
-    ],
-    "pontos": "1 ponto por passo vivo e +100 por rodada vencida; cada rodada tem mais motos rivais. Se você bater, acaba.",
-    "dicas": [
-      "Não se feche em espaços pequenos",
-      "Corte na frente do rival para ele bater no seu rastro",
-      "Fique longe das bordas no começo"
-    ]
-  },
-  "ponte": {
-    "objetivo": "Faça a vara crescer no tamanho certo para virar ponte e atravessar até a próxima pedra.",
-    "celular": [
-      "Segure o dedo na tela para a vara crescer",
-      "Solte para ela cair e o desbravador atravessar"
-    ],
-    "computador": [
-      "Segure Espaço, Enter, ↑ ou ↓ e solte na hora certa",
-      "Ou segure e solte o clique do mouse"
-    ],
-    "pontos": "Cada travessia vale 1 ponto; acertar o centro vermelho da pedra vale 2. Vara curta ou longa demais: caiu, acabou.",
-    "dicas": [
-      "Olhe a distância antes de começar a segurar",
-      "Pense no ritmo: a vara cresce sempre na mesma velocidade",
-      "Mire no centro vermelho para pontos extras"
-    ]
-  },
-  "zigzag": {
-    "objetivo": "A bola corre sozinha pela trilha em diagonal. Mude de direção na hora certa para não cair.",
-    "celular": [
-      "A bola anda sozinha pela trilha",
-      "Toque na tela para trocar a direção dela (esquerda ↔ direita)"
-    ],
-    "computador": [
-      "Espaço, Enter ou qualquer seta para trocar de direção",
-      "Ou clique na tela"
-    ],
-    "pontos": "1 ponto por passo na trilha e 1 por diamante pego. Saiu da trilha, acabou.",
-    "dicas": [
-      "Vire um pouquinho antes da curva",
-      "A bola acelera com o tempo",
-      "Não arrisque cair só para pegar um diamante"
-    ]
-  },
-  "cores": {
-    "objetivo": "Toque na COR da tinta em que a palavra está pintada, e não no que está escrito.",
-    "celular": [
-      "Espere a contagem de 3",
-      "Veja a cor da tinta da palavra (ex.: \"AZUL\" pintado de vermelho = vermelho)",
-      "Toque no botão dessa cor antes da barra acabar"
-    ],
-    "computador": [
-      "Teclas 1, 2, 3 e 4 escolhem a opção",
-      "Ou clique com o mouse"
-    ],
-    "pontos": "Cada acerto vale 10 + bônus por rapidez (até +10). Errou a cor ou o tempo acabou, fim de jogo.",
-    "dicas": [
-      "Não leia a palavra: olhe só a cor",
-      "O tempo diminui a cada acerto",
-      "Desfoque um pouco a vista para ver só a cor"
-    ]
-  }
+ "2048": {
+  "objetivo": "Deslize as peças para juntar números iguais e chegar à peça 2048 (ou além).",
+  "celular": [
+   "Deslize o dedo no tabuleiro para cima, baixo, esquerda ou direita",
+   "Todas as peças andam juntas; iguais que se encostam viram uma só",
+   "O botão \"Desistir\" encerra a partida"
+  ],
+  "computador": [
+   "Setas ou W A S D para mover as peças"
+  ],
+  "pontos": "Cada junção soma o valor da nova peça (2+2 dá 4 pontos). Acaba quando não há mais nenhum movimento.",
+  "dicas": [
+   "Mantenha a maior peça num canto",
+   "Use quase sempre só duas ou três direções",
+   "Evite mover para o lado que tira a peça grande do canto"
+  ]
+ },
+ "cobrinha": {
+  "objetivo": "Guie a cobrinha para comer as frutas e crescer o máximo possível sem bater em nada.",
+  "celular": [
+   "Deslize o dedo sobre o tabuleiro para virar (cima, baixo, esquerda, direita)",
+   "Ou use as setas na tela, abaixo do tabuleiro",
+   "A cobrinha não vira de ré: escolha sempre um lado"
+  ],
+  "computador": [
+   "Setas ou W A S D para virar",
+   "Também dá para clicar nas setas na tela"
+  ],
+  "pontos": "Cada fruta vale 10 pontos. O jogo acaba se a cobrinha bater na parede ou no próprio corpo.",
+  "dicas": [
+   "Ela fica mais rápida a cada fruta: planeje a curva antes",
+   "Ande perto das bordas para deixar o meio livre",
+   "Não se enrole: deixe sempre uma saída"
+  ]
+ },
+ "aventura": {
+  "objetivo": "Corra para a direita o mais longe que conseguir, pegando moedas e pisando nos besouros.",
+  "celular": [
+   "Use os botões ◀ ▶ na tela para andar",
+   "Toque em \"Pular\" para pular",
+   "Segure \"Pular\" para ir mais alto; solte cedo para um pulo curto"
+  ],
+  "computador": [
+   "Setas ← → (ou A e D) para andar",
+   "Espaço, Enter, ↑ ou W para pular",
+   "Segure o pulo para saltar mais alto"
+  ],
+  "pontos": "1 ponto por passo de distância, 10 por moeda e 50 por besouro pisado. Você tem 3 vidas; cair no buraco ou encostar no besouro tira uma.",
+  "dicas": [
+   "Pise no besouro caindo em cima dele; segurar o pulo faz quicar mais alto",
+   "Buracos maiores pedem pulo longo e correndo",
+   "A tela não volta: não fique parado na beirada"
+  ]
+ },
+ "velha": {
+  "objetivo": "Você é o ✕. Faça uma linha de 3 (reta ou diagonal) antes do computador (◯).",
+  "celular": [
+   "Toque em uma casa vazia para colocar seu ✕",
+   "Espere o computador jogar e toque de novo"
+  ],
+  "computador": [
+   "Use o mouse para clicar na casa vazia"
+  ],
+  "pontos": "Vitória vale 3 pontos, empate (deu velha) 1 e derrota 0. A partida acaba com uma linha ou com o tabuleiro cheio.",
+  "dicas": [
+   "Começar no centro ou num canto é forte",
+   "Sempre bloqueie quando o computador tiver 2 em linha",
+   "Tente criar duas ameaças ao mesmo tempo"
+  ]
+ },
+ "domino": {
+  "objetivo": "Encaixe suas pedras nas pontas da mesa e fique sem pedras antes do computador (bater).",
+  "celular": [
+   "Toque numa pedra destacada da sua mão para jogá-la",
+   "Se ela encaixa nas duas pontas, toque em \"◀ Esquerda\" ou \"Direita ▶\"",
+   "Sem jogada? Toque em \"Comprar do monte\"; sem monte, \"Passar a vez\""
+  ],
+  "computador": [
+   "Use o mouse para clicar nas pedras e nos botões"
+  ],
+  "pontos": "Bater vale 3 pontos. Se o jogo trancar (ninguém joga), vence quem tiver menos pontos na mão; empate vale 1.",
+  "dicas": [
+   "Jogue primeiro as pedras de números altos e as duplas",
+   "Guarde pedras de números diferentes para ter opções",
+   "Olhe as pontas e veja quais números o computador não tem"
+  ]
+ },
+ "blocos": {
+  "objetivo": "Encaixe as peças que caem e complete linhas inteiras para elas sumirem.",
+  "celular": [
+   "Botões ◀ ▶ movem a peça (segure para repetir)",
+   "Botão de girar vira a peça",
+   "Botão ▼ desce mais rápido e \"Cair\" derruba de vez"
+  ],
+  "computador": [
+   "Setas ← → para mover",
+   "↑ para girar",
+   "↓ para descer mais rápido",
+   "Espaço para cair de vez"
+  ],
+  "pontos": "1 linha vale 100, 2 = 300, 3 = 500 e 4 = 800, vezes o nível. Descer rápido dá pontos extras. Acaba quando as peças chegam ao topo.",
+  "dicas": [
+   "Olhe a próxima peça no painel ao lado",
+   "Deixe uma coluna livre para a peça comprida (4 linhas de uma vez)",
+   "A sombra mostra onde a peça vai cair"
+  ]
+ },
+ "memoria": {
+  "objetivo": "Vire duas cartas por vez e encontre os 8 pares de figuras iguais.",
+  "celular": [
+   "Toque numa carta para virá-la",
+   "Toque em outra: se forem iguais ficam abertas; senão, viram de volta"
+  ],
+  "computador": [
+   "Use o mouse para clicar nas cartas"
+  ],
+  "pontos": "Começa com 1000 e perde 20 por jogada e 5 por segundo (mínimo 50). Acaba ao achar todos os pares.",
+  "dicas": [
+   "Preste atenção em cada carta que aparece",
+   "Vire primeiro uma carta nova; a segunda tente onde já viu o par",
+   "Jogue rápido: o tempo também conta"
+  ]
+ },
+ "passaro": {
+  "objetivo": "Faça o pássaro voar entre os canos sem bater neles nem no chão.",
+  "celular": [
+   "Toque na tela para começar e bater as asas",
+   "Cada toque dá um impulso para cima; sem tocar ele cai"
+  ],
+  "computador": [
+   "Espaço, Enter ou ↑ para bater as asas",
+   "Também dá para clicar na tela"
+  ],
+  "pontos": "Cada cano que você passa vale 1 ponto. Acaba ao bater num cano ou no chão.",
+  "dicas": [
+   "Toques curtos e ritmados funcionam melhor",
+   "Mire no meio da abertura do próximo cano",
+   "Com o tempo os canos ficam mais rápidos e a abertura menor"
+  ]
+ },
+ "tijolos": {
+  "objetivo": "Rebata a bola com a barra e quebre todos os tijolos para passar de fase.",
+  "celular": [
+   "Arraste o dedo na tela para mover a barra",
+   "Toque para lançar a bola (ela também sai sozinha)"
+  ],
+  "computador": [
+   "Setas ← → (ou A e D) para mover a barra",
+   "Espaço ou ↑ para lançar",
+   "Ou mova o mouse sobre o jogo"
+  ],
+  "pontos": "Cada tijolo quebrado vale 10 pontos. Você tem 3 vidas; perde uma quando a bola cai. A cada fase a bola fica mais rápida.",
+  "dicas": [
+   "Bater com a ponta da barra manda a bola mais de lado",
+   "Abra um buraco na lateral para a bola quebrar tudo por cima",
+   "A partir da fase 2, alguns tijolos precisam de 2 batidas"
+  ]
+ },
+ "minado": {
+  "objetivo": "Abra todos os quadrados sem bombas (são 10 bombas escondidas em 9x9).",
+  "celular": [
+   "Toque num quadrado para abri-lo",
+   "Segure o dedo para marcar uma bandeira 🚩",
+   "Ou ligue o \"Modo bandeira\" no botão abaixo do campo"
+  ],
+  "computador": [
+   "Clique com o botão esquerdo para abrir",
+   "Clique com o botão direito para marcar bandeira",
+   "Clique num número já cercado de bandeiras para abrir os vizinhos"
+  ],
+  "pontos": "Vencer vale 1000 menos 5 por segundo (mínimo 100). Se abrir uma bomba, acaba e vale o número de casas abertas.",
+  "dicas": [
+   "O primeiro toque nunca é bomba",
+   "O número mostra quantas bombas há nas 8 casas em volta",
+   "Marque bandeiras só quando tiver certeza"
+  ]
+ },
+ "genius": {
+  "objetivo": "Observe a sequência de cores que acende e repita na mesma ordem. A cada rodada ela cresce.",
+  "celular": [
+   "Espere a contagem e observe as cores acenderem",
+   "Quando aparecer \"Sua vez\", toque nas cores na mesma ordem"
+  ],
+  "computador": [
+   "Teclas 1, 2, 3 e 4 para as cores (o número aparece em cada cor)",
+   "Ou clique nas cores com o mouse"
+  ],
+  "pontos": "Cada sequência completa vale 1 ponto (o tamanho dela). Errou uma cor, acabou.",
+  "dicas": [
+   "Fale as cores baixinho para lembrar",
+   "Os sons ajudam: cada cor tem uma nota",
+   "A sequência fica mais rápida: concentre-se"
+  ]
+ },
+ "toupeira": {
+  "objetivo": "Acerte as toupeiras 🐹 antes que se escondam, durante 45 segundos, sem acertar as bombas.",
+  "celular": [
+   "Toque no buraco onde a toupeira apareceu",
+   "Não toque nas bombas 💣"
+  ],
+  "computador": [
+   "Teclas 1 a 9 no formato do teclado numérico (7 8 9 em cima, 1 2 3 embaixo)",
+   "Ou clique nos buracos com o mouse"
+  ],
+  "pontos": "Cada toupeira vale 10 pontos, mais bônus de combo seguido. Bomba tira 1 de 3 vidas. Acaba no fim do tempo ou sem vidas.",
+  "dicas": [
+   "Errar ou deixar uma toupeira fugir zera o combo",
+   "Olhe bem antes de tocar: bomba custa vida",
+   "No fim aparecem mais rápido e mais bombas"
+  ]
+ },
+ "pong": {
+  "objetivo": "Rebata a bola com sua raquete (embaixo) e faça a bola passar pela raquete do computador.",
+  "celular": [
+   "Arraste o dedo para os lados na tela para mover sua raquete (a de baixo)",
+   "Toque em qualquer ponto: a raquete vai para lá na hora"
+  ],
+  "computador": [
+   "Setas ← → (ou A e D) para mover",
+   "Ou mova o mouse sobre o jogo"
+  ],
+  "pontos": "Cada ponto que você faz conta 1. O jogo acaba quando o computador fizer 5 pontos.",
+  "dicas": [
+   "Bater com a ponta da raquete manda a bola na diagonal",
+   "O computador erra mais quando a bola está rápida",
+   "Volte para o meio depois de rebater"
+  ]
+ },
+ "forca": {
+  "objetivo": "Descubra a palavra escondida letra por letra antes de completar o boneco da forca.",
+  "celular": [
+   "Leia a dica no topo (ex.: Personagem bíblico)",
+   "Toque nas letras do teclado da tela para chutar"
+  ],
+  "computador": [
+   "Digite as letras no teclado",
+   "Ou clique nas letras na tela"
+  ],
+  "pontos": "Cada palavra acertada vale 10 + 5 por vida que sobrou. Você tem 6 erros por palavra; ao perder uma palavra, acaba.",
+  "dicas": [
+   "Comece pelas vogais A, E, O",
+   "Depois tente letras comuns como R, S, M, N",
+   "Acentos não contam: o A vale para Á e Ã"
+  ]
+ },
+ "quiz": {
+  "objetivo": "Responda certo o maior número de perguntas sobre a Bíblia e os Desbravadores.",
+  "celular": [
+   "Leia a pergunta e toque numa das 4 respostas (A, B, C ou D)",
+   "Cada pergunta tem 15 segundos: fique de olho na barra"
+  ],
+  "computador": [
+   "Teclas 1, 2, 3, 4 ou A, B, C, D para responder",
+   "Ou clique na resposta com o mouse"
+  ],
+  "pontos": "Cada acerto vale 10 pontos + 1 por segundo que sobrou. Errar ou deixar o tempo acabar tira 1 de 3 vidas; sem vidas, acaba.",
+  "dicas": [
+   "Responder rápido dá mais pontos",
+   "Quando errar, leia a resposta certa que aparece: ela pode voltar",
+   "Na dúvida, elimine as opções absurdas"
+  ]
+ },
+ "matematica": {
+  "objetivo": "Resolva as contas o mais rápido que puder antes do relógio zerar.",
+  "celular": [
+   "Veja a conta no meio da tela",
+   "Toque na resposta certa entre as 4 opções"
+  ],
+  "computador": [
+   "Teclas 1, 2, 3 e 4 escolhem a opção (o número aparece no botão)",
+   "Ou clique com o mouse"
+  ],
+  "pontos": "Cada acerto vale 10 pontos (mais em níveis altos) e dá +3 s. Errar tira 5 s. Acaba quando o tempo zera.",
+  "dicas": [
+   "A cada 4 acertos sobe o nível: aparecem −, × e ÷",
+   "Errar custa caro: pense meio segundo antes",
+   "Olhe o último algarismo para eliminar opções"
+  ]
+ },
+ "nave": {
+  "objetivo": "Mova a nave para destruir as ondas de invasores e desviar das bombas deles.",
+  "celular": [
+   "Arraste o dedo para os lados na tela para mover a nave",
+   "A nave atira sozinha"
+  ],
+  "computador": [
+   "Setas ← → (ou A e D) para mover",
+   "Ou mova o mouse sobre o jogo"
+  ],
+  "pontos": "Invasores de cima valem mais (10 a 50), e cada onda limpa dá +100. Você tem 3 vidas; bomba ou invasor que chega embaixo tira uma.",
+  "dicas": [
+   "Fique embaixo de um invasor só por pouco tempo e saia",
+   "Derrube primeiro as pontas do bloco",
+   "Com poucos invasores eles andam mais rápido"
+  ]
+ },
+ "lig4": {
+  "objetivo": "Ligue 4 peças suas em linha (de pé, deitada ou diagonal) antes do computador.",
+  "celular": [
+   "Toque numa coluna para soltar sua peça",
+   "A peça cai até o espaço mais baixo livre"
+  ],
+  "computador": [
+   "Teclas 1 a 7 escolhem a coluna",
+   "Ou clique na coluna com o mouse"
+  ],
+  "pontos": "Vitória vale 3 pontos, empate (tabuleiro cheio) 1 e derrota 0.",
+  "dicas": [
+   "A coluna do meio é a mais forte",
+   "Sempre veja se o computador tem 3 em linha para bloquear",
+   "Cuidado para não dar ao computador a casa em cima da sua"
+  ]
+ },
+ "xadrez": {
+  "objetivo": "Você joga com as brancas e começa. Dê xeque-mate no rei preto do computador: ele fica atacado e sem saída.",
+  "celular": [
+   "Toque numa peça branca: aparecem pontinhos nas casas para onde ela pode ir",
+   "Toque numa casa marcada para mover (casa com anel = captura)",
+   "Toque em outra peça sua para trocar a escolha"
+  ],
+  "computador": [
+   "Use o mouse: clique na peça e depois na casa de destino"
+  ],
+  "pontos": "Vitória vale 3 pontos e empate 1 (afogamento, peças insuficientes ou 100 lances). O peão que chega ao fim vira dama.",
+  "dicas": [
+   "Só aparecem lances permitidos: se o rei está em xeque, proteja-o",
+   "Roque e en passant funcionam: escolha o rei e toque duas casas ao lado",
+   "Desenvolva cavalos e bispos cedo e não perca a dama à toa"
+  ]
+ },
+ "damas": {
+  "objetivo": "Você joga com as brancas e começa. Capture ou bloqueie todas as peças do computador.",
+  "celular": [
+   "Toque numa pedra sua e depois na casa escura destacada",
+   "Na captura em sequência, toque em cada casa do caminho, um pulo por vez",
+   "Quando é obrigatório comer, as pedras que podem capturar ficam marcadas"
+  ],
+  "computador": [
+   "Use o mouse: clique na pedra e depois na casa de destino"
+  ],
+  "pontos": "Vitória vale 3 pontos e empate 1. Regras brasileiras: pedra anda 1 casa para a frente na diagonal e come para a frente e para trás.",
+  "dicas": [
+   "Comer é obrigatório e pela maioria: vale o lance que captura mais peças",
+   "Pedra que chega à última linha vira dama ♛, que anda várias casas na diagonal",
+   "Mantenha as pedras juntas e a última fileira protegida"
+  ]
+ },
+ "reversi": {
+  "objetivo": "Você joga com as pretas. Termine com mais peças da sua cor no tabuleiro que o computador.",
+  "celular": [
+   "Toque numa casa marcada com pontinho para colocar sua peça",
+   "As peças brancas cercadas em linha entre a sua nova peça e outra sua viram pretas"
+  ],
+  "computador": [
+   "Use o mouse para clicar nas casas marcadas"
+  ],
+  "pontos": "Vitória vale 3 pontos e empate 1. Sem lance possível, a vez passa; acaba quando ninguém pode jogar.",
+  "dicas": [
+   "Os cantos nunca viram: tente pegá-los",
+   "Evite as casas ao lado dos cantos no começo",
+   "Virar muitas peças cedo nem sempre é bom: pense no fim"
+  ]
+ },
+ "trilha": {
+  "objetivo": "Você usa as peças azuis. Forme moinhos (3 em linha) para tirar peças do computador até ele ficar com 2 ou travado.",
+  "celular": [
+   "Fase 1: toque num ponto vazio para colocar suas 9 peças",
+   "Fase 2: toque numa peça sua e depois num ponto vizinho livre",
+   "Formou moinho? Toque numa peça vermelha destacada para removê-la"
+  ],
+  "computador": [
+   "Use o mouse para clicar nos pontos do tabuleiro"
+  ],
+  "pontos": "Vitória vale 3 pontos e empate 1 (limite de 150 jogadas). Com só 3 peças você pode \"voar\" para qualquer ponto livre.",
+  "dicas": [
+   "Peças dentro de um moinho só podem ser tiradas se não houver outras",
+   "Abra e feche o mesmo moinho para tirar várias peças",
+   "Bloqueie o computador quando ele tiver 2 em linha"
+  ]
+ },
+ "mancala": {
+  "objetivo": "Junte no seu depósito (à direita) mais sementes que o computador.",
+  "celular": [
+   "Toque numa das suas 6 casas de baixo para pegar todas as sementes dela",
+   "Elas são semeadas uma por casa, no sentido anti-horário, passando pelo seu depósito"
+  ],
+  "computador": [
+   "Teclas 1 a 6 escolhem suas casas (da esquerda para a direita)",
+   "Ou clique na casa com o mouse"
+  ],
+  "pontos": "Vitória vale 3 pontos e empate 1. Acaba quando um lado fica sem sementes; o que sobra vai para o dono.",
+  "dicas": [
+   "Se a última semente cair no seu depósito, jogue de novo",
+   "Se cair numa casa sua vazia, você captura ela e as sementes da casa em frente",
+   "Conte as sementes antes para acertar o depósito"
+  ]
+ },
+ "pontinhos": {
+  "objetivo": "Ligue os pontos com traços e feche mais quadrados (de 16) que o computador.",
+  "celular": [
+   "Toque no espaço entre dois pontos vizinhos para desenhar um traço",
+   "Fechou o 4º lado de um quadrado? Ele é seu (V) e você joga de novo"
+  ],
+  "computador": [
+   "Use o mouse para clicar entre dois pontos"
+  ],
+  "pontos": "Vitória vale 3 pontos e empate (8 a 8) vale 1. Acaba quando todos os traços forem desenhados.",
+  "dicas": [
+   "Não desenhe o 3º lado de um quadrado: o computador fecha",
+   "No fim, entregue a menor corrente de quadrados possível",
+   "Feche quadrados em sequência sempre que puder"
+  ]
+ },
+ "batalha-naval": {
+  "objetivo": "Afunde os 5 navios escondidos do computador antes que ele afunde a sua frota.",
+  "celular": [
+   "Toque numa casa do mar inimigo (grade de cima) para atirar",
+   "✹ é acerto e • é água; depois o computador atira na sua grade de baixo",
+   "Antes do 1º tiro, \"Sortear de novo\" muda a posição dos seus navios"
+  ],
+  "computador": [
+   "Use o mouse para clicar nas casas do mar inimigo"
+  ],
+  "pontos": "Vencer vale 1000 menos 10 por tiro (mínimo 100). Se sua frota afundar, ganha 5 por acerto.",
+  "dicas": [
+   "Acertou? Atire nas casas ao lado para achar o resto do navio",
+   "Os navios nunca se encostam, nem na diagonal",
+   "Atire em xadrez (pulando uma casa) para achar navios mais rápido"
+  ]
+ },
+ "paciencia": {
+  "objetivo": "Leve todas as cartas para as 4 pilhas de cima (fundações), uma por naipe, do Ás ao Rei.",
+  "celular": [
+   "Toque no monte (canto de cima) para virar uma carta",
+   "Toque numa carta e depois no destino para movê-la",
+   "Toque duas vezes na mesma carta para mandá-la sozinha à fundação ou a outra coluna"
+  ],
+  "computador": [
+   "Use o mouse: clique na carta e depois no destino",
+   "Clique duas vezes para mover automático"
+  ],
+  "pontos": "+10 por carta na fundação, +5 por carta virada nas colunas e bônus de tempo ao vencer. Acaba ao vencer ou sem jogadas.",
+  "dicas": [
+   "Nas colunas, coloque carta menor de cor diferente (ex.: 6 vermelho no 7 preto)",
+   "Só o Rei (K) vai para uma coluna vazia",
+   "Vire as cartas escondidas das colunas o quanto antes"
+  ]
+ },
+ "vinteum": {
+  "objetivo": "Faça a soma das suas cartas chegar mais perto de 21 que a banca, sem passar de 21.",
+  "celular": [
+   "Toque em \"Pedir\" para receber mais uma carta",
+   "Toque em \"Parar\" para ficar com o que tem e a banca joga",
+   "Toque em \"Próxima rodada\" para continuar"
+  ],
+  "computador": [
+   "↑ (ou W) para pedir carta",
+   "↓ (ou S) para parar",
+   "Espaço ou Enter: pedir ou ir para a próxima rodada"
+  ],
+  "pontos": "Vencer a rodada vale 10 pontos e 21 com as 2 primeiras cartas vale 15. Empate dá 0. Com 3 derrotas, acaba.",
+  "dicas": [
+   "J, Q e K valem 10; o Ás vale 1 ou 11",
+   "A banca sempre compra até ter 17 ou mais",
+   "Com 17 ou mais, normalmente é melhor parar"
+  ]
+ },
+ "general": {
+  "objetivo": "Em 13 rodadas, jogue 5 dados e marque cada combinação na tabela para fazer a maior pontuação.",
+  "celular": [
+   "Toque em \"Jogar os dados\" (até 3 vezes por rodada)",
+   "Entre as jogadas, toque nos dados que quer segurar",
+   "Toque numa casa da tabela para marcar os pontos mostrados"
+  ],
+  "computador": [
+   "Espaço ou Enter para jogar os dados",
+   "Use o mouse para segurar dados e escolher a casa"
+  ],
+  "pontos": "Cada casa só pode ser usada uma vez. General (5 iguais) vale 50; somar 63 nas casas de cima dá +35. Acaba após 13 rodadas.",
+  "dicas": [
+   "Na parte de cima, tente 3 dados iguais de cada número para o bônus",
+   "Use \"Chance\" quando nada mais servir",
+   "Às vezes vale marcar 0 numa casa difícil"
+  ]
+ },
+ "sudoku": {
+  "objetivo": "Complete a grade 9x9 para que cada linha, coluna e quadrado 3x3 tenha os números de 1 a 9 sem repetir.",
+  "celular": [
+   "Antes de começar, escolha Fácil ou Médio",
+   "Toque numa casa vazia e depois num número do teclado abaixo",
+   "Ligue \"Anotações\" para escrever palpites pequenos na casa"
+  ],
+  "computador": [
+   "Setas para escolher a casa e teclas 1 a 9 para o número",
+   "N liga/desliga anotações; Backspace apaga as notas",
+   "Ou use o mouse nas casas e botões"
+  ],
+  "pontos": "Resolver vale 2000 menos 2 por segundo e 100 por erro (Médio ×1,5). Com 3 erros acaba, valendo 5 por casa certa.",
+  "dicas": [
+   "Procure linhas ou quadrados que faltam poucos números",
+   "Tocar numa casa destaca os mesmos números no tabuleiro",
+   "O teclado mostra quantos de cada número ainda faltam"
+  ]
+ },
+ "nonograma": {
+  "objetivo": "Pinte as casas certas seguindo os números das linhas e colunas para revelar o desenho escondido.",
+  "celular": [
+   "Toque numa casa para pintá-la; toque de novo para apagar",
+   "Arraste o dedo para pintar várias casas de uma vez",
+   "Use \"✕ Marcar vazio\" para marcar casas que você sabe que ficam em branco"
+  ],
+  "computador": [
+   "Use o mouse: clique ou arraste para pintar",
+   "Clique em \"■ Pintar\" ou \"✕ Marcar vazio\" para trocar o modo"
+  ],
+  "pontos": "Cada desenho completo dá pontos pelo tamanho e pelo tempo que sobrou. Começa em 5x5 e passa a 7x7. Acaba se os 3 minutos de um desenho acabarem.",
+  "dicas": [
+   "Números como \"3 1\" querem dizer: 3 seguidas, um espaço, depois 1",
+   "Comece pelas linhas com números grandes",
+   "Os números ficam verdes quando a linha está certa"
+  ]
+ },
+ "senha": {
+  "objetivo": "Descubra a senha secreta de 4 cores (pode repetir cor) em até 10 tentativas.",
+  "celular": [
+   "Toque nas cores da paleta para montar sua tentativa",
+   "Toque numa cor já colocada (ou em \"Apagar\") para tirar",
+   "Toque em \"Testar\" para conferir"
+  ],
+  "computador": [
+   "Use o mouse para clicar nas cores e nos botões"
+  ],
+  "pontos": "Cada senha descoberta vale (11 − tentativas usadas) × 20 e aparece uma nova. Acaba quando as 10 tentativas acabam.",
+  "dicas": [
+   "Bolinha preta: cor certa no lugar certo; branca: cor certa em outro lugar",
+   "Teste cores repetidas no começo (ex.: 2 vermelhas e 2 azuis)",
+   "Use as respostas anteriores antes de chutar"
+  ]
+ },
+ "resta-um": {
+  "objetivo": "Pule uma peça por cima da vizinha até uma casa vazia para tirá-la. Tente deixar só uma peça.",
+  "celular": [
+   "Toque numa peça que pode pular (fica destacada)",
+   "Toque na casa vazia de destino, duas casas à frente",
+   "Se a peça pode pular de novo, ela continua selecionada"
+  ],
+  "computador": [
+   "Use o mouse: clique na peça e depois na casa vazia"
+  ],
+  "pontos": "10 pontos por peça tirada. Restar uma vale +500, e se ela ficar no centro, +1000. Acaba quando não há mais pulos.",
+  "dicas": [
+   "Pulos só valem na reta, nunca na diagonal",
+   "Não deixe peças isoladas longe das outras",
+   "Trabalhe de fora para dentro, deixando o centro para o fim"
+  ]
+ },
+ "canos": {
+  "objetivo": "Gire os canos para a água sair da torneira 💧 (esquerda) e chegar até a bandeira 🏁 (direita).",
+  "celular": [
+   "Toque num cano para girá-lo 90°",
+   "Os canos com água ficam azuis: siga o caminho até a saída"
+  ],
+  "computador": [
+   "Setas para mover o cursor",
+   "Espaço ou Enter para girar o cano",
+   "Ou clique nos canos com o mouse"
+  ],
+  "pontos": "Cada fase completa dá pontos (mais se for rápido) e +20 s no relógio. Começa com 2 minutos; acaba quando o tempo zera.",
+  "dicas": [
+   "Comece pela torneira e vá seguindo a água",
+   "Alguns canos são enfeite e não precisam ser usados",
+   "Olhe também a ponta da saída e ligue de trás para a frente"
+  ]
+ },
+ "sokoban": {
+  "objetivo": "Empurre todas as caixas até os lugares marcados no chão. Você só pode empurrar, nunca puxar.",
+  "celular": [
+   "Deslize o dedo no tabuleiro ou use as setas na tela para andar",
+   "Ande contra uma caixa para empurrá-la",
+   "Use \"↶ Desfazer\" ou \"↺ Recomeçar\" se travar"
+  ],
+  "computador": [
+   "Setas ou W A S D para andar",
+   "Z, U ou Backspace para desfazer",
+   "R para recomeçar a fase"
+  ],
+  "pontos": "Cada fase vale 200 menos 1 por passo (mínimo 20). O jogo acaba ao terminar a última fase.",
+  "dicas": [
+   "Caixa no canto da parede não sai mais: cuidado",
+   "Pense antes de empurrar; desfazer é de graça",
+   "O contador 📦 mostra quantas caixas já estão no lugar"
+  ]
+ },
+ "ligue": {
+  "objetivo": "Ligue cada par de pontos da mesma cor com um caminho, sem cruzar, e preencha todas as casas.",
+  "celular": [
+   "Coloque o dedo num ponto colorido e arraste até o outro ponto da mesma cor",
+   "Toque num caminho no meio para cortá-lo dali e refazer"
+  ],
+  "computador": [
+   "Use o mouse: clique num ponto e arraste até o par dele"
+  ],
+  "pontos": "Cada fase vale pontos pelo tamanho e pela rapidez. São 3 minutos no total; acaba quando o tempo zera.",
+  "dicas": [
+   "Ligar tudo não basta: todas as casas precisam ficar pintadas",
+   "Comece pelas cores com pontos perto da borda",
+   "Passar por cima de outro caminho corta esse caminho"
+  ]
+ },
+ "mahjong": {
+  "objetivo": "Tire todas as 72 pedras do tabuleiro juntando pares de figuras iguais que estejam livres.",
+  "celular": [
+   "Toque numa pedra livre e depois em outra igual para tirar o par",
+   "Pedra livre: nada em cima e com o lado esquerdo ou direito livre",
+   "Sem pares? Toque em \"Embaralhar\" (custa 50 pontos)"
+  ],
+  "computador": [
+   "Use o mouse para clicar nas pedras"
+  ],
+  "pontos": "Cada par vale 10 pontos e limpar tudo dá bônus de tempo. Acaba quando o tabuleiro fica vazio.",
+  "dicas": [
+   "Tire primeiro as pedras de cima das pilhas",
+   "Pedras mais escuras estão presas",
+   "Se houver 3 iguais livres, escolha a que solta mais pedras"
+  ]
+ },
+ "labirinto": {
+  "objetivo": "Leve a bolinha até a saída no canto de baixo, à direita, antes do tempo acabar. Cada fase é maior.",
+  "celular": [
+   "Deslize o dedo sobre o labirinto: a bolinha corre pelo corredor até uma bifurcação",
+   "Ou use as setas na tela (segure para continuar andando)"
+  ],
+  "computador": [
+   "Setas ou W A S D para andar",
+   "Segure a tecla para continuar andando"
+  ],
+  "pontos": "Cada saída vale 100 + bônus por rapidez e dá +15 s. Começa com 1 minuto; acaba quando o tempo zera.",
+  "dicas": [
+   "Deslizar é mais rápido nos corredores compridos",
+   "O rastro mostra por onde você já passou",
+   "Em becos sem saída, volte até a última bifurcação"
+  ]
+ },
+ "joias": {
+  "objetivo": "Troque joias vizinhas para formar linhas de 3 ou mais iguais. Você tem 30 jogadas.",
+  "celular": [
+   "Deslize uma joia para o lado da vizinha que quer trocar",
+   "Ou toque numa joia e depois na vizinha"
+  ],
+  "computador": [
+   "Setas para mover o cursor e Espaço/Enter para escolher a joia",
+   "Com uma joia escolhida, a seta troca com a vizinha",
+   "Ou use o mouse (clique ou arraste)"
+  ],
+  "pontos": "10 pontos por joia, vezes o combo das quedas em cascata. 4 ou mais em linha limpam a fileira toda. Acaba após 30 jogadas.",
+  "dicas": [
+   "Faça jogadas embaixo para causar cascatas",
+   "Procure formar 4 em linha",
+   "Troca que não forma linha não gasta jogada"
+  ]
+ },
+ "bolhas": {
+  "objetivo": "Mire e atire bolhas para juntar 3 ou mais da mesma cor e estourá-las antes que cheguem à linha.",
+  "celular": [
+   "Toque e arraste na tela para mirar (aparece uma linha pontilhada)",
+   "Solte o dedo para atirar; soltar perto do canhão cancela",
+   "Toque na bolha pequena ao lado do canhão para trocar a cor"
+  ],
+  "computador": [
+   "Mova o mouse para mirar e clique para atirar",
+   "Setas ← → para girar a mira e Espaço para atirar",
+   "↑ ou ↓ trocam a bolha atual pela próxima"
+  ],
+  "pontos": "10 por bolha estourada e 20 por bolha que cai solta. Limpar o quadro dá +500. Se passar da linha, acaba.",
+  "dicas": [
+   "Use as paredes para tabelar a bolha",
+   "Estoure as bolhas que seguram outras: todas caem",
+   "A cada poucos tiros desce uma fileira nova"
+  ]
+ },
+ "caca-palavras": {
+  "objetivo": "Encontre todas as palavras da lista escondidas no quadro de letras antes dos 2 minutos acabarem.",
+  "celular": [
+   "Coloque o dedo na primeira letra da palavra e arraste até a última",
+   "Solte o dedo: se acertou, a palavra fica colorida e é riscada da lista"
+  ],
+  "computador": [
+   "Use o mouse: clique na primeira letra e arraste até a última"
+  ],
+  "pontos": "Cada palavra vale 10 + 2 por letra. Completar o quadro dá bônus de tempo e vem outro. Acaba quando o tempo zera.",
+  "dicas": [
+   "As palavras podem estar em 8 direções, até de trás para a frente e na diagonal",
+   "Procure letras menos comuns da palavra primeiro",
+   "Leia o tema no topo para ter ideia das palavras"
+  ]
+ },
+ "embaralhada": {
+  "objetivo": "Coloque as letras embaralhadas na ordem certa para formar a palavra da dica.",
+  "celular": [
+   "Leia a dica (ex.: Personagem bíblico)",
+   "Toque nas letras na ordem certa; elas sobem para os espaços",
+   "Toque num espaço preenchido para voltar dali, ou em \"Limpar\""
+  ],
+  "computador": [
+   "Digite as letras no teclado",
+   "Backspace apaga a última letra",
+   "Ou clique nas letras e botões com o mouse"
+  ],
+  "pontos": "Cada palavra vale 10 + 3 por letra e dá +5 s. \"Pular\" tira 3 s. Começa com 60 s; acaba quando o tempo zera.",
+  "dicas": [
+   "Ache primeiro a primeira letra ou um pedaço conhecido",
+   "Use a dica para pensar no tema",
+   "Não perca tempo: pule as muito difíceis"
+  ]
+ },
+ "termo": {
+  "objetivo": "Descubra a palavra secreta de 5 letras em até 6 tentativas.",
+  "celular": [
+   "Toque nas letras do teclado da tela para escrever",
+   "Toque em \"ENTRA\" para conferir e em ⌫ para apagar"
+  ],
+  "computador": [
+   "Digite as letras no teclado",
+   "Enter confere e Backspace apaga"
+  ],
+  "pontos": "Acertar vale (7 − tentativas) × 20 e vem outra palavra. Se errar as 6 tentativas, acaba.",
+  "dicas": [
+   "Verde: letra certa no lugar certo; amarelo: existe em outro lugar; cinza: não tem",
+   "Comece com palavras de várias vogais",
+   "Acentos não importam"
+  ]
+ },
+ "versiculo": {
+  "objetivo": "Monte o versículo bíblico tocando nas palavras na ordem certa.",
+  "celular": [
+   "Leia a referência (ex.: João 3:16)",
+   "Toque nas palavras embaralhadas na ordem do versículo"
+  ],
+  "computador": [
+   "Use o mouse para clicar nas palavras na ordem certa"
+  ],
+  "pontos": "Cada versículo vale 5 por palavra + bônus por rapidez. Cada palavra errada tira 1 de 3 vidas; sem vidas, acaba.",
+  "dicas": [
+   "Os primeiros versículos são curtos; depois ficam maiores",
+   "Leia as palavras todas antes de começar",
+   "Pense no sentido da frase para achar a próxima"
+  ]
+ },
+ "linha-tempo": {
+  "objetivo": "Coloque as histórias da Bíblia na ordem em que aconteceram, da mais antiga para a mais recente.",
+  "celular": [
+   "Toque nas cartas começando pela história mais antiga",
+   "Toque numa carta já numerada para desfazer a partir dela",
+   "Ao tocar a última, o jogo confere e mostra a ordem certa"
+  ],
+  "computador": [
+   "Use o mouse para clicar nas cartas na ordem"
+  ],
+  "pontos": "Cada rodada certa vale 10 por carta + bônus por rapidez. Cada rodada errada tira 1 de 3 vidas; sem vidas, acaba.",
+  "dicas": [
+   "Lembre: Antigo Testamento vem antes do Novo",
+   "Pense em quem viveu antes: Abraão, Moisés, Davi...",
+   "Veja a ordem certa quando errar para aprender"
+  ]
+ },
+ "morse": {
+  "objetivo": "Veja o código Morse (pontos • e traços −) e escolha qual letra ou palavra ele forma.",
+  "celular": [
+   "Leia o código no meio da tela",
+   "Toque na resposta certa entre as 4 opções antes da barra de tempo acabar",
+   "Toque em \"Ver tabela\" se precisar de ajuda"
+  ],
+  "computador": [
+   "Teclas 1, 2, 3 e 4 escolhem a opção",
+   "Ou clique com o mouse"
+  ],
+  "pontos": "Cada acerto vale pontos + bônus pelo tempo que sobrou; palavras valem mais. Com a tabela aberta vale a metade. Errar ou demorar tira 1 de 3 vidas.",
+  "dicas": [
+   "Decore primeiro: E = •, T = −, A = •−, N = −•",
+   "SOS é • • •  − − −  • • •",
+   "Use a tabela no começo e vá largando aos poucos"
+  ]
+ },
+ "diferenca": {
+  "objetivo": "Ache o quadrado com a cor um pouquinho diferente dos outros. Você tem 60 segundos.",
+  "celular": [
+   "Toque no quadrado de cor diferente",
+   "A cada acerto a grade cresce e a diferença diminui"
+  ],
+  "computador": [
+   "Use o mouse para clicar no quadrado diferente"
+  ],
+  "pontos": "Cada acerto vale 1 ponto (1 nível). Errar tira 3 segundos. Acaba quando os 60 segundos acabam.",
+  "dicas": [
+   "Olhe a grade inteira, sem focar num quadrado só",
+   "Afaste um pouco o rosto da tela",
+   "Não chute: erro custa 3 segundos"
+  ]
+ },
+ "grade": {
+  "objetivo": "Memorize os quadrados que acendem por um instante e depois toque em todos eles.",
+  "celular": [
+   "Espere \"Memorize!\" e veja quais quadrados acendem",
+   "Quando aparecer \"Toque nos ... quadrados\", toque neles"
+  ],
+  "computador": [
+   "Use o mouse para clicar nos quadrados"
+  ],
+  "pontos": "10 por quadrado certo e bônus ao completar o nível. Cada quadrado errado tira 1 de 3 vidas; sem vidas, acaba.",
+  "dicas": [
+   "Imagine o desenho que os quadrados formam",
+   "Divida a grade em partes para lembrar melhor",
+   "A grade cresce a cada nível: concentre-se"
+  ]
+ },
+ "asteroides": {
+  "objetivo": "Pilote a nave, atire nos asteroides e não deixe nenhum bater em você. Pedras grandes se partem em menores.",
+  "celular": [
+   "Segure os botões ⟲ e ⟳ para girar a nave",
+   "Segure \"Acelerar\" para ir para a frente",
+   "Segure \"Atirar\" para disparar"
+  ],
+  "computador": [
+   "Setas ← → (ou A e D) para girar",
+   "↑ (ou W) para acelerar",
+   "Espaço ou Enter para atirar (pode segurar)"
+  ],
+  "pontos": "Pedra pequena vale 100, média 50 e grande 20. Limpar a onda dá bônus. Você tem 3 vidas; bater numa pedra tira uma.",
+  "dicas": [
+   "A tela dá a volta: saiu de um lado, entra do outro",
+   "A nave desliza: acelere pouco e freie girando",
+   "Atire nas pedras pequenas e rápidas primeiro"
+  ]
+ },
+ "atravesse": {
+  "objetivo": "Leve o sapo pela rua e pelo rio até as 5 tocas lá em cima, sem ser atropelado nem cair na água.",
+  "celular": [
+   "Deslize o dedo na tela para pular (toque rápido pula para a frente)",
+   "Ou use as setas na tela, abaixo do jogo"
+  ],
+  "computador": [
+   "Setas ou W A S D para pular",
+   "Espaço ou Enter pula para a frente"
+  ],
+  "pontos": "10 por linha nova, 110 + bônus de tempo por toca. Encher as 5 tocas dá bônus e passa de fase. São 3 vidas; cada viagem tem 30 s.",
+  "dicas": [
+   "No rio, pule só em cima dos troncos",
+   "O tronco leva o sapo; não deixe ele sair da tela",
+   "Mire a toca vazia certinha para entrar"
+  ]
+ },
+ "comecome": {
+  "objetivo": "Coma todas as bolinhas do labirinto e fuja dos fantasmas.",
+  "celular": [
+   "Deslize o dedo no labirinto para virar",
+   "Ou use as setas na tela",
+   "Você pode virar antes da curva: o come-come vira quando der"
+  ],
+  "computador": [
+   "Setas ou W A S D para mudar de direção"
+  ],
+  "pontos": "Bolinha vale 10 e bolona 50. Depois da bolona, comer fantasmas vale 200, 400, 800... Limpar o labirinto dá bônus. São 3 vidas.",
+  "dicas": [
+   "Guarde as bolonas para quando os fantasmas estiverem perto",
+   "Fantasma azul piscando vai voltar ao normal logo",
+   "Use os túneis dos lados para escapar"
+  ]
+ },
+ "corrida": {
+  "objetivo": "Troque de faixa para desviar dos carros e pegar moedas. A estrada fica cada vez mais rápida.",
+  "celular": [
+   "Deslize o dedo para os lados para mudar de faixa",
+   "Ou toque no lado esquerdo ou direito da tela"
+  ],
+  "computador": [
+   "Setas ← → (ou A e D) para mudar de faixa",
+   "Ou clique no lado esquerdo ou direito da tela"
+  ],
+  "pontos": "Você ganha pontos pela distância e 25 por moeda. Bateu num carro, acabou.",
+  "dicas": [
+   "Olhe sempre mais à frente, não só perto do seu carro",
+   "Às vezes duas faixas ficam bloqueadas: vá logo para a livre",
+   "Só pegue moeda se o caminho estiver seguro"
+  ]
+ },
+ "pescaria": {
+  "objetivo": "Pesque o máximo de pontos em 60 segundos soltando o anzol na hora certa.",
+  "celular": [
+   "O anzol balança de um lado para o outro",
+   "Toque na tela para soltar a linha",
+   "O primeiro peixe (ou lixo) que encostar é fisgado"
+  ],
+  "computador": [
+   "Espaço, Enter, ↓ ou S para soltar a linha",
+   "Ou clique na tela"
+  ],
+  "pontos": "Peixes mais fundos valem mais (veja os números do lado: 10, 20, 35, 50). Lixo 👢 🥫 🧦 tira pontos. Acaba em 60 s.",
+  "dicas": [
+   "Espere o anzol ficar em cima de um peixe fundo e sem lixo no caminho",
+   "Peixe fundo demora mais para subir",
+   "O anzol balança mais rápido com o tempo"
+  ]
+ },
+ "basquete": {
+  "objetivo": "Arremesse a bola na cesta o máximo de vezes que conseguir em 60 segundos.",
+  "celular": [
+   "Coloque o dedo na tela e arraste para cima, na direção da cesta",
+   "Quanto mais longo o arraste, mais forte o arremesso; os pontinhos mostram a mira",
+   "Solte o dedo para arremessar"
+  ],
+  "computador": [
+   "Use o mouse: clique, arraste na direção da cesta e solte"
+  ],
+  "pontos": "Cesta vale 2 e cesta limpa (sem tocar no aro) vale 3. 3 ou mais seguidas dão bônus. Acaba em 60 segundos.",
+  "dicas": [
+   "Arremesso em arco alto entra mais fácil",
+   "A cada 3 cestas a cesta muda de lugar e depois começa a se mexer",
+   "Repita o mesmo gesto quando acertar"
+  ]
+ },
+ "penalti": {
+  "objetivo": "Escolha onde chutar no gol e faça o máximo de gols sem o goleiro defender.",
+  "celular": [
+   "Toque no gol e arraste para ajustar a mira",
+   "Solte o dedo para chutar"
+  ],
+  "computador": [
+   "Setas para mover a mira",
+   "Espaço ou Enter para chutar",
+   "Ou mova o mouse, clique e solte"
+  ],
+  "pontos": "Gol no meio vale 1, nos lados 2 e no ângulo (alto e no canto) 3. 3 gols seguidos dão +1. Com 3 erros ou defesas, acaba.",
+  "dicas": [
+   "Não chute sempre no mesmo lado: o goleiro aprende",
+   "Mirar muito no canto pode mandar a bola para fora",
+   "O chute fica menos preciso com o tempo"
+  ]
+ },
+ "boliche": {
+  "objetivo": "Derrube os 10 pinos em 10 jogadas (frames), fazendo strikes e spares para somar mais pontos.",
+  "celular": [
+   "A seta de mira balança: toque para travar a direção",
+   "A barra de força sobe e desce: toque de novo para lançar"
+  ],
+  "computador": [
+   "Espaço ou Enter para travar a mira e depois a força",
+   "Ou clique na tela"
+  ],
+  "pontos": "Contagem oficial: strike (10 na 1ª bola) e spare (10 em 2 bolas) dão bônus das próximas bolas. Acaba após o 10º frame.",
+  "dicas": [
+   "Mire um pouco fora do centro para acertar entre os pinos da frente",
+   "Força alta espalha melhor os pinos",
+   "Cuidado com a canaleta nas bordas"
+  ]
+ },
+ "arco": {
+  "objetivo": "Acerte o centro do alvo com 10 flechas, contando com a gravidade e o vento.",
+  "celular": [
+   "Coloque o dedo na tela e arraste para trás (para longe do alvo) para mirar",
+   "Quanto mais puxar, mais força",
+   "Solte para atirar"
+  ],
+  "computador": [
+   "↑ e ↓ para mudar o ângulo",
+   "Segure Espaço para carregar a força e solte para atirar",
+   "Ou use o mouse: clique, arraste para trás e solte"
+  ],
+  "pontos": "Os anéis valem de 10 (centro amarelo) a 1 (borda). Errar o alvo vale 0. Acaba após 10 flechas.",
+  "dicas": [
+   "Olhe a seta do vento no canto e mire para compensar",
+   "A flecha cai: mire um pouco acima do centro",
+   "Os pontinhos mostram a trajetória sem o vento"
+  ]
+ },
+ "estilingue": {
+  "objetivo": "Derrube todas as latas de cada fase usando no máximo 3 pedras.",
+  "celular": [
+   "Coloque o dedo na tela e puxe para trás, como um estilingue",
+   "Os pontinhos mostram para onde a pedra vai",
+   "Solte para lançar"
+  ],
+  "computador": [
+   "Use o mouse: clique, puxe para trás e solte"
+  ],
+  "pontos": "Cada lata derrubada vale 10. Pedras que sobram ao passar de fase valem +25 cada. Acaba se as pedras acabarem com latas de pé.",
+  "dicas": [
+   "Acerte a base das pilhas para derrubar tudo",
+   "Puxar menos dá um arremesso mais baixo e preciso",
+   "Caixas são pesadas: mire nas latas"
+  ]
+ },
+ "pulapula": {
+  "objetivo": "O desbravador pula sozinho. Incline para os lados e suba de plataforma em plataforma o mais alto possível.",
+  "celular": [
+   "Segure o dedo no lado esquerdo da tela para ir para a esquerda",
+   "Segure no lado direito para ir para a direita",
+   "Solte para cair reto"
+  ],
+  "computador": [
+   "Setas ← → (ou A e D) para inclinar"
+  ],
+  "pontos": "Os pontos vêm da altura máxima que você alcançar. Se cair abaixo da tela, acaba.",
+  "dicas": [
+   "Saiu por um lado da tela? Você aparece do outro",
+   "Pise na mola para um superpulo",
+   "Plataformas rachadas quebram: não confie nelas"
+  ]
+ },
+ "ritmo": {
+  "objetivo": "Toque em cada nota quando ela chegar na linha de baixo da sua pista. Não deixe passar!",
+  "celular": [
+   "As notas descem por 4 pistas coloridas",
+   "Toque na pista certa quando a nota estiver em cima da linha"
+  ],
+  "computador": [
+   "Teclas D, F, J e K para as 4 pistas (da esquerda para a direita)",
+   "Ou as setas ← ↓ ↑ →",
+   "Ou clique na pista"
+  ],
+  "pontos": "\"Perfeito!\" vale 3 e \"Bom\" vale 1, multiplicado pela sequência (até x4). Com 10 notas perdidas, acaba.",
+  "dicas": [
+   "Tocar fora de hora quebra a sequência",
+   "Use dois dedos de cada mão no teclado",
+   "O ritmo acelera aos poucos: siga as linhas da batida"
+  ]
+ },
+ "frutas": {
+  "objetivo": "Corte as frutas que são jogadas para cima antes que elas caiam, sem cortar as bombas.",
+  "celular": [
+   "Passe o dedo rápido sobre as frutas para cortá-las",
+   "Corte várias de uma vez num só movimento para fazer combo"
+  ],
+  "computador": [
+   "Use o mouse: segure o botão e arraste sobre as frutas"
+  ],
+  "pontos": "Cada fruta vale 1 ponto; 3 ou mais num só corte dão bônus. Cada fruta que cai inteira tira 1 de 3 vidas. Cortou bomba 💣, acabou.",
+  "dicas": [
+   "Espere as frutas subirem e cortem todas juntas no alto",
+   "Desvie o dedo das bombas",
+   "Movimentos curtos dão mais controle"
+  ]
+ }
 }

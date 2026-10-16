@@ -26,6 +26,7 @@ import gameRoutes from './routes/games.js';
 import albumRoutes from './routes/albums.js';
 import paymentRoutes from './routes/payments.js';
 import learningRoutes from './routes/learning.js';
+import bomLiderRoutes from './routes/bomLider.js';
 import { startAudioGenerator } from './bible.js';
 import { attachOnline } from './online/hub.js';
 import { startPaymentSweep } from './payments.js';
@@ -83,7 +84,7 @@ if (MANUTENCAO) {
 
 const api = express.Router();
 api.get('/health', (_req, res) => res.json({ ok: true }));
-for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, transferRoutes, clubToolRoutes, supportRoutes, gameRoutes, albumRoutes, paymentRoutes, learningRoutes]) api.use(r);
+for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, transferRoutes, clubToolRoutes, supportRoutes, gameRoutes, albumRoutes, paymentRoutes, learningRoutes, bomLiderRoutes]) api.use(r);
 api.use((_req, _res, next) => next(new HttpError(404, 'Rota não encontrada')));
 app.use('/api', api);
 

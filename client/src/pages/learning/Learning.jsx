@@ -83,14 +83,14 @@ export function LearningHub({ base }) {
                 <small>{d.bdb.passed} de {d.bdb.total} fases</small>
               </Link>
               {d.leader && (
-                <div className="learn-card c4 soon">
+                <Link to={`${base}/aprendizagem/bom-lider`} className="learn-card c4">
                   <span className="learn-ico"><Users size={30} /></span>
                   <b>Bom Líder</b>
-                  <small>Lições para a liderança (16 anos ou mais)</small>
-                  <span className="chip">Em breve</span>
-                </div>
+                  <small>50 aulas de liderança com perguntas para marcar e para escrever (16 anos ou mais)</small>
+                </Link>
               )}
             </div>
+            {d.test && <p className="small center"><b>Modo de teste:</b> todos os dias do Ano Bíblico e o Bom Líder estão liberados.</p>}
             <p className="small muted center">Só o Ano Bíblico feito no dia certo conta para a sequência.</p>
           </>
         )}
@@ -148,7 +148,7 @@ function BibleYearBody({ d, base }) {
           </div>
         </div>
       )}
-      {d.today_day < 1 && <Card className="center">O Ano Bíblico começa em <b>{br(d.start)}</b>. Até lá, os dias ficam trancados.</Card>}
+      {d.today_day < 1 && <Card className="center">O Ano Bíblico começa em <b>{br(d.start)}</b>. {d.test ? 'Modo de teste: todos os dias estão liberados para testar.' : 'Até lá, os dias ficam trancados.'}</Card>}
       {today && (
         <Link to={to(today)} className={'today-card' + (today.status === 'feito' ? ' done' : '')}>
           <span className="today-tag">Hoje · {br(today.date)}</span>
@@ -180,7 +180,7 @@ function BibleYearBody({ d, base }) {
 
 function DayRow({ x, to }) {
   const icon = {
-    feito: <CheckCircle2 size={18} />, 'feito-depois': <Check size={18} />, perdido: <X size={18} />, hoje: <Flame size={18} />, futuro: <Lock size={16} />,
+    feito: <CheckCircle2 size={18} />, 'feito-depois': <Check size={18} />, perdido: <X size={18} />, hoje: <Flame size={18} />, futuro: <Lock size={16} />, teste: <ChevronRight size={18} />,
   }[x.status];
   const body = (
     <>
@@ -396,6 +396,12 @@ function BibleQuiz({ d, back, onRead, reload }) {
             <>
               <p><b>Dia concluído!</b>{result.on_time ? ' A sua sequência subiu!' : ''}</p>
               {result.pack && <p className="quiz-gift"><Gift size={18} /> Você ganhou 1 pacotinho do Álbum Bíblico!</p>}
+              {result.points?.member > 0 && (
+                <p className="quiz-gift">
+                  <Trophy size={18} /> +{result.points.member} pontos no ranking
+                  {result.points.unit > 0 ? `, +${result.points.unit} para a sua unidade` : ''} e +{result.points.club} para o seu clube!
+                </p>
+              )}
               {result.all_done && <p><Medal size={18} /> Você completou o Ano Bíblico! Veja o seu prêmio na página do Ano Bíblico.</p>}
               {result.best > result.score && <p className="small">A sua melhor nota neste dia continua {result.best}/5.</p>}
             </>

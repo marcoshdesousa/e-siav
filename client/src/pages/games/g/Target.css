@@ -1,4 +1,0 @@
-.target { width: 100%; max-width: 480px; margin: 0 auto; }
-.target-canvas { display: block; width: min(100%, calc(72vh * 360 / 480)); margin: 0 auto; height: auto; aspect-ratio: 360 / 480; border-radius: var(--r, 16px);
-  touch-action: none; user-select: none; -webkit-user-select: none; cursor: crosshair; background: #0B1430;
-  -webkit-tap-highlight-color: transparent; }

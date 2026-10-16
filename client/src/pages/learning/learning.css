@@ -125,3 +125,9 @@
 .learn-focus .bottom-nav, .learn-focus .main > .back-link { display: none; }
 .learn-focus .main { padding-bottom: 1rem; }
 .bible-page { min-height: calc(100dvh - 250px); }
+
+/* Bom Líder */
+.lesson-text p { line-height: 1.6; margin: 0 0 .8rem; }
+.lesson-verse { margin: .8rem 0; padding: .7rem .9rem; border-left: 4px solid var(--primary); background: var(--surface-2, var(--surface)); border-radius: 0 12px 12px 0; font-style: italic; }
+.lesson-q textarea { width: 100%; box-sizing: border-box; margin-top: .3rem; }
+.lesson-q small { display: inline-flex; align-items: center; gap: .3rem; margin-top: .25rem; }

@@ -1,0 +1,5802 @@
+[
+ {
+  "phase": 126,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Quanto maná cada pessoa devia recolher por dia, normalmente?",
+    "options": [
+     "Um ômer",
+     "Um him",
+     "Um efa",
+     "Dois ômeres"
+    ],
+    "answer": 0,
+    "ref": "Êxodo 16:16"
+   },
+   {
+    "q": "Qual era o terceiro sinal dado a Moisés, caso não cressem nos dois primeiros?",
+    "options": [
+     "A água do rio virar sangue",
+     "A mão ficar leprosa",
+     "A vara virar serpente",
+     "A sarça arder sem se consumir"
+    ],
+    "answer": 0,
+    "ref": "Êxodo 4:9"
+   },
+   {
+    "q": "Onde Raabe escondeu os espias, no terraço de sua casa?",
+    "options": [
+     "Entre as canas de linho",
+     "Dentro de cântaros",
+     "Num poço seco",
+     "Debaixo de feixes de trigo"
+    ],
+    "answer": 0,
+    "ref": "Josué 2:6"
+   },
+   {
+    "q": "Quem disse: \"O Senhor teu Deus te despertará um profeta... como eu\"?",
+    "options": [
+     "Samuel",
+     "Josué",
+     "Arão",
+     "Moisés"
+    ],
+    "answer": 3,
+    "ref": "Deuteronômio 18:15"
+   },
+   {
+    "q": "De quantos em quantos anos a lei devia ser lida a todo Israel na Festa dos Tabernáculos?",
+    "options": [
+     "Cinquenta",
+     "Um",
+     "Sete",
+     "Três"
+    ],
+    "answer": 2,
+    "ref": "Deuteronômio 31:10-11"
+   },
+   {
+    "q": "Que nome os cananeus deram ao lugar do pranto por Jacó, além do Jordão?",
+    "options": [
+     "Alom-Bacute",
+     "Abel-Mizraim",
+     "Quibrote-Taavá",
+     "Beer-Laai-Roi"
+    ],
+    "answer": 1,
+    "ref": "Gênesis 50:10-11"
+   },
+   {
+    "q": "Qual rei de Jerusalém reuniu os cinco reis amorreus contra Gibeom?",
+    "options": [
+     "Siom",
+     "Adoni-Bezeque",
+     "Adoni-Zedeque",
+     "Jabim"
+    ],
+    "answer": 2,
+    "ref": "Josué 10:1-5"
+   },
+   {
+    "q": "Onde Moisés mandou que os levitas pusessem o livro da lei?",
+    "options": [
+     "No átrio",
+     "Ao lado da arca da aliança",
+     "Sobre o altar",
+     "Dentro da arca"
+    ],
+    "answer": 1,
+    "ref": "Deuteronômio 31:24-26"
+   },
+   {
+    "q": "Qual rio do Éden rodeava a terra de Havilá, onde havia ouro?",
+    "options": [
+     "Pisom",
+     "Giom",
+     "Eufrates",
+     "Hidéquel"
+    ],
+    "answer": 0,
+    "ref": "Gênesis 2:11"
+   },
+   {
+    "q": "Qual rei da Mesopotâmia oprimiu Israel oito anos antes da libertação por Otniel?",
+    "options": [
+     "Cusã-Risataim",
+     "Eglom",
+     "Jabim",
+     "Zeba"
+    ],
+    "answer": 0,
+    "ref": "Juízes 3:8"
+   }
+  ]
+ },
+ {
+  "phase": 127,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual juiz, natural de Belém, teve trinta filhos e trinta filhas?",
+    "options": [
+     "Ibsã",
+     "Elom",
+     "Abdom",
+     "Tola"
+    ],
+    "answer": 0,
+    "ref": "Juízes 12:8-9"
+   },
+   {
+    "q": "Que gesto confirmava a cessão do direito de resgate em Rute 4?",
+    "options": [
+     "Rasgar a capa",
+     "Tirar o sapato e dá-lo ao outro",
+     "Dar um anel",
+     "Partir um pão"
+    ],
+    "answer": 1,
+    "ref": "Rute 4:7-8"
+   },
+   {
+    "q": "Quem era o filho primogênito de Jessé?",
+    "options": [
+     "Abinadabe",
+     "Eliabe",
+     "Samá",
+     "Natanael"
+    ],
+    "answer": 1,
+    "ref": "1 Samuel 17:13"
+   },
+   {
+    "q": "Em que lugar Mefibosete morava, na casa de Maquir?",
+    "options": [
+     "Maanaim",
+     "Ziclague",
+     "Lo-Debar",
+     "Gibeá"
+    ],
+    "answer": 2,
+    "ref": "2 Samuel 9:4"
+   },
+   {
+    "q": "Quanto tempo Joabe levou para fazer o recenseamento de Israel?",
+    "options": [
+     "Sete meses",
+     "Um ano",
+     "Nove meses e vinte dias",
+     "Seis meses e dez dias"
+    ],
+    "answer": 2,
+    "ref": "2 Samuel 24:8"
+   },
+   {
+    "q": "Quantos anos Jeú reinou sobre Israel em Samaria?",
+    "options": [
+     "22",
+     "40",
+     "12",
+     "28"
+    ],
+    "answer": 3,
+    "ref": "2 Reis 10:36"
+   },
+   {
+    "q": "Que nome recebeu o vale onde Josafá e o povo bendisseram ao Senhor após a vitória?",
+    "options": [
+     "Beraca",
+     "Acor",
+     "Refaim",
+     "Josafá"
+    ],
+    "answer": 0,
+    "ref": "2 Crônicas 20:26"
+   },
+   {
+    "q": "Qual sumo sacerdote edificou com seus irmãos a Porta das Ovelhas?",
+    "options": [
+     "Eliasibe",
+     "Josué",
+     "Joiada",
+     "Seraías"
+    ],
+    "answer": 0,
+    "ref": "Neemias 3:1"
+   },
+   {
+    "q": "Em que templo Senaqueribe adorava quando foi morto por seus filhos?",
+    "options": [
+     "De Nisroque",
+     "De Dagom",
+     "De Bel",
+     "De Nebo"
+    ],
+    "answer": 0,
+    "ref": "Isaías 37:38"
+   },
+   {
+    "q": "Segundo Cantares 2:15, que animais fazem mal às vinhas?",
+    "options": [
+     "As raposinhas",
+     "Os javalis",
+     "Os gafanhotos",
+     "As corças"
+    ],
+    "answer": 0,
+    "ref": "Cantares 2:15"
+   }
+  ]
+ },
+ {
+  "phase": 128,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Segundo Malaquias 3:16, o que foi escrito diante do Senhor para os que o temem?",
+    "options": [
+     "Uma aliança",
+     "Um memorial",
+     "Um cântico",
+     "Um decreto"
+    ],
+    "answer": 1,
+    "ref": "Malaquias 3:16"
+   },
+   {
+    "q": "Como Amós chamou as mulheres opressoras de Samaria?",
+    "options": [
+     "Vacas de Basã",
+     "Ovelhas de Quedar",
+     "Cabras de Gileade",
+     "Jumentas de Moabe"
+    ],
+    "answer": 0,
+    "ref": "Amós 4:1"
+   },
+   {
+    "q": "Por quanto Oseias comprou a mulher em Oseias 3?",
+    "options": [
+     "Trinta peças de prata",
+     "Vinte siclos e um efa de trigo",
+     "Cinquenta siclos de prata",
+     "Quinze peças de prata e um ômer e meio de cevada"
+    ],
+    "answer": 3,
+    "ref": "Oseias 3:2"
+   },
+   {
+    "q": "Segundo Joel 3:10, as nações deviam forjar espadas de quê?",
+    "options": [
+     "Dos arados",
+     "Das panelas",
+     "Das enxadas",
+     "Dos jugos"
+    ],
+    "answer": 2,
+    "ref": "Joel 3:10"
+   },
+   {
+    "q": "Segundo Eclesiastes 4:12, que cordão não se quebra tão depressa?",
+    "options": [
+     "O de sete fios",
+     "O de três dobras",
+     "O de linho fino",
+     "O de duas dobras"
+    ],
+    "answer": 1,
+    "ref": "Eclesiastes 4:12"
+   },
+   {
+    "q": "Segundo Ageu 2:9, o que seria maior na última casa do que na primeira?",
+    "options": [
+     "O tamanho",
+     "A quantidade de ouro",
+     "A glória",
+     "O número de sacerdotes"
+    ],
+    "answer": 2,
+    "ref": "Ageu 2:9"
+   },
+   {
+    "q": "Bildade, amigo de Jó, é identificado como:",
+    "options": [
+     "Suíta",
+     "Temanita",
+     "Naamatita",
+     "Buzita"
+    ],
+    "answer": 0,
+    "ref": "Jó 2:11"
+   },
+   {
+    "q": "Quem disse que convinha que um homem morresse pelo povo?",
+    "options": [
+     "Anás",
+     "Caifás",
+     "Pilatos",
+     "Nicodemos"
+    ],
+    "answer": 1,
+    "ref": "João 11:49-50"
+   },
+   {
+    "q": "Onde João Batista batizava \"porque havia ali muitas águas\"?",
+    "options": [
+     "Em Enom, junto a Salim",
+     "Em Siloé",
+     "Em Betesda",
+     "Em Caná"
+    ],
+    "answer": 0,
+    "ref": "João 3:23"
+   },
+   {
+    "q": "Joana, uma das mulheres que serviam a Jesus, era mulher de quem?",
+    "options": [
+     "Clopas",
+     "Cuza, procurador de Herodes",
+     "Zebedeu",
+     "Simão, o fariseu"
+    ],
+    "answer": 1,
+    "ref": "Lucas 8:3"
+   }
+  ]
+ },
+ {
+  "phase": 129,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Quantas vezes por semana o fariseu da parábola dizia jejuar?",
+    "options": [
+     "Uma",
+     "Três",
+     "Sete",
+     "Duas"
+    ],
+    "answer": 3,
+    "ref": "Lucas 18:12"
+   },
+   {
+    "q": "Quantos outros discípulos Jesus designou e enviou dois a dois em Lucas 10?",
+    "options": [
+     "Setenta",
+     "Doze",
+     "Quarenta",
+     "Cento e vinte"
+    ],
+    "answer": 0,
+    "ref": "Lucas 10:1"
+   },
+   {
+    "q": "Sob quais sumos sacerdotes veio a palavra de Deus a João no deserto?",
+    "options": [
+     "Anás e Caifás",
+     "Caifás e Eli",
+     "Anás e Zacarias",
+     "Abiatar e Caifás"
+    ],
+    "answer": 0,
+    "ref": "Lucas 3:2"
+   },
+   {
+    "q": "Na sinagoga de Nazaré, que leproso Jesus citou como purificado no tempo de Eliseu?",
+    "options": [
+     "Naamã, o sírio",
+     "Geazi",
+     "Uzias",
+     "Miriã"
+    ],
+    "answer": 0,
+    "ref": "Lucas 4:27"
+   },
+   {
+    "q": "Quem perguntou: \"Senhor, de onde vem que te hás de manifestar a nós e não ao mundo?\"",
+    "options": [
+     "Tomé",
+     "Filipe",
+     "Judas, não o Iscariotes",
+     "Pedro"
+    ],
+    "answer": 2,
+    "ref": "João 14:22"
+   },
+   {
+    "q": "Segundo Lucas, o que o centurião disse ao ver a morte de Jesus?",
+    "options": [
+     "Na verdade, este homem era justo",
+     "Este é o Rei dos judeus",
+     "Está consumado",
+     "Este salvou a outros"
+    ],
+    "answer": 0,
+    "ref": "Lucas 23:47"
+   },
+   {
+    "q": "Quais discípulos quiseram fazer descer fogo do céu sobre uma aldeia samaritana?",
+    "options": [
+     "Tiago e João",
+     "Pedro e André",
+     "Filipe e Natanael",
+     "Tomé e Mateus"
+    ],
+    "answer": 0,
+    "ref": "Lucas 9:52-54"
+   },
+   {
+    "q": "Qual macedônio de Tessalônica embarcou com Paulo rumo à Itália?",
+    "options": [
+     "Aristarco",
+     "Sópatro",
+     "Trófimo",
+     "Gaio"
+    ],
+    "answer": 0,
+    "ref": "Atos 27:2"
+   },
+   {
+    "q": "Para qual cidade Paulo chamou os anciãos da igreja de Éfeso?",
+    "options": [
+     "Trôade",
+     "Pátara",
+     "Cós",
+     "Mileto"
+    ],
+    "answer": 3,
+    "ref": "Atos 20:17"
+   },
+   {
+    "q": "Quantos frutos a árvore da vida dá, segundo Apocalipse 22:2?",
+    "options": [
+     "Um só, eterno",
+     "Sete, um a cada dia",
+     "Doze, um a cada mês",
+     "Quarenta, um por ano"
+    ],
+    "answer": 2,
+    "ref": "Apocalipse 22:2"
+   }
+  ]
+ },
+ {
+  "phase": 130,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Na abertura do terceiro selo, o que tinha na mão quem montava o cavalo preto?",
+    "options": [
+     "Uma foice",
+     "Uma balança",
+     "Uma grande espada",
+     "Um arco"
+    ],
+    "answer": 1,
+    "ref": "Apocalipse 6:5"
+   },
+   {
+    "q": "A igreja de Éfeso foi elogiada por aborrecer as obras de quem?",
+    "options": [
+     "Dos nicolaítas",
+     "De Balaão",
+     "De Jezabel",
+     "Dos falsos judeus"
+    ],
+    "answer": 0,
+    "ref": "Apocalipse 2:6"
+   },
+   {
+    "q": "Em Apocalipse 4:3, o arco celeste ao redor do trono era semelhante a:",
+    "options": [
+     "Safira",
+     "Topázio",
+     "Rubi",
+     "Esmeralda"
+    ],
+    "answer": 3,
+    "ref": "Apocalipse 4:3"
+   },
+   {
+    "q": "Quantos discípulos em Éfeso receberam o Espírito Santo quando Paulo impôs as mãos?",
+    "options": [
+     "Cerca de setenta",
+     "Sete",
+     "Cerca de doze",
+     "Cento e vinte"
+    ],
+    "answer": 2,
+    "ref": "Atos 19:6-7"
+   },
+   {
+    "q": "Os vencedores sobre o mar de vidro cantavam o cântico de quem e do Cordeiro?",
+    "options": [
+     "Elias",
+     "Moisés",
+     "Miriã",
+     "Davi"
+    ],
+    "answer": 1,
+    "ref": "Apocalipse 15:2-3"
+   },
+   {
+    "q": "Qual destes NÃO é um dos quatro animais de Apocalipse 4:7?",
+    "options": [
+     "Urso",
+     "Águia",
+     "Leão",
+     "Bezerro"
+    ],
+    "answer": 0,
+    "ref": "Apocalipse 4:7"
+   },
+   {
+    "q": "Como foi chamado o campo ligado à morte de Judas, em Atos 1?",
+    "options": [
+     "Getsêmani",
+     "Gólgota",
+     "Gabatá",
+     "Aceldama"
+    ],
+    "answer": 3,
+    "ref": "Atos 1:19"
+   },
+   {
+    "q": "Quais filhos as filhas de Ló geraram, pais dos moabitas e amonitas?",
+    "options": [
+     "Amaleque e Edom",
+     "Moabe e Uz",
+     "Ben-Ami e Elifaz",
+     "Moabe e Ben-Ami"
+    ],
+    "answer": 3,
+    "ref": "Gênesis 19:36-38"
+   },
+   {
+    "q": "Qual mulher de Lameque foi mãe de Jabal e Jubal?",
+    "options": [
+     "Ada",
+     "Naamá",
+     "Milca",
+     "Zilá"
+    ],
+    "answer": 0,
+    "ref": "Gênesis 4:19-21"
+   },
+   {
+    "q": "Quem era o pai de Calebe, um dos doze espias?",
+    "options": [
+     "Aminadabe",
+     "Hur",
+     "Jefoné",
+     "Num"
+    ],
+    "answer": 2,
+    "ref": "Números 13:6"
+   }
+  ]
+ },
+ {
+  "phase": 131,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual rei tinha uma cama de ferro de nove côvados de comprimento?",
+    "options": [
+     "Siom, rei de Hesbom",
+     "Adoni-Zedeque",
+     "Jabim, rei de Hazor",
+     "Ogue, rei de Basã"
+    ],
+    "answer": 3,
+    "ref": "Deuteronômio 3:11"
+   },
+   {
+    "q": "Quantas filhas tinha o sacerdote de Midiã que Moisés defendeu junto ao poço?",
+    "options": [
+     "Doze",
+     "Três",
+     "Cinco",
+     "Sete"
+    ],
+    "answer": 3,
+    "ref": "Êxodo 2:16-17"
+   },
+   {
+    "q": "Qual era o nome da mãe do homem que blasfemou o Nome do Senhor?",
+    "options": [
+     "Eliseba",
+     "Cozbi",
+     "Milca",
+     "Selomite"
+    ],
+    "answer": 3,
+    "ref": "Levítico 24:10-11"
+   },
+   {
+    "q": "Com quem Arão se casou?",
+    "options": [
+     "Selomite",
+     "Eliseba",
+     "Zípora",
+     "Joquebede"
+    ],
+    "answer": 1,
+    "ref": "Êxodo 6:23"
+   },
+   {
+    "q": "Para um peixe ser limpo, o que ele precisava ter?",
+    "options": [
+     "Barbatanas e escamas",
+     "Só barbatanas",
+     "Dentes e escamas",
+     "Só escamas"
+    ],
+    "answer": 0,
+    "ref": "Levítico 11:9"
+   },
+   {
+    "q": "Em que livro está escrito: \"Ouve, Israel, o Senhor nosso Deus é o único Senhor\"?",
+    "options": [
+     "Levítico",
+     "Deuteronômio",
+     "Êxodo",
+     "Números"
+    ],
+    "answer": 1,
+    "ref": "Deuteronômio 6:4"
+   },
+   {
+    "q": "O que a lei mandava fazer no terraço de uma casa nova?",
+    "options": [
+     "Um parapeito",
+     "Uma cisterna",
+     "Um altar",
+     "Uma tenda"
+    ],
+    "answer": 0,
+    "ref": "Deuteronômio 22:8"
+   },
+   {
+    "q": "Qual rei de Canaã reinava em Hazor quando Débora julgava Israel?",
+    "options": [
+     "Sísera",
+     "Adoni-Bezeque",
+     "Zalmuna",
+     "Jabim"
+    ],
+    "answer": 3,
+    "ref": "Juízes 4:2"
+   },
+   {
+    "q": "Qual juiz teve quarenta filhos e trinta netos que cavalgavam setenta jumentos?",
+    "options": [
+     "Jair",
+     "Ibsã",
+     "Tola",
+     "Abdom"
+    ],
+    "answer": 3,
+    "ref": "Juízes 12:13-14"
+   },
+   {
+    "q": "Quem deu nome ao menino Obede, filho de Rute?",
+    "options": [
+     "As vizinhas",
+     "Noemi",
+     "Boaz",
+     "Os anciãos"
+    ],
+    "answer": 0,
+    "ref": "Rute 4:17"
+   }
+  ]
+ },
+ {
+  "phase": 132,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Quanto pesava a couraça de bronze de Golias?",
+    "options": [
+     "5.000 siclos",
+     "600 siclos",
+     "1.000 siclos",
+     "3.000 siclos"
+    ],
+    "answer": 0,
+    "ref": "1 Samuel 17:5"
+   },
+   {
+    "q": "Qual rei amonita rapou metade da barba dos servos de Davi?",
+    "options": [
+     "Naás",
+     "Hanum",
+     "Hirão",
+     "Talmai"
+    ],
+    "answer": 1,
+    "ref": "2 Samuel 10:1-4"
+   },
+   {
+    "q": "Qual rei de Judá tirou Maaca de ser rainha por ter feito um ídolo?",
+    "options": [
+     "Abias",
+     "Josafá",
+     "Asa",
+     "Roboão"
+    ],
+    "answer": 2,
+    "ref": "1 Reis 15:13"
+   },
+   {
+    "q": "Qual rei de Judá matou dez mil edomitas no vale do Sal?",
+    "options": [
+     "Uzias",
+     "Josafá",
+     "Amazias",
+     "Joás"
+    ],
+    "answer": 2,
+    "ref": "2 Reis 14:7"
+   },
+   {
+    "q": "Qual rei de Judá recebeu uma carta escrita pelo profeta Elias?",
+    "options": [
+     "Josafá",
+     "Acazias",
+     "Joás",
+     "Jeorão"
+    ],
+    "answer": 3,
+    "ref": "2 Crônicas 21:12"
+   },
+   {
+    "q": "Em que vale Sambalate e Gesém chamaram Neemias para um encontro?",
+    "options": [
+     "Hinom",
+     "Elá",
+     "Beraca",
+     "Ono"
+    ],
+    "answer": 3,
+    "ref": "Neemias 6:2"
+   },
+   {
+    "q": "Com qual conselho começa Eclesiastes 11?",
+    "options": [
+     "Guarda o teu pé quando entrares na casa de Deus",
+     "Melhor é o fim das coisas do que o princípio",
+     "Tudo tem o seu tempo determinado",
+     "Lança o teu pão sobre as águas"
+    ],
+    "answer": 3,
+    "ref": "Eclesiastes 11:1"
+   },
+   {
+    "q": "Qual dos amigos de Jó é chamado de temanita?",
+    "options": [
+     "Elifaz",
+     "Bildade",
+     "Zofar",
+     "Eliú"
+    ],
+    "answer": 0,
+    "ref": "Jó 2:11"
+   },
+   {
+    "q": "Em que ano do reinado de Jeoaquim Nabucodonosor veio a Jerusalém e a sitiou?",
+    "options": [
+     "Primeiro",
+     "Quinto",
+     "Terceiro",
+     "Décimo primeiro"
+    ],
+    "answer": 2,
+    "ref": "Daniel 1:1"
+   },
+   {
+    "q": "Por quais escritos Daniel entendeu o número dos anos da desolação de Jerusalém?",
+    "options": [
+     "Pelo livro de Isaías",
+     "Pela lei de Moisés",
+     "Pelas visões de Ezequiel",
+     "Pela palavra dada a Jeremias"
+    ],
+    "answer": 3,
+    "ref": "Daniel 9:2"
+   }
+  ]
+ },
+ {
+  "phase": 133,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Em Cantares 2:1, como a amada se descreve?",
+    "options": [
+     "O lírio de Gileade",
+     "A palmeira de En-Gedi",
+     "A videira do Líbano",
+     "A rosa de Sarom"
+    ],
+    "answer": 3,
+    "ref": "Cantares 2:1"
+   },
+   {
+    "q": "Qual rei da Babilônia tirou Joaquim da prisão no 37º ano de seu cativeiro?",
+    "options": [
+     "Nabucodonosor",
+     "Belsazar",
+     "Merodaque-Baladã",
+     "Evil-Merodaque"
+    ],
+    "answer": 3,
+    "ref": "Jeremias 52:31"
+   },
+   {
+    "q": "Em Ribla, o que o rei da Babilônia fez a Zedequias após matar seus filhos?",
+    "options": [
+     "Cegou-lhe os olhos",
+     "Cortou-lhe as mãos",
+     "Fê-lo comer erva",
+     "Deu-lhe lugar à sua mesa"
+    ],
+    "answer": 0,
+    "ref": "Jeremias 39:6-7"
+   },
+   {
+    "q": "Segundo Daniel 12:3, os entendidos resplandecerão como o quê?",
+    "options": [
+     "Como o sol ao meio-dia",
+     "Como o resplendor do firmamento",
+     "Como a lua cheia",
+     "Como o relâmpago"
+    ],
+    "answer": 1,
+    "ref": "Daniel 12:3"
+   },
+   {
+    "q": "Oseias compara Efraim a que alimento malfeito?",
+    "options": [
+     "Um bolo que não foi virado",
+     "Um vinho azedo",
+     "Um pão mofado",
+     "Um figo podre"
+    ],
+    "answer": 0,
+    "ref": "Oseias 7:8"
+   },
+   {
+    "q": "Em João, quem perguntou a Pedro se não o tinha visto no horto com Jesus?",
+    "options": [
+     "A porteira",
+     "Um parente de Malco",
+     "Um soldado romano",
+     "O sumo sacerdote"
+    ],
+    "answer": 1,
+    "ref": "João 18:26"
+   },
+   {
+    "q": "Com quem Tiago e João deixaram seu pai Zebedeu ao seguir Jesus?",
+    "options": [
+     "Com os empregados, no barco",
+     "Com André",
+     "Com a mãe deles",
+     "Sozinho na praia"
+    ],
+    "answer": 0,
+    "ref": "Marcos 1:20"
+   },
+   {
+    "q": "Segundo Lucas, sobre o que Moisés e Elias falavam com Jesus na transfiguração?",
+    "options": [
+     "Da lei e dos profetas",
+     "Da sua morte em Jerusalém",
+     "Do reino de Israel",
+     "Da escolha dos doze"
+    ],
+    "answer": 1,
+    "ref": "Lucas 9:30-31"
+   },
+   {
+    "q": "O cego curado por etapas em Betsaida disse que via os homens como o quê?",
+    "options": [
+     "Como árvores que andam",
+     "Como sombras",
+     "Como anjos",
+     "Como gigantes"
+    ],
+    "answer": 0,
+    "ref": "Marcos 8:22-24"
+   },
+   {
+    "q": "Onde o gadareno liberto começou a anunciar o que Jesus lhe fizera?",
+    "options": [
+     "Em Cafarnaum",
+     "Em Decápolis",
+     "Em Jerusalém",
+     "Em Samaria"
+    ],
+    "answer": 1,
+    "ref": "Marcos 5:20"
+   }
+  ]
+ },
+ {
+  "phase": 134,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Segundo João 18:40, o que era Barrabás?",
+    "options": [
+     "Um publicano",
+     "Um soldado romano",
+     "Um sacerdote",
+     "Um salteador"
+    ],
+    "answer": 3,
+    "ref": "João 18:40"
+   },
+   {
+    "q": "Em que vigília da noite Jesus foi até os discípulos andando sobre o mar?",
+    "options": [
+     "Quarta",
+     "Primeira",
+     "Segunda",
+     "Terceira"
+    ],
+    "answer": 0,
+    "ref": "Mateus 14:25"
+   },
+   {
+    "q": "Segundo Mateus 28:2, o que o anjo fez depois de remover a pedra do sepulcro?",
+    "options": [
+     "Entrou no sepulcro",
+     "Subiu ao céu",
+     "Chamou os guardas",
+     "Assentou-se sobre ela"
+    ],
+    "answer": 3,
+    "ref": "Mateus 28:2"
+   },
+   {
+    "q": "Segundo Lucas 24:50, até onde Jesus levou os discípulos antes de ser elevado ao céu?",
+    "options": [
+     "Até Betânia",
+     "Até Emaús",
+     "Até Cafarnaum",
+     "Até o Jordão"
+    ],
+    "answer": 0,
+    "ref": "Lucas 24:50-51"
+   },
+   {
+    "q": "Segundo Mateus 26:73, o que denunciou Pedro como seguidor de Jesus?",
+    "options": [
+     "A sua fala",
+     "A sua roupa",
+     "A sua espada",
+     "O seu barco"
+    ],
+    "answer": 0,
+    "ref": "Mateus 26:73"
+   },
+   {
+    "q": "Por quanto tempo Paulo falou ousadamente na sinagoga de Éfeso antes de se apartar?",
+    "options": [
+     "Quarenta dias",
+     "Dois anos",
+     "Seis meses",
+     "Três meses"
+    ],
+    "answer": 3,
+    "ref": "Atos 19:8-9"
+   },
+   {
+    "q": "Quem foi apresentado junto com Matias como candidato a substituir Judas?",
+    "options": [
+     "Manaém",
+     "Ágabo",
+     "José, chamado Barsabás",
+     "Silas"
+    ],
+    "answer": 2,
+    "ref": "Atos 1:23"
+   },
+   {
+    "q": "Paulo pede a Tito que acompanhe com cuidado Apolo e qual doutor da lei?",
+    "options": [
+     "Tíquico",
+     "Zenas",
+     "Artemas",
+     "Gamaliel"
+    ],
+    "answer": 1,
+    "ref": "Tito 3:13"
+   },
+   {
+    "q": "Em 3 João, quem 'de todos tem bom testemunho, e até da mesma verdade'?",
+    "options": [
+     "Demétrio",
+     "Diótrefes",
+     "Erasto",
+     "Gaio"
+    ],
+    "answer": 0,
+    "ref": "3 João 1:12"
+   },
+   {
+    "q": "Saindo de Trôade, Paulo quis ir a pé até qual lugar, enquanto os outros iam de navio?",
+    "options": [
+     "Quios",
+     "Mileto",
+     "Samos",
+     "Assôs"
+    ],
+    "answer": 3,
+    "ref": "Atos 20:13"
+   }
+  ]
+ },
+ {
+  "phase": 135,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Quem Paulo enviou aos efésios, 'irmão amado e fiel ministro do Senhor'?",
+    "options": [
+     "Trófimo",
+     "Demas",
+     "Tíquico",
+     "Epafras"
+    ],
+    "answer": 2,
+    "ref": "Efésios 6:21"
+   },
+   {
+    "q": "Com o que Ágabo atou os próprios pés e mãos ao profetizar a prisão de Paulo?",
+    "options": [
+     "Com uma corrente",
+     "Com o cinto de Paulo",
+     "Com cordas de linho",
+     "Com o manto de Paulo"
+    ],
+    "answer": 1,
+    "ref": "Atos 21:11"
+   },
+   {
+    "q": "Qual destes NÃO é citado nos partidos de Corinto ('Eu sou de...')?",
+    "options": [
+     "Barnabé",
+     "Paulo",
+     "Cefas",
+     "Apolo"
+    ],
+    "answer": 0,
+    "ref": "1 Coríntios 1:12"
+   },
+   {
+    "q": "Qual fiel testemunha foi morta em Pérgamo, 'onde Satanás habita'?",
+    "options": [
+     "Estêvão",
+     "Diótrefes",
+     "Demétrio",
+     "Antipas"
+    ],
+    "answer": 3,
+    "ref": "Apocalipse 2:13"
+   },
+   {
+    "q": "À igreja de qual cidade Jesus se apresenta como 'o que tem a chave de Davi'?",
+    "options": [
+     "Sardes",
+     "Laodiceia",
+     "Filadélfia",
+     "Esmirna"
+    ],
+    "answer": 2,
+    "ref": "Apocalipse 3:7"
+   },
+   {
+    "q": "No Dia da Expiação, o bode enviado vivo ao deserto era sorteado para quem?",
+    "options": [
+     "Para o Senhor",
+     "Para o sacerdote",
+     "Para Azazel",
+     "Para os levitas"
+    ],
+    "answer": 2,
+    "ref": "Levítico 16:8-10"
+   },
+   {
+    "q": "Qual irmão de Abrão, pai de Ló, morreu em Ur dos caldeus?",
+    "options": [
+     "Naor",
+     "Harã",
+     "Terá",
+     "Betuel"
+    ],
+    "answer": 1,
+    "ref": "Gênesis 11:27-28"
+   },
+   {
+    "q": "Em que ano a terra devia ter um sábado de descanso, sem semear?",
+    "options": [
+     "No sétimo ano",
+     "No quinto ano",
+     "No décimo ano",
+     "No terceiro ano"
+    ],
+    "answer": 0,
+    "ref": "Levítico 25:4"
+   },
+   {
+    "q": "Que nome Jacó deu ao lugar onde os anjos de Deus o encontraram?",
+    "options": [
+     "Galeede",
+     "Maanaim",
+     "Sucote",
+     "Luz"
+    ],
+    "answer": 1,
+    "ref": "Gênesis 32:1-2"
+   },
+   {
+    "q": "Quais mulheres heteias Esaú tomou aos 40 anos?",
+    "options": [
+     "Judite e Basemate",
+     "Timna e Oolibama",
+     "Maalate e Milca",
+     "Ada e Zilá"
+    ],
+    "answer": 0,
+    "ref": "Gênesis 26:34"
+   }
+  ]
+ },
+ {
+  "phase": 136,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Diante de qual lugar Israel acampou junto ao mar antes da travessia?",
+    "options": [
+     "Elim",
+     "Refidim",
+     "Cades",
+     "Pi-Hairote"
+    ],
+    "answer": 3,
+    "ref": "Êxodo 14:2"
+   },
+   {
+    "q": "Em que lugar José encontrou seus irmãos apascentando o rebanho?",
+    "options": [
+     "Berseba",
+     "Gerar",
+     "Dotã",
+     "Siquém"
+    ],
+    "answer": 2,
+    "ref": "Gênesis 37:17"
+   },
+   {
+    "q": "Em que cova se esconderam os cinco reis amorreus?",
+    "options": [
+     "Acor",
+     "Maquedá",
+     "Macpela",
+     "Adulão"
+    ],
+    "answer": 1,
+    "ref": "Josué 10:16"
+   },
+   {
+    "q": "Qual era o nome do marido de Jael, o queneu?",
+    "options": [
+     "Lapidote",
+     "Abinoão",
+     "Héber",
+     "Manoá"
+    ],
+    "answer": 2,
+    "ref": "Juízes 4:17"
+   },
+   {
+    "q": "Em que cidade Sansão matou trinta homens para pagar a aposta do enigma?",
+    "options": [
+     "Gaza",
+     "Timna",
+     "Ecrom",
+     "Asquelom"
+    ],
+    "answer": 3,
+    "ref": "Juízes 14:19"
+   },
+   {
+    "q": "De que lugar, na região de Efraim, era Elcana, pai de Samuel?",
+    "options": [
+     "Siló",
+     "Mispa",
+     "Gibeá",
+     "Ramataim-Zofim"
+    ],
+    "answer": 3,
+    "ref": "1 Samuel 1:1"
+   },
+   {
+    "q": "Com quem Saul casou Merabe, a filha prometida a Davi?",
+    "options": [
+     "Adriel, meolatita",
+     "Paltiel, filho de Laís",
+     "Abner",
+     "Doegue"
+    ],
+    "answer": 0,
+    "ref": "1 Samuel 18:19"
+   },
+   {
+    "q": "Qual amigo de Amnom, sobrinho de Davi, lhe deu o plano para enganar Tamar?",
+    "options": [
+     "Jonadabe",
+     "Aitofel",
+     "Husai",
+     "Itai"
+    ],
+    "answer": 0,
+    "ref": "2 Samuel 13:3-5"
+   },
+   {
+    "q": "Quem reedificou Jericó à custa de seus filhos Abirão e Segube?",
+    "options": [
+     "Acabe",
+     "Hiel, o betelita",
+     "Onri",
+     "Zinri"
+    ],
+    "answer": 1,
+    "ref": "1 Reis 16:34"
+   },
+   {
+    "q": "Qual rei da Assíria recebeu mil talentos de prata de Menaém?",
+    "options": [
+     "Senaqueribe",
+     "Salmaneser",
+     "Pul",
+     "Esar-Hadom"
+    ],
+    "answer": 2,
+    "ref": "2 Reis 15:19"
+   }
+  ]
+ },
+ {
+  "phase": 137,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual filho do sacerdote Joiada foi apedrejado no pátio por ordem de Joás?",
+    "options": [
+     "Azarias",
+     "Benaia",
+     "Zacarias",
+     "Hilquias"
+    ],
+    "answer": 2,
+    "ref": "2 Crônicas 24:20-21"
+   },
+   {
+    "q": "Por quantos anos Neemias não comeu o pão do governador?",
+    "options": [
+     "Sete",
+     "Vinte",
+     "Cinco",
+     "Doze"
+    ],
+    "answer": 3,
+    "ref": "Neemias 5:14"
+   },
+   {
+    "q": "Em qual cidade Jeremias diz que se ouvia Raquel chorando por seus filhos?",
+    "options": [
+     "Belém",
+     "Betel",
+     "Ramá",
+     "Siló"
+    ],
+    "answer": 2,
+    "ref": "Jeremias 31:15"
+   },
+   {
+    "q": "Quem era o pai de Eliú, o jovem que falou depois dos três amigos de Jó?",
+    "options": [
+     "Buzi",
+     "Baraquel",
+     "Hamedata",
+     "Elcana"
+    ],
+    "answer": 1,
+    "ref": "Jó 32:2"
+   },
+   {
+    "q": "Por quem as mulheres choravam à entrada da casa do Senhor, em Ezequiel 8?",
+    "options": [
+     "Por Tamuz",
+     "Por Baal",
+     "Por Moloque",
+     "Por Astarote"
+    ],
+    "answer": 0,
+    "ref": "Ezequiel 8:14"
+   },
+   {
+    "q": "Qual sacerdote, filho de Imer, feriu Jeremias e o meteu no tronco?",
+    "options": [
+     "Hananias",
+     "Pasur",
+     "Seraías",
+     "Amazias"
+    ],
+    "answer": 1,
+    "ref": "Jeremias 20:1-2"
+   },
+   {
+    "q": "Segundo o título do Salmo 34, diante de quem Davi mudou o seu semblante?",
+    "options": [
+     "Absalão",
+     "Abimeleque",
+     "Golias",
+     "Nabal"
+    ],
+    "answer": 1,
+    "ref": "Salmos 34 (título)"
+   },
+   {
+    "q": "Na visão de Jeremias 24, o que havia nos dois cestos diante do templo?",
+    "options": [
+     "Uvas",
+     "Romãs",
+     "Figos",
+     "Pães"
+    ],
+    "answer": 2,
+    "ref": "Jeremias 24:1-2"
+   },
+   {
+    "q": "Em Salmos 137, onde os cativos penduraram as suas harpas?",
+    "options": [
+     "Nos salgueiros",
+     "Nas palmeiras",
+     "Nos cedros",
+     "Nas portas da cidade"
+    ],
+    "answer": 0,
+    "ref": "Salmos 137:2"
+   },
+   {
+    "q": "Qual oficial do rei da Assíria falou em alta voz aos judeus junto ao muro de Jerusalém?",
+    "options": [
+     "Pul",
+     "Nebuzaradã",
+     "Arioque",
+     "Rabsaqué"
+    ],
+    "answer": 3,
+    "ref": "Isaías 36:2,13"
+   }
+  ]
+ },
+ {
+  "phase": 138,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "No Salmo 133, a união dos irmãos é comparada ao orvalho de qual monte?",
+    "options": [
+     "Carmelo",
+     "Tabor",
+     "Hermom",
+     "Líbano"
+    ],
+    "answer": 2,
+    "ref": "Salmos 133:3"
+   },
+   {
+    "q": "Segundo Ageu 2:23, Deus faria Zorobabel como o quê?",
+    "options": [
+     "Uma coroa de ouro",
+     "Um anel de selar",
+     "Uma pedra angular",
+     "Um cetro de ferro"
+    ],
+    "answer": 1,
+    "ref": "Ageu 2:23"
+   },
+   {
+    "q": "Em que cidade de Samaria ficava a fonte de Jacó onde Jesus falou com a samaritana?",
+    "options": [
+     "Siquém",
+     "Samaria",
+     "Sicar",
+     "Efraim"
+    ],
+    "answer": 2,
+    "ref": "João 4:5-6"
+   },
+   {
+    "q": "Segundo Marcos, por volta de que hora Jesus clamou: \"Eloí, Eloí, lamá sabactâni?\"",
+    "options": [
+     "Sexta",
+     "Nona",
+     "Terceira",
+     "Undécima"
+    ],
+    "answer": 1,
+    "ref": "Marcos 15:34"
+   },
+   {
+    "q": "Qual discípulo é citado pelo nome na mensagem do jovem às mulheres em Marcos 16:7?",
+    "options": [
+     "João",
+     "Tomé",
+     "Tiago",
+     "Pedro"
+    ],
+    "answer": 3,
+    "ref": "Marcos 16:7"
+   },
+   {
+    "q": "Segundo Lucas 3:14, o que João Batista disse aos soldados?",
+    "options": [
+     "Não cobreis mais do que o ordenado",
+     "Quem tem duas túnicas, reparta",
+     "Contentai-vos com o vosso soldo",
+     "Deixai as armas"
+    ],
+    "answer": 2,
+    "ref": "Lucas 3:14"
+   },
+   {
+    "q": "Segundo João, o que Judas Iscariotes guardava entre os discípulos?",
+    "options": [
+     "As chaves",
+     "Os rolos",
+     "A bolsa",
+     "O vinho da ceia"
+    ],
+    "answer": 2,
+    "ref": "João 12:6"
+   },
+   {
+    "q": "Segundo Mateus 4:13, Cafarnaum ficava nos confins de quais tribos?",
+    "options": [
+     "Aser e Issacar",
+     "Zebulom e Naftali",
+     "Dã e Naftali",
+     "Zebulom e Issacar"
+    ],
+    "answer": 1,
+    "ref": "Mateus 4:13"
+   },
+   {
+    "q": "Segundo Lucas 3:1, quem era tetrarca de Abilene?",
+    "options": [
+     "Filipe",
+     "Arquelau",
+     "Lisânias",
+     "Cirênio"
+    ],
+    "answer": 2,
+    "ref": "Lucas 3:1"
+   },
+   {
+    "q": "Como se chamava em hebraico o lugar onde Pilatos se assentou no tribunal?",
+    "options": [
+     "Gólgota",
+     "Gabatá",
+     "Getsêmani",
+     "Gazofilácio"
+    ],
+    "answer": 1,
+    "ref": "João 19:13"
+   }
+  ]
+ },
+ {
+  "phase": 139,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Segundo Mateus, o que os guardas do sepulcro foram pagos para dizer?",
+    "options": [
+     "Que Jesus não havia morrido",
+     "Que o corpo foi levado por José",
+     "Que os discípulos furtaram o corpo de noite",
+     "Que nunca guardaram o sepulcro"
+    ],
+    "answer": 2,
+    "ref": "Mateus 28:12-13"
+   },
+   {
+    "q": "Na ceia, como Jesus indicou quem o trairia, segundo João?",
+    "options": [
+     "Lavando-lhe os pés primeiro",
+     "Apontando com a mão",
+     "Dando-lhe o bocado molhado",
+     "Chamando-o pelo nome"
+    ],
+    "answer": 2,
+    "ref": "João 13:26"
+   },
+   {
+    "q": "Na alegoria de Gálatas 4, Agar corresponde a qual monte?",
+    "options": [
+     "Sião",
+     "Carmelo",
+     "Sinai",
+     "Moriá"
+    ],
+    "answer": 2,
+    "ref": "Gálatas 4:24-25"
+   },
+   {
+    "q": "A que hora Pedro e João subiam ao templo quando curaram o coxo?",
+    "options": [
+     "Hora sexta",
+     "Hora nona",
+     "Hora primeira",
+     "Hora terceira"
+    ],
+    "answer": 1,
+    "ref": "Atos 3:1"
+   },
+   {
+    "q": "Em Filipenses 4:22, Paulo envia saudações especialmente dos da casa de:",
+    "options": [
+     "César",
+     "Filemom",
+     "Lídia",
+     "Herodes"
+    ],
+    "answer": 0,
+    "ref": "Filipenses 4:22"
+   },
+   {
+    "q": "Em qual cidade o navio parou três dias antes de chegar a Régio?",
+    "options": [
+     "Sidom",
+     "Mirra",
+     "Putéoli",
+     "Siracusa"
+    ],
+    "answer": 3,
+    "ref": "Atos 28:12"
+   },
+   {
+    "q": "No concílio de Jerusalém, quem disse: 'julgo que não se deve perturbar' os gentios?",
+    "options": [
+     "João",
+     "Pedro",
+     "Tiago",
+     "Barnabé"
+    ],
+    "answer": 2,
+    "ref": "Atos 15:13,19"
+   },
+   {
+    "q": "Em Gálatas 6:11, Paulo chama atenção para o quê, escrito por sua mão?",
+    "options": [
+     "Sua cadeia",
+     "As grandes letras",
+     "O selo de Cristo",
+     "Sua assinatura em grego"
+    ],
+    "answer": 1,
+    "ref": "Gálatas 6:11"
+   },
+   {
+    "q": "Expulsos de Antioquia da Pisídia, Paulo e Barnabé sacudiram o pó e foram a:",
+    "options": [
+     "Icônio",
+     "Derbe",
+     "Listra",
+     "Atália"
+    ],
+    "answer": 0,
+    "ref": "Atos 13:50-51"
+   },
+   {
+    "q": "Quem sucedeu Félix como governador?",
+    "options": [
+     "Cláudio Lísias",
+     "Gálio",
+     "Sérgio Paulo",
+     "Pórcio Festo"
+    ],
+    "answer": 3,
+    "ref": "Atos 24:27"
+   }
+  ]
+ },
+ {
+  "phase": 140,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Saindo de Trôade, Paulo passou por Samotrácia e chegou a qual porto?",
+    "options": [
+     "Cencreia",
+     "Mileto",
+     "Neápolis",
+     "Pafos"
+    ],
+    "answer": 2,
+    "ref": "Atos 16:11"
+   },
+   {
+    "q": "Sobre qual rio o sexto anjo derramou a sua taça?",
+    "options": [
+     "Jordão",
+     "Eufrates",
+     "Tigre",
+     "Nilo"
+    ],
+    "answer": 1,
+    "ref": "Apocalipse 16:12"
+   },
+   {
+    "q": "Em que lugar Israel cantou: \"Brota, ó poço\"?",
+    "options": [
+     "Berseba",
+     "Beer",
+     "Mara",
+     "Elim"
+    ],
+    "answer": 1,
+    "ref": "Números 21:16-17"
+   },
+   {
+    "q": "Como se chamava a midianita morta por Fineias junto com Zinri?",
+    "options": [
+     "Selomite",
+     "Cozbi",
+     "Basemate",
+     "Timna"
+    ],
+    "answer": 1,
+    "ref": "Números 25:15"
+   },
+   {
+    "q": "Em que data o tabernáculo foi levantado pela primeira vez?",
+    "options": [
+     "1º dia do 1º mês do 2º ano",
+     "1º dia do 7º mês do 2º ano",
+     "10º dia do 7º mês do 1º ano",
+     "14º dia do 1º mês do 1º ano"
+    ],
+    "answer": 0,
+    "ref": "Êxodo 40:17"
+   },
+   {
+    "q": "Qual era o nome de Josué antes de Moisés o chamar assim?",
+    "options": [
+     "Otniel",
+     "Eldade",
+     "Jair",
+     "Oseias"
+    ],
+    "answer": 3,
+    "ref": "Números 13:16"
+   },
+   {
+    "q": "De que tribo era Acã?",
+    "options": [
+     "Rúben",
+     "Benjamim",
+     "Judá",
+     "Efraim"
+    ],
+    "answer": 2,
+    "ref": "Josué 7:1"
+   },
+   {
+    "q": "Que nome as tribos do oriente deram ao altar junto ao Jordão?",
+    "options": [
+     "Galeede",
+     "O Senhor é minha bandeira",
+     "Ede (testemunho)",
+     "Ebenézer"
+    ],
+    "answer": 2,
+    "ref": "Josué 22:34"
+   },
+   {
+    "q": "De qual cidade, junto ao rio, Balaão foi chamado?",
+    "options": [
+     "Zoã",
+     "Ur",
+     "Harã",
+     "Petor"
+    ],
+    "answer": 3,
+    "ref": "Números 22:5"
+   },
+   {
+    "q": "O que Josué estendeu em direção a Ai como sinal para a emboscada?",
+    "options": [
+     "A trombeta",
+     "A bandeira",
+     "A lança",
+     "A vara"
+    ],
+    "answer": 2,
+    "ref": "Josué 8:18"
+   }
+  ]
+ },
+ {
+  "phase": 141,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Que nome recebeu o lugar onde o fogo do Senhor ardeu entre os que se queixavam?",
+    "options": [
+     "Taberá",
+     "Massá",
+     "Hazerote",
+     "Quibrote-Taavá"
+    ],
+    "answer": 0,
+    "ref": "Números 11:1-3"
+   },
+   {
+    "q": "Por quantos dias durou a praga das trevas espessas no Egito?",
+    "options": [
+     "Sete",
+     "Um",
+     "Dez",
+     "Três"
+    ],
+    "answer": 3,
+    "ref": "Êxodo 10:22"
+   },
+   {
+    "q": "Qual era o nome do marido da profetisa Débora?",
+    "options": [
+     "Héber",
+     "Lapidote",
+     "Abinoão",
+     "Elcana"
+    ],
+    "answer": 1,
+    "ref": "Juízes 4:4"
+   },
+   {
+    "q": "Até onde Sansão carregou as portas da cidade de Gaza?",
+    "options": [
+     "Ao vale de Soreque",
+     "À rocha de Etã",
+     "Ao monte defronte de Hebrom",
+     "Até Zorá"
+    ],
+    "answer": 2,
+    "ref": "Juízes 16:3"
+   },
+   {
+    "q": "O que Ana fazia todos os anos e levava ao menino Samuel?",
+    "options": [
+     "Um par de sandálias",
+     "Uma harpa",
+     "Uma túnica pequena",
+     "Um cinto de couro"
+    ],
+    "answer": 2,
+    "ref": "1 Samuel 2:19"
+   },
+   {
+    "q": "Para junto de qual rei de Gesur Absalão fugiu após matar Amnom?",
+    "options": [
+     "Aquis",
+     "Hanum",
+     "Toí",
+     "Talmai"
+    ],
+    "answer": 3,
+    "ref": "2 Samuel 13:37"
+   },
+   {
+    "q": "Por que Simei foi morto no reinado de Salomão?",
+    "options": [
+     "Saiu de Jerusalém para buscar seus servos em Gate",
+     "Apoiou Adonias",
+     "Amaldiçoou Salomão",
+     "Fugiu para o altar"
+    ],
+    "answer": 0,
+    "ref": "1 Reis 2:39-46"
+   },
+   {
+    "q": "De quem Onri comprou o monte de Samaria?",
+    "options": [
+     "Semer",
+     "Tibni",
+     "Nabote",
+     "Zinri"
+    ],
+    "answer": 0,
+    "ref": "1 Reis 16:24"
+   },
+   {
+    "q": "O que o Senhor enviou contra os povos estrangeiros postos em Samaria?",
+    "options": [
+     "Ursos",
+     "Leões",
+     "Gafanhotos",
+     "Serpentes"
+    ],
+    "answer": 1,
+    "ref": "2 Reis 17:24-25"
+   },
+   {
+    "q": "Qual rei de Judá, levado em grilhões à Babilônia, humilhou-se e foi restaurado?",
+    "options": [
+     "Joaquim",
+     "Manassés",
+     "Amom",
+     "Zedequias"
+    ],
+    "answer": 1,
+    "ref": "2 Crônicas 33:11-13"
+   }
+  ]
+ },
+ {
+  "phase": 142,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "De quem eram os móveis que Neemias lançou fora da câmara do templo?",
+    "options": [
+     "Sambalate",
+     "Gesém",
+     "Tobias",
+     "Eliasibe"
+    ],
+    "answer": 2,
+    "ref": "Neemias 13:7-8"
+   },
+   {
+    "q": "Que posição Belsazar prometeu a quem lesse a escrita na parede?",
+    "options": [
+     "Segundo no reino",
+     "Terceiro no reino",
+     "Governador da Babilônia",
+     "Chefe dos sacerdotes"
+    ],
+    "answer": 1,
+    "ref": "Daniel 5:7"
+   },
+   {
+    "q": "Na visão de Daniel 7, o que o urso tinha na boca, entre os dentes?",
+    "options": [
+     "Um pedaço de carne",
+     "Três costelas",
+     "Duas costelas",
+     "Um chifre quebrado"
+    ],
+    "answer": 1,
+    "ref": "Daniel 7:5"
+   },
+   {
+    "q": "Quem matou Gedalias, governador posto pelo rei da Babilônia?",
+    "options": [
+     "Ismael, filho de Netanias",
+     "Joanã, filho de Careá",
+     "Baalis, rei dos amonitas",
+     "Jezanias, filho de Hosaías"
+    ],
+    "answer": 0,
+    "ref": "Jeremias 41:2"
+   },
+   {
+    "q": "Em Ezequiel 37, os dois pedaços de madeira unidos representavam:",
+    "options": [
+     "Israel e Edom",
+     "Judá e Benjamim",
+     "Levi e Judá",
+     "Judá e José"
+    ],
+    "answer": 3,
+    "ref": "Ezequiel 37:16-17"
+   },
+   {
+    "q": "Como Miqueias é identificado em Miqueias 1:1?",
+    "options": [
+     "Elcosita",
+     "Tisbita",
+     "Morastita",
+     "Anatotita"
+    ],
+    "answer": 2,
+    "ref": "Miqueias 1:1"
+   },
+   {
+    "q": "Segundo Malaquias 4:2, o que nascerá para os que temem o nome do Senhor?",
+    "options": [
+     "A estrela da manhã",
+     "O renovo justo",
+     "O sol da justiça",
+     "A luz da aurora"
+    ],
+    "answer": 2,
+    "ref": "Malaquias 4:2"
+   },
+   {
+    "q": "Quem lembrou a Belsazar a existência de Daniel durante o banquete?",
+    "options": [
+     "Um dos magos",
+     "Aspenaz",
+     "O capitão da guarda",
+     "A rainha"
+    ],
+    "answer": 3,
+    "ref": "Daniel 5:10-11"
+   },
+   {
+    "q": "Onde Habacuque devia escrever a visão para que fosse lida com facilidade?",
+    "options": [
+     "Num rolo",
+     "Na parede do templo",
+     "Em tábuas",
+     "Em pedras caiadas"
+    ],
+    "answer": 2,
+    "ref": "Habacuque 2:2"
+   },
+   {
+    "q": "Segundo o último versículo de Ezequiel, qual seria o nome da cidade?",
+    "options": [
+     "O Senhor Está Ali",
+     "Cidade de Davi",
+     "Cidade da Verdade",
+     "Nova Jerusalém"
+    ],
+    "answer": 0,
+    "ref": "Ezequiel 48:35"
+   }
+  ]
+ },
+ {
+  "phase": 143,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Por quanto tempo Isaías andou despido e descalço como sinal contra o Egito e a Etiópia?",
+    "options": [
+     "Quarenta dias",
+     "Um ano",
+     "Sete anos",
+     "Três anos"
+    ],
+    "answer": 3,
+    "ref": "Isaías 20:2-3"
+   },
+   {
+    "q": "Na parábola das bodas, o que faltava ao convidado que foi lançado fora?",
+    "options": [
+     "Um presente ao noivo",
+     "O convite escrito",
+     "Uma lâmpada acesa",
+     "A veste nupcial"
+    ],
+    "answer": 3,
+    "ref": "Mateus 22:11-13"
+   },
+   {
+    "q": "Segundo João 11:18, a que distância Betânia ficava de Jerusalém?",
+    "options": [
+     "Sessenta estádios",
+     "Quase quinze estádios",
+     "Cem estádios",
+     "Três estádios"
+    ],
+    "answer": 1,
+    "ref": "João 11:18"
+   },
+   {
+    "q": "Segundo Marcos, quantas vezes o galo cantaria antes de Pedro negar Jesus três vezes?",
+    "options": [
+     "Uma",
+     "Duas",
+     "Três",
+     "Sete"
+    ],
+    "answer": 1,
+    "ref": "Marcos 14:30"
+   },
+   {
+    "q": "Na parábola dos trabalhadores da vinha, em que hora foram contratados os últimos?",
+    "options": [
+     "Undécima",
+     "Nona",
+     "Sexta",
+     "Terceira"
+    ],
+    "answer": 0,
+    "ref": "Mateus 20:6"
+   },
+   {
+    "q": "Onde Jesus estava quando curou à distância o filho do oficial que estava em Cafarnaum?",
+    "options": [
+     "Em Nazaré",
+     "Em Betânia",
+     "Em Caná da Galileia",
+     "Em Jerusalém"
+    ],
+    "answer": 2,
+    "ref": "João 4:46-50"
+   },
+   {
+    "q": "Como Zacarias comunicou que o filho se chamaria João?",
+    "options": [
+     "Falou em voz alta",
+     "Fez sinais aos vizinhos",
+     "Escreveu numa tabuinha",
+     "Pediu a Isabel que dissesse"
+    ],
+    "answer": 2,
+    "ref": "Lucas 1:63"
+   },
+   {
+    "q": "Por volta de que hora os dois discípulos de João foram ver onde Jesus morava?",
+    "options": [
+     "Sexta",
+     "Terceira",
+     "Décima",
+     "Nona"
+    ],
+    "answer": 2,
+    "ref": "João 1:39"
+   },
+   {
+    "q": "Que ribeiro Jesus atravessou com os discípulos antes de chegar ao horto onde foi preso?",
+    "options": [
+     "Querite",
+     "Jaboque",
+     "Cedrom",
+     "Quisom"
+    ],
+    "answer": 2,
+    "ref": "João 18:1"
+   },
+   {
+    "q": "Quantas pessoas morreram quando caiu a torre de Siloé, segundo Jesus?",
+    "options": [
+     "Doze",
+     "Dezoito",
+     "Sete",
+     "Quarenta"
+    ],
+    "answer": 1,
+    "ref": "Lucas 13:4"
+   }
+  ]
+ },
+ {
+  "phase": 144,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual irmão Hebreus 13:23 informa que foi posto em liberdade?",
+    "options": [
+     "Silas",
+     "Timóteo",
+     "Tito",
+     "Aristarco"
+    ],
+    "answer": 1,
+    "ref": "Hebreus 13:23"
+   },
+   {
+    "q": "Em 1 Pedro 5:13, de qual 'filho' Pedro envia saudações?",
+    "options": [
+     "Marcos",
+     "Clemente",
+     "Silvano",
+     "Timóteo"
+    ],
+    "answer": 0,
+    "ref": "1 Pedro 5:13"
+   },
+   {
+    "q": "Quem Paulo saúda como seus parentes e companheiros de prisão em Romanos 16?",
+    "options": [
+     "Áquila e Priscila",
+     "Trifena e Trifosa",
+     "Filólogo e Júlia",
+     "Andrônico e Júnia"
+    ],
+    "answer": 3,
+    "ref": "Romanos 16:7"
+   },
+   {
+    "q": "Um profeta dos cretenses disse que eles eram 'sempre...':",
+    "options": [
+     "Rebeldes",
+     "Contenciosos",
+     "Mentirosos",
+     "Avarentos"
+    ],
+    "answer": 2,
+    "ref": "Tito 1:12"
+   },
+   {
+    "q": "Qual é o nome grego do anjo do abismo, chamado em hebraico Abadom?",
+    "options": [
+     "Gogue",
+     "Apoliom",
+     "Belial",
+     "Dragão"
+    ],
+    "answer": 1,
+    "ref": "Apocalipse 9:11"
+   },
+   {
+    "q": "Qual era a pedra do primeiro fundamento do muro da Nova Jerusalém?",
+    "options": [
+     "Jaspe",
+     "Safira",
+     "Ametista",
+     "Esmeralda"
+    ],
+    "answer": 0,
+    "ref": "Apocalipse 21:19"
+   },
+   {
+    "q": "A quem Tiago dirige sua epístola?",
+    "options": [
+     "À igreja de Jerusalém",
+     "Aos anciãos da Ásia",
+     "Aos santos de Roma",
+     "Às doze tribos dispersas"
+    ],
+    "answer": 3,
+    "ref": "Tiago 1:1"
+   },
+   {
+    "q": "A besta que subiu do mar era semelhante a qual animal, com pés de urso?",
+    "options": [
+     "Lobo",
+     "Touro",
+     "Leopardo",
+     "Leão"
+    ],
+    "answer": 2,
+    "ref": "Apocalipse 13:2"
+   },
+   {
+    "q": "Qual era o ofício de Alexandre, que causou muitos males a Paulo?",
+    "options": [
+     "Oleiro",
+     "Latoeiro",
+     "Ourives",
+     "Curtidor"
+    ],
+    "answer": 1,
+    "ref": "2 Timóteo 4:14"
+   },
+   {
+    "q": "Qual sumo sacerdote mandou ferir Paulo na boca diante do conselho?",
+    "options": [
+     "Ananias",
+     "Ismael",
+     "Anás",
+     "Caifás"
+    ],
+    "answer": 0,
+    "ref": "Atos 23:2"
+   }
+  ]
+ },
+ {
+  "phase": 145,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Na bênção de Jacó, qual filho é chamado de \"jumento forte\"?",
+    "options": [
+     "Zebulom",
+     "Issacar",
+     "Naftali",
+     "Dã"
+    ],
+    "answer": 1,
+    "ref": "Gênesis 49:14"
+   },
+   {
+    "q": "Segundo Josué 5, o que Deus revolveu de sobre Israel em Gilgal?",
+    "options": [
+     "A maldição de Balaão",
+     "O pecado de Acã",
+     "O medo dos cananeus",
+     "O opróbrio do Egito"
+    ],
+    "answer": 3,
+    "ref": "Josué 5:9"
+   },
+   {
+    "q": "Em que lugar Amaleque veio pelejar contra Israel?",
+    "options": [
+     "Refidim",
+     "Elim",
+     "Mara",
+     "Hazerote"
+    ],
+    "answer": 0,
+    "ref": "Êxodo 17:8"
+   },
+   {
+    "q": "Hebrom foi edificada quantos anos antes de Zoã, no Egito?",
+    "options": [
+     "Quarenta",
+     "Três",
+     "Sete",
+     "Dez"
+    ],
+    "answer": 2,
+    "ref": "Números 13:22"
+   },
+   {
+    "q": "Para onde Israel partiu de Ramessés na saída do Egito?",
+    "options": [
+     "Elim",
+     "Etã",
+     "Sucote",
+     "Mara"
+    ],
+    "answer": 2,
+    "ref": "Êxodo 12:37"
+   },
+   {
+    "q": "Onde Raquel escondeu os ídolos que furtou de seu pai?",
+    "options": [
+     "Debaixo da tenda",
+     "Na albarda do camelo",
+     "Entre as ovelhas",
+     "Num saco de trigo"
+    ],
+    "answer": 1,
+    "ref": "Gênesis 31:34"
+   },
+   {
+    "q": "Quantos morreram da praga no dia seguinte à rebelião de Coré?",
+    "options": [
+     "14.700",
+     "23.000",
+     "3.000",
+     "24.000"
+    ],
+    "answer": 0,
+    "ref": "Números 16:49"
+   },
+   {
+    "q": "Qual rei de Elão liderou os reis que levaram Ló cativo?",
+    "options": [
+     "Anrafel",
+     "Tidal",
+     "Quedorlaomer",
+     "Arioque"
+    ],
+    "answer": 2,
+    "ref": "Gênesis 14:1-12"
+   },
+   {
+    "q": "Moisés convidou qual filho de Reuel, o midianita, para seguir com Israel?",
+    "options": [
+     "Eliézer",
+     "Hobabe",
+     "Gérson",
+     "Zur"
+    ],
+    "answer": 1,
+    "ref": "Números 10:29"
+   },
+   {
+    "q": "Junto a qual cidade as águas do Jordão se amontoaram?",
+    "options": [
+     "Jericó",
+     "Adã",
+     "Gilgal",
+     "Zoar"
+    ],
+    "answer": 1,
+    "ref": "Josué 3:16"
+   }
+  ]
+ },
+ {
+  "phase": 146,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Que nome Gideão deu ao altar que edificou em Ofra?",
+    "options": [
+     "O Senhor é minha bandeira",
+     "O Senhor é Paz",
+     "O Senhor proverá",
+     "Ebenézer"
+    ],
+    "answer": 1,
+    "ref": "Juízes 6:24"
+   },
+   {
+    "q": "Que cidade os danitas tomaram e passaram a chamar de Dã?",
+    "options": [
+     "Zorá",
+     "Laís",
+     "Estaol",
+     "Siquém"
+    ],
+    "answer": 1,
+    "ref": "Juízes 18:27-29"
+   },
+   {
+    "q": "Além de tumores, que figuras de ouro os filisteus enviaram com a arca?",
+    "options": [
+     "Sete pombas",
+     "Doze bois",
+     "Cinco ratos",
+     "Dois querubins"
+    ],
+    "answer": 2,
+    "ref": "1 Samuel 6:4"
+   },
+   {
+    "q": "Quantas ovelhas tinha Nabal, o homem rico de Maom?",
+    "options": [
+     "1.000",
+     "7.000",
+     "3.000",
+     "500"
+    ],
+    "answer": 2,
+    "ref": "1 Samuel 25:2"
+   },
+   {
+    "q": "De que cidade era a mulher sábia que Joabe enviou para falar a Davi?",
+    "options": [
+     "Abel",
+     "Belém",
+     "En-Dor",
+     "Tecoa"
+    ],
+    "answer": 3,
+    "ref": "2 Samuel 14:2"
+   },
+   {
+    "q": "Em que ano após a saída do Egito Salomão começou a edificar o templo?",
+    "options": [
+     "440",
+     "400",
+     "500",
+     "480"
+    ],
+    "answer": 3,
+    "ref": "1 Reis 6:1"
+   },
+   {
+    "q": "Quantos reis acompanhavam Ben-Hadade quando cercou Samaria?",
+    "options": [
+     "32",
+     "12",
+     "7",
+     "70"
+    ],
+    "answer": 0,
+    "ref": "1 Reis 20:1"
+   },
+   {
+    "q": "Em que templo Senaqueribe foi morto por seus próprios filhos?",
+    "options": [
+     "De Nisroque",
+     "De Dagom",
+     "De Baal",
+     "De Quemós"
+    ],
+    "answer": 0,
+    "ref": "2 Reis 19:37"
+   },
+   {
+    "q": "Em que mês Ezequias celebrou a grande Páscoa com todo Israel?",
+    "options": [
+     "No primeiro mês",
+     "No segundo mês",
+     "No sétimo mês",
+     "No décimo mês"
+    ],
+    "answer": 1,
+    "ref": "2 Crônicas 30:2,15"
+   },
+   {
+    "q": "Por quantos dias Assuero mostrou as riquezas do seu reino no início de Ester?",
+    "options": [
+     "120",
+     "180",
+     "70",
+     "40"
+    ],
+    "answer": 1,
+    "ref": "Ester 1:4"
+   }
+  ]
+ },
+ {
+  "phase": 147,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Como o autor de Eclesiastes se identifica no primeiro versículo?",
+    "options": [
+     "Agur, filho de Jaque",
+     "O Pregador, filho de Davi",
+     "O rei Lemuel",
+     "O vidente, filho de Amoz"
+    ],
+    "answer": 1,
+    "ref": "Eclesiastes 1:1"
+   },
+   {
+    "q": "O que Deus preparou para ferir a planta que dava sombra a Jonas?",
+    "options": [
+     "Gafanhotos",
+     "Granizo",
+     "Um raio",
+     "Um bicho"
+    ],
+    "answer": 3,
+    "ref": "Jonas 4:7"
+   },
+   {
+    "q": "Qual rei persa Isaías chama pelo nome e de \"ungido\" do Senhor?",
+    "options": [
+     "Ciro",
+     "Dario",
+     "Artaxerxes",
+     "Assuero"
+    ],
+    "answer": 0,
+    "ref": "Isaías 45:1"
+   },
+   {
+    "q": "Segundo Ezequiel 38, Gogue era da terra de:",
+    "options": [
+     "Ofir",
+     "Elão",
+     "Magogue",
+     "Sinear"
+    ],
+    "answer": 2,
+    "ref": "Ezequiel 38:2"
+   },
+   {
+    "q": "O que Isaías mandou pôr sobre a chaga do rei Ezequias doente?",
+    "options": [
+     "Azeite e vinho",
+     "Bálsamo de Gileade",
+     "Uma pasta de figos",
+     "Barro com saliva"
+    ],
+    "answer": 2,
+    "ref": "Isaías 38:21"
+   },
+   {
+    "q": "Qual ezraíta é citado no título do Salmo 89?",
+    "options": [
+     "Hemã",
+     "Etã",
+     "Asafe",
+     "Jedutum"
+    ],
+    "answer": 1,
+    "ref": "Salmos 89 (título)"
+   },
+   {
+    "q": "No sonho de Nabucodonosor, em que se tornou a pedra que feriu a estátua?",
+    "options": [
+     "Um grande monte que encheu a terra",
+     "Um templo de ouro",
+     "Um rio caudaloso",
+     "Uma grande árvore"
+    ],
+    "answer": 0,
+    "ref": "Daniel 2:35"
+   },
+   {
+    "q": "Por quanto tempo os amigos ficaram sentados com Jó sem lhe dizer palavra?",
+    "options": [
+     "Três dias e três noites",
+     "Quarenta dias",
+     "Sete dias e sete noites",
+     "Dez dias"
+    ],
+    "answer": 2,
+    "ref": "Jó 2:13"
+   },
+   {
+    "q": "Em Ezequiel 47, até onde chegaram as águas na primeira medição de mil côvados?",
+    "options": [
+     "Aos joelhos",
+     "Aos tornozelos",
+     "Aos lombos",
+     "Ao pescoço"
+    ],
+    "answer": 1,
+    "ref": "Ezequiel 47:3"
+   },
+   {
+    "q": "Segundo Obadias, onde habitava Edom, orgulhoso de seu coração?",
+    "options": [
+     "Nos vales profundos",
+     "Nas fendas das rochas",
+     "À beira do mar",
+     "No deserto de areia"
+    ],
+    "answer": 1,
+    "ref": "Obadias 1:3"
+   }
+  ]
+ },
+ {
+  "phase": 148,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Como Lucas 6:15 chama o apóstolo Simão, que não é Pedro?",
+    "options": [
+     "Dídimo",
+     "Leproso",
+     "Cireneu",
+     "Zelote"
+    ],
+    "answer": 3,
+    "ref": "Lucas 6:15"
+   },
+   {
+    "q": "Quem mandou dizer a Pilatos: \"Não entres na questão desse justo\"?",
+    "options": [
+     "Herodes",
+     "Sua mulher",
+     "Nicodemos",
+     "O centurião"
+    ],
+    "answer": 1,
+    "ref": "Mateus 27:19"
+   },
+   {
+    "q": "Segundo Marcos, com quem Jesus estava no deserto, além dos anjos que o serviam?",
+    "options": [
+     "Com João Batista",
+     "Com os pastores",
+     "Com Pedro e André",
+     "Com as feras"
+    ],
+    "answer": 3,
+    "ref": "Marcos 1:13"
+   },
+   {
+    "q": "Quantos discípulos estavam juntos na pesca narrada em João 21?",
+    "options": [
+     "Doze",
+     "Cinco",
+     "Onze",
+     "Sete"
+    ],
+    "answer": 3,
+    "ref": "João 21:2"
+   },
+   {
+    "q": "Segundo João, em que planta puseram a esponja com vinagre para Jesus?",
+    "options": [
+     "Ramo de palmeira",
+     "Ramo de oliveira",
+     "Hissopo",
+     "Videira"
+    ],
+    "answer": 2,
+    "ref": "João 19:29"
+   },
+   {
+    "q": "O que os discípulos deram a Jesus ressuscitado para comer em Lucas 24?",
+    "options": [
+     "Pão e vinho",
+     "Figos e tâmaras",
+     "Cordeiro assado",
+     "Peixe assado e favo de mel"
+    ],
+    "answer": 3,
+    "ref": "Lucas 24:42-43"
+   },
+   {
+    "q": "Que sinal os discípulos deviam seguir para achar o lugar da Páscoa?",
+    "options": [
+     "Uma estrela sobre a casa",
+     "Um jumentinho preso",
+     "Uma mulher na porta",
+     "Um homem levando um cântaro de água"
+    ],
+    "answer": 3,
+    "ref": "Marcos 14:13"
+   },
+   {
+    "q": "Na parábola do servo sem compaixão, quanto lhe devia o seu conservo?",
+    "options": [
+     "Mil talentos",
+     "Cem dinheiros",
+     "Dez dinheiros",
+     "Cinquenta talentos"
+    ],
+    "answer": 1,
+    "ref": "Mateus 18:28"
+   },
+   {
+    "q": "Que festa estava próxima quando os irmãos de Jesus o incentivaram a ir à Judeia?",
+    "options": [
+     "Páscoa",
+     "Pentecostes",
+     "Purim",
+     "Tabernáculos"
+    ],
+    "answer": 3,
+    "ref": "João 7:2-3"
+   },
+   {
+    "q": "Em que região Pedro confessou: \"Tu és o Cristo, o Filho do Deus vivo\"?",
+    "options": [
+     "Betsaida",
+     "Decápolis",
+     "Tiro e Sidom",
+     "Cesareia de Filipe"
+    ],
+    "answer": 3,
+    "ref": "Mateus 16:13-16"
+   }
+  ]
+ },
+ {
+  "phase": 149,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual principal da sinagoga foi espancado diante do tribunal de Gálio?",
+    "options": [
+     "Sóstenes",
+     "Jasom",
+     "Crispo",
+     "Erasto"
+    ],
+    "answer": 0,
+    "ref": "Atos 18:17"
+   },
+   {
+    "q": "Como se chamava a estrela que caiu e tornou amargas as águas na terceira trombeta?",
+    "options": [
+     "Abadom",
+     "Estrela da manhã",
+     "Lúcifer",
+     "Absinto"
+    ],
+    "answer": 3,
+    "ref": "Apocalipse 8:10-11"
+   },
+   {
+    "q": "Em Creta, o navio de Paulo chegou a um lugar chamado Bons Portos, perto da cidade de:",
+    "options": [
+     "Salmona",
+     "Fenice",
+     "Laseia",
+     "Gortina"
+    ],
+    "answer": 2,
+    "ref": "Atos 27:8"
+   },
+   {
+    "q": "Em qual cidade Paulo decidiu passar o inverno, segundo a carta a Tito?",
+    "options": [
+     "Éfeso",
+     "Nicópolis",
+     "Corinto",
+     "Roma"
+    ],
+    "answer": 1,
+    "ref": "Tito 3:12"
+   },
+   {
+    "q": "Félix se espantou quando Paulo falou de justiça, temperança e:",
+    "options": [
+     "Juízo vindouro",
+     "Perdão dos pecados",
+     "Ressurreição dos mortos",
+     "Reino de Deus"
+    ],
+    "answer": 0,
+    "ref": "Atos 24:25"
+   },
+   {
+    "q": "Além de Silas, quem foi enviado com Paulo e Barnabé levando a carta do concílio?",
+    "options": [
+     "Ágabo",
+     "Nicolau",
+     "Matias",
+     "Judas, chamado Barsabás"
+    ],
+    "answer": 3,
+    "ref": "Atos 15:22"
+   },
+   {
+    "q": "Segundo Hebreus 7, o título 'rei de Salém' quer dizer:",
+    "options": [
+     "Rei de justiça",
+     "Rei dos sacerdotes",
+     "Rei de paz",
+     "Rei eterno"
+    ],
+    "answer": 2,
+    "ref": "Hebreus 7:2"
+   },
+   {
+    "q": "Em que lugar do templo os crentes estavam unanimemente em Atos 5:12?",
+    "options": [
+     "No pináculo",
+     "No alpendre de Salomão",
+     "Na porta Formosa",
+     "No átrio dos gentios"
+    ],
+    "answer": 1,
+    "ref": "Atos 5:12"
+   },
+   {
+    "q": "Com quem Paulo deixou a capa em Trôade, pedindo que Timóteo a trouxesse?",
+    "options": [
+     "Carpo",
+     "Erasto",
+     "Crescente",
+     "Trófimo"
+    ],
+    "answer": 0,
+    "ref": "2 Timóteo 4:13"
+   },
+   {
+    "q": "Quando o sétimo selo foi aberto, houve silêncio no céu por quanto tempo?",
+    "options": [
+     "Um instante",
+     "Uma hora",
+     "Sete dias",
+     "Quase meia hora"
+    ],
+    "answer": 3,
+    "ref": "Apocalipse 8:1"
+   }
+  ]
+ },
+ {
+  "phase": 150,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Quantas aves vivas e limpas eram usadas na purificação do leproso?",
+    "options": [
+     "Três",
+     "Duas",
+     "Sete",
+     "Uma"
+    ],
+    "answer": 1,
+    "ref": "Levítico 14:4"
+   },
+   {
+    "q": "Quantos homens que ofereciam incenso foram consumidos pelo fogo na rebelião de Coré?",
+    "options": [
+     "250",
+     "120",
+     "300",
+     "70"
+    ],
+    "answer": 0,
+    "ref": "Números 16:35"
+   },
+   {
+    "q": "Por quantos dias Miriã ficou fora do arraial após ficar leprosa?",
+    "options": [
+     "Três",
+     "Catorze",
+     "Trinta",
+     "Sete"
+    ],
+    "answer": 3,
+    "ref": "Números 12:15"
+   },
+   {
+    "q": "Quais cidades-armazéns os israelitas edificaram para Faraó?",
+    "options": [
+     "Gósen e Zoã",
+     "Om e Sucote",
+     "Pitom e Ramessés",
+     "Etã e Migdol"
+    ],
+    "answer": 2,
+    "ref": "Êxodo 1:11"
+   },
+   {
+    "q": "Que serviço os gibeonitas passaram a fazer para Israel?",
+    "options": [
+     "Pastorear o gado",
+     "Guardar as portas",
+     "Rachar lenha e tirar água",
+     "Fazer tijolos"
+    ],
+    "answer": 2,
+    "ref": "Josué 9:21-27"
+   },
+   {
+    "q": "Qual tribo se ajuntou a Moisés quando ele disse: \"Quem é do Senhor, venha a mim\"?",
+    "options": [
+     "Levi",
+     "Judá",
+     "Efraim",
+     "Rúben"
+    ],
+    "answer": 0,
+    "ref": "Êxodo 32:26"
+   },
+   {
+    "q": "Quantos côvados de comprimento tinha a arca da aliança?",
+    "options": [
+     "Três",
+     "Dois e meio",
+     "Cinco",
+     "Um e meio"
+    ],
+    "answer": 1,
+    "ref": "Êxodo 25:10"
+   },
+   {
+    "q": "Quantas vezes Balaão espancou a jumenta?",
+    "options": [
+     "Três",
+     "Quatro",
+     "Sete",
+     "Duas"
+    ],
+    "answer": 0,
+    "ref": "Números 22:28"
+   },
+   {
+    "q": "Quantos anos tinha Arão quando morreu no monte Hor?",
+    "options": [
+     "120",
+     "110",
+     "130",
+     "123"
+    ],
+    "answer": 3,
+    "ref": "Números 33:39"
+   },
+   {
+    "q": "Em que monte Israel devia levantar pedras caiadas com a lei e um altar?",
+    "options": [
+     "Nebo",
+     "Gerizim",
+     "Ebal",
+     "Hor"
+    ],
+    "answer": 2,
+    "ref": "Deuteronômio 27:4-5"
+   }
+  ]
+ },
+ {
+  "phase": 151,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Quais dois príncipes midianitas foram mortos pelos homens de Efraim?",
+    "options": [
+     "Orebe e Zeebe",
+     "Zeba e Zalmuna",
+     "Hofni e Fineias",
+     "Baaná e Recabe"
+    ],
+    "answer": 0,
+    "ref": "Juízes 7:25"
+   },
+   {
+    "q": "Quantos benjamitas canhotos atiravam pedras com a funda num cabelo sem errar?",
+    "options": [
+     "700",
+     "600",
+     "300",
+     "1.000"
+    ],
+    "answer": 0,
+    "ref": "Juízes 20:16"
+   },
+   {
+    "q": "Na casa de quem, em Quiriate-Jearim, a arca ficou por vinte anos?",
+    "options": [
+     "Obede-Edom",
+     "Abinadabe",
+     "Eli",
+     "Aimeleque"
+    ],
+    "answer": 1,
+    "ref": "1 Samuel 7:1-2"
+   },
+   {
+    "q": "Quem desceu com Davi ao arraial de Saul e quis matá-lo com a lança?",
+    "options": [
+     "Joabe",
+     "Abisai",
+     "Asael",
+     "Benaia"
+    ],
+    "answer": 1,
+    "ref": "1 Samuel 26:6-8"
+   },
+   {
+    "q": "Por que Absalão mandou pôr fogo no campo de cevada de Joabe?",
+    "options": [
+     "Joabe matara seu irmão",
+     "Para iniciar a revolta",
+     "Joabe não atendia aos seus chamados",
+     "Joabe zombara dele"
+    ],
+    "answer": 2,
+    "ref": "2 Samuel 14:29-31"
+   },
+   {
+    "q": "Sobre quantos bois de bronze estava o mar de fundição do templo?",
+    "options": [
+     "Sete",
+     "Dez",
+     "Doze",
+     "Quatro"
+    ],
+    "answer": 2,
+    "ref": "1 Reis 7:23-25"
+   },
+   {
+    "q": "Que falso profeta fez chifres de ferro diante de Acabe e Josafá?",
+    "options": [
+     "Micaías, filho de Inlá",
+     "Hananias",
+     "Semaías",
+     "Zedequias, filho de Quenaana"
+    ],
+    "answer": 3,
+    "ref": "1 Reis 22:11"
+   },
+   {
+    "q": "Que nome Faraó Neco deu a Eliaquim ao fazê-lo rei de Judá?",
+    "options": [
+     "Zedequias",
+     "Jeoacaz",
+     "Joaquim",
+     "Jeoaquim"
+    ],
+    "answer": 3,
+    "ref": "2 Reis 23:34"
+   },
+   {
+    "q": "A qual príncipe de Judá o tesoureiro Mitredate entregou os utensílios do templo?",
+    "options": [
+     "Sesbazar",
+     "Zorobabel",
+     "Neemias",
+     "Esdras"
+    ],
+    "answer": 0,
+    "ref": "Esdras 1:8"
+   },
+   {
+    "q": "Qual príncipe aconselhou o rei Assuero a depor a rainha Vasti?",
+    "options": [
+     "Memucã",
+     "Harbona",
+     "Hegai",
+     "Hatá"
+    ],
+    "answer": 0,
+    "ref": "Ester 1:16-21"
+   }
+  ]
+ },
+ {
+  "phase": 152,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "O que Jeremias recebia por dia enquanto estava no átrio da guarda?",
+    "options": [
+     "Um ômer de cevada",
+     "Um pão da rua dos padeiros",
+     "Legumes e água",
+     "Carne e vinho do rei"
+    ],
+    "answer": 1,
+    "ref": "Jeremias 37:21"
+   },
+   {
+    "q": "Segundo Daniel 1:21, Daniel continuou até o primeiro ano de qual rei?",
+    "options": [
+     "Ciro",
+     "Dario",
+     "Belsazar",
+     "Artaxerxes"
+    ],
+    "answer": 0,
+    "ref": "Daniel 1:21"
+   },
+   {
+    "q": "Quem Deus chamou de \"o desejo dos teus olhos\" ao anunciar sua morte a Ezequiel?",
+    "options": [
+     "Seu pai",
+     "Seu filho",
+     "Seu irmão",
+     "Sua mulher"
+    ],
+    "answer": 3,
+    "ref": "Ezequiel 24:16-18"
+   },
+   {
+    "q": "Segundo Eclesiastes 10:1, o que faz o unguento do perfumador exalar mau cheiro?",
+    "options": [
+     "Vinho azedo",
+     "Cinza",
+     "Moscas mortas",
+     "Água parada"
+    ],
+    "answer": 2,
+    "ref": "Eclesiastes 10:1"
+   },
+   {
+    "q": "Qual rei de Judá aparece na genealogia do profeta Sofonias?",
+    "options": [
+     "Josias",
+     "Uzias",
+     "Ezequias",
+     "Asa"
+    ],
+    "answer": 2,
+    "ref": "Sofonias 1:1"
+   },
+   {
+    "q": "Por quantos siclos de prata Jeremias comprou o campo de seu primo Hanameel?",
+    "options": [
+     "Dezessete",
+     "Trinta",
+     "Cinquenta",
+     "Doze"
+    ],
+    "answer": 0,
+    "ref": "Jeremias 32:9"
+   },
+   {
+    "q": "Qual mordomo do palácio Isaías anunciou que seria substituído por Eliaquim?",
+    "options": [
+     "Joá",
+     "Sebna",
+     "Hilquias",
+     "Safã"
+    ],
+    "answer": 1,
+    "ref": "Isaías 22:15-20"
+   },
+   {
+    "q": "Que idade tinha Dario, o medo, quando recebeu o reino?",
+    "options": [
+     "62 anos",
+     "70 anos",
+     "45 anos",
+     "80 anos"
+    ],
+    "answer": 0,
+    "ref": "Daniel 5:31"
+   },
+   {
+    "q": "Como Daniel 7:9 descreve a veste do Ancião de Dias?",
+    "options": [
+     "Vermelha como a escarlata",
+     "Dourada como o sol",
+     "Azul como o céu",
+     "Branca como a neve"
+    ],
+    "answer": 3,
+    "ref": "Daniel 7:9"
+   },
+   {
+    "q": "Em qual vale Joel diz que Deus congregará as nações para juízo?",
+    "options": [
+     "Hinom",
+     "Acor",
+     "Josafá",
+     "Sidim"
+    ],
+    "answer": 2,
+    "ref": "Joel 3:2,12"
+   }
+  ]
+ },
+ {
+  "phase": 153,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Que sacrifício foi oferecido na apresentação do menino Jesus no templo?",
+    "options": [
+     "Um par de rolas ou dois pombinhos",
+     "Um cordeiro de um ano",
+     "Um bezerro",
+     "Dois carneiros"
+    ],
+    "answer": 0,
+    "ref": "Lucas 2:22-24"
+   },
+   {
+    "q": "Qual discípulo disse: \"Está aqui um rapaz que tem cinco pães\"?",
+    "options": [
+     "André",
+     "Filipe",
+     "Pedro",
+     "Judas"
+    ],
+    "answer": 0,
+    "ref": "João 6:8-9"
+   },
+   {
+    "q": "Segundo Marcos 15:40, qual mulher olhava de longe a cruz com Maria Madalena?",
+    "options": [
+     "Marta",
+     "Susana",
+     "Isabel",
+     "Salomé"
+    ],
+    "answer": 3,
+    "ref": "Marcos 15:40"
+   },
+   {
+    "q": "Segundo Marcos, Simão Cireneu era pai de quem?",
+    "options": [
+     "Alexandre e Rufo",
+     "Tiago e José",
+     "Lázaro e Marta",
+     "Jairo e Timeu"
+    ],
+    "answer": 0,
+    "ref": "Marcos 15:21"
+   },
+   {
+    "q": "Como Marcos descreve a mulher que pediu a cura da filha nas terras de Tiro?",
+    "options": [
+     "Samaritana",
+     "Romana",
+     "Egípcia",
+     "Grega, siro-fenícia"
+    ],
+    "answer": 3,
+    "ref": "Marcos 7:26"
+   },
+   {
+    "q": "Segundo Lucas, quais discípulos Jesus enviou para preparar a Páscoa?",
+    "options": [
+     "Pedro e João",
+     "Tiago e João",
+     "André e Filipe",
+     "Judas e Pedro"
+    ],
+    "answer": 0,
+    "ref": "Lucas 22:8"
+   },
+   {
+    "q": "Segundo Lucas, quantos dias depois das palavras de Jesus aconteceu a transfiguração?",
+    "options": [
+     "Três",
+     "Seis",
+     "Quarenta",
+     "Quase oito"
+    ],
+    "answer": 3,
+    "ref": "Lucas 9:28"
+   },
+   {
+    "q": "Segundo João 18:13, Anás era o que de Caifás?",
+    "options": [
+     "Pai",
+     "Irmão",
+     "Sogro",
+     "Tio"
+    ],
+    "answer": 2,
+    "ref": "João 18:13"
+   },
+   {
+    "q": "Em que mês da gravidez de Isabel o anjo Gabriel foi enviado a Maria?",
+    "options": [
+     "Terceiro",
+     "Quinto",
+     "Sétimo",
+     "Sexto"
+    ],
+    "answer": 3,
+    "ref": "Lucas 1:26,36"
+   },
+   {
+    "q": "Qual filho de Herodes reinava na Judeia quando José voltou do Egito?",
+    "options": [
+     "Arquelau",
+     "Herodes Antipas",
+     "Filipe",
+     "Agripa"
+    ],
+    "answer": 0,
+    "ref": "Mateus 2:22"
+   }
+  ]
+ },
+ {
+  "phase": 154,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Em 2 Coríntios 11, quantas vezes Paulo diz que sofreu naufrágio?",
+    "options": [
+     "Cinco",
+     "Duas",
+     "Uma",
+     "Três"
+    ],
+    "answer": 3,
+    "ref": "2 Coríntios 11:25"
+   },
+   {
+    "q": "Quem Paulo chama de 'nosso companheiro de milícia' na carta a Filemom?",
+    "options": [
+     "Onésimo",
+     "Lucas",
+     "Arquipo",
+     "Epafras"
+    ],
+    "answer": 2,
+    "ref": "Filemom 1:2"
+   },
+   {
+    "q": "Quem muitas vezes recreou Paulo e não se envergonhou da sua cadeia?",
+    "options": [
+     "Demas",
+     "Onesíforo",
+     "Alexandre",
+     "Himeneu"
+    ],
+    "answer": 1,
+    "ref": "2 Timóteo 1:16"
+   },
+   {
+    "q": "Por quanto tempo a multidão gritou 'Grande é a Diana dos efésios!'?",
+    "options": [
+     "Quase duas horas",
+     "Meia hora",
+     "Três dias",
+     "Um dia inteiro"
+    ],
+    "answer": 0,
+    "ref": "Atos 19:34"
+   },
+   {
+    "q": "O que tinha o anjo que voava pelo meio do céu em Apocalipse 14:6?",
+    "options": [
+     "Um incensário de ouro",
+     "A chave do abismo",
+     "Uma foice aguda",
+     "O evangelho eterno"
+    ],
+    "answer": 3,
+    "ref": "Apocalipse 14:6"
+   },
+   {
+    "q": "Os irmãos de Roma foram ao encontro de Paulo até a Praça de Ápio e:",
+    "options": [
+     "Bons Portos",
+     "Sete Colinas",
+     "Três Vendas",
+     "Porta Latina"
+    ],
+    "answer": 2,
+    "ref": "Atos 28:15"
+   },
+   {
+    "q": "Correndo abaixo de qual pequena ilha os marinheiros recolheram o batel?",
+    "options": [
+     "Rodes",
+     "Clauda",
+     "Malta",
+     "Samos"
+    ],
+    "answer": 1,
+    "ref": "Atos 27:16"
+   },
+   {
+    "q": "Como Tiago chama a Deus, de quem desce toda boa dádiva e todo dom perfeito?",
+    "options": [
+     "Pai das luzes",
+     "Rei dos séculos",
+     "Pai da glória",
+     "Deus de toda consolação"
+    ],
+    "answer": 0,
+    "ref": "Tiago 1:17"
+   },
+   {
+    "q": "Além da concupiscência da carne e dos olhos, o que 1 João 2:16 cita?",
+    "options": [
+     "A dureza do coração",
+     "A ira do homem",
+     "O amor ao ouro",
+     "A soberba da vida"
+    ],
+    "answer": 3,
+    "ref": "1 João 2:16"
+   },
+   {
+    "q": "A qual igreja Jesus aconselha comprar colírio para ungir os olhos?",
+    "options": [
+     "Tiatira",
+     "Pérgamo",
+     "Laodiceia",
+     "Sardes"
+    ],
+    "answer": 2,
+    "ref": "Apocalipse 3:18"
+   }
+  ]
+ },
+ {
+  "phase": 155,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Quem levou para fora do arraial os corpos de Nadabe e Abiú?",
+    "options": [
+     "Misael e Elzafã",
+     "Eldade e Medade",
+     "Eleazar e Itamar",
+     "Datã e Abirão"
+    ],
+    "answer": 0,
+    "ref": "Levítico 10:4-5"
+   },
+   {
+    "q": "Qual ano devia ser santificado como ano do jubileu?",
+    "options": [
+     "O quadragésimo",
+     "O quinquagésimo",
+     "O septuagésimo",
+     "O sétimo"
+    ],
+    "answer": 1,
+    "ref": "Levítico 25:10"
+   },
+   {
+    "q": "Quantos anciãos subiram com Moisés, Arão, Nadabe e Abiú e viram o Deus de Israel?",
+    "options": [
+     "70",
+     "40",
+     "12",
+     "24"
+    ],
+    "answer": 0,
+    "ref": "Êxodo 24:9-10"
+   },
+   {
+    "q": "Quanto cada homem recenseado devia dar como resgate pela sua alma?",
+    "options": [
+     "Cinco siclos",
+     "Um siclo",
+     "Dois siclos",
+     "Meio siclo"
+    ],
+    "answer": 3,
+    "ref": "Êxodo 30:12-13"
+   },
+   {
+    "q": "Qual destas cidades de refúgio Moisés separou a leste do Jordão?",
+    "options": [
+     "Quedes",
+     "Siquém",
+     "Hebrom",
+     "Bezer"
+    ],
+    "answer": 3,
+    "ref": "Deuteronômio 4:41-43"
+   },
+   {
+    "q": "Qual sacerdote de Om era o sogro de José?",
+    "options": [
+     "Potifar",
+     "Zafenate",
+     "Potífera",
+     "Reuel"
+    ],
+    "answer": 2,
+    "ref": "Gênesis 41:45"
+   },
+   {
+    "q": "Quem conquistou Quiriate-Sefer e recebeu Acsa por mulher?",
+    "options": [
+     "Fineias",
+     "Eúde",
+     "Calebe",
+     "Otniel"
+    ],
+    "answer": 3,
+    "ref": "Josué 15:16-17"
+   },
+   {
+    "q": "Em quantas fileiras estavam as pedras do peitoral do sumo sacerdote?",
+    "options": [
+     "Três",
+     "Seis",
+     "Quatro",
+     "Doze"
+    ],
+    "answer": 2,
+    "ref": "Êxodo 28:17-20"
+   },
+   {
+    "q": "Quais foram os filhos gêmeos de Judá e Tamar?",
+    "options": [
+     "Perez e Zera",
+     "Er e Onã",
+     "Hezrom e Hamul",
+     "Selá e Hezrom"
+    ],
+    "answer": 0,
+    "ref": "Gênesis 38:27-30"
+   },
+   {
+    "q": "Qual servo de Damasco Abrão pensava que seria seu herdeiro?",
+    "options": [
+     "Ficol",
+     "Aner",
+     "Eliézer",
+     "Escol"
+    ],
+    "answer": 2,
+    "ref": "Gênesis 15:2"
+   }
+  ]
+ },
+ {
+  "phase": 156,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Quais dois reis de Midiã Gideão perseguiu e matou?",
+    "options": [
+     "Orebe e Zeebe",
+     "Jabim e Sísera",
+     "Eglom e Agague",
+     "Zeba e Zalmuna"
+    ],
+    "answer": 3,
+    "ref": "Juízes 8:5,21"
+   },
+   {
+    "q": "Qual era o nome da nora de Noemi que voltou para o seu povo?",
+    "options": [
+     "Orfa",
+     "Mara",
+     "Penina",
+     "Abigail"
+    ],
+    "answer": 0,
+    "ref": "Rute 1:4,14"
+   },
+   {
+    "q": "Como se chamavam os filhos de Samuel, que julgavam em Berseba?",
+    "options": [
+     "Joel e Abias",
+     "Hofni e Fineias",
+     "Nadabe e Abiú",
+     "Joabe e Abisai"
+    ],
+    "answer": 0,
+    "ref": "1 Samuel 8:2"
+   },
+   {
+    "q": "Junto a que ribeiro ficaram duzentos homens cansados demais para seguir Davi?",
+    "options": [
+     "Querite",
+     "Besor",
+     "Quisom",
+     "Cedrom"
+    ],
+    "answer": 1,
+    "ref": "1 Samuel 30:9-10"
+   },
+   {
+    "q": "Quanto pesava o cabelo de Absalão quando o cortava?",
+    "options": [
+     "100 siclos",
+     "200 siclos",
+     "50 siclos",
+     "300 siclos"
+    ],
+    "answer": 1,
+    "ref": "2 Samuel 14:26"
+   },
+   {
+    "q": "O artífice de bronze Hirão era filho de uma viúva de qual tribo?",
+    "options": [
+     "Judá",
+     "Benjamim",
+     "Naftali",
+     "Aser"
+    ],
+    "answer": 2,
+    "ref": "1 Reis 7:13-14"
+   },
+   {
+    "q": "Que dois rios de Damasco Naamã considerou melhores que as águas de Israel?",
+    "options": [
+     "Quebar e Ulai",
+     "Tigre e Eufrates",
+     "Abana e Farpar",
+     "Arnom e Jaboque"
+    ],
+    "answer": 2,
+    "ref": "2 Reis 5:12"
+   },
+   {
+    "q": "Quem, mais ilustre que seus irmãos, orou: \"Se me abençoares muitíssimo\"?",
+    "options": [
+     "Jaaziel",
+     "Asafe",
+     "Hemã",
+     "Jabez"
+    ],
+    "answer": 3,
+    "ref": "1 Crônicas 4:9-10"
+   },
+   {
+    "q": "Qual era o total da congregação que voltou com Zorobabel, segundo Esdras 2?",
+    "options": [
+     "24.000",
+     "7.337",
+     "50.000",
+     "42.360"
+    ],
+    "answer": 3,
+    "ref": "Esdras 2:64"
+   },
+   {
+    "q": "Quais eunucos conspiraram contra Assuero e foram denunciados por Mardoqueu?",
+    "options": [
+     "Bigtã e Teres",
+     "Hegai e Hatá",
+     "Harbona e Memucã",
+     "Baaná e Recabe"
+    ],
+    "answer": 0,
+    "ref": "Ester 2:21-23"
+   }
+  ]
+ },
+ {
+  "phase": 157,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Depois de ler o livro contra a Babilônia, o que Seraías devia fazer com ele?",
+    "options": [
+     "Atá-lo a uma pedra e lançá-lo no Eufrates",
+     "Queimá-lo no braseiro",
+     "Enterrá-lo junto ao muro",
+     "Pendurá-lo na porta da cidade"
+    ],
+    "answer": 0,
+    "ref": "Jeremias 51:59-63"
+   },
+   {
+    "q": "Quantos homens Ezequiel viu adorando o sol, de costas para o templo?",
+    "options": [
+     "Cerca de 70",
+     "Cerca de 25",
+     "Doze",
+     "Cerca de 50"
+    ],
+    "answer": 1,
+    "ref": "Ezequiel 8:16"
+   },
+   {
+    "q": "Segundo Isaías 58:13, como o povo deveria chamar o sábado?",
+    "options": [
+     "Deleitoso",
+     "Dia de jejum",
+     "Dia de festa solene",
+     "Dia de lembrança"
+    ],
+    "answer": 0,
+    "ref": "Isaías 58:13"
+   },
+   {
+    "q": "Qual falso profeta quebrou o jugo de madeira do pescoço de Jeremias?",
+    "options": [
+     "Semaías",
+     "Pasur",
+     "Acabe",
+     "Hananias"
+    ],
+    "answer": 3,
+    "ref": "Jeremias 28:10"
+   },
+   {
+    "q": "Em Daniel 10, os lombos do homem vestido de linho estavam cingidos com ouro de:",
+    "options": [
+     "Ofir",
+     "Társis",
+     "Havilá",
+     "Ufaz"
+    ],
+    "answer": 3,
+    "ref": "Daniel 10:5"
+   },
+   {
+    "q": "Os homens de qual rei copiaram os provérbios de Salomão de Provérbios 25?",
+    "options": [
+     "Josias",
+     "Josafá",
+     "Ezequias",
+     "Uzias"
+    ],
+    "answer": 2,
+    "ref": "Provérbios 25:1"
+   },
+   {
+    "q": "Quais eram as medidas do rolo voante visto por Zacarias?",
+    "options": [
+     "10 por 5 côvados",
+     "30 por 15 côvados",
+     "60 por 6 côvados",
+     "20 por 10 côvados"
+    ],
+    "answer": 3,
+    "ref": "Zacarias 5:1-2"
+   },
+   {
+    "q": "Que família não bebia vinho por obediência a seu antepassado Jonadabe?",
+    "options": [
+     "Os gibeonitas",
+     "Os netineus",
+     "Os recabitas",
+     "Os coatitas"
+    ],
+    "answer": 2,
+    "ref": "Jeremias 35:5-6"
+   },
+   {
+    "q": "Quem era o pai de Agur, cujas palavras estão em Provérbios 30?",
+    "options": [
+     "Jaque",
+     "Jessé",
+     "Amoz",
+     "Itiel"
+    ],
+    "answer": 0,
+    "ref": "Provérbios 30:1"
+   },
+   {
+    "q": "Que povo atacou e levou os bois e as jumentas de Jó?",
+    "options": [
+     "Os caldeus",
+     "Os filisteus",
+     "Os sabeus",
+     "Os amalequitas"
+    ],
+    "answer": 2,
+    "ref": "Jó 1:14-15"
+   }
+  ]
+ },
+ {
+  "phase": 158,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Em Betânia, na casa de quem uma mulher derramou nardo sobre a cabeça de Jesus?",
+    "options": [
+     "Zaqueu",
+     "Simão, o leproso",
+     "Simão, o fariseu",
+     "Jairo"
+    ],
+    "answer": 1,
+    "ref": "Marcos 14:3"
+   },
+   {
+    "q": "Para que cidade, perto do deserto, Jesus se retirou depois da ressurreição de Lázaro?",
+    "options": [
+     "Betsaida",
+     "Naim",
+     "Jericó",
+     "Efraim"
+    ],
+    "answer": 3,
+    "ref": "João 11:54"
+   },
+   {
+    "q": "Na parábola da semente que cresce, qual é a ordem do crescimento?",
+    "options": [
+     "Espiga, erva, grão",
+     "Raiz, flor, fruto",
+     "Grão, erva, espiga",
+     "Erva, espiga, grão cheio na espiga"
+    ],
+    "answer": 3,
+    "ref": "Marcos 4:26-28"
+   },
+   {
+    "q": "Segundo Marcos, como a multidão se assentou na alimentação dos cinco mil?",
+    "options": [
+     "Em grupos de dez",
+     "Em doze grupos",
+     "Em grupos de mil",
+     "Em grupos de cem e de cinquenta"
+    ],
+    "answer": 3,
+    "ref": "Marcos 6:40"
+   },
+   {
+    "q": "Segundo Marcos, o que o jovem que fugiu na prisão de Jesus deixou para trás?",
+    "options": [
+     "O lençol",
+     "As sandálias",
+     "Uma lanterna",
+     "Uma bolsa"
+    ],
+    "answer": 0,
+    "ref": "Marcos 14:51-52"
+   },
+   {
+    "q": "De qual turma sacerdotal era Zacarias, pai de João Batista?",
+    "options": [
+     "Abias",
+     "Arão",
+     "Levi",
+     "Eli"
+    ],
+    "answer": 0,
+    "ref": "Lucas 1:5"
+   },
+   {
+    "q": "Quantos dias depois Jesus apareceu aos discípulos estando Tomé com eles?",
+    "options": [
+     "Três",
+     "Sete",
+     "Quarenta",
+     "Oito"
+    ],
+    "answer": 3,
+    "ref": "João 20:26"
+   },
+   {
+    "q": "Segundo Mateus 10:3, qual era o apelido de Lebeu?",
+    "options": [
+     "Dídimo",
+     "Tadeu",
+     "Zelote",
+     "Barjonas"
+    ],
+    "answer": 1,
+    "ref": "Mateus 10:3"
+   },
+   {
+    "q": "Segundo Marcos 10:21, o que Jesus sentiu ao olhar para o jovem rico?",
+    "options": [
+     "Indignou-se",
+     "Amou-o",
+     "Entristeceu-se",
+     "Admirou-se"
+    ],
+    "answer": 1,
+    "ref": "Marcos 10:21"
+   },
+   {
+    "q": "Pelos da casa de quem Paulo soube das contendas na igreja de Corinto?",
+    "options": [
+     "Estéfanas",
+     "Febe",
+     "Cloe",
+     "Crispo"
+    ],
+    "answer": 2,
+    "ref": "1 Coríntios 1:11"
+   }
+  ]
+ },
+ {
+  "phase": 159,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual colossense, 'servo de Cristo', combatia sempre pelos irmãos em suas orações?",
+    "options": [
+     "Arquipo",
+     "Epafras",
+     "Tíquico",
+     "Aristarco"
+    ],
+    "answer": 1,
+    "ref": "Colossenses 4:12"
+   },
+   {
+    "q": "Como se chamava o vento tempestuoso que atingiu o navio de Paulo?",
+    "options": [
+     "Euroaquilão",
+     "Siroco",
+     "Austro",
+     "Bóreas"
+    ],
+    "answer": 0,
+    "ref": "Atos 27:14"
+   },
+   {
+    "q": "Em qual porto da Itália Paulo achou irmãos e ficou com eles sete dias?",
+    "options": [
+     "Régio",
+     "Óstia",
+     "Brundísio",
+     "Putéoli"
+    ],
+    "answer": 3,
+    "ref": "Atos 28:13-14"
+   },
+   {
+    "q": "Em Apocalipse 1:13, com que estava cingido pelos peitos o semelhante ao Filho do homem?",
+    "options": [
+     "Uma corrente de prata",
+     "Uma faixa de púrpura",
+     "Um cinto de ouro",
+     "Um cinto de couro"
+    ],
+    "answer": 2,
+    "ref": "Apocalipse 1:13"
+   },
+   {
+    "q": "Que filósofos disputaram com Paulo em Atenas?",
+    "options": [
+     "Herodianos e zelotes",
+     "Epicureus e estoicos",
+     "Gnósticos e cínicos",
+     "Fariseus e saduceus"
+    ],
+    "answer": 1,
+    "ref": "Atos 17:18"
+   },
+   {
+    "q": "Qual era a medida da Nova Jerusalém em comprimento, largura e altura?",
+    "options": [
+     "Doze mil estádios",
+     "Mil estádios",
+     "Cento e quarenta e quatro estádios",
+     "Sete mil estádios"
+    ],
+    "answer": 0,
+    "ref": "Apocalipse 21:16"
+   },
+   {
+    "q": "Quanto tempo Paulo e os náufragos ficaram em Malta antes de partir?",
+    "options": [
+     "Um ano",
+     "Sete dias",
+     "Dois meses",
+     "Três meses"
+    ],
+    "answer": 3,
+    "ref": "Atos 28:11"
+   },
+   {
+    "q": "Em Tessalônica, a casa de quem foi assaltada pelos que procuravam Paulo e Silas?",
+    "options": [
+     "Gaio",
+     "Tito Justo",
+     "Jasom",
+     "Crispo"
+    ],
+    "answer": 2,
+    "ref": "Atos 17:5-7"
+   },
+   {
+    "q": "O eunuco batizado por Filipe era mordomo-mor de qual rainha?",
+    "options": [
+     "Drusila",
+     "Candace",
+     "Berenice",
+     "Ester"
+    ],
+    "answer": 1,
+    "ref": "Atos 8:27"
+   },
+   {
+    "q": "Quantos siclos de prata Acã escondeu em sua tenda?",
+    "options": [
+     "50",
+     "30",
+     "200",
+     "1.000"
+    ],
+    "answer": 2,
+    "ref": "Josué 7:21"
+   }
+  ]
+ },
+ {
+  "phase": 160,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual era o nome antigo de Hebrom?",
+    "options": [
+     "Quiriate-Jearim",
+     "Quiriate-Sefer",
+     "Luz",
+     "Quiriate-Arba"
+    ],
+    "answer": 3,
+    "ref": "Josué 14:15"
+   },
+   {
+    "q": "Que cidade Josué recebeu como herança no monte de Efraim?",
+    "options": [
+     "Timnate-Sera",
+     "Gibeom",
+     "Siquém",
+     "Siló"
+    ],
+    "answer": 0,
+    "ref": "Josué 19:50"
+   },
+   {
+    "q": "Segundo Deuteronômio 17, o que o rei devia escrever para si num livro?",
+    "options": [
+     "A genealogia real",
+     "Seus feitos",
+     "Uma cópia da lei",
+     "Um cântico de vitória"
+    ],
+    "answer": 2,
+    "ref": "Deuteronômio 17:18"
+   },
+   {
+    "q": "Em qual praga os magos disseram a Faraó: \"Isto é o dedo de Deus\"?",
+    "options": [
+     "Moscas",
+     "Sangue",
+     "Rãs",
+     "Piolhos"
+    ],
+    "answer": 3,
+    "ref": "Êxodo 8:18-19"
+   },
+   {
+    "q": "Amaleque era filho de qual filho de Esaú?",
+    "options": [
+     "Elifaz",
+     "Corá",
+     "Jeús",
+     "Reuel"
+    ],
+    "answer": 0,
+    "ref": "Gênesis 36:12"
+   },
+   {
+    "q": "Segundo Deuteronômio 1, quantos dias de caminho havia de Horebe a Cades-Barneia?",
+    "options": [
+     "Sete",
+     "Três",
+     "Quarenta",
+     "Onze"
+    ],
+    "answer": 3,
+    "ref": "Deuteronômio 1:2"
+   },
+   {
+    "q": "Quantos israelitas morreram na primeira derrota diante de Ai?",
+    "options": [
+     "70",
+     "12",
+     "36",
+     "300"
+    ],
+    "answer": 2,
+    "ref": "Josué 7:5"
+   },
+   {
+    "q": "Quem devia abençoar Israel dizendo \"O Senhor te abençoe e te guarde\"?",
+    "options": [
+     "Moisés",
+     "Os coatitas",
+     "Arão e seus filhos",
+     "Os setenta anciãos"
+    ],
+    "answer": 2,
+    "ref": "Números 6:23-24"
+   },
+   {
+    "q": "Qual destas era uma das filhas de Zelofeade?",
+    "options": [
+     "Timna",
+     "Tirza",
+     "Acsa",
+     "Diná"
+    ],
+    "answer": 1,
+    "ref": "Números 27:1"
+   },
+   {
+    "q": "O que Gideão fez com os pendentes de ouro tomados dos midianitas?",
+    "options": [
+     "Um bezerro de ouro",
+     "Um altar",
+     "Uma estola (éfode)",
+     "Uma coroa"
+    ],
+    "answer": 2,
+    "ref": "Juízes 8:24-27"
+   }
+  ]
+ },
+ {
+  "phase": 161,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Onde Saul estava escondido quando foi sorteado rei em Mispa?",
+    "options": [
+     "Numa caverna",
+     "Debaixo de uma árvore",
+     "No campo",
+     "Entre a bagagem"
+    ],
+    "answer": 3,
+    "ref": "1 Samuel 10:21-22"
+   },
+   {
+    "q": "Do muro de qual cidade os homens de Jabes-Gileade tiraram o corpo de Saul?",
+    "options": [
+     "Bete-Seã",
+     "Gilboa",
+     "Gibeá",
+     "Siló"
+    ],
+    "answer": 0,
+    "ref": "1 Samuel 31:12"
+   },
+   {
+    "q": "Em que lugar Jônatas e Aimaás se esconderam num poço, fugindo de Absalão?",
+    "options": [
+     "Baurim",
+     "Maanaim",
+     "Hebrom",
+     "En-Rogel"
+    ],
+    "answer": 0,
+    "ref": "2 Samuel 17:18"
+   },
+   {
+    "q": "Que nome Hirão deu às vinte cidades da Galileia recebidas de Salomão?",
+    "options": [
+     "Terra de Ofir",
+     "Terra de Cabul",
+     "Terra de Tobe",
+     "Terra de Hamate"
+    ],
+    "answer": 1,
+    "ref": "1 Reis 9:11-13"
+   },
+   {
+    "q": "O que Naamã pediu para levar de Israel para a Síria?",
+    "options": [
+     "Água do Jordão",
+     "Uma carga de terra de um par de mulos",
+     "Uma pedra do altar",
+     "Azeite santo"
+    ],
+    "answer": 1,
+    "ref": "2 Reis 5:17"
+   },
+   {
+    "q": "Os filhos de qual tribo eram \"entendidos na ciência dos tempos\"?",
+    "options": [
+     "Zebulom",
+     "Levi",
+     "Issacar",
+     "Gade"
+    ],
+    "answer": 2,
+    "ref": "1 Crônicas 12:32"
+   },
+   {
+    "q": "Em que ano do rei Dario a obra do templo voltou a ser feita?",
+    "options": [
+     "No sexto",
+     "No sétimo",
+     "No segundo",
+     "No vigésimo"
+    ],
+    "answer": 2,
+    "ref": "Esdras 4:24"
+   },
+   {
+    "q": "Quantos talentos de prata Hamã ofereceu para destruir os judeus?",
+    "options": [
+     "1.000",
+     "666",
+     "5.000",
+     "10.000"
+    ],
+    "answer": 3,
+    "ref": "Ester 3:9"
+   },
+   {
+    "q": "Como o profeta Naum é identificado em Naum 1:1?",
+    "options": [
+     "Morastita",
+     "Tisbita",
+     "Elcosita",
+     "Tecoíta"
+    ],
+    "answer": 2,
+    "ref": "Naum 1:1"
+   },
+   {
+    "q": "Quem era o avô do profeta Zacarias?",
+    "options": [
+     "Berequias",
+     "Buzi",
+     "Amoz",
+     "Ido"
+    ],
+    "answer": 3,
+    "ref": "Zacarias 1:1"
+   }
+  ]
+ },
+ {
+  "phase": 162,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Quanto pesaram a Zacarias como seu salário de pastor?",
+    "options": [
+     "Trinta moedas de prata",
+     "Vinte moedas de prata",
+     "Cinquenta siclos",
+     "Quinze moedas de prata"
+    ],
+    "answer": 0,
+    "ref": "Zacarias 11:12"
+   },
+   {
+    "q": "Qual foi o nome do primeiro filho de Oseias e Gômer?",
+    "options": [
+     "Lo-Ruama",
+     "Lo-Ami",
+     "Jezreel",
+     "Sear-Jasube"
+    ],
+    "answer": 2,
+    "ref": "Oseias 1:3-4"
+   },
+   {
+    "q": "Qual filho de Isaías o acompanhou ao encontro do rei Acaz?",
+    "options": [
+     "Maer-Salal-Hás-Baz",
+     "Emanuel",
+     "Jezreel",
+     "Sear-Jasube"
+    ],
+    "answer": 3,
+    "ref": "Isaías 7:3"
+   },
+   {
+    "q": "O Salmo 3 foi composto quando Davi fugia de quem?",
+    "options": [
+     "De Absalão, seu filho",
+     "De Saul",
+     "De Adonias",
+     "De Seba"
+    ],
+    "answer": 0,
+    "ref": "Salmos 3 (título)"
+   },
+   {
+    "q": "Segundo Daniel 8:14, até quantas tardes e manhãs, e o santuário seria purificado?",
+    "options": [
+     "1.260",
+     "1.290",
+     "1.335",
+     "2.300"
+    ],
+    "answer": 3,
+    "ref": "Daniel 8:14"
+   },
+   {
+    "q": "Segundo Miqueias 7:19, onde Deus lançará os pecados do seu povo?",
+    "options": [
+     "No deserto de Arabá",
+     "Debaixo dos montes",
+     "Nas profundezas do mar",
+     "No vale de Hinom"
+    ],
+    "answer": 2,
+    "ref": "Miqueias 7:19"
+   },
+   {
+    "q": "Quem caiu morto enquanto Ezequiel profetizava, na visão de Ezequiel 11?",
+    "options": [
+     "Jaazanias, filho de Safã",
+     "Hananias, filho de Azur",
+     "Pelatias, filho de Benaia",
+     "Seraías, filho de Nerias"
+    ],
+    "answer": 2,
+    "ref": "Ezequiel 11:13"
+   },
+   {
+    "q": "Quantas cabeças tinha o leopardo da visão de Daniel 7?",
+    "options": [
+     "Sete",
+     "Quatro",
+     "Duas",
+     "Três"
+    ],
+    "answer": 1,
+    "ref": "Daniel 7:6"
+   },
+   {
+    "q": "Segundo João 19:25, uma das Marias junto à cruz era mulher de quem?",
+    "options": [
+     "Cuza",
+     "Alfeu",
+     "Clopas",
+     "Zebedeu"
+    ],
+    "answer": 2,
+    "ref": "João 19:25"
+   },
+   {
+    "q": "Que moeda Pedro achou na boca do peixe para pagar o imposto?",
+    "options": [
+     "Um denário",
+     "Um estáter",
+     "Uma dracma",
+     "Um siclo"
+    ],
+    "answer": 1,
+    "ref": "Mateus 17:27"
+   }
+  ]
+ },
+ {
+  "phase": 163,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual Evangelho relata que Pilatos lavou as mãos diante da multidão?",
+    "options": [
+     "Marcos",
+     "Lucas",
+     "Mateus",
+     "João"
+    ],
+    "answer": 2,
+    "ref": "Mateus 27:24"
+   },
+   {
+    "q": "Qual Evangelho conta que, na morte de Jesus, sepulcros se abriram e corpos de santos ressuscitaram?",
+    "options": [
+     "Marcos",
+     "Mateus",
+     "Lucas",
+     "João"
+    ],
+    "answer": 1,
+    "ref": "Mateus 27:52-53"
+   },
+   {
+    "q": "Quantas espadas os discípulos mostraram a Jesus após a ceia?",
+    "options": [
+     "Uma",
+     "Duas",
+     "Doze",
+     "Três"
+    ],
+    "answer": 1,
+    "ref": "Lucas 22:38"
+   },
+   {
+    "q": "Segundo Mateus 2:18, o choro de quem foi ouvido em Ramá?",
+    "options": [
+     "Raquel",
+     "Lia",
+     "Rebeca",
+     "Sara"
+    ],
+    "answer": 0,
+    "ref": "Mateus 2:17-18"
+   },
+   {
+    "q": "Quantas legiões de anjos Jesus disse que o Pai poderia lhe enviar?",
+    "options": [
+     "Sete",
+     "Mais de setenta",
+     "Mais de doze",
+     "Três"
+    ],
+    "answer": 2,
+    "ref": "Mateus 26:53"
+   },
+   {
+    "q": "A qual discípulo os gregos disseram: \"Senhor, queríamos ver a Jesus\"?",
+    "options": [
+     "André",
+     "Pedro",
+     "Filipe",
+     "João"
+    ],
+    "answer": 2,
+    "ref": "João 12:20-21"
+   },
+   {
+    "q": "Segundo os anciãos judeus, o que o centurião de Cafarnaum havia edificado para eles?",
+    "options": [
+     "Um poço",
+     "A sinagoga",
+     "Uma escola",
+     "O muro da cidade"
+    ],
+    "answer": 1,
+    "ref": "Lucas 7:3-5"
+   },
+   {
+    "q": "O que havia sobre a cabeça da mulher vestida do sol em Apocalipse 12?",
+    "options": [
+     "Um arco-íris",
+     "Uma coroa de doze estrelas",
+     "Sete diademas",
+     "A lua"
+    ],
+    "answer": 1,
+    "ref": "Apocalipse 12:1"
+   },
+   {
+    "q": "Como se chama, em hebraico, o lugar onde os reis foram congregados?",
+    "options": [
+     "Armagedom",
+     "Hadade-Rimom",
+     "Megido",
+     "Josafá"
+    ],
+    "answer": 0,
+    "ref": "Apocalipse 16:16"
+   },
+   {
+    "q": "Qual era a medida do muro da Nova Jerusalém?",
+    "options": [
+     "70 côvados",
+     "1.000 côvados",
+     "12 côvados",
+     "144 côvados"
+    ],
+    "answer": 3,
+    "ref": "Apocalipse 21:17"
+   }
+  ]
+ },
+ {
+  "phase": 164,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "A qual igreja foi prometido o maná escondido e uma pedra branca com um novo nome?",
+    "options": [
+     "Esmirna",
+     "Filadélfia",
+     "Pérgamo",
+     "Tiatira"
+    ],
+    "answer": 2,
+    "ref": "Apocalipse 2:17"
+   },
+   {
+    "q": "O tribuno perguntou se Paulo era o egípcio que levara ao deserto quantos salteadores?",
+    "options": [
+     "Quarenta",
+     "Quatro mil",
+     "Dois mil",
+     "Quatrocentos"
+    ],
+    "answer": 1,
+    "ref": "Atos 21:38"
+   },
+   {
+    "q": "Em qual cidade Paulo teve de noite a visão do varão macedônio?",
+    "options": [
+     "Trôade",
+     "Éfeso",
+     "Neápolis",
+     "Mísia"
+    ],
+    "answer": 0,
+    "ref": "Atos 16:8-9"
+   },
+   {
+    "q": "A quem é endereçada a segunda carta de João?",
+    "options": [
+     "Aos anciãos de Éfeso",
+     "Ao amado Gaio",
+     "Às sete igrejas",
+     "À senhora eleita e a seus filhos"
+    ],
+    "answer": 3,
+    "ref": "2 João 1:1"
+   },
+   {
+    "q": "Por quantos dias as duas testemunhas profetizariam vestidas de pano de saco?",
+    "options": [
+     "1.335",
+     "2.300",
+     "1.260",
+     "1.290"
+    ],
+    "answer": 2,
+    "ref": "Apocalipse 11:3"
+   },
+   {
+    "q": "Como 2 Pedro chama Noé?",
+    "options": [
+     "Pregoeiro da justiça",
+     "Profeta do Altíssimo",
+     "Varão segundo o coração de Deus",
+     "Amigo de Deus"
+    ],
+    "answer": 0,
+    "ref": "2 Pedro 2:5"
+   },
+   {
+    "q": "Que distância o povo devia guardar da arca ao atravessar o Jordão?",
+    "options": [
+     "Quinhentos côvados",
+     "Dois mil côvados",
+     "Trezentos côvados",
+     "Mil côvados"
+    ],
+    "answer": 1,
+    "ref": "Josué 3:4"
+   },
+   {
+    "q": "Quantos anos tinha Isaque quando nasceram Esaú e Jacó?",
+    "options": [
+     "70",
+     "50",
+     "60",
+     "40"
+    ],
+    "answer": 2,
+    "ref": "Gênesis 25:26"
+   },
+   {
+    "q": "Qual foi o total de homens contados no primeiro recenseamento de Números?",
+    "options": [
+     "603.550",
+     "600.000",
+     "601.730",
+     "625.000"
+    ],
+    "answer": 0,
+    "ref": "Números 1:46"
+   },
+   {
+    "q": "Qual príncipe de Judá apresentou a oferta no primeiro dia da dedicação do altar?",
+    "options": [
+     "Elisur",
+     "Naassom",
+     "Eliabe",
+     "Natanael"
+    ],
+    "answer": 1,
+    "ref": "Números 7:12"
+   }
+  ]
+ },
+ {
+  "phase": 165,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "O que Rúben achou no campo e Raquel pediu a Lia?",
+    "options": [
+     "Mandrágoras",
+     "Tâmaras",
+     "Figos",
+     "Romãs"
+    ],
+    "answer": 0,
+    "ref": "Gênesis 30:14"
+   },
+   {
+    "q": "Até qual lugar Abrão perseguiu os reis que levaram Ló?",
+    "options": [
+     "Berseba",
+     "Dã",
+     "Hebrom",
+     "Zoar"
+    ],
+    "answer": 1,
+    "ref": "Gênesis 14:14"
+   },
+   {
+    "q": "Quantos anos tinha Arão quando ele e Moisés falaram a Faraó?",
+    "options": [
+     "80",
+     "85",
+     "77",
+     "83"
+    ],
+    "answer": 3,
+    "ref": "Êxodo 7:7"
+   },
+   {
+    "q": "Quantos anos tinha Ismael quando foi circuncidado?",
+    "options": [
+     "8",
+     "12",
+     "13",
+     "17"
+    ],
+    "answer": 2,
+    "ref": "Gênesis 17:25"
+   },
+   {
+    "q": "Para qual terra fugiu Jefté quando seus irmãos o expulsaram?",
+    "options": [
+     "Gesur",
+     "Moabe",
+     "Tobe",
+     "Mispa"
+    ],
+    "answer": 2,
+    "ref": "Juízes 11:3"
+   },
+   {
+    "q": "Quantas medidas de cevada Boaz deu a Rute na manhã após a eira?",
+    "options": [
+     "Três",
+     "Sete",
+     "Seis",
+     "Dez"
+    ],
+    "answer": 2,
+    "ref": "Rute 3:15"
+   },
+   {
+    "q": "Qual rei amonita ameaçou vazar o olho direito dos homens de Jabes-Gileade?",
+    "options": [
+     "Hanum",
+     "Aquis",
+     "Agague",
+     "Naás"
+    ],
+    "answer": 3,
+    "ref": "1 Samuel 11:1-2"
+   },
+   {
+    "q": "Em que livro estava escrito o lamento de Davi por Saul e Jônatas?",
+    "options": [
+     "Livro das Crônicas",
+     "Livro das Guerras do Senhor",
+     "Livro de Natã",
+     "Livro do Reto"
+    ],
+    "answer": 3,
+    "ref": "2 Samuel 1:18"
+   },
+   {
+    "q": "Quem rebelou-se contra Davi tocando a trombeta e dizendo: \"Não temos parte em Davi\"?",
+    "options": [
+     "Seba, filho de Bicri",
+     "Simei, filho de Gera",
+     "Amasa",
+     "Adonias"
+    ],
+    "answer": 0,
+    "ref": "2 Samuel 20:1"
+   },
+   {
+    "q": "Quantos talentos de ouro Salomão recebia em um ano?",
+    "options": [
+     "666",
+     "420",
+     "120",
+     "1.000"
+    ],
+    "answer": 0,
+    "ref": "1 Reis 10:14"
+   }
+  ]
+ },
+ {
+  "phase": 166,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Por quanto se vendia uma cabeça de jumento na fome do cerco de Samaria?",
+    "options": [
+     "30 siclos de prata",
+     "80 siclos de prata",
+     "5 siclos de prata",
+     "100 siclos de prata"
+    ],
+    "answer": 1,
+    "ref": "2 Reis 6:25"
+   },
+   {
+    "q": "Qual etíope saiu contra Asa com um exército de um milhão de homens?",
+    "options": [
+     "Sisaque",
+     "Zerá",
+     "Tiraca",
+     "Neco"
+    ],
+    "answer": 1,
+    "ref": "2 Crônicas 14:9"
+   },
+   {
+    "q": "Junto a que rio Esdras proclamou um jejum antes da viagem a Jerusalém?",
+    "options": [
+     "Quebar",
+     "Eufrates",
+     "Aava",
+     "Ulai"
+    ],
+    "answer": 2,
+    "ref": "Esdras 8:21"
+   },
+   {
+    "q": "Qual eunuco sugeriu ao rei enforcar Hamã na forca que ele fizera?",
+    "options": [
+     "Hatá",
+     "Hegai",
+     "Harbona",
+     "Bigtã"
+    ],
+    "answer": 2,
+    "ref": "Ester 7:9"
+   },
+   {
+    "q": "Segundo Amós 8:11, de que seria a fome que Deus enviaria à terra?",
+    "options": [
+     "De pão e de trigo",
+     "De ouvir as palavras do Senhor",
+     "De água limpa",
+     "De paz entre os povos"
+    ],
+    "answer": 1,
+    "ref": "Amós 8:11"
+   },
+   {
+    "q": "Quantos graus a sombra retrocedeu no relógio de Acaz, como sinal a Ezequias?",
+    "options": [
+     "Cinco",
+     "Sete",
+     "Quinze",
+     "Dez"
+    ],
+    "answer": 3,
+    "ref": "Isaías 38:8"
+   },
+   {
+    "q": "Que animal Deus descreve a Jó dizendo que \"come a erva como o boi\"?",
+    "options": [
+     "O leviatã",
+     "O cavalo",
+     "O beemote",
+     "O leão"
+    ],
+    "answer": 2,
+    "ref": "Jó 40:15"
+   },
+   {
+    "q": "Em Ezequiel 9, o que o homem vestido de linho com tinteiro devia fazer?",
+    "options": [
+     "Marcar a testa dos que suspiravam",
+     "Medir o templo e o altar",
+     "Contar os sacerdotes",
+     "Ungir os anciãos"
+    ],
+    "answer": 0,
+    "ref": "Ezequiel 9:3-4"
+   },
+   {
+    "q": "Quais três justos Ezequiel 14 cita, que livrariam apenas a si mesmos?",
+    "options": [
+     "Abraão, Moisés e Davi",
+     "Noé, Daniel e Jó",
+     "Noé, Abraão e Jó",
+     "Moisés, Samuel e Daniel"
+    ],
+    "answer": 1,
+    "ref": "Ezequiel 14:14"
+   },
+   {
+    "q": "Segundo Salmos 90:10, a quantos anos chegam os dias da nossa vida?",
+    "options": [
+     "Setenta",
+     "Cem",
+     "Cento e vinte",
+     "Sessenta"
+    ],
+    "answer": 0,
+    "ref": "Salmos 90:10"
+   }
+  ]
+ },
+ {
+  "phase": 167,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Quantos camelos Jó possuía antes de sua provação?",
+    "options": [
+     "7.000",
+     "3.000",
+     "500",
+     "1.000"
+    ],
+    "answer": 1,
+    "ref": "Jó 1:3"
+   },
+   {
+    "q": "A qual rei Isaías anunciou o sinal da virgem que daria à luz Emanuel?",
+    "options": [
+     "Ezequias",
+     "Uzias",
+     "Jotão",
+     "Acaz"
+    ],
+    "answer": 3,
+    "ref": "Isaías 7:10-14"
+   },
+   {
+    "q": "No sonho de Daniel 4, quantos tempos passariam sobre Nabucodonosor?",
+    "options": [
+     "Três e meio",
+     "Sete",
+     "Doze",
+     "Quarenta"
+    ],
+    "answer": 1,
+    "ref": "Daniel 4:16"
+   },
+   {
+    "q": "Quantos anos Jó viveu depois de ser restaurado?",
+    "options": [
+     "70",
+     "120",
+     "140",
+     "100"
+    ],
+    "answer": 2,
+    "ref": "Jó 42:16"
+   },
+   {
+    "q": "O que os principais sacerdotes compraram com as moedas devolvidas por Judas?",
+    "options": [
+     "Um cordeiro para a Páscoa",
+     "O campo do oleiro",
+     "Ofertas para o templo",
+     "Um túmulo no Gólgota"
+    ],
+    "answer": 1,
+    "ref": "Mateus 27:6-7"
+   },
+   {
+    "q": "Segundo Lucas, o que Jesus fez logo que o galo cantou na negação de Pedro?",
+    "options": [
+     "Chamou Pedro pelo nome",
+     "Virou-se e olhou para Pedro",
+     "Chorou em silêncio",
+     "Orou por Pedro em voz alta"
+    ],
+    "answer": 1,
+    "ref": "Lucas 22:60-61"
+   },
+   {
+    "q": "Segundo Marcos, quando os discípulos viram a figueira amaldiçoada seca desde as raízes?",
+    "options": [
+     "Na manhã seguinte",
+     "No mesmo instante",
+     "Três dias depois",
+     "Após a ressurreição"
+    ],
+    "answer": 0,
+    "ref": "Marcos 11:20"
+   },
+   {
+    "q": "Segundo Mateus 20:30, quantos cegos clamaram a Jesus na saída de Jericó?",
+    "options": [
+     "Um",
+     "Três",
+     "Quatro",
+     "Dois"
+    ],
+    "answer": 3,
+    "ref": "Mateus 20:29-30"
+   },
+   {
+    "q": "Segundo Marcos 16:5, onde estava assentado o jovem vestido de branco no sepulcro?",
+    "options": [
+     "À esquerda",
+     "Sobre a pedra",
+     "À direita",
+     "À cabeceira"
+    ],
+    "answer": 2,
+    "ref": "Marcos 16:5"
+   },
+   {
+    "q": "Segundo João, como estava o lenço que cobrira a cabeça de Jesus?",
+    "options": [
+     "Junto com os lençóis",
+     "Jogado no chão",
+     "Enrolado num lugar à parte",
+     "Nas mãos de um anjo"
+    ],
+    "answer": 2,
+    "ref": "João 20:7"
+   }
+  ]
+ },
+ {
+  "phase": 168,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Na pergunta dos saduceus sobre a ressurreição, com quantos irmãos a mulher se casou?",
+    "options": [
+     "Três",
+     "Cinco",
+     "Sete",
+     "Doze"
+    ],
+    "answer": 2,
+    "ref": "Mateus 22:25-26"
+   },
+   {
+    "q": "O que os soldados decidiram fazer com a túnica de Jesus, que era sem costura?",
+    "options": [
+     "Rasgá-la em quatro",
+     "Devolvê-la a Maria",
+     "Queimá-la",
+     "Lançar sortes sobre ela"
+    ],
+    "answer": 3,
+    "ref": "João 19:23-24"
+   },
+   {
+    "q": "Segundo Filipe, quanto em pão não bastaria para a multidão?",
+    "options": [
+     "Trezentos dinheiros",
+     "Trinta moedas",
+     "Duzentos dinheiros",
+     "Cem dinheiros"
+    ],
+    "answer": 2,
+    "ref": "João 6:7"
+   },
+   {
+    "q": "Em que festa Jesus andava no alpendre de Salomão, no inverno?",
+    "options": [
+     "Dedicação",
+     "Tabernáculos",
+     "Páscoa",
+     "Trombetas"
+    ],
+    "answer": 0,
+    "ref": "João 10:22-23"
+   },
+   {
+    "q": "Qual era o nome de quem montava o cavalo amarelo do quarto selo?",
+    "options": [
+     "Morte",
+     "Peste",
+     "Guerra",
+     "Fome"
+    ],
+    "answer": 0,
+    "ref": "Apocalipse 6:8"
+   },
+   {
+    "q": "Quantos cavaleiros fizeram parte da escolta de Paulo até Cesareia?",
+    "options": [
+     "Quarenta",
+     "Duzentos",
+     "Cem",
+     "Setenta"
+    ],
+    "answer": 3,
+    "ref": "Atos 23:23"
+   },
+   {
+    "q": "De qual porto Barnabé e Saulo navegaram para Chipre na primeira viagem?",
+    "options": [
+     "Jope",
+     "Tiro",
+     "Selêucia",
+     "Cesareia"
+    ],
+    "answer": 2,
+    "ref": "Atos 13:4"
+   },
+   {
+    "q": "Em Colossenses 4:10, Marcos é apresentado como parente de quem?",
+    "options": [
+     "Silas",
+     "Barnabé",
+     "Pedro",
+     "Lucas"
+    ],
+    "answer": 1,
+    "ref": "Colossenses 4:10"
+   },
+   {
+    "q": "Junto com Alexandre, quem Paulo diz ter entregue a Satanás em 1 Timóteo 1:20?",
+    "options": [
+     "Himeneu",
+     "Fígelo",
+     "Demas",
+     "Diótrefes"
+    ],
+    "answer": 0,
+    "ref": "1 Timóteo 1:20"
+   },
+   {
+    "q": "Em qual cidade Paulo foi apedrejado e arrastado para fora, tido por morto?",
+    "options": [
+     "Bereia",
+     "Icônio",
+     "Filipos",
+     "Listra"
+    ],
+    "answer": 3,
+    "ref": "Atos 14:19"
+   }
+  ]
+ },
+ {
+  "phase": 169,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual líder revoltoso Gamaliel citou como exemplo diante do conselho?",
+    "options": [
+     "Tértulo",
+     "Barrabás",
+     "Teudas",
+     "Elimas"
+    ],
+    "answer": 2,
+    "ref": "Atos 5:36"
+   },
+   {
+    "q": "Com qual antigo discípulo, natural de Chipre, Paulo e os seus iriam se hospedar?",
+    "options": [
+     "Barnabé",
+     "Mnasom",
+     "Simeão",
+     "Lúcio"
+    ],
+    "answer": 1,
+    "ref": "Atos 21:16"
+   },
+   {
+    "q": "Segundo Hebreus 9:4, o que estava na arca além das tábuas da aliança?",
+    "options": [
+     "O vaso de maná e a vara de Arão",
+     "O éfode e o peitoral",
+     "A lei e os profetas",
+     "O incensário e o candelabro"
+    ],
+    "answer": 0,
+    "ref": "Hebreus 9:4"
+   },
+   {
+    "q": "Cornélio era centurião de qual coorte?",
+    "options": [
+     "Augusta",
+     "Siríaca",
+     "Romana",
+     "Italiana"
+    ],
+    "answer": 3,
+    "ref": "Atos 10:1"
+   },
+   {
+    "q": "Que cume, defronte de Jericó, Moisés subiu para ver a terra?",
+    "options": [
+     "Horebe",
+     "Hor",
+     "Carmelo",
+     "Pisga"
+    ],
+    "answer": 3,
+    "ref": "Deuteronômio 34:1"
+   },
+   {
+    "q": "Que nome Labão deu ao montão de pedras do testemunho?",
+    "options": [
+     "El-Betel",
+     "Galeede",
+     "Maanaim",
+     "Jegar-Saaduta"
+    ],
+    "answer": 3,
+    "ref": "Gênesis 31:47"
+   },
+   {
+    "q": "Quem profetizou: \"Uma estrela procederá de Jacó\"?",
+    "options": [
+     "Moisés",
+     "Josué",
+     "Jacó",
+     "Balaão"
+    ],
+    "answer": 3,
+    "ref": "Números 24:15-17"
+   },
+   {
+    "q": "Que nome recebeu o poço onde o Anjo do Senhor encontrou Agar?",
+    "options": [
+     "Eseque",
+     "Beer-Laai-Roi",
+     "Berseba",
+     "Reobote"
+    ],
+    "answer": 1,
+    "ref": "Gênesis 16:7-14"
+   },
+   {
+    "q": "Moisés foi sepultado num vale de Moabe, defronte de qual lugar?",
+    "options": [
+     "Bete-Peor",
+     "Cades",
+     "Hesbom",
+     "Jericó"
+    ],
+    "answer": 0,
+    "ref": "Deuteronômio 34:6"
+   },
+   {
+    "q": "Por quantos dias Israel devia habitar em cabanas na Festa dos Tabernáculos?",
+    "options": [
+     "Quarenta",
+     "Dez",
+     "Sete",
+     "Três"
+    ],
+    "answer": 2,
+    "ref": "Levítico 23:42"
+   }
+  ]
+ },
+ {
+  "phase": 170,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Quais eram os três filhos de Levi?",
+    "options": [
+     "Nadabe, Abiú e Eleazar",
+     "Hezrom, Hamul e Zera",
+     "Hanoque, Palu e Carmi",
+     "Gérson, Coate e Merari"
+    ],
+    "answer": 3,
+    "ref": "Gênesis 46:11"
+   },
+   {
+    "q": "De que foi feita a pia de cobre do tabernáculo?",
+    "options": [
+     "Dos espelhos das mulheres",
+     "Das armas dos egípcios",
+     "Do bezerro derretido",
+     "Das argolas dos homens"
+    ],
+    "answer": 0,
+    "ref": "Êxodo 38:8"
+   },
+   {
+    "q": "Quantos efraimitas caíram no Jordão no episódio do \"Chibolete\"?",
+    "options": [
+     "32.000",
+     "42.000",
+     "24.000",
+     "12.000"
+    ],
+    "answer": 1,
+    "ref": "Juízes 12:6"
+   },
+   {
+    "q": "Quantos anciãos da cidade Boaz reuniu à porta para resolver o resgate?",
+    "options": [
+     "Sete",
+     "Dez",
+     "Doze",
+     "Três"
+    ],
+    "answer": 1,
+    "ref": "Rute 4:2"
+   },
+   {
+    "q": "Qual era o nome da mulher do rei Saul?",
+    "options": [
+     "Rispa",
+     "Merabe",
+     "Ainoã",
+     "Abigail"
+    ],
+    "answer": 2,
+    "ref": "1 Samuel 14:50"
+   },
+   {
+    "q": "Quem matou Is-Bosete enquanto ele dormia ao meio-dia?",
+    "options": [
+     "Joabe e Abisai",
+     "Abner e Asael",
+     "Recabe e Baaná",
+     "Doegue e Ziba"
+    ],
+    "answer": 2,
+    "ref": "2 Samuel 4:5-7"
+   },
+   {
+    "q": "Que valente de Davi defendeu sozinho um campo de lentilhas contra os filisteus?",
+    "options": [
+     "Eleazar",
+     "Benaia",
+     "Abisai",
+     "Samá"
+    ],
+    "answer": 3,
+    "ref": "2 Samuel 23:11-12"
+   },
+   {
+    "q": "Qual era o nome da mãe do rei Roboão, que era amonita?",
+    "options": [
+     "Maaca",
+     "Azuba",
+     "Jedida",
+     "Naamá"
+    ],
+    "answer": 3,
+    "ref": "1 Reis 14:21,31"
+   },
+   {
+    "q": "Quantos filhos de Acabe estavam em Samaria quando Jeú escreveu cartas?",
+    "options": [
+     "70",
+     "40",
+     "12",
+     "30"
+    ],
+    "answer": 0,
+    "ref": "2 Reis 10:1"
+   },
+   {
+    "q": "Sobre qual levita veio o Espírito do Senhor para animar Josafá antes da batalha?",
+    "options": [
+     "Jaaziel",
+     "Zacarias",
+     "Jedutum",
+     "Quenanias"
+    ],
+    "answer": 0,
+    "ref": "2 Crônicas 20:14"
+   }
+  ]
+ },
+ {
+  "phase": 171,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual irmão de Neemias lhe trouxe notícias da situação de Jerusalém?",
+    "options": [
+     "Hananias",
+     "Hanani",
+     "Eliasibe",
+     "Semaías"
+    ],
+    "answer": 1,
+    "ref": "Neemias 1:2"
+   },
+   {
+    "q": "Qual era o nome do pai de Ester?",
+    "options": [
+     "Jair",
+     "Abiail",
+     "Hamedata",
+     "Quis"
+    ],
+    "answer": 1,
+    "ref": "Ester 2:15"
+   },
+   {
+    "q": "A que hora Gabriel veio tocar Daniel, no capítulo 9?",
+    "options": [
+     "À meia-noite",
+     "Ao nascer do sol",
+     "Na hora terceira",
+     "No tempo da oblação da tarde"
+    ],
+    "answer": 3,
+    "ref": "Daniel 9:21"
+   },
+   {
+    "q": "Jeremias perguntou: \"Porventura não há ____ em Gileade?\" Que palavra completa?",
+    "options": [
+     "Mirra",
+     "Incenso",
+     "Azeite",
+     "Bálsamo"
+    ],
+    "answer": 3,
+    "ref": "Jeremias 8:22"
+   },
+   {
+    "q": "Qual salmo termina dizendo que ali acabam as orações de Davi, filho de Jessé?",
+    "options": [
+     "41",
+     "150",
+     "51",
+     "72"
+    ],
+    "answer": 3,
+    "ref": "Salmos 72:20"
+   },
+   {
+    "q": "Com que foi selada a pedra posta sobre a cova dos leões?",
+    "options": [
+     "Com cera e azeite",
+     "Com o selo do templo",
+     "Com o selo dos magos",
+     "Com o anel do rei e o dos seus grandes"
+    ],
+    "answer": 3,
+    "ref": "Daniel 6:17"
+   },
+   {
+    "q": "Qual salmo começa: \"Junto aos rios da Babilônia nos assentamos e choramos\"?",
+    "options": [
+     "126",
+     "137",
+     "42",
+     "80"
+    ],
+    "answer": 1,
+    "ref": "Salmos 137:1"
+   },
+   {
+    "q": "Qual era o nome da primeira filha de Jó depois da restauração?",
+    "options": [
+     "Quézia",
+     "Jemima",
+     "Quéren-Hapuque",
+     "Dina"
+    ],
+    "answer": 1,
+    "ref": "Jó 42:14"
+   },
+   {
+    "q": "Que instrumento Amós viu na mão do Senhor, sobre um muro?",
+    "options": [
+     "Um prumo",
+     "Uma régua de cana",
+     "Uma foice",
+     "Um cordel de medir"
+    ],
+    "answer": 0,
+    "ref": "Amós 7:7-8"
+   },
+   {
+    "q": "Quantos versículos tem o capítulo 3 de Lamentações?",
+    "options": [
+     "22",
+     "44",
+     "66",
+     "50"
+    ],
+    "answer": 2,
+    "ref": "Lamentações 3"
+   }
+  ]
+ },
+ {
+  "phase": 172,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Quantas colunas a Sabedoria lavrou para a sua casa, em Provérbios 9?",
+    "options": [
+     "Doze",
+     "Quatro",
+     "Três",
+     "Sete"
+    ],
+    "answer": 3,
+    "ref": "Provérbios 9:1"
+   },
+   {
+    "q": "Para onde Jeremias foi levado por Joanã e os chefes após a morte de Gedalias?",
+    "options": [
+     "Para o Egito",
+     "Para a Babilônia",
+     "Para Moabe",
+     "Para Damasco"
+    ],
+    "answer": 0,
+    "ref": "Jeremias 43:5-7"
+   },
+   {
+    "q": "Qual Evangelho relata que o suor de Jesus no Getsêmani foi como grandes gotas de sangue?",
+    "options": [
+     "Mateus",
+     "Marcos",
+     "João",
+     "Lucas"
+    ],
+    "answer": 3,
+    "ref": "Lucas 22:44"
+   },
+   {
+    "q": "Quem chegou primeiro ao sepulcro quando Pedro e o outro discípulo correram para lá?",
+    "options": [
+     "O outro discípulo",
+     "Pedro",
+     "Chegaram juntos",
+     "Maria Madalena com eles"
+    ],
+    "answer": 0,
+    "ref": "João 20:3-4"
+   },
+   {
+    "q": "Que palavra Jesus disse ao curar o surdo e gago na região de Decápolis?",
+    "options": [
+     "Talita cumi",
+     "Corbã",
+     "Efatá",
+     "Hosana"
+    ],
+    "answer": 2,
+    "ref": "Marcos 7:31-34"
+   },
+   {
+    "q": "Que palavra, que significa \"oferta ao Senhor\", Jesus citou ao repreender os fariseus?",
+    "options": [
+     "Efatá",
+     "Raca",
+     "Corbã",
+     "Mamom"
+    ],
+    "answer": 2,
+    "ref": "Marcos 7:11"
+   },
+   {
+    "q": "Quantos alpendres tinha o tanque de Betesda?",
+    "options": [
+     "Três",
+     "Cinco",
+     "Sete",
+     "Doze"
+    ],
+    "answer": 1,
+    "ref": "João 5:2"
+   },
+   {
+    "q": "Na parábola das minas, quantos servos o homem nobre chamou antes de partir?",
+    "options": [
+     "Três",
+     "Doze",
+     "Dez",
+     "Sete"
+    ],
+    "answer": 2,
+    "ref": "Lucas 19:12-13"
+   },
+   {
+    "q": "De que lado do barco Jesus mandou lançar a rede em João 21?",
+    "options": [
+     "Esquerdo",
+     "Direito",
+     "Na popa",
+     "Na proa"
+    ],
+    "answer": 1,
+    "ref": "João 21:6"
+   },
+   {
+    "q": "Segundo João, com o que Jesus expulsou os vendilhões do templo?",
+    "options": [
+     "Uma vara de pastor",
+     "Um ramo de palmeira",
+     "Um azorrague de cordas",
+     "As próprias mãos apenas"
+    ],
+    "answer": 2,
+    "ref": "João 2:15"
+   }
+  ]
+ },
+ {
+  "phase": 173,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Na história do rico e Lázaro, quantos irmãos tinha o rico?",
+    "options": [
+     "Três",
+     "Cinco",
+     "Sete",
+     "Dois"
+    ],
+    "answer": 1,
+    "ref": "Lucas 16:28"
+   },
+   {
+    "q": "Judas cita uma profecia de Enoque, a quem chama de:",
+    "options": [
+     "O primeiro profeta",
+     "O pai de Noé",
+     "O amigo de Deus",
+     "O sétimo depois de Adão"
+    ],
+    "answer": 3,
+    "ref": "Judas 1:14"
+   },
+   {
+    "q": "Em Damasco, o governador de qual rei guardava a cidade para prender Paulo?",
+    "options": [
+     "Agripa",
+     "Herodes",
+     "Aretas",
+     "Antíoco"
+    ],
+    "answer": 2,
+    "ref": "2 Coríntios 11:32"
+   },
+   {
+    "q": "No dia seguinte ao apedrejamento, para qual cidade Paulo partiu com Barnabé?",
+    "options": [
+     "Perge",
+     "Derbe",
+     "Tarso",
+     "Antioquia"
+    ],
+    "answer": 1,
+    "ref": "Atos 14:20"
+   },
+   {
+    "q": "Por quem Pedro diz ter escrito brevemente sua primeira carta?",
+    "options": [
+     "Silvano",
+     "Tito",
+     "Lucas",
+     "Marcos"
+    ],
+    "answer": 0,
+    "ref": "1 Pedro 5:12"
+   },
+   {
+    "q": "Em qual cidade de Chipre Barnabé e Saulo anunciaram primeiro a palavra?",
+    "options": [
+     "Pafos",
+     "Perge",
+     "Mira",
+     "Salamina"
+    ],
+    "answer": 3,
+    "ref": "Atos 13:5"
+   },
+   {
+    "q": "Depois de batizar o eunuco, em que cidade Filipe se achou?",
+    "options": [
+     "Jope",
+     "Gaza",
+     "Azoto",
+     "Lida"
+    ],
+    "answer": 2,
+    "ref": "Atos 8:40"
+   },
+   {
+    "q": "Como João viu o Cordeiro em Apocalipse 5:6?",
+    "options": [
+     "Com dez chifres e sete coroas",
+     "Com sete pontas e sete olhos",
+     "Com quatro asas",
+     "Com uma coroa de espinhos"
+    ],
+    "answer": 1,
+    "ref": "Apocalipse 5:6"
+   },
+   {
+    "q": "Qual mensageiro dos filipenses adoeceu 'quase à morte' servindo Paulo?",
+    "options": [
+     "Epafrodito",
+     "Epafras",
+     "Onesíforo",
+     "Clemente"
+    ],
+    "answer": 0,
+    "ref": "Filipenses 2:25-27"
+   },
+   {
+    "q": "Qual mulher creu em Atenas, junto com Dionísio, o areopagita?",
+    "options": [
+     "Febe",
+     "Cloe",
+     "Lídia",
+     "Dâmaris"
+    ],
+    "answer": 3,
+    "ref": "Atos 17:34"
+   }
+  ]
+ },
+ {
+  "phase": 174,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Romanos 12:1 chama de 'culto racional' apresentar o corpo como:",
+    "options": [
+     "Instrumento de justiça",
+     "Oferta de primícias",
+     "Sacrifício vivo, santo e agradável",
+     "Templo do Espírito"
+    ],
+    "answer": 2,
+    "ref": "Romanos 12:1"
+   },
+   {
+    "q": "Qual juiz, filho de Puá, da tribo de Issacar, habitava em Samir e julgou Israel 23 anos?",
+    "options": [
+     "Tola",
+     "Elom",
+     "Ibsã",
+     "Jair"
+    ],
+    "answer": 0,
+    "ref": "Juízes 10:1-2"
+   },
+   {
+    "q": "Qual rei cananeu teve cortados os polegares das mãos e dos pés pelos homens de Judá?",
+    "options": [
+     "Jabim",
+     "Adoni-Bezeque",
+     "Eglom",
+     "Adoni-Zedeque"
+    ],
+    "answer": 1,
+    "ref": "Juízes 1:6-7"
+   },
+   {
+    "q": "Qual juiz zebulonita julgou Israel por dez anos?",
+    "options": [
+     "Abdom",
+     "Tola",
+     "Elom",
+     "Otniel"
+    ],
+    "answer": 2,
+    "ref": "Juízes 12:11"
+   },
+   {
+    "q": "Qual eunuco Ester enviou a Mardoqueu para saber por que ele estava de luto?",
+    "options": [
+     "Hegai",
+     "Harbona",
+     "Bigtã",
+     "Hatá"
+    ],
+    "answer": 3,
+    "ref": "Ester 4:5"
+   },
+   {
+    "q": "Quem era o pai de Gômer, a mulher do profeta Oseias?",
+    "options": [
+     "Diblaim",
+     "Beeri",
+     "Petuel",
+     "Amitai"
+    ],
+    "answer": 0,
+    "ref": "Oseias 1:3"
+   },
+   {
+    "q": "Segundo 2 Timóteo, quais homens resistiram a Moisés, assim como os falsos mestres resistem à verdade?",
+    "options": [
+     "Datã e Abirão",
+     "Janes e Jambres",
+     "Himeneu e Fileto",
+     "Coré e On"
+    ],
+    "answer": 1,
+    "ref": "2 Timóteo 3:8"
+   },
+   {
+    "q": "Qual primogênito de Gideão não teve coragem de matar Zeba e Zalmuna, por ser ainda jovem?",
+    "options": [
+     "Abimeleque",
+     "Jotão",
+     "Jeter",
+     "Gaal"
+    ],
+    "answer": 2,
+    "ref": "Juízes 8:20"
+   },
+   {
+    "q": "Segundo Tiago, o enfermo deve chamar quem para orar sobre ele e ungi-lo com azeite?",
+    "options": [
+     "Os diáconos",
+     "Os profetas",
+     "Os vizinhos",
+     "Os presbíteros da igreja"
+    ],
+    "answer": 3,
+    "ref": "Tiago 5:14"
+   },
+   {
+    "q": "Em Atos 13:1, qual profeta ou mestre de Antioquia era chamado Níger?",
+    "options": [
+     "Simeão",
+     "Lúcio",
+     "Manaém",
+     "Barnabé"
+    ],
+    "answer": 0,
+    "ref": "Atos 13:1"
+   }
+  ]
+ },
+ {
+  "phase": 175,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Segundo Daniel 12:12, bem-aventurado o que espera e chega até quantos dias?",
+    "options": [
+     "1.290",
+     "1.335",
+     "2.300",
+     "1.260"
+    ],
+    "answer": 1,
+    "ref": "Daniel 12:12"
+   },
+   {
+    "q": "Qual servo desceu com Gideão, de noite, até o arraial dos midianitas?",
+    "options": [
+     "Zebul",
+     "Jeter",
+     "Pura",
+     "Ebede"
+    ],
+    "answer": 2,
+    "ref": "Juízes 7:10-11"
+   },
+   {
+    "q": "Quantos inimigos os judeus mataram nas demais províncias do rei Assuero?",
+    "options": [
+     "Dez mil",
+     "Trinta mil",
+     "Cento e vinte mil",
+     "Setenta e cinco mil"
+    ],
+    "answer": 3,
+    "ref": "Ester 9:16"
+   },
+   {
+    "q": "Que sacrifício Deus mandou os três amigos de Jó oferecerem por si mesmos?",
+    "options": [
+     "Sete novilhos e sete carneiros",
+     "Um cordeiro sem defeito",
+     "Dois bodes e um carneiro",
+     "Doze novilhos"
+    ],
+    "answer": 0,
+    "ref": "Jó 42:8"
+   },
+   {
+    "q": "Segundo Hebreus 11:21, Jacó adorou encostado a quê ao abençoar os filhos de José?",
+    "options": [
+     "A uma coluna",
+     "À ponta do seu bordão",
+     "Ao ombro de José",
+     "À cabeceira da cama"
+    ],
+    "answer": 1,
+    "ref": "Hebreus 11:21"
+   },
+   {
+    "q": "Qual filho de Ebede incitou os homens de Siquém contra Abimeleque?",
+    "options": [
+     "Zebul",
+     "Jotão",
+     "Gaal",
+     "Jefté"
+    ],
+    "answer": 2,
+    "ref": "Juízes 9:26-28"
+   },
+   {
+    "q": "Quanto Mica ofereceu por ano ao jovem levita para ser seu sacerdote, além de vestes e sustento?",
+    "options": [
+     "Trinta siclos de prata",
+     "Cinco siclos de ouro",
+     "Um talento de prata",
+     "Dez siclos de prata"
+    ],
+    "answer": 3,
+    "ref": "Juízes 17:10"
+   },
+   {
+    "q": "Em quantos bandos os caldeus vieram para levar os camelos de Jó?",
+    "options": [
+     "Três",
+     "Dois",
+     "Quatro",
+     "Sete"
+    ],
+    "answer": 0,
+    "ref": "Jó 1:17"
+   },
+   {
+    "q": "Segundo Tiago 4:14, o que é a nossa vida?",
+    "options": [
+     "Uma sombra que passa",
+     "Um vapor que aparece por um pouco",
+     "Uma flor do campo",
+     "Um sopro no deserto"
+    ],
+    "answer": 1,
+    "ref": "Tiago 4:14"
+   },
+   {
+    "q": "Segundo 1 Pedro 4:8, o que cobre a multidão de pecados?",
+    "options": [
+     "A fé",
+     "A oração",
+     "O amor (caridade)",
+     "O jejum"
+    ],
+    "answer": 2,
+    "ref": "1 Pedro 4:8"
+   }
+  ]
+ }
+]

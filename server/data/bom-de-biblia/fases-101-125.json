@@ -1,0 +1,2902 @@
+[
+ {
+  "phase": 101,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Quem disse: \"Eis aqui a serva do Senhor; cumpra-se em mim segundo a tua palavra\"?",
+    "options": [
+     "Isabel",
+     "Ana",
+     "Maria",
+     "Marta"
+    ],
+    "answer": 2,
+    "ref": "Lucas 1:38"
+   },
+   {
+    "q": "Qual profeta disse que era boieiro e colhedor de sicômoros quando Deus o chamou?",
+    "options": [
+     "Amós",
+     "Miqueias",
+     "Oseias",
+     "Joel"
+    ],
+    "answer": 0,
+    "ref": "Amós 7:14-15"
+   },
+   {
+    "q": "Quem disse a Noemi: \"o teu povo é o meu povo, o teu Deus é o meu Deus\"?",
+    "options": [
+     "Orfa",
+     "Ester",
+     "Raquel",
+     "Rute"
+    ],
+    "answer": 3,
+    "ref": "Rute 1:16"
+   },
+   {
+    "q": "Em Atos, quem foi apedrejado em Jerusalém enquanto orava pelos que o matavam?",
+    "options": [
+     "Tiago",
+     "Estêvão",
+     "Filipe",
+     "Barnabé"
+    ],
+    "answer": 1,
+    "ref": "Atos 7:59-60"
+   },
+   {
+    "q": "Qual profeta se casou com Gômer por ordem de Deus?",
+    "options": [
+     "Amós",
+     "Oseias",
+     "Jeremias",
+     "Ezequiel"
+    ],
+    "answer": 1,
+    "ref": "Oseias 1:2-3"
+   },
+   {
+    "q": "Por instrução de quem a filha de Herodias pediu a cabeça de João Batista?",
+    "options": [
+     "De Herodes",
+     "De Pilatos",
+     "De Caifás",
+     "De Herodias, sua mãe"
+    ],
+    "answer": 3,
+    "ref": "Mateus 14:8"
+   },
+   {
+    "q": "A qual igreja Paulo escreveu: \"Alegrai-vos sempre no Senhor; outra vez digo: alegrai-vos\"?",
+    "options": [
+     "Filipenses",
+     "Gálatas",
+     "Colossenses",
+     "Efésios"
+    ],
+    "answer": 0,
+    "ref": "Filipenses 4:4"
+   },
+   {
+    "q": "Qual rei de Judá ficou leproso por queimar incenso no templo?",
+    "options": [
+     "Ezequias",
+     "Josias",
+     "Uzias",
+     "Acaz"
+    ],
+    "answer": 2,
+    "ref": "2 Crônicas 26:19"
+   },
+   {
+    "q": "Quem foi escolhido por sorte para substituir Judas Iscariotes entre os apóstolos?",
+    "options": [
+     "José Barsabás",
+     "Barnabé",
+     "Silas",
+     "Matias"
+    ],
+    "answer": 3,
+    "ref": "Atos 1:26"
+   },
+   {
+    "q": "Qual profeta viu um vale de ossos secos voltar à vida?",
+    "options": [
+     "Isaías",
+     "Ezequiel",
+     "Daniel",
+     "Zacarias"
+    ],
+    "answer": 1,
+    "ref": "Ezequiel 37:1-10"
+   }
+  ]
+ },
+ {
+  "phase": 102,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Quem disse: \"Ainda que ele me mate, nele esperarei\"?",
+    "options": [
+     "Davi",
+     "Jeremias",
+     "Jó",
+     "Habacuque"
+    ],
+    "answer": 2,
+    "ref": "Jó 13:15"
+   },
+   {
+    "q": "Qual discípula de Jope, cheia de boas obras, foi ressuscitada por Pedro?",
+    "options": [
+     "Tabita",
+     "Lídia",
+     "Priscila",
+     "Febe"
+    ],
+    "answer": 0,
+    "ref": "Atos 9:36-41"
+   },
+   {
+    "q": "Qual vendedora de púrpura, da cidade de Tiatira, se converteu em Filipos?",
+    "options": [
+     "Lídia",
+     "Dâmaris",
+     "Tabita",
+     "Cloe"
+    ],
+    "answer": 0,
+    "ref": "Atos 16:14"
+   },
+   {
+    "q": "Qual profeta escreveu: \"o justo pela sua fé viverá\"?",
+    "options": [
+     "Naum",
+     "Sofonias",
+     "Habacuque",
+     "Ageu"
+    ],
+    "answer": 2,
+    "ref": "Habacuque 2:4"
+   },
+   {
+    "q": "Que menino ouviu Deus chamar seu nome durante a noite, no templo em Siló?",
+    "options": [
+     "Davi",
+     "Samuel",
+     "Josias",
+     "Joás"
+    ],
+    "answer": 1,
+    "ref": "1 Samuel 3:4-10"
+   },
+   {
+    "q": "Quantos profetas de Baal Elias enfrentou no monte Carmelo?",
+    "options": [
+     "400",
+     "300",
+     "850",
+     "450"
+    ],
+    "answer": 3,
+    "ref": "1 Reis 18:22"
+   },
+   {
+    "q": "Qual jovem caiu de uma janela do terceiro andar durante a pregação de Paulo em Trôade?",
+    "options": [
+     "Timóteo",
+     "Êutico",
+     "Tíquico",
+     "Trófimo"
+    ],
+    "answer": 1,
+    "ref": "Atos 20:9"
+   },
+   {
+    "q": "Como se chamava o mago de Samaria que quis comprar com dinheiro o dom do Espírito Santo?",
+    "options": [
+     "Simão",
+     "Elimas",
+     "Ananias",
+     "Demétrio"
+    ],
+    "answer": 0,
+    "ref": "Atos 8:18-19"
+   },
+   {
+    "q": "Que profeta repreendeu Davi contando a parábola da cordeirinha do pobre?",
+    "options": [
+     "Gade",
+     "Samuel",
+     "Aías",
+     "Natã"
+    ],
+    "answer": 3,
+    "ref": "2 Samuel 12:1-7"
+   },
+   {
+    "q": "Quem escreveu: \"Porque para mim o viver é Cristo, e o morrer é ganho\"?",
+    "options": [
+     "Pedro",
+     "João",
+     "Paulo",
+     "Tiago"
+    ],
+    "answer": 2,
+    "ref": "Filipenses 1:21"
+   }
+  ]
+ },
+ {
+  "phase": 103,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Que livro o eunuco etíope lia quando Filipe se aproximou de seu carro?",
+    "options": [
+     "Jeremias",
+     "Salmos",
+     "Isaías",
+     "Deuteronômio"
+    ],
+    "answer": 2,
+    "ref": "Atos 8:28"
+   },
+   {
+    "q": "Qual centurião de Cesareia mandou chamar Pedro a Jope?",
+    "options": [
+     "Júlio",
+     "Cláudio Lísias",
+     "Sérgio Paulo",
+     "Cornélio"
+    ],
+    "answer": 3,
+    "ref": "Atos 10:1-5"
+   },
+   {
+    "q": "Qual profeta respondeu a Deus: \"Eis-me aqui, envia-me a mim\"?",
+    "options": [
+     "Isaías",
+     "Jeremias",
+     "Samuel",
+     "Ezequiel"
+    ],
+    "answer": 0,
+    "ref": "Isaías 6:8"
+   },
+   {
+    "q": "Qual profetisa idosa, da tribo de Aser, falou do menino Jesus no templo?",
+    "options": [
+     "Isabel",
+     "Ana",
+     "Débora",
+     "Hulda"
+    ],
+    "answer": 1,
+    "ref": "Lucas 2:36-38"
+   },
+   {
+    "q": "Segundo Paulo, Deus ama ao que dá com:",
+    "options": [
+     "Abundância",
+     "Humildade",
+     "Sacrifício",
+     "Alegria"
+    ],
+    "answer": 3,
+    "ref": "2 Coríntios 9:7"
+   },
+   {
+    "q": "Qual juiz de Israel era canhoto e matou Eglom, rei de Moabe?",
+    "options": [
+     "Sangar",
+     "Otniel",
+     "Eúde",
+     "Jair"
+    ],
+    "answer": 2,
+    "ref": "Juízes 3:15-21"
+   },
+   {
+    "q": "Quem disse: \"Senhor, não lhes imputes este pecado\"?",
+    "options": [
+     "Jesus",
+     "Estêvão",
+     "Paulo",
+     "Pedro"
+    ],
+    "answer": 1,
+    "ref": "Atos 7:60"
+   },
+   {
+    "q": "Noé amaldiçoou Canaã, que era filho de qual de seus filhos?",
+    "options": [
+     "Cão",
+     "Sem",
+     "Jafé",
+     "Ninrode"
+    ],
+    "answer": 0,
+    "ref": "Gênesis 9:22-25"
+   },
+   {
+    "q": "Qual profeta pediu porção dobrada do espírito de Elias?",
+    "options": [
+     "Eliseu",
+     "Geazi",
+     "Obadias",
+     "Micaías"
+    ],
+    "answer": 0,
+    "ref": "2 Reis 2:9"
+   },
+   {
+    "q": "Qual carta de Paulo contém: \"O amor é sofredor, é benigno\"?",
+    "options": [
+     "Romanos",
+     "Efésios",
+     "2 Coríntios",
+     "1 Coríntios"
+    ],
+    "answer": 3,
+    "ref": "1 Coríntios 13:4"
+   }
+  ]
+ },
+ {
+  "phase": 104,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual profeta foi lançado numa cisterna com lama pelos príncipes de Judá?",
+    "options": [
+     "Daniel",
+     "José",
+     "Jeremias",
+     "Micaías"
+    ],
+    "answer": 2,
+    "ref": "Jeremias 38:6"
+   },
+   {
+    "q": "Qual etíope, eunuco do rei, tirou Jeremias da cisterna?",
+    "options": [
+     "Baruque",
+     "Ebede-Meleque",
+     "Seraías",
+     "Gedalias"
+    ],
+    "answer": 1,
+    "ref": "Jeremias 38:7-13"
+   },
+   {
+    "q": "Qual escriba escreveu num rolo as palavras ditadas por Jeremias?",
+    "options": [
+     "Esdras",
+     "Safã",
+     "Baruque",
+     "Hilquias"
+    ],
+    "answer": 2,
+    "ref": "Jeremias 36:4"
+   },
+   {
+    "q": "Qual rei cortou e queimou no braseiro o rolo das profecias de Jeremias?",
+    "options": [
+     "Jeoaquim",
+     "Zedequias",
+     "Josias",
+     "Manassés"
+    ],
+    "answer": 0,
+    "ref": "Jeremias 36:22-23"
+   },
+   {
+    "q": "Qual mulher matou Sísera cravando uma estaca em sua fonte?",
+    "options": [
+     "Débora",
+     "Dalila",
+     "Mical",
+     "Jael"
+    ],
+    "answer": 3,
+    "ref": "Juízes 4:21"
+   },
+   {
+    "q": "Em que cidade os discípulos foram chamados cristãos pela primeira vez?",
+    "options": [
+     "Jerusalém",
+     "Antioquia",
+     "Éfeso",
+     "Damasco"
+    ],
+    "answer": 1,
+    "ref": "Atos 11:26"
+   },
+   {
+    "q": "Qual apóstolo foi morto à espada por ordem do rei Herodes?",
+    "options": [
+     "Pedro",
+     "Tiago, irmão de João",
+     "André",
+     "Filipe"
+    ],
+    "answer": 1,
+    "ref": "Atos 12:2"
+   },
+   {
+    "q": "Quem foi ferido por um anjo e comido de bichos por não dar glória a Deus?",
+    "options": [
+     "Faraó",
+     "Nabucodonosor",
+     "Belsazar",
+     "Herodes"
+    ],
+    "answer": 3,
+    "ref": "Atos 12:21-23"
+   },
+   {
+    "q": "Qual profeta anunciou que de Belém Efrata sairia o que governaria Israel?",
+    "options": [
+     "Miqueias",
+     "Malaquias",
+     "Zacarias",
+     "Ageu"
+    ],
+    "answer": 0,
+    "ref": "Miqueias 5:2"
+   },
+   {
+    "q": "Em qual carta está: \"Tudo posso naquele que me fortalece\"?",
+    "options": [
+     "Colossenses",
+     "Romanos",
+     "Filipenses",
+     "2 Timóteo"
+    ],
+    "answer": 2,
+    "ref": "Filipenses 4:13"
+   }
+  ]
+ },
+ {
+  "phase": 105,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual rei de Israel era conhecido por guiar o carro furiosamente?",
+    "options": [
+     "Acabe",
+     "Jeroboão",
+     "Onri",
+     "Jeú"
+    ],
+    "answer": 3,
+    "ref": "2 Reis 9:20"
+   },
+   {
+    "q": "Qual rei de Israel se casou com Jezabel, filha do rei dos sidônios?",
+    "options": [
+     "Jeú",
+     "Acabe",
+     "Onri",
+     "Acazias"
+    ],
+    "answer": 1,
+    "ref": "1 Reis 16:31"
+   },
+   {
+    "q": "De quem era a vinha que Acabe cobiçou em Jezreel?",
+    "options": [
+     "Nabal",
+     "Natã",
+     "Nabote",
+     "Naamã"
+    ],
+    "answer": 2,
+    "ref": "1 Reis 21:1-2"
+   },
+   {
+    "q": "Para qual cidade Deus enviou Elias para ser sustentado por uma viúva?",
+    "options": [
+     "Sarepta",
+     "Tiro",
+     "Jope",
+     "Biblos"
+    ],
+    "answer": 0,
+    "ref": "1 Reis 17:9"
+   },
+   {
+    "q": "Quantas vezes Naamã mergulhou no Jordão para ser curado?",
+    "options": [
+     "Sete",
+     "Três",
+     "Dez",
+     "Doze"
+    ],
+    "answer": 0,
+    "ref": "2 Reis 5:14"
+   },
+   {
+    "q": "Qual servo de Eliseu ficou leproso por cobiçar os presentes de Naamã?",
+    "options": [
+     "Zibá",
+     "Mefibosete",
+     "Geazi",
+     "Abiatar"
+    ],
+    "answer": 2,
+    "ref": "2 Reis 5:20-27"
+   },
+   {
+    "q": "Quem perguntou ao povo: \"Até quando coxeareis entre dois pensamentos?\"",
+    "options": [
+     "Eliseu",
+     "Elias",
+     "Josué",
+     "Moisés"
+    ],
+    "answer": 1,
+    "ref": "1 Reis 18:21"
+   },
+   {
+    "q": "Quem disse: \"Senhor, para quem iremos nós? Tu tens as palavras da vida eterna\"?",
+    "options": [
+     "João",
+     "Tomé",
+     "André",
+     "Pedro"
+    ],
+    "answer": 3,
+    "ref": "João 6:68"
+   },
+   {
+    "q": "Quem perguntou: \"Pode vir alguma coisa boa de Nazaré?\"",
+    "options": [
+     "Filipe",
+     "Natanael",
+     "Nicodemos",
+     "Tomé"
+    ],
+    "answer": 1,
+    "ref": "João 1:46"
+   },
+   {
+    "q": "Em Listra, a multidão chamou Barnabé e Paulo pelos nomes de quais deuses?",
+    "options": [
+     "Júpiter e Mercúrio",
+     "Marte e Vênus",
+     "Apolo e Diana",
+     "Netuno e Baco"
+    ],
+    "answer": 0,
+    "ref": "Atos 14:12"
+   }
+  ]
+ },
+ {
+  "phase": 106,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual deusa era adorada em Éfeso, motivo do tumulto contra Paulo?",
+    "options": [
+     "Astarote",
+     "Vênus",
+     "Minerva",
+     "Diana"
+    ],
+    "answer": 3,
+    "ref": "Atos 19:27-28"
+   },
+   {
+    "q": "Qual ourives, que fazia nichos de prata, provocou o tumulto em Éfeso?",
+    "options": [
+     "Alexandre",
+     "Tértulo",
+     "Demétrio",
+     "Erasto"
+    ],
+    "answer": 2,
+    "ref": "Atos 19:24"
+   },
+   {
+    "q": "Quem disse a Paulo: \"Por pouco me queres persuadir a que me faça cristão!\"?",
+    "options": [
+     "Festo",
+     "Félix",
+     "O rei Agripa",
+     "Gálio"
+    ],
+    "answer": 2,
+    "ref": "Atos 26:28"
+   },
+   {
+    "q": "Quem interrompeu Paulo dizendo em alta voz: \"Estás louco, Paulo\"?",
+    "options": [
+     "Agripa",
+     "Félix",
+     "Gálio",
+     "Festo"
+    ],
+    "answer": 3,
+    "ref": "Atos 26:24"
+   },
+   {
+    "q": "Em qual ilha Paulo naufragou e foi picado por uma víbora sem sofrer mal?",
+    "options": [
+     "Malta",
+     "Chipre",
+     "Creta",
+     "Patmos"
+    ],
+    "answer": 0,
+    "ref": "Atos 28:1-5"
+   },
+   {
+    "q": "Qual casal, fazedor de tendas como Paulo, o acolheu em Corinto?",
+    "options": [
+     "Ananias e Safira",
+     "Áquila e Priscila",
+     "Filemom e Áfia",
+     "Andrônico e Júnia"
+    ],
+    "answer": 1,
+    "ref": "Atos 18:2-3"
+   },
+   {
+    "q": "Qual judeu eloquente, natural de Alexandria, foi instruído por Áquila e Priscila?",
+    "options": [
+     "Estéfanas",
+     "Tito",
+     "Lucas",
+     "Apolo"
+    ],
+    "answer": 3,
+    "ref": "Atos 18:24-26"
+   },
+   {
+    "q": "Qual era o nome da avó de Timóteo, lembrada por Paulo por sua fé sincera?",
+    "options": [
+     "Eunice",
+     "Lídia",
+     "Loide",
+     "Priscila"
+    ],
+    "answer": 2,
+    "ref": "2 Timóteo 1:5"
+   },
+   {
+    "q": "Qual profeta comprou um campo em Anatote enquanto Jerusalém estava cercada?",
+    "options": [
+     "Isaías",
+     "Jeremias",
+     "Ezequiel",
+     "Habacuque"
+    ],
+    "answer": 1,
+    "ref": "Jeremias 32:6-9"
+   },
+   {
+    "q": "Qual profetisa foi consultada quando o livro da lei foi achado no tempo de Josias?",
+    "options": [
+     "Hulda",
+     "Débora",
+     "Miriã",
+     "Noadia"
+    ],
+    "answer": 0,
+    "ref": "2 Reis 22:14"
+   }
+  ]
+ },
+ {
+  "phase": 107,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual sumo sacerdote achou o livro da lei na casa do Senhor no reinado de Josias?",
+    "options": [
+     "Hilquias",
+     "Safã",
+     "Zadoque",
+     "Abiatar"
+    ],
+    "answer": 0,
+    "ref": "2 Reis 22:8"
+   },
+   {
+    "q": "Com quantos anos Josias começou a reinar?",
+    "options": [
+     "Sete",
+     "Doze",
+     "Dezesseis",
+     "Oito"
+    ],
+    "answer": 3,
+    "ref": "2 Reis 22:1"
+   },
+   {
+    "q": "Debaixo de que árvore a profetisa Débora julgava Israel?",
+    "options": [
+     "Carvalho",
+     "Terebinto",
+     "Palmeira",
+     "Figueira"
+    ],
+    "answer": 2,
+    "ref": "Juízes 4:5"
+   },
+   {
+    "q": "Qual comandante disse que só iria à batalha se Débora fosse com ele?",
+    "options": [
+     "Gideão",
+     "Baraque",
+     "Jefté",
+     "Abner"
+    ],
+    "answer": 1,
+    "ref": "Juízes 4:8"
+   },
+   {
+    "q": "Com quantos homens Gideão venceu os midianitas?",
+    "options": [
+     "10.000",
+     "22.000",
+     "300",
+     "3.000"
+    ],
+    "answer": 2,
+    "ref": "Juízes 7:7"
+   },
+   {
+    "q": "Qual juiz fez um voto ao Senhor que acabou atingindo sua única filha?",
+    "options": [
+     "Jefté",
+     "Sansão",
+     "Gideão",
+     "Eli"
+    ],
+    "answer": 0,
+    "ref": "Juízes 11:30-35"
+   },
+   {
+    "q": "Que palavra os efraimitas não conseguiam pronunciar, sendo descobertos no Jordão?",
+    "options": [
+     "Maranata",
+     "Hosana",
+     "Selá",
+     "Chibolete"
+    ],
+    "answer": 3,
+    "ref": "Juízes 12:6"
+   },
+   {
+    "q": "Qual rei de Israel consultou uma necromante em En-Dor?",
+    "options": [
+     "Acabe",
+     "Saul",
+     "Jeroboão",
+     "Manassés"
+    ],
+    "answer": 1,
+    "ref": "1 Samuel 28:7"
+   },
+   {
+    "q": "Qual mulher sábia impediu Davi de se vingar de Nabal?",
+    "options": [
+     "Bate-Seba",
+     "Abigail",
+     "Mical",
+     "Ainoã"
+    ],
+    "answer": 1,
+    "ref": "1 Samuel 25:32-33"
+   },
+   {
+    "q": "Qual carta afirma: \"a fé sem obras é morta\"?",
+    "options": [
+     "Romanos",
+     "Hebreus",
+     "1 Pedro",
+     "Tiago"
+    ],
+    "answer": 3,
+    "ref": "Tiago 2:26"
+   }
+  ]
+ },
+ {
+  "phase": 108,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual capítulo de Hebreus começa: \"Ora, a fé é o firme fundamento das coisas que se esperam\"?",
+    "options": [
+     "11",
+     "12",
+     "10",
+     "6"
+    ],
+    "answer": 0,
+    "ref": "Hebreus 11:1"
+   },
+   {
+    "q": "Qual profeta escreveu: \"Trazei todos os dízimos à casa do tesouro\"?",
+    "options": [
+     "Ageu",
+     "Zacarias",
+     "Malaquias",
+     "Joel"
+    ],
+    "answer": 2,
+    "ref": "Malaquias 3:10"
+   },
+   {
+    "q": "Qual profeta animou a reconstrução do templo dizendo: \"Considerai os vossos caminhos\"?",
+    "options": [
+     "Malaquias",
+     "Obadias",
+     "Naum",
+     "Ageu"
+    ],
+    "answer": 3,
+    "ref": "Ageu 1:5-8"
+   },
+   {
+    "q": "Qual profeta anunciou: \"derramarei o meu Espírito sobre toda a carne\"?",
+    "options": [
+     "Amós",
+     "Joel",
+     "Isaías",
+     "Ezequiel"
+    ],
+    "answer": 1,
+    "ref": "Joel 2:28"
+   },
+   {
+    "q": "Qual livro profético, de um só capítulo, é dirigido contra Edom?",
+    "options": [
+     "Naum",
+     "Sofonias",
+     "Obadias",
+     "Habacuque"
+    ],
+    "answer": 2,
+    "ref": "Obadias 1:1"
+   },
+   {
+    "q": "Além de Jonas, qual profeta tem um livro inteiro com a sentença contra Nínive?",
+    "options": [
+     "Naum",
+     "Obadias",
+     "Ageu",
+     "Joel"
+    ],
+    "answer": 0,
+    "ref": "Naum 1:1"
+   },
+   {
+    "q": "Em quantos dias foi terminado o muro de Jerusalém no tempo de Neemias?",
+    "options": [
+     "52",
+     "40",
+     "70",
+     "120"
+    ],
+    "answer": 0,
+    "ref": "Neemias 6:15"
+   },
+   {
+    "q": "Quais dois inimigos zombaram de Neemias e tentaram impedir a obra do muro?",
+    "options": [
+     "Hamã e Zeres",
+     "Datã e Abirão",
+     "Sambalate e Tobias",
+     "Hofni e Fineias"
+    ],
+    "answer": 2,
+    "ref": "Neemias 2:19"
+   },
+   {
+    "q": "De qual rei persa Neemias era copeiro?",
+    "options": [
+     "Ciro",
+     "Artaxerxes",
+     "Dario",
+     "Assuero"
+    ],
+    "answer": 1,
+    "ref": "Neemias 1:11-2:1"
+   },
+   {
+    "q": "Qual era o outro nome de Ester?",
+    "options": [
+     "Abigail",
+     "Jedidias",
+     "Vasti",
+     "Hadassa"
+    ],
+    "answer": 3,
+    "ref": "Ester 2:7"
+   }
+  ]
+ },
+ {
+  "phase": 109,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual rainha foi deposta por Assuero antes de Ester?",
+    "options": [
+     "Zeres",
+     "Vasti",
+     "Jezabel",
+     "Atalia"
+    ],
+    "answer": 1,
+    "ref": "Ester 1:19"
+   },
+   {
+    "q": "Qual era o nome da esposa de Hamã?",
+    "options": [
+     "Zeres",
+     "Vasti",
+     "Atalia",
+     "Dalila"
+    ],
+    "answer": 0,
+    "ref": "Ester 5:14"
+   },
+   {
+    "q": "Hamã foi enforcado na forca que havia preparado para quem?",
+    "options": [
+     "Ester",
+     "Daniel",
+     "Neemias",
+     "Mordecai"
+    ],
+    "answer": 3,
+    "ref": "Ester 7:10"
+   },
+   {
+    "q": "Que festa os judeus instituíram para lembrar o livramento no tempo de Ester?",
+    "options": [
+     "Tabernáculos",
+     "Pentecostes",
+     "Purim",
+     "Dedicação"
+    ],
+    "answer": 2,
+    "ref": "Ester 9:26"
+   },
+   {
+    "q": "Qual mulher reinou sobre Judá depois de tentar destruir toda a descendência real?",
+    "options": [
+     "Jezabel",
+     "Vasti",
+     "Atalia",
+     "Maaca"
+    ],
+    "answer": 2,
+    "ref": "2 Reis 11:1-3"
+   },
+   {
+    "q": "Qual menino ficou escondido seis anos na casa do Senhor e foi feito rei aos sete?",
+    "options": [
+     "Josias",
+     "Uzias",
+     "Manassés",
+     "Joás"
+    ],
+    "answer": 3,
+    "ref": "2 Reis 11:2-3, 21"
+   },
+   {
+    "q": "Qual sacerdote organizou a coroação do menino Joás?",
+    "options": [
+     "Joiada",
+     "Hilquias",
+     "Zadoque",
+     "Abiatar"
+    ],
+    "answer": 0,
+    "ref": "2 Reis 11:4-12"
+   },
+   {
+    "q": "Qual rei de Judá recebeu de Deus mais quinze anos de vida?",
+    "options": [
+     "Josias",
+     "Ezequias",
+     "Asa",
+     "Josafá"
+    ],
+    "answer": 1,
+    "ref": "2 Reis 20:6"
+   },
+   {
+    "q": "Que sinal Deus deu a Ezequias de que seria curado?",
+    "options": [
+     "Fogo do céu no altar",
+     "Orvalho só na lã",
+     "Chuva fora de época",
+     "A sombra voltou dez graus"
+    ],
+    "answer": 3,
+    "ref": "2 Reis 20:9-11"
+   },
+   {
+    "q": "Qual rei da Assíria subiu contra as cidades de Judá no tempo de Ezequias?",
+    "options": [
+     "Salmaneser",
+     "Tiglate-Pileser",
+     "Senaqueribe",
+     "Nabucodonosor"
+    ],
+    "answer": 2,
+    "ref": "2 Reis 18:13"
+   }
+  ]
+ },
+ {
+  "phase": 110,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Quantos homens do arraial assírio o anjo do Senhor feriu numa só noite?",
+    "options": [
+     "100.000",
+     "185.000",
+     "50.000",
+     "120.000"
+    ],
+    "answer": 1,
+    "ref": "2 Reis 19:35"
+   },
+   {
+    "q": "Qual rei de Judá reinou 55 anos em Jerusalém?",
+    "options": [
+     "Manassés",
+     "Uzias",
+     "Ezequias",
+     "Josias"
+    ],
+    "answer": 0,
+    "ref": "2 Reis 21:1"
+   },
+   {
+    "q": "Qual carta de Paulo intercede pelo escravo fugitivo Onésimo?",
+    "options": [
+     "Filemom",
+     "Tito",
+     "Colossenses",
+     "2 Timóteo"
+    ],
+    "answer": 0,
+    "ref": "Filemom 1:10"
+   },
+   {
+    "q": "Qual destes NÃO aparece na lista do fruto do Espírito em Gálatas 5?",
+    "options": [
+     "Longanimidade",
+     "Mansidão",
+     "Temperança",
+     "Sabedoria"
+    ],
+    "answer": 3,
+    "ref": "Gálatas 5:22-23"
+   },
+   {
+    "q": "Quem escreveu: \"Eu plantei, Apolo regou; mas Deus deu o crescimento\"?",
+    "options": [
+     "Pedro",
+     "Barnabé",
+     "Paulo",
+     "Timóteo"
+    ],
+    "answer": 2,
+    "ref": "1 Coríntios 3:6"
+   },
+   {
+    "q": "Na armadura de Deus descrita por Paulo, o escudo é o da:",
+    "options": [
+     "Verdade",
+     "Fé",
+     "Justiça",
+     "Salvação"
+    ],
+    "answer": 1,
+    "ref": "Efésios 6:16"
+   },
+   {
+    "q": "Qual carta diz que \"toda a Escritura é divinamente inspirada\"?",
+    "options": [
+     "1 Timóteo",
+     "Tito",
+     "2 Timóteo",
+     "2 Pedro"
+    ],
+    "answer": 2,
+    "ref": "2 Timóteo 3:16"
+   },
+   {
+    "q": "Quem foram os pais do profeta Samuel?",
+    "options": [
+     "Elcana e Ana",
+     "Manoá e sua mulher",
+     "Zacarias e Isabel",
+     "Anrão e Joquebede"
+    ],
+    "answer": 0,
+    "ref": "1 Samuel 1:19-20"
+   },
+   {
+    "q": "Qual era o nome da outra mulher de Elcana, que provocava Ana?",
+    "options": [
+     "Orfa",
+     "Zilpa",
+     "Ainoã",
+     "Penina"
+    ],
+    "answer": 3,
+    "ref": "1 Samuel 1:2, 6"
+   },
+   {
+    "q": "Quais eram os dois filhos ímpios do sacerdote Eli?",
+    "options": [
+     "Nadabe e Abiú",
+     "Hofni e Fineias",
+     "Joel e Abias",
+     "Malom e Quiliom"
+    ],
+    "answer": 1,
+    "ref": "1 Samuel 2:34"
+   }
+  ]
+ },
+ {
+  "phase": 111,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual nome babilônico foi dado a Daniel?",
+    "options": [
+     "Belsazar",
+     "Beltessazar",
+     "Sadraque",
+     "Mesaque"
+    ],
+    "answer": 1,
+    "ref": "Daniel 1:7"
+   },
+   {
+    "q": "Qual rei babilônico viu dedos de mão escrevendo na parede durante um banquete?",
+    "options": [
+     "Nabucodonosor",
+     "Dario",
+     "Ciro",
+     "Belsazar"
+    ],
+    "answer": 3,
+    "ref": "Daniel 5:1-5"
+   },
+   {
+    "q": "Na escrita da parede, o que significava \"TEQUEL\"?",
+    "options": [
+     "Pesado na balança e achado em falta",
+     "Deus contou o teu reino",
+     "O teu reino foi dividido",
+     "Os teus dias acabaram"
+    ],
+    "answer": 0,
+    "ref": "Daniel 5:27"
+   },
+   {
+    "q": "Na estátua do sonho de Nabucodonosor, de que era a cabeça?",
+    "options": [
+     "Prata",
+     "Bronze",
+     "Ouro fino",
+     "Ferro"
+    ],
+    "answer": 2,
+    "ref": "Daniel 2:32"
+   },
+   {
+    "q": "Na visão de Daniel 7, como era o primeiro animal que subiu do mar?",
+    "options": [
+     "Urso",
+     "Leopardo com quatro asas",
+     "Bode",
+     "Leão com asas de águia"
+    ],
+    "answer": 3,
+    "ref": "Daniel 7:4"
+   },
+   {
+    "q": "Qual anjo foi mandado explicar a Daniel a visão do carneiro e do bode?",
+    "options": [
+     "Miguel",
+     "Gabriel",
+     "Rafael",
+     "Uriel"
+    ],
+    "answer": 1,
+    "ref": "Daniel 8:16"
+   },
+   {
+    "q": "Por quantos dias Daniel e seus amigos foram provados comendo legumes e bebendo água?",
+    "options": [
+     "Sete",
+     "Trinta",
+     "Dez",
+     "Quarenta"
+    ],
+    "answer": 2,
+    "ref": "Daniel 1:12-15"
+   },
+   {
+    "q": "Quantas vezes por dia Daniel se ajoelhava para orar?",
+    "options": [
+     "Três",
+     "Duas",
+     "Sete",
+     "Cinco"
+    ],
+    "answer": 0,
+    "ref": "Daniel 6:10"
+   },
+   {
+    "q": "Quantas vezes mais que o costume a fornalha foi aquecida para os três jovens?",
+    "options": [
+     "Sete",
+     "Três",
+     "Dez",
+     "Duas"
+    ],
+    "answer": 0,
+    "ref": "Daniel 3:19"
+   },
+   {
+    "q": "Qual rei da Pérsia decretou que os judeus voltassem para edificar a casa do Senhor?",
+    "options": [
+     "Dario",
+     "Artaxerxes",
+     "Ciro",
+     "Assuero"
+    ],
+    "answer": 2,
+    "ref": "Esdras 1:1-3"
+   }
+  ]
+ },
+ {
+  "phase": 112,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual líder do retorno, junto com o sumo sacerdote Josué, começou a obra do templo?",
+    "options": [
+     "Neemias",
+     "Zorobabel",
+     "Esdras",
+     "Mordecai"
+    ],
+    "answer": 1,
+    "ref": "Esdras 3:8"
+   },
+   {
+    "q": "Qual escriba, \"hábil na lei de Moisés\", subiu da Babilônia no tempo de Artaxerxes?",
+    "options": [
+     "Baruque",
+     "Neemias",
+     "Safã",
+     "Esdras"
+    ],
+    "answer": 3,
+    "ref": "Esdras 7:6"
+   },
+   {
+    "q": "Qual sumo sacerdote aparece na visão de Zacarias vestido de vestes sujas?",
+    "options": [
+     "Joiada",
+     "Josué",
+     "Eliasibe",
+     "Hilquias"
+    ],
+    "answer": 1,
+    "ref": "Zacarias 3:1-3"
+   },
+   {
+    "q": "Qual profeta anunciou o rei que viria \"montado sobre um jumento\"?",
+    "options": [
+     "Zacarias",
+     "Miqueias",
+     "Isaías",
+     "Malaquias"
+    ],
+    "answer": 0,
+    "ref": "Zacarias 9:9"
+   },
+   {
+    "q": "Quem disse: \"Senhor, lembra-te de mim, quando entrares no teu reino\"?",
+    "options": [
+     "O centurião",
+     "José de Arimateia",
+     "Pedro",
+     "Um malfeitor crucificado"
+    ],
+    "answer": 3,
+    "ref": "Lucas 23:42"
+   },
+   {
+    "q": "Quem ajudou José de Arimateia a sepultar Jesus, levando mirra e aloés?",
+    "options": [
+     "Lázaro",
+     "Simão Cireneu",
+     "Nicodemos",
+     "Gamaliel"
+    ],
+    "answer": 2,
+    "ref": "João 19:38-39"
+   },
+   {
+    "q": "Quem foi obrigado pelos soldados a levar a cruz de Jesus?",
+    "options": [
+     "Simão Pedro",
+     "José de Arimateia",
+     "Simão Cireneu",
+     "Barrabás"
+    ],
+    "answer": 2,
+    "ref": "Marcos 15:21"
+   },
+   {
+    "q": "Para a casa de qual sumo sacerdote Jesus foi levado, onde estavam os escribas e anciãos?",
+    "options": [
+     "Anás",
+     "Gamaliel",
+     "Ananias",
+     "Caifás"
+    ],
+    "answer": 3,
+    "ref": "Mateus 26:57"
+   },
+   {
+    "q": "Qual fariseu, doutor da lei, aconselhou o Sinédrio a deixar os apóstolos em paz?",
+    "options": [
+     "Gamaliel",
+     "Nicodemos",
+     "Caifás",
+     "Saulo"
+    ],
+    "answer": 0,
+    "ref": "Atos 5:34-39"
+   },
+   {
+    "q": "Quem mentiu ao Espírito Santo sobre o preço de uma propriedade e caiu morto?",
+    "options": [
+     "Simão",
+     "Ananias",
+     "Elimas",
+     "Demas"
+    ],
+    "answer": 1,
+    "ref": "Atos 5:1-5"
+   }
+  ]
+ },
+ {
+  "phase": 113,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual discípulo de Damasco foi enviado para impor as mãos sobre Saulo?",
+    "options": [
+     "Barnabé",
+     "Judas",
+     "Silas",
+     "Ananias"
+    ],
+    "answer": 3,
+    "ref": "Atos 9:10-17"
+   },
+   {
+    "q": "Qual era o nome da rua de Damasco onde Saulo estava hospedado?",
+    "options": [
+     "Larga",
+     "Do Templo",
+     "Direita",
+     "Formosa"
+    ],
+    "answer": 2,
+    "ref": "Atos 9:11"
+   },
+   {
+    "q": "Quem levou Saulo aos apóstolos em Jerusalém e contou como ele havia visto o Senhor?",
+    "options": [
+     "Ananias",
+     "Barnabé",
+     "Pedro",
+     "Silas"
+    ],
+    "answer": 1,
+    "ref": "Atos 9:27"
+   },
+   {
+    "q": "Qual era a cidade natal de Paulo?",
+    "options": [
+     "Tarso",
+     "Antioquia",
+     "Damasco",
+     "Corinto"
+    ],
+    "answer": 0,
+    "ref": "Atos 22:3"
+   },
+   {
+    "q": "Paulo dizia pertencer a qual tribo de Israel?",
+    "options": [
+     "Benjamim",
+     "Judá",
+     "Levi",
+     "Efraim"
+    ],
+    "answer": 0,
+    "ref": "Filipenses 3:5"
+   },
+   {
+    "q": "Quem Paulo escolheu como companheiro após separar-se de Barnabé?",
+    "options": [
+     "João Marcos",
+     "Tito",
+     "Lucas",
+     "Silas"
+    ],
+    "answer": 3,
+    "ref": "Atos 15:40"
+   },
+   {
+    "q": "Por causa de quem Paulo e Barnabé tiveram uma desavença e se separaram?",
+    "options": [
+     "Silas",
+     "Timóteo",
+     "João Marcos",
+     "Demas"
+    ],
+    "answer": 2,
+    "ref": "Atos 15:37-39"
+   },
+   {
+    "q": "Em qual cidade Paulo e Silas cantavam na prisão quando houve um terremoto?",
+    "options": [
+     "Tessalônica",
+     "Filipos",
+     "Bereia",
+     "Corinto"
+    ],
+    "answer": 1,
+    "ref": "Atos 16:12, 25-26"
+   },
+   {
+    "q": "Os judeus de qual cidade \"examinavam cada dia nas Escrituras\" o que Paulo dizia?",
+    "options": [
+     "Tessalônica",
+     "Atenas",
+     "Bereia",
+     "Filipos"
+    ],
+    "answer": 2,
+    "ref": "Atos 17:10-11"
+   },
+   {
+    "q": "Que inscrição Paulo encontrou num altar em Atenas?",
+    "options": [
+     "Ao Deus desconhecido",
+     "Ao Deus altíssimo",
+     "A Júpiter",
+     "Ao Deus de Israel"
+    ],
+    "answer": 0,
+    "ref": "Atos 17:23"
+   }
+  ]
+ },
+ {
+  "phase": 114,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual membro do Areópago creu após ouvir Paulo em Atenas?",
+    "options": [
+     "Erasto",
+     "Crispo",
+     "Sóstenes",
+     "Dionísio"
+    ],
+    "answer": 3,
+    "ref": "Atos 17:34"
+   },
+   {
+    "q": "Qual principal da sinagoga de Corinto creu no Senhor com toda a sua casa?",
+    "options": [
+     "Sóstenes",
+     "Crispo",
+     "Jairo",
+     "Gaio"
+    ],
+    "answer": 1,
+    "ref": "Atos 18:8"
+   },
+   {
+    "q": "Qual procônsul da Acaia recusou-se a julgar a acusação dos judeus contra Paulo?",
+    "options": [
+     "Festo",
+     "Gálio",
+     "Félix",
+     "Sérgio Paulo"
+    ],
+    "answer": 1,
+    "ref": "Atos 18:12-16"
+   },
+   {
+    "q": "Qual procônsul de Chipre creu depois que o mago Elimas ficou cego?",
+    "options": [
+     "Gálio",
+     "Cornélio",
+     "Félix",
+     "Sérgio Paulo"
+    ],
+    "answer": 3,
+    "ref": "Atos 13:7-12"
+   },
+   {
+    "q": "Qual governador deixou Paulo preso por dois anos, querendo agradar aos judeus?",
+    "options": [
+     "Félix",
+     "Festo",
+     "Pilatos",
+     "Gálio"
+    ],
+    "answer": 0,
+    "ref": "Atos 24:27"
+   },
+   {
+    "q": "Qual orador acusou Paulo diante do governador Félix?",
+    "options": [
+     "Demétrio",
+     "Alexandre",
+     "Tértulo",
+     "Áquila"
+    ],
+    "answer": 2,
+    "ref": "Atos 24:1-2"
+   },
+   {
+    "q": "Ao ser julgado diante de Festo, para quem Paulo apelou?",
+    "options": [
+     "Para Agripa",
+     "Para o Sinédrio",
+     "Para Félix",
+     "Para César"
+    ],
+    "answer": 3,
+    "ref": "Atos 25:11"
+   },
+   {
+    "q": "Qual era o nome do centurião que levou Paulo preso para a Itália?",
+    "options": [
+     "Cornélio",
+     "Júlio",
+     "Cláudio",
+     "Lísias"
+    ],
+    "answer": 1,
+    "ref": "Atos 27:1"
+   },
+   {
+    "q": "Como se chamava o principal da ilha de Malta, cujo pai Paulo curou?",
+    "options": [
+     "Júlio",
+     "Aristarco",
+     "Públio",
+     "Trófimo"
+    ],
+    "answer": 2,
+    "ref": "Atos 28:7-8"
+   },
+   {
+    "q": "Quanto tempo Paulo ficou em Roma, na casa que havia alugado?",
+    "options": [
+     "Dois anos inteiros",
+     "Três meses",
+     "Um ano",
+     "Cinco anos"
+    ],
+    "answer": 0,
+    "ref": "Atos 28:30"
+   }
+  ]
+ },
+ {
+  "phase": 115,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual capítulo de Isaías diz que o Servo \"foi ferido pelas nossas transgressões\"?",
+    "options": [
+     "53",
+     "40",
+     "9",
+     "61"
+    ],
+    "answer": 0,
+    "ref": "Isaías 53:5"
+   },
+   {
+    "q": "Qual destes NÃO está entre os nomes do menino em Isaías 9:6?",
+    "options": [
+     "Maravilhoso",
+     "Pai da Eternidade",
+     "Leão de Judá",
+     "Príncipe da Paz"
+    ],
+    "answer": 2,
+    "ref": "Isaías 9:6"
+   },
+   {
+    "q": "Na visão de Isaías, quem tocou seus lábios com uma brasa viva tirada do altar?",
+    "options": [
+     "Um querubim",
+     "Um serafim",
+     "Gabriel",
+     "Miguel"
+    ],
+    "answer": 1,
+    "ref": "Isaías 6:6-7"
+   },
+   {
+    "q": "Quantas asas tinha cada serafim na visão de Isaías?",
+    "options": [
+     "Quatro",
+     "Duas",
+     "Oito",
+     "Seis"
+    ],
+    "answer": 3,
+    "ref": "Isaías 6:2"
+   },
+   {
+    "q": "Que objeção Jeremias apresentou quando Deus o chamou para ser profeta?",
+    "options": [
+     "Que era pesado de língua",
+     "Que era uma criança",
+     "Que era impuro de lábios",
+     "Que era o menor da casa"
+    ],
+    "answer": 1,
+    "ref": "Jeremias 1:6"
+   },
+   {
+    "q": "Que objeto Jeremias escondeu junto ao Eufrates e depois encontrou apodrecido?",
+    "options": [
+     "Um cinto de linho",
+     "Um jugo de madeira",
+     "Um vaso de barro",
+     "Uma vara de amendoeira"
+    ],
+    "answer": 0,
+    "ref": "Jeremias 13:1-7"
+   },
+   {
+    "q": "Quantos anos Jeremias anunciou que as nações serviriam ao rei da Babilônia?",
+    "options": [
+     "40",
+     "50",
+     "100",
+     "70"
+    ],
+    "answer": 3,
+    "ref": "Jeremias 25:11"
+   },
+   {
+    "q": "Qual profeta deitou-se sobre o lado esquerdo por 390 dias como sinal?",
+    "options": [
+     "Jeremias",
+     "Isaías",
+     "Ezequiel",
+     "Oseias"
+    ],
+    "answer": 2,
+    "ref": "Ezequiel 4:4-5"
+   },
+   {
+    "q": "Qual profeta perguntou: \"Até quando, Senhor, clamarei eu, e tu não me escutarás?\"",
+    "options": [
+     "Jeremias",
+     "Jó",
+     "Habacuque",
+     "Davi"
+    ],
+    "answer": 2,
+    "ref": "Habacuque 1:2"
+   },
+   {
+    "q": "Qual profeta viu um cesto de frutos de verão como sinal do fim de Israel?",
+    "options": [
+     "Oseias",
+     "Jeremias",
+     "Joel",
+     "Amós"
+    ],
+    "answer": 3,
+    "ref": "Amós 8:1-2"
+   }
+  ]
+ },
+ {
+  "phase": 116,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual profeta disse que se alegraria no Senhor ainda que a figueira não florescesse?",
+    "options": [
+     "Habacuque",
+     "Joel",
+     "Amós",
+     "Naum"
+    ],
+    "answer": 0,
+    "ref": "Habacuque 3:17-18"
+   },
+   {
+    "q": "Qual profeta viu em visão uma vara de amendoeira?",
+    "options": [
+     "Amós",
+     "Jeremias",
+     "Zacarias",
+     "Ezequiel"
+    ],
+    "answer": 1,
+    "ref": "Jeremias 1:11"
+   },
+   {
+    "q": "Qual profeta comeu um rolo que em sua boca era doce como o mel?",
+    "options": [
+     "Jeremias",
+     "Isaías",
+     "Zacarias",
+     "Ezequiel"
+    ],
+    "answer": 3,
+    "ref": "Ezequiel 3:1-3"
+   },
+   {
+    "q": "Qual destes NÃO era um dos rostos dos seres viventes em Ezequiel 1?",
+    "options": [
+     "Leão",
+     "Boi",
+     "Cordeiro",
+     "Águia"
+    ],
+    "answer": 2,
+    "ref": "Ezequiel 1:10"
+   },
+   {
+    "q": "Qual profeta disse que o Senhor pede: \"que pratiques a justiça, e ames a beneficência\"?",
+    "options": [
+     "Amós",
+     "Miqueias",
+     "Oseias",
+     "Isaías"
+    ],
+    "answer": 1,
+    "ref": "Miqueias 6:8"
+   },
+   {
+    "q": "Qual profeta disse: \"Rasgai o vosso coração, e não as vossas vestes\"?",
+    "options": [
+     "Joel",
+     "Jonas",
+     "Isaías",
+     "Malaquias"
+    ],
+    "answer": 0,
+    "ref": "Joel 2:13"
+   },
+   {
+    "q": "Qual profeta disse: \"O meu povo foi destruído, porque lhe faltou o conhecimento\"?",
+    "options": [
+     "Oseias",
+     "Amós",
+     "Jeremias",
+     "Isaías"
+    ],
+    "answer": 0,
+    "ref": "Oseias 4:6"
+   },
+   {
+    "q": "Qual profeta anunciou que Deus enviaria Elias antes do grande e terrível dia do Senhor?",
+    "options": [
+     "Joel",
+     "Zacarias",
+     "Isaías",
+     "Malaquias"
+    ],
+    "answer": 3,
+    "ref": "Malaquias 4:5"
+   },
+   {
+    "q": "Qual destes era o nome de um filho do profeta Oseias?",
+    "options": [
+     "Sear-Jasube",
+     "Icabode",
+     "Lo-Ami",
+     "Emanuel"
+    ],
+    "answer": 2,
+    "ref": "Oseias 1:9"
+   },
+   {
+    "q": "Qual livro diz: \"Lembra-te do teu Criador nos dias da tua mocidade\"?",
+    "options": [
+     "Provérbios",
+     "Eclesiastes",
+     "Salmos",
+     "Cantares"
+    ],
+    "answer": 1,
+    "ref": "Eclesiastes 12:1"
+   }
+  ]
+ },
+ {
+  "phase": 117,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "O último capítulo de Provérbios traz as palavras de qual rei, ensinadas por sua mãe?",
+    "options": [
+     "Ezequias",
+     "Salomão",
+     "Lemuel",
+     "Davi"
+    ],
+    "answer": 2,
+    "ref": "Provérbios 31:1"
+   },
+   {
+    "q": "Qual salmo começa: \"O Senhor é o meu pastor; nada me faltará\"?",
+    "options": [
+     "23",
+     "1",
+     "91",
+     "121"
+    ],
+    "answer": 0,
+    "ref": "Salmos 23:1"
+   },
+   {
+    "q": "Qual é o salmo mais longo da Bíblia, com 176 versículos?",
+    "options": [
+     "150",
+     "78",
+     "89",
+     "119"
+    ],
+    "answer": 3,
+    "ref": "Salmos 119"
+   },
+   {
+    "q": "Qual salmo é chamado no título de \"oração de Moisés, homem de Deus\"?",
+    "options": [
+     "23",
+     "90",
+     "51",
+     "1"
+    ],
+    "answer": 1,
+    "ref": "Salmos 90 (título)"
+   },
+   {
+    "q": "O salmo 51, de arrependimento, foi escrito por Davi depois do pecado com quem?",
+    "options": [
+     "Abigail",
+     "Bate-Seba",
+     "Mical",
+     "Ainoã"
+    ],
+    "answer": 1,
+    "ref": "Salmos 51 (título)"
+   },
+   {
+    "q": "Quem era o marido de Bate-Seba, morto na batalha por ordem de Davi?",
+    "options": [
+     "Joabe",
+     "Abner",
+     "Amasa",
+     "Urias"
+    ],
+    "answer": 3,
+    "ref": "2 Samuel 11:3, 15"
+   },
+   {
+    "q": "Qual filho de Davi se revoltou e ficou preso pela cabeça num carvalho?",
+    "options": [
+     "Absalão",
+     "Amnom",
+     "Adonias",
+     "Salomão"
+    ],
+    "answer": 0,
+    "ref": "2 Samuel 18:9"
+   },
+   {
+    "q": "Quem matou Absalão, contrariando a ordem de Davi?",
+    "options": [
+     "Abisai",
+     "Davi",
+     "Joabe",
+     "Itai"
+    ],
+    "answer": 2,
+    "ref": "2 Samuel 18:14"
+   },
+   {
+    "q": "Qual conselheiro de Davi apoiou Absalão e depois se enforcou?",
+    "options": [
+     "Husai",
+     "Joabe",
+     "Zibá",
+     "Aitofel"
+    ],
+    "answer": 3,
+    "ref": "2 Samuel 17:23"
+   },
+   {
+    "q": "Qual amigo de Davi fingiu apoiar Absalão para frustrar o conselho de Aitofel?",
+    "options": [
+     "Joabe",
+     "Husai",
+     "Abisai",
+     "Mefibosete"
+    ],
+    "answer": 1,
+    "ref": "2 Samuel 17:14"
+   }
+  ]
+ },
+ {
+  "phase": 118,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual filho de Jônatas, aleijado dos pés, comia sempre à mesa de Davi?",
+    "options": [
+     "Is-Bosete",
+     "Zibá",
+     "Mefibosete",
+     "Mica"
+    ],
+    "answer": 2,
+    "ref": "2 Samuel 9:13"
+   },
+   {
+    "q": "Qual filho de Saul foi feito rei sobre Israel por Abner após a morte do pai?",
+    "options": [
+     "Is-Bosete",
+     "Jônatas",
+     "Mefibosete",
+     "Abinadabe"
+    ],
+    "answer": 0,
+    "ref": "2 Samuel 2:8-10"
+   },
+   {
+    "q": "Qual chefe do exército de Saul foi morto por Joabe em Hebrom?",
+    "options": [
+     "Abner",
+     "Amasa",
+     "Urias",
+     "Doegue"
+    ],
+    "answer": 0,
+    "ref": "2 Samuel 3:27"
+   },
+   {
+    "q": "Qual edomita matou os sacerdotes de Nobe por ordem de Saul?",
+    "options": [
+     "Abner",
+     "Zibá",
+     "Doegue",
+     "Simei"
+    ],
+    "answer": 2,
+    "ref": "1 Samuel 22:18"
+   },
+   {
+    "q": "Quem amaldiçoou Davi e atirou pedras nele quando fugia de Absalão?",
+    "options": [
+     "Zibá",
+     "Simei",
+     "Aitofel",
+     "Seba"
+    ],
+    "answer": 1,
+    "ref": "2 Samuel 16:5-6"
+   },
+   {
+    "q": "Quem estendeu a mão à arca de Deus, quando os bois tropeçaram, e morreu?",
+    "options": [
+     "Aiô",
+     "Obede-Edom",
+     "Abinadabe",
+     "Uzá"
+    ],
+    "answer": 3,
+    "ref": "2 Samuel 6:6-7"
+   },
+   {
+    "q": "Na casa de quem a arca do Senhor ficou três meses?",
+    "options": [
+     "Abinadabe",
+     "Obede-Edom",
+     "Uzá",
+     "Zadoque"
+    ],
+    "answer": 1,
+    "ref": "2 Samuel 6:11"
+   },
+   {
+    "q": "Qual filha de Saul desprezou Davi ao vê-lo dançar diante da arca?",
+    "options": [
+     "Mical",
+     "Merabe",
+     "Tamar",
+     "Abigail"
+    ],
+    "answer": 0,
+    "ref": "2 Samuel 6:16"
+   },
+   {
+    "q": "Qual profeta levou a Davi a escolha entre três castigos após o recenseamento?",
+    "options": [
+     "Natã",
+     "Samuel",
+     "Aías",
+     "Gade"
+    ],
+    "answer": 3,
+    "ref": "2 Samuel 24:11-13"
+   },
+   {
+    "q": "Na eira de quem Davi edificou um altar para deter a praga?",
+    "options": [
+     "Boaz",
+     "Obede-Edom",
+     "Araúna",
+     "Nabal"
+    ],
+    "answer": 2,
+    "ref": "2 Samuel 24:18-25"
+   }
+  ]
+ },
+ {
+  "phase": 119,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual filho de Davi se exaltou dizendo \"Eu reinarei\", antes de Salomão ser ungido?",
+    "options": [
+     "Absalão",
+     "Amnom",
+     "Adonias",
+     "Quileabe"
+    ],
+    "answer": 2,
+    "ref": "1 Reis 1:5"
+   },
+   {
+    "q": "Qual sacerdote foi afastado por Salomão por ter apoiado Adonias?",
+    "options": [
+     "Zadoque",
+     "Aimeleque",
+     "Benaia",
+     "Abiatar"
+    ],
+    "answer": 3,
+    "ref": "1 Reis 2:26-27"
+   },
+   {
+    "q": "Que nome o Senhor deu a Salomão por meio do profeta Natã?",
+    "options": [
+     "Jedidias",
+     "Jesurum",
+     "Emanuel",
+     "Lemuel"
+    ],
+    "answer": 0,
+    "ref": "2 Samuel 12:25"
+   },
+   {
+    "q": "Em quantos anos Salomão edificou o templo?",
+    "options": [
+     "Três",
+     "Sete",
+     "Quarenta",
+     "Vinte"
+    ],
+    "answer": 1,
+    "ref": "1 Reis 6:38"
+   },
+   {
+    "q": "Qual rei de Tiro forneceu madeira de cedro para o templo de Salomão?",
+    "options": [
+     "Ben-Hadade",
+     "Etbaal",
+     "Rezim",
+     "Hirão"
+    ],
+    "answer": 3,
+    "ref": "1 Reis 5:1-10"
+   },
+   {
+    "q": "Quais os nomes das duas colunas de bronze do templo de Salomão?",
+    "options": [
+     "Urim e Tumim",
+     "Efraim e Manassés",
+     "Jaquim e Boaz",
+     "Hofni e Fineias"
+    ],
+    "answer": 2,
+    "ref": "1 Reis 7:21"
+   },
+   {
+    "q": "Quem visitou Salomão para prová-lo com perguntas difíceis?",
+    "options": [
+     "A rainha Vasti",
+     "A rainha de Sabá",
+     "A rainha Candace",
+     "A rainha Jezabel"
+    ],
+    "answer": 1,
+    "ref": "1 Reis 10:1"
+   },
+   {
+    "q": "Qual servo de Salomão levantou a mão contra o rei e depois reinou sobre dez tribos?",
+    "options": [
+     "Jeroboão",
+     "Roboão",
+     "Baasa",
+     "Onri"
+    ],
+    "answer": 0,
+    "ref": "1 Reis 11:26; 12:20"
+   },
+   {
+    "q": "Em quantos pedaços o profeta Aías rasgou a capa nova diante de Jeroboão?",
+    "options": [
+     "Doze",
+     "Dez",
+     "Dois",
+     "Sete"
+    ],
+    "answer": 0,
+    "ref": "1 Reis 11:29-31"
+   },
+   {
+    "q": "Em quais cidades Jeroboão colocou os bezerros de ouro?",
+    "options": [
+     "Samaria e Siquém",
+     "Gilgal e Berseba",
+     "Siló e Hebrom",
+     "Betel e Dã"
+    ],
+    "answer": 3,
+    "ref": "1 Reis 12:28-29"
+   }
+  ]
+ },
+ {
+  "phase": 120,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual rei provocou a divisão do reino ao seguir o conselho dos jovens?",
+    "options": [
+     "Jeroboão",
+     "Abias",
+     "Roboão",
+     "Asa"
+    ],
+    "answer": 2,
+    "ref": "1 Reis 12:13-16"
+   },
+   {
+    "q": "Qual rei de Israel comprou o monte de Samaria e edificou ali a cidade?",
+    "options": [
+     "Acabe",
+     "Onri",
+     "Jeroboão",
+     "Baasa"
+    ],
+    "answer": 1,
+    "ref": "1 Reis 16:24"
+   },
+   {
+    "q": "Qual profeta, filho de Inlá, anunciou a derrota de Acabe em Ramote-Gileade?",
+    "options": [
+     "Elias",
+     "Jeú",
+     "Micaías",
+     "Obadias"
+    ],
+    "answer": 2,
+    "ref": "1 Reis 22:8, 17"
+   },
+   {
+    "q": "Qual mordomo de Acabe escondeu cem profetas em cavernas?",
+    "options": [
+     "Obadias",
+     "Micaías",
+     "Jeú",
+     "Hazael"
+    ],
+    "answer": 0,
+    "ref": "1 Reis 18:3-4"
+   },
+   {
+    "q": "Debaixo de que árvore Elias pediu para si a morte no deserto?",
+    "options": [
+     "Carvalho",
+     "Figueira",
+     "Palmeira",
+     "Zimbro"
+    ],
+    "answer": 3,
+    "ref": "1 Reis 19:4"
+   },
+   {
+    "q": "Depois do vento, do terremoto e do fogo, o que Elias ouviu no monte Horebe?",
+    "options": [
+     "Uma trombeta",
+     "Uma voz mansa e delicada",
+     "Um trovão",
+     "O cântico dos anjos"
+    ],
+    "answer": 1,
+    "ref": "1 Reis 19:11-12"
+   },
+   {
+    "q": "O que Eliseu estava fazendo quando Elias lançou sobre ele a sua capa?",
+    "options": [
+     "Pastoreando ovelhas",
+     "Lavrando com bois",
+     "Pescando",
+     "Colhendo figos"
+    ],
+    "answer": 1,
+    "ref": "1 Reis 19:19"
+   },
+   {
+    "q": "Quem zombou de Eliseu chamando-o de \"calvo\" a caminho de Betel?",
+    "options": [
+     "Soldados sírios",
+     "Profetas de Baal",
+     "Os moradores de Jericó",
+     "Uns rapazes"
+    ],
+    "answer": 3,
+    "ref": "2 Reis 2:23-24"
+   },
+   {
+    "q": "Qual mulher rica preparou um pequeno quarto para Eliseu em sua casa?",
+    "options": [
+     "A sunamita",
+     "A viúva de Sarepta",
+     "Abigail",
+     "Rispa"
+    ],
+    "answer": 0,
+    "ref": "2 Reis 4:8-10"
+   },
+   {
+    "q": "O que Eliseu lançou na água para fazer o ferro do machado flutuar?",
+    "options": [
+     "Sal",
+     "Farinha",
+     "Um pedaço de pau",
+     "Sua capa"
+    ],
+    "answer": 2,
+    "ref": "2 Reis 6:5-6"
+   }
+  ]
+ },
+ {
+  "phase": 121,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "O que Eliseu deitou na panela envenenada para que o guisado ficasse bom?",
+    "options": [
+     "Sal",
+     "Mel",
+     "Azeite",
+     "Farinha"
+    ],
+    "answer": 3,
+    "ref": "2 Reis 4:40-41"
+   },
+   {
+    "q": "Cercado pelo exército sírio em Dotã, Eliseu pediu que Deus abrisse o quê do seu servo?",
+    "options": [
+     "Os ouvidos",
+     "Os olhos",
+     "A boca",
+     "As mãos"
+    ],
+    "answer": 1,
+    "ref": "2 Reis 6:17"
+   },
+   {
+    "q": "Os ossos de qual profeta fizeram reviver um morto que os tocou?",
+    "options": [
+     "Elias",
+     "Samuel",
+     "Eliseu",
+     "Isaías"
+    ],
+    "answer": 2,
+    "ref": "2 Reis 13:20-21"
+   },
+   {
+    "q": "Segundo Romanos 6:23, \"o salário do pecado é a...\":",
+    "options": [
+     "Morte",
+     "Condenação",
+     "Separação",
+     "Lei"
+    ],
+    "answer": 0,
+    "ref": "Romanos 6:23"
+   },
+   {
+    "q": "Segundo Romanos 8, nenhuma criatura nos poderá separar do quê?",
+    "options": [
+     "Do amor de Deus",
+     "Da fé",
+     "Da lei",
+     "Da esperança"
+    ],
+    "answer": 0,
+    "ref": "Romanos 8:38-39"
+   },
+   {
+    "q": "Qual carta diz a um jovem líder: \"Ninguém despreze a tua mocidade\"?",
+    "options": [
+     "2 Timóteo",
+     "Tito",
+     "1 Timóteo",
+     "Filemom"
+    ],
+    "answer": 2,
+    "ref": "1 Timóteo 4:12"
+   },
+   {
+    "q": "Em qual ilha Paulo deixou Tito para pôr em ordem as coisas e estabelecer anciãos?",
+    "options": [
+     "Chipre",
+     "Creta",
+     "Malta",
+     "Patmos"
+    ],
+    "answer": 1,
+    "ref": "Tito 1:5"
+   },
+   {
+    "q": "Qual companheiro abandonou Paulo, \"amando o presente século\"?",
+    "options": [
+     "Lucas",
+     "Tíquico",
+     "Crescente",
+     "Demas"
+    ],
+    "answer": 3,
+    "ref": "2 Timóteo 4:10"
+   },
+   {
+    "q": "Em 2 Timóteo, quem Paulo diz que era o único que estava com ele?",
+    "options": [
+     "Marcos",
+     "Lucas",
+     "Tito",
+     "Demas"
+    ],
+    "answer": 1,
+    "ref": "2 Timóteo 4:11"
+   },
+   {
+    "q": "Qual epístola menciona o arcanjo Miguel disputando com o diabo pelo corpo de Moisés?",
+    "options": [
+     "Judas",
+     "2 Pedro",
+     "Tiago",
+     "Hebreus"
+    ],
+    "answer": 0,
+    "ref": "Judas 1:9"
+   }
+  ]
+ },
+ {
+  "phase": 122,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual carta afirma: \"Deus é amor\"?",
+    "options": [
+     "Evangelho de João",
+     "Romanos",
+     "1 Coríntios",
+     "1 João"
+    ],
+    "answer": 3,
+    "ref": "1 João 4:8"
+   },
+   {
+    "q": "Em 3 João, quem é criticado por gostar de ter entre eles o primado?",
+    "options": [
+     "Demétrio",
+     "Gaio",
+     "Diótrefes",
+     "Demas"
+    ],
+    "answer": 2,
+    "ref": "3 João 1:9"
+   },
+   {
+    "q": "A quem é endereçada a terceira carta de João?",
+    "options": [
+     "Diótrefes",
+     "Tito",
+     "Gaio",
+     "Timóteo"
+    ],
+    "answer": 2,
+    "ref": "3 João 1:1"
+   },
+   {
+    "q": "Segundo Pedro, o diabo anda em derredor, bramando como:",
+    "options": [
+     "Lobo",
+     "Serpente",
+     "Urso",
+     "Leão"
+    ],
+    "answer": 3,
+    "ref": "1 Pedro 5:8"
+   },
+   {
+    "q": "Segundo Pedro, para o Senhor um dia é como:",
+    "options": [
+     "Mil anos",
+     "Cem anos",
+     "Uma vigília",
+     "Um momento"
+    ],
+    "answer": 0,
+    "ref": "2 Pedro 3:8"
+   },
+   {
+    "q": "Em Hebreus, Jesus é sacerdote eternamente segundo a ordem de quem?",
+    "options": [
+     "Arão",
+     "Melquisedeque",
+     "Levi",
+     "Zadoque"
+    ],
+    "answer": 1,
+    "ref": "Hebreus 5:6"
+   },
+   {
+    "q": "Melquisedeque, que trouxe pão e vinho a Abrão, era rei de qual cidade?",
+    "options": [
+     "Sodoma",
+     "Hebrom",
+     "Zoar",
+     "Salém"
+    ],
+    "answer": 3,
+    "ref": "Gênesis 14:18"
+   },
+   {
+    "q": "Segundo Tiago, \"a língua também é um...\":",
+    "options": [
+     "Espinho",
+     "Rio",
+     "Fogo",
+     "Martelo"
+    ],
+    "answer": 2,
+    "ref": "Tiago 3:6"
+   },
+   {
+    "q": "A quantas igrejas da Ásia João foi mandado escrever no Apocalipse?",
+    "options": [
+     "Doze",
+     "Sete",
+     "Cinco",
+     "Dez"
+    ],
+    "answer": 1,
+    "ref": "Apocalipse 1:11"
+   },
+   {
+    "q": "Em qual ilha João estava quando recebeu a revelação do Apocalipse?",
+    "options": [
+     "Patmos",
+     "Creta",
+     "Malta",
+     "Chipre"
+    ],
+    "answer": 0,
+    "ref": "Apocalipse 1:9"
+   }
+  ]
+ },
+ {
+  "phase": 123,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Qual igreja do Apocalipse foi chamada de \"morna\", nem fria nem quente?",
+    "options": [
+     "Laodiceia",
+     "Sardes",
+     "Pérgamo",
+     "Tiatira"
+    ],
+    "answer": 0,
+    "ref": "Apocalipse 3:14-16"
+   },
+   {
+    "q": "Qual igreja do Apocalipse havia deixado o seu \"primeiro amor\"?",
+    "options": [
+     "Esmirna",
+     "Filadélfia",
+     "Sardes",
+     "Éfeso"
+    ],
+    "answer": 3,
+    "ref": "Apocalipse 2:1-4"
+   },
+   {
+    "q": "De qual igreja Jesus disse: \"tens nome de que vives, e estás morto\"?",
+    "options": [
+     "Laodiceia",
+     "Pérgamo",
+     "Sardes",
+     "Éfeso"
+    ],
+    "answer": 2,
+    "ref": "Apocalipse 3:1"
+   },
+   {
+    "q": "A qual igreja Jesus disse: \"Sê fiel até à morte, e dar-te-ei a coroa da vida\"?",
+    "options": [
+     "Filadélfia",
+     "Esmirna",
+     "Tiatira",
+     "Éfeso"
+    ],
+    "answer": 1,
+    "ref": "Apocalipse 2:8-10"
+   },
+   {
+    "q": "Qual falsa profetisa é mencionada na carta à igreja de Tiatira?",
+    "options": [
+     "Atalia",
+     "Dalila",
+     "Jezabel",
+     "Herodias"
+    ],
+    "answer": 2,
+    "ref": "Apocalipse 2:18-20"
+   },
+   {
+    "q": "Em Apocalipse 4, quantos anciãos estavam assentados ao redor do trono?",
+    "options": [
+     "24",
+     "12",
+     "70",
+     "7"
+    ],
+    "answer": 0,
+    "ref": "Apocalipse 4:4"
+   },
+   {
+    "q": "Quem venceu para abrir o livro selado com sete selos?",
+    "options": [
+     "O arcanjo Miguel",
+     "O anjo Gabriel",
+     "Um dos anciãos",
+     "O Leão da tribo de Judá"
+    ],
+    "answer": 3,
+    "ref": "Apocalipse 5:5"
+   },
+   {
+    "q": "Na abertura do primeiro selo, de que cor era o cavalo?",
+    "options": [
+     "Vermelho",
+     "Branco",
+     "Preto",
+     "Amarelo"
+    ],
+    "answer": 1,
+    "ref": "Apocalipse 6:1-2"
+   },
+   {
+    "q": "Quantos foram assinalados de todas as tribos de Israel em Apocalipse 7?",
+    "options": [
+     "12.000",
+     "144.000",
+     "24.000",
+     "100.000"
+    ],
+    "answer": 1,
+    "ref": "Apocalipse 7:4"
+   },
+   {
+    "q": "Na Nova Jerusalém, de que eram feitas as doze portas?",
+    "options": [
+     "Ouro",
+     "Jaspe",
+     "Safiras",
+     "Pérolas"
+    ],
+    "answer": 3,
+    "ref": "Apocalipse 21:21"
+   }
+  ]
+ },
+ {
+  "phase": 124,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Quem disse a Jesus: \"Senhor, não sou digno de que entres debaixo do meu telhado\"?",
+    "options": [
+     "Um centurião",
+     "Jairo",
+     "Zaqueu",
+     "Nicodemos"
+    ],
+    "answer": 0,
+    "ref": "Mateus 8:5-8"
+   },
+   {
+    "q": "Como se chamava o chefe da sinagoga cuja filha Jesus ressuscitou?",
+    "options": [
+     "Crispo",
+     "Sóstenes",
+     "Jairo",
+     "Simão"
+    ],
+    "answer": 2,
+    "ref": "Marcos 5:22"
+   },
+   {
+    "q": "Quantos anos tinha a filha de Jairo?",
+    "options": [
+     "Sete",
+     "Dez",
+     "Quinze",
+     "Doze"
+    ],
+    "answer": 3,
+    "ref": "Marcos 5:42"
+   },
+   {
+    "q": "Há quantos anos sofria de hemorragia a mulher que tocou nas vestes de Jesus?",
+    "options": [
+     "Dezoito",
+     "Doze",
+     "Trinta e oito",
+     "Oito"
+    ],
+    "answer": 1,
+    "ref": "Marcos 5:25"
+   },
+   {
+    "q": "Há quantos anos estava enfermo o homem curado junto ao tanque de Betesda?",
+    "options": [
+     "12",
+     "18",
+     "38",
+     "40"
+    ],
+    "answer": 2,
+    "ref": "João 5:5"
+   },
+   {
+    "q": "Em qual tanque Jesus mandou o cego de nascença se lavar?",
+    "options": [
+     "Siloé",
+     "Betesda",
+     "Gibeom",
+     "Hesbom"
+    ],
+    "answer": 0,
+    "ref": "João 9:7"
+   },
+   {
+    "q": "Qual cego de Jericó clamou: \"Jesus, Filho de Davi, tem misericórdia de mim\"?",
+    "options": [
+     "Bartimeu",
+     "Zaqueu",
+     "Malco",
+     "Lázaro"
+    ],
+    "answer": 0,
+    "ref": "Marcos 10:46-47"
+   },
+   {
+    "q": "Qual servo do sumo sacerdote teve a orelha cortada por Pedro?",
+    "options": [
+     "Tértulo",
+     "Barrabás",
+     "Malco",
+     "Alexandre"
+    ],
+    "answer": 2,
+    "ref": "João 18:10"
+   },
+   {
+    "q": "Qual menina reconheceu a voz de Pedro à porta, depois que ele saiu da prisão?",
+    "options": [
+     "Dorcas",
+     "Rode",
+     "Lídia",
+     "Joana"
+    ],
+    "answer": 1,
+    "ref": "Atos 12:13-14"
+   },
+   {
+    "q": "Na casa de quem a igreja orava quando Pedro foi libertado pelo anjo?",
+    "options": [
+     "De Lídia",
+     "De Priscila",
+     "De Marta",
+     "De Maria, mãe de João Marcos"
+    ],
+    "answer": 3,
+    "ref": "Atos 12:12"
+   }
+  ]
+ },
+ {
+  "phase": 125,
+  "level": "dificil",
+  "questions": [
+   {
+    "q": "Quem disse: \"É necessário que ele cresça e que eu diminua\"?",
+    "options": [
+     "Paulo",
+     "João Batista",
+     "Pedro",
+     "André"
+    ],
+    "answer": 1,
+    "ref": "João 3:30"
+   },
+   {
+    "q": "Quem disse: \"Ainda que todos se escandalizem em ti, eu nunca me escandalizarei\"?",
+    "options": [
+     "Pedro",
+     "Tomé",
+     "João",
+     "Judas Iscariotes"
+    ],
+    "answer": 0,
+    "ref": "Mateus 26:33"
+   },
+   {
+    "q": "Quem disse: \"Vamos nós também, para morrermos com ele\"?",
+    "options": [
+     "Pedro",
+     "Natanael",
+     "Tiago",
+     "Tomé"
+    ],
+    "answer": 3,
+    "ref": "João 11:16"
+   },
+   {
+    "q": "Quem pediu: \"Senhor, mostra-nos o Pai, o que nos basta\"?",
+    "options": [
+     "Tomé",
+     "Pedro",
+     "Filipe",
+     "André"
+    ],
+    "answer": 2,
+    "ref": "João 14:8"
+   },
+   {
+    "q": "Quem perguntou a Jesus: \"Que é a verdade?\"",
+    "options": [
+     "Herodes",
+     "Caifás",
+     "Pilatos",
+     "Anás"
+    ],
+    "answer": 2,
+    "ref": "João 18:38"
+   },
+   {
+    "q": "Quem disse: \"Não tenho prata nem ouro; mas o que tenho isso te dou\"?",
+    "options": [
+     "João",
+     "Paulo",
+     "Filipe",
+     "Pedro"
+    ],
+    "answer": 3,
+    "ref": "Atos 3:6"
+   },
+   {
+    "q": "Junto a qual porta do templo ficava o coxo curado por Pedro e João?",
+    "options": [
+     "Formosa",
+     "Das Ovelhas",
+     "Oriental",
+     "Dos Peixes"
+    ],
+    "answer": 0,
+    "ref": "Atos 3:2"
+   },
+   {
+    "q": "Quem respondeu ao Sinédrio: \"Mais importa obedecer a Deus do que aos homens\"?",
+    "options": [
+     "Estêvão",
+     "Pedro e os apóstolos",
+     "Paulo",
+     "Gamaliel"
+    ],
+    "answer": 1,
+    "ref": "Atos 5:29"
+   },
+   {
+    "q": "Quem escreveu: \"Miserável homem que eu sou! Quem me livrará do corpo desta morte?\"",
+    "options": [
+     "Jó",
+     "Davi",
+     "Pedro",
+     "Paulo"
+    ],
+    "answer": 3,
+    "ref": "Romanos 7:24"
+   },
+   {
+    "q": "Quem escreveu: \"Combati o bom combate, acabei a carreira, guardei a fé\"?",
+    "options": [
+     "Pedro",
+     "Timóteo",
+     "Paulo",
+     "João"
+    ],
+    "answer": 2,
+    "ref": "2 Timóteo 4:7"
+   }
+  ]
+ }
+]

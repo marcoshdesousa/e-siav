@@ -2,9 +2,11 @@
 // Classes e especialidades não são vendidas nem feitas online: o membro informa
 // as que já tem e a diretoria do clube aprova. As classes são sincronizadas ao
 // iniciar o servidor; as especialidades são cadastradas pelo administrador
-// (uma a uma, com foto) dentro das áreas oficiais abaixo.
+// dentro das áreas oficiais abaixo. Classes e especialidades aparecem só pelo nome
+// (com o ícone da área): fotos deixavam o app pesado e não são mais usadas.
 import { all, get, run } from './db.js';
 
+/** Classes oficiais dos Desbravadores: regulares e avançadas (por idade) e de liderança. */
 export const CLASSES = [
   // Classes regulares (idade) e avançadas
   ['Amigo', 10, 0, 'compass'], ['Amigo da Natureza', 10, 0, 'leaf'],
@@ -118,7 +120,7 @@ function removeOldSpecialties() {
 }
 
 export const catalog = (type) =>
-  all(`SELECT id, type, code, name, icon, image, category, age, leader FROM content WHERE type = ? ORDER BY ${type === 'classe' ? 'leader, id' : 'category, name'}`, type);
+  all(`SELECT id, type, code, name, icon, NULL AS image, category, age, leader FROM content WHERE type = ? ORDER BY ${type === 'classe' ? 'leader, id' : 'category, name'}`, type);
 
 /** Nome "normalizado" para comparar (sem acento, minúsculo, só letras e números). */
 export const norm = (s) => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();

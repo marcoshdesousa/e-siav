@@ -39,7 +39,7 @@ function GameRanking({ game, base, limit }) {
 
 /** Jogos grandes (online). Ficam "em breve" até cada um ficar pronto. */
 export const BIG_GAMES = [
-  { id: 'uno', name: 'Cartada DBV', hint: 'Cartas online, 2 a 6 jogadores, com chat de voz', icon: Layers, ranks: [['uno', 'Vitórias']], ready: true },
+  { id: 'uno', name: 'Uno DBV', hint: 'Uno online na mesa, 2 a 6 jogadores, com chat de voz', icon: Layers, ranks: [['uno', 'Vitórias']], ready: true },
   { id: 'corrida', name: 'Surf DBV', hint: 'Surfe pelos trilhos de skate, fuja do guarda e junte desbrava coins', icon: TrainFront, ranks: [['corrida-moedas', 'Mais moedas'], ['corrida-distancia', 'Maior distância']], ready: true },
   { id: 'stumble', name: 'Stumble DBV', hint: 'Até 10 jogadores em fases malucas. Só o 1º vence', icon: PersonStanding, ranks: [['stumble', 'Vitórias']], ready: true },
 ];
@@ -70,64 +70,64 @@ function BigGames({ base, onSkin }) {
         </div>
         <Play size={26} />
       </button>
-      <p className="small muted center">O Cartada DBV e o Stumble DBV precisam de internet. O Surf DBV dá para jogar sem internet (sem contar no ranking).</p>
+      <p className="small muted center">O Uno DBV e o Stumble DBV precisam de internet. O Surf DBV dá para jogar sem internet (sem contar no ranking).</p>
     </div>
   );
 }
 
-/** Rankings: primeiro escolhe Mini-jogos ou Jogos, depois o jogo. */
-function GamesRankings({ base, online, initial }) {
+/** Ranking dos mini-jogos (fica dentro da aba Mini-jogos). */
+function MiniRankings({ base, online, initial }) {
+  const [rankGame, setRankGame] = useState(GAMES.some((g) => g.id === initial) ? initial : GAMES[0].id);
+  return (
+    <>
+      <select value={rankGame} onChange={(e) => setRankGame(e.target.value)} aria-label="Jogo">
+        {GAMES.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
+      </select>
+      <p className="small muted">{gameById(rankGame).mode === 'sum' ? 'Os pontos de todas as partidas vão somando.' : 'Vale a melhor partida de cada um.'} Ranking geral de todos os membros.</p>
+      {online ? <GameRanking key={rankGame} game={gameById(rankGame)} base={base} /> : <Card className="small center">Os rankings precisam de internet. Sem internet, dá para jogar, mas as partidas não entram no ranking.</Card>}
+    </>
+  );
+}
+
+/** Ranking dos jogos grandes (fica dentro da aba Jogos). */
+function BigRankings({ base, online, initial }) {
   const ranked = BIG_GAMES.filter((g) => g.ranks.length);
   const initialBig = ranked.find((g) => g.ranks.some((r) => r[0] === initial));
-  const [kind, setKind] = useState(initialBig ? 'big' : 'mini');
-  const [rankGame, setRankGame] = useState(GAMES.some((g) => g.id === initial) ? initial : GAMES[0].id);
   const [big, setBig] = useState(initialBig?.id || ranked[0].id);
   const bigGame = ranked.find((g) => g.id === big);
   const [board, setBoard] = useState(initialBig ? initial : bigGame.ranks[0][0]);
   const boardId = bigGame.ranks.some((r) => r[0] === board) ? board : bigGame.ranks[0][0];
   return (
     <>
-      <div className="seg games-rank-kind" role="tablist">
-        <button type="button" className={kind === 'mini' ? 'active' : ''} onClick={() => setKind('mini')}>Mini-jogos</button>
-        <button type="button" className={kind === 'big' ? 'active' : ''} onClick={() => setKind('big')}>Jogos</button>
-      </div>
-      {kind === 'mini' ? (
-        <>
-          <select value={rankGame} onChange={(e) => setRankGame(e.target.value)} aria-label="Jogo">
-            {GAMES.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
-          </select>
-          <p className="small muted">{gameById(rankGame).mode === 'sum' ? 'Os pontos de todas as partidas vão somando.' : 'Vale a melhor partida de cada um.'} Ranking geral de todos os membros.</p>
-          {online ? <GameRanking key={rankGame} game={gameById(rankGame)} base={base} /> : <Card className="small center">Os rankings precisam de internet. Sem internet, dá para jogar, mas as partidas não entram no ranking.</Card>}
-        </>
-      ) : (
-        <>
-          <select value={big} onChange={(e) => setBig(e.target.value)} aria-label="Jogo">
-            {ranked.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
-          </select>
-          {bigGame.ranks.length > 1 && (
-            <div className="seg games-rank-kind" role="tablist">
-              {bigGame.ranks.map(([id, label]) => <button key={id} type="button" className={boardId === id ? 'active' : ''} onClick={() => setBoard(id)}>{label}</button>)}
-            </div>
-          )}
-          {!bigGame.ready ? <Card className="small center">O ranking de {bigGame.name} começa quando o jogo for lançado.</Card>
-            : online ? <><p className="small muted">{bigGame.ranks.find((r) => r[0] === boardId)[1]} · ranking geral de todos os membros.</p><GameRanking key={boardId} game={{ id: boardId, mode: 'sum' }} base={base} /></>
-              : <Card className="small center">Os rankings precisam de internet.</Card>}
-        </>
+      <select value={big} onChange={(e) => setBig(e.target.value)} aria-label="Jogo">
+        {ranked.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
+      </select>
+      {bigGame.ranks.length > 1 && (
+        <div className="seg games-rank-kind" role="tablist">
+          {bigGame.ranks.map(([id, label]) => <button key={id} type="button" className={boardId === id ? 'active' : ''} onClick={() => setBoard(id)}>{label}</button>)}
+        </div>
       )}
+      {online ? <><p className="small muted">{bigGame.ranks.find((r) => r[0] === boardId)[1]} · ranking geral de todos os membros.</p><GameRanking key={boardId} game={{ id: boardId, mode: 'sum' }} base={base} /></>
+        : <Card className="small center">Os rankings precisam de internet.</Card>}
     </>
   );
 }
 
-/** Aba Jogos: jogos grandes, mini-jogos e rankings. */
+const isBigRank = (id) => BIG_GAMES.some((g) => g.ranks.some((r) => r[0] === id));
+
+/** Aba Jogos: duas abas (Jogos e Mini-jogos), cada uma com o seu ranking dentro. */
 export function GamesHub({ base }) {
   const [params] = useSearchParams();
+  const wantRank = params.get('aba') === 'ranking';
+  const rankOf = params.get('jogo');
   const [tab, setTab] = useState(() => {
-    if (params.get('aba') === 'ranking') return 'ranking';
+    if (wantRank) return isBigRank(rankOf) ? 'jogos' : 'mini';
     if (params.get('aba') === 'skin') return 'jogos';
-    try { const t = window.sessionStorage.getItem('dbv-games-tab'); return ['jogos', 'mini', 'ranking'].includes(t) ? t : 'mini'; } catch { return 'mini'; }
+    try { const t = window.sessionStorage.getItem('dbv-games-tab'); return ['jogos', 'mini'].includes(t) ? t : 'mini'; } catch { return 'mini'; }
   });
-  // Dentro da aba Jogos: a lista dos jogos ou a Skin (que vale para os jogos, não para os mini-jogos)
-  const [sub, setSub] = useState(() => (params.get('aba') === 'skin' ? 'skin' : 'jogar'));
+  // Dentro da aba Jogos: jogar, skin (vale para os jogos) e ranking; nos Mini-jogos: jogar e ranking
+  const [sub, setSub] = useState(() => (params.get('aba') === 'skin' ? 'skin' : wantRank && isBigRank(rankOf) ? 'ranking' : 'jogar'));
+  const [miniSub, setMiniSub] = useState(() => (wantRank && !isBigRank(rankOf) ? 'ranking' : 'jogar'));
   const pick = (t) => { setTab(t); try { window.sessionStorage.setItem('dbv-games-tab', t); } catch { /* sem armazenamento */ } };
   const mine = useLoad(() => api.get('/jogos/meus'));
   const my = mine.data || {};
@@ -135,28 +135,38 @@ export function GamesHub({ base }) {
   return (
     <>
       <PageHeader title="Jogos" subtitle={`Jogos online e ${GAMES.length} mini-jogos para fazer pontos e subir no ranking. Sem anúncios!`} />
-      <Tabs tabs={[['jogos', 'Jogos'], ['mini', 'Mini-jogos'], ['ranking', 'Rankings']]} value={tab} onChange={pick} />
+      <Tabs tabs={[['jogos', 'Jogos'], ['mini', 'Mini-jogos']]} value={tab} onChange={pick} />
       {tab === 'jogos' && (
         <>
           <div className="seg games-sub" role="tablist">
             <button type="button" className={sub === 'jogar' ? 'active' : ''} onClick={() => setSub('jogar')}><Play size={14} /> Jogar</button>
             <button type="button" className={sub === 'skin' ? 'active' : ''} onClick={() => setSub('skin')}><Shirt size={14} /> Skin</button>
+            <button type="button" className={sub === 'ranking' ? 'active' : ''} onClick={() => setSub('ranking')}><Trophy size={14} /> Ranking</button>
           </div>
-          {sub === 'jogar' ? <BigGames base={base} onSkin={() => setSub('skin')} /> : <Suspense fallback={<Spinner />}><SkinPage /></Suspense>}
+          {sub === 'jogar' && <BigGames base={base} onSkin={() => setSub('skin')} />}
+          {sub === 'skin' && <Suspense fallback={<Spinner />}><SkinPage /></Suspense>}
+          {sub === 'ranking' && <BigRankings base={base} online={online} initial={rankOf} />}
         </>
       )}
       {tab === 'mini' && (
-        <div className="games-grid">
-          {GAMES.map((g) => (
-            <Link key={g.id} to={`${base}/jogos/${g.id}`} className="game-tile">
-              <span className="game-ico"><g.icon size={26} /></span>
-              <b>{g.name}</b>
-              <small>{my[g.id]?.value ? `${my[g.id].value} pts${my[g.id].position ? ` · ${my[g.id].position}º` : ''}` : 'Jogar'}</small>
-            </Link>
-          ))}
-        </div>
+        <>
+          <div className="seg games-sub" role="tablist">
+            <button type="button" className={miniSub === 'jogar' ? 'active' : ''} onClick={() => setMiniSub('jogar')}><Play size={14} /> Jogar</button>
+            <button type="button" className={miniSub === 'ranking' ? 'active' : ''} onClick={() => setMiniSub('ranking')}><Trophy size={14} /> Ranking</button>
+          </div>
+          {miniSub === 'jogar' ? (
+            <div className="games-grid">
+              {GAMES.map((g) => (
+                <Link key={g.id} to={`${base}/jogos/${g.id}`} className="game-tile">
+                  <span className="game-ico"><g.icon size={26} /></span>
+                  <b>{g.name}</b>
+                  <small>{my[g.id]?.value ? `${my[g.id].value} pts${my[g.id].position ? ` · ${my[g.id].position}º` : ''}` : 'Jogar'}</small>
+                </Link>
+              ))}
+            </div>
+          ) : <MiniRankings base={base} online={online} initial={rankOf} />}
+        </>
       )}
-      {tab === 'ranking' && <GamesRankings base={base} online={online} initial={params.get('jogo')} />}
     </>
   );
 }

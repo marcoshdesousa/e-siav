@@ -798,6 +798,22 @@ function migrate() {
     on_time INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (member_id, day)
   )`);
+  // Pontos de ranking da Leitura bíblica (Ano Bíblico): um registro por dia concluído pela 1ª vez.
+  // Guarda a unidade e o clube de quando o dia foi feito (membro 100, unidade 100, clube 25).
+  db.exec(`CREATE TABLE IF NOT EXISTS bible_points (
+    member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+    day INTEGER NOT NULL,
+    unit_id INTEGER REFERENCES units(id) ON DELETE SET NULL,
+    club_id INTEGER NOT NULL REFERENCES clubs(id) ON DELETE CASCADE,
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+    PRIMARY KEY (member_id, day)
+  )`);
+  db.exec('CREATE INDEX IF NOT EXISTS idx_bible_points_unit ON bible_points(unit_id)');
+  db.exec('CREATE INDEX IF NOT EXISTS idx_bible_points_club ON bible_points(club_id)');
+  // Dias já concluídos antes de existir a pontuação também valem (uma vez só; a chave impede repetir).
+  db.exec(`INSERT OR IGNORE INTO bible_points (member_id, day, unit_id, club_id, created_at)
+    SELECT p.member_id, p.day, m.unit_id, m.club_id, p.completed_at
+    FROM bible_progress p JOIN members m ON m.id = p.member_id WHERE p.completed_at IS NOT NULL`);
   // Bom de Bíblia: melhor nota de cada fase (passa de fase com 7 de 10).
   db.exec(`CREATE TABLE IF NOT EXISTS bdb_progress (
     member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,

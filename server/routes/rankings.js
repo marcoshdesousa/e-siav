@@ -1,13 +1,15 @@
 import { Router } from 'express';
 import { get } from '../db.js';
 import { requireAuth } from '../auth.js';
-import { membersRanking, clubsRanking, unitsRanking, clubUnitsRanking, clubMembersRanking, leadersRanking, clubLeadersRanking, positionOf } from '../rankings.js';
+import { membersRanking, clubsRanking, unitsRanking, clubUnitsRanking, clubMembersRanking, leadersRanking, clubLeadersRanking, positionOf, rankingDistrict } from '../rankings.js';
 import { fail, int } from '../util.js';
 
 const r = Router();
 r.use('/rankings', requireAuth());
 
-const district = (req) => int(req.query.district_id);
+// Não existe ranking geral de todos os distritos: cada um vê o do seu distrito
+// (membros, unidades e clubes do distrito). O Administrador Geral escolhe o distrito.
+const district = (req) => rankingDistrict(req.actor, int(req.query.district_id));
 
 r.get('/rankings/members', (req, res) => res.json(membersRanking(district(req))));
 r.get('/rankings/clubs', (req, res) => res.json(clubsRanking(district(req))));
@@ -37,24 +39,26 @@ r.get('/rankings/club/:clubId/leaders', (req, res) => {
   res.json(clubLeadersRanking(clubId));
 });
 
-const pick = (row) => (row ? { position: row.position, points: row.points } : null);
+const pick = (row) => (row ? { position: row.position, points: row.points, bible_points: row.bible_points } : null);
 
-// Resumo: a posição do membro, da sua unidade e do seu clube de uma vez.
+// Resumo: a posição do membro, da sua unidade e do seu clube de uma vez (no clube e no distrito).
 r.get('/rankings/summary', (req, res) => {
   const a = req.actor;
   if (a.type === 'admin') return res.json({});
   const clubId = a.club_id;
   const unitId = a.type === 'unit' ? a.id : a.unit_id;
+  const d = a.district_id;
   const unitRow = unitId ? get('SELECT id, name, is_leadership FROM units WHERE id = ?', unitId) : null;
   res.json({
-    member: a.type === 'member' && a.kind === 'desbravador' ? pick(positionOf(membersRanking(), a.id)) : null,
+    district: d ? get('SELECT id, name FROM districts WHERE id = ?', d) : null,
+    member: a.type === 'member' && a.kind === 'desbravador' ? pick(positionOf(membersRanking(d), a.id)) : null,
     member_club: a.type === 'member' && a.kind === 'desbravador' ? pick(positionOf(clubMembersRanking(clubId), a.id)) : null,
-    leader: a.type === 'member' && a.kind === 'lideranca' ? pick(positionOf(leadersRanking(), a.id)) : null,
+    leader: a.type === 'member' && a.kind === 'lideranca' ? pick(positionOf(leadersRanking(d), a.id)) : null,
     leader_club: a.type === 'member' && a.kind === 'lideranca' ? pick(positionOf(clubLeadersRanking(clubId), a.id)) : null,
     unit: unitRow && !unitRow.is_leadership
-      ? { name: unitRow.name, id: unitRow.id, club: pick(positionOf(clubUnitsRanking(clubId), unitId)), general: pick(positionOf(unitsRanking(), unitId)) }
+      ? { name: unitRow.name, id: unitRow.id, club: pick(positionOf(clubUnitsRanking(clubId), unitId)), general: pick(positionOf(unitsRanking(d), unitId)) }
       : null,
-    club: { id: clubId, name: get('SELECT name FROM clubs WHERE id = ?', clubId).name, ...pick(positionOf(clubsRanking(), clubId)) },
+    club: { id: clubId, name: get('SELECT name FROM clubs WHERE id = ?', clubId).name, ...pick(positionOf(clubsRanking(d), clubId)) },
   });
 });
 

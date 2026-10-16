@@ -211,6 +211,9 @@ test('perfis públicos mostram só a quantidade de membros', async () => {
   const pub = await (await fetch(BASE + '/public/members/' + pedro.actor.code)).json();
   assert.equal(pub.birth_date, undefined, 'data de nascimento não é exposta');
   assert.ok(pub.age >= 10);
+  assert.equal(typeof pub.bible.streak, 'number', 'sequência do Ano Bíblico aparece no link');
+  assert.equal(typeof pub.bible.best_streak, 'number');
+  assert.ok([...pub.classes, ...pub.specialties].every((c) => !c.image), 'sem fotos de classe/especialidade');
 });
 
 test('medalhas só pelo administrador e entrega manual', async () => {
@@ -395,11 +398,14 @@ test('classes e especialidades: o membro informa, a diretoria aprova e vai para 
   const lider = (await davi.get('/catalog?type=classe')).body.find((c) => c.name === 'Líder');
   const r = await davi.post('/me/achievement-requests', { content_ids: [aves.id, ast.id, lider.id] });
   assert.equal(r.body.created, 2, 'desbravador não pede classe de líder');
+  const amigo = (await davi.get('/catalog?type=classe')).body.find((c) => c.name === 'Amigo da Natureza');
+  assert.equal((await davi.post('/me/achievement-requests', { content_ids: [amigo.id] })).body.created, 1, 'pede classe regular/avançada');
   const leoes = await login('clube', 'leoes', 'LE2026');
   const aguias = await login('clube', 'aguias', 'AG2026');
   assert.ok(!(await aguias.get('/club/achievement-requests')).body.some((m) => m.member_id === davi.actor.id), 'outro clube não vê');
   const group = (await leoes.get('/club/achievement-requests')).body.find((m) => m.member_id === davi.actor.id);
-  const [i1, i2] = group.items;
+  assert.ok(group.items.some((i) => i.type === 'classe' && i.name === 'Amigo da Natureza'), 'diretoria vê o pedido de classe');
+  const [i1, i2] = group.items.filter((i) => i.type === 'especialidade');
   await leoes.post('/club/achievement-requests/decide', { ids: [i1.id], decision: 'aprovado' });
   await leoes.post('/club/achievement-requests/decide', { ids: [i2.id], decision: 'recusado' });
   const mine = (await davi.get('/me/achievements?type=especialidade')).body;
@@ -411,7 +417,7 @@ test('classes e especialidades: o membro informa, a diretoria aprova e vai para 
   assert.ok((await admin.get('/admin/content')).body.every((c) => c.type === 'curso'));
 });
 
-test('catálogo: importar a lista oficial e ligar as fotos pelo nome do arquivo', async () => {
+test('catálogo: importar a lista oficial; classes e especialidades só com o nome (sem fotos)', async () => {
   const admin = await login('membros', 'admin', 'admin123');
   const imp = (await admin.post('/admin/catalog/import', { text: 'EB-001; Profecias de Daniel; Ensinos Bíblicos\nAves; Estudo da Natureza\nlinha inválida' })).body;
   assert.equal(imp.created, 1);
@@ -419,14 +425,17 @@ test('catálogo: importar a lista oficial e ligar as fotos pelo nome do arquivo'
   assert.equal(imp.skipped, 1);
   const fd = new FormData();
   fd.append('images', PNG(), 'profecias-de-daniel.png');
-  fd.append('images', PNG(), 'EB-001.png');
-  fd.append('images', PNG(), 'nao-existe.png');
-  const img = (await admin.post('/admin/catalog/images', fd)).body;
-  assert.equal(img.matched.length, 2);
-  assert.deepEqual(img.unmatched, ['nao-existe.png']);
-  const item = (await admin.get('/admin/catalog?type=especialidade')).body.items.find((c) => c.name === 'Profecias de Daniel');
+  assert.equal((await admin.post('/admin/catalog/images', fd)).status, 404, 'não há mais envio de fotos');
+  const items = (await admin.get('/admin/catalog?type=especialidade')).body.items;
+  const item = items.find((c) => c.name === 'Profecias de Daniel');
   assert.equal(item.category, 'Ensinos Bíblicos');
-  assert.ok(item.image);
+  assert.ok(items.every((c) => c.image === null), 'catálogo não serve fotos');
+  // Todas as classes oficiais dos Desbravadores (regulares, avançadas e de liderança)
+  const classes = (await admin.get('/catalog?type=classe')).body.map((c) => c.name);
+  for (const n of ['Amigo', 'Amigo da Natureza', 'Companheiro', 'Companheiro de Excursionismo', 'Pesquisador', 'Pesquisador de Campo e Bosque',
+    'Pioneiro', 'Pioneiro de Novas Fronteiras', 'Excursionista', 'Excursionista na Mata', 'Guia', 'Guia de Exploração', 'Líder', 'Líder Master', 'Líder Master Avançado']) {
+    assert.ok(classes.includes(n), 'classe ' + n);
+  }
 });
 
 test('entregar conteúdo em massa, eventos com participantes e anúncios', async () => {
@@ -777,6 +786,8 @@ test('aprendizagem diária: ano bíblico (sequência, dias perdidos, futuro tran
   const d = new Date(Date.now() - 2 * 86400000);
   const start = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo' }).format(d);
   assert.equal((await admin.put('/admin/ano-biblico/inicio', { date: start })).status, 200);
+  // Modo de teste (libera tudo) vem ligado: aqui testamos o normal, com o futuro trancado
+  assert.equal((await admin.put('/admin/biblia-teste', { on: false })).body.test, false);
   const plan = (await pedro.get('/ano-biblico')).body;
   assert.equal(plan.total, 275);
   assert.equal(plan.today_day, 3);
@@ -800,7 +811,7 @@ test('aprendizagem diária: ano bíblico (sequência, dias perdidos, futuro tran
   assert.equal((await pedro.get('/albuns/biblico')).body.packs_unopened, packs + 2);
   const sum = (await pedro.get('/aprendizagem')).body;
   assert.equal(sum.bible.done, 2);
-  assert.equal(sum.bdb.total, 100);
+  assert.equal(sum.bdb.total, 200);
   assert.equal((await admin.get('/aprendizagem')).status, 403, 'só membros');
   // Bom de Bíblia: fase 2 trancada até passar a 1
   assert.equal((await pedro.get('/bom-de-biblia/fase/2')).status, 403);
@@ -813,4 +824,13 @@ test('aprendizagem diária: ano bíblico (sequência, dias perdidos, futuro tran
   assert.equal((await pedro.get('/bom-de-biblia/fase/2')).status, 200);
   await admin.put('/admin/ano-biblico/inicio', { date: '' });
   assert.equal((await admin.get('/admin/ano-biblico')).body.start, '2027-03-01');
+  // Bom Líder: com o modo de teste ligado, todo membro vê; sem aulas, mostra "sendo preparadas"
+  assert.equal((await pedro.get('/bom-lider')).status, 403, 'sem modo de teste é só para a liderança');
+  await admin.put('/admin/biblia-teste', { on: true });
+  assert.equal((await pedro.get('/bom-lider')).body.preparing, true);
+  const bl = (await admin.get('/admin/bom-lider')).body;
+  assert.equal(bl.pages.length, 0);
+  assert.equal((await pedro.get('/bom-lider/paginas/qualquer')).status, 404, 'link errado não abre');
+  const tok = (await admin.post('/admin/bom-lider/link')).body.token;
+  assert.ok(tok && (await pedro.get(`/bom-lider/paginas/${tok}`)).body.pages);
 });

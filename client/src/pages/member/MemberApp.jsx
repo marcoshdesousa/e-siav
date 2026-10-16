@@ -22,6 +22,7 @@ const CorridaPage = lazy(() => import('../online/corrida/Corrida.jsx'));
 const StumblePage = lazy(() => import('../online/stumble/Stumble.jsx'));
 import { AlbumPage, AlbumsPage } from '../albums/AlbumsHub.jsx';
 import { BibleDay, BibleYear, BomDeBiblia, BomDeBibliaPhase, LearningHub, StreakCard } from '../learning/Learning.jsx';
+import { BomLider, BomLiderLesson } from '../learning/BomLider.jsx';
 
 const base = '/membro';
 
@@ -88,7 +89,7 @@ function Waiting({ text }) {
 /** Para onde o "Voltar" do topo leva em cada tela. */
 function parentOf(path) {
   const [seg, sub, sub2] = path.split('/').slice(2);
-  if (seg === 'aprendizagem') return sub === 'bom-de-biblia' && sub2 ? `${base}/aprendizagem/bom-de-biblia` : sub === 'ano-biblico' && sub2 ? `${base}/aprendizagem/ano-biblico` : sub ? `${base}/aprendizagem` : `${base}/mais`;
+  if (seg === 'aprendizagem') return sub === 'bom-lider' && sub2 ? `${base}/aprendizagem/bom-lider` : sub === 'bom-de-biblia' && sub2 ? `${base}/aprendizagem/bom-de-biblia` : sub === 'ano-biblico' && sub2 ? `${base}/aprendizagem/ano-biblico` : sub ? `${base}/aprendizagem` : `${base}/mais`;
   if ((seg === 'jogos' || seg === 'albuns') && sub) return `${base}/${seg}`;
   if (['cursos', 'clubes', 'agenda', 'suporte', 'especialidades', 'albuns'].includes(seg)) return `${base}/mais`;
   return base;
@@ -106,7 +107,7 @@ export default function MemberApp() {
   ];
   const more = [
     { to: `${base}/aprendizagem`, icon: Flame, label: 'Aprendizagem Diária', hint: 'Ano Bíblico, Bom de Bíblia e mais' },
-    { to: `${base}/especialidades`, icon: Waypoints, label: 'Especialidades', hint: 'As suas especialidades' },
+    { to: `${base}/especialidades`, icon: Waypoints, label: 'Especialidades e classes', hint: 'As suas especialidades e classes' },
     { to: `${base}/albuns`, icon: BookImage, label: 'Álbuns de figurinhas', hint: 'Álbum Bíblico' },
     { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas do clube e do App' },
     { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },
@@ -137,6 +138,8 @@ export default function MemberApp() {
               <Route path="aprendizagem/ano-biblico" element={<BibleYear base={base} />} />
               <Route path="aprendizagem/ano-biblico/:day" element={<BibleDay base={base} />} />
               <Route path="aprendizagem/bom-de-biblia" element={<BomDeBiblia base={base} />} />
+              <Route path="aprendizagem/bom-lider" element={<BomLider base={base} />} />
+              <Route path="aprendizagem/bom-lider/:n" element={<BomLiderLesson base={base} />} />
               <Route path="aprendizagem/bom-de-biblia/:phase" element={<BomDeBibliaPhase base={base} />} />
               <Route path="cursos" element={<ContentList type="curso" base={base} />} />
               <Route path="conteudo/:id" element={<ContentDetail />} />

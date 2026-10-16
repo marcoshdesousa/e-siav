@@ -11,9 +11,11 @@ import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment
 
 // ───────────── Arquivos ─────────────
 const BASE = '/models/chars/';
+// Peças de roupa separadas (camisa, mangas, calça, calçado): cada roupa junta as peças e pinta cada uma.
+const PIECES = ['Peasant_Body', 'Peasant_Arms', 'Peasant_Legs', 'Ranger_Body', 'Ranger_Legs', 'Ranger_Feet'];
+const pieceFile = (g, n) => `parts/${g === 'm' ? 'Male' : 'Female'}_${g === 'm' && n === 'Ranger_Feet' ? 'Ranger_Feet_Boots' : n}.gltf`;
 const PARTS = {
-  'outfit:ranger:m': 'outfits/Male_Ranger.gltf', 'outfit:ranger:f': 'outfits/Female_Ranger.gltf',
-  'outfit:casual:m': 'outfits/Male_Peasant.gltf', 'outfit:casual:f': 'outfits/Female_Peasant.gltf',
+  ...Object.fromEntries(['m', 'f'].flatMap((g) => PIECES.map((n) => [`piece:${g}:${n}`, pieceFile(g, n)]))),
   'body:m': 'base/Superhero_Male_FullBody.gltf', 'body:f': 'base/Superhero_Female_FullBody.gltf',
   'hair:curto': 'hair/Hair_SimpleParted.gltf', 'hair:raspado': 'hair/Hair_Buzzed.gltf', 'hair:longo': 'hair/Hair_Long.gltf',
   'hair:coque': 'hair/Hair_Buns.gltf', 'hair:raspado-f': 'hair/Hair_BuzzedFemale.gltf',
@@ -90,6 +92,51 @@ function tint(mat, color) {
   return tinted.get(key);
 }
 
+/**
+ * Roupas (inspiradas no uniforme dos Desbravadores). Cada peça tem um papel que define a cor:
+ * shirt (camisa), pants (calça), shoes (calçado). scarf: lenço amarelo com anel no pescoço.
+ */
+export const OUTFITS = {
+  // Uniforme de gala: camisa caqui, calça azul-marinho, sapato preto e lenço
+  gala: { pieces: [['Peasant_Body', 'shirt'], ['Peasant_Arms', 'shirt'], ['Ranger_Legs', 'pants'], ['Ranger_Feet', 'shoes']], colors: { shirt: '#d8c49a', pants: '#26324f', shoes: '#2a2a2a' }, scarf: true },
+  // Uniforme de campo: camiseta, calça de brim e bota
+  campo: { pieces: [['Peasant_Body', 'shirt'], ['Peasant_Arms', 'shirt'], ['Ranger_Legs', 'pants'], ['Ranger_Feet', 'shoes']], colors: { shirt: '#5f7d3c', pants: '#6b6a4a', shoes: '#5a3a22' } },
+  // Colete de aventura (com cinto e bolsos) por cima da camisa
+  aventura: { pieces: [['Ranger_Body', 'shirt'], ['Peasant_Arms', 'sleeve'], ['Ranger_Legs', 'pants'], ['Ranger_Feet', 'shoes']], colors: { shirt: '#ffffff', sleeve: '#e9dcc0', pants: '#3b4a2a', shoes: '#4a3020' }, scarf: true },
+  // Agasalho do clube
+  agasalho: { pieces: [['Peasant_Body', 'shirt'], ['Peasant_Arms', 'shirt'], ['Peasant_Legs', 'pants'], ['Ranger_Feet', 'shoes']], colors: { shirt: '#2b4c9b', pants: '#3a4c8a', shoes: '#2a2a2a' } },
+  // Camiseta e calça do dia a dia
+  camiseta: { pieces: [['Peasant_Body', 'shirt'], ['Peasant_Arms', 'shirt'], ['Ranger_Legs', 'pants'], ['Ranger_Feet', 'shoes']], colors: { shirt: '#f2c94c', pants: '#5a7cc0', shoes: '#3a2a20' } },
+};
+
+/** Lenço amarelo (triângulo no peito) com o anel, preso no pescoço. */
+let SCARF = null;
+function makeScarf(g = 'm') {
+  if (!SCARF) {
+    const cloth = new THREE.MeshStandardMaterial({ color: '#f5c518', roughness: 0.8, side: THREE.DoubleSide });
+    const ring = new THREE.MeshStandardMaterial({ color: '#c99a2e', roughness: 0.3, metalness: 0.8 });
+    const tri = new THREE.BufferGeometry();
+    // triângulo um pouco dobrado (acompanha o peito)
+    tri.setAttribute('position', new THREE.Float32BufferAttribute([-0.13, 0, -0.01, 0.13, 0, -0.01, 0, -0.21, 0.03, -0.13, 0, -0.01, 0, -0.21, 0.03, 0.13, 0, -0.01], 3));
+    tri.computeVertexNormals();
+    SCARF = { cloth, ring, tri, collar: new THREE.TorusGeometry(0.088, 0.024, 8, 22), knot: new THREE.TorusGeometry(0.026, 0.011, 8, 14) };
+  }
+  const grp = new THREE.Group();
+  const front = g === 'f' ? 0.05 : 0.02; // o peito da menina fica mais à frente
+  const collar = new THREE.Mesh(SCARF.collar, SCARF.cloth);
+  collar.rotation.x = Math.PI / 2;
+  collar.scale.set(1, 1.15, 1);
+  const tri = new THREE.Mesh(SCARF.tri, SCARF.cloth);
+  tri.position.set(0, -0.01, 0.105 + front);
+  tri.rotation.x = -0.25 - front * 3;
+  tri.scale.set(0.72, 0.78, 1);
+  const knot = new THREE.Mesh(SCARF.knot, SCARF.ring);
+  knot.position.set(0, -0.055, 0.13 + front);
+  grp.add(collar, tri, knot);
+  grp.traverse((o) => { if (o.isMesh) o.castShadow = true; });
+  return grp;
+}
+
 const STYLE = {
   surf: { scale: 1.0, head: 1.12, legs: 1 },
   stumble: { scale: 0.7, head: 1.6, legs: 0.8 },
@@ -99,8 +146,16 @@ const STYLE = {
 export function buildAvatar(s, style = 'surf') {
   if (!RIG) throw new Error('Personagens ainda não carregaram');
   const S = STYLE[style] || STYLE.surf;
-  const keys = [`outfit:${s.outfit || 'ranger'}:${s.g}`, `body:${s.g}`, `hair:${s.hair}`, `brows:${s.g}`].filter((k) => RIG.parts.has(k));
-  const scenes = keys.map((k) => cloneRig(RIG.parts.get(k)));
+  const outfit = OUTFITS[s.outfit] || OUTFITS.gala;
+  const colors = { ...outfit.colors, ...(s.colors || {}) };
+  const pieces = outfit.pieces.map(([n, role]) => [`piece:${s.g}:${n}`, role]);
+  const keys = [`body:${s.g}`, ...pieces.map((p) => p[0]), `hair:${s.hair}`, `brows:${s.g}`].filter((k) => RIG.parts.has(k));
+  const roleOf = new Map(pieces);
+  const scenes = keys.map((k) => {
+    const sc = cloneRig(RIG.parts.get(k));
+    sc.traverse((o) => { if (o.isMesh) o.userData.role = roleOf.get(k) || null; });
+    return sc;
+  });
   const main = scenes[0];
   // Um esqueleto só: as outras peças passam a usar os ossos da roupa
   const bones = new Map();
@@ -114,13 +169,14 @@ export function buildAvatar(s, style = 'surf') {
       m.bind(sk, m.bindMatrix);
     }
   }
-  // Cores: roupa, pele e cabelo
+  // Cores: cada peça de roupa com a sua cor, pele e cabelo
   main.traverse((o) => {
     if (!o.isMesh) return;
     o.castShadow = true;
     o.frustumCulled = false;
     const n = o.material.name || '';
-    if (/Ranger|Peasant/.test(n) && s.cloth && s.cloth !== '#ffffff') o.material = tint(o.material, s.cloth);
+    const c = colors[o.userData.role];
+    if (/Ranger|Peasant/.test(n) && c && c !== '#ffffff') o.material = tint(o.material, c);
     else if (/Superhero|Regular/.test(n) && s.skin && s.skin !== '#ffffff') o.material = tint(o.material, s.skin);
     else if (/Hair/.test(n) && s.hairColor) o.material = tint(o.material, s.hairColor);
   });
@@ -141,6 +197,15 @@ export function buildAvatar(s, style = 'surf') {
   root.updateMatrixWorld(true);
   const fl = B('foot_l').getWorldPosition(new THREE.Vector3()).y;
   const bl = B('ball_l').getWorldPosition(new THREE.Vector3()).y;
+  // Lenço no pescoço (preso no peito, acompanha o corpo)
+  if (outfit.scarf) {
+    const scarf = makeScarf(s.g);
+    main.add(scarf);
+    scarf.position.copy(main.worldToLocal(B('neck_01').getWorldPosition(new THREE.Vector3())));
+    scarf.position.y -= 0.035;
+    scarf.position.z += 0.005;
+    B('spine_03').attach(scarf);
+  }
   const mixer = new THREE.AnimationMixer(main);
   root.userData = { style, rig: main, mixer, actions: new Map(), state: null, clip: null, current: null, lastT: null, soleDrop: (fl + bl) / 2 };
   return root;

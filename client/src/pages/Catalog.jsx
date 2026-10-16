@@ -2,20 +2,20 @@ import { useMemo, useState } from 'react';
 import { Check, Search } from 'lucide-react';
 import { ContentIcon } from '../ui.jsx';
 
-/** Agrupa classes (todos juntos) ou especialidades (por área). */
+/** Agrupa classes (regulares/avançadas e de liderança) ou especialidades (por área). */
 export function groupCatalog(type, items) {
   const groups = new Map();
   for (const c of items) {
-    const g = type === 'classe' ? 'Classes' : c.category || 'Outras';
+    const g = type === 'classe' ? (c.leader ? 'Classes de liderança' : 'Classes regulares e avançadas') : c.category || 'Outras';
     if (!groups.has(g)) groups.set(g, []);
     groups.get(g).push(c);
   }
   return [...groups.entries()];
 }
 
-/** Insígnia/foto do item do catálogo (ou o ícone da área, se ainda não tiver foto). */
+/** Ícone do item do catálogo (o da área). Classes e especialidades não usam foto: só o nome. */
 export const CatalogBadge = ({ c, size = 48 }) => (
-  <span className="cat-badge" style={{ width: size, height: size }}><ContentIcon c={c} size={Math.round(size * 0.5)} /></span>
+  <span className="cat-badge" style={{ width: size, height: size }}><ContentIcon c={{ icon: c.icon }} size={Math.round(size * 0.5)} /></span>
 );
 
 /**

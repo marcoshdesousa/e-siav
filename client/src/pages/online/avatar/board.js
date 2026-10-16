@@ -1,7 +1,7 @@
 // Skates do Surf DBV: shape com bico e rabeta levantados, lixa estampada, rodas com brilho
 // e luz por baixo. Comprimento no eixo z (bico para -z).
 import * as THREE from 'three';
-import { gradientMap, toon } from './build.js';
+import { toon } from './build.js';
 
 const W = 0.44;
 const L = 1.3;
@@ -81,7 +81,32 @@ function deckGeometry() {
 }
 let DECK = null;
 
-/** Monta um skate. Topo da lixa fica em y ≈ 0.2 (onde vão os pés). */
+/** Lateral do shape: as lâminas de madeira coladas (maple), como num skate de verdade. */
+let PLY = null;
+function plyMat() {
+  if (PLY) return PLY;
+  const c = document.createElement('canvas');
+  c.width = 64; c.height = 32;
+  const g = c.getContext('2d');
+  const cols = ['#e7c9a0', '#b9875a', '#e7c9a0', '#2563eb', '#e7c9a0', '#b9875a', '#e7c9a0'];
+  cols.forEach((col, i) => { g.fillStyle = col; g.fillRect(0, (i * 32) / cols.length, 64, 32 / cols.length + 1); });
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  PLY = new THREE.MeshStandardMaterial({ map: t, roughness: 0.7 });
+  return PLY;
+}
+const metalM = new THREE.MeshStandardMaterial({ color: '#cbd5e1', metalness: 0.9, roughness: 0.28 });
+const darkM = new THREE.MeshStandardMaterial({ color: '#1f2937', metalness: 0.6, roughness: 0.45 });
+const truckGeo = {
+  base: new THREE.BoxGeometry(0.16, 0.025, 0.11),
+  hanger: new THREE.CylinderGeometry(0.035, 0.03, 0.34, 10).rotateZ(Math.PI / 2),
+  king: new THREE.CylinderGeometry(0.018, 0.018, 0.07, 8),
+  bush: new THREE.CylinderGeometry(0.03, 0.03, 0.03, 10),
+  wheel: new THREE.CylinderGeometry(0.058, 0.058, 0.06, 20).rotateZ(Math.PI / 2),
+  hub: new THREE.CylinderGeometry(0.024, 0.024, 0.064, 12).rotateZ(Math.PI / 2),
+};
+
+/** Monta um skate (shape de madeira com lixa estampada, trucks de metal e rodas). Topo da lixa em y ≈ 0.2. */
 export function buildBoard(b) {
   DECK ||= deckGeometry();
   const root = new THREE.Group();
@@ -91,37 +116,28 @@ export function buildBoard(b) {
   const tex = deckTexture(b);
   tex.repeat.set(1 / W, 1 / L);
   tex.offset.set(0.5, 0.5);
-  const top = new THREE.MeshToonMaterial({ map: tex, gradientMap });
-  const side = toon(b.c2);
-  // A ExtrudeGeometry tem 2 grupos: [0] tampas (topo/base) e [1] laterais
-  const deck = new THREE.Mesh(DECK, [top, side]);
+  const top = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.85, metalness: 0 });
+  // A ExtrudeGeometry tem 2 grupos: [0] tampas (topo/base) e [1] laterais (as lâminas de madeira)
+  const deck = new THREE.Mesh(DECK, [top, plyMat()]);
   deck.castShadow = true;
+  deck.receiveShadow = true;
   board.add(deck);
-  const out = new THREE.Mesh(DECK, new THREE.MeshBasicMaterial({ color: '#1b1420', side: THREE.BackSide }));
-  out.scale.set(1.04, 1.25, 1.02);
-  out.position.y = -0.006;
-  board.add(out);
-  // Trucks e rodas com brilho
-  const metal = toon('#cbd5e1');
-  const wheelM = toon(b.glow);
-  const hub = new THREE.MeshBasicMaterial({ color: '#ffffff' });
-  for (const z of [-0.38, 0.38]) {
-    const truck = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.05, 0.08), metal);
-    truck.position.set(0, -0.02, z);
-    board.add(truck);
+  // Trucks (base, eixo, parafuso e borrachas) e rodas de poliuretano com rolamento
+  const wheelM = new THREE.MeshStandardMaterial({ color: b.glow, roughness: 0.5, metalness: 0.05 });
+  const bushM = new THREE.MeshStandardMaterial({ color: b.c2, roughness: 0.8 });
+  const add = (geo, mat, x, y, z) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; board.add(m); return m; };
+  for (const z of [-0.4, 0.4]) {
+    add(truckGeo.base, darkM, 0, -0.012, z);
+    add(truckGeo.king, metalM, 0, -0.045, z);
+    add(truckGeo.bush, bushM, 0, -0.04, z + (z > 0 ? -0.04 : 0.04));
+    add(truckGeo.hanger, metalM, 0, -0.075, z);
     for (const x of [-0.17, 0.17]) {
-      const w = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.065, 18), wheelM);
-      w.rotation.z = Math.PI / 2;
-      w.position.set(x, -0.065, z);
-      board.add(w);
-      const hc = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.07, 10), hub);
-      hc.rotation.z = Math.PI / 2;
-      hc.position.copy(w.position);
-      board.add(hc);
+      const w = add(truckGeo.wheel, wheelM, x, -0.075, z);
       w.userData.wheel = true;
+      add(truckGeo.hub, metalM, x, -0.075, z);
     }
   }
-  // Aletas
+  // Aletas (alguns modelos)
   if (b.fins === 1) for (const x of [-0.12, 0.12]) {
     const f = new THREE.Mesh(new THREE.ConeGeometry(0.07, 0.22, 3), toon(b.c2));
     f.scale.z = 0.25;
@@ -135,8 +151,8 @@ export function buildBoard(b) {
     f.rotation.y = sd * -0.25;
     board.add(f);
   }
-  // Luz de baixo (aditiva)
-  const glow = new THREE.Mesh(new THREE.PlaneGeometry(0.75, 1.6), new THREE.MeshBasicMaterial({ color: b.glow, map: glowTex(), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.85 }));
+  // Luz de baixo (aditiva, discreta)
+  const glow = new THREE.Mesh(new THREE.PlaneGeometry(0.75, 1.6), new THREE.MeshBasicMaterial({ color: b.glow, map: glowTex(), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0.6 }));
   glow.rotation.x = -Math.PI / 2;
   glow.position.y = 0.012;
   root.add(glow);
@@ -169,7 +185,7 @@ export function poseBoard(root, t, flip = 0) {
     board.rotation.y = Math.sin(flip * Math.PI) * 0.4;
     board.position.y += Math.sin(flip * Math.PI) * 0.25;
   }
-  root.userData.glow.material.opacity = 0.65 + Math.sin(t * 6) * 0.15;
+  root.userData.glow.material.opacity = 0.45 + Math.sin(t * 6) * 0.12;
 }
 
 const _a = new THREE.Vector3();

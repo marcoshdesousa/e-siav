@@ -302,66 +302,84 @@ export function makeTrain(len, seed = 0, moving = false, plain = false, kind = '
   return g;
 }
 
-// ───────────── Rampa de metal (sobe até o teto do trem) ─────────────
-function plateTexture() {
-  return once('t:plate', () => {
-    const t = canvasTex(256, 256, (g, w, h) => {
-      g.fillStyle = '#9ca3af'; g.fillRect(0, 0, w, h);
-      for (let i = 0; i < 1500; i++) { g.fillStyle = `rgba(255,255,255,${Math.random() * 0.08})`; g.fillRect(Math.random() * w, Math.random() * h, 6, 1); }
-      // chapa xadrez (antiderrapante)
-      for (let y = 8; y < h; y += 24) for (let x = (y / 24) % 2 ? 20 : 8; x < w; x += 24) {
-        g.save(); g.translate(x, y); g.rotate((((x + y) / 24) % 2 ? 1 : -1) * 0.7);
-        g.fillStyle = 'rgba(255,255,255,.45)'; g.fillRect(-7, -2, 14, 2);
-        g.fillStyle = 'rgba(0,0,0,.35)'; g.fillRect(-7, 0, 14, 2);
-        g.restore();
-      }
-    });
-    t.wrapS = t.wrapT = THREE.RepeatWrapping;
-    t.repeat.set(1, 4);
-    return t;
-  });
-}
-function hazardTexture() {
-  return once('t:hazard', () => {
-    const t = canvasTex(256, 32, (g, w, h) => {
-      g.fillStyle = '#facc15'; g.fillRect(0, 0, w, h);
-      g.fillStyle = '#111827';
-      for (let x = -h; x < w + h; x += 32) { g.beginPath(); g.moveTo(x, h); g.lineTo(x + 16, h); g.lineTo(x + 16 + h, 0); g.lineTo(x + h, 0); g.fill(); }
-    });
-    t.wrapS = THREE.RepeatWrapping;
-    t.repeat.set(4, 1);
-    return t;
-  });
-}
-/** Rampa com chapa antiderrapante, bordas zebradas, corrimão e pés de apoio. z = 0 é o começo (embaixo). */
+// ───────────── Rampa de terra (monte natural que sobe até o teto do trem) ─────────────
+const rockMat = () => once('m:rock', () => new THREE.MeshStandardMaterial({ color: '#7c7468', roughness: 0.95, flatShading: true }));
+const grassMat = () => once('m:grass', () => new THREE.MeshStandardMaterial({ color: '#4d7c2a', roughness: 0.9, flatShading: true, side: THREE.DoubleSide }));
+/**
+ * Monte de terra: o caminho do meio sobe reto (é por onde o personagem corre, igual à física)
+ * e as laterais descem em barranco até o chão, com pedras e capim no pé. z = 0 é o começo.
+ */
 export function makeRamp(len, height = TRAIN_H) {
   const g = new THREE.Group();
-  const W = 1.95;
-  const slope = Math.hypot(len, height);
-  const ang = Math.atan2(height, len);
-  const plateM = once('m:plate', () => new THREE.MeshStandardMaterial({ map: plateTexture(), metalness: 0.75, roughness: 0.42 }));
-  const hazM = once('m:haz', () => new THREE.MeshStandardMaterial({ map: hazardTexture(), roughness: 0.6 }));
-  const frame = metal('#374151', 0.5, 0.7);
-  const tilt = new THREE.Group();
-  tilt.rotation.x = ang; // sobe para -z
-  tilt.position.set(0, 0, 0);
-  g.add(tilt);
-  // chapa (topo exatamente na linha da subida)
-  add(tilt, G.box(W, 0.1, slope), plateM, 0, -0.05, -slope / 2);
-  for (const s of [-1, 1]) {
-    add(tilt, G.box(0.1, 0.22, slope), hazM, s * (W / 2 + 0.03), 0.02, -slope / 2);
-    // corrimão
-    add(tilt, G.box(0.05, 0.05, slope), metal('#e5e7eb', 0.3, 0.9), s * (W / 2 + 0.05), 0.75, -slope / 2, false);
-    for (let k = 0.6; k < slope; k += 1.8) add(tilt, G.box(0.04, 0.75, 0.04), metal('#e5e7eb', 0.3, 0.9), s * (W / 2 + 0.05), 0.38, -k, false);
-  }
-  // pés de apoio
-  for (let k = 1.6; k < len; k += 2) {
-    const h = (k / len) * height;
-    for (const s of [-1, 1]) add(g, G.box(0.12, 1, 0.12), frame, s * (W / 2 - 0.15), h / 2, -k, true).scale.y = h;
-    add(g, G.box(W - 0.2, 0.08, 0.08), frame, 0, h * 0.5, -k, false);
+  const key = `g:dirtramp${len}:${height}`;
+  const geo = once(key, () => {
+    // perfil da seção (x, fator da altura): meio plano, beiradas arredondando até o chão
+    const prof = [[-1.18, 0], [-1.08, 0.3], [-0.95, 0.62], [-0.8, 0.86], [-0.62, 0.97], [-0.4, 1], [0, 1], [0.4, 1], [0.62, 0.97], [0.8, 0.86], [0.95, 0.62], [1.08, 0.3], [1.18, 0]];
+    const N = Math.round(len * 3);
+    const pos = [];
+    const uv = [];
+    const idx = [];
+    for (let i = 0; i <= N; i++) {
+      const t = i / N;
+      const z = -t * len;
+      const h = t * height;
+      prof.forEach(([x, f], j) => {
+        const lump = f > 0 && f < 1 ? Math.sin(i * 1.7 + j * 2.3) * 0.06 : f === 1 ? Math.sin(i * 2.9 + j) * 0.012 : 0;
+        // barranco um pouco mais largo embaixo quando o monte é alto
+        const spread = 1 + (1 - f) * t * 0.08;
+        pos.push(x * spread, Math.max(0, h * f + (h > 0.05 ? lump : 0)), z);
+        uv.push((x + 1.2) / 2.4, t * len / 2.4);
+      });
+    }
+    const W = prof.length;
+    for (let i = 0; i < N; i++) for (let j = 0; j < W - 1; j++) {
+      const a = i * W + j; const b = a + 1; const c = a + W; const d = c + 1;
+      idx.push(a, b, c, b, d, c);
+    }
+    // parede de trás (encostada no trem), para não ficar vazado
+    const base = pos.length / 3;
+    prof.forEach(([x, f]) => { pos.push(x, height * f, -len); uv.push((x + 1.2) / 2.4, 0); pos.push(x, 0, -len); uv.push((x + 1.2) / 2.4, 1); });
+    for (let j = 0; j < W - 1; j++) { const a = base + j * 2; idx.push(a, a + 2, a + 1, a + 1, a + 2, a + 3); }
+    const bg = new THREE.BufferGeometry();
+    bg.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    bg.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+    bg.setIndex(idx);
+    bg.computeVertexNormals();
+    return bg;
+  });
+  const dirt = new THREE.Mesh(geo, once('m:earth2', () => { const m = earthMat().clone(); m.side = THREE.DoubleSide; return m; }));
+  dirt.castShadow = true;
+  dirt.receiveShadow = true;
+  g.add(dirt);
+  // marcas de pegadas/trilha no meio (terra mais escura e batida)
+  const path = add(g, G.plane(0.8, Math.hypot(len, height)), trailMat(), 0, height / 2 + 0.015, -len / 2, false);
+  path.rotation.x = -Math.PI / 2 + Math.atan2(height, len);
+  path.receiveShadow = true;
+  // pedras e capim no pé do barranco
+  const rockGeo = once('g:rock', () => new THREE.DodecahedronGeometry(0.16, 0));
+  const grassGeo = once('g:grass', () => new THREE.ConeGeometry(0.07, 0.32, 4));
+  for (let k = 0; k < 10; k++) {
+    const t = (k + 0.5) / 10;
+    const s = k % 2 ? 1 : -1;
+    const r = add(g, rockGeo, rockMat(), s * (1.05 + (k % 3) * 0.05), 0.07, -t * len, true);
+    r.scale.set(1 + (k % 3) * 0.4, 0.6 + (k % 2) * 0.3, 1 + ((k + 1) % 3) * 0.3);
+    r.rotation.set(k, k * 1.3, 0);
+    for (let q = 0; q < 3; q++) {
+      const gr = add(g, grassGeo, grassMat(), s * (1.12 + q * 0.06), 0.14, -t * len + (q - 1) * 0.18, false);
+      gr.rotation.set((q - 1) * 0.3, 0, s * 0.25);
+    }
   }
   return g;
 }
+const trailMat = () => once('m:trail', () => {
+  const t = canvasTex(64, 256, (gc, w, h) => {
+    gc.clearRect(0, 0, w, h);
+    for (let i = 0; i < 700; i++) { gc.fillStyle = `rgba(55,36,20,${Math.random() * 0.35})`; gc.beginPath(); gc.arc(w / 2 + (Math.random() - 0.5) * w * 0.7, Math.random() * h, 1 + Math.random() * 3, 0, 7); gc.fill(); }
+  });
+  t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(1, 3);
+  return new THREE.MeshStandardMaterial({ map: t, transparent: true, roughness: 1, depthWrite: false });
+});
 
 // ───────────── Moeda (frente e verso certinhos) ─────────────
 let coinParts = null;

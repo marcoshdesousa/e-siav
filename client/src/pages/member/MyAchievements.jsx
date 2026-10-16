@@ -3,7 +3,7 @@ import { Clock, Plus, Send, X, XCircle } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { fmtDate } from '../../format.js';
-import { Button, Empty, Loading, Modal, PageHeader, Section, notify, useAsync, useLoad } from '../../ui.jsx';
+import { Button, Empty, Loading, Modal, PageHeader, Section, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
 import CatalogPicker, { CatalogBadge, groupCatalog } from '../Catalog.jsx';
 
 const LABEL = {
@@ -13,9 +13,20 @@ const LABEL = {
 
 /**
  * Classes e especialidades do membro: ele marca as que já tem e envia para a
- * diretoria do clube. Depois de aprovadas, aparecem no perfil.
+ * diretoria do clube. Depois de aprovadas, aparecem no perfil. Só o nome (sem fotos).
  */
-export default function MyAchievements({ type }) {
+export default function MyAchievements({ type: initial = 'especialidade' }) {
+  const [type, setType] = useState(initial);
+  return (
+    <>
+      <PageHeader title="Especialidades e classes" subtitle="As que você tem, aprovadas pela diretoria do seu clube" />
+      <Tabs tabs={[['especialidade', 'Especialidades'], ['classe', 'Classes']]} value={type} onChange={setType} />
+      <AchievementsOf key={type} type={type} />
+    </>
+  );
+}
+
+function AchievementsOf({ type }) {
   const { actor } = useAuth();
   const L = LABEL[type];
   const mine = useLoad(() => api.get('/me/achievements?type=' + type), [type]);
@@ -40,7 +51,6 @@ export default function MyAchievements({ type }) {
 
   return (
     <>
-      <PageHeader title={L.title} subtitle={`${L.many} que você tem, ${L.approved} pela diretoria do seu clube`} />
       <Button block onClick={() => setAdding(true)}><Plus size={18} /> {L.add}</Button>
       <Loading {...mine}>
         {(d) => {
@@ -67,7 +77,7 @@ export default function MyAchievements({ type }) {
                     <h3>{g}</h3>
                     <div className="cat-grid">
                       {list.map((c) => (
-                        <div key={c.id} className="cat-item static"><CatalogBadge c={c} size={56} /><span className="cat-name">{c.name}</span></div>
+                        <div key={c.id} className="cat-item static"><CatalogBadge c={c} size={44} /><span className="cat-name">{c.name}</span></div>
                       ))}
                     </div>
                   </div>

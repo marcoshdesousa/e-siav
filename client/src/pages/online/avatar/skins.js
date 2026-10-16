@@ -1,46 +1,48 @@
 // Skins dos jogos: 10 de menino e 10 de menina (valem para o Surf DBV e o Stumble DBV) e 30 skates
 // para o Surf DBV. Os personagens são modelos de verdade (Universal Base Characters, de Quaternius,
-// CC0): roupa de aventureiro (ranger) ou de camisa e calça (casual). Aqui só se escolhe a roupa,
-// o cabelo e as cores (a cor da roupa "tinge" o tecido do modelo).
+// CC0) vestidos com roupas de desbravador montadas peça por peça (ver OUTFITS em build.js):
+// gala (com lenço), campo, aventura (colete, com lenço), agasalho e camiseta. Cada skin escolhe a
+// roupa, as cores de cada peça, o cabelo e a pele.
 //
-// outfit: ranger | casual · hair: curto | raspado | longo | coque | raspado-f
+// hair: curto | raspado | longo | coque | raspado-f
 import { api } from '../../../api.js';
 
 const PELE = { clara: '#ffffff', media: '#f1d2b8', morena: '#d9a07a', parda: '#b98059', negra: '#8d5a3b', escura: '#6a4128' };
 const CABELO = { preto: '#1b120c', castanho: '#3b2314', castanhoClaro: '#6b3a1f', ruivo: '#9a3b16', loiro: '#c79a3f' };
-const M = (id, name, o) => ({ id, name, g: 'm', outfit: 'ranger', hair: 'curto', hairColor: CABELO.castanho, skin: PELE.media, cloth: '#ffffff', ...o });
-const F = (id, name, o) => ({ id, name, g: 'f', outfit: 'ranger', hair: 'longo', hairColor: CABELO.castanho, skin: PELE.clara, cloth: '#ffffff', ...o });
+const M = (id, name, o) => ({ id, name, g: 'm', outfit: 'gala', hair: 'curto', hairColor: CABELO.castanho, skin: PELE.media, ...o });
+const F = (id, name, o) => ({ id, name, g: 'f', outfit: 'gala', hair: 'longo', hairColor: CABELO.castanho, skin: PELE.clara, ...o });
 
 export const SKINS = [
   // ───────────── Meninos ─────────────
-  M('m01', 'Desbravador', { outfit: 'ranger', cloth: '#ffffff', hairColor: CABELO.castanho, skin: PELE.media }),
-  M('m03', 'Skatista', { outfit: 'casual', cloth: '#ffb28a', hair: 'curto', hairColor: CABELO.ruivo, skin: PELE.clara }),
-  M('m07', 'Campista', { outfit: 'ranger', cloth: '#ffd29a', hair: 'raspado', hairColor: CABELO.preto, skin: PELE.morena }),
-  M('m09', 'Músico', { outfit: 'casual', cloth: '#c9b6ff', hair: 'raspado', hairColor: CABELO.preto, skin: PELE.negra }),
-  M('m13', 'Piloto', { outfit: 'casual', cloth: '#9ec2ff', hair: 'curto', hairColor: CABELO.preto, skin: PELE.parda }),
-  M('m15', 'Inverno', { outfit: 'ranger', cloth: '#a8d4ff', hair: 'curto', hairColor: CABELO.loiro, skin: PELE.clara }),
-  M('m17', 'Noite de gala', { outfit: 'casual', cloth: '#8a8fa3', hair: 'curto', hairColor: CABELO.castanho, skin: PELE.media }),
-  M('m22', 'Robótica', { outfit: 'casual', cloth: '#b6f0ef', hair: 'raspado', hairColor: CABELO.preto, skin: PELE.escura }),
-  M('m27', 'Artista', { outfit: 'ranger', cloth: '#ffb7d0', hair: 'curto', hairColor: CABELO.castanhoClaro, skin: PELE.media }),
-  M('m28', 'Líder DBV', { outfit: 'casual', cloth: '#fff1a8', hair: 'curto', hairColor: CABELO.castanho, skin: PELE.morena }),
+  M('m01', 'Desbravador de gala', { outfit: 'gala', hairColor: CABELO.castanho, skin: PELE.media }),
+  M('m03', 'Uniforme de campo', { outfit: 'campo', hair: 'curto', hairColor: CABELO.ruivo, skin: PELE.clara }),
+  M('m07', 'Explorador', { outfit: 'aventura', hair: 'raspado', hairColor: CABELO.preto, skin: PELE.morena }),
+  M('m09', 'Agasalho azul', { outfit: 'agasalho', hair: 'raspado', hairColor: CABELO.preto, skin: PELE.negra }),
+  M('m13', 'Camiseta do clube', { outfit: 'camiseta', hair: 'curto', hairColor: CABELO.preto, skin: PELE.parda }),
+  M('m15', 'Desbravador', { outfit: 'gala', hair: 'curto', hairColor: CABELO.loiro, skin: PELE.clara }),
+  M('m17', 'Acampante', { outfit: 'campo', colors: { shirt: '#7a5a3a', pants: '#3f4a33' }, hair: 'curto', hairColor: CABELO.castanho, skin: PELE.media }),
+  M('m22', 'Trilheiro', { outfit: 'aventura', colors: { shirt: '#c6a77a', pants: '#2f3b4f' }, hair: 'raspado', hairColor: CABELO.preto, skin: PELE.escura }),
+  M('m27', 'Agasalho verde', { outfit: 'agasalho', colors: { shirt: '#2f7d4f', pants: '#1f3d2c' }, hair: 'curto', hairColor: CABELO.castanhoClaro, skin: PELE.media }),
+  M('m28', 'Líder DBV', { outfit: 'gala', colors: { shirt: '#e8dcc4', pants: '#1c2238' }, hair: 'curto', hairColor: CABELO.castanho, skin: PELE.morena }),
 
   // ───────────── Meninas ─────────────
-  F('f01', 'Desbravadora', { outfit: 'ranger', cloth: '#ffffff', hair: 'longo', hairColor: CABELO.castanhoClaro, skin: PELE.clara }),
-  F('f03', 'Skatista', { outfit: 'casual', cloth: '#d6b8ff', hair: 'coque', hairColor: CABELO.ruivo, skin: PELE.clara }),
-  F('f05', 'Jogadora de basquete', { outfit: 'casual', cloth: '#ffcf9e', hair: 'coque', hairColor: CABELO.preto, skin: PELE.negra }),
-  F('f07', 'Campista', { outfit: 'ranger', cloth: '#ffd29a', hair: 'longo', hairColor: CABELO.castanho, skin: PELE.morena }),
-  F('f12', 'Cientista', { outfit: 'casual', cloth: '#ffffff', hair: 'coque', hairColor: CABELO.loiro, skin: PELE.clara }),
-  F('f15', 'Inverno', { outfit: 'ranger', cloth: '#ffc3e1', hair: 'longo', hairColor: CABELO.loiro, skin: PELE.media }),
-  F('f17', 'Noite de gala', { outfit: 'casual', cloth: '#9fb4ff', hair: 'longo', hairColor: CABELO.preto, skin: PELE.parda }),
-  F('f24', 'Florista', { outfit: 'casual', cloth: '#ffb3cf', hair: 'coque', hairColor: CABELO.castanho, skin: PELE.media }),
-  F('f28', 'Líder DBV', { outfit: 'ranger', cloth: '#fff1a8', hair: 'coque', hairColor: CABELO.preto, skin: PELE.escura }),
-  F('f30', 'Estrela', { outfit: 'casual', cloth: '#ff9e9e', hair: 'raspado-f', hairColor: CABELO.ruivo, skin: PELE.morena }),
+  F('f01', 'Desbravadora de gala', { outfit: 'gala', hair: 'longo', hairColor: CABELO.castanhoClaro, skin: PELE.clara }),
+  F('f03', 'Uniforme de campo', { outfit: 'campo', hair: 'coque', hairColor: CABELO.ruivo, skin: PELE.clara }),
+  F('f05', 'Exploradora', { outfit: 'aventura', hair: 'coque', hairColor: CABELO.preto, skin: PELE.negra }),
+  F('f07', 'Agasalho rosa', { outfit: 'agasalho', colors: { shirt: '#d9668f', pants: '#5b2a43' }, hair: 'longo', hairColor: CABELO.castanho, skin: PELE.morena }),
+  F('f12', 'Camiseta do clube', { outfit: 'camiseta', hair: 'coque', hairColor: CABELO.loiro, skin: PELE.clara }),
+  F('f15', 'Desbravadora', { outfit: 'gala', hair: 'longo', hairColor: CABELO.loiro, skin: PELE.media }),
+  F('f17', 'Acampante', { outfit: 'campo', colors: { shirt: '#8a5a7a', pants: '#3f4a33' }, hair: 'longo', hairColor: CABELO.preto, skin: PELE.parda }),
+  F('f24', 'Trilheira', { outfit: 'aventura', colors: { shirt: '#c6a77a', pants: '#2f3b4f' }, hair: 'coque', hairColor: CABELO.castanho, skin: PELE.media }),
+  F('f28', 'Líder DBV', { outfit: 'gala', colors: { shirt: '#e8dcc4', pants: '#1c2238' }, hair: 'coque', hairColor: CABELO.preto, skin: PELE.escura }),
+  F('f30', 'Agasalho azul', { outfit: 'agasalho', hair: 'raspado-f', hairColor: CABELO.ruivo, skin: PELE.morena }),
 ];
-// Cor que aparece no fundo da foto de cada skin
-for (const s of SKINS) s.top = { color: s.cloth === '#ffffff' ? (s.outfit === 'ranger' ? '#86efac' : '#e2e8f0') : s.cloth };
+// Cor que aparece no fundo da foto de cada skin (a cor da camisa)
+const SHIRT = { gala: '#d8c49a', campo: '#5f7d3c', aventura: '#c6a77a', agasalho: '#2b4c9b', camiseta: '#f2c94c' };
+for (const s of SKINS) s.top = { color: s.colors?.shirt || SHIRT[s.outfit] };
 
-/** O guarda que corre atrás no Surf DBV. */
-export const GUARD = { id: 'guarda', name: 'Guarda', g: 'm', outfit: 'casual', cloth: '#5a78c8', hair: 'raspado', hairColor: CABELO.preto, skin: PELE.morena, top: { color: '#1e3a8a' } };
+/** O guarda que corre atrás no Surf DBV: camisa azul, calça escura e bota. */
+export const GUARD = { id: 'guarda', name: 'Guarda', g: 'm', outfit: 'campo', colors: { shirt: '#3f5fa8', pants: '#1e2433', shoes: '#151515' }, hair: 'raspado', hairColor: CABELO.preto, skin: PELE.morena, top: { color: '#1e3a8a' } };
 
 export const skinById = (id) => SKINS.find((s) => s.id === id) || SKINS[0];
 

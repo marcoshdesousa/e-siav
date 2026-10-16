@@ -14,8 +14,8 @@ import * as stumble from './stumble.js';
 const GAMES = {
   // Robôs completam sempre a sala até o máximo. Na sala aleatória eles vão entrando durante a
   // contagem e saem para dar lugar a quem chega; na sala criada, entram quando o dono começa.
-  uno: { name: 'Cartada DBV', sizes: [2, 4, 6], quick: [2, 4], min: 1, countdown: 15_000, logic: uno },
-  stumble: { name: 'Stumble DBV', sizes: [10], quick: [10], min: 1, countdown: 60_000, logic: stumble },
+  uno: { name: 'Uno DBV', sizes: [2, 4, 6], quick: [2, 4], min: 1, countdown: 15_000, logic: uno },
+  stumble: { name: 'Stumble DBV', sizes: [10], quick: [10], min: 1, countdown: 20_000, logic: stumble },
 };
 
 const rooms = new Map(); // id -> sala

@@ -1,13 +1,13 @@
 // Aprendizagem Diária (só membros): Ano Bíblico (leitura do dia + áudio + quiz, sequência e
-// pacotinho do Álbum Bíblico por dia concluído) e Bom de Bíblia (100 fases de perguntas).
+// pacotinho do Álbum Bíblico por dia concluído) e Bom de Bíblia (200 fases de perguntas).
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Router } from 'express';
-import { all, get, run } from '../db.js';
+import { all, get, run, tx } from '../db.js';
 import { requireAuth } from '../auth.js';
 import { fail, int, validDate } from '../util.js';
-import { setSetting } from '../fees.js';
+import { setSetting, setting } from '../fees.js';
 import {
   AUDIO_DIR, PLAN, QUIZZES, TOTAL_DAYS, audioStatus, audioTimes, audioUrl, chapterText, chapterTitle, dateOfDay,
   hasAudio, planStart, startAudioGenerator, todayBR, todayDay,
@@ -17,6 +17,10 @@ const r = Router();
 const member = requireAuth('member');
 const admin = requireAuth('admin');
 const PASS = 3; // acertos (de 5) para concluir o dia
+// Modo de teste (ligado até o admin desligar): todos os dias do Ano Bíblico e o Bom Líder ficam
+// abertos para testar antes do lançamento.
+export const testMode = () => setting('biblia_teste') !== '0';
+const openDay = (day, t) => day <= t || testMode();
 const BDB_PASS = 7; // acertos (de 10) para passar de fase
 
 // ───────────── Ano Bíblico ─────────────
@@ -58,7 +62,7 @@ function bibleSummary(memberId) {
 
 const dayStatus = (d, t, row) => {
   if (row?.completed_at) return row.on_time ? 'feito' : 'feito-depois';
-  if (d > t) return 'futuro';
+  if (d > t) return testMode() ? 'teste' : 'futuro';
   return d === t ? 'hoje' : 'perdido';
 };
 
@@ -67,7 +71,7 @@ r.get('/aprendizagem', member, (req, res) => {
   const b = bibleSummary(req.actor.id);
   const bdb = get('SELECT COUNT(*) n FROM bdb_progress WHERE member_id = ? AND passed_at IS NOT NULL', req.actor.id).n;
   const { rows: _r, missedDays: _m, ...bible } = b;
-  res.json({ bible, bdb: { passed: bdb, total: BDB.length }, leader: req.actor.kind === 'lideranca' });
+  res.json({ bible, bdb: { passed: bdb, total: BDB.length }, leader: req.actor.kind === 'lideranca' || testMode(), test: testMode() });
 });
 
 r.get('/ano-biblico', member, (req, res) => {
@@ -76,6 +80,7 @@ r.get('/ano-biblico', member, (req, res) => {
   const { rows: _r, missedDays: _m, ...summary } = b;
   res.json({
     ...summary,
+    test: testMode(),
     days: PLAN.days.map((d) => {
       const row = byDay.get(d.day);
       return { day: d.day, date: dateOfDay(d.day), label: d.label, status: dayStatus(d.day, b.today_day, row), best: row?.best || 0 };
@@ -92,7 +97,7 @@ function planDay(n) {
 r.get('/ano-biblico/dia/:n', member, (req, res) => {
   const d = planDay(req.params.n);
   const t = todayDay();
-  if (d.day > t) fail(403, `Este dia ainda não chegou. Libera em ${dateOfDay(d.day).split('-').reverse().join('/')}.`);
+  if (!openDay(d.day, t)) fail(403, `Este dia ainda não chegou. Libera em ${dateOfDay(d.day).split('-').reverse().join('/')}.`);
   const row = get('SELECT best, attempts, completed_at, on_time FROM bible_progress WHERE member_id = ? AND day = ?', req.actor.id, d.day);
   const quiz = QUIZZES.get(d.day) || null;
   res.json({
@@ -106,10 +111,10 @@ r.get('/ano-biblico/dia/:n', member, (req, res) => {
   });
 });
 
-r.post('/ano-biblico/dia/:n/quiz', member, (req, res) => {
+r.post('/ano-biblico/dia/:n/quiz', member, async (req, res) => {
   const d = planDay(req.params.n);
   const t = todayDay();
-  if (d.day > t) fail(403, 'Este dia ainda não chegou');
+  if (!openDay(d.day, t)) fail(403, 'Este dia ainda não chegou');
   const quiz = QUIZZES.get(d.day);
   if (!quiz) fail(400, 'O quiz deste dia ainda não está pronto');
   const answers = Array.isArray(req.body.answers) ? req.body.answers : [];
@@ -127,9 +132,13 @@ r.post('/ano-biblico/dia/:n/quiz', member, (req, res) => {
     run('INSERT OR IGNORE INTO album_progress (member_id, album) VALUES (?, ?)', req.actor.id, 'biblico');
     run('UPDATE album_progress SET packs_unopened = packs_unopened + 1 WHERE member_id = ? AND album = ?', req.actor.id, 'biblico');
   }
+  // Ranking (Leitura bíblica): 100 pontos para o membro, 100 para a unidade e 25 para o clube, só na
+  // primeira vez que conclui o dia. Dia futuro aberto no modo de teste não pontua.
+  const { awardBibleDay } = await import('../rankings.js');
+  const points = first && d.day <= t ? awardBibleDay(req.actor.id, d.day) : null;
   const b = bibleSummary(req.actor.id);
   res.json({
-    score, total: quiz.length, passed, pass: PASS, best: Math.max(score, before?.best || 0), first, on_time: !!onTime, pack: first,
+    score, total: quiz.length, passed, pass: PASS, best: Math.max(score, before?.best || 0), first, on_time: !!onTime, pack: first, points,
     correct: quiz.map((q) => q.answer), refs: quiz.map((q) => q.ref || null),
     streak: b.streak, done: b.done, all_done: b.all_done,
   });
@@ -155,7 +164,7 @@ r.get('/admin/ano-biblico', admin, (req, res) => {
   const readers = get('SELECT COUNT(DISTINCT member_id) n FROM bible_progress WHERE completed_at IS NOT NULL').n;
   res.json({
     start: planStart(), default_start: PLAN.start, end: dateOfDay(TOTAL_DAYS), total: TOTAL_DAYS, quizzes: QUIZZES.size,
-    audio: audioStatus(), completers, readers, bdb: { phases: BDB.length, medals: bdbMedals },
+    audio: audioStatus(), completers, readers, bdb: { phases: BDB.length, medals: bdbMedals }, test: testMode(),
   });
 });
 
@@ -164,6 +173,12 @@ r.put('/admin/ano-biblico/inicio', admin, (req, res) => {
   if (date && !validDate(date)) fail(400, 'Data inválida');
   setSetting('ano_biblico_inicio', date || '');
   res.json({ start: planStart() });
+});
+
+// Modo de teste: libera todos os dias do Ano Bíblico e o Bom Líder para todo mundo testar.
+r.put('/admin/biblia-teste', admin, (req, res) => {
+  setSetting('biblia_teste', req.body.on ? '1' : '0');
+  res.json({ test: testMode() });
 });
 
 r.post('/admin/ano-biblico/audio', admin, (req, res) => {
@@ -195,6 +210,15 @@ function loadBdb() {
   return out;
 }
 const BDB = loadBdb();
+// 200 fases (antes eram 100): as fases antigas difíceis (51-75) viraram 101-125 e as muito
+// difíceis (76-100) viraram 176-200. O progresso de quem já jogava muda junto, uma vez só.
+if (BDB.length >= 200 && setting('bdb_v2') !== '1') {
+  tx(() => {
+    run('UPDATE bdb_progress SET phase = phase + 100 WHERE phase BETWEEN 76 AND 100');
+    run('UPDATE bdb_progress SET phase = phase + 50 WHERE phase BETWEEN 51 AND 75');
+    setSetting('bdb_v2', '1');
+  });
+}
 export const BDB_SECONDS = 15;
 
 const bdbRows = (memberId) => new Map(all('SELECT phase, best, attempts, passed_at FROM bdb_progress WHERE member_id = ?', memberId).map((x) => [x.phase, x]));
