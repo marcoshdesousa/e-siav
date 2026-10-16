@@ -47,12 +47,28 @@ function starTexture() {
   return STAR;
 }
 
+let DUST = null;
+/** Grão de terra/poeira (não brilha): bolinha irregular. */
+function dustTexture() {
+  if (DUST) return DUST;
+  const c = document.createElement('canvas');
+  c.width = c.height = 32;
+  const g = c.getContext('2d');
+  for (let i = 0; i < 9; i++) {
+    const r = g.createRadialGradient(16 + (Math.random() - 0.5) * 10, 16 + (Math.random() - 0.5) * 10, 0, 16, 16, 9);
+    r.addColorStop(0, 'rgba(255,255,255,.9)'); r.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = r; g.fillRect(0, 0, 32, 32);
+  }
+  DUST = new THREE.CanvasTexture(c);
+  return DUST;
+}
+
 /** Partículas com brilho (sprites que somam luz), reaproveitadas para não pesar. */
-export function createParticles(scene, max = 260) {
+export function createParticles(scene, max = 260, { additive = true } = {}) {
   const pool = [];
   const live = [];
   const make = () => {
-    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTexture(), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: additive ? glowTexture() : dustTexture(), transparent: true, depthWrite: false, blending: additive ? THREE.AdditiveBlending : THREE.NormalBlending }));
     s.visible = false;
     scene.add(s);
     return s;
@@ -65,7 +81,7 @@ export function createParticles(scene, max = 260) {
       for (let i = 0; i < n && pool.length; i++) {
         const s = pool.pop();
         s.visible = true;
-        s.material.map = star ? starTexture() : glowTexture();
+        if (additive) s.material.map = star ? starTexture() : glowTexture();
         s.material.color.set(colors[i % colors.length]);
         s.material.opacity = 1;
         s.position.set(x + (Math.random() - 0.5) * 0.2 * spread, y, z + (Math.random() - 0.5) * 0.2 * spread);

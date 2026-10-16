@@ -26,7 +26,7 @@ const loader = new GLTFLoader();
 export function loadRig() {
   if (!rigPromise) {
     rigPromise = Promise.all([
-      loader.loadAsync('/models/dbv-rig.glb?v=1'),
+      loader.loadAsync('/models/dbv-rig.glb?v=2'),
       ...Object.entries(PARTS).map(([k, f]) => loader.loadAsync(BASE + f).then((g) => [k, g.scene])),
     ]).then(([rig, ...parts]) => {
       RIG = { clips: new Map(rig.animations.map((a) => [a.name, a])), parts: new Map(parts) };
@@ -147,7 +147,8 @@ export function buildAvatar(s, style = 'surf') {
 }
 
 // ───────────── Animações ─────────────
-// estado -> animação do esqueleto. once: toca uma vez e para no fim; speed: velocidade; yaw: gira o corpo.
+// estado -> animação do esqueleto. clip: animação principal; mix: [[outra, peso]] misturadas junto;
+// once: toca uma vez e para no fim; speed: velocidade; yaw: gira o corpo; pitch: inclina para a frente.
 const ANIM = {
   surf: {
     idle: { clip: 'Idle_Loop' },
@@ -156,15 +157,22 @@ const ANIM = {
     air: { clip: 'NinjaJump_Idle_Loop', fade: 0.12 },
     pogo: { clip: 'Jump_Loop' },
     roll: { clip: 'Roll', once: true, speed: 2.1, fade: 0.08 },
-    stumble: { clip: 'Hit_Stomach', once: true, speed: 1.3, fade: 0.06 },
-    skate: { clip: 'Sword_Idle', yaw: 1.15 },
+    // Tropeço: continua correndo, mas o corpo vai para a frente como quem quase cai
+    stumble: { clip: 'Sprint_Loop', mix: [['Hit_Stomach', 1.1, true]], speed: 1.0, fade: 0.06 },
+    // Em cima do skate: de lado, joelhos um pouco dobrados e braços soltos (sem abrir as pernas)
+    skate: { clip: 'Idle_Loop', mix: [['Crouch_Idle_Loop', 0.3]], yaw: Math.PI / 2, alignFeet: true, speed: 0.8 },
     skatelie: { clip: 'Slide_Loop' },
-    spray: { clip: 'Idle_Torch_Loop' },
-    caught: { clip: 'Surprise', speed: 1.4 }, // de cabeça para baixo: braços balançando e pernas esticadas
-    hold: { clip: 'Celebration', speed: 0.8 }, // o guarda levanta o personagem com os braços para cima
+    // Pichando: braço esticado com a lata de spray apontada para o trem
+    spray: { clip: 'Spell_Simple_Idle_Loop' },
+    caught: { clip: 'Jump_Loop', speed: 0.45, fade: 0.25 }, // pendurado por uma perna: a outra dobrada
+    grab: { clip: 'Crouch_Idle_Loop', fade: 0.25 }, // o guarda agacha para pegar o tornozelo
+    hold: { clip: 'Idle_Loop', fade: 0.3 }, // o guarda (o braço que segura é posto pelo jogo)
+    carry: { clip: 'Walk_Loop', fade: 0.3 }, // o guarda indo embora carregando
     crash: { clip: 'Hit_Knockback', once: true, fade: 0.05 },
+    down: { clip: 'Death01', once: true, speed: 1.6, fade: 0.15 }, // caído de costas no chão
     dive: { clip: 'Swim_Fwd_Loop' },
-    fly: { clip: 'Swim_Fwd_Loop', speed: 0.7 },
+    // Foguete: em pé, inclinado para a frente, pernas juntas (como voando com uma mochila-foguete)
+    fly: { clip: 'Idle_Loop', speed: 0.6, pitch: 0.42, fade: 0.25 },
     wave: { clip: 'Celebration' },
     win: { clip: 'Dance_Loop' },
     lose: { clip: 'Crying' },
@@ -184,10 +192,21 @@ const ANIM = {
   },
 };
 
+function action(U, name) {
+  let a = U.actions.get(name);
+  if (!a) {
+    const clip = RIG.clips.get(name);
+    if (!clip) return null;
+    a = U.mixer.clipAction(clip);
+    U.actions.set(name, a);
+  }
+  return a;
+}
+
 /**
  * Anima o personagem. t: relógio em segundos (o passo é a diferença entre as chamadas).
- * Estados: idle, run, jump, air, pogo, roll, stumble, skate, skatelie, spray, caught, hold, crash,
- * dive, fly, wave, win, lose, fall.
+ * Estados: idle, run, jump, air, pogo, roll, stumble, skate, skatelie, spray, caught, hold, carry,
+ * crash, down, dive, fly, wave, win, lose, fall.
  */
 export function poseAvatar(model, state, t) {
   const U = model.userData;
@@ -199,24 +218,74 @@ export function poseAvatar(model, state, t) {
   const spec = table[state] || ANIM.surf[state] || table.idle;
   if (U.state !== state) {
     U.state = state;
-    U.rig.rotation.y = spec.yaw || 0;
-    if (U.clip !== spec.clip || spec.once) {
-      const clip = RIG.clips.get(spec.clip);
-      let a = U.actions.get(spec.clip);
-      if (!a) { a = U.mixer.clipAction(clip); U.actions.set(spec.clip, a); }
-      a.reset();
-      a.setLoop(spec.once ? THREE.LoopOnce : THREE.LoopRepeat, Infinity);
-      a.clampWhenFinished = !!spec.once;
-      a.timeScale = spec.speed || 1;
+    U.rig.rotation.set(spec.pitch || 0, spec.yaw || 0, 0);
+    const fade = spec.fade ?? 0.18;
+    const layers = [[spec.clip, 1, spec.once], ...(spec.mix || [])];
+    const next = new Set();
+    for (const [name, w, once] of layers) {
+      const a = action(U, name);
+      if (!a) continue;
+      next.add(a);
+      const restart = once || !a.isRunning() || !U.active?.has(a);
+      a.stopFading();
       a.enabled = true;
-      a.setEffectiveWeight(1);
-      a.play();
-      if (U.current && U.current !== a) a.crossFadeFrom(U.current, spec.fade ?? 0.18, false);
-      U.current = a;
-      U.clip = spec.clip;
-    } else if (U.current) U.current.timeScale = spec.speed || 1;
+      a.setLoop(once ? THREE.LoopOnce : THREE.LoopRepeat, Infinity);
+      a.clampWhenFinished = !!once;
+      a.timeScale = spec.speed || 1;
+      a.setEffectiveWeight(w);
+      if (restart) { a.reset(); a.setEffectiveWeight(w); a.play(); if (U.active?.size) a.fadeIn(fade); }
+    }
+    for (const a of U.active || []) if (!next.has(a)) a.fadeOut(fade);
+    U.active = next;
+    U.clip = spec.clip;
   }
   U.mixer.update(dt);
+  // No skate: gira o corpo até os dois pés ficarem na linha da prancha (nenhum pé para fora)
+  if (spec.alignFeet) {
+    model.updateMatrixWorld(true);
+    const a = model.worldToLocal(U.rig.getObjectByName('foot_l').getWorldPosition(_fa));
+    const b = model.worldToLocal(U.rig.getObjectByName('foot_r').getWorldPosition(_fb));
+    let d = Math.atan2(b.x - a.x, b.z - a.z);
+    if (d > Math.PI / 2) d -= Math.PI;
+    if (d < -Math.PI / 2) d += Math.PI;
+    U.rig.rotation.y -= d;
+  }
+}
+const _fa = new THREE.Vector3();
+const _fb = new THREE.Vector3();
+
+/** Põe um objeto (lata de spray, por exemplo) na mão do personagem. */
+export function holdProp(model, prop, hand = 'hand_l') {
+  const bone = model.userData.rig.getObjectByName(hand);
+  bone.add(prop);
+  return prop;
+}
+
+/**
+ * Aponta um osso (braço, perna) para uma direção do mundo, depois da animação: o osso gira até
+ * o osso filho ficar na direção pedida. Usado para o guarda levantar o braço segurando o personagem.
+ */
+const _q = new THREE.Quaternion();
+const _q2 = new THREE.Quaternion();
+const _a = new THREE.Vector3();
+const _b = new THREE.Vector3();
+export function aimBone(model, boneName, childName, dir, k = 1) {
+  const rig = model.userData.rig;
+  const bone = rig.getObjectByName(boneName);
+  const child = rig.getObjectByName(childName);
+  model.updateMatrixWorld(true);
+  bone.getWorldPosition(_a);
+  child.getWorldPosition(_b);
+  const cur = _b.sub(_a).normalize();
+  _q.setFromUnitVectors(cur, _a.copy(dir).normalize());
+  if (k < 1) _q.slerp(_q2.identity(), 1 - k);
+  // rotação no mundo -> rotação local do osso
+  bone.parent.getWorldQuaternion(_q2);
+  const parentInv = _q2.clone().invert();
+  bone.getWorldQuaternion(_q2);
+  _q2.premultiply(_q);
+  bone.quaternion.copy(parentInv.multiply(_q2));
+  bone.updateMatrixWorld(true);
 }
 
 /**
