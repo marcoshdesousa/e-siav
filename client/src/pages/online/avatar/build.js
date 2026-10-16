@@ -1,24 +1,24 @@
 // Personagens dos jogos: modelos de verdade do "Universal Base Characters" (Quaternius, CC0) com as
-// animações do "Universal Animation Library" (mesmo esqueleto). Cada skin junta uma roupa inteira
-// (aventureiro ou casual), a cabeça do corpo-base, o cabelo e as sobrancelhas, tudo preso num único
-// esqueleto. As cores da roupa, da pele e do cabelo tingem as texturas.
-//  - 'surf': proporção de adolescente (cabeça um pouquinho maior);
-//  - 'stumble': versão pequenininha (cabeção, pernas mais curtas).
+// animações do "Universal Animation Library" (mesmo esqueleto). O personagem é montado peça por
+// peça (ver skins.js): o corpo-base (só aparece o que a roupa não cobre), a camisa, a calça/bermuda
+// ou saia, o calçado, o cabelo, o chapéu e o lenço, tudo preso num único esqueleto.
+//  - 'surf' (grande): proporção de adolescente (cabeça um pouquinho maior);
+//  - 'stumble' (pequeno): versão pequenininha (cabeção, pernas mais curtas).
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { clone as cloneRig } from 'three/examples/jsm/utils/SkeletonUtils.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 
 // ───────────── Arquivos ─────────────
 const BASE = '/models/chars/';
-// Peças de roupa separadas (camisa, mangas, calça, calçado): cada roupa junta as peças e pinta cada uma.
-const PIECES = ['Peasant_Body', 'Peasant_Arms', 'Peasant_Legs', 'Ranger_Body', 'Ranger_Legs', 'Ranger_Feet'];
+const PIECES = ['Peasant_Body', 'Ranger_Body', 'Ranger_Arms', 'Ranger_Legs', 'Ranger_Feet'];
 const pieceFile = (g, n) => `parts/${g === 'm' ? 'Male' : 'Female'}_${g === 'm' && n === 'Ranger_Feet' ? 'Ranger_Feet_Boots' : n}.gltf`;
 const PARTS = {
   ...Object.fromEntries(['m', 'f'].flatMap((g) => PIECES.map((n) => [`piece:${g}:${n}`, pieceFile(g, n)]))),
   'body:m': 'base/Superhero_Male_FullBody.gltf', 'body:f': 'base/Superhero_Female_FullBody.gltf',
   'hair:curto': 'hair/Hair_SimpleParted.gltf', 'hair:raspado': 'hair/Hair_Buzzed.gltf', 'hair:longo': 'hair/Hair_Long.gltf',
-  'hair:coque': 'hair/Hair_Buns.gltf', 'hair:raspado-f': 'hair/Hair_BuzzedFemale.gltf',
+  'hair:coque': 'hair/Hair_Buns.gltf', 'hair:raspado-f': 'hair/Hair_BuzzedFemale.gltf', 'hair:barba': 'hair/Hair_Beard.gltf',
   'brows:m': 'hair/Eyebrows_Regular.gltf', 'brows:f': 'hair/Eyebrows_Female.gltf',
 };
 let RIG = null;
@@ -32,8 +32,6 @@ export function loadRig() {
       ...Object.entries(PARTS).map(([k, f]) => loader.loadAsync(BASE + f).then((g) => [k, g.scene])),
     ]).then(([rig, ...parts]) => {
       RIG = { clips: new Map(rig.animations.map((a) => [a.name, a])), parts: new Map(parts) };
-      // Corpo-base: fica só a cabeça e o pescoço (o resto do corpo é a roupa)
-      for (const k of ['body:m', 'body:f']) headOnly(RIG.parts.get(k));
       return RIG;
     });
     rigPromise.catch(() => { rigPromise = null; });
@@ -42,21 +40,74 @@ export function loadRig() {
 }
 export const rigLoaded = () => !!RIG;
 
-function headOnly(scene) {
-  scene.traverse((o) => {
-    if (!o.isSkinnedMesh || !o.geometry.index) return;
-    const keep = new Set();
-    o.skeleton.bones.forEach((b, k) => { if (b.name === 'Head' || b.name === 'neck_01') keep.add(k); });
-    const si = o.geometry.attributes.skinIndex;
-    const sw = o.geometry.attributes.skinWeight;
-    const head = (v) => { let best = 0; let bi = 0; for (let c = 0; c < 4; c++) { const w = sw.getComponent(v, c); if (w > best) { best = w; bi = si.getComponent(v, c); } } return keep.has(bi); };
-    const idx = o.geometry.index.array;
-    const out = [];
-    for (let t = 0; t < idx.length; t += 3) if (head(idx[t]) && head(idx[t + 1]) && head(idx[t + 2])) out.push(idx[t], idx[t + 1], idx[t + 2]);
-    o.geometry = o.geometry.clone();
-    o.geometry.setIndex(out);
-  });
+// ───────────── Recortes: some com a parte do corpo (ou da calça) que a roupa cobre ─────────────
+// Para cada vértice: o osso que mais o move e onde ele fica ao longo do osso (t: 0 no começo, 1 no fim).
+const NEXT = { upperarm_l: 'lowerarm_l', upperarm_r: 'lowerarm_r', lowerarm_l: 'hand_l', lowerarm_r: 'hand_r', thigh_l: 'calf_l', thigh_r: 'calf_r', calf_l: 'foot_l', calf_r: 'foot_r' };
+const vinfo = new WeakMap();
+function vertexInfo(mesh) {
+  if (vinfo.has(mesh.geometry)) return vinfo.get(mesh.geometry);
+  const g = mesh.geometry;
+  const bones = mesh.skeleton.bones;
+  const pos = bones.map((_b, k) => new THREE.Vector3().setFromMatrixPosition(mesh.skeleton.boneInverses[k].clone().invert()));
+  const byName = new Map(bones.map((b, k) => [b.name, k]));
+  const si = g.attributes.skinIndex;
+  const sw = g.attributes.skinWeight;
+  const p = g.attributes.position;
+  const v = new THREE.Vector3();
+  const names = [];
+  const ts = new Float32Array(p.count);
+  for (let i = 0; i < p.count; i++) {
+    let best = 0;
+    let bi = 0;
+    for (let c = 0; c < 4; c++) { const w = sw.getComponent(i, c); if (w > best) { best = w; bi = si.getComponent(i, c); } }
+    const name = bones[bi].name;
+    names.push(name);
+    const next = byName.get(NEXT[name]);
+    if (next != null) {
+      v.fromBufferAttribute(p, i).applyMatrix4(mesh.bindMatrix);
+      const a = pos[bi];
+      const d = pos[next].clone().sub(a);
+      ts[i] = v.sub(a).dot(d) / d.lengthSq();
+    }
+  }
+  const info = { names, ts };
+  vinfo.set(g, info);
+  return info;
 }
+const cutCache = new Map();
+/** Copia da malha só com os triângulos em que hide(osso, t) é falso nos 3 vértices. */
+function cutMesh(mesh, key, hide) {
+  const k = mesh.geometry.uuid + key;
+  if (!cutCache.has(k)) {
+    const { names, ts } = vertexInfo(mesh);
+    const idx = mesh.geometry.index.array;
+    const out = [];
+    for (let t = 0; t < idx.length; t += 3) {
+      const a = idx[t]; const b = idx[t + 1]; const c = idx[t + 2];
+      if (!hide(names[a], ts[a]) && !hide(names[b], ts[b]) && !hide(names[c], ts[c])) out.push(a, b, c);
+    }
+    const geo = mesh.geometry.clone();
+    geo.setIndex(out);
+    cutCache.set(k, geo);
+  }
+  mesh.geometry = cutCache.get(k);
+}
+const side = (n) => n.replace(/_[lr]$/, '');
+/** O que a roupa cobre no corpo-base (para não atravessar o tecido). */
+function bodyHider(top, bottom, shoes) {
+  return (n, t) => {
+    const b = side(n);
+    if (b === 'pelvis' || b.startsWith('spine') || b === 'clavicle') return true;
+    if (b === 'upperarm') return top.style === 'camiseta' ? t < 0.62 : top.style === 'colete' ? t < 0.14 : true;
+    if (b === 'lowerarm' || b === 'hand') return top.style === 'manga' || top.style === 'colete-manga';
+    if (b === 'thigh') return bottom.style === 'calca' ? true : bottom.style === 'bermuda' ? t < 0.9 : t < 0.88;
+    if (b === 'calf') return (bottom.style === 'calca' && t < 0.55) || (shoes.style === 'bota' && t > 0.5);
+    if (b === 'ball' || b === 'ball_leaf') return true;
+    if (b === 'foot') return shoes.style === 'bota';
+    return false;
+  };
+}
+const shortsHider = (n, t) => { const b = side(n); return b === 'calf' || b === 'foot' || b === 'ball' || b === 'ball_leaf' || (b === 'thigh' && t > 0.92); };
 
 // ───────────── Materiais ─────────────
 /** Degraus de luz (usado pelo skate). */
@@ -92,23 +143,6 @@ function tint(mat, color) {
   return tinted.get(key);
 }
 
-/**
- * Roupas (inspiradas no uniforme dos Desbravadores). Cada peça tem um papel que define a cor:
- * shirt (camisa), pants (calça), shoes (calçado). scarf: lenço amarelo com anel no pescoço.
- */
-export const OUTFITS = {
-  // Uniforme de gala: camisa caqui, calça azul-marinho, sapato preto e lenço
-  gala: { pieces: [['Peasant_Body', 'shirt'], ['Peasant_Arms', 'shirt'], ['Ranger_Legs', 'pants'], ['Ranger_Feet', 'shoes']], colors: { shirt: '#d8c49a', pants: '#26324f', shoes: '#2a2a2a' }, scarf: true },
-  // Uniforme de campo: camiseta, calça de brim e bota
-  campo: { pieces: [['Peasant_Body', 'shirt'], ['Peasant_Arms', 'shirt'], ['Ranger_Legs', 'pants'], ['Ranger_Feet', 'shoes']], colors: { shirt: '#5f7d3c', pants: '#6b6a4a', shoes: '#5a3a22' } },
-  // Colete de aventura (com cinto e bolsos) por cima da camisa
-  aventura: { pieces: [['Ranger_Body', 'shirt'], ['Peasant_Arms', 'sleeve'], ['Ranger_Legs', 'pants'], ['Ranger_Feet', 'shoes']], colors: { shirt: '#ffffff', sleeve: '#e9dcc0', pants: '#3b4a2a', shoes: '#4a3020' }, scarf: true },
-  // Agasalho do clube
-  agasalho: { pieces: [['Peasant_Body', 'shirt'], ['Peasant_Arms', 'shirt'], ['Peasant_Legs', 'pants'], ['Ranger_Feet', 'shoes']], colors: { shirt: '#2b4c9b', pants: '#3a4c8a', shoes: '#2a2a2a' } },
-  // Camiseta e calça do dia a dia
-  camiseta: { pieces: [['Peasant_Body', 'shirt'], ['Peasant_Arms', 'shirt'], ['Ranger_Legs', 'pants'], ['Ranger_Feet', 'shoes']], colors: { shirt: '#f2c94c', pants: '#5a7cc0', shoes: '#3a2a20' } },
-};
-
 /** Lenço amarelo (triângulo no peito) com o anel, preso no pescoço. */
 let SCARF = null;
 function makeScarf(g = 'm') {
@@ -137,27 +171,158 @@ function makeScarf(g = 'm') {
   return grp;
 }
 
+const std = new Map();
+const mat = (color, rough = 0.75, metal = 0, extra = {}) => {
+  const k = `${color}${rough}${metal}${JSON.stringify(extra)}`;
+  if (!std.has(k)) std.set(k, new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: metal, ...extra }));
+  return std.get(k);
+};
+const pmesh = (geo, m, x = 0, y = 0, z = 0, parent) => { const o = new THREE.Mesh(geo, m); o.position.set(x, y, z); o.castShadow = true; parent?.add(o); return o; };
+
+/** Chapéus (rígidos, presos na cabeça). y = 0 é o alto da cabeça; olha para +z. */
+const HATG = {};
+function makeHat(kind, color) {
+  const g = new THREE.Group();
+  if (kind === 'bone') {
+    HATG.crown ||= new THREE.SphereGeometry(0.114, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2);
+    HATG.brim ||= new THREE.CylinderGeometry(0.115, 0.115, 0.012, 24, 1, false, -Math.PI / 2, Math.PI);
+    HATG.button ||= new THREE.SphereGeometry(0.014, 8, 6);
+    const c = pmesh(HATG.crown, mat(color, 0.8), 0, -0.072, 0.02, g);
+    c.scale.set(1, 0.98, 1.1);
+    pmesh(HATG.brim, mat(color, 0.8), 0, -0.068, 0.12, g).scale.set(0.9, 1, 0.85);
+    pmesh(HATG.button, mat(color, 0.8), 0, 0.04, 0.02, g);
+  } else if (kind === 'chapeu') {
+    // chapéu de campanha (como o dos desbravadores e escoteiros): aba larga e copa com 4 vincos
+    HATG.wide ||= new THREE.CylinderGeometry(0.235, 0.235, 0.012, 36);
+    HATG.peak ||= new THREE.CylinderGeometry(0.055, 0.128, 0.105, 4, 1).rotateY(Math.PI / 4);
+    HATG.band ||= new THREE.CylinderGeometry(0.128, 0.128, 0.03, 4, 1, true).rotateY(Math.PI / 4);
+    pmesh(HATG.wide, mat(color, 0.9), 0, -0.05, 0.015, g);
+    pmesh(HATG.peak, mat(color, 0.9), 0, 0.008, 0.015, g);
+    pmesh(HATG.band, mat('#4a3020', 0.7), 0, -0.03, 0.015, g);
+  } else if (kind === 'gorro') {
+    HATG.beanie ||= new THREE.SphereGeometry(0.117, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2);
+    HATG.rim ||= new THREE.TorusGeometry(0.113, 0.02, 8, 28).rotateX(Math.PI / 2);
+    pmesh(HATG.beanie, mat(color, 0.95), 0, -0.07, 0.015, g).scale.set(1, 1.08, 1.1);
+    pmesh(HATG.rim, mat(color, 0.95), 0, -0.065, 0.015, g).scale.set(1.04, 1, 1.12);
+  }
+  return g;
+}
+
+/** Tênis e sapato (rígidos, presos no pé). Monta do calcanhar até a ponta do pé. */
+const SHOEG = {};
+function makeShoe(shoe, heel, toe, groundY) {
+  const g = new THREE.Group();
+  const len = Math.hypot(toe.x - heel.x, toe.z - heel.z) + 0.07;
+  const low = shoe.style === 'sapato';
+  const h = low ? 0.1 : 0.12;
+  const key = `${len.toFixed(3)}${low}`;
+  SHOEG[key] ||= {
+    heel: new RoundedBoxGeometry(0.122, h, len * 0.58, 3, 0.04),
+    toe: new RoundedBoxGeometry(0.118, h * 0.62, len * 0.55, 3, 0.035),
+    sole: new RoundedBoxGeometry(0.13, 0.028, len + 0.01, 2, 0.012),
+    lace: new THREE.BoxGeometry(0.05, 0.008, 0.08),
+  };
+  const G = SHOEG[key];
+  const up = mat(shoe.color, low ? 0.25 : 0.7, low ? 0.2 : 0);
+  pmesh(G.sole, mat(shoe.sole || '#d4d4d4', 0.9), 0, 0.014, 0, g);
+  pmesh(G.heel, up, 0, 0.028 + h / 2, -len * 0.21, g);
+  pmesh(G.toe, up, 0, 0.028 + h * 0.31, len * 0.22, g);
+  if (!low) pmesh(G.lace, mat('#f4f4f4', 0.9), 0, 0.028 + h * 0.62 + 0.004, len * 0.1, g).rotation.x = -0.35;
+  g.position.set((heel.x + toe.x) / 2, groundY, (heel.z + toe.z) / 2);
+  g.rotation.y = Math.atan2(toe.x - heel.x, toe.z - heel.z);
+  return g;
+}
+
+/** Saia até o joelho, presa no quadril e nas coxas (balança junto com as pernas). */
+function makeSkirt(bones, color) {
+  const B = (n) => bones.get(n).getWorldPosition(new THREE.Vector3());
+  const pel = B('pelvis');
+  const tl = B('thigh_l');
+  const tr = B('thigh_r');
+  const kl = B('calf_l');
+  const top = pel.y + 0.07;
+  const bottom = kl.y + 0.02;
+  const rx = Math.abs(tl.x - tr.x) / 2 + 0.1;
+  const rz = 0.13;
+  const SEG = 28;
+  const ROWS = 7;
+  const pos = [];
+  const idx = [];
+  const si = [];
+  const sw = [];
+  const lx = Math.sign(tl.x - pel.x) || 1; // de que lado fica a coxa esquerda
+  for (let r = 0; r <= ROWS; r++) {
+    const h = r / ROWS;
+    const sx = rx * (1 + h * 0.5);
+    const sz = rz * (1 + h * 0.75);
+    for (let k = 0; k <= SEG; k++) {
+      const a = (k / SEG) * Math.PI * 2;
+      const x = Math.sin(a) * sx;
+      const z = Math.cos(a) * sz + 0.005;
+      pos.push(pel.x + x, top + (bottom - top) * h + Math.sin(a * 6) * 0.006 * h, pel.z + z);
+      const wt = Math.min(0.85, h * 1.05);
+      const fl = Math.min(1, Math.max(0, 0.5 + (x * lx) / (2 * sx) * 1.4));
+      si.push(0, 1, 2, 0);
+      sw.push(1 - wt, wt * fl, wt * (1 - fl), 0);
+    }
+  }
+  for (let r = 0; r < ROWS; r++) for (let k = 0; k < SEG; k++) {
+    const a = r * (SEG + 1) + k; const b = a + 1; const c = a + SEG + 1; const d = c + 1;
+    idx.push(a, c, b, b, c, d);
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geo.setAttribute('skinIndex', new THREE.Uint16BufferAttribute(si, 4));
+  geo.setAttribute('skinWeight', new THREE.Float32BufferAttribute(sw, 4));
+  geo.setIndex(idx);
+  geo.computeVertexNormals();
+  const m = new THREE.SkinnedMesh(geo, mat(color, 0.85, 0, { side: THREE.DoubleSide }));
+  m.castShadow = true;
+  m.frustumCulled = false;
+  return { mesh: m, skeleton: new THREE.Skeleton([bones.get('pelvis'), bones.get('thigh_l'), bones.get('thigh_r')]) };
+}
+
 const STYLE = {
   surf: { scale: 1.0, head: 1.12, legs: 1 },
   stumble: { scale: 0.7, head: 1.6, legs: 0.8 },
 };
 
-/** Monta o personagem (as peças precisam estar carregadas: loadRig()). Fica de frente para -z. */
+/**
+ * Monta o personagem (as peças precisam estar carregadas: loadRig()). Fica de frente para -z.
+ * s: descrição do personagem (lookOf em skins.js).
+ */
 export function buildAvatar(s, style = 'surf') {
   if (!RIG) throw new Error('Personagens ainda não carregaram');
   const S = STYLE[style] || STYLE.surf;
-  const outfit = OUTFITS[s.outfit] || OUTFITS.gala;
-  const colors = { ...outfit.colors, ...(s.colors || {}) };
-  const pieces = outfit.pieces.map(([n, role]) => [`piece:${s.g}:${n}`, role]);
-  const keys = [`body:${s.g}`, ...pieces.map((p) => p[0]), `hair:${s.hair}`, `brows:${s.g}`].filter((k) => RIG.parts.has(k));
-  const roleOf = new Map(pieces);
-  const scenes = keys.map((k) => {
+  const g = s.g === 'f' ? 'f' : 'm';
+  const top = s.top;
+  const bottom = s.bottom;
+  const shoes = s.shoes;
+  // Peças (chave, papel da cor, recorte)
+  const pieces = [[`body:${g}`, 'body']];
+  pieces.push([`piece:${g}:${top.style.startsWith('colete') ? 'Ranger_Body' : 'Peasant_Body'}`, 'top']);
+  if (top.style === 'manga' || top.style === 'colete-manga') pieces.push([`piece:${g}:Ranger_Arms`, 'sleeve']);
+  if (bottom.style !== 'saia') pieces.push([`piece:${g}:Ranger_Legs`, bottom.style === 'bermuda' ? 'shorts' : 'bottom']);
+  if (shoes.style === 'bota') pieces.push([`piece:${g}:Ranger_Feet`, 'shoes']);
+  if (s.hair) pieces.push([s.hair, 'hair']);
+  if (s.beard) pieces.push(['hair:barba', 'hair']);
+  pieces.push([`brows:${g}`, 'hair']);
+  const color = { top: top.color, sleeve: top.sleeve || top.color, bottom: bottom.color, shorts: bottom.color, shoes: shoes.color, hair: s.hairColor };
+  const scenes = pieces.filter(([k]) => RIG.parts.has(k)).map(([k, role]) => {
     const sc = cloneRig(RIG.parts.get(k));
-    sc.traverse((o) => { if (o.isMesh) o.userData.role = roleOf.get(k) || null; });
+    sc.traverse((o) => { if (o.isMesh) o.userData.role = role; });
     return sc;
   });
   const main = scenes[0];
-  // Um esqueleto só: as outras peças passam a usar os ossos da roupa
+  // Recortes (antes de trocar o esqueleto, enquanto cada malha ainda tem o seu)
+  const hideBody = bodyHider(top, bottom, shoes);
+  const bodyKey = `${top.style}|${bottom.style}|${shoes.style}`;
+  for (const sc of scenes) sc.traverse((o) => {
+    if (!o.isSkinnedMesh || !o.geometry.index) return;
+    if (o.userData.role === 'body') cutMesh(o, bodyKey, hideBody);
+    if (o.userData.role === 'shorts') cutMesh(o, 'shorts', shortsHider);
+  });
+  // Um esqueleto só: as outras peças passam a usar os ossos do corpo-base
   const bones = new Map();
   main.traverse((o) => { if (o.isBone) bones.set(o.name, o); });
   for (let i = 1; i < scenes.length; i++) {
@@ -169,19 +334,54 @@ export function buildAvatar(s, style = 'surf') {
       m.bind(sk, m.bindMatrix);
     }
   }
-  // Cores: cada peça de roupa com a sua cor, pele e cabelo
+  // Cores: cada peça com a sua cor, a pele e o cabelo
   main.traverse((o) => {
     if (!o.isMesh) return;
     o.castShadow = true;
     o.frustumCulled = false;
     const n = o.material.name || '';
-    const c = colors[o.userData.role];
-    if (/Ranger|Peasant/.test(n) && c && c !== '#ffffff') o.material = tint(o.material, c);
-    else if (/Superhero|Regular/.test(n) && s.skin && s.skin !== '#ffffff') o.material = tint(o.material, s.skin);
-    else if (/Hair/.test(n) && s.hairColor) o.material = tint(o.material, s.hairColor);
+    const c = color[o.userData.role];
+    if (/Superhero|Regular/.test(n)) { if (s.skin && s.skin !== '#ffffff') o.material = tint(o.material, s.skin); } else if (/Hair/.test(n)) {
+      if (s.hairColor) o.material = tint(o.material, s.hairColor);
+    } else if (c && c !== '#ffffff') o.material = tint(o.material, c);
   });
-  // Proporções do estilo (cabeça maior, pernas mais curtas no pequenininho)
+  main.updateMatrixWorld(true);
   const B = (n) => bones.get(n);
+  const W = (n) => B(n).getWorldPosition(new THREE.Vector3());
+  // Saia (procedural, presa no quadril e nas coxas)
+  if (bottom.style === 'saia') {
+    const { mesh, skeleton } = makeSkirt(bones, bottom.color);
+    main.add(mesh);
+    mesh.bind(skeleton, new THREE.Matrix4());
+  }
+  // Tênis/sapato em cada pé (presos no osso do pé)
+  if (shoes.style !== 'bota') {
+    const ground = Math.min(W('ball_leaf_l').y, W('ball_leaf_r').y) - 0.012;
+    for (const sd of ['l', 'r']) {
+      const shoe = makeShoe(shoes, W(`foot_${sd}`), W(`ball_leaf_${sd}`), ground);
+      main.add(shoe);
+      B(`foot_${sd}`).attach(shoe);
+    }
+  }
+  // Chapéu no alto da cabeça (antes de aumentar a cabeça, para crescer junto)
+  if (s.hat && s.hat !== 'nenhum') {
+    const hat = makeHat(s.hat, s.hatColor);
+    const h = W('Head');
+    // y = 0 do chapéu no alto da cabeça (crânio: ~0,21 acima do osso da cabeça)
+    hat.position.set(h.x, h.y + (g === 'f' ? 0.215 : 0.21), h.z);
+    main.add(hat);
+    B('Head').attach(hat);
+  }
+  // Lenço no pescoço (preso no peito, acompanha o corpo)
+  if (s.scarf) {
+    const scarf = makeScarf(g);
+    main.add(scarf);
+    scarf.position.copy(W('neck_01'));
+    scarf.position.y -= 0.035;
+    scarf.position.z += 0.005;
+    B('spine_03').attach(scarf);
+  }
+  // Proporções do estilo (cabeça maior, pernas mais curtas no pequenininho)
   B('Head').scale.setScalar(S.head);
   for (const n of ['thigh_l', 'thigh_r', 'calf_l', 'calf_r']) B(n).scale.set(1, S.legs, 1);
   const root = new THREE.Group();
@@ -197,15 +397,6 @@ export function buildAvatar(s, style = 'surf') {
   root.updateMatrixWorld(true);
   const fl = B('foot_l').getWorldPosition(new THREE.Vector3()).y;
   const bl = B('ball_l').getWorldPosition(new THREE.Vector3()).y;
-  // Lenço no pescoço (preso no peito, acompanha o corpo)
-  if (outfit.scarf) {
-    const scarf = makeScarf(s.g);
-    main.add(scarf);
-    scarf.position.copy(main.worldToLocal(B('neck_01').getWorldPosition(new THREE.Vector3())));
-    scarf.position.y -= 0.035;
-    scarf.position.z += 0.005;
-    B('spine_03').attach(scarf);
-  }
   const mixer = new THREE.AnimationMixer(main);
   root.userData = { style, rig: main, mixer, actions: new Map(), state: null, clip: null, current: null, lastT: null, soleDrop: (fl + bl) / 2 };
   return root;

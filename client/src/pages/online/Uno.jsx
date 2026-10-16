@@ -81,6 +81,10 @@ export default function UnoPage({ base }) {
   if (!internet) return <><PageHeader title="Uno DBV" /><Card className="center"><WifiOff size={30} /><p>O Uno DBV precisa de internet.</p></Card></>;
   return (
     <div className="uno-page">
+      <div className="uno-rotate" role="alert">
+        <div className="uno-rotate-phone" aria-hidden="true"><i /></div>
+        <p>Vire o celular de pé para jogar o <span>Uno DBV</span></p>
+      </div>
       {!net.connected && <div className="uno-conn"><RefreshCw size={14} className="spin" /> Conectando...</div>}
       {!room && <Lobby net={net} base={base} />}
       {room && !playing && <WaitingRoom net={net} voice={voice} />}
@@ -102,7 +106,10 @@ function Lobby({ net, base }) {
     <>
       <div className="uno-hero">
         <UnoCard card={{ color: 'r', value: 'draw2' }} size="sm" className="tilt-l" />
-        <div className="uno-logo" role="img" aria-label="Uno DBV"><img src="/marca/logo.svg" alt="" /><span>UNO</span><small>DBV</small></div>
+        <div className="uno-logo-wrap">
+          <div className="uno-logo" role="img" aria-label="Uno DBV"><img src="/marca/logo.svg" alt="" /><span>UNO</span><small>DBV</small></div>
+          <p className="uno-logo-sub" aria-hidden="true"><i /> Desbravadores <i /></p>
+        </div>
         <UnoCard card={{ color: 'w', value: 'wild' }} size="sm" className="tilt-r" />
       </div>
       <p className="center small muted">O UNO de verdade, com todas as 108 cartas, numa mesa com até 6 desbravadores.</p>
@@ -428,6 +435,8 @@ function Table({ net, voice, base }) {
 
       <div className="uno-room" ref={wrapRef}>
         <div className="uno-felt">
+          <img className="uno-felt-logo" src="/marca/logo.svg" alt="" aria-hidden="true" />
+          <FeltRing />
           <div className={'uno-dir' + (g.dir < 0 ? ' ccw' : '')} aria-label={g.dir < 0 ? 'Sentido anti-horário' : 'Sentido horário'} role="img">
             <svg viewBox="0 0 200 200" className="uno-dir-svg" aria-hidden="true">
               <ellipse cx="100" cy="100" rx="92" ry="92" />
@@ -584,6 +593,40 @@ function TurnRing({ left }) {
   return (
     <svg className="uno-ring" viewBox="0 0 48 48" aria-hidden="true">
       <circle cx="24" cy="24" r="22" pathLength="100" strokeDasharray={`${pct * 100} 100`} />
+    </svg>
+  );
+}
+
+// Letreiro gravado na borda de madeira da mesa (acompanha o tamanho da oval).
+const RING_TEXT = '★ DESBRAVADORES ★ UNO DBV ★ DESBRAVADORES ★';
+function FeltRing() {
+  const ref = useRef(null);
+  const [box, setBox] = useState(null);
+  useLayoutEffect(() => {
+    const el = ref.current?.parentElement;
+    if (!el) return undefined;
+    const upd = () => setBox({ w: el.clientWidth, h: el.clientHeight });
+    const ro = new ResizeObserver(upd);
+    ro.observe(el);
+    upd();
+    return () => ro.disconnect();
+  }, []);
+  const pad = 8; // meio da borda de madeira, fora do feltro
+  const W = (box?.w || 0) + pad * 2 + 4, H = (box?.h || 0) + pad * 2 + 4;
+  const rx = (box?.w || 0) / 2 + pad, ry = (box?.h || 0) / 2 + pad;
+  const cx = W / 2, cy = H / 2;
+  const per = Math.PI * (3 * (rx + ry) - Math.sqrt((3 * rx + ry) * (rx + 3 * ry)));
+  return (
+    <svg ref={ref} className="uno-felt-ring" width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ left: -pad - 2, top: -pad - 2 }} aria-hidden="true">
+      {box && box.w > 0 && (
+        <>
+          {/* Duas metades (em cima e embaixo), as duas lidas da esquerda para a direita */}
+          <path id="uno-ring-top" d={`M${cx - rx},${cy} A${rx},${ry} 0 0,1 ${cx + rx},${cy}`} fill="none" />
+          <path id="uno-ring-bot" d={`M${cx - rx},${cy} A${rx},${ry} 0 0,0 ${cx + rx},${cy}`} fill="none" />
+          <text><textPath href="#uno-ring-top" startOffset="3%" textLength={per / 2 * 0.94} lengthAdjust="spacing">{RING_TEXT}</textPath></text>
+          <text><textPath href="#uno-ring-bot" startOffset="3%" textLength={per / 2 * 0.94} lengthAdjust="spacing">{RING_TEXT}</textPath></text>
+        </>
+      )}
     </svg>
   );
 }

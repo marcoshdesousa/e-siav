@@ -1,9 +1,9 @@
-// Prévia 3D da skin (girando e se mexendo). mode: 'surf' | 'stumble' | 'board'.
+// Prévia 3D do personagem (girando e se mexendo). mode: 'surf' (grande) | 'stumble' (pequeno).
 import { useEffect, useRef } from 'react';
 import { mountPreview } from './preview.js';
 import './skin.css';
 
-export default function SkinPreview({ mode, skin, board = 'b01', label, cycle, className = '' }) {
+export default function SkinPreview({ mode, skin, label, cycle, className = '' }) {
   const ref = useRef(null);
   const view = useRef(null);
   useEffect(() => {
@@ -12,7 +12,7 @@ export default function SkinPreview({ mode, skin, board = 'b01', label, cycle, c
     view.current = v;
     return () => { v?.dispose(); view.current = null; };
   }, [mode, cycle]);
-  useEffect(() => { view.current?.set({ skin, board }); }, [skin, board, mode, cycle]);
+  useEffect(() => { view.current?.set({ skin }); }, [skin, mode, cycle]);
   return (
     <div className={`skin-stage ${mode} ${className}`}>
       <canvas ref={ref} />

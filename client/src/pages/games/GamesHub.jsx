@@ -1,7 +1,7 @@
 // Jogos dos membros (jogos grandes + mini-jogos): lista de jogos, tela de cada jogo e ranking geral de cada um.
 import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, Flag, Keyboard, Layers, Lightbulb, Smartphone, Target, PersonStanding, Shirt, Play, RotateCcw, TrainFront, Trophy, Volume2, VolumeX } from 'lucide-react';
+import { ArrowLeft, Flag, Gamepad2, Keyboard, Layers, Lightbulb, Smartphone, Target, PersonStanding, Shirt, Play, RotateCcw, Trophy, Volume2, VolumeX } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Button, Card, Loading, PageHeader, Section, Spinner, Tabs, useLoad } from '../../ui.jsx';
@@ -39,9 +39,9 @@ function GameRanking({ game, base, limit }) {
 
 /** Jogos grandes (online). Ficam "em breve" até cada um ficar pronto. */
 export const BIG_GAMES = [
-  { id: 'uno', name: 'Uno DBV', hint: 'Uno online na mesa, 2 a 6 jogadores, com chat de voz', icon: Layers, ranks: [['uno', 'Vitórias']], ready: true },
-  { id: 'corrida', name: 'Surf DBV', hint: 'Surfe pelos trilhos de skate, fuja do guarda e junte desbrava coins', icon: TrainFront, ranks: [['corrida-moedas', 'Mais moedas'], ['corrida-distancia', 'Maior distância']], ready: true },
-  { id: 'stumble', name: 'Stumble DBV', hint: 'Até 10 jogadores em fases malucas. Só o 1º vence', icon: PersonStanding, ranks: [['stumble', 'Vitórias']], ready: true },
+  { id: 'uno', name: 'Uno DBV', logo: ['UNO', 'DBV'], theme: 'uno', hint: 'Uno de verdade na mesa, de 2 a 6 jogadores, com chat de voz. Celular em pé.', icon: Layers, ranks: [['uno', 'Vitórias']], ready: true },
+  { id: 'stumble', name: 'Stumble DBV', logo: ['STUMBLE', 'DBV'], theme: 'stumble', hint: 'Até 10 jogadores em fases malucas de obstáculos. Só o 1º vence. Celular deitado.', icon: PersonStanding, ranks: [['stumble', 'Vitórias']], ready: true },
+  { id: 'play', name: 'Desbrava Play', logo: ['DESBRAVA', 'PLAY'], theme: 'play', hint: 'Um jogo novo dos Desbravadores está sendo preparado.', icon: Gamepad2, ranks: [], ready: false },
 ];
 
 function BigGames({ base, onSkin }) {
@@ -50,7 +50,11 @@ function BigGames({ base, onSkin }) {
       {BIG_GAMES.map((g) => {
         const body = (
           <>
-            <span className="big-game-ico"><g.icon size={34} /></span>
+            <span className={'big-game-logo ' + g.theme}>
+              <img src="/marca/logo.svg?v=4" alt="" />
+              <b>{g.logo[0]}</b>
+              <i>{g.logo[1]}</i>
+            </span>
             <div className="grow">
               <b>{g.name}</b>
               <small>{g.hint}</small>
@@ -59,18 +63,18 @@ function BigGames({ base, onSkin }) {
           </>
         );
         return g.ready
-          ? <Link key={g.id} to={`${base}/jogos/${g.id}`} className="big-game">{body}</Link>
-          : <div key={g.id} className="big-game soon">{body}</div>;
+          ? <Link key={g.id} to={`${base}/jogos/${g.id}`} className={'big-game ' + g.theme}>{body}</Link>
+          : <div key={g.id} className={'big-game soon ' + g.theme} aria-disabled="true">{body}</div>;
       })}
       <button type="button" onClick={onSkin} className="big-game skin-link">
         <span className="big-game-ico"><Shirt size={34} /></span>
         <div className="grow">
-          <b>Skin</b>
-          <small>Escolha o seu personagem (20 opções) e o seu skate (30 opções). Vale para todos os jogos</small>
+          <b>Meu personagem</b>
+          <small>Monte o seu: pele, cabelo, chapéu, camisa, calça ou saia, calçado e o lenço. Vale para todos os jogos</small>
         </div>
         <Play size={26} />
       </button>
-      <p className="small muted center">O Uno DBV e o Stumble DBV precisam de internet. O Surf DBV dá para jogar sem internet (sem contar no ranking).</p>
+      <p className="small muted center">O Uno DBV e o Stumble DBV precisam de internet.</p>
     </div>
   );
 }
@@ -140,7 +144,7 @@ export function GamesHub({ base }) {
         <>
           <div className="seg games-sub" role="tablist">
             <button type="button" className={sub === 'jogar' ? 'active' : ''} onClick={() => setSub('jogar')}><Play size={14} /> Jogar</button>
-            <button type="button" className={sub === 'skin' ? 'active' : ''} onClick={() => setSub('skin')}><Shirt size={14} /> Skin</button>
+            <button type="button" className={sub === 'skin' ? 'active' : ''} onClick={() => setSub('skin')}><Shirt size={14} /> Personagem</button>
             <button type="button" className={sub === 'ranking' ? 'active' : ''} onClick={() => setSub('ranking')}><Trophy size={14} /> Ranking</button>
           </div>
           {sub === 'jogar' && <BigGames base={base} onSkin={() => setSub('skin')} />}

@@ -47,18 +47,17 @@ r.post('/jogos/:id/pontos', member, (req, res) => {
 });
 
 // Ranking geral de um jogo: os 50 primeiros e a minha posição.
-// Skin dos jogos (vale para o Surf DBV e o Stumble DBV).
-const SKIN_RE = /^[mf](0[1-9]|[12][0-9]|30)$/;
-const BOARD_RE = /^b(0[1-9]|[12][0-9]|30)$/;
+// Personagem dos jogos (montado na aba Skin): um código curto (m/f + 10 escolhas) ou um dos prontos antigos.
+const SKIN_RE = /^([mf][0-9a-z]{10}|[mf](0[1-9]|[12][0-9]|30))$/;
 r.get('/jogos/skin', member, (req, res) => {
-  const m = get('SELECT game_skin, game_board FROM members WHERE id = ?', req.actor.id);
-  res.json({ skin: m?.game_skin || null, board: m?.game_board || null });
+  const m = get('SELECT game_skin FROM members WHERE id = ?', req.actor.id);
+  res.json({ skin: m?.game_skin || null });
 });
 r.put('/jogos/skin', member, (req, res) => {
-  const { skin, board } = req.body || {};
-  if (!SKIN_RE.test(String(skin)) || !BOARD_RE.test(String(board))) fail(400, 'Skin inválida');
-  run('UPDATE members SET game_skin = ?, game_board = ? WHERE id = ?', skin, board, req.actor.id);
-  res.json({ ok: true, skin, board });
+  const { skin } = req.body || {};
+  if (!SKIN_RE.test(String(skin))) fail(400, 'Personagem inválido');
+  run('UPDATE members SET game_skin = ? WHERE id = ?', skin, req.actor.id);
+  res.json({ ok: true, skin });
 });
 
 r.get('/jogos/:id/ranking', member, (req, res) => {

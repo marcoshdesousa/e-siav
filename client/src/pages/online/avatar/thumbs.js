@@ -1,8 +1,7 @@
 // Miniaturas (fotos) das skins e dos skates, desenhadas uma vez num renderizador escondido.
 import * as THREE from 'three';
 import { buildAvatar, loadRig, poseAvatar, studioEnv } from './build.js';
-import { buildBoard, poseBoard } from './board.js';
-import { boardById, skinById } from './skins.js';
+import { skinById } from './skins.js';
 
 const cache = new Map();
 let R = null;
@@ -24,7 +23,7 @@ function setup() {
 }
 
 let queue = Promise.resolve();
-/** kind 'skin' (rosto e corpo, estilo Stumble fica mais fofinho na foto) ou 'board'. */
+/** Foto do personagem (id = código do personagem). */
 export function thumb(kind, id) {
   const key = kind + id;
   if (cache.has(key)) return Promise.resolve(cache.get(key));
@@ -33,21 +32,12 @@ export function thumb(kind, id) {
       if (cache.has(key)) { ok(cache.get(key)); return; }
       const { renderer, scene, cam } = setup();
       let obj;
-      if (kind === 'board') {
-        obj = buildBoard(boardById(id));
-        poseBoard(obj, 0);
-        obj.rotation.set(1.05, 0.5, 0.35);
-        obj.position.y = 0.3;
-        cam.position.set(0, 0.3, 2.9);
-        cam.lookAt(0, 0.3, 0);
-      } else {
-        obj = buildAvatar(skinById(id), 'surf');
-        poseAvatar(obj, 'idle', 0);
-        poseAvatar(obj, 'idle', 0.2);
-        obj.rotation.y = Math.PI - 0.35;
-        cam.position.set(0, 1.25, 4.4);
-        cam.lookAt(0, 0.95, 0);
-      }
+      obj = buildAvatar(skinById(id), 'surf');
+      poseAvatar(obj, 'idle', 0);
+      poseAvatar(obj, 'idle', 0.2);
+      obj.rotation.y = Math.PI - 0.35;
+      cam.position.set(0, 1.25, 4.4);
+      cam.lookAt(0, 0.95, 0);
       scene.add(obj);
       renderer.render(scene, cam);
       const url = renderer.domElement.toDataURL('image/png');

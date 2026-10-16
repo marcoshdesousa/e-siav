@@ -5,9 +5,6 @@ export const GAMES = {
   // Jogos online: o servidor é quem marca as vitórias (server: true, o celular não manda pontos).
   uno: { mode: 'sum', max: 1, server: true },
   stumble: { mode: 'sum', max: 1, server: true },
-  // Corrida DBV: recorde de moedas e de distância (o total de moedas é a carteira de desbrava coins).
-  'corrida-moedas': { mode: 'best', max: 100000 },
-  'corrida-distancia': { mode: 'best', max: 1000000 },
   cobrinha: { mode: 'best', max: 5000 },
   aventura: { mode: 'best', max: 200000 },
   velha: { mode: 'sum', max: 3 },

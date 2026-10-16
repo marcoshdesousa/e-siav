@@ -18,7 +18,6 @@ import { EmbeddedSite, SupportChat } from '../Shared.jsx';
 import { GamePage, GamesHub } from '../games/GamesHub.jsx';
 import UnoPage from '../online/Uno.jsx';
 
-const CorridaPage = lazy(() => import('../online/corrida/Corrida.jsx'));
 const StumblePage = lazy(() => import('../online/stumble/Stumble.jsx'));
 import { AlbumPage, AlbumsPage } from '../albums/AlbumsHub.jsx';
 import { BibleDay, BibleYear, BomDeBiblia, BomDeBibliaPhase, LearningHub, StreakCard } from '../learning/Learning.jsx';
@@ -130,7 +129,6 @@ export default function MemberApp() {
               <Route path="jogos" element={<GamesHub base={base} />} />
               <Route path="jogos/uno" element={<UnoPage base={base} />} />
               <Route path="jogos/stumble" element={<Suspense fallback={<Spinner />}><StumblePage base={base} /></Suspense>} />
-              <Route path="jogos/corrida" element={<Suspense fallback={<Spinner />}><CorridaPage base={base} /></Suspense>} />
               <Route path="jogos/:id" element={<GamePage base={base} />} />
               <Route path="albuns" element={<AlbumsPage base={base} />} />
               <Route path="albuns/:id" element={<AlbumPage />} />
