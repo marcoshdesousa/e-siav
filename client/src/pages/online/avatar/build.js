@@ -405,9 +405,11 @@ export function buildAvatar(s, style = 'surf') {
     m.scale.set(fr * 0.55, fr * 0.95, fr * 0.5);
     fill.add(m);
   }
+  // A saia começa mais larga que o quadril (as coxas ficam por dentro dela)
+  const skirtR0 = Math.abs(P('thigh_l').x) * 0.82 + D.leg[0][0] + D.hipPad + 0.03;
   if (skirtLike) {
     const len = (s.bottom.type === 'saia-longa' ? 0.62 : 0.45) * D.skirtK;
-    skirt(mb(new THREE.MeshStandardMaterial({ map: skirtTex(bottomColor), roughness: 0.78, side: THREE.DoubleSide })), pel.clone().add(V(0, 0.06 * D.skirtK, D.hipZ)), len, D.waistX + D.waistR[0] + 0.02, (D.waistX + D.waistR[0]) * 1.75, { pelvis: B.pelvis, thighL: B.thigh_l, thighR: B.thigh_r });
+    skirt(mb(new THREE.MeshStandardMaterial({ map: skirtTex(bottomColor), roughness: 0.78, side: THREE.DoubleSide })), pel.clone().add(V(0, 0.06 * D.skirtK, D.hipZ)), len, skirtR0, skirtR0 * 1.35, { pelvis: B.pelvis, thighL: B.thigh_l, thighR: B.thigh_r });
   }
   // Tronco (camisa) com barra mais larga embaixo
   const torsoPts = [pel.clone().add(V(0, D.shirtY, D.hipZ)), P('spine_01').add(V(0, 0, D.hipZ * 0.5)), P('spine_02'), P('spine_03'), P('neck_01').add(V(0, -0.02, 0))];
