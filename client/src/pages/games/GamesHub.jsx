@@ -66,7 +66,7 @@ function BigGames({ base, onSkin }) {
         <span className="big-game-ico"><Shirt size={34} /></span>
         <div className="grow">
           <b>Skin</b>
-          <small>Escolha o seu personagem (60 opções) e o seu skate (30 opções). Vale para todos os jogos</small>
+          <small>Escolha o seu personagem (20 opções) e o seu skate (30 opções). Vale para todos os jogos</small>
         </div>
         <Play size={26} />
       </button>

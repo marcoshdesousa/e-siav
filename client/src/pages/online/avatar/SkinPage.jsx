@@ -1,4 +1,4 @@
-// Aba Skin dos jogos: 30 personagens de menino, 30 de menina e 30 skates. A prévia mostra
+// Aba Skin dos jogos: 10 personagens de menino, 10 de menina e 30 skates. A prévia mostra
 // como fica no Surf DBV (adolescente) e no Stumble DBV (bonequinho), girando, correndo e pulando.
 import { useEffect, useRef, useState } from 'react';
 import { Check } from 'lucide-react';
@@ -45,8 +45,8 @@ export default function SkinPage() {
       {tab === 'personagem' ? (
         <>
           <div className="skin-gender">
-            <button type="button" className={g === 'm' ? 'active m' : 'm'} onClick={() => setG('m')}>Meninos <small>30</small></button>
-            <button type="button" className={g === 'f' ? 'active f' : 'f'} onClick={() => setG('f')}>Meninas <small>30</small></button>
+            <button type="button" className={g === 'm' ? 'active m' : 'm'} onClick={() => setG('m')}>Meninos <small>{SKINS.filter((x) => x.g === 'm').length}</small></button>
+            <button type="button" className={g === 'f' ? 'active f' : 'f'} onClick={() => setG('f')}>Meninas <small>{SKINS.filter((x) => x.g === 'f').length}</small></button>
           </div>
           <div className="skin-grid">
             {SKINS.filter((s) => s.g === g).map((s) => (

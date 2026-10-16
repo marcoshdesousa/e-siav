@@ -138,12 +138,16 @@ function tube(mb, pts, rad, bn, o = {}) {
       if (along) nor.multiplyScalar(Math.cos(alongK)).addScaledVector(along, Math.sin(alongK)).normalize();
       // Calça inteiriça: acima do gancho, o lado de dentro de cada perna encosta no meio (x = 0)
       // e fica preso no quadril; as duas pernas viram uma peça só, sem fresta.
-      if (clamp && pos.y > clamp.y && pos.x * clamp.side < 0) {
-        const k = Math.min(1, (pos.y - clamp.y) / 0.03);
-        pos.x *= 1 - k;
-        nor.x *= 1 - k;
-        nor.normalize();
-        mb.vert(pos, nor, 1 - u, v, k >= 1 ? [[clamp.bone, 1]] : ws.map(([b, w]) => [b, w * (1 - k)]).concat([[clamp.bone, k]]));
+      if (clamp && pos.y > clamp.y - 0.05) {
+        // Quadril: tudo acima do gancho segue a bacia (não "sai" da camisa quando a perna sobe)
+        const kw = Math.min(1, (pos.y - (clamp.y - 0.05)) / 0.1);
+        if (pos.x * clamp.side < 0 && pos.y > clamp.y) {
+          const k = Math.min(1, (pos.y - clamp.y) / 0.03);
+          pos.x *= 1 - k;
+          nor.x *= 1 - k;
+          nor.normalize();
+        }
+        mb.vert(pos, nor, 1 - u, v, kw >= 1 ? [[clamp.bone, 1]] : ws.map(([bb, w]) => [bb, w * (1 - kw)]).concat([[clamp.bone, kw]]));
         continue;
       }
       mb.vert(pos, nor, 1 - u, v, ws);
@@ -301,15 +305,15 @@ const STYLE = {
 const TEEN = {
   leg: [[0.074, 0.074], [0.062, 0.064], [0.05, 0.054]], pad: 0.01,
   waistX: 0.016, waistR: [0.12, 0.09], hipPad: 0.022, crotch: 0.07, hipZ: 0.012, skirtK: 1, shirtY: -0.02,
-  torso: [[0.15, 0.108], [0.138, 0.098], [0.148, 0.1], [0.172, 0.108], [0.1, 0.082]],
+  torso: [[0.186, 0.128], [0.152, 0.108], [0.152, 0.104], [0.174, 0.11], [0.1, 0.082]],
   arm: [[0.062, 0.062], [0.062, 0.062], [0.05, 0.052], [0.042, 0.044]],
   neck: true, collarR: 0.085, legScale: 1, armScale: 1,
 };
 /** Bonequinho (chibi): cabeção redondo, corpinho fofo, bracinhos e perninhas curtas. */
 const CHIBI = {
   leg: [[0.105, 0.105], [0.095, 0.095], [0.09, 0.092]], pad: 0.016,
-  waistX: 0.022, waistR: [0.178, 0.148], hipPad: 0.014, crotch: 0.05, hipZ: 0.03, skirtK: 0.75, shirtY: 0.05,
-  torso: [[0.215, 0.178], [0.205, 0.168], [0.212, 0.168], [0.22, 0.17], [0.14, 0.12]],
+  waistX: 0.022, waistR: [0.16, 0.13], hipPad: 0.0, crotch: 0.05, hipZ: 0.03, skirtK: 0.75, shirtY: -0.06,
+  torso: [[0.25, 0.21], [0.235, 0.19], [0.218, 0.175], [0.222, 0.172], [0.14, 0.12]],
   arm: [[0.088, 0.088], [0.086, 0.086], [0.078, 0.078], [0.07, 0.07]],
   neck: false, collarR: 0.13, legScale: 0.55, armScale: 0.72,
 };
@@ -334,7 +338,6 @@ export function buildAvatar(s, style = 'surf') {
   const B = idx;
   const skin = skinMat(s.skin);
   const bottomColor = s.bottom.type === 'vestido' ? s.top.color : s.bottom.color;
-  const pants = cloth(bottomColor);
   const sleeve = SLEEVE[s.top.type] || 'curta';
   const sleeveCol = s.top.type === 'colete' ? s.top.color2 : s.top.color;
   const builds = new Map(); // material -> MeshBuild
@@ -351,12 +354,6 @@ export function buildAvatar(s, style = 'surf') {
     return g;
   };
 
-  const legs = (side) => {
-    const sfx = side > 0 ? '_l' : '_r';
-    const pts = [P('thigh' + sfx), P('calf' + sfx), P('foot' + sfx)];
-    const bn = [B['thigh' + sfx], B['calf' + sfx], B['foot' + sfx]];
-    return { pts, bn };
-  };
   const arms = (side) => {
     const sfx = side > 0 ? '_l' : '_r';
     const sh = P('upperarm' + sfx);
@@ -388,7 +385,7 @@ export function buildAvatar(s, style = 'surf') {
     } else {
       // perna (pele) com o mesmo molde; bermuda por cima até perto do joelho. Com saia, a pele começa
       // embaixo da saia (o quadril fica escondido).
-      tube(mb(skin), pts, shape(skirtLike ? -0.012 : 0), bn, { clamp, segs: 26, steps: 9, s0: skirtLike ? 0.22 : 0 });
+      tube(mb(s.legs ? cloth(s.legs) : skin), pts, shape(skirtLike ? -0.012 : 0), bn, { clamp, segs: 26, steps: 9, s0: skirtLike ? 0.22 : 0 }); // meia-calça, se tiver
       if (shorts) {
         tube(mb(pantsTexM), pts, shape(D.pad), bn, { s1: kneeS - 0.06, clamp, segs: 26, steps: 9 });
         tube(mb(cloth(shade(bottomColor, 0.8))), pts, shape(D.pad * 1.5), bn, { s0: kneeS - 0.1, s1: kneeS - 0.06, segs: 26 });
@@ -415,9 +412,9 @@ export function buildAvatar(s, style = 'surf') {
   // Tronco (camisa) com barra mais larga embaixo
   const torsoPts = [pel.clone().add(V(0, D.shirtY, D.hipZ)), P('spine_01').add(V(0, 0, D.hipZ * 0.5)), P('spine_02'), P('spine_03'), P('neck_01').add(V(0, -0.02, 0))];
   const shirt = new THREE.MeshStandardMaterial({ map: shirtTex(s), roughness: 0.82 });
-  tube(mb(shirt), torsoPts, D.torso, [B.pelvis, B.spine_01, B.spine_02, B.spine_03, B.neck_01], { capStart: true, capK: 0.12, capEnd: true, front: V(0, 0, 1), segs: 32 });
+  tube(mb(shirt), torsoPts, D.torso, [B.pelvis, B.spine_01, B.spine_02, B.spine_03, B.neck_01], { capEnd: true, front: V(0, 0, 1), segs: 36, steps: 9 });
   const tucked = s.top.type === 'uniforme' || s.top.type === 'terno' || s.top.type === 'polo';
-  if (!tucked && s.top.type !== 'vestido') tube(mb(cloth(shade(s.top.color, 0.86))), torsoPts.slice(0, 2), D.torso.slice(0, 2).map(([a, b]) => [a + D.pad * 0.8, b + D.pad * 0.8]), [B.pelvis, B.spine_01], { s0: 0, s1: 0.32, front: V(0, 0, 1), segs: 32 });
+  if (!tucked && s.top.type !== 'vestido') tube(mb(cloth(shade(s.top.color, 0.86))), torsoPts.slice(0, 2), D.torso.slice(0, 2).map(([a, b]) => [a + D.pad * 0.25, b + D.pad * 0.25]), [B.pelvis, B.spine_01], { s0: 0, s1: 0.32, front: V(0, 0, 1), segs: 32 });
   if (D.neck) tube(mb(skin), [P('spine_03').add(V(0, 0.08, 0)), P('neck_01'), P('Head')], [[0.06, 0.06], [0.058, 0.058], [0.055, 0.055]], [B.spine_03, B.neck_01, B.Head], {});
   // Braços: manga (curta ou comprida, com punho) e pele
   for (const side of [1, -1]) {
@@ -425,10 +422,10 @@ export function buildAvatar(s, style = 'surf') {
     const R = D.arm;
     const Rs = R.map(([a, b]) => [a + D.pad * 1.3, b + D.pad * 1.3]);
     if (sleeve === 'longa') {
-      tube(mb(cloth(sleeveCol)), pts, Rs, bn, { capStart: true, startBone: B.spine_03 });
+      tube(mb(cloth(sleeveCol)), pts, Rs, bn, { capStart: true, capEnd: true, startBone: B.spine_03 });
       tube(mb(cloth(shade(sleeveCol, 0.8))), pts, Rs.map(([a, b]) => [a + D.pad * 0.5, b + D.pad * 0.5]), bn, { s0: 0.88, s1: 1 });
     } else {
-      tube(mb(skin), pts, R, bn, { capStart: true, startBone: B.spine_03 });
+      tube(mb(skin), pts, R, bn, { capStart: true, capEnd: true, startBone: B.spine_03 });
       if (sleeve === 'curta') {
         tube(mb(cloth(sleeveCol)), pts, Rs.map(([a, b]) => [a + D.pad * 0.4, b + D.pad * 0.4]), bn, { s0: 0, s1: 0.42, capStart: true, startBone: B.spine_03 });
         tube(mb(cloth(shade(sleeveCol, 0.82))), pts, Rs.map(([a, b]) => [a + D.pad * 0.8, b + D.pad * 0.8]), bn, { s0: 0.38, s1: 0.42 });
@@ -521,7 +518,11 @@ export function buildAvatar(s, style = 'surf') {
   rig.position.y = -legLoss * S.scale; // pés no chão com as perninhas curtas
   root.add(rig);
   const mixer = new THREE.AnimationMixer(rig);
-  root.userData = { style, rig, mixer, actions: new Map(), state: null, clip: null, current: null, lastT: null };
+  // distância entre o osso do pé e a sola (parado), para apoiar os pés certinho no skate
+  rig.updateMatrixWorld(true);
+  const fl = bones[idx.foot_l].getWorldPosition(V()).y;
+  const bl = bones[idx.ball_l].getWorldPosition(V()).y;
+  root.userData = { style, rig, mixer, actions: new Map(), state: null, clip: null, current: null, lastT: null, soleDrop: (fl + bl) / 2 };
   return root;
 }
 
@@ -893,6 +894,32 @@ export function poseAvatar(model, state, t) {
     } else if (U.current) U.current.timeScale = spec.speed || 1;
   }
   U.mixer.update(dt);
+}
+
+/**
+ * Ponto do mundo de uma parte do corpo, já com a animação aplicada: 'pes' (meio da sola dos
+ * dois tênis), 'maos' (meio das duas mãos) ou 'baixo' (ponto mais baixo do corpo, para deitar).
+ */
+const _v = new THREE.Vector3();
+export function bodyPoint(model, what, out = new THREE.Vector3()) {
+  model.updateMatrixWorld(true);
+  const rig = model.userData.rig;
+  const get = (n) => rig.getObjectByName(n).getWorldPosition(_v);
+  if (what === 'pes') {
+    out.set(0, 0, 0);
+    for (const n of ['foot_l', 'foot_r', 'ball_l', 'ball_r']) out.add(get(n));
+    out.multiplyScalar(0.25);
+    out.y -= model.userData.soleDrop * model.scale.y;
+    return out;
+  }
+  if (what === 'maos') {
+    out.copy(get('hand_l')).add(get('hand_r')).multiplyScalar(0.5);
+    return out;
+  }
+  let low = Infinity;
+  rig.traverse((o) => { if (o.isBone || (o.type === 'Object3D' && o.parent && o.name)) { const y = o.getWorldPosition(_v).y; if (y < low) { low = y; out.copy(_v); } } });
+  out.y -= 0.09 * model.scale.y;
+  return out;
 }
 
 /** Altura total aproximada (para a câmera e etiquetas). */

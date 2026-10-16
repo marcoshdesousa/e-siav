@@ -1,8 +1,8 @@
 // Prévia 3D da skin: o personagem gira devagar num pedestal e vai correndo, pulando e acenando.
 // mode: 'surf' (adolescente + skate), 'stumble' (bonequinho) ou 'board' (só o skate).
 import * as THREE from 'three';
-import { buildAvatar, loadRig, poseAvatar, rigLoaded, studioEnv } from './build.js';
-import { buildBoard, poseBoard } from './board.js';
+import { bodyPoint, buildAvatar, loadRig, poseAvatar, rigLoaded, studioEnv } from './build.js';
+import { buildBoard, poseBoard, standOnBoard } from './board.js';
 import { boardById, skinById } from './skins.js';
 
 const CYCLE = [['run', 2.4], ['jump', 0.9], ['run', 1.6], ['wave', 1.8], ['idle', 1.2]];
@@ -102,17 +102,20 @@ export function mountPreview(canvas, { mode = 'surf', skin = 'm01', board = 'b01
       if (st === 'jump' || st === 'skatejump') y = Math.sin(k * Math.PI) * (cur.mode === 'stumble' ? 0.55 : 0.75);
       if (deck) {
         deck.visible = onBoard || cur.mode === 'surf';
-        poseBoard(deck, t, st === 'skatejump' ? k * 1.15 : 0);
+        poseBoard(deck, t, 0);
         deck.position.set(onBoard ? 0 : 0.72, onBoard ? y * 0.92 : 0, onBoard ? 0 : 0.2);
         deck.rotation.set(0, onBoard ? Math.PI : -0.6, onBoard ? 0 : 0);
         deck.scale.setScalar(onBoard ? 1 : 0.8);
       }
       if (model) {
-        model.position.y = y + (onBoard && st !== 'skatelie' ? 0.2 : 0);
-        model.position.x = 0;
-        poseAvatar(model, st === 'skatejump' ? 'air' : st, t, k);
-        if (st === 'skatelie') model.position.y = 0.0;
+        model.position.set(0, y, 0);
+        poseAvatar(model, st === 'skatejump' ? 'skate' : st, t);
+        // Em cima do skate: pés na lixa (ou deitado na prancha), nunca atravessando
+        if (onBoard && deck) standOnBoard(model, deck, bodyPoint, st === 'skatelie');
+        // No pulo, o skate dá o giro embaixo dos pés (depois de apoiar o personagem)
+        if (st === 'skatejump' && deck) poseBoard(deck, t, k * 1.15);
       }
+      if (!model && deck) poseBoard(deck, t, st === 'skatejump' ? k * 1.15 : 0);
     }
     renderer.render(scene, cam);
   };

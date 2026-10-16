@@ -171,3 +171,23 @@ export function poseBoard(root, t, flip = 0) {
   }
   root.userData.glow.material.opacity = 0.65 + Math.sin(t * 6) * 0.15;
 }
+
+const _a = new THREE.Vector3();
+const _b = new THREE.Vector3();
+/**
+ * Põe o personagem em cima do skate: as solas dos tênis apoiadas na lixa (ou, deitado, o corpo
+ * encostando na prancha), centralizado no skate. Chame depois de animar o personagem.
+ * bodyPoint vem de build.js (passado para não criar dependência circular).
+ */
+export function standOnBoard(model, deck, bodyPoint, lie = false) {
+  const board = deck.userData.board;
+  deck.updateMatrixWorld(true);
+  const top = board.localToWorld(_a.set(0, 0.057, 0));
+  const p = bodyPoint(model, lie ? 'baixo' : 'pes', _b);
+  const parent = model.parent;
+  // diferença no espaço do pai do personagem
+  const tl = parent ? parent.worldToLocal(top.clone()) : top.clone();
+  const pl = parent ? parent.worldToLocal(p.clone()) : p.clone();
+  model.position.y += tl.y - pl.y;
+  if (!lie) { model.position.x += tl.x - pl.x; model.position.z += tl.z - pl.z; }
+}

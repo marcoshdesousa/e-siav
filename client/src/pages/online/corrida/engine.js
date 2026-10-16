@@ -5,9 +5,9 @@
 // Esbarrar ou bater numa barreira: tropeça e o guarda chega perto. De novo com ele perto: pegou!
 import * as THREE from 'three';
 import { makeCoin, makeTrain, toon, TRAIN_H } from './models.js';
-import { buildAvatar, poseAvatar, studioEnv } from '../avatar/build.js';
+import { bodyPoint, buildAvatar, poseAvatar, studioEnv } from '../avatar/build.js';
 import { createParticles, makePogo, makePowerup, makeRocket, POWERS, POWER_TYPES } from './powerups.js';
-import { buildBoard, poseBoard } from '../avatar/board.js';
+import { buildBoard, poseBoard, standOnBoard } from '../avatar/board.js';
 import { boardById, skinById } from '../avatar/skins.js';
 
 /** O guarda que corre atrás. */
@@ -755,7 +755,10 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
     if (skate.visible) {
       skate.position.set(st.x, st.y, st.z);
       skate.rotation.y = player.rotation.y;
-      poseBoard(skate, clock, st.flip);
+      poseBoard(skate, clock, 0);
+      // pés apoiados na lixa (ou deitado na prancha); no pulo o skate gira embaixo dos pés
+      standOnBoard(player, skate, bodyPoint, lie);
+      if (st.flip >= 0) poseBoard(skate, clock, st.flip);
     }
     const close = st.t - st.hitAt < CATCH_WINDOW || st.t < 2.5;
     const target = !st.alive ? 0.75 : close ? 2.3 : 16;
@@ -770,22 +773,17 @@ export function createRunner(canvas, { skin = 'm01', board = 'b01', onHud, onEnd
     if (held) {
       // Pendura o personagem pelos pés na mão levantada do guarda
       officer.updateMatrixWorld(true);
-      // ponto entre as duas mãos (o guarda segura pelos pés com as mãos levantadas)
-      const hand = new THREE.Vector3();
-      let nHands = 0;
-      for (const n of ['hand_l', 'hand_r']) {
-        const bone = officer.getObjectByName(n);
-        if (!bone) continue;
-        hand.add(bone.getWorldPosition(new THREE.Vector3()));
-        nHands++;
-      }
-      if (nHands) hand.multiplyScalar(1 / nHands);
+      // O guarda segura de verdade: os pés do personagem ficam nas mãos dele
       const k = Math.min(1, (sinceDead - 0.95) / 0.35);
-      const feet = new THREE.Vector3(hand.x + 0.1, Math.max(hand.y, 2.1), hand.z + 0.32); // na frente do guarda, sem encostar nele // ao lado do guarda, sem encostar nele
-      const from = new THREE.Vector3(st.x, 0.2, pz);
-      player.position.copy(from.lerp(feet, k));
-      player.rotation.set(Math.PI * k, 0, 0);
-      player.position.y += Math.sin(st.t * 6) * 0.04;
+      const hand = bodyPoint(officer, 'maos', new THREE.Vector3());
+      hand.z += 0.18; // um pouquinho à frente do guarda (não atravessa o corpo dele)
+      player.rotation.set(Math.PI * k - 0.12 * k, Math.PI, 0);
+      player.position.set(st.x, 0, pz);
+      const feet = bodyPoint(player, 'pes', new THREE.Vector3());
+      // tornozelos na mão (pouco acima da sola)
+      const want = hand.clone().add(new THREE.Vector3(0, -0.06, 0));
+      player.position.add(want.sub(feet).multiplyScalar(k));
+      if (player.position.y < 0) player.position.y = 0;
     }
     const sh = st.shake > 0 ? st.shake * 0.5 : 0;
     if (!st.alive && sinceDead > 0.5) {

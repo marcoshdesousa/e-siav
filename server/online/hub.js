@@ -100,7 +100,8 @@ const cleanOutfit = (o) => (typeof o === 'string' && /^[a-z0-9-]{1,24}$/.test(o)
 
 // ───────────── Robôs ─────────────
 const BOT_NAMES = ['Lucas', 'Ana', 'Pedro', 'Bia', 'Davi', 'Lara', 'Gabriel', 'Sofia', 'Miguel', 'Alice', 'Rafa', 'Clara', 'Theo', 'Laura', 'Enzo', 'Manu', 'Samuel', 'Helena', 'Caleb', 'Ester', 'Noah', 'Rute', 'Elias', 'Sara'];
-const OUTFIT_IDS = [...Array.from({ length: 30 }, (_, i) => `m${String(i + 1).padStart(2, '0')}`), ...Array.from({ length: 30 }, (_, i) => `f${String(i + 1).padStart(2, '0')}`)];
+// Visuais dos robôs: as 20 skins dos jogos (iguais às de client/src/pages/online/avatar/skins.js)
+const OUTFIT_IDS = ['m01', 'm03', 'm07', 'm09', 'm13', 'm15', 'm17', 'm22', 'm27', 'm28', 'f01', 'f03', 'f05', 'f07', 'f12', 'f15', 'f17', 'f24', 'f28', 'f30'];
 let botSeq = 0;
 const isBot = (id) => id < 0;
 const humans = (room) => [...room.players.values()].filter((p) => !p.bot);
