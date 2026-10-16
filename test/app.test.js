@@ -824,10 +824,17 @@ test('aprendizagem diária: ano bíblico (sequência, dias perdidos, futuro tran
   assert.equal((await pedro.get('/bom-de-biblia/fase/2')).status, 200);
   await admin.put('/admin/ano-biblico/inicio', { date: '' });
   assert.equal((await admin.get('/admin/ano-biblico')).body.start, '2027-03-01');
-  // Bom Líder: com o modo de teste ligado, todo membro vê; sem aulas, mostra "sendo preparadas"
+  // Bom Líder: com o modo de teste ligado, todo membro vê as 50 aulas
   assert.equal((await pedro.get('/bom-lider')).status, 403, 'sem modo de teste é só para a liderança');
   await admin.put('/admin/biblia-teste', { on: true });
-  assert.equal((await pedro.get('/bom-lider')).body.preparing, true);
+  const blList = (await pedro.get('/bom-lider')).body;
+  assert.equal(blList.preparing, false);
+  assert.equal(blList.total, 50);
+  const aula1 = (await pedro.get('/bom-lider/aula/1')).body;
+  assert.ok(aula1.content.length >= 6 && aula1.questions.length === 9);
+  assert.ok(aula1.questions.every((q) => q.answer === undefined), 'a resposta certa não vai para o celular');
+  const shortAns = await pedro.post('/bom-lider/aula/1', { answers: aula1.questions.map((q) => (q.type === 'escrita' ? 'curto' : 0)) });
+  assert.equal(shortAns.status, 400, 'resposta escrita curta demais é recusada');
   const bl = (await admin.get('/admin/bom-lider')).body;
   assert.equal(bl.pages.length, 0);
   assert.equal((await pedro.get('/bom-lider/paginas/qualquer')).status, 404, 'link errado não abre');

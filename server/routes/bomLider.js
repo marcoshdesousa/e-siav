@@ -1,6 +1,6 @@
 // Bom Líder (liderança): 50 aulas com leitura e perguntas (de marcar e de escrever).
 // O admin envia as páginas do livro (fotos ou PDF); a partir delas o plano de aulas é montado
-// e fica em server/data/bom-lider.json. Um link secreto deixa ler as páginas enviadas (para montar
+// e fica em server/data/bom-lider/*.json. Um link secreto deixa ler as páginas enviadas (para montar
 // as aulas) sem precisar da senha do admin; o admin pode trocar o link quando quiser.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -90,15 +90,19 @@ r.get('/bom-lider/paginas/:token/:id', (req, res) => { checkToken(req.params.tok
 
 // ───────────── Aulas (membros) ─────────────
 const HERE = path.dirname(fileURLToPath(import.meta.url));
+/** Aulas: arquivos server/data/bom-lider/*.json (cada um com uma lista de aulas, com o número n). */
 function loadLessons() {
-  const f = path.join(HERE, '..', 'data', 'bom-lider.json');
-  if (!fs.existsSync(f)) return [];
-  try {
-    return JSON.parse(fs.readFileSync(f, 'utf8')).filter((l) => l?.title && Array.isArray(l.questions));
-  } catch (e) {
-    console.error('[bom líder] aulas com erro:', e.message);
-    return [];
+  const dir = path.join(HERE, '..', 'data', 'bom-lider');
+  if (!fs.existsSync(dir)) return [];
+  const all = [];
+  for (const f of fs.readdirSync(dir).filter((x) => x.endsWith('.json')).sort()) {
+    try {
+      all.push(...JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')).filter((l) => l?.title && Array.isArray(l.questions)));
+    } catch (e) {
+      console.error(`[bom líder] ${f} com erro:`, e.message);
+    }
   }
+  return all.sort((a, b) => (a.n || 0) - (b.n || 0));
 }
 const LESSONS = loadLessons();
 const canSee = (actor) => actor.kind === 'lideranca' || testMode();

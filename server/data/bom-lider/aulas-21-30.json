@@ -1,0 +1,1082 @@
+[
+ {
+  "n": 21,
+  "title": "Planejamento (parte 2): anual, mensal e diário",
+  "theme": "Administração e planejamento",
+  "objective": "Montar a agenda anual, o programa mensal e o programa diário do Clube, sabendo o que cada etapa exige e como mantê-las em execução.",
+  "reading": "Manual Administrativo do Clube de Desbravadores, seção 3.1 (agenda anual, programa mensal e programa diário)",
+  "verse": "\"Confia ao Senhor as tuas obras, e os teus planos serão firmados.\" (Provérbios 16:3)",
+  "content": [
+   "Na aula anterior você viu por que planejar e o que precisa entrar no planejamento do Clube. Agora vamos ao \"como\". O manual orienta que o planejamento seja pensado em três sessões distintas: uma para o ano (agenda anual), uma para o mês (programa mensal) e outra para cada reunião (programa diário). Separar assim economiza muitas horas de trabalho da direção, porque cada sessão parte do que a anterior já decidiu.",
+   "Um detalhe importante: todas essas etapas devem estar concluídas antes do início das atividades do Clube. Isso não significa que o plano fica engessado. Como o planejamento é muito dinâmico, cada reunião pode ser adaptada conforme a evolução do trabalho, e o conjunto deve ser reavaliado mensalmente.",
+   "A agenda anual é o \"esqueleto\" do programa: um cronograma com as datas das reuniões regulares, reuniões e eventos especiais, acampamentos, eventos do Campo (Associação/Missão, União, Divisão), da região e da igreja local, além dos feriados. Para cada atividade, liste também o local e o responsável. Geralmente uma reunião de duas horas basta para montá-la, mas ela depende muito do calendário do Campo, da região e da igreja. E atenção: obrigatoriamente essa agenda deve ser aprovada pela Comissão da Igreja.",
+   "No exemplo do manual, janeiro é reservado ao planejamento geral e ao treinamento básico de diretoria; fevereiro traz o lançamento e os dias de inscrição (sob responsabilidade do Secretário) e a abertura do Clube; ao longo do ano aparecem reuniões regulares, projetos comunitários, o Dia do Desbravador, o acampamento do Clube, o Campori nas férias e, em dezembro, a cerimônia de investidura e encerramento. O manual também comenta que muitos Clubes e Campos reservam uma folga mensal (no exemplo, os dias marcados como \"Livre\") para que Desbravadores e direção fiquem com a família, e recomenda que isso seja conversado com a igreja e as famílias.",
+   "O programa mensal desce um nível: define o que haverá em cada reunião do mês e quem é responsável por cada parte. Nessa sessão, a Comissão Regular precisa ter diante dos olhos os requisitos dos cartões, os requisitos das Especialidades e os programas de acampamentos, cerimônias e reuniões ordinárias. Aqui o trabalho fica mais complexo, porque cada Classe faz um planejamento distinto, mas todos precisam se encaixar no planejamento anual do Clube. No exemplo do manual, cada atividade de março da Classe de Pesquisador aparece ligada ao número do requisito do cartão que ela cumpre.",
+   "O programa diário é a sessão mais detalhada. Nele se faz a lista de contatos das pessoas que serão Instrutoras, escolhe-se o local de cada atividade e garantem-se os materiais necessários. Cada Classe é estruturada requisito por requisito, nos mínimos detalhes. O manual é claro: as atividades das Classes devem estar no centro do programa diário do Clube.",
+   "Veja a sequência do exemplo de uma manhã de reunião: às 7h30, reunião de direção; às 8h00, abertura (Unidades em forma, apresentação de cada Unidade, hasteamento, ideais, Hino dos Desbravadores, oração, boas-vindas e ordem do dia); 8h10, meditação com o Capelão; 8h15, Ordem Unida por níveis; 8h45, Classe Bíblica; 9h15, Cantinho da Unidade com o Conselheiro; 10h00, Classes e Especialidades com os Instrutores; 10h50, recreação; e, no encerramento, Unidades em forma, arriamento, últimas informações, oração e gritos de guerra do Clube e da Unidade. Repare que cada linha tem horário, materiais e responsável.",
+   "Para que o plano não fique só no papel, a Comissão Regular deve se reunir semanalmente, cuidando dos detalhes da reunião seguinte. Além disso, toda reunião do Clube deve ser precedida por uma rápida reunião da direção, para conferir os detalhes e resolver falhas antes que os Desbravadores cheguem. Um erro comum é planejar só o ano e \"improvisar\" o resto; outro é fazer um programa diário sem materiais e responsáveis definidos. Planeje em camadas e confira sempre."
+  ],
+  "activity": "Pegue a próxima reunião do seu Clube e escreva um programa diário no formato do manual (horário, atividade, materiais e responsável), indicando em qual momento entram as Classes. Apresente-o ao seu Diretor ou Diretor Associado.",
+  "questions": [
+   {
+    "type": "escolha",
+    "q": "Segundo o manual, quais são as três sessões em que o planejamento do Clube deve ser pensado?",
+    "options": [
+     "Anual, semestral e semanal",
+     "Trimestral, mensal e semanal",
+     "Anual, bimestral e diária",
+     "Anual, mensal e diária"
+    ],
+    "answer": 3
+   },
+   {
+    "type": "escolha",
+    "q": "Qual órgão deve obrigatoriamente aprovar a agenda anual do Clube?",
+    "options": [
+     "A Comissão da Igreja",
+     "A Comissão Regular do Clube",
+     "O Regional ou Distrital",
+     "A Associação/Missão"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "escolha",
+    "q": "Ao montar o programa mensal, o que a Comissão Regular precisa ter em vista, segundo o manual?",
+    "options": [
+     "Apenas as datas dos feriados e eventos do Campo",
+     "Os requisitos dos cartões e das Especialidades, além dos programas de acampamentos, cerimônias e reuniões",
+     "Somente o orçamento do mês e as mensalidades recebidas",
+     "A lista de contatos dos Instrutores e os materiais de cada atividade"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "escolha",
+    "q": "Em qual sessão do planejamento se faz a lista de contatos dos Instrutores e se estrutura cada Classe requisito por requisito?",
+    "options": [
+     "Na agenda anual",
+     "No programa mensal",
+     "No programa diário",
+     "Na reunião de avaliação semestral"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "escolha",
+    "q": "Com que frequência o manual orienta que a Comissão Regular se reúna para manter o planejamento em execução?",
+    "options": [
+     "Semanalmente",
+     "Mensalmente",
+     "Bimestralmente",
+     "Apenas no início e no fim do ano"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "escolha",
+    "q": "Faltam 30 minutos para a reunião e um Instrutor ainda não confirmou o material da aula. Que prática do manual ajuda a evitar esse tipo de surpresa?",
+    "options": [
+     "Cancelar a parte das Classes sempre que houver dúvida",
+     "Fazer uma rápida reunião da direção antes de toda reunião para verificar detalhes e corrigir falhas",
+     "Deixar que cada Instrutor resolva sozinho, sem envolver a direção",
+     "Reavaliar o planejamento apenas na reunião anual"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "escolha",
+    "q": "Sobre a agenda anual, qual afirmação está de acordo com o manual?",
+    "options": [
+     "Ela detalha os materiais de cada atividade de cada reunião",
+     "Ela é montada depois que o Clube já começou as atividades",
+     "Ela dispensa os eventos do Campo, que são planejados à parte",
+     "Ela é o esqueleto do programa e deve indicar, para cada atividade, local e responsável"
+    ],
+    "answer": 3
+   },
+   {
+    "type": "escrita",
+    "q": "Descreva como você montaria o programa mensal de uma Classe no seu Clube, explicando como ligaria as atividades aos requisitos do cartão e ao planejamento anual.",
+    "min": 60
+   },
+   {
+    "type": "escrita",
+    "q": "Explique por que o manual diz que as Classes devem estar no centro do programa diário e como você garantiria isso numa reunião real.",
+    "min": 60
+   }
+  ]
+ },
+ {
+  "n": 22,
+  "title": "Sistema de Unidades: a identidade da Unidade",
+  "theme": "Administração e planejamento",
+  "objective": "Organizar as Unidades do Clube conforme o manual (tamanho, divisão por sexo e idade) e preservar sua identidade e sua pasta.",
+  "reading": "Manual Administrativo do Clube de Desbravadores, seções 3.2 e 3.2.1",
+  "verse": "\"E, se alguém prevalecer contra um, os dois lhe resistirão; o cordão de três dobras não se rompe facilmente.\" (Eclesiastes 4:12)",
+  "content": [
+   "O sistema de Unidades é o núcleo principal do funcionamento do Clube de Desbravadores. Toda a estrutura, o programa e as atividades foram pensados para funcionar por meio dele. Por isso o manual alerta: se o sistema de Unidades for deficiente, o Clube perde o seu foco.",
+   "Todos os Desbravadores devem ser divididos em Unidades, agrupados por sexo e por faixa etária aproximada. Cada Unidade deve ter de 6 a 8 Desbravadores, número considerado apropriado para aplicar o programa e alcançar seus objetivos. Toda Unidade é coordenada por um Conselheiro e, no máximo, um Conselheiro Associado.",
+   "O ideal é que o Clube tenha 12 Unidades: 6 masculinas e 6 femininas, uma para cada idade. Quando isso não for possível, o Clube deve trabalhar para ter pelo menos 6 (3 masculinas e 3 femininas), distribuídas nas faixas de 10 e 11 anos, 12 e 13 anos e 14 e 15 anos. Se houver Desbravadores demais para uma idade, abre-se mais de uma Unidade para a mesma idade, em vez de ultrapassar o limite. Se houver poucos e não for possível encaixá-los em outra Unidade por incompatibilidade de idade, o Clube deve fazer uma campanha com seus membros para inscrever novos Desbravadores.",
+   "Cada Unidade precisa de identidade: nome, Bandeirim, grito de guerra e tradições. Quem institui esses elementos é a Comissão Executiva do Clube, e eles devem ser fixos. Os nomes também são definidos pela Comissão Executiva e devem ter relação com o nome do Clube. Nem o nome nem a idade dos Desbravadores de uma Unidade devem ser alterados, para que cada Desbravador passe por todas elas ao longo dos anos, aprendendo com os costumes e emoções de cada uma.",
+   "Uma Unidade jamais deixa de existir. Se não houver mais Desbravadores daquela faixa etária, ela fica inativa, e não extinta: assim que o Clube matricular alguém com a idade correspondente, ela volta a funcionar com o mesmo nome, grito de guerra e Bandeirim. E quando as Unidades existentes já não forem suficientes, a Comissão Executiva deve instituir novas, com nova identidade, em vez de sobrecarregar as atuais acima do limite.",
+   "O Bandeirim segue o Regulamento de Uniformes do Ministério de Desbravadores da Divisão Sul-Americana e deve combinar com o nome da Unidade. Ele não precisa ser alterado no futuro, a não ser para ser melhorado, e mesmo nesse caso é necessária autorização da Comissão Executiva. Já o grito de guerra une e anima os Desbravadores e cria carinho pela Unidade. Se a Unidade não tem um, o Conselheiro deve reunir-se com o grupo para criar um grito criativo, de acordo com os ideais do Clube, e submetê-lo à aprovação da diretoria.",
+   "A Unidade também precisa de uma secretaria organizada, com uma pasta ornamentada de acordo com o seu nome. Nela devem constar: ficha completa de cada Desbravador (com fotos, preferências, boletins escolares, lista de Especialidades e Classes); relatório das visitas aos pais, já com a data da próxima visita; relatório das atividades da Unidade (festas, acampamentos, visitas, caminhadas); relatório de cada reunião do Clube no ano, inclusive acampamentos e eventos do Campo como Camporis e Olimpíadas; relatórios dos livros do Clube do Livro lidos; cópia dos certificados de Classes, Especialidades e cursos; cópia das fichas do Cantinho da Unidade; e documento de identificação dos Desbravadores.",
+   "Essa pasta é o registro histórico da Unidade, com a história de todos que passaram por ela. Serve de fonte de consulta quando um Desbravador precisar comprovar Classes e Especialidades e dá ao Conselheiro um retorno do seu trabalho em comparação com anos anteriores. Erros comuns: trocar o nome da Unidade a cada ano, \"inchar\" uma Unidade com 11 ou 12 membros e deixar a pasta desatualizada. Cuide da identidade, e a Unidade ganha alma."
+  ],
+  "activity": "Confira a pasta da sua Unidade (ou de uma Unidade do Clube) usando a lista do manual e anote quais itens estão faltando. Combine com o Conselheiro um prazo para completá-los.",
+  "questions": [
+   {
+    "type": "escolha",
+    "q": "Quantos Desbravadores, segundo o manual, uma Unidade deve ter?",
+    "options": [
+     "De 4 a 6",
+     "De 8 a 10",
+     "De 6 a 8",
+     "De 5 a 12"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "escolha",
+    "q": "Quando não é possível ter 12 Unidades, qual é a configuração mínima que o Clube deve buscar?",
+    "options": [
+     "4 Unidades: 2 masculinas e 2 femininas, nas faixas de 10-12 e 13-15 anos",
+     "6 Unidades mistas, uma para cada idade de 10 a 15 anos",
+     "6 Unidades: 3 masculinas e 3 femininas, nas faixas de 10-11, 12-13 e 14-15 anos",
+     "3 Unidades mistas, nas faixas de 10-11, 12-13 e 14-15 anos"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "escolha",
+    "q": "O Clube matriculou 14 meninos de 12 anos. O que o manual orienta?",
+    "options": [
+     "Colocar todos na mesma Unidade, já que têm a mesma idade",
+     "Abrir mais de uma Unidade para a mesma idade, respeitando o limite de membros",
+     "Transferir parte deles para a Unidade feminina da mesma idade",
+     "Recusar novas inscrições até sobrar vaga"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "escolha",
+    "q": "Não há mais Desbravadoras de 14 anos no Clube. O que acontece com a Unidade feminina dessa idade?",
+    "options": [
+     "É extinta, e uma nova Unidade com outro nome será criada no futuro",
+     "Recebe Desbravadoras de 10 anos para não ficar vazia",
+     "Passa a ser uma Unidade mista para manter o número mínimo",
+     "Fica inativa, e volta a funcionar com o mesmo nome, grito e Bandeirim quando houver novas matrículas"
+    ],
+    "answer": 3
+   },
+   {
+    "type": "escolha",
+    "q": "Quem institui as Unidades e define seus nomes?",
+    "options": [
+     "A Comissão Executiva do Clube",
+     "O Conselheiro, junto com os Desbravadores",
+     "A Comissão da Igreja",
+     "O Regional ou Distrital"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "escolha",
+    "q": "Uma Unidade quer melhorar o desenho do seu Bandeirim. O que o manual exige?",
+    "options": [
+     "Apenas a votação dos membros da Unidade",
+     "Aprovação da Comissão da Igreja",
+     "Autorização da Comissão Executiva do Clube",
+     "Nenhuma autorização, pois o Bandeirim é da Unidade"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "escolha",
+    "q": "Uma Unidade não tem grito de guerra. Qual é o procedimento indicado?",
+    "options": [
+     "O Diretor escolhe um grito e o comunica à Unidade",
+     "O Capitão cria o grito sozinho e o apresenta na abertura",
+     "A Unidade usa o grito do Clube até o ano seguinte",
+     "O Conselheiro reúne os Desbravadores para criar um grito de acordo com os ideais do Clube e o submete à aprovação da diretoria"
+    ],
+    "answer": 3
+   },
+   {
+    "type": "escrita",
+    "q": "Explique por que o manual insiste que o nome e a faixa etária de cada Unidade não sejam alterados e que Unidades não sejam extintas. Que benefícios isso traz para o Desbravador?",
+    "min": 60
+   },
+   {
+    "type": "escrita",
+    "q": "Descreva como você organizaria e manteria atualizada a pasta de uma Unidade ao longo do ano, citando pelo menos cinco itens que ela deve conter.",
+    "min": 60
+   }
+  ]
+ },
+ {
+  "n": 23,
+  "title": "Os oficiais da Unidade",
+  "theme": "Administração e planejamento",
+  "objective": "Distinguir as funções do Conselheiro, do Conselheiro Associado, do Capitão, do Secretário e de outros cargos da Unidade, e aplicá-las no dia a dia.",
+  "reading": "Manual Administrativo do Clube de Desbravadores, seção 3.2.2",
+  "verse": "\"Ninguém despreze a sua juventude; pelo contrário, seja um padrão para os fiéis na palavra, no comportamento, na caridade, na fé e na pureza.\" (1ª Timóteo 4:12)",
+  "content": [
+   "O grande segredo do sistema de Unidades é dar responsabilidades aos juvenis e adolescentes. Assim eles aprendem a \"cumprir fielmente a parte que lhes corresponde\". As funções principais são Capitão e Secretário; outras, como Tesoureiro e almoxarife, ficam a critério da Unidade. Acima de todos está o Conselheiro, o \"grande maestro\" da Unidade, que trabalha sempre junto aos Diretores Associados.",
+   "Para o manual, a função mais importante do Clube é a do Conselheiro, porque ele está em íntimo contato com a mente e o coração juvenil. Ele deve ser um cristão convertido e dedicado, ter no mínimo 16 anos e ser membro batizado da Igreja Adventista do Sétimo Dia. Ninguém deve aceitar o cargo sem amor por meninos e meninas, pois não é passatempo: é um dever da mais alta ordem. Ele deve ser fiel em assistir às reuniões do Clube e da diretoria.",
+   "Uma das tarefas centrais é a visita aos pais, a cada um ou dois meses, marcada com pelo menos uma semana de antecedência e avisada por uma carta levada pelo próprio Desbravador. Na visita, o Conselheiro pergunta sobre comportamento e notas, informa sobre o Clube e o desempenho do filho, e deve estar pronto para uma pequena mensagem bíblica e uma oração. Ele monta um programa de visitação e convida pelo menos um membro da diretoria para acompanhá-lo. Com pais não adventistas, o cuidado é redobrado: respeito total, sem jamais impor a religião; quando houver abertura, pode compartilhar mensagens bíblicas, orar e oferecer ou indicar um estudo bíblico.",
+   "Entre as demais funções do Conselheiro estão: coordenar a Unidade sem fazer tudo sozinho (quanto mais o mérito for da Unidade, melhor seu trabalho); coordenar o Cantinho da Unidade, principal programa do sistema; ajudar no planejamento e execução do programa do Clube; conduzir a Unidade nos projetos e eventos; montar com os Instrutores um programa para as Classes (ele não instrui a Classe, mas monitora e incentiva); manter uma lista com cada Desbravador, sua Classe e as datas de início e conclusão prevista; entregar um relatório bimestral do cartão ao Instrutor e à diretoria; participar da Ordem Unida com a Unidade; dar bom exemplo; e avisar o Diretor com antecedência quando não puder comparecer.",
+   "Ele também ajuda os membros em seus problemas e mantém os líderes informados: se não conseguir resolver, comunica ao Diretor, e mesmo quando resolve, o Diretor deve estar a par, pois o trabalho do Conselheiro deve ser transparente. Recepciona os novatos, integrando-os e trabalhando com eles o programa de admissão (ideais, história, emblemas e programa) até receberem o lenço. E entrega mensalmente à secretaria do Clube a ficha de avaliação de cada Desbravador (formulário E), conforme as diretrizes que o Clube definiu.",
+   "O Conselheiro Associado geralmente é um aprendiz na liderança (com 16 anos ou mais). Ele atua junto com o Conselheiro e o auxilia no que for necessário; nesta seção, o manual diz que, na ausência do Conselheiro, a diretoria assume a Unidade com o auxílio do Associado.",
+   "O Capitão é um Desbravador (de 10 a 15 anos) escolhido pela Unidade para animar o grupo pelo exemplo e pela influência pessoal. Ele é eleito na primeira reunião do ano, por votação de todos os membros, numa eleição dirigida pelo Conselheiro, e atua de três meses a um ano, conforme o tempo aprovado pela Comissão Executiva. Usa uma insígnia da função. Precisa ser organizado, ter liderança, disciplina, honestidade, fidelidade e, acima de tudo, humildade. Suas funções: auxiliar os Conselheiros e assumir a Unidade na ausência do Conselheiro e do Associado; portar e cuidar do Bandeirim, que deve estar sempre à frente da Unidade; ser responsável pela presença da Unidade no horário; e apresentar a Unidade ao Diretor no início das reuniões.",
+   "O Secretário da Unidade também é eleito na primeira reunião do ano, pelos membros, com a eleição dirigida pelo Conselheiro, e usa insígnia. Ele é o segundo líder: cumpre as funções do Capitão na ausência deste; serve de mensageiro entre a Unidade e o Diretor quando o Conselheiro pede; preenche a ficha do Cantinho da Unidade com honestidade; e mantém a pasta da Unidade atualizada junto com o Conselheiro. Outros cargos possíveis: Tesoureiro (recolhe a mensalidade e entrega ao Tesoureiro do Clube, registrando na pasta), almoxarife (cuida dos pertences, empréstimos e devoluções), coordenador de recreação, padioleiro (caixa de primeiros socorros, repelente, protetor solar, apoio ao enfermeiro) e Capelão da Unidade (lidera momentos espirituais e incentiva o ano bíblico). Novos cargos podem ser criados se forem importantes e aprovados pela Comissão Executiva."
+  ],
+  "activity": "Junto com o seu Conselheiro, verifique se a sua Unidade tem Capitão e Secretário eleitos conforme o manual e escolha mais um cargo opcional (almoxarife, padioleiro, coordenador de recreação etc.) que faria diferença. Escreva em poucas linhas as tarefas dele.",
+  "questions": [
+   {
+    "type": "escolha",
+    "q": "Quais são os requisitos mínimos para ser Conselheiro, segundo o manual?",
+    "options": [
+     "Ter no mínimo 18 anos e ser investido em Líder",
+     "Ser cristão convertido e dedicado, ter no mínimo 16 anos e ser membro batizado da IASD",
+     "Ter no mínimo 15 anos e ter concluído a Classe de Guia",
+     "Ser membro da igreja há pelo menos dois anos, sem idade mínima"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "escolha",
+    "q": "Com que frequência e antecedência o Conselheiro deve visitar os pais?",
+    "options": [
+     "A cada um ou dois meses, marcando com pelo menos uma semana de antecedência",
+     "Uma vez por ano, avisando no dia anterior",
+     "Toda semana, sem necessidade de aviso",
+     "A cada seis meses, com um mês de antecedência"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "escolha",
+    "q": "O Conselheiro percebe que os pais de um Desbravador não são adventistas e se mostram reservados. O que o manual orienta?",
+    "options": [
+     "Iniciar logo um estudo bíblico, pois essa é a finalidade da visita",
+     "Suspender as visitas a essa família para evitar conflito",
+     "Pedir que o Pastor faça as visitas no lugar do Conselheiro",
+     "Tratá-los com muito respeito, sem impor a religião, e compartilhar mensagens bíblicas só quando sentir abertura"
+    ],
+    "answer": 3
+   },
+   {
+    "type": "escolha",
+    "q": "Sobre a relação do Conselheiro com as Classes, qual afirmação está correta?",
+    "options": [
+     "Ele deve instruir a Classe da sua Unidade durante o Cantinho da Unidade",
+     "Ele não instrui as Classes, mas monta com os Instrutores um programa, monitora e incentiva o cumprimento",
+     "Ele não tem nenhuma responsabilidade sobre as Classes",
+     "Ele é quem dá a palavra final sobre a investidura"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "escolha",
+    "q": "Como é escolhido o Capitão da Unidade?",
+    "options": [
+     "Por votação de todos os membros da Unidade, na primeira reunião do ano, dirigida pelo Conselheiro",
+     "Por indicação do Diretor Associado da ala correspondente",
+     "Pelo Conselheiro, que escolhe o Desbravador mais antigo",
+     "Pela Comissão Executiva, a partir de uma lista de Classes concluídas"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "escolha",
+    "q": "Numa reunião, o Capitão da Unidade faltou. Quem assume as responsabilidades dele?",
+    "options": [
+     "O Tesoureiro da Unidade",
+     "O Capelão da Unidade",
+     "O Secretário da Unidade",
+     "O Desbravador mais velho da Unidade"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "escolha",
+    "q": "Qual destas tarefas cabe ao Secretário da Unidade, e não ao Capitão?",
+    "options": [
+     "Preencher com honestidade a ficha do Cantinho da Unidade",
+     "Portar e cuidar do Bandeirim",
+     "Apresentar a Unidade ao Diretor no início da reunião",
+     "Ser responsável pela presença da Unidade no horário convocado"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "escrita",
+    "q": "Imagine que você é Conselheiro de uma Unidade nova. Descreva como planejaria a primeira visita aos pais de um Desbravador, do agendamento até o encerramento da visita.",
+    "min": 60
+   },
+   {
+    "type": "escrita",
+    "q": "O manual diz que \"quanto menos os méritos forem creditados ao Conselheiro e sim à Unidade, melhor está o trabalho dele\". Explique essa ideia e como você daria responsabilidade real ao Capitão e ao Secretário.",
+    "min": 60
+   }
+  ]
+ },
+ {
+  "n": 24,
+  "title": "Organização do Clube: Diretor e Diretores Associados",
+  "theme": "Administração e planejamento",
+  "objective": "Explicar como o Clube é organizado e quais são os requisitos e as funções do Diretor e dos Diretores Associados.",
+  "reading": "Manual Administrativo do Clube de Desbravadores, seções 3.3 e 3.3.1",
+  "verse": "\"Conheça bem o estado das suas ovelhas e zele pelo seu rebanho.\" (Provérbios 27:23)",
+  "content": [
+   "O Clube de Desbravadores é um programa mundial, organizado e dirigido pelo Ministério de Desbravadores da Associação Geral da Igreja Adventista do Sétimo Dia, e oferece experiências de aprendizagem para juvenis e adolescentes de 10 a 15 anos. Cada Clube é administrado por Diretor, Diretores Associados, Conselheiros, Instrutores, Capelão, Secretário e Tesoureiro, e internamente se divide pelo sistema de Unidades.",
+   "O Diretor e os Diretores Associados são indicados anualmente pela Comissão de Nomeações da igreja local. Se algum deles desistir, mudar de cidade ou ficar impedido de exercer o cargo, cabe à Comissão da Igreja local definir o substituto. Guarde essa diferença: nomeação anual pela Comissão de Nomeações; substituição durante o ano pela Comissão da Igreja.",
+   "O Diretor deve ter no mínimo 18 anos, ser maduro e membro regular da IASD. Deve concluir o curso de treinamento básico de diretoria e, de preferência, ser investido em Líder; se ainda não for, deve iniciar imediatamente o cartão de Classes Agrupadas e, em seguida, o de Líder. O sucesso e a moral do Clube dependem em grande parte dele, por isso deve ser exemplo de espiritualidade, pureza, prontidão, amabilidade, temperança, pontualidade, organização e asseio, incluindo o uso correto do uniforme. Precisa gostar dos juvenis, ser estudioso, entusiasmado, aberto a novas ideias e relacionar-se bem com a direção.",
+   "Funções do Diretor: ser membro da Comissão da Igreja (por ter sido eleito pela Comissão de Nomeações), representando o Clube, apresentando projetos e informando os resultados; manter contato com o líder de Jovens da Associação/Missão, via Regional ou Distrital, e enviar os relatórios no prazo; exercer, com os Associados, a direção superior da administração; convocar e presidir a Comissão Executiva e a Comissão Regular, preparando a pauta; providenciar materiais e locais (a chamada intendência), incluindo transporte, alimentação e equipamentos nos eventos; definir as diretrizes e metas do ano; e dirigir todas as reuniões do Clube, definindo o que será feito e o tempo de cada atividade.",
+   "O plano de metas merece atenção. No início de cada ano, o Diretor define o foco: aumentar membros, investir novos líderes, batizar uma porcentagem dos Desbravadores, fazer parcerias, um projeto comunitário por mês... Seja qual for o foco, o PROGRAMA do Clube, principalmente Classes e Especialidades, nunca deve ser deixado de lado, nem mesmo para preparar o Clube para um evento do Campo, União ou Divisão. O plano deve ser discutido e aprovado pela Comissão Executiva para ser posto em prática na primeira reunião do Clube.",
+   "Os Diretores Associados são o \"braço direito e o esquerdo\" do Diretor. São responsáveis pelo cumprimento do programa e, por isso, coordenam as Classes, as Especialidades e as Unidades, gerenciando o trabalho de Instrutores e Conselheiros conforme o planejamento anual. São no mínimo dois: uma mulher responsável pela ala feminina e um homem responsável pela ala masculina, e o inverso nunca pode acontecer. Se o Clube for grande e precisar de mais, a Comissão de Nomeações da igreja define. Devem ter as mesmas qualidades de liderança do Diretor e trabalhar com ele em harmonia e respeito.",
+   "Funções dos Associados: coordenar e fiscalizar o trabalho com as Unidades, visitando os Conselheiros e observando o sistema de Unidades (a Associada cuida das femininas e o Associado das masculinas) e, no fim do ano, definir com a Comissão Executiva planos para as Unidades; coordenar a instrução de Classes e Especialidades com os Instrutores, exigindo o planejamento de instruções, verificando a qualidade e preparando os Desbravadores para a investidura; e substituir o Diretor em sua ausência ou a pedido dele, sendo que um dos Associados deve estar previamente escolhido para isso.",
+   "Dica prática: muitos problemas nascem de um Diretor que tenta fazer tudo, ou de Associados que ficam só \"ajudando\" sem coordenar de fato. Se você um dia ocupar um desses cargos, lembre que o Diretor dirige e providencia, e os Associados garantem que Unidades, Classes e Especialidades andem conforme o planejado."
+  ],
+  "activity": "Converse com o Diretor ou um Diretor Associado do seu Clube e pergunte quais são as metas do ano. Anote como essas metas se relacionam com as Classes e Especialidades e compartilhe suas observações com a sua Unidade.",
+  "questions": [
+   {
+    "type": "escolha",
+    "q": "Quem indica anualmente o Diretor e os Diretores Associados do Clube?",
+    "options": [
+     "A Comissão Executiva do Clube",
+     "O Regional, com aprovação da Associação",
+     "A Comissão de Nomeações da igreja local",
+     "A Comissão Regular do Clube"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "escolha",
+    "q": "No meio do ano, o Diretor do Clube muda de cidade. Segundo o manual, quem define o substituto?",
+    "options": [
+     "A Comissão de Nomeações, apenas no ano seguinte",
+     "O Diretor Associado mais antigo, automaticamente",
+     "A Comissão Executiva do Clube",
+     "A Comissão da Igreja local"
+    ],
+    "answer": 3
+   },
+   {
+    "type": "escolha",
+    "q": "Um Diretor recém-nomeado ainda não é investido em Líder. O que o manual orienta?",
+    "options": [
+     "Que deixe o cargo até ser investido em Líder",
+     "Que inicie imediatamente o cartão de Classes Agrupadas e, em seguida, o de Líder",
+     "Que faça apenas o curso de Líder Máster",
+     "Que nada precisa ser feito, pois a investidura é opcional"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "escolha",
+    "q": "O Campori está chegando e um líder sugere parar as Classes por dois meses para treinar só para o evento. O que o manual diz sobre isso?",
+    "options": [
+     "É permitido, desde que a Comissão Executiva aprove",
+     "O programa do Clube, principalmente Classes e Especialidades, nunca deve ser deixado de lado, nem para preparar eventos",
+     "É recomendado, pois eventos do Campo têm prioridade",
+     "É permitido apenas para Unidades que participarão de competições"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "escolha",
+    "q": "Quantos Diretores Associados o Clube deve ter, no mínimo, e como se distribuem?",
+    "options": [
+     "Dois: uma mulher para a ala feminina e um homem para a ala masculina",
+     "Um, que coordena as duas alas",
+     "Dois, de qualquer sexo, um para Classes e outro para Unidades",
+     "Três: um para Classes, um para Especialidades e um para Unidades"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "escolha",
+    "q": "O que o manual chama de \"intendência\", uma das principais funções do Diretor?",
+    "options": [
+     "Fiscalizar o trabalho dos Conselheiros nas Unidades",
+     "Enviar os relatórios trimestrais ao Campo",
+     "Providenciar todo o material e os locais necessários para o programa e os eventos",
+     "Controlar as mensalidades e o caixa do Clube"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "escolha",
+    "q": "Qual destas funções pertence aos Diretores Associados, e não ao Diretor?",
+    "options": [
+     "Convocar e presidir a Comissão Executiva e a Comissão Regular",
+     "Ser membro da Comissão da Igreja",
+     "Manter contato com o líder de Jovens da Associação/Missão",
+     "Coordenar o esquema de instrução de Classes e Especialidades junto aos Instrutores"
+    ],
+    "answer": 3
+   },
+   {
+    "type": "escrita",
+    "q": "Escreva um pequeno plano de metas para um Clube fictício (três metas), explicando como você garantiria que Classes e Especialidades continuem no centro do programa.",
+    "min": 60
+   },
+   {
+    "type": "escrita",
+    "q": "Explique a diferença entre o papel do Diretor e o dos Diretores Associados e dê um exemplo de situação em que cada um deve agir.",
+    "min": 60
+   }
+  ]
+ },
+ {
+  "n": 25,
+  "title": "Secretário, Tesoureiro e Capelão",
+  "theme": "Administração e planejamento",
+  "objective": "Identificar as funções do Secretário, do Tesoureiro e do Capelão do Clube e aplicar cada uma em situações reais.",
+  "reading": "Manual Administrativo do Clube de Desbravadores, seções 3.3.2 a 3.3.4",
+  "verse": "\"Cada um de vocês sirva aos outros conforme o dom que recebeu, como bons despenseiros da multiforme graça de Deus.\" (1ª Pedro 4:10)",
+  "content": [
+   "Além do Diretor e dos Associados, três cargos sustentam o funcionamento do Clube: o Secretário cuida dos registros, o Tesoureiro cuida do dinheiro e o Capelão cuida da vida espiritual. Cada um tem tarefas próprias, e saber distingui-las evita sobreposição e esquecimentos.",
+   "O Secretário é responsável por todos os registros e relatórios do Clube, exceto os que são do Tesoureiro. Um Secretário eficiente tem valor incalculável. Suas funções: registrar pontos e deméritos na ficha de registro permanente (cada Clube adota seu sistema de disciplina, e o manual considera o sistema de méritos a melhor forma de incentivo); preencher o relatório trimestral, online ou em papel, no prazo, para que o Diretor o entregue ao Distrital/Regional, que aprova e envia à Associação/Missão; e avisar o Diretor quando um Desbravador começa a faltar com frequência, observando as fichas das Unidades, para que Diretor e Conselheiros criem um plano de atenção especial.",
+   "O Secretário também monta e mantém um sistema de comunicação do Clube (quadro de anúncios, mural, boletim ou meio eletrônico), para que igreja, Desbravadores e direção saibam o que está acontecendo; requisita materiais e formulários da Associação, via Distrital/Regional; é responsável pela biblioteca do Clube, catalogando os livros e criando um sistema de empréstimos; e mantém em dia os livros de atas e atos e o software de secretaria. Segundo o manual, sua principal função é manter atualizados todos os registros, principalmente os livros de Ata e Atos.",
+   "O Tesoureiro é o responsável geral pelas finanças e trabalha junto com o Tesoureiro da Igreja, mantendo o caixa do Clube unido ao caixa da igreja. Em Clubes menores, Secretário e Tesoureiro podem ser a mesma pessoa, embora o trabalho seja melhor quando são separados. Ele deve agir com honestidade e cuidado, e o ideal é que tenha alguma experiência em contabilidade.",
+   "Funções do Tesoureiro: controlar e registrar todos os fundos (contribuições, taxas, ofertas, vendas, doações), com notas fiscais ou comprovantes anexados a cada receita ou despesa, e emitir mensalmente um balanço para a Comissão Executiva; transferir imediatamente toda receita para a tesouraria da Igreja, onde fica reservada para uso exclusivo do Clube; elaborar projetos de arrecadação, podendo montar uma equipe com autorização da Comissão Executiva; receber valores de vendas, uniformes, mensalidades, doações e taxas e destiná-los corretamente; e emitir comprovantes de todas as transações.",
+   "O Capelão dirige e oferece oportunidades de crescimento espiritual a todos os Desbravadores e à direção. Deve ser membro batizado da IASD, em situação regular na igreja onde o Clube está organizado, e ter capacidade de organizar e liderar as atividades espirituais. Todas as atividades espirituais são de sua competência, sendo a principal delas a Classe Bíblica, e ele as prepara junto com o Diretor e a Comissão Executiva, conhecendo a realidade de cada Desbravador para criar um programa personalizado.",
+   "Também cabe ao Capelão coordenar o momento devocional, que é obrigatório em todas as reuniões; organizar e liderar as atividades missionárias com apoio da Comissão Executiva; atuar como Conselheiro espiritual especial, junto com os Conselheiros, para qualquer Desbravador que precise (por motivos pessoais, familiares, de saúde, doutrinários etc.); e conhecer pessoalmente cada Desbravador e membro da direção, desenvolvendo com os Conselheiros um plano para aproximá-los de Jesus.",
+   "Um exemplo de como os três se completam: um Desbravador começa a faltar. O Secretário percebe pelas fichas e avisa o Diretor; o Conselheiro visita a família; o Capelão oferece apoio espiritual; e, se o motivo for financeiro, o Tesoureiro ajuda a buscar uma solução discreta. Cargos diferentes, um único objetivo: cuidar de cada juvenil."
+  ],
+  "activity": "Escolha um dos três cargos (Secretário, Tesoureiro ou Capelão) e entreviste, por 10 minutos, quem o ocupa no seu Clube. Pergunte quais tarefas do manual são mais difíceis de cumprir e anote uma ideia para ajudar.",
+  "questions": [
+   {
+    "type": "escolha",
+    "q": "Segundo o manual, qual é a principal função do Secretário do Clube?",
+    "options": [
+     "Manter atualizados todos os registros, principalmente os livros de Ata e Atos",
+     "Controlar as mensalidades e emitir recibos",
+     "Dirigir as reuniões na ausência do Diretor",
+     "Preparar a Classe Bíblica"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "escolha",
+    "q": "Qual é o caminho do relatório trimestral, segundo o manual?",
+    "options": [
+     "O Tesoureiro preenche e envia direto à União",
+     "O Secretário preenche, o Diretor entrega ao Distrital/Regional, que aprova e envia à Associação/Missão",
+     "O Conselheiro preenche e entrega à Comissão da Igreja",
+     "O Secretário preenche e envia direto à Divisão"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "escolha",
+    "q": "O Secretário nota pelas fichas das Unidades que uma Desbravadora faltou várias reuniões seguidas. O que o manual orienta?",
+    "options": [
+     "Registrar deméritos e aguardar o fim do trimestre",
+     "Remover a Desbravadora do cadastro do Clube",
+     "Notificar o Diretor, para que ele crie com os Conselheiros um plano de atenção especial",
+     "Avisar apenas o Tesoureiro, por causa da mensalidade"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "escolha",
+    "q": "O que o Tesoureiro deve fazer com toda receita que o Clube recebe?",
+    "options": [
+     "Guardá-la em conta pessoal até o fim do mês",
+     "Mantê-la em um caixa separado do Clube, para agilizar compras",
+     "Repassá-la ao Diretor, que decide o destino",
+     "Transferi-la imediatamente para a tesouraria da Igreja, reservada para uso exclusivo do Clube"
+    ],
+    "answer": 3
+   },
+   {
+    "type": "escolha",
+    "q": "Com que periodicidade o Tesoureiro deve emitir um balanço das finanças, e para quem?",
+    "options": [
+     "Mensalmente, para a Comissão Executiva",
+     "Anualmente, para a Comissão da Igreja",
+     "Trimestralmente, para o Regional",
+     "Semestralmente, para a Comissão Regular"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "escolha",
+    "q": "Qual é a principal atividade espiritual do Clube, sob a competência do Capelão?",
+    "options": [
+     "O culto de ação de graças",
+     "A semana de oração",
+     "A Classe Bíblica",
+     "O Projeto Bálsamo"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "escolha",
+    "q": "Sobre o momento devocional, o que o manual afirma?",
+    "options": [
+     "É opcional e fica a critério de cada Conselheiro",
+     "É obrigatório em todas as reuniões do Clube e é coordenado pelo Capelão",
+     "Ocorre apenas em acampamentos e eventos especiais",
+     "É dirigido sempre pelo Diretor do Clube"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "escrita",
+    "q": "Descreva como Secretário, Tesoureiro e Capelão poderiam trabalhar juntos para ajudar um Desbravador que está se afastando do Clube.",
+    "min": 60
+   },
+   {
+    "type": "escrita",
+    "q": "Explique por que o manual considera melhor que Secretário e Tesoureiro sejam pessoas diferentes e como você organizaria essas funções em um Clube pequeno.",
+    "min": 60
+   }
+  ]
+ },
+ {
+  "n": 26,
+  "title": "Conselheiros, Instrutores e comissões",
+  "theme": "Administração e planejamento",
+  "objective": "Diferenciar as funções de Conselheiros e Instrutores e a composição e as atribuições da Comissão Executiva e da Comissão Regular.",
+  "reading": "Manual Administrativo do Clube de Desbravadores, seções 3.3.5 e 3.3.6",
+  "verse": "\"Procura entre o povo homens capazes, tementes a Deus, homens de verdade, que aborreçam a avareza; e coloca-os como líderes sobre o povo, como chefes de mil, de cem, de cinquenta e de dez.\" (Êxodo 18:21)",
+  "content": [
+   "Os Conselheiros são os responsáveis pelo funcionamento de todo o sistema de Unidades, como você estudou na aula sobre os oficiais da Unidade. O Conselheiro pode precisar de um assistente, o Conselheiro Associado, geralmente um aprendiz na liderança, que atua junto com ele e o auxilia no que for necessário. Nesta aula o foco está em outro papel essencial, o Instrutor, e nas comissões que organizam a direção do Clube.",
+   "O Instrutor é membro da diretoria e atua diretamente com Conselheiros e Diretores Associados. Em geral, é responsável por uma Classe específica. O Clube também deve ter Instrutores de Especialidades, que buscam, além das Especialidades obrigatórias das Classes, outras que sejam interessantes para os Desbravadores, e pessoas que possam instruí-las. Instrutores podem ser convidados de fora, como a Polícia Militar, o Corpo de Bombeiros, artesãos e profissionais de saúde, para temas como nós e amarras, natação ou habilidades manuais. Eles não precisam ser adventistas, mas só podem ser chamados com autorização do Diretor.",
+   "Funções do Instrutor: ministrar uma das Classes, providenciando a instrução de todo o cartão para que os Desbravadores sejam investidos; avaliar os itens do cartão (quem instruiu avalia se o requisito foi cumprido); preparar os Desbravadores para a avaliação Regional, já que a palavra final sobre quem será investido é do Distrital/Regional; montar um calendário de instrução e encaminhá-lo aos Diretores Associados, de modo que tudo esteja concluído até a investidura e sem chocar com programas do Clube; e trabalhar junto com o Conselheiro, que conhece melhor a realidade de cada Desbravador.",
+   "Por que comissões? O manual lembra o conselho de Jetro a Moisés (Êxodo 18:21-23): escolher homens capazes, tementes a Deus e dignos de confiança para dividir o peso da liderança. Não é bom que a direção do Clube fique sobre uma ou duas pessoas. As comissões descentralizam o poder e unem habilidades em torno de um bem comum: a salvação dos Desbravadores por meio do programa do Clube.",
+   "A Comissão Executiva, ou DIRETORIA, é formada pelo Diretor, pelos Diretores Associados, pelo Secretário e pelo pastor Distrital ou ancião. Reúne-se pelo menos uma vez por mês. Todos os processos administrativos do Clube passam por ela e só têm valor se aprovados por ela. Suas funções: coordenar e dirigir todas as atividades (propondo o plano de metas e o planejamento anual, que depois são discutidos e aprovados na Comissão Regular); nomear Conselheiros, Instrutores, Tesoureiro e Capelão (só o Diretor e os Associados são nomeados pela igreja); assumir a responsabilidade pelo Clube em atividades e eventos, inclusive o cuidado legal com os Desbravadores; tomar decisões administrativas; deliberar sobre as formas de premiação; instituir as Unidades; e selecionar os que receberão a Insígnia de Excelência.",
+   "A Comissão Regular, ou DIREÇÃO, é formada pelos membros da Comissão Executiva mais todos os demais membros da direção: Conselheiros, Instrutores, Capelão e Tesoureiro. Também se reúne pelo menos uma vez por mês, para deliberar sobre o diagnóstico do Clube. É um fórum de discussão: todos expõem seus pontos de vista e buscam decisões de comum acordo. Suas funções: avaliar se o programa está sendo cumprido corretamente, propor soluções e conferir na reunião seguinte se funcionaram; indicar os Desbravadores para a Insígnia de Excelência; e avaliar o desenvolvimento de cada Desbravador como um todo, já que nenhum líder sozinho consegue fazê-lo.",
+   "Observe o fluxo da Insígnia de Excelência: somente a Comissão Regular tem autonomia para indicar os nomes, porque é o único momento em que Instrutores e Conselheiros estão juntos; depois, a Comissão Executiva faz a avaliação final, confere se cada caso alcançou o padrão e define em qual cerimônia será a entrega, que deve acontecer apenas uma vez ao ano. O manual acrescenta que, nesse momento, o pastor Distrital deve ser o Conselheiro.",
+   "O manual conclui que, como na igreja, cada membro tem uma função importante e indispensável: se um falha, todo o Clube sofre. Por isso cita Eclesiastes 9:10: \"Tudo quanto te vier à mão para fazer, faze-o conforme as tuas forças\". Confundir as comissões (por exemplo, achar que a Regular nomeia Conselheiros) é um erro comum que gera decisões sem valor."
+  ],
+  "activity": "Monte uma tabela simples com duas colunas, \"Comissão Executiva\" e \"Comissão Regular\", e preencha com quem participa de cada uma no seu Clube e qual foi a última decisão que cada uma tomou. Se não souber, pergunte ao Secretário.",
+  "questions": [
+   {
+    "type": "escolha",
+    "q": "Um Instrutor quer convidar um bombeiro (não adventista) para ensinar primeiros socorros. O que o manual exige?",
+    "options": [
+     "Que o convidado seja batizado na IASD",
+     "Aprovação da Comissão da Igreja",
+     "Nenhuma autorização, pois o Instrutor é livre para convidar",
+     "Autorização do Diretor"
+    ],
+    "answer": 3
+   },
+   {
+    "type": "escolha",
+    "q": "Quem dá a palavra final sobre quais Desbravadores serão investidos?",
+    "options": [
+     "O Instrutor da Classe",
+     "O Conselheiro da Unidade",
+     "A Comissão Regular",
+     "O Distrital/Regional"
+    ],
+    "answer": 3
+   },
+   {
+    "type": "escolha",
+    "q": "Para quem o Instrutor deve encaminhar seu calendário de instrução?",
+    "options": [
+     "Para o Secretário do Clube",
+     "Para a Comissão da Igreja",
+     "Para os Diretores Associados",
+     "Para o Capelão"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "escolha",
+    "q": "Quem compõe a Comissão Executiva (Diretoria) do Clube?",
+    "options": [
+     "Diretor, Diretores Associados, Tesoureiro e Capelão",
+     "Diretor, Diretores Associados, Secretário e pastor Distrital ou ancião",
+     "Todos os membros da direção, incluindo Conselheiros e Instrutores",
+     "Diretor, Secretário, Tesoureiro e todos os Conselheiros"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "escolha",
+    "q": "Quem nomeia os Conselheiros, Instrutores, Tesoureiro e Capelão do Clube?",
+    "options": [
+     "A Comissão Executiva do Clube",
+     "A Comissão de Nomeações da igreja",
+     "A Comissão Regular do Clube",
+     "O Diretor, sozinho"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "escolha",
+    "q": "Sobre a Insígnia de Excelência, qual sequência está de acordo com o manual?",
+    "options": [
+     "A Comissão Executiva indica os nomes e a Comissão Regular aprova",
+     "Cada Conselheiro indica e o Diretor aprova sozinho",
+     "A Comissão Regular indica os nomes e a Comissão Executiva faz a avaliação final e define a cerimônia",
+     "O Instrutor indica e o Regional aprova"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "escolha",
+    "q": "O plano de metas e o planejamento anual do Clube, segundo a seção sobre comissões, são:",
+    "options": [
+     "Propostos pela Comissão Regular e aprovados pela Comissão Executiva",
+     "Definidos pelo Diretor e apenas comunicados às comissões",
+     "Elaborados pelos Conselheiros e aprovados pelo Capelão",
+     "Propostos pela Comissão Executiva e depois discutidos e aprovados na Comissão Regular"
+    ],
+    "answer": 3
+   },
+   {
+    "type": "escrita",
+    "q": "Explique, com suas palavras, a diferença entre a Comissão Executiva e a Comissão Regular e por que o Clube precisa das duas.",
+    "min": 60
+   },
+   {
+    "type": "escrita",
+    "q": "O manual usa o conselho de Jetro a Moisés para justificar as comissões. Descreva uma situação no seu Clube em que dividir responsabilidades ajudaria e como você a organizaria.",
+    "min": 60
+   }
+  ]
+ },
+ {
+  "n": 27,
+  "title": "Secretaria: arquivos, cadastro, atas e atos",
+  "theme": "Administração e planejamento",
+  "objective": "Organizar a secretaria do Clube: arquivos, cadastro dos membros, livro de atas e livro de atos, seguindo o manual.",
+  "reading": "Manual Administrativo do Clube de Desbravadores, seções 3.4 a 3.4.4",
+  "verse": "\"O SENHOR me respondeu e disse: Escreva a visão e a torne clara em tábuas, para que até quem passa correndo possa lê-la.\" (Habacuque 2:2)",
+  "content": [
+   "O manual chama a secretaria de \"raio X do Clube\": olhando para ela, dá para avaliar a estrutura, a organização, a disciplina e o compromisso do Clube com a própria memória. Para que funcione bem, o Secretário precisa primeiro definir prioridades e o que deve ser feito imediatamente, cuidar da boa aparência do Clube e verificar o que pode ser melhorado, eliminado ou simplificado. Ele deve estar sempre se atualizando. Suas principais tarefas são manter os livros de atas, de atos, o cadastro e os registros de correspondência.",
+   "A secretaria é a história do Clube. Nela deve ser possível descobrir quando o Clube foi fundado, quem foram seus diretores, quais Desbravadores passaram por ali, em quais Classes cada um foi investido e de quais projetos o Clube participou. Para isso, o material que não está em uso vai para o arquivo morto, e o que está em uso fica em lugar visível e de fácil acesso.",
+   "Uma secretaria deve ter: arquivo morto (arquivos antigos, catalogados para facilitar a consulta); pastas individuais para cada membro, com toda a sua história no Clube (ficha de avaliação da Unidade, cópias de certificados de Classes, Especialidades e cursos, fotos, fichas de saúde, receitas médicas etc.); as pastas das Unidades, que ficam guardadas na secretaria e só saem para atualização ou consulta; e a pasta do Clube, com correspondências enviadas e recebidas (pais, Campo, igreja, ofícios), formulários, relatórios e fotografias, para que, depois de 5, 10, 20 ou 40 anos, alguém consiga conhecer toda a trajetória do Clube.",
+   "O cadastro de todos os membros e a atualização dos dados são responsabilidade do Secretário. Ele é feito por meio de formulário próprio (formulário A), com cópia de todas as fichas na pasta do Clube. Mesmo que o cadastro seja virtual, é necessário haver uma cópia física na secretaria. Junto com os dados pessoais, escolares e do Clube, cada Desbravador precisa ter uma ficha de saúde (formulário B), para saber se tem doença crônica, alergia ou usa medicamento. Se precisar tomar remédio no horário das reuniões, isso deve constar na ficha, com cópia da prescrição médica anexada.",
+   "O livro de atas registra os pontos discutidos e as decisões de todas as reuniões da Comissão Executiva e da Comissão Regular. Pode ser manuscrito ou digitado, com a mesma validade; o mais importante é guardar em lugar adequado e não rasurar.",
+   "Na ata manuscrita, usa-se um livro próprio com páginas numeradas e, na primeira página, um termo de abertura que descreve para que o livro se destina. As anotações começam na primeira linha, sem parágrafo e sem pular linhas, para que nada possa ser acrescentado depois. Ao final, o Secretário, junto com o Diretor, data, assina e arquiva. Esse modelo costuma narrar todos os fatos da reunião.",
+   "A ata digitada é mais objetiva: traz o cabeçalho (comissão, número da reunião e data), os membros presentes, a oração inicial, os votos numerados (no exemplo do manual, \"Voto 12/001 – Aprovado acampamento interno do Clube nos dias 7 a 10 de junho\") e a oração final, com as assinaturas do Secretário e do Diretor. Ela menciona, na narração, apenas os votos.",
+   "Já o livro de atos é o histórico de todas as atividades que o Clube realizou em sua existência. Após cada evento, faz-se um pequeno relatório dos pontos principais, manuscrito ou digitado, de preferência enriquecido com fotos. Ele não exige formalidades, e cada Clube pode adotar seu próprio modelo. Não confunda: a ata registra decisões das comissões; o livro de atos registra o que o Clube fez."
+  ],
+  "activity": "Peça ao Secretário do seu Clube para ver o livro de atas e o livro de atos. Depois, escreva um relatório curto (no estilo do livro de atos) da última atividade da sua Unidade, com data, local, o que foi feito e quantos participaram.",
+  "questions": [
+   {
+    "type": "escolha",
+    "q": "O que deve ser feito com o material da secretaria que não está mais em uso?",
+    "options": [
+     "Descartá-lo ao final de cada ano",
+     "Formar um arquivo morto, catalogado para facilitar a consulta",
+     "Entregá-lo à Associação/Missão",
+     "Guardá-lo na pasta de cada Unidade"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "escolha",
+    "q": "O Clube passou a usar um sistema online de cadastro. O que o manual orienta sobre as fichas?",
+    "options": [
+     "Mesmo com cadastro virtual, deve haver uma cópia física na secretaria",
+     "A cópia física pode ser descartada para economizar espaço",
+     "Basta manter os dados no sistema da Associação",
+     "Somente a ficha de saúde precisa ser impressa"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "escolha",
+    "q": "Um Desbravador precisa tomar um medicamento durante a reunião. Segundo o manual, o que deve constar no cadastro?",
+    "options": [
+     "Apenas um aviso verbal dos pais ao Conselheiro",
+     "Uma anotação no livro de atos",
+     "A informação na ficha de saúde, com cópia da prescrição médica anexada",
+     "Somente o nome do remédio na ficha de inscrição"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "escolha",
+    "q": "O livro de atas registra:",
+    "options": [
+     "Os pontos discutidos e as decisões das reuniões das Comissões Executiva e Regular",
+     "O histórico de todas as atividades e eventos do Clube",
+     "Os nomes dos padrinhos e parceiros do Clube",
+     "As entradas e saídas financeiras do Clube"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "escolha",
+    "q": "Na ata manuscrita, por que as anotações começam na primeira linha, sem parágrafo e sem pular linhas?",
+    "options": [
+     "Para economizar páginas do livro",
+     "Para que não seja possível acrescentar conteúdo posteriormente",
+     "Porque é o padrão das atas digitadas",
+     "Para facilitar a leitura em voz alta na reunião seguinte"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "escolha",
+    "q": "Quem deve datar e assinar a ata manuscrita depois de tudo registrado?",
+    "options": [
+     "O Secretário, juntamente com o Tesoureiro",
+     "Todos os membros presentes",
+     "O pastor Distrital, sozinho",
+     "O Secretário, juntamente com o Diretor"
+    ],
+    "answer": 3
+   },
+   {
+    "type": "escolha",
+    "q": "Qual característica pertence ao livro de atos, segundo o manual?",
+    "options": [
+     "Não exige formalidades, e cada Clube pode adotar seu modelo, de preferência com fotos",
+     "Deve ter páginas numeradas e termo de abertura obrigatório",
+     "Registra apenas os votos da Comissão Executiva",
+     "Só pode ser manuscrito"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "escrita",
+    "q": "Descreva como você organizaria a secretaria de um Clube que está desorganizado, explicando o que faria primeiro e por quê.",
+    "min": 60
+   },
+   {
+    "type": "escrita",
+    "q": "Redija, com suas palavras, uma ata digitada fictícia de uma reunião da Comissão Regular com dois votos, seguindo os elementos que o manual apresenta.",
+    "min": 60
+   }
+  ]
+ },
+ {
+  "n": 28,
+  "title": "Pasta de campori, Livro de Ouro, ofícios e seguro anual",
+  "theme": "Administração e planejamento",
+  "objective": "Preparar a pasta de campori, usar o Livro de Ouro e os ofícios corretamente e compreender as regras do seguro anual obrigatório.",
+  "reading": "Manual Administrativo do Clube de Desbravadores, seções 3.4.5 a 3.5",
+  "verse": "\"Que tudo seja realizado com decência e ordem.\" (1ª Coríntios 14:40)",
+  "content": [
+   "A pasta de campori é um dos itens mais importantes do Clube, porque, num Campori, uma grande porcentagem dos pontos vai para a pasta de secretaria. Sua elaboração compete ao Secretário. Ela deve conter todos os itens do manual do Campori, em ordem, com a descrição de cada atividade e as devidas assinaturas.",
+   "Deve haver relatório para todos os requisitos, e todos assinados. Os itens indispensáveis de cada relatório são: data, horário e local da atividade; descrição do que foi realizado; e quantidade de membros participantes. As fotos enriquecem e dão credibilidade, mas em nenhuma hipótese substituem o relatório. Um erro comum é montar a pasta só com fotos na véspera do evento; o certo é registrar cada atividade quando ela acontece.",
+   "O Livro de Ouro registra todos os padrinhos e parceiros do Clube. É um caderno ornamentado, na cor dourada, em que o Secretário anota o nome de todos os que colaboraram financeiramente, com a data da parceria, deixando à frente um espaço para a assinatura do colaborador. É uma forma de gratidão e de memória.",
+   "O ofício é o documento de comunicação oficial entre o Clube e qualquer entidade, empresa ou órgão público. Serve principalmente para solicitar bens ou serviços, como pedir o espaço de uma escola para as reuniões regulares ou ajuda financeira para comprar material de camping (o manual traz modelos nos Anexos A, B e C).",
+   "Seguro anual: em 2010, a Divisão Sul-Americana e o Ministério de Desbravadores determinaram que o seguro deixasse de ser opcional e passasse a ser obrigatório, para proteger o nome da IASD através da ARM Sul-Americana e amparar os Clubes em atividades internas e externas. É um seguro de acidentes pessoais para membros ativos de Clubes de Desbravadores, Aventureiros e Clube de Jovens, com vigência de 1 ano e contratação pelo sistema online; o Clube deve se informar com o Campo sobre a data limite para cadastrar os membros. O faturamento é semestral, em abril e agosto.",
+   "Quem pode ser segurado: todo membro regular e ativo, com cadastro atualizado no Clube (Regionais, Coordenadores Regionais, diretoria e membros). Não podem ser incluídas pessoas da equipe de apoio, como pais que acompanham o Clube, anciãos e outros. As coberturas são: Morte Acidental; Invalidez Permanente Total ou Parcial por Acidente; Despesas Médicas, Hospitalares e Odontológicas (reembolso limitado ao capital segurado); Resgate Emergencial; e Repatriação (transporte do falecido e despesas de funeral, até o limite estabelecido).",
+   "A cobertura vale apenas para membros ativos e regulares, em reuniões regulares e eventos autorizados pela igreja (aprovados pela comissão da igreja local), durante viagens para atividades do Clube junto com os outros membros e sob supervisão do líder, e no trajeto de casa até o local da atividade, com o propósito exclusivo de participar dela. Em caso de sinistro, o Diretor deve comunicá-lo em até 20 dias corridos da data do acidente, com o aviso de sinistro assinado e os documentos exigidos para cada cobertura (por exemplo, carta do Diretor descrevendo o fato, ficha de cadastro do membro e relatório do evento; para despesas médicas, laudo ou prontuário e notas fiscais ou recibos originais). Todo pagamento é por reembolso: o Clube ou o segurado paga primeiro e depois solicita o reembolso.",
+   "Exclusões importantes: suicídio, doenças preexistentes, acidente aéreo, transporte terrestre não regulamentado pelo Código Nacional de Trânsito e pela ANTT, troca de óculos e próteses, pessoas que não sejam membros regulares e segurados fora de atividades autorizadas. O seguro não se estende a outros departamentos da IASD e cobre apenas atividades do Clube. Dúvidas devem ser tratadas com a Associação/Missão ou com a ARM/Unibrás. Por isso, manter o cadastro atualizado e cada atividade aprovada pela igreja não é burocracia: é proteção."
+  ],
+  "activity": "Pegue uma atividade recente do seu Clube e escreva um relatório no padrão da pasta de campori (data, horário, local, descrição e número de participantes). Depois confira com o Secretário se todos os membros da sua Unidade estão com o cadastro do seguro atualizado.",
+  "questions": [
+   {
+    "type": "escolha",
+    "q": "Quais itens o manual considera indispensáveis em cada relatório da pasta de campori?",
+    "options": [
+     "Fotos da atividade e assinatura dos pais",
+     "Apenas a descrição da atividade e o nome do responsável",
+     "Data, horário e local; descrição do que foi realizado; e quantidade de participantes",
+     "Fotos, lista de materiais e custo da atividade"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "escolha",
+    "q": "Um Secretário quer apresentar só fotos para alguns requisitos da pasta de campori. O que o manual diz?",
+    "options": [
+     "Fotos são suficientes quando estão datadas",
+     "As fotos enriquecem, mas em nenhuma hipótese substituem o relatório",
+     "Fotos substituem o relatório se houver assinatura do Diretor",
+     "Fotos só são aceitas em atividades ao ar livre"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "escolha",
+    "q": "O que é registrado no Livro de Ouro?",
+    "options": [
+     "Os Desbravadores que receberam a Insígnia de Excelência",
+     "As decisões das Comissões Executiva e Regular",
+     "O histórico de todos os eventos do Clube",
+     "O nome dos que colaboraram financeiramente com o Clube, com a data da parceria e espaço para assinatura"
+    ],
+    "answer": 3
+   },
+   {
+    "type": "escolha",
+    "q": "O Clube quer pedir à prefeitura o uso de uma quadra para as reuniões. Qual documento o manual indica?",
+    "options": [
+     "Uma ata",
+     "Um registro no livro de atos",
+     "Uma ficha de cadastro",
+     "Um ofício"
+    ],
+    "answer": 3
+   },
+   {
+    "type": "escolha",
+    "q": "Um pai acompanha o Clube em todos os acampamentos como apoio. Ele pode ser incluído no seguro anual?",
+    "options": [
+     "Sim, desde que vá a pelo menos três eventos no ano",
+     "Não, pessoas da equipe de apoio, como pais que acompanham o Clube, não podem ser incluídas",
+     "Sim, se o Diretor assinar uma autorização",
+     "Sim, se pagar o valor do seguro separadamente"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "escolha",
+    "q": "Ocorreu um acidente num acampamento autorizado. Qual é o prazo para o Diretor comunicar o sinistro?",
+    "options": [
+     "Até 48 horas após o acidente",
+     "Até 60 dias úteis",
+     "Até 20 dias corridos da data do acidente",
+     "Até o próximo faturamento semestral"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "escolha",
+    "q": "Como são feitos os pagamentos de sinistro do seguro anual?",
+    "options": [
+     "Sempre por reembolso: o Clube ou o segurado paga e depois solicita o reembolso",
+     "O seguro paga diretamente o hospital no momento do atendimento",
+     "O valor é descontado do faturamento semestral do Clube",
+     "A igreja local paga e o seguro não reembolsa"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "escrita",
+    "q": "Explique por que o manual dá tanta importância à pasta de campori e descreva como você organizaria os relatórios ao longo do ano para não acumular trabalho na véspera.",
+    "min": 60
+   },
+   {
+    "type": "escrita",
+    "q": "Descreva quais cuidados de cadastro e de autorização das atividades a direção deve ter para que os Desbravadores estejam realmente cobertos pelo seguro anual.",
+    "min": 60
+   }
+  ]
+ },
+ {
+  "n": 29,
+  "title": "Finanças: recursos e a filosofia sobre vendas",
+  "theme": "Administração e planejamento",
+  "objective": "Administrar as fontes de recursos do Clube (mensalidade, subsídio, patrocínios e campanhas) e avaliar uma campanha de vendas segundo os critérios do manual.",
+  "reading": "Manual Administrativo do Clube de Desbravadores, seções 3.6, 3.6.1 e 3.6.2",
+  "verse": "\"Procurando agir de forma honesta não apenas diante do Senhor, mas também diante dos homens.\" (2ª Coríntios 8:21)",
+  "content": [
+   "Manter o programa do Clube exige recursos, e para a maior parte deles o dinheiro é essencial. Por isso o Clube precisa de uma tesouraria bem estruturada. O responsável é o Tesoureiro, que pode exercer só essa função (o preferível) ou ser um dos Diretores Associados. Ele precisa ser responsável, ter bom relacionamento com os líderes da igreja e habilidade com dinheiro. O manual desaconselha acumular os cargos de Secretário e Tesoureiro, a menos que a pessoa tenha muito tempo, pois o risco é deixar uma área de lado ou não fazer bem nenhuma das duas.",
+   "Pode parecer estranho, mas o Tesoureiro do Clube não fica com o dinheiro do Clube! É inaceitável manter um \"caixa dois\": todo movimento financeiro do Clube deve passar pela tesouraria da igreja local. Por isso o bom relacionamento com o Tesoureiro da Igreja é indispensável. Se houver dificuldade para liberar recursos, a situação deve ser resolvida com a ajuda do pastor Distrital; se persistir, pode-se recorrer ao Diretor do Ministério de Desbravadores da Associação/Missão ou à Tesouraria do Campo.",
+   "As entradas do Clube vêm de quatro fontes: mensalidades, subsídio da igreja, patrocínios e campanhas de arrecadação. A mensalidade deve combinar com a realidade financeira dos membros, e todos pagam, inclusive a diretoria. Mesmo em regiões muito carentes ela deve ser cobrada, com valor simbólico, para ensinar que tudo o que vale a pena tem um custo. Ao mesmo tempo, nenhum juvenil fica de fora por não poder pagar: a direção busca padrinhos que o \"adotem\" financeiramente, deixando claro à criança que alguém se importa com ela.",
+   "O Tesoureiro define uma data de cobrança (por exemplo, até o dia 10 ou no segundo domingo do mês), conta com a ajuda dos Tesoureiros das Unidades e controla os pagamentos numa planilha com o nome de cada membro. Pode fazer acordos personalizados com os pais. Se alguém atrasar, a cobrança deve ser feita com delicadeza, sem constranger o Desbravador, e qualquer acordo deve ser feito em particular, nunca em público.",
+   "O subsídio da igreja é definido anualmente pela Comissão da Igreja, ao aprovar o orçamento e a porcentagem das ofertas para cada departamento. Esse valor deve ser respeitado pelos dois lados: a igreja repassa a verba, e o Clube não pressiona por mais se não houver condições. Se a igreja não fizer distribuição orçamentária, deve-se manter o controle fiel das entradas do Clube, sem desvio de finalidade sem acordo prévio entre a diretoria do Clube e a comissão da igreja. Os patrocínios podem vir de membros, pais, amigos e empresários; buscá-los é tarefa de toda a direção, mas cabe ao Tesoureiro organizar a estratégia. Uma boa estratégia: listar as necessidades (barracas, inscrições, equipamentos), orçar e pedir ajuda para um item específico, ou aceitar a doação do próprio item. As campanhas também são organizadas pelo Tesoureiro com a direção e devem seguir a filosofia da igreja. Todo dinheiro recebido, de qualquer fonte, vai para o Tesoureiro da Igreja, que fornece recibo.",
+   "Sobre vendas, o manual se baseia em Ellen G. White, em Arthur L. White e em votos da igreja. Para fins religiosos não se deve recorrer à venda de alimentos, festas ou algo parecido: isso é chamado de \"oferta manca\", que Deus não aceita. Há, porém, exceções aprovadas por Ellen White ligadas à obra médico-missionária (atos de misericórdia e bondade desinteressada), com base em Levítico 22:23, em que ofertas imperfeitas eram aceitas e, segundo o Comentário Bíblico Adventista, destinadas aos pobres. As preocupações dela eram duas: atividades degradantes (glutonaria, danças, festivais) e a troca do apelo à razão e ao coração pelo apelo ao estômago.",
+   "Critérios para vendas, quando acontecerem: nunca para fins religiosos; nunca no local de culto; nunca de produtos contrários aos princípios adventistas (incluindo carne), devendo ter finalidade educativa e ganhadora de almas (sempre que possível com exposição de livros e revistas, folhetos entregues de graça, aulas de saúde e culinária); jamais com preços exorbitantes; nunca bingos, rifas, apostas ou jogos; ao vender alimento, evitar apelar ao apetite e a divertimentos carnais; é legítimo vender produtos feitos em cursos e oficinas da igreja; e o que foi doado para distribuição gratuita não pode ser vendido sem autorização do doador.",
+   "As vendas nunca devem substituir o espírito de amor, solidariedade e desprendimento do viver cristão. Como as atividades do Clube também têm caráter social, a Divisão Sul-Americana considera as vendas, seguindo essas orientações, uma opção de fonte de recursos para os Clubes. Antes de aprovar uma campanha, passe-a por cada critério; uma rifa \"para ajudar o Campori\", por exemplo, está fora de qualquer hipótese."
+  ],
+  "activity": "Com a sua Unidade, planeje uma campanha de arrecadação para um item específico do Clube (por exemplo, uma barraca). Escreva o orçamento e verifique, critério por critério, se ela segue a filosofia do manual sobre vendas.",
+  "questions": [
+   {
+    "type": "escolha",
+    "q": "Segundo o manual, onde deve ficar o dinheiro do Clube?",
+    "options": [
+     "Com o Tesoureiro do Clube, em um caixa próprio",
+     "Em uma conta bancária em nome do Diretor",
+     "Com os Tesoureiros das Unidades",
+     "Na tesouraria da igreja local, por onde deve passar todo movimento financeiro do Clube"
+    ],
+    "answer": 3
+   },
+   {
+    "type": "escolha",
+    "q": "O Clube está com dificuldade para liberar recursos junto à tesouraria da igreja. Qual é o primeiro passo indicado?",
+    "options": [
+     "Resolver a situação com a ajuda do pastor Distrital",
+     "Abrir um caixa paralelo até o problema ser resolvido",
+     "Recorrer diretamente à União",
+     "Suspender as mensalidades até a liberação"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "escolha",
+    "q": "O Clube fica numa região muito carente. O que o manual orienta sobre a mensalidade?",
+    "options": [
+     "Isentar todos os membros da mensalidade",
+     "Cobrar apenas da diretoria",
+     "Cobrar um valor simbólico, e buscar padrinhos para quem não puder pagar",
+     "Cobrar o valor normal e desligar quem não pagar"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "escolha",
+    "q": "Um Desbravador está com a mensalidade atrasada. Como o Tesoureiro deve agir?",
+    "options": [
+     "Anunciar os inadimplentes na abertura para incentivar o pagamento",
+     "Cobrar com delicadeza, sem constrangê-lo, e fazer qualquer acordo em particular",
+     "Impedi-lo de participar até quitar a dívida",
+     "Cobrar diretamente do Conselheiro da Unidade"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "escolha",
+    "q": "Qual estratégia de patrocínio o manual sugere?",
+    "options": [
+     "Pedir doações em dinheiro sem informar o destino",
+     "Listar as necessidades, fazer um orçamento e pedir ajuda para um item específico",
+     "Deixar a busca de patrocínio apenas para o Diretor",
+     "Oferecer em troca espaço de propaganda no uniforme"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "escolha",
+    "q": "Uma Unidade propõe vender lanches no salão de culto para arrecadar dinheiro para a reforma da igreja. Segundo os critérios do manual, essa venda:",
+    "options": [
+     "Não deve ser feita, pois é para fim religioso e no local de culto",
+     "Pode ser feita, desde que os preços não sejam exorbitantes",
+     "Pode ser feita, se os lanches forem vegetarianos",
+     "Pode ser feita, se a Comissão Executiva aprovar"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "escolha",
+    "q": "Qual das opções a seguir é considerada legítima pelo manual?",
+    "options": [
+     "Fazer uma rifa de uma bicicleta para custear o Campori",
+     "Vender materiais doados para distribuição gratuita, sem consultar o doador",
+     "Organizar um bingo beneficente para os pobres",
+     "Vender produtos preparados nos cursos e oficinas ministrados pela igreja"
+    ],
+    "answer": 3
+   },
+   {
+    "type": "escrita",
+    "q": "Explique por que o manual exige que todo movimento financeiro do Clube passe pela tesouraria da igreja e quais problemas um \"caixa dois\" poderia causar.",
+    "min": 60
+   },
+   {
+    "type": "escrita",
+    "q": "Descreva como você lidaria com um Desbravador cuja família não pode pagar a mensalidade, seguindo as orientações do manual.",
+    "min": 60
+   }
+  ]
+ },
+ {
+  "n": 30,
+  "title": "Despesas, registros e patrimônio",
+  "theme": "Administração e planejamento",
+  "objective": "Classificar as despesas do Clube, fazer compras e registros financeiros corretos e manter o registro de patrimônio atualizado.",
+  "reading": "Manual Administrativo do Clube de Desbravadores, seções 3.6.3 a 3.6.5",
+  "verse": "\"Além disso, o que se exige dos despenseiros é que cada um seja encontrado fiel.\" (1ª Coríntios 4:2)",
+  "content": [
+   "Depois de entender de onde vêm os recursos, é hora de cuidar de como eles saem. O manual classifica as despesas do Clube em dois tipos: regulares e ocasionais. Saber diferenciá-las é o primeiro passo para um orçamento equilibrado.",
+   "As despesas regulares são as que se repetem ano após ano: papelaria, emblemas para investidura, materiais didáticos das Classes e Especialidades, decoração das programações especiais, seguro anual, despesas de acampamentos etc. Elas devem sempre constar no orçamento anual e precisam estar equilibradas com as entradas regulares do Clube (mensalidades e subsídio).",
+   "As despesas ocasionais são gastos com equipamentos, como barracas, fogão e bandeiras, e inscrições para eventos do Campo, União ou Divisão. Geralmente são altas e também devem estar no orçamento, mas nem sempre as entradas regulares bastam para cobri-las. É para esse tipo de despesa que o Clube deve buscar patrocínios e campanhas de arrecadação.",
+   "Qualquer material ou serviço adquirido, seja um lápis, um freezer ou a contratação de um ônibus, deve ter nota fiscal. Isso não é só uma regra do Clube, é uma exigência legal. O Tesoureiro do Clube faz uma cópia de cada nota e a arquiva na tesouraria do Clube, entregando a original ao Tesoureiro da Igreja. Além disso, todas as compras e contratações devem ser feitas com o CNPJ do Campo local, nunca com o CPF do membro; o número correto deve ser consultado na tesouraria do Campo.",
+   "Para acessar o dinheiro do Clube que está no caixa da igreja, existem duas formas: o responsável paga com o próprio dinheiro e depois é reembolsado mediante a nota fiscal; ou o Tesoureiro da Igreja repassa o valor antes, e o responsável leva a nota depois da compra. As duas são aceitáveis, mas devem ser combinadas previamente para evitar desentendimentos.",
+   "O registro de entradas e saídas pode ser feito num livro caixa simples de papelaria, em planilhas eletrônicas ou em sistemas online. O que importa é que TODAS as entradas e TODAS as saídas estejam registradas. No modelo do manual, cada mês fica em uma página ou planilha separada, com as colunas data, entradas, histórico, saídas e saldo; o saldo de um mês continua no seguinte. As cópias das notas fiscais devem ficar arquivadas organizadamente, mês a mês.",
+   "Veja o exemplo do manual: em março, entram R$ 300,00 de mensalidades e R$ 200,00 de subsídio da igreja (saldo de R$ 500,00); saem R$ 20,00 em cordas, R$ 30,00 em lona e R$ 50,00 em uma machadinha, e o mês fecha com R$ 400,00. Em abril, o saldo começa em R$ 400,00, recebe mais R$ 300,00 e R$ 200,00 (R$ 900,00), e depois saem R$ 400,00 em barracas e R$ 250,00 com o Dia dos Desbravadores (R$ 100,00 de ornamentação e R$ 150,00 de lanche), fechando com R$ 250,00.",
+   "O patrimônio do Clube deve estar registrado e ser votado anualmente pela Comissão da Igreja local. O motivo principal é que nada se perca nas mudanças de direção. Outro motivo é o seguro patrimonial da igreja: como os equipamentos costumam ficar numa sala do prédio da igreja, em caso de furto um dos documentos exigidos para o ressarcimento é o registro de patrimônio votado pela Comissão. Por isso, sempre que o Clube comprar um bem de maior valor, a lista deve ser atualizada e passada na Comissão, em qualquer mês. O registro traz: nome do item, descrição, estado de conservação, valor estimado e data de aquisição. Itens sem valor comercial, como livro de atas, livro de atos, troféus, álbuns de fotos e pastas de secretaria, também entram na lista, sem o valor estimado."
+  ],
+  "activity": "Faça um levantamento de cinco itens do patrimônio do seu Clube (por exemplo, barracas, bandeiras, livro de atas) e registre cada um com os cinco dados que o manual pede. Entregue a lista ao Tesoureiro ou ao Secretário.",
+  "questions": [
+   {
+    "type": "escolha",
+    "q": "Qual destas é uma despesa regular, segundo o manual?",
+    "options": [
+     "Compra de barracas",
+     "Compra de um fogão",
+     "Emblemas para investidura",
+     "Inscrição em evento da Divisão"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "escolha",
+    "q": "Para que tipo de despesa o manual indica buscar patrocínios e campanhas de arrecadação?",
+    "options": [
+     "Para as despesas ocasionais, geralmente altas, que as entradas regulares nem sempre cobrem",
+     "Para as despesas regulares, como papelaria e seguro anual",
+     "Somente para o seguro anual",
+     "Para todas as despesas, pois mensalidades não devem cobrir gastos"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "escolha",
+    "q": "Um líder comprou cordas para o acampamento e pediu a nota fiscal no seu CPF. O que o manual orienta?",
+    "options": [
+     "Está correto, desde que a nota seja entregue ao Tesoureiro",
+     "O CPF só é aceito em compras de pequeno valor",
+     "As compras devem ser feitas com o CNPJ do Campo local, nunca com o CPF do membro",
+     "Deve-se usar o CNPJ da igreja local, consultado com o ancião"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "escolha",
+    "q": "O que o Tesoureiro do Clube deve fazer com as notas fiscais das compras?",
+    "options": [
+     "Entregar a cópia ao Tesoureiro da Igreja e guardar a original",
+     "Arquivar uma cópia na tesouraria do Clube e entregar a original ao Tesoureiro da Igreja",
+     "Guardar todas as originais com o Diretor",
+     "Enviar as originais à Associação/Missão"
+    ],
+    "answer": 1
+   },
+   {
+    "type": "escolha",
+    "q": "Sobre as duas formas de acessar o dinheiro do Clube no caixa da igreja, o manual afirma que:",
+    "options": [
+     "Apenas o reembolso posterior é permitido",
+     "Apenas o repasse antecipado é permitido",
+     "O Tesoureiro do Clube deve sacar o valor e guardá-lo até a compra",
+     "Ambas são aceitáveis, mas devem ser combinadas previamente para evitar desentendimentos"
+    ],
+    "answer": 3
+   },
+   {
+    "type": "escolha",
+    "q": "No livro caixa, um mês terminou com saldo de R$ 400,00. No mês seguinte entram R$ 500,00 e saem R$ 650,00. Qual é o saldo final, seguindo o modelo do manual?",
+    "options": [
+     "R$ 250,00",
+     "R$ 150,00",
+     "R$ 400,00",
+     "R$ 1.550,00"
+    ],
+    "answer": 0
+   },
+   {
+    "type": "escolha",
+    "q": "Sobre o registro de patrimônio, qual afirmação está de acordo com o manual?",
+    "options": [
+     "Só entram itens com valor comercial",
+     "A lista só pode ser atualizada uma vez por ano, em dezembro",
+     "Livro de atas, troféus e álbuns também entram na lista, sem valor estimado",
+     "O registro é aprovado pela Comissão Executiva do Clube, sem passar pela igreja"
+    ],
+    "answer": 2
+   },
+   {
+    "type": "escrita",
+    "q": "Monte, com suas palavras, um pequeno orçamento anual para um Clube, separando despesas regulares e ocasionais e indicando de onde viria o dinheiro para cada tipo.",
+    "min": 60
+   },
+   {
+    "type": "escrita",
+    "q": "Explique por que o manual exige que o patrimônio seja registrado e votado pela Comissão da Igreja e o que pode acontecer se isso não for feito.",
+    "min": 60
+   }
+  ]
+ }
+]
