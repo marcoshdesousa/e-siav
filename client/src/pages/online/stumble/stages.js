@@ -111,6 +111,41 @@ function canvasTex(key, w, h, draw, rep = 1) {
   texCache.set(key, t);
   return t;
 }
+// ───────────── Marca dos Desbravadores (emblema em /marca/logo.svg) ─────────────
+// Cores oficiais: amarelo, vermelho e azul
+export const DBV = { yellow: '#f9c71d', red: '#e92a2f', blue: '#235293' };
+let logoImg = null;
+const logoWait = [];
+/** Chama fn(img) quando o emblema estiver carregado (no Node/testes não carrega nada). */
+function onLogo(fn) {
+  if (logoImg && logoImg.complete && logoImg.naturalWidth) { fn(logoImg); return; }
+  logoWait.push(fn);
+  if (logoImg || typeof Image === 'undefined') return;
+  logoImg = new Image();
+  logoImg.decoding = 'async';
+  logoImg.onload = () => logoWait.splice(0).forEach((f) => { try { f(logoImg); } catch { /* canvas perdido */ } });
+  logoImg.src = '/marca/logo.svg';
+}
+/** Desenha o emblema (triângulo) centrado em (cx, cy) com altura h. Antes de carregar, um triângulo simples. */
+function drawLogo(g, cx, cy, h, img) {
+  const w = h;
+  if (img) { g.drawImage(img, cx - w / 2, cy - h / 2, w, h); return; }
+  g.beginPath();
+  g.moveTo(cx - w * 0.43, cy - h * 0.45); g.lineTo(cx + w * 0.43, cy - h * 0.45); g.lineTo(cx, cy + h * 0.45);
+  g.closePath();
+  g.fillStyle = DBV.red; g.fill();
+  g.lineWidth = h * 0.06; g.strokeStyle = DBV.yellow; g.stroke();
+}
+/** Textura de canvas que é desenhada de novo quando o emblema carrega (draw recebe a imagem ou null). */
+function logoTex(key, w, h, draw) {
+  const t = canvasTex(key, w, h, (g, ww, hh) => draw(g, ww, hh, null));
+  if (!t.logoDone && t.image?.getContext) {
+    t.logoDone = true;
+    onLogo((img) => { const g = t.image.getContext('2d'); g.clearRect(0, 0, w, h); draw(g, w, h, img); t.needsUpdate = true; });
+  }
+  return t;
+}
+
 const WHITE = new THREE.Color('#ffffff');
 const BLACK = new THREE.Color('#000000');
 const tint = (c, k) => '#' + new THREE.Color(c).lerp(k > 0 ? WHITE : BLACK, Math.abs(k)).getHexString();
@@ -251,7 +286,8 @@ function makeCtx(scene, theme, r) {
 
   /** Decoração estática repetida: vira um InstancedMesh por (geometria, material). */
   ctx.inst = (geo, mat, x, y, z, sx = 1, sy = sx, sz = sx, rx = 0, ry = 0, rz = 0, color = null, cast = false) => {
-    const key = geo.uuid + mat.uuid + (cast ? 'c' : '');
+    // Separado em blocos de 50 m de pista: o que fica atrás da câmera ou longe não é desenhado
+    const key = geo.uuid + mat.uuid + (cast ? 'c' : '') + Math.floor(z / 50);
     let b = batches.get(key);
     if (!b) { b = { geo, mat, cast, m: [], c: [] }; batches.set(key, b); }
     _o.position.set(x, y, z);
@@ -278,6 +314,7 @@ function makeCtx(scene, theme, r) {
   /**
    * Plataforma (chão). top = altura do chão. move(t) -> {x, y, z} de deslocamento.
    * Extras: o.r (disco redondo), o.spin (gira em rad/s), o.tilt(t) (gangorra: ângulo em z),
+   * move(t, out) escreve o deslocamento em out (sem criar objeto novo a cada quadro),
    * o.convX (rolo que empurra de lado), o.mesh (visual pronto, centrado em top - thick/2).
    */
   ctx.plat = (x, z, w, d, top, color, o = {}) => {
@@ -286,7 +323,7 @@ function makeCtx(scene, theme, r) {
       o.mesh.position.set(x, top - thick / 2, z);
       o.mesh.traverse((c) => { if (c.isMesh) { c.receiveShadow = true; c.castShadow = !!o.cast; } });
       group.add(o.mesh);
-      const p = { x, z, w, d, top, r: o.r || 0, spin: o.spin || 0, tilt: o.tilt, convX: o.convX || 0, kind: o.kind || 'normal', conv: o.conv || 0, move: o.move, mesh: o.mesh, ox: 0, oy: 0, oz: 0, dx: 0, dy: 0, dz: 0, gone: false, baseY: top - thick / 2 };
+      const p = { x, z, w, d, top, thick, r: o.r || 0, spin: o.spin || 0, tilt: o.tilt, convX: o.convX || 0, kind: o.kind || 'normal', conv: o.conv || 0, move: o.move, mesh: o.mesh, ox: 0, oy: 0, oz: 0, dx: 0, dy: 0, dz: 0, gone: false, baseY: top - thick / 2 };
       if (!o.move && !o.noLegs) legs(ctx, x, z, w, d, top - thick);
       ctx.plats.push(p);
       return p;
@@ -305,7 +342,7 @@ function makeCtx(scene, theme, r) {
     m.add(body, cap);
     m.position.set(x, top - thick / 2, z);
     group.add(m);
-    const p = { x, z, w, d, top, kind: o.kind || 'normal', conv: o.conv || 0, move: o.move, mesh: m, cap, ox: 0, oy: 0, oz: 0, dx: 0, dy: 0, dz: 0, slope: o.slope, gone: false, baseY: top - thick / 2 };
+    const p = { x, z, w, d, top, thick, kind: o.kind || 'normal', conv: o.conv || 0, move: o.move, mesh: m, cap, ox: 0, oy: 0, oz: 0, dx: 0, dy: 0, dz: 0, slope: o.slope, gone: false, baseY: top - thick / 2 };
     if (o.slope) { // rampa: o chão sobe de y0 (z0) até y1 (z1)
       const ang = Math.atan2(o.slope.y1 - o.slope.y0, Math.abs(o.slope.z1 - o.slope.z0));
       m.position.set(x, (o.slope.y0 + o.slope.y1) / 2 - 0.3, (o.slope.z0 + o.slope.z1) / 2);
@@ -387,38 +424,55 @@ function gear(ctx, x, y, z, s, color, speed) {
 // Altura da faixa do arco: acima da câmera que segue o jogador (ela fica ~5,8 m acima dele)
 const ARCH_Y = 9.7;
 
-/** Arco com faixa (largada e chegada), com balões em cima dos pilares. */
+/** Arco com faixa (largada, ponto seguro e chegada) com o emblema dos Desbravadores e balões em cima. */
 function arch(ctx, z, label, finish) {
   const th = ctx.theme;
   const half = W / 2 + 2.6;
   for (const s of [-1, 1]) {
-    const post = ctx.mesh(rbox(1.3, 9.6, 1.3, 0.5), candyMat(finish ? th.acc : th.obs, '#ffffff', 9.6), s * half, 4.8, z);
+    const post = ctx.mesh(rbox(1.3, 9.6, 1.3, 0.5), candyMat(finish ? DBV.blue : DBV.red, finish ? DBV.yellow : '#ffffff', 9.6), s * half, 4.8, z);
     ctx.deco(post);
-    ctx.inst(rbox(2, 0.5, 2, 0.2), std(th.trim), s * half, 0.25, z);
+    ctx.inst(rbox(2, 0.5, 2, 0.2), std(DBV.yellow), s * half, 0.25, z);
   }
-  const banner = ctx.mesh(rbox(half * 2 + 1.6, 1.9, 0.7, 0.35), std(finish ? '#1f2937' : th.obs, { rough: 0.35 }), 0, ARCH_Y, z);
+  const banner = ctx.mesh(rbox(half * 2 + 1.6, 1.9, 0.7, 0.35), std(finish ? '#1f2937' : DBV.blue, { rough: 0.35 }), 0, ARCH_Y, z);
   ctx.deco(banner);
-  const tex = canvasTex(`label${label}${finish}${th.acc}`, 1024, 128, (g, w, h) => {
+  const tex = logoTex(`label${label}${finish}`, 1024, 128, (g, w, h, img) => {
     if (finish) {
       for (let x = 0; x < 32; x++) for (let y = 0; y < 4; y++) { g.fillStyle = (x + y) % 2 ? '#111827' : '#ffffff'; g.fillRect(x * 32, y * 32, 32, 32); }
-      g.fillStyle = '#111827'; rr(g, 230, 10, 564, 108, 50); g.fill();
+      g.fillStyle = DBV.blue; rr(g, 150, 8, 724, 112, 54); g.fill();
     } else {
-      g.fillStyle = th.obs; g.fillRect(0, 0, w, h);
-      g.fillStyle = 'rgba(255,255,255,.18)';
-      for (let x = 0; x < w; x += 64) { g.beginPath(); g.arc(x + 32, h / 2, 14, 0, Math.PI * 2); g.fill(); }
-      g.fillStyle = th.obs; rr(g, 250, 12, 524, 104, 50); g.fill();
+      g.fillStyle = DBV.blue; g.fillRect(0, 0, w, h);
+      // Faixas amarela e vermelha nas bordas
+      g.fillStyle = DBV.yellow; g.fillRect(0, 0, w, 12); g.fillRect(0, h - 12, w, 12);
+      g.fillStyle = DBV.red; g.fillRect(0, 12, w, 6); g.fillRect(0, h - 18, w, 6);
     }
-    g.font = '900 84px Arial Black, Arial, sans-serif';
+    drawLogo(g, finish ? 215 : 90, h / 2, 96, img);
+    drawLogo(g, finish ? w - 215 : w - 90, h / 2, 96, img);
     g.textAlign = 'center'; g.textBaseline = 'middle';
-    g.lineWidth = 10; g.strokeStyle = 'rgba(0,0,0,.35)'; g.strokeText(label, w / 2, h / 2 + 4);
-    g.fillStyle = finish ? '#fde047' : '#ffffff'; g.fillText(label, w / 2, h / 2 + 4);
+    g.font = '900 76px Arial Black, Arial, sans-serif';
+    const tw = g.measureText(label).width;
+    g.font = '900 86px Arial Black, Arial, sans-serif';
+    const dw = g.measureText('DBV').width;
+    const gap = 34;
+    const total = tw + gap + dw;
+    const f = Math.min(1, (finish ? 520 : 700) / total); // texto comprido: aperta na horizontal
+    g.save();
+    g.translate(w / 2, 0);
+    g.scale(f, 1);
+    const x0 = -total / 2;
+    g.lineWidth = 10; g.strokeStyle = 'rgba(0,0,0,.35)';
+    g.font = '900 76px Arial Black, Arial, sans-serif';
+    g.textAlign = 'left';
+    g.strokeText(label, x0, h / 2 + 4); g.fillStyle = '#ffffff'; g.fillText(label, x0, h / 2 + 4);
+    g.font = '900 86px Arial Black, Arial, sans-serif';
+    g.strokeText('DBV', x0 + tw + gap, h / 2 + 4); g.fillStyle = DBV.yellow; g.fillText('DBV', x0 + tw + gap, h / 2 + 4);
+    g.restore();
   });
   tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
   const face = new THREE.Mesh(cached(`plane${half}`, () => new THREE.PlaneGeometry(half * 2 + 0.8, 1.55)), std('#ffffff', { map: tex, rough: 0.5, em: '#ffffff', emI: 0.12 }));
   face.position.set(0, ARCH_Y, z + 0.36);
   ctx.deco(face);
-  // Balões nos dois pilares, balançando
-  const cols = [th.acc, th.alt, '#ffffff', th.obs, '#fde047'];
+  // Balões nos dois pilares, balançando (nas cores dos Desbravadores)
+  const cols = [DBV.yellow, DBV.red, '#ffffff', DBV.blue, th.acc];
   for (const s of [-1, 1]) {
     const bunch = new THREE.Group();
     bunch.position.set(s * half, ARCH_Y + 1.3, z);
@@ -431,6 +485,66 @@ function arch(ctx, z, label, finish) {
     ctx.deco(bunch);
     ctx.updaters.push((t) => { bunch.rotation.z = Math.sin(t * 1.3 + s) * 0.08; bunch.position.y = ARCH_Y + 1.3 + Math.sin(t * 2 + s) * 0.12; });
   }
+}
+
+// ───────────── Bandeiras dos Desbravadores (balançam no shader: nenhum custo na CPU) ─────────────
+const flagTime = { value: 0 };
+const flagMats = new Map();
+function flagMat(bg) {
+  let m = flagMats.get(bg);
+  if (m) return m;
+  const tex = logoTex(`flag${bg}`, 256, 172, (g, w, h, img) => {
+    g.fillStyle = bg; g.fillRect(0, 0, w, h);
+    const stripe = bg === DBV.yellow ? DBV.red : DBV.yellow;
+    g.fillStyle = stripe; g.fillRect(0, h - 22, w, 22); g.fillRect(0, 0, w, 10);
+    g.fillStyle = '#ffffff'; g.beginPath(); g.arc(w * 0.5, h * 0.47, 62, 0, Math.PI * 2); g.fill();
+    drawLogo(g, w * 0.5, h * 0.47, 104, img);
+  });
+  tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
+  m = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.75, side: THREE.DoubleSide });
+  m.onBeforeCompile = (sh) => {
+    sh.uniforms.uFlagT = flagTime;
+    sh.vertexShader = 'uniform float uFlagT;\n' + sh.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
+      #ifdef USE_INSTANCING
+        float fph = instanceMatrix[3].z * 0.7 + instanceMatrix[3].x;
+      #else
+        float fph = 0.0;
+      #endif
+      float fk = clamp(position.x / 1.9, 0.0, 1.0);
+      transformed.z += sin(position.x * 3.2 - uFlagT * 5.0 + fph) * 0.16 * fk;
+      transformed.y += sin(position.x * 2.1 - uFlagT * 3.0 + fph) * 0.05 * fk;`);
+  };
+  m.customProgramCacheKey = () => 'dbvflag';
+  flagMats.set(bg, m);
+  return m;
+}
+const flagGeo = () => cached('flag', () => new THREE.PlaneGeometry(1.9, 1.28, 10, 3).translate(0.95, 0, 0));
+const FLAG_BG = [DBV.yellow, DBV.blue, DBV.red];
+/** Mastros com bandeiras dos dois lados de um trecho (decoração instanciada). */
+function flags(ctx, z0, len, half = W / 2 + 1.1, every = 9) {
+  const n = Math.max(1, Math.floor(len / every));
+  for (let k = 0; k < n; k++) {
+    const z = z0 - (len / n) * (k + 0.5);
+    for (const s of [-1, 1]) {
+      ctx.inst(G.cylLo(), metal(), s * half, 2.4, z, 0.07, 4.8, 0.07, 0, 0, 0, null, true);
+      ctx.inst(G.sphLo(), std(DBV.yellow, { rough: 0.25, metal: 0.3 }), s * half, 4.85, z, 0.14);
+      // A bandeira sai do mastro para fora da pista
+      ctx.inst(flagGeo(), flagMat(FLAG_BG[(k + (s > 0 ? 1 : 0)) % 3]), s * half, 4.0, z, 1, 1, 1, 0, s > 0 ? 0 : Math.PI, 0);
+    }
+  }
+}
+
+/** Placa grande com o emblema, de frente para quem vem correndo (fora da pista). */
+function emblemSign(ctx, x, z, s = 3.2) {
+  const tex = logoTex('emblemSign', 256, 256, (g, w, h, img) => { g.clearRect(0, 0, w, h); drawLogo(g, w / 2, h / 2, 240, img); });
+  tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
+  let m = matCache.get('emblemSign');
+  if (!m) { m = new THREE.MeshStandardMaterial({ map: tex, transparent: true, alphaTest: 0.3, roughness: 0.5, emissive: '#ffffff', emissiveIntensity: 0.15, emissiveMap: tex }); matCache.set('emblemSign', m); }
+  const plane = ctx.mesh(cached('emblemPlane', () => new THREE.PlaneGeometry(1, 1)), m, x, s * 0.5 + 1.4, z, false);
+  plane.scale.setScalar(s);
+  ctx.deco(plane);
+  ctx.inst(G.cylLo(), metal(), x, 0.8, z - 0.05, 0.1, 1.6, 0.1);
+  ctx.inst(rbox(1.2, 0.3, 1.2, 0.12), std(DBV.blue), x, 0.15, z - 0.05);
 }
 
 /** Cogumelo que empurra: caule branco e chapéu colorido com bolinhas (pulsa de leve). */
@@ -482,17 +596,152 @@ function spinBar(ctx, cz, y, L, w, cx = 0, r = 0.27) {
   return { rot, h };
 }
 
+// Linhas de vento: uma InstancedMesh por ventilador (12 riscos = 1 desenho), andando com o vento
+const STREAKS = 14;
+let windMat = null;
+/**
+ * Ventilador do lado s (-1 = esquerda, 1 = direita) na altura z. Liga e desliga em ciclo; ligado,
+ * o vento empurra quem está na faixa dele para o outro lado (força de verdade, ver physics.js).
+ */
+function fan(ctx, z, s, ph, trackW, power = 4.6) {
+  const th = ctx.theme;
+  const fx = s * (trackW / 2 + 1.7);
+  ctx.inst(G.cylLo(), dark(), fx, (WATER_Y + 0.4) / 2, z, 0.4, 0.4 - WATER_Y, 0.4);
+  ctx.inst(rbox(1.6, 0.5, 1.6, 0.2), std(th.trim), fx, 0.15, z, 1, 1, 1, 0, 0, 0, null, true);
+  const head = new THREE.Group();
+  head.position.set(fx, 1.7, z);
+  const ring = ctx.mesh(G.torus(1.55, 0.24), std('#ffffff', { rough: 0.3 }), 0, 0, 0);
+  ring.rotation.y = Math.PI / 2;
+  const ring2 = ctx.mesh(G.torus(1.32, 0.1), std(th.obs, { rough: 0.3 }), -s * 0.08, 0, 0, false);
+  ring2.rotation.y = Math.PI / 2;
+  const back = ctx.mesh(G.cyl(), std(th.obs, { rough: 0.35 }), s * 0.55, 0, 0);
+  back.scale.set(0.75, 0.9, 0.75);
+  back.rotation.z = Math.PI / 2;
+  // Grade na frente (anéis finos) e a lâmpada que avisa quando vai ligar
+  const grill = ctx.mesh(G.torus(0.8, 0.05), metal(), -s * 0.2, 0, 0, false);
+  grill.rotation.y = Math.PI / 2;
+  const lamp = ctx.mesh(G.sphLo(), new THREE.MeshStandardMaterial({ color: '#ef4444', emissive: '#ef4444', emissiveIntensity: 0 }), s * 0.2, 1.85, 0, false);
+  lamp.scale.setScalar(0.22);
+  ctx.owned.push(lamp.material);
+  head.add(ring, ring2, back, grill, lamp);
+  const blades = new THREE.Group();
+  blades.position.x = -s * 0.1;
+  for (let j = 0; j < 4; j++) {
+    const bl = ctx.mesh(rbox(0.12, 1.25, 0.55, 0.06), std(j % 2 ? th.acc : '#fde047', { rough: 0.3 }), 0, 0.62, 0, false);
+    bl.rotation.y = 0.35;
+    const arm = new THREE.Group();
+    arm.rotation.x = (j / 4) * Math.PI * 2;
+    arm.add(bl);
+    blades.add(arm);
+  }
+  const hub = ctx.mesh(G.sphLo(), metal(), 0, 0, 0, false);
+  hub.scale.setScalar(0.3);
+  blades.add(hub);
+  head.add(blades);
+  ctx.deco(head);
+  // Riscos de vento atravessando a pista
+  if (!windMat) windMat = new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.85, depthWrite: false, fog: false });
+  const streak = cached('streak', () => new THREE.BoxGeometry(1, 0.16, 0.16));
+  const im = new THREE.InstancedMesh(streak, windMat, STREAKS);
+  im.frustumCulled = false;
+  ctx.group.add(im);
+  ctx.owned.push(im);
+  const r = rng(Math.round(z * 31) + 7);
+  const seeds = Array.from({ length: STREAKS }, () => ({ y: 0.3 + r() * 2.6, z: z + (r() - 0.5) * 4.6, o: r(), l: 1.2 + r() * 1.6 }));
+  const span = trackW + 3;
+  const wind = { x0: -trackW / 2 - 1.5, x1: trackW / 2 + 1.5, z0: z + 2.6, z1: z - 2.6, top: 4.5, fx: -s * power, k: 0, x: fx };
+  ctx.winds.push(wind);
+  let ang = 0;
+  ctx.updaters.push((t, dt = 0.016) => {
+    const e = Math.sin(t * 1.1 + ph);
+    wind.k = Math.max(0, Math.min(1, (e + 0.15) * 3));
+    ang += (2 + wind.k * 24) * dt;
+    blades.rotation.x = ang;
+    // A lâmpada acende um pouco antes de ligar (dá tempo de se preparar)
+    lamp.material.emissiveIntensity = e > -0.45 ? 1.2 : 0;
+    head.position.x = fx + (wind.k > 0.5 ? Math.sin(t * 40) * 0.025 : 0);
+    const k = wind.k;
+    for (let j = 0; j < STREAKS; j++) {
+      const sd = seeds[j];
+      const u = (t * 1.1 + sd.o) % 1;
+      const px = s * (trackW / 2 + 1) - s * u * span;
+      const a = k * Math.min(1, u * 5, (1 - u) * 5);
+      _o.position.set(px, sd.y + Math.sin(t * 6 + j) * 0.08, sd.z);
+      _o.rotation.set(0, 0, 0);
+      _o.scale.set(a > 0.02 ? sd.l * (0.4 + k * 0.6) : 0, a, a);
+      _o.updateMatrix();
+      im.setMatrixAt(j, _o.matrix);
+    }
+    im.instanceMatrix.needsUpdate = true;
+    im.visible = k > 0.02;
+  });
+}
+
+/** Seta amarela pintada na mola mostrando para onde ela joga. */
+function springArrow(ctx, x, y, z) {
+  const tex = canvasTex('springArrow', 128, 128, (g, w, h) => {
+    g.clearRect(0, 0, w, h);
+    g.fillStyle = 'rgba(255,255,255,.92)';
+    g.strokeStyle = 'rgba(21,128,61,.6)';
+    g.lineWidth = 6;
+    g.lineJoin = 'round';
+    for (const y0 of [18, 62]) {
+      g.beginPath();
+      g.moveTo(20, y0 + 40); g.lineTo(64, y0); g.lineTo(108, y0 + 40); g.lineTo(108, y0 + 58); g.lineTo(64, y0 + 20); g.lineTo(20, y0 + 58);
+      g.closePath(); g.stroke(); g.fill();
+    }
+  });
+  tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
+  let m = matCache.get('springArrow');
+  if (!m) { m = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, fog: false }); matCache.set('springArrow', m); }
+  ctx.inst(cached('arrowPlane', () => new THREE.PlaneGeometry(1.6, 1.6).rotateX(-Math.PI / 2)), m, x, y, z);
+}
+
 const SEG = {
   start(ctx) {
     const len = 14;
     ctx.plat(0, ctx.z - len / 2, W + 4, len, 0, ctx.theme.floor, { pat: 'check' });
     arch(ctx, ctx.z - len + 1, 'LARGADA', false);
+    flags(ctx, ctx.z + 4, len + 2, W / 2 + 2.6, 6);
+    emblemSign(ctx, -(W / 2 + 6), ctx.z - 8, 4.5);
+    emblemSign(ctx, W / 2 + 6, ctx.z - 8, 4.5);
     return len;
   },
   floor(ctx, { len = 12 } = {}) {
     ctx.plat(0, ctx.z - len / 2, W, len, 0, ctx.theme.floor);
     railings(ctx, ctx.z, len);
+    if (len >= 6) flags(ctx, ctx.z, len);
     return len;
+  },
+  plaza(ctx) {
+    // Praça do meio da fase: um respiro com bandeiras, emblema e arco de ponto seguro
+    const len = 16;
+    const th = ctx.theme;
+    ctx.plat(0, ctx.z - len / 2, W + 6, len, 0, th.floor, { pat: 'check', c2: tint(th.floor, 0.22) });
+    arch(ctx, ctx.z - 3, 'PONTO SEGURO', false);
+    flags(ctx, ctx.z - 4, len - 4, W / 2 + 2.4, 4);
+    emblemSign(ctx, -(W / 2 + 5.5), ctx.z - 10, 3.6);
+    emblemSign(ctx, W / 2 + 5.5, ctx.z - 10, 3.6);
+    // Faixa no chão com as cores dos Desbravadores
+    for (const [i, c] of [DBV.yellow, DBV.red, DBV.blue].entries()) ctx.inst(rbox(W + 4, 0.06, 0.6, 0.03), std(c, { rough: 0.5 }), 0, 0.03, ctx.z - 6.5 - i * 0.7);
+    ctx.checkpoints.push(ctx.z - len + 2);
+    return len;
+  },
+  launch(ctx, { up = 4 } = {}) {
+    // Mola gigante que joga lá em cima de uma torre; depois desce por um escorregador
+    const th = ctx.theme;
+    const tz = ctx.z - 16;
+    const p = ctx.plat(0, ctx.z - 3, 6, 3.6, 0.3, '#22c55e', { kind: 'bounce', thick: 0.5, pat: 'rings', c2: '#bbf7d0', rim: '#fde047', noLegs: true });
+    p.aim = { x: 0, y: up, z: tz, w: W };
+    springArrow(ctx, 0, 0.33, ctx.z - 3);
+    for (const sx of [-1, 1]) for (let j = 0; j < 4; j++) ctx.inst(G.torus(0.36, 0.08), metal(), sx * 1.8, -0.35 - j * 0.22, ctx.z - 3, 1, 1, 1, Math.PI / 2);
+    ctx.plat(0, tz, W, 8, up, th.floor, { thick: up + 1, pat: 'check' });
+    railings(ctx, tz + 4, 8, up);
+    flags(ctx, tz + 4, 8, W / 2 + 1.1, 4);
+    const sl = 12;
+    ctx.plat(0, tz - 4 - sl / 2, W, sl, 0, th.alt, { pat: 'stripe', c2: tint(th.alt, 0.25), slope: { z0: tz - 4, z1: tz - 4 - sl, y0: up, y1: 0 } });
+    ctx.checkpoints.push(ctx.z);
+    return 16 + 4 + sl;
   },
   spinner(ctx, { low = false, n = 1 } = {}) {
     const len = 14 * n;
@@ -611,7 +860,7 @@ const SEG = {
       const ph = k * 1.7;
       const amp = 3.5;
       const c = k % 2 ? th.alt : th.acc;
-      const p = ctx.plat(0, z, 4, 4, 0, c, { cast: true, pat: 'rings', c2: tint(c, 0.35), move: (t) => ({ x: Math.sin(t * 1.1 + ph) * amp, y: 0, z: 0 }) });
+      const p = ctx.plat(0, z, 4, 4, 0, c, { cast: true, pat: 'rings', c2: tint(c, 0.35), move: (t, o) => { o.x = Math.sin(t * 1.1 + ph) * amp; o.y = 0; o.z = 0; return o; } });
       // Propulsor embaixo (anda junto)
       const jet = ctx.mesh(G.cone(), dark(), 0, -1.05, 0, false);
       jet.scale.set(0.9, 0.9, 0.9);
@@ -702,9 +951,13 @@ const SEG = {
   },
   bounce(ctx, { n = 2 } = {}) {
     const len = 6 + n * 8;
+    const endZ = ctx.z - len + 1.5;
     for (let k = 0; k < n; k++) {
       const z = ctx.z - 3 - k * 8;
       const p = ctx.plat(0, z, 5, 3.2, 0.3, '#22c55e', { kind: 'bounce', thick: 0.5, pat: 'rings', c2: '#bbf7d0', rim: '#fde047', noLegs: true });
+      // Cada mola joga o boneco no meio da próxima (a última, no chão do fim): pulo sempre confiável
+      p.aim = k < n - 1 ? { x: 0, y: 0.3, z: z - 8, w: 5 } : { x: 0, y: 0, z: endZ, w: W };
+      springArrow(ctx, 0, 0.33, z);
       const ring = ctx.mesh(G.torus(1.5, 0.16), std('#fde047', { rough: 0.25, em: '#facc15', emI: 0.3 }), 0, 0.5, z, false);
       ring.rotation.x = Math.PI / 2;
       ctx.deco(ring);
@@ -1045,54 +1298,22 @@ const SEG = {
     const len = 6 + n * 8;
     const th = ctx.theme;
     ctx.plat(0, ctx.z - len / 2, W, len, 0, th.floor, { pat: 'stripe', c2: tint(th.floor, 0.2) });
+    for (let k = 0; k < n; k++) fan(ctx, ctx.z - 5 - k * 8, k % 2 ? 1 : -1, k * 2.1, W);
+    ctx.checkpoints.push(ctx.z);
+    return len;
+  },
+  windbridge(ctx, { n = 3 } = {}) {
+    // Ponte estreita entre ventiladores gigantes: vento forte vindo dos dois lados, um de cada vez
+    const len = 6 + n * 8;
+    const bw = 6.5;
+    const th = ctx.theme;
+    ctx.plat(0, ctx.z - 1.5, W, 3, 0, th.floor, { pat: 'plain', noLegs: true });
+    ctx.plat(0, ctx.z - len / 2, bw, len - 6, 0, th.alt, { pat: 'arrows', c2: tint(th.alt, 0.3) });
+    ctx.plat(0, ctx.z - len + 1.5, W, 3, 0, th.floor, { pat: 'plain', noLegs: true });
     for (let k = 0; k < n; k++) {
-      const z = ctx.z - 5 - k * 8;
-      const s = k % 2 ? 1 : -1;
-      const fx = s * (W / 2 + 1.7);
-      // Corpo do ventilador
-      ctx.inst(G.cylLo(), dark(), fx, (WATER_Y + 0.4) / 2, z, 0.4, 0.4 - WATER_Y, 0.4);
-      const ring = ctx.mesh(G.torus(1.55, 0.22), std(th.obs, { rough: 0.3 }), fx, 1.7, z);
-      ring.rotation.y = Math.PI / 2;
-      ctx.deco(ring);
-      const back = ctx.mesh(G.cyl(), dark(), fx + s * 0.5, 1.7, z);
-      back.scale.set(0.7, 0.8, 0.7);
-      back.rotation.z = Math.PI / 2;
-      ctx.deco(back);
-      const blades = new THREE.Group();
-      blades.position.set(fx - s * 0.1, 1.7, z);
-      for (let j = 0; j < 3; j++) {
-        const bl = ctx.mesh(rbox(0.12, 1.2, 0.5, 0.06), std(th.acc, { rough: 0.3 }), 0, 0.6, 0, false);
-        const arm = new THREE.Group();
-        arm.rotation.x = (j / 3) * Math.PI * 2;
-        arm.add(bl);
-        blades.add(arm);
-      }
-      const hub = ctx.mesh(G.sphLo(), metal(), 0, 0, 0, false);
-      hub.scale.setScalar(0.3);
-      blades.add(hub);
-      ctx.deco(blades);
-      // Linhas de vento (só aparecem com o ventilador ligado)
-      const wm = new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0, depthWrite: false });
-      ctx.owned.push(wm);
-      const lines = [];
-      for (let j = 0; j < 5; j++) {
-        const ln = new THREE.Mesh(rbox(1.8, 0.07, 0.07, 0.03), wm);
-        ln.position.set(0, 0.6 + (j % 3) * 0.6, z - 1.6 + j * 0.8);
-        ctx.deco(ln);
-        lines.push(ln);
-      }
-      const wind = { x0: -W / 2 - 1, x1: W / 2 + 1, z0: z + 2.3, z1: z - 2.3, fx: -s * 4.8, k: 0 };
-      ctx.winds.push(wind);
-      const ph = k * 2.1;
-      let ang = 0;
-      ctx.updaters.push((t, dt = 0.016) => {
-        const e = Math.sin(t * 1.1 + ph);
-        wind.k = Math.max(0, Math.min(1, (e + 0.15) * 3));
-        ang += (2 + wind.k * 22) * dt;
-        blades.rotation.x = ang;
-        wm.opacity = wind.k * 0.55;
-        for (let j = 0; j < lines.length; j++) lines[j].position.x = s * (W / 2) - s * ((((t * 12 + j * 2.7) % (W + 2)) + W + 2) % (W + 2));
-      });
+      const z = ctx.z - 6 - k * 8;
+      fan(ctx, z, -1, k * 2.4, bw, 5.4);
+      fan(ctx, z - 2.6, 1, k * 2.4 + Math.PI / 1.1, bw, 5.4);
     }
     ctx.checkpoints.push(ctx.z);
     return len;
@@ -1134,7 +1355,7 @@ const SEG = {
       const ph = k * 1.9;
       const x = k % 2 ? 1.2 : -1.2;
       const c = k % 2 ? th.obs : th.acc;
-      const p = ctx.plat(x, z, 4.2, 4.2, 0, c, { cast: true, pat: 'rings', c2: tint(c, 0.35), move: (t) => ({ x: 0, y: Math.sin(t * 1.2 + ph) * 1.8, z: 0 }) });
+      const p = ctx.plat(x, z, 4.2, 4.2, 0, c, { cast: true, pat: 'rings', c2: tint(c, 0.35), move: (t, o) => { o.x = 0; o.y = Math.sin(t * 1.2 + ph) * 1.8; o.z = 0; return o; } });
       const piston = ctx.mesh(G.cylLo(), metal(), 0, -7.5, 0, false);
       piston.scale.set(0.35, 14, 0.35);
       p.mesh.add(piston);
@@ -1187,6 +1408,9 @@ const SEG = {
     const line = ctx.mesh(cached('fline', () => new THREE.PlaneGeometry(W + 3.2, 1.6).rotateX(-Math.PI / 2)), std('#ffffff', { map: tex, rough: 0.6 }), 0, 0.02, ctx.z - 2, false);
     ctx.deco(line);
     arch(ctx, ctx.z - 2, 'CHEGADA', true);
+    flags(ctx, ctx.z + 1, len, W / 2 + 2.6, 5);
+    emblemSign(ctx, -(W / 2 + 6), ctx.z - len + 3, 5);
+    emblemSign(ctx, W / 2 + 6, ctx.z - len + 3, 5);
     // Pódio de festa no fundo
     ctx.inst(rbox(4, 1.2, 3, 0.4), std(th.alt), 0, 0.6, ctx.z - len + 2.2, 1, 1, 1, 0, 0, 0, null, true);
     ctx.inst(rbox(3, 0.8, 3, 0.35), std(th.obs), -3.6, 0.4, ctx.z - len + 2.2, 1, 1, 1, 0, 0, 0, null, true);
@@ -1196,40 +1420,42 @@ const SEG = {
   },
 };
 
-// ───────────── As 20 fases ─────────────
+// ───────────── As 30 fases ─────────────
+// Cada fase tem duas metades separadas por uma praça (ponto seguro): ~400 a 480 m, de 1 a 2 minutos.
 
+const F6 = ['floor', { len: 6 }];
+const F4 = ['floor', { len: 4 }];
 export const STAGES = [
-  { name: 'Trilha da Largada', segs: [['floor', { len: 8 }], ['spinner'], ['doors'], ['floor', { len: 6 }], ['conveyor'], ['spinner', { low: true }], ['bumpers'], ['doors'], ['floor', { len: 6 }], ['holewalls', { n: 2 }], ['fans', { n: 2 }], ['spinner'], ['finish']] },
-  { name: 'Ponte dos Pêndulos', segs: [['floor', { len: 8 }], ['pendulums'], ['floor', { len: 6 }], ['pendulums', { n: 4 }], ['floor', { len: 6 }], ['spinner'], ['pendulums', { n: 5 }], ['floor', { len: 6 }], ['axes', { n: 3 }], ['finish']] },
-  { name: 'Fábrica de Pistões', segs: [['floor', { len: 8 }], ['pushers'], ['conveyor', { len: 14 }], ['pushers', { n: 5 }], ['floor', { len: 6 }], ['hammers', { n: 3 }], ['pushers', { n: 6 }], ['floor', { len: 6 }], ['holewalls'], ['finish']] },
-  { name: 'Lago das Plataformas', segs: [['floor', { len: 8 }], ['moving'], ['floor', { len: 6 }], ['moving', { rows: 4 }], ['floor', { len: 6 }], ['narrow'], ['moving', { rows: 5 }], ['floor', { len: 6 }], ['lifts', { rows: 3 }], ['floor', { len: 6 }], ['moving', { rows: 4 }], ['floor', { len: 6 }], ['finish']] },
-  { name: 'Pula-Pula', segs: [['floor', { len: 8 }], ['bounce'], ['spinner', { low: true }], ['bounce', { n: 3 }], ['floor', { len: 6 }], ['bumpers'], ['bounce', { n: 3 }], ['floor', { len: 6 }], ['bounce', { n: 4 }], ['finish']] },
-  { name: 'Portas da Sorte', segs: [['floor', { len: 8 }], ['doors'], ['floor', { len: 6 }], ['doors'], ['floor', { len: 6 }], ['doors'], ['pushers', { n: 3 }], ['doors'], ['floor', { len: 6 }], ['doors'], ['floor', { len: 6 }], ['doors'], ['holewalls'], ['doors'], ['pushers', { n: 3 }], ['finish']] },
-  { name: 'Pisos Traiçoeiros', segs: [['floor', { len: 8 }], ['tiles'], ['floor', { len: 6 }], ['tiles', { rows: 6 }], ['floor', { len: 6 }], ['spinner', { low: true }], ['tiles', { rows: 7 }], ['floor', { len: 4 }], ['honey', { rows: 8 }], ['floor', { len: 6 }], ['spinner'], ['tiles', { rows: 5 }], ['floor', { len: 4 }], ['finish']] },
-  { name: 'Montanha Russa', segs: [['floor', { len: 8 }], ['ramp'], ['spinner'], ['ramp', { up: 4 }], ['floor', { len: 6 }], ['ramp', { up: 5 }], ['sweeper'], ['floor', { len: 6 }], ['boulders'], ['finish']] },
-  { name: 'Corredor dos Martelos', segs: [['floor', { len: 8 }], ['hammers'], ['floor', { len: 6 }], ['hammers'], ['spinner'], ['hammers', { n: 5 }], ['floor', { len: 6 }], ['axes'], ['hammers', { n: 3 }], ['finish']] },
-  { name: 'Hélice Gigante', segs: [['floor', { len: 8 }], ['sweeper'], ['floor', { len: 6 }], ['spinner', { n: 2 }], ['sweeper'], ['floor', { len: 6 }], ['spinner', { low: true, n: 2 }], ['sweeper'], ['floor', { len: 6 }], ['discs', { n: 2 }], ['floor', { len: 4 }], ['sweeper'], ['finish']] },
-  { name: 'Parque dos Bumpers', segs: [['floor', { len: 8 }], ['bumpers'], ['conveyor', { len: 12 }], ['bumpers'], ['floor', { len: 6 }], ['pushers', { n: 3 }], ['bumpers'], ['floor', { len: 6 }], ['ice'], ['bumpers'], ['finish']] },
-  { name: 'Equilibrista', segs: [['floor', { len: 8 }], ['narrow'], ['floor', { len: 6 }], ['narrow'], ['pendulums', { n: 2 }], ['narrow'], ['floor', { len: 6 }], ['pendulums'], ['floor', { len: 6 }], ['seesaw'], ['floor', { len: 6 }], ['narrow'], ['finish']] },
-  { name: 'Escadaria', segs: [['floor', { len: 8 }], ['stairs'], ['spinner'], ['stairs'], ['floor', { len: 6 }], ['stairs'], ['spinner', { low: true }], ['floor', { len: 6 }], ['lifts', { rows: 3 }], ['floor', { len: 6 }], ['finish']] },
-  { name: 'Esteira Maluca', segs: [['floor', { len: 8 }], ['conveyor', { len: 22, speed: 4 }], ['pushers'], ['conveyor', { len: 16, speed: 4.2 }], ['bumpers'], ['conveyor', { len: 18, speed: 4.2 }], ['floor', { len: 6 }], ['spinner'], ['logs', { n: 3 }], ['floor', { len: 6 }], ['conveyor', { len: 14 }], ['finish']] },
-  { name: 'Ilhas Flutuantes', segs: [['floor', { len: 8 }], ['moving', { rows: 2 }], ['floor', { len: 4 }], ['narrow'], ['moving', { rows: 3 }], ['floor', { len: 6 }], ['moving', { rows: 4 }], ['floor', { len: 6 }], ['bounce'], ['moving', { rows: 3 }], ['floor', { len: 6 }], ['lifts', { rows: 3 }], ['floor', { len: 6 }], ['finish']] },
-  { name: 'Mistura Total', segs: [['floor', { len: 8 }], ['spinner'], ['tiles', { rows: 4 }], ['floor', { len: 4 }], ['hammers'], ['doors'], ['pushers', { n: 3 }], ['sweeper'], ['floor', { len: 6 }], ['fans', { n: 2 }], ['honey', { rows: 6 }], ['floor', { len: 6 }], ['discs', { n: 2 }], ['floor', { len: 4 }], ['finish']] },
-  { name: 'Salto no Vazio', segs: [['floor', { len: 8 }], ['bounce', { n: 3 }], ['narrow'], ['bounce'], ['moving', { rows: 3 }], ['floor', { len: 6 }], ['bounce', { n: 3 }], ['floor', { len: 6 }], ['logs', { n: 3 }], ['floor', { len: 6 }], ['bounce'], ['finish']] },
-  { name: 'Rodamoinho', segs: [['floor', { len: 8 }], ['sweeper'], ['bumpers'], ['sweeper'], ['floor', { len: 6 }], ['spinner', { n: 2 }], ['sweeper'], ['floor', { len: 6 }], ['discs'], ['floor', { len: 6 }], ['finish']] },
-  { name: 'Desafio do Acampamento', segs: [['floor', { len: 8 }], ['pushers'], ['pendulums'], ['tiles', { rows: 4 }], ['floor', { len: 4 }], ['ramp'], ['hammers'], ['moving', { rows: 3 }], ['floor', { len: 6 }], ['axes', { n: 3 }], ['seesaw', { n: 2 }], ['floor', { len: 6 }], ['finish']] },
-  { name: 'Grande Final DBV', segs: [['floor', { len: 8 }], ['spinner', { n: 2 }], ['moving', { rows: 3 }], ['floor', { len: 4 }], ['hammers'], ['doors'], ['sweeper'], ['pendulums'], ['bumpers'], ['floor', { len: 6 }], ['boulders'], ['holewalls', { n: 2 }], ['finish']] },
-  // Fases novas
-  { name: 'Carrossel Maluco', segs: [['floor', { len: 8 }], ['discs'], ['floor', { len: 6 }], ['spinner'], ['discs'], ['floor', { len: 6 }], ['sweeper'], ['discs', { n: 2 }], ['floor', { len: 6 }], ['bumpers'], ['spinner', { low: true }], ['finish']] },
-  { name: 'Avalanche de Bolas', segs: [['floor', { len: 8 }], ['boulders'], ['floor', { len: 6 }], ['spinner'], ['boulders'], ['floor', { len: 6 }], ['pushers', { n: 3 }], ['boulders'], ['bumpers'], ['finish']] },
-  { name: 'Machados do Ferreiro', segs: [['floor', { len: 8 }], ['axes'], ['floor', { len: 6 }], ['hammers'], ['axes', { n: 5 }], ['floor', { len: 6 }], ['pendulums'], ['axes', { n: 3 }], ['floor', { len: 6 }], ['hammers', { n: 3 }], ['finish']] },
-  { name: 'Gangorra Gigante', segs: [['floor', { len: 8 }], ['seesaw'], ['floor', { len: 6 }], ['narrow'], ['seesaw', { n: 4 }], ['floor', { len: 6 }], ['bounce', { n: 2 }], ['seesaw'], ['floor', { len: 6 }], ['spinner'], ['finish']] },
-  { name: 'Favo de Mel', segs: [['floor', { len: 8 }], ['honey'], ['floor', { len: 6 }], ['spinner', { low: true }], ['honey', { rows: 10 }], ['floor', { len: 6 }], ['hammers', { n: 3 }], ['honey', { rows: 12 }], ['floor', { len: 6 }], ['doors'], ['honey'], ['floor', { len: 6 }], ['tiles', { rows: 5 }], ['floor', { len: 4 }], ['finish']] },
-  { name: 'Pista de Gelo', segs: [['floor', { len: 8 }], ['ice'], ['floor', { len: 6 }], ['sweeper'], ['ice', { len: 30 }], ['pushers', { n: 4 }], ['ice'], ['spinner', { low: true }], ['ice', { len: 20 }], ['floor', { len: 6 }], ['finish']] },
-  { name: 'Vendaval', segs: [['floor', { len: 8 }], ['fans'], ['floor', { len: 6 }], ['narrow'], ['fans', { n: 4 }], ['floor', { len: 6 }], ['moving', { rows: 3 }], ['floor', { len: 6 }], ['fans'], ['bumpers'], ['finish']] },
-  { name: 'Troncos Rolantes', segs: [['floor', { len: 8 }], ['logs'], ['floor', { len: 6 }], ['conveyor', { len: 16 }], ['logs', { n: 5 }], ['floor', { len: 6 }], ['spinner'], ['logs'], ['floor', { len: 6 }], ['hammers', { n: 3 }], ['finish']] },
-  { name: 'Elevadores', segs: [['floor', { len: 8 }], ['lifts'], ['floor', { len: 6 }], ['stairs'], ['lifts', { rows: 5 }], ['floor', { len: 6 }], ['pushers', { n: 3 }], ['lifts'], ['floor', { len: 6 }], ['sweeper'], ['finish']] },
-  { name: 'Paredão Furado', segs: [['floor', { len: 8 }], ['holewalls'], ['floor', { len: 6 }], ['doors'], ['holewalls', { n: 4 }], ['spinner'], ['holewalls'], ['floor', { len: 6 }], ['pushers', { n: 4 }], ['holewalls', { n: 2 }], ['finish']] },
+  { name: 'Trilha da Largada', segs: [['floor', { len: 8 }], ['spinner'], ['doors'], F6, ['conveyor'], ['spinner', { low: true }], ['bumpers'], ['doors'], F6, ['holewalls', { n: 2 }], ['fans', { n: 2 }], ['spinner'], ['plaza'], ['pendulums'], F6, ['tiles', { rows: 4 }], F4, ['hammers', { n: 3 }], ['bounce'], ['sweeper'], F6, ['doors'], ['moving', { rows: 3 }], F6, ['pushers', { n: 3 }], ['finish']] },
+  { name: 'Ponte dos Pêndulos', segs: [['floor', { len: 8 }], ['pendulums'], F6, ['pendulums', { n: 4 }], F6, ['spinner'], ['pendulums', { n: 5 }], F6, ['axes', { n: 3 }], ['plaza'], ['narrow'], ['pendulums', { n: 3 }], F6, ['seesaw', { n: 2 }], F6, ['windbridge', { n: 2 }], ['axes', { n: 4 }], F6, ['bounce'], ['pendulums', { n: 4 }], ['finish']] },
+  { name: 'Fábrica de Pistões', segs: [['floor', { len: 8 }], ['pushers'], ['conveyor', { len: 14 }], ['pushers', { n: 5 }], F6, ['hammers', { n: 3 }], ['pushers', { n: 6 }], F6, ['holewalls'], ['plaza'], ['conveyor', { len: 16, speed: 3.6 }], ['pushers', { n: 4 }], ['lifts', { rows: 3 }], F6, ['spinner', { low: true }], ['hammers', { n: 4 }], F6, ['fans', { n: 2 }], ['pushers', { n: 5 }], ['finish']] },
+  { name: 'Lago das Plataformas', segs: [['floor', { len: 8 }], ['moving'], F6, ['moving', { rows: 4 }], F6, ['narrow'], ['moving', { rows: 5 }], F6, ['lifts', { rows: 3 }], F6, ['moving', { rows: 4 }], ['plaza'], ['logs', { n: 3 }], F6, ['bounce', { n: 3 }], ['moving', { rows: 4 }], F6, ['discs', { n: 2 }], F6, ['lifts', { rows: 4 }], F6, ['moving', { rows: 3 }], F6, ['bounce'], ['finish']] },
+  { name: 'Pula-Pula', segs: [['floor', { len: 8 }], ['bounce'], ['spinner', { low: true }], ['bounce', { n: 3 }], F6, ['bumpers'], ['bounce', { n: 3 }], F6, ['bounce', { n: 4 }], ['plaza'], ['launch'], ['bumpers'], ['bounce', { n: 3 }], F6, ['sweeper'], ['launch', { up: 5 }], ['bounce', { n: 4 }], F6, ['spinner'], ['bounce', { n: 2 }], ['finish']] },
+  { name: 'Portas da Sorte', segs: [['floor', { len: 8 }], ['doors'], F6, ['doors'], F6, ['doors'], ['pushers', { n: 3 }], ['doors'], F6, ['doors'], F6, ['doors'], ['holewalls'], ['doors'], ['pushers', { n: 3 }], ['plaza'], ['doors'], ['spinner'], ['doors'], F6, ['tiles', { rows: 4 }], F4, ['doors'], ['sweeper'], ['doors'], ['holewalls', { n: 2 }], ['doors'], F6, ['doors'], ['pendulums', { n: 2 }], ['finish']] },
+  { name: 'Pisos Traiçoeiros', segs: [['floor', { len: 8 }], ['tiles'], F6, ['tiles', { rows: 6 }], F6, ['spinner', { low: true }], ['tiles', { rows: 7 }], F4, ['honey', { rows: 8 }], F6, ['spinner'], ['tiles', { rows: 5 }], ['plaza'], ['honey', { rows: 10 }], F6, ['fans', { n: 2 }], ['tiles', { rows: 6 }], F6, ['bounce'], ['tiles', { rows: 5 }], F4, ['sweeper'], ['honey', { rows: 8 }], F4, ['spinner'], F6, ['finish']] },
+  { name: 'Montanha Russa', segs: [['floor', { len: 8 }], ['ramp'], ['spinner'], ['ramp', { up: 4 }], F6, ['ramp', { up: 5 }], ['sweeper'], F6, ['boulders'], ['plaza'], ['launch'], ['spinner', { low: true }], ['ramp', { up: 4 }], ['hammers', { n: 3 }], ['boulders'], F6, ['stairs'], ['finish']] },
+  { name: 'Corredor dos Martelos', segs: [['floor', { len: 8 }], ['hammers'], F6, ['hammers'], ['spinner'], ['hammers', { n: 5 }], F6, ['axes'], ['hammers', { n: 3 }], ['plaza'], ['pushers', { n: 4 }], ['hammers', { n: 4 }], F6, ['windbridge', { n: 2 }], ['axes', { n: 3 }], F6, ['hammers', { n: 6 }], ['bounce'], ['finish']] },
+  { name: 'Hélice Gigante', segs: [['floor', { len: 8 }], ['sweeper'], F6, ['spinner', { n: 2 }], ['sweeper'], F6, ['spinner', { low: true, n: 2 }], ['sweeper'], F6, ['discs', { n: 2 }], F4, ['sweeper'], ['plaza'], ['fans', { n: 3 }], ['sweeper'], ['spinner', { n: 2 }], F6, ['discs', { n: 2 }], F4, ['sweeper'], ['pushers', { n: 3 }], ['finish']] },
+  { name: 'Parque dos Bumpers', segs: [['floor', { len: 8 }], ['bumpers'], ['conveyor', { len: 12 }], ['bumpers'], F6, ['pushers', { n: 3 }], ['bumpers'], F6, ['ice'], ['bumpers'], ['plaza'], ['bounce', { n: 2 }], ['bumpers'], ['fans', { n: 2 }], ['bumpers'], ['spinner', { low: true }], ['ice', { len: 20 }], ['bumpers'], F6, ['holewalls', { n: 2 }], ['bumpers'], ['finish']] },
+  { name: 'Equilibrista', segs: [['floor', { len: 8 }], ['narrow'], F6, ['narrow'], ['pendulums', { n: 2 }], ['narrow'], F6, ['pendulums'], F6, ['seesaw'], F6, ['narrow'], ['plaza'], ['windbridge', { n: 3 }], ['narrow'], ['seesaw', { n: 3 }], F6, ['logs', { n: 3 }], ['narrow'], F6, ['pendulums', { n: 3 }], ['finish']] },
+  { name: 'Escadaria', segs: [['floor', { len: 8 }], ['stairs'], ['spinner'], ['stairs'], F6, ['stairs'], ['spinner', { low: true }], F6, ['lifts', { rows: 3 }], F6, ['plaza'], ['launch'], ['stairs'], ['hammers', { n: 3 }], ['stairs'], F6, ['lifts', { rows: 4 }], F6, ['ramp', { up: 5 }], ['sweeper'], ['finish']] },
+  { name: 'Esteira Maluca', segs: [['floor', { len: 8 }], ['conveyor', { len: 22, speed: 4 }], ['pushers'], ['conveyor', { len: 16, speed: 4.2 }], ['bumpers'], ['conveyor', { len: 18, speed: 4.2 }], F6, ['spinner'], ['logs', { n: 3 }], F6, ['conveyor', { len: 14 }], ['plaza'], ['conveyor', { len: 20, speed: 4.4 }], ['hammers', { n: 3 }], ['conveyor', { len: 16, speed: 4 }], ['fans', { n: 2 }], ['logs', { n: 4 }], F6, ['conveyor', { len: 22, speed: 4.6 }], ['pushers', { n: 3 }], ['spinner'], F6, ['finish']] },
+  { name: 'Ilhas Flutuantes', segs: [['floor', { len: 8 }], ['moving', { rows: 2 }], F4, ['narrow'], ['moving', { rows: 3 }], F6, ['moving', { rows: 4 }], F6, ['bounce'], ['moving', { rows: 3 }], F6, ['lifts', { rows: 3 }], ['plaza'], ['launch'], ['moving', { rows: 4 }], F6, ['discs', { n: 2 }], F4, ['lifts', { rows: 4 }], F6, ['bounce', { n: 3 }], ['moving', { rows: 4 }], F6, ['narrow'], ['finish']] },
+  { name: 'Mistura Total', segs: [['floor', { len: 8 }], ['spinner'], ['tiles', { rows: 4 }], F4, ['hammers'], ['doors'], ['pushers', { n: 3 }], ['sweeper'], F6, ['fans', { n: 2 }], ['honey', { rows: 6 }], F6, ['discs', { n: 2 }], ['plaza'], ['axes', { n: 3 }], ['bounce'], ['logs', { n: 3 }], F6, ['holewalls', { n: 2 }], ['seesaw', { n: 2 }], F6, ['lifts', { rows: 3 }], F6, ['boulders'], ['finish']] },
+  { name: 'Salto no Vazio', segs: [['floor', { len: 8 }], ['bounce', { n: 3 }], ['narrow'], ['bounce'], ['moving', { rows: 3 }], F6, ['bounce', { n: 3 }], F6, ['logs', { n: 3 }], F6, ['bounce'], ['plaza'], ['launch', { up: 5 }], ['narrow'], ['bounce', { n: 4 }], ['moving', { rows: 4 }], F6, ['launch'], ['tiles', { rows: 5 }], F4, ['bounce', { n: 3 }], ['finish']] },
+  { name: 'Rodamoinho', segs: [['floor', { len: 8 }], ['sweeper'], ['bumpers'], ['sweeper'], F6, ['spinner', { n: 2 }], ['sweeper'], F6, ['discs'], F6, ['plaza'], ['spinner', { low: true, n: 2 }], ['sweeper'], ['discs', { n: 2 }], F6, ['fans', { n: 3 }], ['sweeper'], ['spinner', { n: 2 }], F6, ['discs'], ['finish']] },
+  { name: 'Desafio do Acampamento', segs: [['floor', { len: 8 }], ['pushers'], ['pendulums'], ['tiles', { rows: 4 }], F4, ['ramp'], ['hammers'], ['moving', { rows: 3 }], F6, ['axes', { n: 3 }], ['seesaw', { n: 2 }], ['plaza'], ['windbridge', { n: 2 }], ['honey', { rows: 8 }], F6, ['bounce', { n: 2 }], ['logs', { n: 3 }], F6, ['doors'], ['sweeper'], ['finish']] },
+  { name: 'Grande Final DBV', segs: [['floor', { len: 8 }], ['spinner', { n: 2 }], ['moving', { rows: 3 }], F4, ['hammers'], ['doors'], ['sweeper'], ['pendulums'], ['bumpers'], F6, ['boulders'], ['holewalls', { n: 2 }], ['plaza'], ['launch'], ['fans', { n: 3 }], ['tiles', { rows: 5 }], F4, ['axes', { n: 3 }], ['discs', { n: 2 }], F6, ['pushers', { n: 4 }], ['finish']] },
+  { name: 'Carrossel Maluco', segs: [['floor', { len: 8 }], ['discs'], F6, ['spinner'], ['discs'], F6, ['sweeper'], ['discs', { n: 2 }], F6, ['bumpers'], ['spinner', { low: true }], ['plaza'], ['discs', { n: 4 }], F6, ['fans', { n: 2 }], ['discs', { n: 3 }], F6, ['sweeper'], ['discs', { n: 2 }], ['bumpers'], ['finish']] },
+  { name: 'Avalanche de Bolas', segs: [['floor', { len: 8 }], ['boulders'], F6, ['spinner'], ['boulders'], F6, ['pushers', { n: 3 }], ['boulders'], ['bumpers'], ['plaza'], ['boulders'], ['hammers', { n: 3 }], ['boulders'], F6, ['bounce'], ['boulders'], ['finish']] },
+  { name: 'Machados do Ferreiro', segs: [['floor', { len: 8 }], ['axes'], F6, ['hammers'], ['axes', { n: 5 }], F6, ['pendulums'], ['axes', { n: 3 }], F6, ['hammers', { n: 3 }], ['plaza'], ['axes', { n: 4 }], ['narrow'], ['hammers', { n: 4 }], F6, ['axes', { n: 5 }], ['pendulums', { n: 3 }], F6, ['axes', { n: 3 }], ['finish']] },
+  { name: 'Gangorra Gigante', segs: [['floor', { len: 8 }], ['seesaw'], F6, ['narrow'], ['seesaw', { n: 4 }], F6, ['bounce', { n: 2 }], ['seesaw'], F6, ['spinner'], ['plaza'], ['seesaw', { n: 4 }], F6, ['windbridge', { n: 2 }], ['seesaw', { n: 3 }], F6, ['logs', { n: 3 }], ['seesaw', { n: 3 }], ['bounce'], ['finish']] },
+  { name: 'Favo de Mel', segs: [['floor', { len: 8 }], ['honey'], F6, ['spinner', { low: true }], ['honey', { rows: 10 }], F6, ['hammers', { n: 3 }], ['honey', { rows: 12 }], F6, ['doors'], ['honey'], F6, ['tiles', { rows: 5 }], F4, ['plaza'], ['honey', { rows: 12 }], F6, ['fans', { n: 2 }], ['honey', { rows: 10 }], F6, ['sweeper'], ['honey', { rows: 14 }], F6, ['bounce', { n: 2 }], ['honey', { rows: 8 }], F4, ['spinner', { low: true }], F6, ['finish']] },
+  { name: 'Pista de Gelo', segs: [['floor', { len: 8 }], ['ice'], F6, ['sweeper'], ['ice', { len: 30 }], ['pushers', { n: 4 }], ['ice'], ['spinner', { low: true }], ['ice', { len: 20 }], F6, ['plaza'], ['ice', { len: 28 }], ['fans', { n: 2 }], ['ice', { len: 24 }], ['hammers', { n: 3 }], ['ice', { len: 26 }], F6, ['bumpers'], F6, ['finish']] },
+  { name: 'Vendaval', segs: [['floor', { len: 8 }], ['fans'], F6, ['narrow'], ['fans', { n: 4 }], F6, ['moving', { rows: 3 }], F6, ['fans'], ['bumpers'], ['plaza'], ['windbridge', { n: 3 }], F6, ['fans', { n: 4 }], ['bounce'], ['windbridge', { n: 2 }], F6, ['fans', { n: 3 }], ['narrow'], F6, ['finish']] },
+  { name: 'Troncos Rolantes', segs: [['floor', { len: 8 }], ['logs'], F6, ['conveyor', { len: 16 }], ['logs', { n: 5 }], F6, ['spinner'], ['logs'], F6, ['hammers', { n: 3 }], ['plaza'], ['logs', { n: 5 }], F6, ['fans', { n: 2 }], ['logs', { n: 4 }], ['conveyor', { len: 14, speed: 4 }], ['logs', { n: 6 }], F6, ['spinner'], F6, ['finish']] },
+  { name: 'Elevadores', segs: [['floor', { len: 8 }], ['lifts'], F6, ['stairs'], ['lifts', { rows: 5 }], F6, ['pushers', { n: 3 }], ['lifts'], F6, ['sweeper'], ['plaza'], ['launch'], ['lifts', { rows: 5 }], F6, ['moving', { rows: 3 }], F6, ['lifts', { rows: 4 }], ['stairs'], ['lifts', { rows: 4 }], F6, ['hammers', { n: 3 }], ['finish']] },
+  { name: 'Paredão Furado', segs: [['floor', { len: 8 }], ['holewalls'], F6, ['doors'], ['holewalls', { n: 4 }], ['spinner'], ['holewalls'], F6, ['pushers', { n: 4 }], ['holewalls', { n: 2 }], ['plaza'], ['holewalls', { n: 4 }], ['fans', { n: 2 }], ['holewalls', { n: 3 }], F6, ['doors'], ['holewalls', { n: 4 }], F6, ['sweeper'], F6, ['finish']] },
 ];
 
 // ───────────── Cenário em volta da pista ─────────────
@@ -1273,7 +1499,7 @@ function scenery(ctx, index) {
   water.position.set(0, WATER_Y, -L / 2);
   water.receiveShadow = true;
   ctx.group.add(water);
-  ctx.updaters.push((t) => { wt.offset.set(t * 0.012, t * 0.02); });
+  ctx.updaters.push((t) => { wt.offset.set(t * 0.012, t * 0.02); flagTime.value = t; });
   // Ilhas flutuantes com árvores dos dois lados (longe da pista)
   const greens = [th.grass, tint(th.grass, -0.15), tint(th.grass, 0.15)];
   const crowns = ['#4ade80', '#22c55e', tint(th.grass, -0.1), '#86efac', th.acc];
@@ -1337,7 +1563,7 @@ export function buildStage(scene, index, seed) {
   ctx.flush();
   scene.background = skyTex(theme);
   // Névoa leve: dá profundidade (o fim da pista some suave no horizonte)
-  scene.fog = new THREE.Fog(theme.skyBot, 75, 330);
+  scene.fog = new THREE.Fog(theme.skyBot, 60, 230);
   const owned = ctx.owned;
   return { ...ctx, name: st.name, theme, dispose: () => owned.forEach((o) => o.dispose()) };
 }

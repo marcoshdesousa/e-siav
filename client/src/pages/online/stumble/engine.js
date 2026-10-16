@@ -6,60 +6,32 @@ import { animate, makeStumbler } from './character.js';
 import { buildStage } from './stages.js';
 import { outfitById } from './outfits.js';
 import { studioEnv } from '../avatar/build.js';
+import { DIVE_V, JUMP_BUF, STEP, hitTest, newBody, stepBody, updateStage } from './physics.js';
 
-const SPEED = 7.4; // velocidade correndo (m/s)
-const GRAV = 34;
-const JUMP = 12; // pulo de ~2,1 m
-const BOUNCE = 17.5; // cama elástica
-const R = 0.45; // raio do boneco
-const H = 1.8; // altura do boneco
-const STEP = 1 / 120; // passo da física
-const ACC_GROUND = 48; // aceleração no chão (m/s²)
-const ACC_STOP = 60; // freada no chão
-const ACC_AIR = 15; // controle no ar
-const ACC_ICE = 6; // gelo: escorrega
-const COYOTE = 0.12; // ainda dá para pular logo depois de sair da borda
-const JUMP_BUF = 0.15; // apertou pular um pouquinho antes de cair no chão: pula assim que encostar
-const DIVE_V = 11.5;
 const REMOTE_DELAY = 110; // ms de atraso para interpolar os outros jogadores sem tremer
-
-function nameSprite(text) {
-  const c = document.createElement('canvas');
-  c.width = 256; c.height = 64;
-  const g = c.getContext('2d');
-  g.font = 'bold 34px Arial';
-  g.textAlign = 'center';
-  g.lineWidth = 7;
-  g.strokeStyle = 'rgba(0,0,0,.7)';
-  g.strokeText(text, 128, 44);
-  g.fillStyle = '#fff';
-  g.fillText(text, 128, 44);
-  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), depthTest: false }));
-  s.scale.set(2.4, 0.6, 1);
-  s.position.y = 2.8;
-  return s;
-}
+const LABEL_Y = 2.75; // altura do nome acima do pé do boneco
 
 /** Diferença entre ângulos pelo caminho mais curto. */
 const angDiff = (a, b) => ((((b - a + Math.PI) % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2)) - Math.PI;
 
 export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, sendPos, onSound }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: window.devicePixelRatio < 2, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+  // Celular deitado: no máximo 1,5 pixel por ponto (a tela já é larga; acima disso só gasta bateria)
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.PCFShadowMap; // sombra simples (a "soft" custa caro no celular)
+  renderer.shadowMap.autoUpdate = false; // a sombra é refeita a cada 2 quadros
   const scene = new THREE.Scene();
   // Reflexo de estúdio suave: deixa o plástico das peças e dos bonecos brilhante
   scene.environment = studioEnv(renderer);
   scene.environmentIntensity = 0.5;
-  const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 420);
+  const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 240); // além da névoa não desenha nada
   // Luz do céu (pega a cor do céu e da água de cada fase) + sol com a única sombra da cena
   const hemi = new THREE.HemisphereLight('#eaf6ff', '#c2a98a', 0.95);
   scene.add(hemi);
   const sun = new THREE.DirectionalLight('#fff1dc', 2);
   sun.castShadow = true;
   sun.shadow.mapSize.set(1024, 1024);
-  sun.shadow.radius = 3;
   sun.shadow.bias = -0.0005;
   sun.shadow.normalBias = 0.03;
   Object.assign(sun.shadow.camera, { left: -18, right: 18, top: 20, bottom: -20, near: 1, far: 80 });
@@ -230,11 +202,69 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
   let stage = null;
   let me = makeStumbler(outfitById(outfit));
   scene.add(me);
-  const st = {
-    x: 0, y: 0, z: 0, vx: 0, vy: 0, vz: 0, grounded: false, stun: 0, dive: 0, recover: 0, inv: 0, coyote: 0, jumpBuf: 0,
-    finished: false, cp: 0, yaw: 0, mode: 'idle', mx: 0, mz: 0, lastSend: 0, lastProg: 0, respawn: 0, flash: 0,
-    animT: 0, introK: 0, ground: null,
+  const st = Object.assign(newBody(), {
+    finished: false, cp: 0, mode: 'idle', lastSend: 0, lastProg: 0, respawn: 0, flash: 0, animT: 0, introK: 0, inWind: 0,
+  });
+  // Eventos da física: som e partículas
+  const ev = {
+    sound: (n) => onSound?.(n),
+    burst(kind, x, y, z) {
+      if (kind === 'spark') burst(x, y, z, 6, SPARK, 4, 0.4);
+      else if (kind === 'bounce') burst(x, y, z, 10, SPARK, 5.5, 0.35);
+      else if (kind === 'land') burst(x, y, z, 7, DUST, 2.6, 0.55);
+      else if (kind === 'door') burst(x, y, z, 8, SPARK, 4, 0.5);
+      else burst(x, y, z, 5, DUST, 2, 0.4);
+    },
   };
+
+  // ───────────── Nomes dos jogadores: pílulas pequenas em HTML (nítidas e do mesmo tamanho na tela) ─────────────
+  const labelLayer = document.createElement('div');
+  labelLayer.className = 'stb-labels';
+  canvas.parentElement?.insertBefore(labelLayer, canvas.nextSibling);
+  const _lv = new THREE.Vector3();
+  function makeLabel(name) {
+    const el = document.createElement('span');
+    el.className = 'stb-name';
+    el.textContent = name;
+    el.style.opacity = '0';
+    labelLayer.appendChild(el);
+    return { el, x: -1, y: -1, s: -1, o: -1 };
+  }
+  /** Posiciona os nomes: encolhem com a distância (sem nunca crescer perto da câmera) e somem no meio da tela. */
+  function placeLabels() {
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    for (const r of remotes.values()) {
+      const L = r.label;
+      if (!L) continue;
+      let o = 0;
+      let x = L.x;
+      let y = L.y;
+      let sc = L.s;
+      if (r.mesh.visible && st.mode !== 'intro') {
+        const p = r.mesh.position;
+        _lv.set(p.x, p.y + LABEL_Y, p.z);
+        const d = _lv.distanceTo(camera.position);
+        _lv.project(camera);
+        if (_lv.z < 1 && Math.abs(_lv.x) < 1.05 && Math.abs(_lv.y) < 1.05) {
+          x = Math.round((_lv.x * 0.5 + 0.5) * w);
+          y = Math.round((0.5 - _lv.y * 0.5) * h);
+          sc = Math.round(Math.max(0.85, Math.min(1, 14 / d)) * 100) / 100; // 11 a 13 px na tela
+          // Some perto demais da câmera, vai sumindo longe e fica bem fraquinho no meio da tela
+          o = Math.min(1, Math.max(0, (d - 2.2) / 2), Math.max(0, (50 - d) / 20));
+          const cx = Math.abs(x - w / 2) / w;
+          const cy = Math.abs(y - h * 0.5) / h;
+          if (cx < 0.14 && cy < 0.2) o *= 0.3;
+          o = Math.round(o * 20) / 20;
+        }
+      }
+      if (o !== L.o) { L.o = o; L.el.style.opacity = String(o); }
+      if (o > 0 && (x !== L.x || y !== L.y || sc !== L.s)) {
+        L.x = x; L.y = y; L.s = sc;
+        L.el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -100%) scale(${sc})`;
+      }
+    }
+  }
   const remotes = new Map();
 
   function clearStage() {
@@ -242,23 +272,6 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
     scene.remove(stage.group);
     stage.dispose?.();
     stage = null;
-  }
-
-  // ───────────── Colisão ─────────────
-  /** Altura do chão da plataforma no ponto (x, z), ou null se o ponto está fora dela. */
-  function platTop(p, x, z) {
-    if (p.gone) return null;
-    const px = p.x + p.ox;
-    const pz = p.z + p.oz;
-    if (p.r) return Math.hypot(x - px, z - pz) > p.r + 0.1 ? null : p.top + p.oy;
-    if (Math.abs(x - px) > p.w / 2 + 0.15 || Math.abs(z - pz) > p.d / 2 + 0.15) return null;
-    if (p.slope) {
-      const { z0, z1, y0, y1 } = p.slope;
-      const k = Math.max(0, Math.min(1, (z0 - z) / (z0 - z1)));
-      return y0 + (y1 - y0) * k;
-    }
-    if (p.tiltA) return p.top + p.oy + Math.tan(p.tiltA) * (x - px);
-    return p.top + p.oy;
   }
 
   /** Caminho dos robôs: segue o chão da pista (desvia das portas de verdade e pula os buracos). */
@@ -284,7 +297,8 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
           const doors = stage.walls.filter((w) => w.fake && Math.abs(z - w.z) < 0.8);
           if (doors.length) px = doors.reduce((a, b) => (Math.abs(b.x - px) < Math.abs(a.x - px) ? b : a)).x;
         }
-        path.push({ x: px, z, y: platTop({ ...p, ox: 0, oy: 0, oz: 0, tiltA: 0, gone: false }, px, z) ?? p.top, p: p.move ? p : null });
+        const y = p.slope ? p.slope.y0 + (p.slope.y1 - p.slope.y0) * Math.max(0, Math.min(1, (p.slope.z0 - z) / (p.slope.z0 - p.slope.z1))) : p.top;
+        path.push({ x: px, z, y, p: p.move ? p : null, bounce: p.kind === 'bounce' });
       } else path.push({ x: null, z, y: null });
     }
     // Buracos: liga as pontas com um pulo
@@ -294,10 +308,12 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
       while (j < path.length && path[j].y == null) j++;
       const a = path[i - 1] || path[j];
       const b = path[j] || a;
+      // Saindo de uma mola o pulo é bem mais alto (igual ao do jogador)
+      const arc = a.bounce ? 4.6 : 1.8;
       for (let k = i; k < j; k++) {
         const f = (k - i + 1) / (j - i + 1);
         path[k].x = a.x + (b.x - a.x) * f;
-        path[k].y = a.y + (b.y - a.y) * f + Math.sin(f * Math.PI) * 1.8;
+        path[k].y = a.y + (b.y - a.y) * f + Math.sin(f * Math.PI) * arc;
         path[k].air = true;
       }
       i = j;
@@ -357,25 +373,12 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
         const x = Math.max(p.x - p.w / 2 + 0.6, Math.min(p.x + p.w / 2 - 0.6, 0));
         // Longe do alcance das barras giratórias, pêndulos, martelos e bolas
         const risky = stage.hitters.some((h) => (h.type === 'bar' ? Math.hypot(x - h.cx, z - h.cz) < h.L + 0.9 : h.type === 'roll' ? z <= h.z0 + 1 && z >= h.z1 - 1 : Math.abs(z - h.z) < 2.2));
-        if (risky) continue;
+        const windy = stage.winds.some((w) => z <= w.z0 + 0.5 && z >= w.z1 - 0.5);
+        if (risky || windy) continue;
         return { x, y: p.top + 2.2, z };
       }
     }
     return { x: 0, y: 2.5, z: cp + 1.5 };
-  }
-
-  function knock(dx, dz, power, up = 5) {
-    const l = Math.hypot(dx, dz) || 1;
-    st.vx = (dx / l) * power;
-    st.vz = (dz / l) * power;
-    st.vy = Math.max(st.vy, up);
-    st.stun = 0.75; // cambaleia um pouco e logo volta ao controle
-    st.inv = 1.0; // e fica um instante sem levar outra pancada
-    st.dive = st.recover = 0;
-    st.grounded = false;
-    st.coyote = 0;
-    onSound?.('stbBump');
-    burst(st.x, st.y + 1, st.z, 6, SPARK, 4, 0.4);
   }
 
   /** Direção da câmera no chão: o joystick e as setas andam em relação a ela. */
@@ -388,183 +391,16 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
     return fwd;
   }
 
-  /** Um passo da física (h segundos). frac = parte do movimento das plataformas que cabe neste passo. */
-  function physicsStep(h, t, frac, fw) {
-    const g = st.ground;
-    // Controle: aceleração em linha reta até a velocidade desejada (resposta rápida, como no Stumble Guys)
-    const ctl = st.stun <= 0 && st.dive <= 0 && st.recover <= 0;
-    const ix = st.mx;
-    const iz = st.mz;
-    const want = Math.hypot(ix, iz) > 0.15;
-    // Joystick relativo à câmera: para cima (iz < 0) = para onde a câmera olha; direita = lado direito dela
-    const wx = -fw.z * ix - fw.x * iz;
-    const wz = fw.x * ix - fw.z * iz;
-    if (ctl) {
-      const tx = want ? wx * SPEED : 0;
-      const tz = want ? wz * SPEED : 0;
-      const ice = st.grounded && g?.kind === 'ice';
-      const acc = !st.grounded ? ACC_AIR : ice ? ACC_ICE : want ? ACC_GROUND : ACC_STOP;
-      const dvx = tx - st.vx;
-      const dvz = tz - st.vz;
-      const dl = Math.hypot(dvx, dvz);
-      const m = acc * h;
-      if (dl <= m) { st.vx = tx; st.vz = tz; } else { st.vx += (dvx / dl) * m; st.vz += (dvz / dl) * m; }
-    } else if (st.grounded) {
-      // Tonto ou deslizando do mergulho: atrito no chão
-      const f = 1 - Math.min(1, h * (st.recover > 0 ? 5 : 3.2));
-      st.vx *= f;
-      st.vz *= f;
-    }
-    st.stun = Math.max(0, st.stun - h);
-    st.inv = Math.max(0, st.inv - h);
-    st.recover = Math.max(0, st.recover - h);
-    st.coyote = st.grounded ? COYOTE : Math.max(0, st.coyote - h);
-    st.jumpBuf = Math.max(0, st.jumpBuf - h);
-    // O mergulho dura até encostar no chão
-    if (st.dive > 0) st.dive = Math.max(0.001, st.dive - h);
-    // Pulo (com tolerância de borda e de aperto antecipado)
-    if (st.jumpBuf > 0 && st.coyote > 0 && ctl) {
-      st.vy = JUMP;
-      st.grounded = false;
-      st.coyote = 0;
-      st.jumpBuf = 0;
-      onSound?.('stbJump');
-      burst(st.x, st.y + 0.1, st.z, 5, DUST, 2, 0.4);
-    }
-    // Vento dos ventiladores
-    if (stage.winds) {
-      for (const w of stage.winds) {
-        if (!w.k || st.x < w.x0 || st.x > w.x1 || st.z > w.z0 || st.z < w.z1 || st.y > 5) continue;
-        st.vx += w.fx * w.k * h;
-      }
-    }
-    st.vy -= GRAV * h;
-    if (st.vy < -40) st.vy = -40;
-    // Plataforma embaixo leva o jogador junto (móveis, giratórias, esteiras, troncos e gangorras)
-    if (st.grounded && g && !g.gone) {
-      st.x += g.dx * frac;
-      st.z += g.dz * frac;
-      if (g.dA) {
-        const a = g.dA * frac;
-        const cx = g.x + g.ox;
-        const cz = g.z + g.oz;
-        const ox = st.x - cx;
-        const oz = st.z - cz;
-        const c = Math.cos(a);
-        const s = Math.sin(a);
-        st.x = cx + ox * c + oz * s;
-        st.z = cz - ox * s + oz * c;
-        st.yaw += a;
-      }
-      if (g.conv) st.z += g.conv * h;
-      if (g.convX) st.x += g.convX * h;
-      if (g.tiltA) st.vx -= Math.sin(g.tiltA) * GRAV * 0.45 * h; // escorrega na gangorra
-    }
-    st.x += st.vx * h;
-    st.y += st.vy * h;
-    st.z += st.vz * h;
-    // Chão
-    const wasGrounded = st.grounded;
-    st.grounded = false;
-    let ground = null;
-    let gtop = -Infinity;
-    for (const p of stage.plats) {
-      const top = platTop(p, st.x, st.z);
-      if (top == null || top > st.y + 0.45) continue;
-      if (top > gtop) { gtop = top; ground = p; }
-    }
-    if (ground && st.y <= gtop + 0.02 && st.vy <= 0.5 && gtop - st.y < 0.9) {
-      const impact = st.vy;
-      st.y = gtop;
-      if (ground.kind === 'bounce') {
-        st.vy = BOUNCE;
-        st.dive = 0;
-        onSound?.('stbBounce');
-        burst(st.x, st.y + 0.2, st.z, 10, SPARK, 5.5, 0.35);
-        ground.squash = 1;
-      } else {
-        if (!wasGrounded && impact < -9) { burst(st.x, st.y + 0.1, st.z, 7, DUST, 2.6, 0.55); onSound?.('stbLand'); }
-        if (st.dive > 0) { st.dive = 0; st.recover = 0.32; } // caiu de barriga: escorrega e levanta
-        st.vy = 0;
-        st.grounded = true;
-      }
-      if ((ground.kind === 'fake' || ground.kind === 'crumble') && ground.fallAt == null) ground.fallAt = t;
-    }
-    st.ground = st.grounded ? ground : null;
-    // Paredes (empurra para fora pelo lado mais perto)
-    for (const w of stage.walls) {
-      if (w.gone) continue;
-      if (st.y > w.y0 + w.h || st.y + H < w.y0) continue;
-      const wx = w.x + (w.ox || 0);
-      const wz = w.z + (w.oz || 0);
-      const cx = Math.max(wx - w.w / 2, Math.min(st.x, wx + w.w / 2));
-      const cz = Math.max(wz - w.d / 2, Math.min(st.z, wz + w.d / 2));
-      let dx = st.x - cx;
-      let dz = st.z - cz;
-      let d = Math.hypot(dx, dz);
-      if (d >= R) continue;
-      if (w.fake) { w.gone = true; w.mesh.visible = false; onSound?.('stbDoor'); burst(wx, 1.3, wz, 8, SPARK, 4, 0.5); continue; }
-      let px = cx;
-      let pz = cz;
-      if (d < 1e-4) {
-        // Centro dentro da parede: sai pelo lado mais perto
-        const ex = w.w / 2 - Math.abs(st.x - wx);
-        const ez = w.d / 2 - Math.abs(st.z - wz);
-        if (ex < ez) { dx = Math.sign(st.x - wx) || 1; dz = 0; px = wx + dx * (w.w / 2); pz = st.z; } else { dz = Math.sign(st.z - wz) || 1; dx = 0; pz = wz + dz * (w.d / 2); px = st.x; }
-        d = 1;
-      }
-      const nx = dx / d;
-      const nz = dz / d;
-      st.x = px + nx * R;
-      st.z = pz + nz * R;
-      if (w.knock && st.inv <= 0) knock(nx + (w.vx || 0) * 0.15, nz, w.knock + Math.abs(w.vx || 0) * 0.5, 4);
-      else {
-        const vn = st.vx * nx + st.vz * nz;
-        if (vn < 0) { st.vx -= vn * nx; st.vz -= vn * nz; }
-      }
-    }
-    // Obstáculos que derrubam
-    if (st.stun <= 0 && st.inv <= 0) {
-      for (const hh of stage.hitters) {
-        if (hh.type === 'bar') {
-          const ux = Math.cos(hh.ang);
-          const uz = -Math.sin(hh.ang);
-          const rx2 = st.x - hh.cx;
-          const rz2 = st.z - hh.cz;
-          const along = Math.max(-hh.L, Math.min(hh.L, rx2 * ux + rz2 * uz));
-          const px = hh.cx + ux * along;
-          const pz = hh.cz + uz * along;
-          const d = Math.hypot(st.x - px, st.z - pz);
-          if (d < 0.25 + R && st.y < hh.y + 0.25 && st.y + H > hh.y - 0.25) {
-            // Empurra no sentido em que a barra gira
-            const tx = -Math.sin(hh.ang) * along * hh.w;
-            const tz = -Math.cos(hh.ang) * along * hh.w;
-            knock(tx || (st.x - px), tz || (st.z - pz), 9 + Math.abs(along * hh.w) * 0.4, 6);
-            break;
-          }
-        } else if (hh.type === 'ball' || hh.type === 'roll') {
-          if (hh.off) continue;
-          const dx = st.x - hh.x;
-          const dz = st.z - hh.z;
-          const dy = st.y + 0.9 - hh.y;
-          if (Math.hypot(dx, dy, dz) < hh.r + 0.55) { knock(dx + (hh.vx || 0) * 0.1, dz + (hh.vz || 0) * 0.12, 11 + Math.hypot(hh.vx || 0, hh.vz || 0) * 0.4, 6); break; }
-        } else if (hh.type === 'bumper') {
-          const dx = st.x - hh.x;
-          const dz = st.z - hh.z;
-          if (st.y < 1.3 + (hh.y || 0) && st.y > (hh.y || 0) - 1 && Math.hypot(dx, dz) < hh.r + R) { knock(dx, dz, 12, 4); hh.hitAt = t; break; }
-        }
-      }
-    }
-  }
-
   function physics(dt, t) {
     const n = Math.max(1, Math.ceil(dt / STEP - 1e-6));
     const h = dt / n;
     const fw = camAxes();
     for (let i = 0; i < n; i++) {
       if (st.respawn) break;
-      physicsStep(h, t, 1 / n, fw);
+      stepBody(st, stage, h, t, 1 / n, fw, ev);
     }
+    // Entrou no vento: um "fuuu" (no máximo a cada 1,5 s)
+    if (st.wind > 0.5) { if (!st.inWind) onSound?.('stbWind'); st.inWind = 1.5; } else st.inWind = Math.max(0, st.inWind - dt);
     // Pontos seguros
     for (const c of stage.checkpoints) {
       if (!(st.z < c - 0.5 && c < st.cp)) continue;
@@ -583,7 +419,7 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
         st.vx = st.vy = st.vz = 0;
         st.stun = 0.2;
         st.inv = 1.2;
-        st.dive = st.recover = 0;
+        st.dive = st.recover = st.launch = st.wvx = st.wvz = 0;
         st.yaw = 0;
         st.flash = 1;
         camPos.set(st.x * 0.6, st.y + 5.6, st.z + 8.4);
@@ -602,47 +438,51 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
     if (sp > 0.6 && st.stun <= 0 && st.recover <= 0) st.yaw += angDiff(st.yaw, Math.atan2(-st.vx, -st.vz)) * Math.min(1, dt * 14);
   }
 
+  /** Robôs: o vento empurra de lado e os obstáculos dão um tranco (eles se recuperam sozinhos). */
+  function botForces(r, q, t, dt) {
+    let wx = 0;
+    for (const w of stage.winds) if (w.k && q.z <= w.z0 && q.z >= w.z1 && q.y < w.top) wx += w.fx * w.k;
+    r.kvx = (r.kvx || 0) * Math.max(0, 1 - dt * 4);
+    r.kvz = (r.kvz || 0) * Math.max(0, 1 - dt * 4);
+    if (!r.kt) {
+      for (const hh of stage.hitters) {
+        if (hitTest(q.x + (r.kx || 0), q.y, q.z + (r.kz || 0), hh) == null) continue;
+        const dx = q.x + (r.kx || 0) - (hh.type === 'bar' ? hh.cx : hh.x);
+        r.kvx = Math.sign(dx || 1) * 5 + (hh.vx || 0) * 0.3;
+        r.kvz = 2.5;
+        r.kt = 0.7;
+        if (hh.type === 'bumper') hh.hitAt = t;
+        break;
+      }
+    }
+    r.kx = (r.kx || 0) + (wx * 0.45 + r.kvx) * dt;
+    r.kz = (r.kz || 0) + r.kvz * dt;
+    // Volta para o caminho aos poucos (e nunca sai da pista)
+    r.kx *= Math.max(0, 1 - dt * (wx ? 0.6 : 1.6));
+    r.kz *= Math.max(0, 1 - dt * 1.6);
+    r.kx = Math.max(-2.4, Math.min(2.4, r.kx));
+    r.kz = Math.max(-1.5, Math.min(2.5, r.kz));
+  }
+
   // ───────────── Laço ─────────────
   let raf = 0;
   let last = 0;
+  let frameN = 0;
+  function render() {
+    // Sombra a cada 2 quadros: quase não se nota e economiza muito no celular
+    renderer.shadowMap.needsUpdate = (frameN++ & 1) === 0;
+    renderer.render(scene, camera);
+  }
   function frame(now) {
     raf = window.requestAnimationFrame(frame);
     const dt = Math.min(0.06, (now - (last || now)) / 1000);
     last = now;
     st.animT += dt;
-    if (st.hidden) return; // roleta cobrindo a tela: não desenha o 3D (economiza bateria no celular)
-    if (!stage) { renderer.render(scene, camera); return; }
+    if (st.hidden || document.hidden) return; // roleta cobrindo a tela ou aba escondida: não desenha nada
+    if (!stage) { render(); return; }
     const t = getTime();
     // Obstáculos e plataformas móveis (mesmo tempo para todos)
-    for (const u of stage.updaters) u(t, dt);
-    for (const p of stage.plats) {
-      if (p.move) {
-        const o = p.move(t);
-        p.dx = o.x - p.ox; p.dy = o.y - p.oy; p.dz = o.z - p.oz;
-        p.ox = o.x; p.oy = o.y; p.oz = o.z;
-        if (Math.abs(p.dx) > 2 || Math.abs(p.dz) > 2) p.dx = p.dz = 0; // tempo pulou (nova fase): não arrasta
-        p.mesh.position.set(p.x + p.ox, p.baseY + p.oy, p.z + p.oz);
-      } else { p.dx = 0; p.dy = 0; p.dz = 0; }
-      if (p.spin) {
-        const a = t * p.spin;
-        p.dA = p.ang == null || Math.abs(a - p.ang) > 1 ? 0 : a - p.ang;
-        p.ang = a;
-        p.mesh.rotation.y = a;
-      }
-      if (p.tilt) { p.tiltA = p.tilt(t); p.mesh.rotation.z = p.tiltA; }
-      if (p.squash) { p.squash = Math.max(0, p.squash - dt * 4); p.mesh.scale.set(1 + p.squash * 0.08, 1 - p.squash * 0.3, 1 + p.squash * 0.08); }
-      if (p.fallAt != null) {
-        if (p.fallAt > t + 1) p.fallAt = null; // nova corrida
-        else if (p.kind === 'crumble') {
-          // Favo: treme, cai e volta depois de um tempo
-          const e = t - p.fallAt;
-          if (!p.gone && e > 0.6) p.gone = true;
-          else if (!p.gone) p.mesh.position.x = p.x + Math.sin(e * 70) * 0.06;
-          if (p.gone && e > 4) { p.gone = false; p.fallAt = null; p.mesh.position.set(p.x, p.baseY, p.z); }
-        } else if (!p.gone && t - p.fallAt > 0.25) p.gone = true;
-      }
-      if (p.gone && p.mesh.position.y > -20) p.mesh.position.y -= dt * 12;
-    }
+    updateStage(stage, t, dt);
     stepPuffs(dt);
     const racing = st.mode === 'race' && t >= 0;
     if (racing) physics(dt, t);
@@ -682,8 +522,11 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
       const dxp = q.x - tg.x;
       const dzp = q.z - tg.z;
       if (Math.hypot(dxp, dzp) > 0.02) tg.r = Math.atan2(-dxp, -dzp);
-      tg.x = q.x; tg.y = q.y; tg.z = done ? q.z - 1.5 : q.z;
-      tg.a = q.air && mov ? 'air' : mov ? 'run' : done ? 'wave' : 'idle';
+      // O vento e as pancadas também mexem nos robôs (desviam um pouco e voltam para o caminho)
+      if (mov) botForces(r, q, t, dt);
+      r.kt = Math.max(0, (r.kt || 0) - dt);
+      tg.x = q.x + (r.kx || 0); tg.y = q.y; tg.z = (done ? q.z - 1.5 : q.z) + (r.kz || 0);
+      tg.a = r.kt > 0 && mov ? 'stun' : q.air && mov ? 'air' : mov ? 'run' : done ? 'wave' : 'idle';
     }
     // Os outros: robôs seguem o alvo; pessoas são interpoladas entre as posições recebidas
     const rt = window.performance.now() - REMOTE_DELAY;
@@ -766,7 +609,8 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
     flash.visible = st.flash > 0;
     sun.position.set(camera.position.x - 8, 22, camera.position.z - 4);
     sun.target.position.set(camera.position.x, 0, camera.position.z - 14);
-    renderer.render(scene, camera);
+    render();
+    placeLabels();
   }
 
   function resize() {
@@ -779,6 +623,13 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
   resize();
   const ro = new window.ResizeObserver(resize);
   ro.observe(canvas);
+  // Aba escondida: para o laço de vez (e volta sem dar um "pulo" no tempo)
+  const onVis = () => {
+    window.cancelAnimationFrame(raf);
+    last = 0;
+    if (!document.hidden) raf = window.requestAnimationFrame(frame);
+  };
+  document.addEventListener('visibilitychange', onVis);
   raf = window.requestAnimationFrame(frame);
 
   return {
@@ -796,18 +647,18 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
     setPlayers(list, meId) {
       // Cria/remove os bonecos dos outros jogadores
       const ids = new Set(list.filter((p) => p.id !== meId).map((p) => p.id));
-      for (const [id, r] of remotes) if (!ids.has(id)) { scene.remove(r.mesh); remotes.delete(id); }
+      for (const [id, r] of remotes) if (!ids.has(id)) { scene.remove(r.mesh); r.label?.el.remove(); remotes.delete(id); }
       for (const p of list) {
         if (p.id === meId) continue;
         let r = remotes.get(p.id);
         if (!r || r.outfit !== p.outfit) {
-          if (r) scene.remove(r.mesh);
+          if (r) { scene.remove(r.mesh); r.label?.el.remove(); }
           const mesh = makeStumbler(outfitById(p.outfit));
-          mesh.add(nameSprite(p.name));
           scene.add(mesh);
-          r = { mesh, outfit: p.outfit, target: null, buf: [], phase: Math.random() * 3, alive: true, bot: !!p.bot, off: (Math.random() - 0.5) * 1.2 };
+          r = { mesh, outfit: p.outfit, target: null, buf: [], phase: Math.random() * 3, alive: true, bot: !!p.bot, off: (Math.random() - 0.5) * 1.2, label: makeLabel(p.name) };
           remotes.set(p.id, r);
         }
+        if (r.label.el.textContent !== p.name) r.label.el.textContent = p.name;
         r.alive = p.alive !== false;
         r.mesh.visible = r.alive || st.mode === 'spectate';
       }
@@ -821,6 +672,7 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
       const z = -3 - Math.floor(slot / 5) * 1.8;
       r.target = { x, y: 0, z, r: 0, a: 'idle' };
       r.buf = [];
+      r.kx = r.kz = r.kvx = r.kvz = r.kt = 0;
       r.mesh.position.set(x, 0, z);
       r.mesh.rotation.y = 0;
     },
@@ -844,18 +696,23 @@ export function createStumble(canvas, { outfit, getTime, onFinish, onProgress, s
         st.vy = st.grounded ? 5 : Math.max(st.vy, 2.5);
         st.grounded = false;
         st.coyote = 0;
+        st.launch = 0;
         st.dive = 0.5;
         onSound?.('stbDive');
         burst(st.x, st.y + 0.2, st.z, 5, DUST, 2.2, 0.45);
       },
     },
     get finished() { return st.finished; },
-    debug: () => ({ ...st, ground: st.ground ? st.ground.kind : null, t: getTime(), path: path.length, stageLen: stage?.length, finishZ: stage?.finishZ, bots: [...remotes].map(([id, r]) => ({ id, bot: r.bot, alive: r.alive, vis: r.mesh.visible, t: r.target, pos: r.mesh.position.toArray() })) }),
+    debug: () => ({ ...st, ground: st.ground ? st.ground.kind : null, t: getTime(), path: path.length, stageLen: stage?.length, finishZ: stage?.finishZ, winds: stage?.winds.map((w) => ({ z0: w.z0, z1: w.z1, k: w.k, fx: w.fx })), springs: stage?.plats.filter((p) => p.kind === 'bounce').map((p) => ({ x: p.x, z: p.z, top: p.top })), bots: [...remotes].map(([id, r]) => ({ id, bot: r.bot, alive: r.alive, vis: r.mesh.visible, t: r.target, pos: r.mesh.position.toArray() })) }),
+    /** Só para testes: números do desenho (chamadas e triângulos) e acesso ao renderizador. */
+    debugRender: () => ({ ...renderer.info.render, renderer, scene }),
     /** Só para testes: coloca o jogador num ponto da pista. */
     debugSet(o) { Object.assign(st, o); },
     dispose() {
       window.cancelAnimationFrame(raf);
       ro.disconnect();
+      document.removeEventListener('visibilitychange', onVis);
+      labelLayer.remove();
       clearStage();
       for (const p of puffs) p.s.material.dispose();
       confGeo.dispose(); confMat.dispose(); conf.dispose();

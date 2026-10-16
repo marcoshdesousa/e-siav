@@ -10,9 +10,9 @@ const ROULETTE_MS = 3000; // sorteio da fase (roleta na tela) antes da apresenta
 const INTRO_MS = 5000; // apresentação da pista + contagem 3, 2, 1
 /** Tempo total entre o anúncio da fase e a largada. */
 export const INTRO_TOTAL = ROULETTE_MS + INTRO_MS;
-const RACE_MAX_S = 120; // nenhuma fase passa de 2 minutos
+const RACE_MAX_S = 180; // nenhuma fase passa de 3 minutos
 const RESULTS_MS = 4500;
-const MIN_RACE_MS = 9000; // ninguém termina uma fase em menos que isso
+const MIN_RACE_MS = 25000; // ninguém termina uma fase (~360 m ou mais) em menos que isso
 
 export function qualifyCount(n, round) {
   if (round >= 2) return 1;
@@ -30,11 +30,12 @@ function pickStages() {
   return all.slice(0, 3);
 }
 
-// Comprimento (m) de cada fase, da largada até a chegada (medido montando as fases de stages.js).
-export const STAGE_LEN = [178, 188, 190, 184, 192, 185, 172, 206, 192, 203, 181, 200, 178, 189, 182, 207, 203, 184, 230, 247, 196, 213, 211, 192, 191, 194, 198, 182, 189, 186];
-const stageLen = (s) => STAGE_LEN[s.stages[s.round]] || 140;
+// Comprimento (m) de cada fase, da largada até a chegada (medido montando as fases de stages.js;
+// o teste test/stumble.test.js monta as fases e confere estes números). Uma pessoa leva de 1 a 2 minutos.
+export const STAGE_LEN = [372, 399, 373, 383, 430, 365, 361, 398, 382, 370, 387, 372, 396, 381, 386, 399, 419, 390, 363, 423, 383, 399, 404, 380, 400, 366, 392, 368, 401, 361];
+const stageLen = (s) => STAGE_LEN[s.stages[s.round]] || 380;
 /** Tempo máximo da fase (s): justo para quem cai algumas vezes, sem deixar a partida arrastada. */
-export const raceSeconds = (len) => Math.min(RACE_MAX_S, Math.round(len / 3.5 + 20));
+export const raceSeconds = (len) => Math.min(RACE_MAX_S, Math.round(len / 3 + 25));
 /** Depois disso (s) os robôs terminam mesmo que alguém ainda esteja correndo. */
 export const botFreeAfter = (len) => len / 4 + 10;
 /** Tempo que cada robô leva para fazer a fase (em segundos): nem rápido demais, nem lento. */

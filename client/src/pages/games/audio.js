@@ -141,6 +141,8 @@ const SFX = {
   stbDing: () => { tone(1568, 0, 0.5, { type: 'sine', vol: 0.22 }); tone(2093, 0.05, 0.45, { type: 'sine', vol: 0.12 }); tone(3136, 0.05, 0.25, { type: 'sine', vol: 0.05 }); },
   stbGo: () => { tone(880, 0, 0.3, { type: 'square', vol: 0.12 }); tone(1320, 0, 0.3, { type: 'triangle', vol: 0.1 }); },
   stbCount: () => tone(660, 0, 0.12, { type: 'square', vol: 0.12 }),
+  // Stumble DBV 2: vento do ventilador
+  stbWind: () => { swish(0, 0.55, { vol: 0.12, f0: 500, f1: 1400, q: 0.7 }); noise(0.05, 0.4, 0.05); },
   // Uno DBV: jogar carta, comprar, embaralhar, gritar UNO, pular, inverter, +2/+4, ser pego, sua vez
   unoPlay: () => { swish(0, 0.09, { vol: 0.2, f0: 2600, f1: 900, q: 0.8 }); tone(180, 0.06, 0.06, { type: 'sine', vol: 0.18, to: 90 }); },
   unoDraw: () => swish(0, 0.14, { vol: 0.16, f0: 900, f1: 2800, q: 1 }),

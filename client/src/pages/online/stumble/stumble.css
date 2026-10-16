@@ -1,7 +1,15 @@
 .stb-page { display: grid; gap: .6rem; }
 .stb-hero { text-align: center; padding-top: .6rem; }
-.stb-hero h1 { margin: 0; font-size: 2.2rem; font-weight: 900; color: #f59e0b; text-shadow: 3px 3px 0 #7c2d12, -1px -1px 0 #7c2d12; letter-spacing: -1px; transform: rotate(-3deg); }
-.stb-hero h1 span { color: #ec4899; text-shadow: 3px 3px 0 #831843; }
+/* Logotipo do jogo: emblema DBV + "Stumble" branco com contorno azul e "DBV" amarelo com contorno vermelho */
+.stb-logo { --blue: #235293; --red: #e92a2f; --yel: #f9c71d; display: inline-flex; align-items: center; gap: .35rem; transform: rotate(-3deg); animation: stb-logo-in .7s cubic-bezier(.2, 1.6, .4, 1) both; user-select: none; }
+.stb-logo-emb { width: 64px; height: 64px; filter: drop-shadow(0 4px 0 rgba(0, 0, 0, .18)); animation: stb-wobble 3.2s ease-in-out infinite; }
+.stb-logo-txt { display: grid; justify-items: start; line-height: .86; font-family: 'Arial Black', var(--font), sans-serif; font-weight: 900; }
+.stb-logo-a { font-size: 2.15rem; letter-spacing: -1px; color: #fff; text-shadow: 0 3px 0 var(--blue), 2px 0 0 var(--blue), -2px 0 0 var(--blue), 0 -2px 0 var(--blue), 2px 2px 0 var(--blue), -2px 2px 0 var(--blue), 2px -2px 0 var(--blue), -2px -2px 0 var(--blue), 0 6px 0 #142f57, 0 9px 12px rgba(0, 0, 0, .25); }
+.stb-logo-b { font-size: 2.7rem; letter-spacing: 1px; margin: -.1rem 0 0 .9rem; color: var(--yel); transform: rotate(-4deg); text-shadow: 0 3px 0 var(--red), 3px 0 0 var(--red), -3px 0 0 var(--red), 0 -3px 0 var(--red), 3px 3px 0 var(--red), -3px 3px 0 var(--red), 3px -3px 0 var(--red), -3px -3px 0 var(--red), 0 7px 0 #8f1418, 0 10px 14px rgba(0, 0, 0, .25); animation: stb-bob 1.6s ease-in-out infinite; }
+.stb-logo.small { transform: rotate(-2deg) scale(.72); transform-origin: 50% 50%; margin: -.6rem 0 -.5rem; }
+@keyframes stb-logo-in { from { transform: rotate(-3deg) scale(.4); opacity: 0; } }
+@keyframes stb-wobble { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg) translateY(-3px); } }
+@keyframes stb-bob { 0%, 100% { transform: rotate(-4deg) translateY(0); } 50% { transform: rotate(-2deg) translateY(-3px); } }
 .stb-hero p { margin: .2rem 0 0; font-size: .85rem; color: var(--muted); display: flex; gap: .3rem; justify-content: center; align-items: center; }
 .stb-preview { width: 100%; display: block; }
 .stb-play { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: .7rem; align-items: center; text-align: left; border: 0; border-radius: 20px; padding: 1rem 1.2rem; cursor: pointer; color: #fff; background: linear-gradient(135deg, #22c55e, #15803d); box-shadow: 0 6px 0 #14532d, 0 10px 20px rgba(0, 0, 0, .2); font-family: var(--font); }
@@ -19,7 +27,7 @@
 .stb-players { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem; }
 .stb-player b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; font-size: .85rem; }
 
-.stb-match { position: fixed; inset: 0; z-index: 30; background: #7dd3fc; touch-action: none; user-select: none; }
+.stb-match { position: fixed; inset: 0; z-index: 30; background: #7dd3fc; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; overflow: hidden; }
 .stb-canvas { width: 100%; height: 100%; display: block; }
 .stb-go { position: absolute; top: 30%; left: 0; right: 0; text-align: center; font-size: 5rem; font-weight: 900; color: #22c55e; text-shadow: 4px 4px 0 #14532d; animation: uno-pop .4s; pointer-events: none; }
 .stb-qual { position: absolute; top: 22%; left: 0; right: 0; text-align: center; font-size: 2.2rem; font-weight: 900; color: #fde047; text-shadow: 3px 3px 0 #7c2d12; pointer-events: none; animation: uno-pop .4s; }
@@ -91,20 +99,56 @@
 .stb-pill.btn { cursor: pointer; padding: .42rem .55rem; }
 .stb-pill.btn:active { transform: scale(.92); }
 .stb-pill.mic-on { background: linear-gradient(180deg, #22c55e, #15803d); }
-.stb-controls { position: absolute; left: 0; right: 0; bottom: calc(18px + env(safe-area-inset-bottom)); display: flex; justify-content: space-between; align-items: flex-end; padding: 0 18px; pointer-events: none; }
-.stb-joy { position: relative; pointer-events: auto; width: 132px; height: 132px; border-radius: 50%; display: grid; place-items: center; touch-action: none; background: radial-gradient(circle, rgba(255, 255, 255, .1) 0 38%, rgba(255, 255, 255, .22) 39% 41%, rgba(15, 23, 42, .3) 42%); border: 2px solid rgba(255, 255, 255, .55); box-shadow: 0 8px 24px rgba(15, 23, 42, .28), inset 0 2px 10px rgba(255, 255, 255, .25); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
-.stb-joy-ring { position: absolute; inset: 6px; border-radius: 50%; pointer-events: none; opacity: .75; background: conic-gradient(from -20deg, #fff 0 40deg, transparent 40deg 90deg, #fff 90deg 130deg, transparent 130deg 180deg, #fff 180deg 220deg, transparent 220deg 270deg, #fff 270deg 310deg, transparent 310deg); -webkit-mask: radial-gradient(circle, transparent 0 55px, #000 56px 58px, transparent 59px); mask: radial-gradient(circle, transparent 0 55px, #000 56px 58px, transparent 59px); }
-.stb-knob { width: 58px; height: 58px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff 0 18%, #e0f2fe 40%, #93c5fd 100%); box-shadow: 0 6px 14px rgba(15, 23, 42, .35), inset 0 -4px 8px rgba(37, 99, 235, .35), inset 0 2px 3px #fff; transition: transform .14s ease-out, box-shadow .15s; }
-.stb-knob.on { transition: none; box-shadow: 0 3px 8px rgba(15, 23, 42, .35), 0 0 0 6px rgba(255, 255, 255, .25), inset 0 -4px 8px rgba(37, 99, 235, .35), inset 0 2px 3px #fff; }
-.stb-btns { pointer-events: auto; display: grid; grid-template-columns: auto auto; align-items: end; gap: .55rem; }
-.stb-btn { position: relative; display: grid; place-items: center; align-content: center; gap: 1px; border: 0; border-radius: 50%; color: #fff; font-family: var(--font); font-weight: 900; font-size: .62rem; letter-spacing: .03em; text-transform: uppercase; cursor: pointer; touch-action: none; overflow: hidden; text-shadow: 0 1px 2px rgba(0, 0, 0, .3); transition: transform .08s ease-out, box-shadow .08s ease-out, filter .15s; -webkit-tap-highlight-color: transparent; }
-.stb-btn::before { content: ''; position: absolute; left: 16%; right: 16%; top: 5%; height: 40%; border-radius: 50%; background: linear-gradient(180deg, rgba(255, 255, 255, .55), rgba(255, 255, 255, 0)); pointer-events: none; }
-.stb-btn svg { filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .25)); }
-.stb-btn.jump { width: 100px; height: 100px; font-size: .72rem; background: radial-gradient(circle at 50% 30%, #4ade80, #16a34a 72%); box-shadow: 0 6px 0 #166534, 0 12px 22px rgba(22, 101, 52, .45), inset 0 -6px 12px rgba(0, 0, 0, .15), inset 0 0 0 3px rgba(255, 255, 255, .35); }
-.stb-btn.dive { width: 80px; height: 80px; margin-bottom: 6px; font-size: .52rem; letter-spacing: 0; background: radial-gradient(circle at 50% 30%, #fdba74, #f97316 72%); box-shadow: 0 5px 0 #9a3412, 0 10px 18px rgba(154, 52, 18, .4), inset 0 -5px 10px rgba(0, 0, 0, .15), inset 0 0 0 3px rgba(255, 255, 255, .35); }
-.stb-btn:active { transform: translateY(5px) scale(.96); filter: brightness(1.1); }
-.stb-btn.jump:active { box-shadow: 0 1px 0 #166534, 0 4px 10px rgba(22, 101, 52, .4), inset 0 -6px 12px rgba(0, 0, 0, .15), inset 0 0 0 3px rgba(255, 255, 255, .5); }
-.stb-btn.dive:active { box-shadow: 0 1px 0 #9a3412, 0 4px 8px rgba(154, 52, 18, .35), inset 0 -5px 10px rgba(0, 0, 0, .15), inset 0 0 0 3px rgba(255, 255, 255, .5); }
+.stb-controls { position: absolute; left: 0; right: 0; bottom: calc(14px + env(safe-area-inset-bottom)); display: flex; justify-content: space-between; align-items: flex-end; padding: 0 calc(18px + env(safe-area-inset-right)) 0 calc(18px + env(safe-area-inset-left)); pointer-events: none; z-index: 2; }
+/* Joystick: base de vidro com setinhas, aro colorido que aponta a direção e botão brilhante */
+.stb-joy { --ang: 0rad; position: relative; pointer-events: auto; width: 138px; height: 138px; border-radius: 50%; display: grid; place-items: center; touch-action: none; background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, .05) 0 30%, rgba(255, 255, 255, .16) 31% 33%, rgba(15, 23, 42, .22) 34% 66%, rgba(255, 255, 255, .28) 67% 69%, rgba(15, 23, 42, .32) 70%); border: 3px solid rgba(255, 255, 255, .7); box-shadow: 0 6px 0 rgba(15, 23, 42, .25), 0 10px 24px rgba(15, 23, 42, .3), inset 0 3px 12px rgba(255, 255, 255, .3); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); transition: transform .12s; }
+.stb-joy.on { transform: scale(1.03); }
+.stb-joy-arrows { position: absolute; inset: 0; pointer-events: none; }
+.stb-joy-arrows b { position: absolute; left: 50%; top: 50%; width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 10px solid rgba(255, 255, 255, .8); filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .3)); }
+.stb-joy-arrows b:nth-child(1) { transform: translate(-50%, -50%) rotate(0deg) translateY(-54px); }
+.stb-joy-arrows b:nth-child(2) { transform: translate(-50%, -50%) rotate(90deg) translateY(-54px); }
+.stb-joy-arrows b:nth-child(3) { transform: translate(-50%, -50%) rotate(180deg) translateY(-54px); }
+.stb-joy-arrows b:nth-child(4) { transform: translate(-50%, -50%) rotate(270deg) translateY(-54px); }
+.stb-joy-dir { position: absolute; inset: -3px; border-radius: 50%; pointer-events: none; opacity: 0; transition: opacity .15s; transform: rotate(var(--ang)); background: conic-gradient(from -35deg, #fde047 0 70deg, transparent 70deg); -webkit-mask: radial-gradient(circle, transparent 0 62px, #000 63px 69px, transparent 70px); mask: radial-gradient(circle, transparent 0 62px, #000 63px 69px, transparent 70px); }
+.stb-joy.on .stb-joy-dir { opacity: 1; }
+.stb-knob { position: relative; width: 62px; height: 62px; border-radius: 50%; background: radial-gradient(circle at 36% 28%, #fff 0 14%, #bfdbfe 38%, #3b82f6 82%, #1d4ed8); box-shadow: 0 5px 0 #1e3a8a, 0 9px 16px rgba(15, 23, 42, .4), inset 0 -5px 8px rgba(30, 58, 138, .45), inset 0 2px 3px #fff; transition: transform .16s cubic-bezier(.3, 1.6, .5, 1), box-shadow .15s; }
+.stb-knob::after { content: ''; position: absolute; left: 22%; right: 22%; top: 9%; height: 32%; border-radius: 50%; background: linear-gradient(180deg, rgba(255, 255, 255, .85), rgba(255, 255, 255, 0)); }
+.stb-knob.on { transition: none; box-shadow: 0 3px 0 #1e3a8a, 0 0 0 7px rgba(255, 255, 255, .22), 0 6px 12px rgba(15, 23, 42, .35), inset 0 -5px 8px rgba(30, 58, 138, .45), inset 0 2px 3px #fff; }
+/* Botões de jogo: redondos, brilhantes, com borda grossa e "afundam" ao tocar */
+.stb-btns { pointer-events: auto; display: flex; align-items: flex-end; gap: .6rem; }
+.stb-btn { --c1: #4ade80; --c2: #16a34a; --c3: #166534; position: relative; display: grid; place-items: center; align-content: center; gap: 0; border: 4px solid #fff; border-radius: 50%; color: #fff; font-family: 'Arial Black', var(--font), sans-serif; font-weight: 900; font-size: .6rem; letter-spacing: .04em; text-transform: uppercase; cursor: pointer; touch-action: none; overflow: visible; text-shadow: 0 2px 0 rgba(0, 0, 0, .3); background: radial-gradient(circle at 50% 22%, color-mix(in srgb, var(--c1), #fff 25%), var(--c1) 35%, var(--c2) 78%); box-shadow: 0 7px 0 var(--c3), 0 12px 20px rgba(0, 0, 0, .35), inset 0 -8px 12px rgba(0, 0, 0, .18), inset 0 3px 0 rgba(255, 255, 255, .45); transition: transform .07s ease-out, box-shadow .07s ease-out, filter .12s; -webkit-tap-highlight-color: transparent; }
+.stb-btn::before { content: ''; position: absolute; left: 15%; right: 15%; top: 6%; height: 38%; border-radius: 50% 50% 45% 45%; background: linear-gradient(180deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, 0)); pointer-events: none; }
+.stb-btn svg { position: relative; filter: drop-shadow(0 2px 0 rgba(0, 0, 0, .22)); }
+.stb-btn span { position: relative; margin-top: -2px; }
+.stb-btn-wave { position: absolute; inset: -4px; border-radius: 50%; border: 4px solid #fff; opacity: 0; pointer-events: none; }
+.stb-btn.press .stb-btn-wave { animation: stb-wave .45s ease-out; }
+@keyframes stb-wave { from { transform: scale(1); opacity: .8; } to { transform: scale(1.45); opacity: 0; } }
+.stb-btn.jump { width: 104px; height: 104px; font-size: .7rem; }
+.stb-btn.dive { --c1: #fb923c; --c2: #ea580c; --c3: #9a3412; width: 78px; height: 78px; margin-bottom: 52px; font-size: .5rem; letter-spacing: 0; }
+.stb-btn.dive span { font-size: 7.5px; letter-spacing: -.02em; }
+.stb-btn.press { transform: translateY(6px) scale(.95); filter: brightness(1.12); box-shadow: 0 1px 0 var(--c3), 0 4px 10px rgba(0, 0, 0, .3), inset 0 -8px 12px rgba(0, 0, 0, .18), inset 0 3px 0 rgba(255, 255, 255, .45); }
+
+/* Nomes dos outros jogadores: pílulas pequenas que acompanham cada boneco */
+.stb-labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 1; contain: strict; }
+.stb-name { position: absolute; left: 0; top: 0; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 2px 8px 3px; border-radius: 99px; font: 800 13px/1.2 var(--font), sans-serif; color: #fff; background: rgba(15, 23, 42, .55); box-shadow: 0 1px 3px rgba(0, 0, 0, .25); text-shadow: 0 1px 1px rgba(0, 0, 0, .35); transform-origin: 50% 100%; will-change: transform, opacity; transition: opacity .2s; }
+
+/* Celular em pé: pede para virar */
+.stb-rotate { display: none; position: fixed; inset: 0; z-index: 80; place-content: center; justify-items: center; gap: .55rem; padding: 24px; text-align: center; color: #fff; background: radial-gradient(circle at 50% 35%, #2f6fc0, #235293 45%, #102a52); }
+.stb-rotate::before { content: ''; position: absolute; inset: 0; background: repeating-conic-gradient(from 0deg at 50% 35%, rgba(255, 255, 255, .05) 0 10deg, transparent 10deg 20deg); pointer-events: none; }
+.stb-rotate > * { position: relative; }
+.stb-rotate b { font-size: 1.45rem; font-weight: 900; line-height: 1.1; text-shadow: 0 3px 0 rgba(0, 0, 0, .25); }
+.stb-rotate small { opacity: .9; font-weight: 700; }
+.stb-rotate-phone { position: relative; width: 74px; height: 128px; margin-bottom: 1.2rem; border-radius: 16px; border: 5px solid #fff; background: linear-gradient(160deg, #f9c71d, #e92a2f); box-shadow: 0 10px 24px rgba(0, 0, 0, .35); animation: stb-turn 2.4s cubic-bezier(.6, 0, .3, 1) infinite; }
+.stb-rotate-phone i { position: absolute; left: 50%; top: 6px; width: 20px; height: 4px; border-radius: 4px; background: rgba(255, 255, 255, .85); transform: translateX(-50%); }
+.stb-rotate-phone span { position: absolute; inset: 22px 10px; background: url('/marca/logo.svg') center / contain no-repeat; }
+@keyframes stb-turn { 0%, 15% { transform: rotate(0deg); } 45%, 70% { transform: rotate(-90deg); } 100% { transform: rotate(0deg); } }
+.stb-rotate-btns { display: flex; gap: .5rem; margin-top: .5rem; flex-wrap: wrap; justify-content: center; }
+.stb-rotate-btns button { display: inline-flex; align-items: center; gap: .35rem; border: 0; border-radius: 99px; padding: .65rem 1.1rem; font: 800 .95rem var(--font), sans-serif; cursor: pointer; }
+.stb-rotate-go { color: #1e1b4b; background: linear-gradient(180deg, #fde68a, #f9c71d); box-shadow: 0 4px 0 #a16207; }
+.stb-rotate-back { color: #fff; background: rgba(255, 255, 255, .18); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .5); }
+@media (orientation: portrait) and (max-width: 900px) {
+  .stb-rotate { display: grid; }
+}
 
 /* Roleta das fases: cartões passando rápido e freando até a fase sorteada */
 .stb-hud { z-index: 3; }
@@ -130,3 +174,52 @@
 .stb-thumb-track { position: absolute; left: 50%; bottom: -6px; width: 74px; height: 70px; transform: translateX(-50%) perspective(70px) rotateX(38deg); transform-origin: 50% 100%; border-radius: 8px 8px 0 0; background: repeating-linear-gradient(180deg, var(--floor) 0 12px, color-mix(in srgb, var(--floor), #fff 28%) 12px 24px); box-shadow: 0 0 0 4px var(--trim), 0 -2px 10px rgba(0, 0, 0, .2); }
 .stb-thumb-track::after { content: ''; position: absolute; left: 10%; right: 10%; top: 38%; height: 7px; border-radius: 6px; background: repeating-linear-gradient(90deg, var(--obs) 0 8px, #fff 8px 14px); }
 .stb-thumb-ico { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; color: #fff; background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--acc), #fff 35%), var(--acc)); box-shadow: 0 3px 0 rgba(0, 0, 0, .25), inset 0 0 0 2px rgba(255, 255, 255, .5); }
+
+/* ───────────── Celular deitado (ex.: 844×390) ───────────── */
+@media (orientation: landscape) and (max-height: 520px) {
+  /* Deitado sobra pouca altura: some a barra de baixo do app enquanto está no Stumble */
+  body.stb-on .bottom-nav { display: none; }
+  body.stb-on .main { padding-bottom: 1rem; }
+  /* Saguão e sala de espera em duas colunas */
+  .stb-lobby { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: .8rem; align-items: start; }
+  .stb-lobby-l, .stb-lobby-r { display: grid; gap: .55rem; min-width: 0; }
+  .stb-lobby-l { position: sticky; top: .5rem; }
+  .stb-hero { padding-top: 0; }
+  .stb-logo-emb { width: 48px; height: 48px; }
+  .stb-logo-a { font-size: 1.7rem; }
+  .stb-logo-b { font-size: 2.1rem; }
+  .stb-me-stage { height: 170px; }
+  .stb-play { padding: .7rem 1rem; }
+  .stb-wait { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: .8rem; align-items: start; }
+  .stb-wait-r { display: grid; gap: .5rem; min-width: 0; }
+  .stb-countdown { width: 88px; height: 88px; }
+  .stb-countdown b { font-size: 1.9rem; }
+  /* Partida: HUD em cima, joystick à esquerda e botões à direita */
+  .stb-hud { top: calc(6px + env(safe-area-inset-top)); left: calc(10px + env(safe-area-inset-left)); right: calc(10px + env(safe-area-inset-right)); }
+  .stb-pill { font-size: .74rem; padding: .3rem .62rem; }
+  .stb-controls { bottom: calc(10px + env(safe-area-inset-bottom)); }
+  .stb-joy { width: 124px; height: 124px; }
+  .stb-joy-arrows b:nth-child(1) { transform: translate(-50%, -50%) rotate(0deg) translateY(-48px); }
+  .stb-joy-arrows b:nth-child(2) { transform: translate(-50%, -50%) rotate(90deg) translateY(-48px); }
+  .stb-joy-arrows b:nth-child(3) { transform: translate(-50%, -50%) rotate(180deg) translateY(-48px); }
+  .stb-joy-arrows b:nth-child(4) { transform: translate(-50%, -50%) rotate(270deg) translateY(-48px); }
+  .stb-joy-dir { -webkit-mask: radial-gradient(circle, transparent 0 55px, #000 56px 61px, transparent 62px); mask: radial-gradient(circle, transparent 0 55px, #000 56px 61px, transparent 62px); }
+  .stb-knob { width: 56px; height: 56px; }
+  .stb-btn.jump { width: 96px; height: 96px; }
+  .stb-btn.dive { width: 72px; height: 72px; }
+  .stb-banner { top: 16%; padding: .7rem 1.4rem .8rem; }
+  .stb-banner b { font-size: 1.6rem; }
+  .stb-321 { top: 36%; font-size: 6rem; }
+  .stb-go { top: 26%; font-size: 4.2rem; }
+  .stb-qual { top: 18%; font-size: 1.8rem; }
+  .stb-spect { left: 50%; right: auto; transform: translateX(-50%); bottom: 14px; padding: .5rem 1rem; font-size: .85rem; }
+  .stb-results { top: 50%; left: 50%; right: auto; width: min(620px, calc(100% - 40px)); transform: translate(-50%, -50%); padding: .7rem 1rem; gap: .4rem; }
+  .stb-results b { font-size: 1.3rem; }
+  .stb-res-list span img, .stb-res-list span .skin-thumb-wait { width: 38px; height: 44px; }
+  .stb-reel { height: 176px; }
+  .stb-roul > b { margin-bottom: .2rem; font-size: 1.4rem; }
+  .stb-match .game-over-card.stb-over { display: grid; grid-template-columns: 200px 1fr; grid-auto-flow: dense; column-gap: 1rem; row-gap: .35rem; max-width: 560px; width: calc(100% - 40px); max-height: calc(100% - 20px); overflow-y: auto; align-items: center; }
+  .stb-over > * { grid-column: 2; }
+  .stb-over .stb-winner { grid-column: 1; grid-row: 1 / 7; margin: 0; }
+  .stb-winner .skin-stage { height: 230px; }
+}

@@ -1,7 +1,7 @@
 // Stumble DBV: saguão (visual, partida aleatória, criar/entrar em sala), sala de espera e a partida.
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowBigUpDash, ArrowLeft, Copy, Crown, Flag, Globe2, Hash, Lock, LogOut, Mic, MicOff, Play, RefreshCw, Shirt, Timer, Trophy, UserX, Users, Wifi, WifiOff, Zap } from 'lucide-react';
+import { ArrowLeft, Copy, Crown, Flag, Globe2, Hash, Lock, LogOut, Maximize, Mic, MicOff, Play, RefreshCw, Shirt, Timer, Trophy, UserX, Users, Wifi, WifiOff } from 'lucide-react';
 import { Button, Card, Modal, PageHeader, Section } from '../../../ui.jsx';
 import { useOnline as useInternet } from '../../../offline.js';
 import { sfx, startMusic, stopMusic, unlockAudio } from '../../games/audio.js';
@@ -17,6 +17,50 @@ import { STAGES } from './stages.js';
 import Roulette from './Roulette.jsx';
 import './stumble.css';
 
+const LOGO = '/marca/logo.svg';
+
+/** Tela cheia + celular deitado (só no toque do usuário; se o navegador não deixar, tudo bem). */
+function goLandscape() {
+  try {
+    if (!window.matchMedia?.('(pointer: coarse)').matches) return;
+    const el = document.documentElement;
+    const full = !document.fullscreenElement && el.requestFullscreen ? el.requestFullscreen({ navigationUI: 'hide' }) : null;
+    Promise.resolve(full).then(() => window.screen?.orientation?.lock?.('landscape')).catch(() => {});
+  } catch { /* sem suporte */ }
+}
+
+/** Celular em pé: pede para virar (o jogo é só deitado). Aparece só pelo CSS (orientação retrato). */
+function RotateHint({ onBack }) {
+  return (
+    <div className="stb-rotate" role="dialog" aria-label="Vire o celular para jogar">
+      <div className="stb-rotate-phone" aria-hidden="true"><i /><span /></div>
+      <b>Vire o celular para jogar</b>
+      <small>O Stumble DBV é jogado com o celular deitado.</small>
+      <div className="stb-rotate-btns">
+        <button type="button" className="stb-rotate-go" onClick={goLandscape}><Maximize size={16} /> Tela cheia</button>
+        {onBack && <button type="button" className="stb-rotate-back" onClick={onBack}><ArrowLeft size={16} /> Voltar</button>}
+      </div>
+    </div>
+  );
+}
+
+/** Logotipo do jogo: emblema dos Desbravadores + "Stumble DBV". */
+function GameLogo({ small }) {
+  return (
+    <div className={'stb-logo' + (small ? ' small' : '')} aria-label="Stumble DBV">
+      <img src={LOGO} alt="" className="stb-logo-emb" />
+      <div className="stb-logo-txt"><span className="stb-logo-a">Stumble</span><span className="stb-logo-b">DBV</span></div>
+    </div>
+  );
+}
+
+const JumpIcon = () => (
+  <svg viewBox="0 0 48 48" width="40" height="40" aria-hidden="true"><path d="M24 6 8 24h9v10h14V24h9z" fill="#fff" stroke="rgba(0,0,0,.25)" strokeWidth="2.5" strokeLinejoin="round" /><rect x="15" y="37" width="18" height="5" rx="2.5" fill="#fff" opacity=".85" /></svg>
+);
+const DiveIcon = () => (
+  <svg viewBox="0 0 48 48" width="34" height="34" aria-hidden="true"><circle cx="35" cy="13" r="5.5" fill="#fff" /><path d="M7 31c6-1 12-4 17-9l6 3c-5 6-12 10-21 12z" fill="#fff" stroke="rgba(0,0,0,.2)" strokeWidth="2" strokeLinejoin="round" /><path d="M6 41h12M22 41h6" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" opacity=".8" /></svg>
+);
+
 export default function StumblePage({ base }) {
   const net = useOnline('stumble');
   const [rigOk, setRigOk] = useState(rigLoaded);
@@ -31,6 +75,16 @@ export default function StumblePage({ base }) {
     document.body.classList.toggle('online-playing', !!room);
     return () => document.body.classList.remove('online-playing');
   }, [room]);
+  // Saindo do jogo: sai da tela cheia e solta a orientação
+  useEffect(() => {
+    document.body.classList.add('stb-on');
+    return () => document.body.classList.remove('stb-on');
+  }, []);
+  useEffect(() => () => {
+    try { window.screen?.orientation?.unlock?.(); } catch { /* sem suporte */ }
+    if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {});
+  }, []);
+  const navTop = useNavigate();
   if (!internet) return <><PageHeader title="Stumble DBV" /><Card className="center"><WifiOff size={30} /><p>O Stumble DBV precisa de internet.</p></Card></>;
   return (
     <div className="stb-page">
@@ -38,6 +92,7 @@ export default function StumblePage({ base }) {
       {!room && <Lobby net={net} base={base} outfit={outfit} />}
       {room && room.status === 'waiting' && <Waiting net={net} base={base} voice={voice} />}
       {room && room.status !== 'waiting' && net.game && rigOk && <Match net={net} outfit={outfit} base={base} voice={voice} />}
+      <RotateHint onBack={room ? null : () => navTop(`${base}/jogos`)} />
     </div>
   );
 }
@@ -46,11 +101,12 @@ function Lobby({ net, base, outfit }) {
   const nav = useNavigate();
   const [code, setCode] = useState('');
   const [pub, setPub] = useState(true);
-  const go = (m) => { unlockAudio(); sfx('tap'); net.send({ ...m, outfit }); };
+  const go = (m) => { unlockAudio(); sfx('tap'); goLandscape(); net.send({ ...m, outfit }); };
   return (
-    <>
+    <div className="stb-lobby">
+      <div className="stb-lobby-l">
       <div className="stb-hero">
-        <h1>Stumble <span>DBV</span></h1>
+        <GameLogo />
         <p><Wifi size={13} /> {net.lobby?.online ?? '…'} jogando agora</p>
       </div>
       <div className="stb-me">
@@ -59,6 +115,8 @@ function Lobby({ net, base, outfit }) {
           <Shirt size={16} /> <span className="grow">{skinById(outfit).name}</span> <small>Trocar skin</small>
         </button>
       </div>
+      </div>
+      <div className="stb-lobby-r">
       {net.kicked && <Card className="small center">O dono da sala tirou você da sala.</Card>}
       {net.error && <Card className="small center uno-err">{net.error.msg}</Card>}
       <button type="button" className="stb-play" onClick={() => go({ t: 'quick', game: 'stumble', size: 10 })}>
@@ -97,7 +155,8 @@ function Lobby({ net, base, outfit }) {
         <Button variant="secondary" onClick={() => nav(`${base}/jogos`)}><ArrowLeft size={16} /> Voltar</Button>
         <Button variant="secondary" onClick={() => nav(`${base}/jogos?aba=ranking&jogo=stumble`)}><Trophy size={16} /> Ranking</Button>
       </div>
-    </>
+      </div>
+    </div>
   );
 }
 
@@ -125,8 +184,9 @@ function Waiting({ net, base, voice }) {
   if (left != null && left > total.current) total.current = left;
   const copy = () => window.navigator.clipboard?.writeText(room.code).catch(() => {});
   return (
-    <>
-      <div className="uno-waiting-head">
+    <div className="stb-wait">
+      <div className="uno-waiting-head stb-wait-l">
+        <GameLogo small />
         <b>{room.quick ? 'Partida aleatória' : room.public ? 'Sala pública' : 'Sala privada'}</b>
         {!room.quick && <button type="button" className="uno-code" onClick={copy}><small>Código da sala</small><span>{room.code}</span><small><Copy size={12} /> Toque para copiar</small></button>}
         <div className="stb-count"><Users size={16} /> {room.players.length}/{room.size}</div>
@@ -138,6 +198,7 @@ function Waiting({ net, base, voice }) {
         )}
         <p className="small muted">{room.quick ? 'A partida sempre tem 10 jogadores: se faltar gente, robôs completam (e saem quando alguém entra).' : owner ? 'Você começa quando quiser: as vagas vazias viram robôs.' : 'O dono da sala vai começar.'}</p>
       </div>
+      <div className="stb-wait-r">
       <div className="stb-players">
         {room.players.map((p) => (
           <div key={p.id} className="stb-player">
@@ -153,10 +214,11 @@ function Waiting({ net, base, voice }) {
       <Button variant="secondary" onClick={() => { net.send({ t: 'leave' }); nav(`${base}/jogos?aba=skin`); }}><Shirt size={16} /> Trocar skin</Button>
       <div className="uno-actions">
         <Button variant="secondary" onClick={() => net.send({ t: 'leave' })}><LogOut size={16} /> Sair</Button>
-        {owner && !room.quick && <Button onClick={() => { unlockAudio(); net.send({ t: 'start' }); }}><Play size={16} /> Começar</Button>}
+        {owner && !room.quick && <Button onClick={() => { unlockAudio(); goLandscape(); net.send({ t: 'start' }); }}><Play size={16} /> Começar</Button>}
       </div>
       {net.error && <p className="small center uno-err">{net.error.msg}</p>}
-    </>
+      </div>
+    </div>
   );
 }
 
@@ -164,29 +226,63 @@ function Waiting({ net, base, voice }) {
 
 function Joystick({ onMove }) {
   const ref = useRef(null);
-  const [knob, setKnob] = useState({ x: 0, y: 0 });
+  const knob = useRef(null);
   const id = useRef(null);
+  // O botão do joystick anda direto no DOM (sem redesenhar o React a cada movimento do dedo)
+  const set = (x, y) => {
+    const k = knob.current;
+    if (k) {
+      k.style.transform = `translate(${x * 40}px, ${y * 40}px)`;
+      k.classList.toggle('on', !!(x || y));
+    }
+    ref.current?.style.setProperty('--ang', `${Math.atan2(x, -y)}rad`);
+    ref.current?.classList.toggle('on', !!(x || y));
+    onMove(x, y);
+  };
   const handle = (e) => {
     const r = ref.current.getBoundingClientRect();
     let x = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
     let y = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
     const l = Math.hypot(x, y);
     if (l > 1) { x /= l; y /= l; }
-    setKnob({ x, y });
-    onMove(x, y);
+    set(x, y);
   };
+  const end = () => { id.current = null; set(0, 0); };
   return (
     <div
       ref={ref}
       className="stb-joy"
       onPointerDown={(e) => { id.current = e.pointerId; e.currentTarget.setPointerCapture(e.pointerId); handle(e); }}
       onPointerMove={(e) => id.current === e.pointerId && handle(e)}
-      onPointerUp={() => { id.current = null; setKnob({ x: 0, y: 0 }); onMove(0, 0); }}
-      onPointerCancel={() => { id.current = null; setKnob({ x: 0, y: 0 }); onMove(0, 0); }}
+      onPointerUp={end}
+      onPointerCancel={end}
     >
-      <i className="stb-joy-ring" aria-hidden="true" />
-      <span className={'stb-knob' + (knob.x || knob.y ? ' on' : '')} style={{ transform: `translate(${knob.x * 36}px, ${knob.y * 36}px)` }} />
+      <i className="stb-joy-arrows" aria-hidden="true"><b /><b /><b /><b /></i>
+      <i className="stb-joy-dir" aria-hidden="true" />
+      <span ref={knob} className="stb-knob" />
     </div>
+  );
+}
+
+/** Botão redondo brilhante de jogo: afunda ao tocar (classe "press") e solta uma onda. */
+function GameButton({ kind, label, onPress, children }) {
+  const ref = useRef(null);
+  const down = (e) => {
+    e.preventDefault();
+    onPress();
+    const b = ref.current;
+    if (!b) return;
+    b.classList.remove('press');
+    void b.offsetWidth; // reinicia a animação da onda
+    b.classList.add('press');
+  };
+  const up = () => ref.current?.classList.remove('press');
+  return (
+    <button ref={ref} type="button" className={'stb-btn ' + kind} aria-label={label} onPointerDown={down} onPointerUp={up} onPointerCancel={up} onPointerLeave={up} onContextMenu={(e) => e.preventDefault()}>
+      <i className="stb-btn-wave" aria-hidden="true" />
+      {children}
+      <span>{label}</span>
+    </button>
   );
 }
 
@@ -218,6 +314,7 @@ function Match({ net, outfit, base, voice }) {
       onSound: (n) => sfx(n),
     });
     eng.current = e;
+    if (window.location.search.includes('stbdebug')) window.__stb = e; // só para testes automáticos
     const off = net.listen((m) => { if (m.t === 'pos') e.remotePos(m.from, m.d); });
     const t = setInterval(() => tick((n) => n + 1), 250);
     startMusic('stumble');
@@ -341,8 +438,8 @@ function Match({ net, outfit, base, voice }) {
         <div className="stb-controls">
           <Joystick onMove={(x, y) => eng.current?.input.move(x, y)} />
           <div className="stb-btns">
-            <button type="button" className="stb-btn dive" onPointerDown={() => eng.current?.input.dive()}><Zap size={24} strokeWidth={2.6} /><span>Mergulhar</span></button>
-            <button type="button" className="stb-btn jump" onPointerDown={() => eng.current?.input.jump()}><ArrowBigUpDash size={34} strokeWidth={2.4} /><span>Pular</span></button>
+            <GameButton kind="dive" label="Mergulhar" onPress={() => eng.current?.input.dive()}><DiveIcon /></GameButton>
+            <GameButton kind="jump" label="Pular" onPress={() => eng.current?.input.jump()}><JumpIcon /></GameButton>
           </div>
         </div>
       )}
