@@ -1,7 +1,7 @@
 // Voz da leitura: Piper (código aberto, grátis), rodando no próprio servidor, em português do Brasil.
 // O programa e a voz são baixados uma vez para o disco (DATA_DIR/piper). O Piper fica ligado
 // (um processo só, com a voz carregada) e fala uma frase de cada vez.
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { createWriteStream, existsSync } from 'node:fs';
 import { chmod, mkdir, mkdtemp, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -126,7 +126,13 @@ async function start() {
     const env = { ...process.env, LD_LIBRARY_PATH: [pdir, process.env.LD_LIBRARY_PATH].filter(Boolean).join(':') };
     const args = ['--model', model, '--json-input', '--length_scale', LENGTH_SCALE, '--espeak_data', path.join(pdir, 'espeak-ng-data')];
     // nice: o site responde primeiro; stdbuf: o Piper avisa (uma linha) assim que cada frase fica pronta
-    const tries = [['nice', ['-n', '15', 'stdbuf', '-oL', bin, ...args]], ['stdbuf', ['-oL', bin, ...args]], [bin, args]];
+    // Só usa nice/stdbuf se existirem no servidor (senão o Piper nem chegava a abrir).
+    const has = (cmd) => spawnSync('sh', ['-c', `command -v ${cmd}`]).status === 0;
+    const tries = [
+      has('nice') && has('stdbuf') && ['nice', ['-n', '10', 'stdbuf', '-oL', bin, ...args]],
+      has('stdbuf') && ['stdbuf', ['-oL', bin, ...args]],
+      [bin, args],
+    ].filter(Boolean);
     let child = null;
     for (const [cmd, a] of tries) {
       const c = spawn(cmd, a, { env });

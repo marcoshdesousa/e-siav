@@ -97,6 +97,8 @@ export default function LearningAdmin() {
   const [busy, run] = useAsync();
   const save = async (value) => { await run(() => api.put('/admin/ano-biblico/inicio', { date: value }), 'Data salva!'); state.reload(); };
   const gen = async () => { await run(() => api.post('/admin/ano-biblico/audio'), 'Preparo do áudio iniciado'); state.reload(); };
+  const [voiceTest, setVoiceTest] = useState(null);
+  const testVoice = async () => { setVoiceTest({ busy: true }); try { setVoiceTest(await api.post('/admin/ano-biblico/voz-teste')); } catch (e) { setVoiceTest({ ok: false, error: e.message }); } };
   const setTest = async (on) => { await run(() => api.put('/admin/biblia-teste', { on }), on ? 'Modo de teste ligado' : 'Modo de teste desligado'); state.reload(); };
   return (
     <>
@@ -142,8 +144,15 @@ export default function LearningAdmin() {
                   <Card className="small">
                     <p>Versículos com voz: <b>{d.audio.done}</b>{d.audio.total ? ` de ${d.audio.total}` : ''}.{d.audio.running ? ` Preparando agora: ${d.audio.current || '...'}` : ' Parado.'}</p>
                     {d.audio.error && <p className="muted">Último erro: {d.audio.error}</p>}
-                    <p className="muted">O áudio é preparado sozinho em segundo plano, começando pela leitura de hoje. Fica salvo no disco do servidor (cerca de 1 GB para a Bíblia inteira).</p>
-                    <Button small busy={busy} disabled={d.audio.running} onClick={gen}>Preparar agora</Button>
+                    {d.audio.piperError && <p className="muted">Erro do Piper: {d.audio.piperError}</p>}
+                    <p className="muted">A voz é preparada versículo por versículo: primeiro o dia (ou a aula do Bom Líder) que alguém abriu, depois os próximos dias, em segundo plano. Fica salva no disco do servidor. Se a voz do servidor falhar, o app usa a voz do próprio celular.</p>
+                    <div className="row">
+                      <Button small busy={busy} disabled={d.audio.running} onClick={gen}>Preparar agora</Button>
+                      <Button small variant="secondary" busy={voiceTest?.busy} onClick={testVoice}>Testar voz</Button>
+                    </div>
+                    {voiceTest && !voiceTest.busy && (voiceTest.ok
+                      ? <p><b>A voz funcionou</b> ({voiceTest.seconds} s de fala em {(voiceTest.ms / 1000).toFixed(1)} s).</p>
+                      : <p style={{ color: 'var(--danger)' }}><b>A voz falhou:</b> {voiceTest.error}{voiceTest.piperError ? ` · ${voiceTest.piperError}` : ''}</p>)}
                   </Card>
                 </Section>
               </>

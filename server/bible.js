@@ -4,6 +4,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 import { Mp3Encoder } from '@breezystack/lamejs';
 import { DATA_DIR } from './db.js';
 import { setting } from './fees.js';
@@ -92,7 +93,9 @@ const PAUSE_VERSE = 0.35;
 const pad = (n, k) => String(n).padStart(k, '0');
 export const voiceName = (b, c, v) => `${pad(b + 1, 2)}-${pad(c, 3)}-${pad(v, 3)}`;
 export const voiceFile = (name) => path.join(VOICE_DIR, `${name}.mp3`);
-export const VOICE_RE = /^\d{2}-\d{3}-\d{3}$/;
+export const VOICE_RE = /^(\d{2}-\d{3}-\d{3}|bl-[0-9a-f]{12})$/;
+/** Nome do áudio de um texto qualquer (Bom Líder): muda sozinho se o texto mudar. */
+export const textVoiceName = (text) => `bl-${createHash('sha1').update(text).digest('hex').slice(0, 12)}`;
 
 const ready = new Set();
 try { for (const f of fs.readdirSync(VOICE_DIR)) if (f.endsWith('.mp3')) ready.add(f.slice(0, -4)); } catch { /* ainda sem pasta */ }
@@ -102,9 +105,13 @@ export const voiceReady = (name) => ready.has(name);
 export function dayVoiceItems(day) {
   const d = PLAN.days[day - 1];
   if (!d) return [];
-  return d.chapters.flatMap(([b, c, rg]) => [0, ...verseNumbers(b, c, rg)].map((v) => ({ name: voiceName(b, c, v), b, c, v })));
+  return d.chapters.flatMap(([b, c, rg]) => [0, ...verseNumbers(b, c, rg)].map((v) => ({
+    name: voiceName(b, c, v), label: `${chapterTitle(b, c)}${v ? `:${v}` : ''}`,
+    text: v === 0 ? spokenTitle(b, c) : chapterText(b, c)[v - 1], pause: v === 0 ? PAUSE_TITLE : PAUSE_VERSE,
+  })));
 }
-const textOf = ({ b, c, v }) => (v === 0 ? spokenTitle(b, c) : chapterText(b, c)[v - 1]);
+/** Itens de voz de textos soltos (um por parágrafo), para o Bom Líder. */
+export const textVoiceItems = (texts) => texts.map((text) => ({ name: textVoiceName(text), label: text.slice(0, 40), text, pause: 0.6 }));
 
 function pcmToMp3(pcm, rate) {
   const samples = new Int16Array(pcm.buffer.slice(pcm.byteOffset, pcm.byteOffset + pcm.length - (pcm.length % 2)));
@@ -141,8 +148,8 @@ function trim(pcm, rate) {
 
 /** Fala um item (título ou versículo) e guarda o MP3. */
 export async function generateVoice(item) {
-  const { rate, pcms } = await piperSpeak([textOf(item)]);
-  const pause = Buffer.alloc(Math.round(rate * (item.v === 0 ? PAUSE_TITLE : PAUSE_VERSE)) * 2);
+  const { rate, pcms } = await piperSpeak([item.text]);
+  const pause = Buffer.alloc(Math.round(rate * (item.pause ?? PAUSE_VERSE)) * 2);
   const mp3 = pcmToMp3(Buffer.concat([trim(pcms[0], rate), pause]), rate);
   fs.mkdirSync(VOICE_DIR, { recursive: true });
   const f = voiceFile(item.name);
@@ -200,7 +207,7 @@ async function work() {
       const item = queued.get(name);
       queued.delete(name);
       if (!item || ready.has(name)) continue;
-      audioState.current = `${chapterTitle(item.b, item.c)}${item.v ? `:${item.v}` : ''}`;
+      audioState.current = item.label;
       try {
         await generateVoice(item);
         audioState.done++;
@@ -226,20 +233,32 @@ async function work() {
   }
 }
 
-/** Alguém abriu o dia: os versículos dele vão para a frente da fila. Devolve como está a voz do dia. */
-export function requestDayVoice(day) {
+/** Alguém abriu o dia (ou a aula): os itens vão para a frente da fila. Devolve como está a voz deles. */
+export function requestVoice(items) {
   if (audioState.failing && Date.now() - failedAt > 2 * 60_000) { audioState.failing = false; fails = 0; }
-  const items = dayVoiceItems(day);
   if (!audioState.failing) {
     enqueue(items, true);
     work().catch(() => {});
   }
-  return dayVoiceStatus(day, items);
+  return voiceStatus(items);
 }
-export function dayVoiceStatus(day, items = dayVoiceItems(day)) {
+export function voiceStatus(items) {
   const bits = items.map((it) => (ready.has(it.name) ? '1' : '0')).join('');
   const done = bits.split('1').length - 1;
   return { total: items.length, done, ready: bits, failing: audioState.failing, error: audioState.failing ? audioState.error || piperError : null };
+}
+export const requestDayVoice = (day) => requestVoice(dayVoiceItems(day));
+export const dayVoiceStatus = (day) => voiceStatus(dayVoiceItems(day));
+
+/** Teste rápido (admin): fala uma frase agora e diz quanto tempo levou ou qual foi o erro. */
+export async function testVoice() {
+  const t0 = Date.now();
+  try {
+    const { rate, pcms } = await piperSpeak(['Teste da voz do Ano Bíblico.']);
+    return { ok: true, ms: Date.now() - t0, seconds: Math.round((pcms[0].length / 2 / rate) * 10) / 10 };
+  } catch (e) {
+    return { ok: false, ms: Date.now() - t0, error: e.message, piperError };
+  }
 }
 
 /** Em segundo plano (no ar): vai preparando os próximos dias, um versículo por vez. */

@@ -9,18 +9,17 @@ import {
 import { api } from '../../api.js';
 import { Button, Card, Loading, PageHeader, Section, useLoad } from '../../ui.jsx';
 import { useOnline } from '../../offline.js';
+import { useVoice } from './voice.js';
 import './learning.css';
 
 /** Na leitura e no jogo, a barra de baixo e o "Voltar" do topo somem (tela inteira para o livro). */
-function useFocusMode() {
+export function useFocusMode() {
   useEffect(() => {
     document.body.classList.add('learn-focus');
     return () => document.body.classList.remove('learn-focus');
   }, []);
 }
 
-/** Um décimo de segundo de silêncio (WAV): toca no toque do botão para o celular liberar o som. */
-const SILENCE = 'data:audio/wav;base64,UklGRkQDAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YSADAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgA==';
 const br = (iso) => (iso ? iso.split('-').reverse().join('/') : '');
 const MONTHS = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
 const LEVEL = { facil: 'Fácil', intermediario: 'Intermediário', dificil: 'Difícil', 'muito-dificil': 'Muito difícil', muito_dificil: 'Muito difícil' };
@@ -196,6 +195,38 @@ function DayRow({ x, to }) {
     : <Link to={to} className={'day-row ' + x.status}>{body}</Link>;
 }
 
+// ───────────── Voz: barra de carregamento, botão Ouvir e velocidade ─────────────
+
+export function VoiceBar({ v }) {
+  if (v.device) return <p className="voice-note">Voz do aparelho (a voz do app ainda não ficou pronta)</p>;
+  if (!v.loading) return null;
+  return (
+    <div className="voice-load" role="status">
+      <span>{v.voice.done === 0 ? 'Carregando a voz' : 'Preparando a voz'}… {v.percent}%</span>
+      <i style={{ width: `${v.percent}%` }} />
+    </div>
+  );
+}
+export function PlayButton({ v, onToggle }) {
+  return (
+    <>
+      <button type="button" className={'play-btn' + (v.waiting ? ' wait' : '')} onClick={onToggle} aria-label={v.playing ? 'Pausar' : 'Ouvir'}>
+        {v.waiting ? <span className="play-spin" /> : v.playing ? <Pause size={22} /> : <Headphones size={22} />}
+        <span>{v.waiting ? `Carregando ${v.percent}%` : v.playing ? 'Pausar' : 'Ouvir'}</span>
+      </button>
+      <button type="button" className="rate-btn" onClick={v.changeRate} aria-label="Velocidade da voz">{String(v.rate).replace('.', ',')}x</button>
+    </>
+  );
+}
+export function VoiceAudio({ v }) {
+  return (
+    <>
+      <audio ref={v.audioRef} preload="auto" onEnded={v.onEnded} />
+      <audio ref={v.preRef} preload="auto" muted />
+    </>
+  );
+}
+
 // ───────────── Ano Bíblico: leitura do dia ─────────────
 
 /** Divide os versículos em páginas (como um livro), sem cortar versículo no meio. */
@@ -240,126 +271,27 @@ function BibleDayBody({ d, back, base, reload }) {
     setPage(p);
   };
   // Voz: um áudio pequeno por versículo (o título do capítulo e depois cada versículo), tocados em
-  // sequência. O servidor prepara primeiro o dia aberto; aqui mostramos quanto já está pronto.
+  // sequência; a marcação segue o versículo e a página vira sozinha.
   const seq = useMemo(() => d.chapters.flatMap((c, ci) => [
     { ci, vi: -1, name: c.voice.title, text: c.part ? `${c.title}, ${c.part}.` : `${c.title}.` },
     ...c.verses.map((text, vi) => ({ ci, vi, name: c.voice.verses[vi], text })),
   ]), [d.chapters]);
-  const [voice, setVoice] = useState(d.voice);
-  const [playing, setPlaying] = useState(false);
-  const [waiting, setWaiting] = useState(false);
-  const [pos, setPos] = useState(-1);
-  const [rate, setRate] = useState(() => {
-    try { return Number(localStorage.getItem('bible-rate')) || 1; } catch { return 1; }
-  });
-  const audioRef = useRef(null);
-  const preRef = useRef(null);
-  const posRef = useRef(-1);
-  const playingRef = useRef(false);
-  const rateRef = useRef(rate);
-  rateRef.current = rate;
-  const isReady = (i) => voice.ready?.[i] === '1';
-  const device = voice.failing && typeof window !== 'undefined' && 'speechSynthesis' in window;
-  const percent = voice.total ? Math.round((voice.done / voice.total) * 100) : 0;
-
-  // Pede a voz do dia ao abrir e acompanha até ficar tudo pronto.
-  useEffect(() => {
-    let alive = true;
-    let timer = 0;
-    const tick = (first) => {
-      (first ? api.post(`/ano-biblico/dia/${d.day}/voz`) : api.get(`/ano-biblico/dia/${d.day}/voz`))
-        .then((v) => { if (!alive) return; setVoice(v); if (v.done < v.total && !v.failing) timer = window.setTimeout(() => tick(false), 1500); })
-        .catch(() => { if (alive) timer = window.setTimeout(() => tick(true), 4000); });
-    };
-    tick(true);
-    return () => { alive = false; window.clearTimeout(timer); };
-  }, [d.day]);
-
+  const v = useVoice({ seq, url: `/ano-biblico/dia/${d.day}/voz`, initial: d.voice });
+  const { pos, playing } = v;
   const verse = pos >= 0 && seq[pos]?.vi >= 0 ? seq[pos] : null;
-  // A página acompanha a leitura (vira sozinha, com o efeito de página).
   useEffect(() => {
     if (!verse) return;
     const p = pages.findIndex((pg) => pg.some((x) => x.ci === verse.ci && x.vi === verse.vi));
     if (p >= 0 && p !== page) { setTurn(p > page ? 'turn-next' : 'turn-prev'); setPage(p); }
   }, [verse?.ci, verse?.vi]);
-
-  const stopAll = () => {
-    playingRef.current = false;
-    setPlaying(false);
-    setWaiting(false);
-    audioRef.current?.pause();
-    if (typeof window !== 'undefined' && window.speechSynthesis) window.speechSynthesis.cancel();
-  };
-  const finish = () => { stopAll(); setPos(-1); posRef.current = -1; };
-
-  const bestVoice = () => {
-    const vs = window.speechSynthesis.getVoices().filter((v) => /^pt(-|_)BR/i.test(v.lang) || /^pt/i.test(v.lang));
-    const score = (v) => (/natural|neural|online|premium|enhanced|aprimorad/i.test(v.name) ? 4 : 0) + (/google|luciana|francisca|thalita|antonio/i.test(v.name) ? 2 : 0) + (/BR/i.test(v.lang) ? 1 : 0);
-    return vs.sort((x, y) => score(y) - score(x))[0] || null;
-  };
-  /** Toca o item i da sequência (ou espera ele ficar pronto). */
-  const playAt = (i) => {
-    if (i >= seq.length) { finish(); return; }
-    posRef.current = i;
-    setPos(i);
-    if (device) {
-      const u = new window.SpeechSynthesisUtterance(seq[i].text);
-      const v = bestVoice();
-      if (v) u.voice = v;
-      u.lang = 'pt-BR';
-      u.rate = rateRef.current;
-      u.onend = () => { if (playingRef.current && posRef.current === i) playAt(i + 1); };
-      window.speechSynthesis.speak(u);
-      setWaiting(false);
-      return;
-    }
-    if (!isReady(i)) { setWaiting(true); return; }
-    setWaiting(false);
-    const a = audioRef.current;
-    a.src = `/api/ano-biblico/voz/${seq[i].name}.mp3`;
-    a.playbackRate = rateRef.current;
-    a.play().catch(() => {});
-    // Já baixa o próximo para não ter pausa entre os versículos.
-    const n = seq[i + 1];
-    if (n && isReady(i + 1) && preRef.current) { preRef.current.src = `/api/ano-biblico/voz/${n.name}.mp3`; preRef.current.load(); }
-  };
-  // Quando o versículo esperado fica pronto, continua sozinho.
-  useEffect(() => {
-    if (playingRef.current && waiting && posRef.current >= 0 && isReady(posRef.current)) playAt(posRef.current);
-  }, [voice]);
-
-  const startAt = (i) => {
-    stopAll();
-    playingRef.current = true;
-    setPlaying(true);
-    // Destrava o som no iPhone/Android ainda dentro do toque (o primeiro versículo pode demorar um pouco).
-    const a = audioRef.current;
-    if (!device && a && !isReady(i)) { a.src = SILENCE; a.play().catch(() => {}); }
-    playAt(i);
-  };
-  const startPage = () => {
-    const first = pages[page][0];
-    const i = seq.findIndex((x) => x.ci === first.ci && x.vi === (first.vi === 0 ? -1 : first.vi));
-    startAt(Math.max(0, i));
-  };
+  const stopAll = v.stop;
   const toggle = () => {
-    if (playing) { stopAll(); return; }
-    if (pos >= 0 && verse && pages[page].some((x) => x.ci === verse.ci && x.vi === verse.vi)) startAt(pos);
-    else startPage();
+    if (playing) { v.stop(); return; }
+    if (verse && pages[page].some((x) => x.ci === verse.ci && x.vi === verse.vi)) { v.startAt(pos); return; }
+    const first = pages[page][0];
+    v.startAt(seq.findIndex((x) => x.ci === first.ci && x.vi === (first.vi === 0 ? -1 : first.vi)));
   };
-  const tapVerse = (ci, vi) => startAt(seq.findIndex((x) => x.ci === ci && x.vi === vi));
-  const changeRate = () => {
-    const r = rate === 1 ? 1.25 : rate === 1.25 ? 1.5 : rate === 1.5 ? 2 : 1;
-    setRate(r);
-    try { localStorage.setItem('bible-rate', String(r)); } catch { /* sem armazenamento */ }
-    if (audioRef.current) audioRef.current.playbackRate = r;
-    if (device && playing) { window.speechSynthesis.cancel(); playAt(posRef.current); }
-  };
-  useEffect(() => () => {
-    playingRef.current = false;
-    audioRef.current?.pause();
-    if (window.speechSynthesis) window.speechSynthesis.cancel();
-  }, []);
+  const tapVerse = (ci, vi) => v.startAt(seq.findIndex((x) => x.ci === ci && x.vi === vi));
 
   // Arrastar para o lado vira a página (com a voz tocando, a página vira sozinha).
   const touch = useRef(null);
@@ -401,24 +333,13 @@ function BibleDayBody({ d, back, base, reload }) {
         </div>
       </div>
 
-      {!device && voice.done < voice.total && (
-        <div className="voice-load" role="status">
-          <span>{voice.done === 0 ? 'Carregando a voz' : 'Preparando a voz'}… {percent}%</span>
-          <i style={{ width: `${percent}%` }} />
-        </div>
-      )}
+      <VoiceBar v={v} />
       <div className="bible-controls">
         <button type="button" className="icon-btn" disabled={page === 0 || playing} onClick={() => go(page - 1)} aria-label="Página anterior"><ChevronLeft size={22} /></button>
-        <button type="button" className={'play-btn' + (waiting ? ' wait' : '')} onClick={toggle} aria-label={playing ? 'Pausar' : 'Ouvir'}>
-          {waiting ? <span className="play-spin" /> : playing ? <Pause size={22} /> : <Headphones size={22} />}
-          <span>{waiting ? `Carregando ${percent}%` : playing ? 'Pausar' : 'Ouvir'}</span>
-        </button>
-        <button type="button" className="rate-btn" onClick={changeRate} aria-label="Velocidade da voz">{String(rate).replace('.', ',')}x</button>
+        <PlayButton v={v} onToggle={toggle} />
         <button type="button" className="icon-btn" disabled={last || playing} onClick={() => go(page + 1)} aria-label="Próxima página"><ChevronRight size={22} /></button>
       </div>
-      {device && <p className="small muted center">Usando a voz do aparelho enquanto a voz do app não fica pronta.</p>}
-      <audio ref={audioRef} preload="auto" onEnded={() => { if (playingRef.current) playAt(posRef.current + 1); }} />
-      <audio ref={preRef} preload="auto" muted />
+      <VoiceAudio v={v} />
 
       {last ? (
         <Button block onClick={() => { stopAll(); setMode('quiz'); window.scrollTo({ top: 0 }); }}>

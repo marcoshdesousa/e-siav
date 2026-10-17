@@ -141,3 +141,4 @@
 .bible-chapter small { display: block; font-size: .55em; font-weight: 600; opacity: .7; margin-top: .15em; }
 .bible-chapter.reading { color: #b45309; }
 .bible-controls .icon-btn:disabled { opacity: .3; }
+.voice-note { text-align: center; font-size: .75rem; font-weight: 700; color: var(--muted, #64748b); margin: 0 0 .4rem; }

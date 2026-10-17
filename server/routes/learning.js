@@ -10,7 +10,7 @@ import { fail, int, validDate } from '../util.js';
 import { setSetting, setting } from '../fees.js';
 import {
   PLAN, QUIZZES, TOTAL_DAYS, VOICE_RE, audioStatus, chapterText, chapterTitle, dateOfDay, dayVoiceStatus, planStart,
-  rangesLabel, requestDayVoice, startAudioGenerator, todayBR, todayDay, verseNumbers, voiceFile, voiceName, voiceReady,
+  rangesLabel, requestDayVoice, startAudioGenerator, testVoice, todayBR, todayDay, verseNumbers, voiceFile, voiceName, voiceReady,
 } from '../bible.js';
 
 const r = Router();
@@ -194,6 +194,8 @@ r.put('/admin/biblia-teste', admin, (req, res) => {
   setSetting('biblia_teste', req.body.on ? '1' : '0');
   res.json({ test: testMode() });
 });
+
+r.post('/admin/ano-biblico/voz-teste', admin, async (req, res) => res.json(await testVoice()));
 
 r.post('/admin/ano-biblico/audio', admin, (req, res) => {
   startAudioGenerator().catch(() => {});
