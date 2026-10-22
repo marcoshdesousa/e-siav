@@ -34,15 +34,10 @@
 .dv-pdf canvas { display: block; max-width: 100%; }
 .dv-pdf.turn-next { animation: page-next .45s ease-out; }
 .dv-pdf.turn-prev { animation: page-prev .45s ease-out; }
-.streak-trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
-.streak-trio > div { display: flex; flex-direction: column; align-items: center; gap: .15rem; padding: .7rem .4rem; border-radius: 14px; background: rgba(255,255,255,.65); text-align: center; }
-.streak-trio small { font-size: .72rem; font-weight: 800; line-height: 1.2; }
-.streak-trio .on { box-shadow: inset 0 0 0 2px #f97316; }
-.streak-box { display: block; padding: .9rem; border-radius: 18px; background: linear-gradient(135deg, #fff7ed, #fde68a); color: #7c2d12; text-decoration: none; box-shadow: 0 8px 22px rgba(249,115,22,.2); }
-.streak-box-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: .6rem; font-weight: 900; }
 .learn-card.lock { opacity: .75; }
 .learn-card .plus { position: absolute; top: .6rem; right: .6rem; font-size: .66rem; font-weight: 900; padding: .15rem .45rem; border-radius: 999px; background: linear-gradient(135deg, #f5c518, #d4a017); color: #0f2744; }
 .learn-card { position: relative; }
 .learn-card.c5 { background: linear-gradient(135deg, #f97316, #db2777); }
 .learn-card.c6 { background: linear-gradient(135deg, #0d9488, #115e59); }
 .learn-card.c7 { background: linear-gradient(135deg, #475569, #1e293b); }
+

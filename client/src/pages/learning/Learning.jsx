@@ -45,12 +45,18 @@ export function StreakTrio({ d }) {
   const items = [['Ano Bíblico', d.bible], ['Meditação', d.meditation], ['Escola Sabatina', d.sabbath]];
   return (
     <div className="streak-trio">
-      {items.map(([label, s]) => (
-        <div key={label} className={s?.today_done ? 'on' : ''}>
-          <span className="streak-flame"><Flame size={26} /><b>{s?.streak || 0}</b></span>
-          <small>{label}</small>
-        </div>
-      ))}
+      {items.map(([label, s]) => {
+        const n = s?.streak || 0;
+        return (
+          <div key={label} className={'st-item' + (s?.today_done ? ' on' : '') + (n ? ' lit' : '')}>
+            <span className="st-flame"><Flame size={30} strokeWidth={2.2} /></span>
+            <b className="st-num">{n}</b>
+            <small className="st-days">{n === 1 ? 'dia' : 'dias'}</small>
+            <span className="st-label">{label}</span>
+            {s?.today_done && <span className="st-check">feito hoje</span>}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -61,7 +67,7 @@ export function StreakCard({ base }) {
   if (!state.data) return null;
   return (
     <Link to={`${base}/aprendizagem`} className="streak-box">
-      <div className="streak-box-head"><span>Ver sequências</span><ChevronRight size={20} /></div>
+      <div className="streak-box-head"><span><Flame size={18} /> Suas sequências</span><em>Ver <ChevronRight size={16} /></em></div>
       <StreakTrio d={state.data} />
     </Link>
   );
@@ -77,7 +83,7 @@ export function LearningHub({ base }) {
       <Loading {...state}>
         {(d) => (
           <>
-            <StreakTrio d={d} />
+            <div className="streak-box"><StreakTrio d={d} /></div>
             <div className="learn-grid mt">
               <Link to={`${base}/aprendizagem/ano-biblico`} className="learn-card c1">
                 <span className="learn-ico"><BookOpenText size={30} /></span>

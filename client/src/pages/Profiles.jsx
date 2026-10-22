@@ -118,13 +118,18 @@ const dias = (n) => `${n} ${n === 1 ? 'dia' : 'dias'}`;
 function BibleStreak({ list }) {
   return (
     <Section title="Sequências">
-      <div className="streak-pub three">
-        {list.map((x) => (
-          <div key={x.name} className={'streak-pub-box' + (x.streak ? ' on' : '')}>
-            <Flame size={22} />
-            <span><b>{dias(x.streak)}</b><small>{x.name} · recorde {dias(x.best_streak)}</small></span>
-          </div>
-        ))}
+      <div className="streak-box">
+        <div className="streak-trio">
+          {list.map((x) => (
+            <div key={x.name} className={'st-item' + (x.streak ? ' lit' : '')}>
+              <span className="st-flame"><Flame size={30} strokeWidth={2.2} /></span>
+              <b className="st-num">{x.streak}</b>
+              <small className="st-days">{x.streak === 1 ? 'dia' : 'dias'}</small>
+              <span className="st-label">{x.name}</span>
+              <small className="st-days">recorde {dias(x.best_streak)}</small>
+            </div>
+          ))}
+        </div>
       </div>
     </Section>
   );

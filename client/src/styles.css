@@ -877,3 +877,22 @@ input::-webkit-datetime-edit { padding: 0; }
 .rank-tile small { font-weight: 800; }
 .rank-tile span { font-size: .75rem; color: var(--muted, #64748b); }
 .streak-pub.three { display: grid; grid-template-columns: 1fr; gap: .45rem; }
+
+/* Sequências: 3 foguinhos */
+.streak-box { display: block; margin: 1.1rem 0; padding: 1rem; border-radius: 22px; text-decoration: none; color: #fff; background: radial-gradient(circle at 15% 0%, rgba(251,146,60,.35), transparent 55%), linear-gradient(160deg, #1e293b, #0f172a); box-shadow: 0 10px 26px rgba(15,23,42,.35); border: 1px solid rgba(251,146,60,.25); }
+.streak-box-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: .8rem; }
+.streak-box-head span { display: inline-flex; align-items: center; gap: .4rem; font-weight: 900; font-size: 1.02rem; }
+.streak-box-head span svg { color: #fb923c; }
+.streak-box-head em { display: inline-flex; align-items: center; gap: .1rem; font-style: normal; font-size: .78rem; font-weight: 800; padding: .3rem .55rem .3rem .75rem; border-radius: 999px; background: rgba(255,255,255,.1); color: #fed7aa; }
+.streak-trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .55rem; }
+.st-item { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; padding: .85rem .35rem .75rem; border-radius: 18px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.08); color: #e2e8f0; }
+.st-flame { width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; background: rgba(148,163,184,.15); color: #64748b; margin-bottom: .35rem; }
+.st-item.lit .st-flame { background: radial-gradient(circle at 50% 65%, #fde047, #fb923c 45%, #ea580c); color: #fff; box-shadow: 0 0 18px rgba(251,146,60,.55); animation: st-glow 2.2s ease-in-out infinite; }
+.st-num { font-size: 1.55rem; font-weight: 900; line-height: 1; }
+.st-item.lit .st-num { background: linear-gradient(180deg, #fde68a, #fb923c); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.st-days { font-size: .68rem; font-weight: 700; color: #94a3b8; margin-bottom: .3rem; }
+.st-label { font-size: .74rem; font-weight: 800; line-height: 1.2; }
+.st-check { margin-top: .35rem; font-size: .6rem; font-weight: 900; text-transform: uppercase; letter-spacing: .03em; color: #052e16; background: #4ade80; border-radius: 999px; padding: .1rem .45rem; }
+.st-item.on { border-color: rgba(74,222,128,.5); }
+@keyframes st-glow { 50% { box-shadow: 0 0 26px rgba(251,146,60,.85); transform: scale(1.05); } }
+@media (prefers-reduced-motion: reduce) { .st-item.lit .st-flame { animation: none; } }

@@ -1,6 +1,7 @@
 // DBV+: assinatura de 30 dias que ajuda o app e libera benefícios.
 import { useState } from 'react';
-import { BadgeCheck, Check, Clock, Gift, Sparkles } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { BadgeCheck, Check, Clock, Gift, Sparkles, X } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Button, Card, Loading, Modal, PageHeader, useAsync, useLoad } from '../../ui.jsx';
@@ -106,24 +107,24 @@ export default function PlusPage() {
 }
 
 /** Aviso para assinar/renovar (uma vez por dia, com X para fechar). O app funciona igual sem assinar. */
+/** Faixa discreta no topo convidando para o DBV+ (só membros sem o plano). O X esconde por 7 dias. */
 export function PlusNudge({ to }) {
   const { actor } = useAuth();
-  const key = 'dbvplus-nudge';
-  const today = new Date().toISOString().slice(0, 10);
+  const { pathname } = useLocation();
+  const key = 'dbvplus-faixa';
   const [open, setOpen] = useState(() => {
     if (actor?.type !== 'member' || actor.plus) return false;
-    try { return localStorage.getItem(key) !== today; } catch { return false; }
+    try { return Number(localStorage.getItem(key) || 0) < Date.now(); } catch { return true; }
   });
-  if (!open) return null;
-  const close = () => { try { localStorage.setItem(key, today); } catch { /* sem armazenamento */ } setOpen(false); };
+  // Só nas telas principais das abas (não atrapalha leitura, quiz nem jogo).
+  if (!open || pathname.startsWith(to) || pathname.split('/').filter(Boolean).length > 2) return null;
+  const close = () => { try { localStorage.setItem(key, String(Date.now() + 7 * 864e5)); } catch { /* sem armazenamento */ } setOpen(false); };
   return (
-    <Modal title="Seja DBV+" onClose={close}>
-      <div className="plus-nudge">
-        <img src="/marca/logo.svg" alt="" />
-        <p>Ajude o App do DBV a crescer! Com o <b>DBV+</b> você ganha áudio nas leituras, Bom Líder, 30 pacotinhos de figurinhas por mês, figurinhas em dobro e o selo de verificado.</p>
-        <a className="btn btn-primary btn-block" href={to} onClick={close}>Ver os planos</a>
-        <Button block variant="secondary" onClick={close}>Agora não</Button>
-      </div>
-    </Modal>
+    <div className="plus-bar">
+      <img src="/marca/logo.svg" alt="" />
+      <Link to={to} className="plus-bar-text"><b>Seja DBV+</b><small>Áudio, Bom Líder e figurinhas em dobro</small></Link>
+      <Link to={to} className="plus-bar-btn">Ver planos</Link>
+      <button type="button" className="plus-bar-x" aria-label="Fechar" onClick={close}><X size={16} /></button>
+    </div>
   );
 }
