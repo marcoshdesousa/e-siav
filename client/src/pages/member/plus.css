@@ -1,4 +1,4 @@
-.plus-hero { display: flex; gap: .9rem; align-items: center; padding: 1.1rem; border-radius: 20px; color: #fff; background: radial-gradient(circle at 90% 10%, rgba(245,197,24,.45), transparent 45%), linear-gradient(135deg, #0f2744, #1e3a5f); box-shadow: 0 12px 30px rgba(15,39,68,.3); }
+.plus-hero { margin-bottom: 1rem; display: flex; gap: .9rem; align-items: center; padding: 1.1rem; border-radius: 20px; color: #fff; background: radial-gradient(circle at 90% 10%, rgba(245,197,24,.45), transparent 45%), linear-gradient(135deg, #0f2744, #1e3a5f); box-shadow: 0 12px 30px rgba(15,39,68,.3); }
 .plus-hero img { width: 64px; height: 64px; filter: drop-shadow(0 0 10px rgba(245,197,24,.6)) sepia(1) saturate(4) hue-rotate(5deg) brightness(1.1); }
 .plus-hero b { font-size: 1.35rem; color: #f5c518; }
 .plus-hero p { margin: .2rem 0 0; font-size: .9rem; opacity: .92; }
