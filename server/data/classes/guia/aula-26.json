@@ -1,0 +1,99 @@
+{
+  "n": 26,
+  "titulo": "Acampamento com pioneiria",
+  "secao": "Arte de Acampar",
+  "requisito": "Participar com sua unidade de um acampamento com estrutura de pioneiria, planejar o que deve ser levado e o que vai acontecer neste acampamento. Supondo que o acampamento será das 18h00 da sexta-feira às 14h00 do domingo, faça uma lista do equipamento pessoal que você deve levar e também da quantidade de comida. Faça um relatório sobre o acampamento do qual você participou. Cole fotos também.",
+  "objetivo": "Planejar um acampamento de fim de semana com a unidade: equipamento pessoal, quantidade de comida, programação com o sábado, e depois relatar a experiência.",
+  "slides": [
+    {
+      "tipo": "capa",
+      "titulo": "Acampamento com pioneiria",
+      "subtitulo": "Aula 26 · Arte de Acampar",
+      "narracao": "Olá, Guia! Chegou um dos requisitos mais esperados: acampar com a sua unidade num acampamento com estrutura de pioneiria. Pioneiria são as construções feitas com troncos ou bambus e cordas, usando nós e amarras, como portais, mesas, torres e cozinhas de campo. O requisito tem três partes: planejar o que levar e o que vai acontecer, participar do acampamento e depois fazer um relatório com fotos. Nesta aula vamos planejar juntos um acampamento que começa na sexta-feira às seis da tarde e termina no domingo às duas da tarde."
+    },
+    {
+      "tipo": "texto",
+      "titulo": "Primeiro, o planejamento",
+      "itens": ["Quantas pessoas vão e quem é o responsável", "Local, transporte e autorização dos pais", "Divisão de tarefas na unidade", "Programação de cada dia"],
+      "narracao": "Um acampamento bom começa muito antes da viagem. Reúna sua unidade com o conselheiro e respondam algumas perguntas. Quantas pessoas vão? Qual é o local e como vamos chegar? Todos têm a ficha de autorização assinada pelos pais? Depois dividam as tarefas: quem cuida da cozinha, quem cuida das barracas, quem cuida da pioneiria, quem prepara o culto, quem leva o kit de primeiros socorros. E façam a programação de cada dia. Quando cada um sabe o que fazer, o acampamento fica mais seguro, mais organizado e muito mais divertido."
+    },
+    {
+      "tipo": "lista",
+      "titulo": "Equipamento pessoal",
+      "itens": ["Barraca ou lugar na barraca", "Saco de dormir e isolante", "Lanterna e pilhas", "Roupas e agasalho", "Roupa de chuva", "Uniforme de gala", "Bíblia e lição", "Prato, copo e talheres", "Itens de higiene", "Cantil ou garrafa", "Repelente e protetor solar", "Remédios de uso pessoal"],
+      "narracao": "Agora a sua lista pessoal. Você vai precisar de um lugar para dormir: barraca, saco de dormir e um isolante para o chão. Lanterna com pilhas extras. Roupas para três dias, um agasalho para a noite e roupa de chuva. Não esqueça o uniforme de gala para o sábado, a Bíblia e a lição da Escola Sabatina. Leve seu prato, copo e talheres, os itens de higiene, uma garrafa de água, repelente e protetor solar. Se você usa algum remédio, leve e avise o conselheiro. Dica: coloque as roupas em sacos plásticos para não molharem."
+    },
+    {
+      "tipo": "texto",
+      "titulo": "Quantas refeições?",
+      "itens": ["Sexta: jantar", "Sábado: café da manhã, almoço e jantar", "Domingo: café da manhã e almoço", "Total: seis refeições, mais lanches e água"],
+      "narracao": "Para calcular a comida, primeiro conte as refeições. O acampamento começa na sexta às seis da tarde, então a primeira refeição é o jantar de sexta. No sábado, são três: café da manhã, almoço e jantar. No domingo, como termina às duas da tarde, temos o café da manhã e o almoço. São seis refeições no total. Some também alguns lanches, como frutas e biscoitos, e bastante água. Depois multiplique as porções pelo número de pessoas da unidade. Assim você chega à quantidade de comida de que precisa."
+    },
+    {
+      "tipo": "lista",
+      "titulo": "Exemplo para cada pessoa",
+      "itens": ["Pão: 6 a 8 unidades", "Arroz: 2 xícaras", "Feijão ou lentilha: 1 xícara", "Macarrão: 1 xícara", "Legumes e verduras", "Frutas: 6 unidades", "Leite ou suco", "Água: 2 litros por dia"],
+      "narracao": "Veja um exemplo aproximado de quantidade por pessoa para o fim de semana. Seis a oito pães para os cafés da manhã e lanches. Cerca de duas xícaras de arroz cru e uma de feijão ou lentilha para os almoços. Uma xícara de macarrão para um dos jantares. Legumes e verduras para acompanhar, cerca de seis frutas, leite ou suco, e pelo menos dois litros de água por dia. Lembre-se de que as quantidades são uma estimativa: adolescentes que fazem muita atividade comem bastante. Converse com seu conselheiro para ajustar o cardápio, que deve ser vegetariano."
+    },
+    {
+      "tipo": "versiculo",
+      "texto": "Amanhã é repouso, o santo sábado do Senhor; o que quiserdes cozer no forno, cozei-o.",
+      "ref": "Êx 16:23",
+      "narracao": "Um acampamento adventista que passa pelo sábado precisa de um cuidado especial. Em Êxodo capítulo dezesseis, verso vinte e três, Deus orientou o povo no deserto a preparar no sexto dia o que iriam comer no sábado. Por isso, planeje o cardápio de sábado para ser simples, com o máximo de coisas adiantadas na sexta-feira. A pioneiria e as tarefas pesadas também devem ficar prontas antes do pôr do sol de sexta. Assim o sábado fica livre para o que ele é: um dia de adoração, comunhão e contato com a criação."
+    },
+    {
+      "tipo": "lista",
+      "titulo": "Exemplo de programação",
+      "itens": ["Sexta: chegada e montagem", "Sexta: jantar e culto", "Sábado: Escola Sabatina", "Sábado: culto e almoço", "Sábado: estudo da natureza", "Domingo: pioneiria e jogos", "Domingo: limpeza e retorno"],
+      "narracao": "Veja um exemplo de programação. Na sexta, chegada, montagem rápida das barracas, jantar e o culto de abertura do sábado. No sábado, Escola Sabatina, culto divino, almoço, uma caminhada de estudo da natureza à tarde e o culto do pôr do sol. No domingo cedo, depois do café, é hora de construir ou completar as estruturas de pioneiria, fazer jogos e atividades. Antes das duas da tarde, desmontar tudo, limpar bem a área e voltar. Ajuste esse modelo com o seu conselheiro e escreva a programação no caderno."
+    },
+    {
+      "tipo": "dica",
+      "titulo": "Deixe o lugar melhor",
+      "texto": "Leve todo o lixo de volta, apague bem o fogo e desmonte a pioneiria. Não deixe rastros.",
+      "narracao": "Uma regra de ouro do acampamento é deixar o lugar melhor do que você encontrou. Recolha todo o lixo e leve de volta. Apague completamente as fogueiras, com água, mexendo as cinzas até ficarem frias. Desmonte as estruturas de pioneiria e guarde as cordas e os bambus. Não corte árvores vivas sem autorização do responsável pelo local. Cuidar da natureza é cuidar da obra de Deus, e também é um bom testemunho para quem empresta o lugar para o seu clube."
+    },
+    {
+      "tipo": "texto",
+      "titulo": "O relatório do acampamento",
+      "itens": ["Data, local e quem participou", "Estruturas de pioneiria construídas", "Momentos espirituais e atividades", "O que deu certo e o que melhorar", "Fotos do acampamento"],
+      "narracao": "Depois do acampamento, escreva o relatório. Comece com a data, o local e os nomes de quem participou. Conte quais estruturas de pioneiria vocês construíram e como foi o trabalho em equipe. Descreva os momentos espirituais, as refeições e as atividades. Faça uma avaliação honesta: a sua lista de equipamento estava completa? A comida foi suficiente ou sobrou? O que vocês fariam diferente? Por fim, cole fotos. Tire fotos das construções, da unidade reunida e das atividades, mas no sábado combine com a liderança o uso do celular."
+    },
+    {
+      "tipo": "tarefa",
+      "titulo": "No seu caderno",
+      "itens": ["Escreva sua lista de equipamento pessoal", "Calcule a comida para as seis refeições", "Anote a programação planejada", "Participe e faça o relatório com fotos", "Peça o visto do instrutor"],
+      "narracao": "No caderno, faça o seguinte. Primeiro, escreva a lista de equipamento pessoal que você vai levar, pensando num acampamento de sexta às seis da tarde até domingo às duas da tarde. Depois, escreva a lista de comida com as quantidades, considerando as seis refeições e o número de pessoas da sua unidade. Anote também a programação planejada. Então participe do acampamento com a sua unidade. Na volta, escreva o relatório no espaço indicado e cole as fotos. Por fim, mostre tudo ao seu instrutor e peça o visto."
+    },
+    {
+      "tipo": "fim",
+      "titulo": "Muito bem!",
+      "texto": "Bom planejamento, bom acampamento. Agora responda o quiz da aula.",
+      "narracao": "Muito bem, Guia! Agora você sabe que um acampamento de sucesso depende de um bom planejamento, de trabalho em equipe e de respeito pelo sábado e pela natureza. Esse é um ótimo momento para mostrar liderança dentro da sua unidade, ajudando os mais novos a montar a barraca e a organizar a mochila. Agora responda o quiz da aula. E bom acampamento!"
+    }
+  ],
+  "caderno": [
+    "Escreva a lista do equipamento pessoal para um acampamento de sexta às 18h até domingo às 14h",
+    "Escreva a lista de comida com as quantidades para as seis refeições e o número de pessoas da unidade",
+    "Participe com sua unidade de um acampamento com estrutura de pioneiria",
+    "Escreva o relatório do acampamento e cole fotos",
+    "Peça o visto do instrutor"
+  ],
+  "quiz": [
+    {
+      "q": "Num acampamento de sexta às 18h até domingo às 14h, quantas refeições principais há?",
+      "options": ["Quatro", "Cinco", "Seis", "Nove"],
+      "answer": 2
+    },
+    {
+      "q": "O que é pioneiria?",
+      "options": ["Construções com troncos ou bambus, cordas, nós e amarras", "Um tipo de barraca de náilon", "Uma receita de acampamento", "Um jogo noturno"],
+      "answer": 0
+    },
+    {
+      "q": "Segundo Êxodo 16:23, o que fazer com a comida do sábado?",
+      "options": ["Comprar no sábado", "Não comer no sábado", "Cozinhar só no domingo", "Preparar no dia anterior"],
+      "answer": 3
+    }
+  ]
+}

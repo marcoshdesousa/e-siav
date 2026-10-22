@@ -61,11 +61,11 @@ export function ClassPage({ base }) {
             {groups.map((g) => (
               <div key={g.secao + g.items[0].n}>
                 <h3 className="cls-sec">{g.secao}</h3>
-                <div className="day-list">
+                <div className="cls-list">
                   {g.items.map((l) => (
-                    <Link key={l.n} to={l.locked ? `${base}/dbv-mais` : `${base}/aprendizagem/classes/${id}/${l.n}`} className={'day-item' + (l.done ? ' done' : '') + (l.locked ? ' locked' : '')}>
-                      <span className="day-n">{l.done ? <CheckCircle2 size={18} /> : l.n}</span>
-                      <span className="grow"><b>{l.titulo}</b><small>Aula {l.n}{l.duration ? ` · ${mins(l.duration)}` : ''}{l.free && !c.plus ? ' · grátis' : ''}</small></span>
+                    <Link key={l.n} to={l.locked ? `${base}/dbv-mais` : `${base}/aprendizagem/classes/${id}/${l.n}`} className={'cls-row' + (l.done ? ' done' : '') + (l.locked ? ' locked' : '')}>
+                      <span className="cls-n">{l.done ? <CheckCircle2 size={18} /> : l.n}</span>
+                      <span className="cls-txt"><b>{l.titulo}</b><small>Aula {l.n}{l.duration ? ` · ${mins(l.duration)}` : ''}{l.free && !c.plus ? ' · grátis' : ''}</small></span>
                       {l.locked ? <span className="cls-plus"><BadgeCheck size={14} /> DBV+</span> : <PlayCircle size={22} className="cls-play" />}
                     </Link>
                   ))}
@@ -114,7 +114,7 @@ export function ClassLesson({ base }) {
               <>
                 {a.video ? (
                   <div className="cls-video">
-                    <video ref={video} key={a.video.url} src={a.video.url} controls playsInline preload="metadata" onTimeUpdate={onTime} />
+                    <video ref={video} key={a.video.url} src={a.video.url} poster={a.video.poster || undefined} controls playsInline preload="metadata" onTimeUpdate={onTime} />
                   </div>
                 ) : <Card className="center small muted">O vídeo desta aula está sendo preparado. Enquanto isso, veja o que fazer no caderno.</Card>}
                 <Tabs tabs={[['aula', 'Tópicos'], ['caderno', 'No caderno'], ['quiz', a.completed ? 'Quiz ✓' : 'Quiz']]} value={tab} onChange={setTab} />

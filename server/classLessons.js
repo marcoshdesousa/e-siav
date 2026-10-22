@@ -51,7 +51,7 @@ export function videoOf(classe, aula) {
     try {
       const m = JSON.parse(fs.readFileSync(path.join(VIDEO_ROOT, classe, `${id}.json`), 'utf8'));
       if (m.hash === videoHash(aula) && fs.existsSync(path.join(VIDEO_ROOT, classe, `${id}.mp4`))) {
-        v = { url: `/video/${classe}/${id}.mp4?v=${m.hash}`, duration: m.duration, starts: m.starts };
+        v = { url: `/video/${classe}/${id}.mp4?v=${m.hash}`, poster: fs.existsSync(path.join(VIDEO_ROOT, classe, `${id}.jpg`)) ? `/video/${classe}/${id}.jpg?v=${m.hash}` : null, duration: m.duration, starts: m.starts };
       }
     } catch { /* sem vídeo */ }
     videoCache.set(key, v);

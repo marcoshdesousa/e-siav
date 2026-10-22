@@ -177,6 +177,8 @@ async function record(browser, file, fontsCss, logo) {
       '-vf', 'fps=2,format=yuv420p', '-c:v', 'libx264', '-preset', 'slow', '-tune', 'stillimage', '-crf', '28', '-g', '600', '-bf', '0',
       '-c:a', 'aac', '-b:a', '40k', '-ac', '1', '-shortest', '-movflags', '+faststart', mp4 + '.part.mp4']);
     fs.renameSync(mp4 + '.part.mp4', mp4);
+    // Capa do vídeo (o primeiro slide), para não aparecer preto antes de tocar.
+    await run('ffmpeg', ['-loglevel', 'error', '-y', '-i', path.join(tmp, 's0.png'), '-vf', 'scale=540:-1', '-q:v', '5', path.join(outDir, `${id}.jpg`)]);
     fs.writeFileSync(meta, JSON.stringify({ hash, duration: Math.round((at / rate) * 10) / 10, starts }));
     return 'novo';
   } finally { fs.rmSync(tmp, { recursive: true, force: true }); }
