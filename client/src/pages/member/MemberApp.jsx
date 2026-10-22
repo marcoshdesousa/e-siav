@@ -118,7 +118,7 @@ export default function MemberApp() {
       <Route
         path="*"
         element={
-          <Shell tabs={tabs} offlineOk={(path) => ['jogos', 'albuns', 'mais'].includes(path.split('/')[2])} parentOf={parentOf}>
+          <Shell tabs={tabs} parentOf={parentOf}>
             {!actor.waiting && <PlusNudge to={`${base}/dbv-mais`} />}
             {actor.waiting ? <Waiting text={actor.waiting} /> : <Routes>
               <Route index element={<MyProfile />} />

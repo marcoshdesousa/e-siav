@@ -10,7 +10,7 @@ import { Badge, Button, Card, Loading, Modal, PageHeader, Section, Tabs, notify,
 import { sfx, unlockAudio } from '../games/audio.js';
 import { StickerCard } from './StickerArt.jsx';
 import { PixCheckout, money } from '../Payment.jsx';
-import { clearPasteQueue, pasteQueue, queuePaste, saveAlbum, savedAlbum, useOnline } from '../../offline.js';
+import { useOnline } from '../../offline.js';
 import { AlbumCover, BibleEmblem } from './AlbumCover.jsx';
 import data from './biblico.json';
 import './albums.css';
@@ -319,36 +319,12 @@ function PasteBar({ sid, peeled, onPeel, onCancel, onGoPage, onDropAt, page }) {
 }
 
 /** O Álbum Bíblico. */
-/**
- * Carrega o álbum: com internet, primeiro envia o que foi colado sem internet e guarda uma cópia
- * no aparelho; sem internet, usa a cópia guardada.
- */
-async function loadAlbum(id, offlineSession) {
-  if (offlineSession) {
-    // Entrou sem internet: até entrar de verdade de novo, usa só a cópia guardada.
-    const saved = savedAlbum(id);
-    if (saved) return { ...saved, offline: true };
-  }
-  try {
-    const q = pasteQueue(id);
-    if (q.length) { await api.post(`/albuns/${id}/colar`, { ids: q }); clearPasteQueue(id); }
-    const d = await api.get('/albuns/' + id);
-    saveAlbum(id, d);
-    return d;
-  } catch (e) {
-    const saved = e.offline && savedAlbum(id);
-    if (saved) return { ...saved, offline: true };
-    if (e.offline) throw new Error('Sem internet. Abra o álbum uma vez com internet para poder usar sem internet depois.');
-    throw e;
-  }
-}
+const loadAlbum = (id) => api.get('/albuns/' + id);
 
 export function AlbumPage() {
   const { id } = useParams();
   const online = useOnline();
-  const { actor } = useAuth();
-  const offlineSession = !!actor?.offline;
-  const state = useLoad(() => loadAlbum(id, offlineSession), [id, online, offlineSession]);
+  const state = useLoad(() => loadAlbum(id), [id, online]);
   const [page, setPage] = useState(0);
   const [tab, setTab] = useState('album');
   const [buy, setBuy] = useState(false);
@@ -398,8 +374,6 @@ export function AlbumPage() {
     sfx('pop');
     state.setData((d) => ({ ...d, stickers: { ...d.stickers, [sid]: { ...d.stickers[sid], stuck: true } } }));
     setTimeout(() => setJustStuck(null), 1200);
-    // Sem internet: cola aqui e envia quando a internet voltar.
-    if (!online || state.data?.offline) { queuePaste(id, sid); return; }
     try {
       const r = await api.post(`/albuns/${id}/colar`, { ids: [sid] });
       if (r.completed) { sfx('record'); notify('Parabéns! Você completou o álbum! Seu trunfo especial está garantido.'); state.reload(); }
@@ -408,8 +382,7 @@ export function AlbumPage() {
         if (pg.stickers.every((x) => x === sid || state.data?.stickers[x]?.stuck)) { setTimeout(() => sfx('win'), 350); notify(`Página "${pg.title}" completa!`); }
       }
     } catch (e) {
-      if (e.offline) queuePaste(id, sid);
-      else { notify(e.message, 'error'); state.reload(); }
+      notify(e.message, 'error'); state.reload();
     }
   };
   const dropAt = (slotId, el) => {
@@ -427,7 +400,7 @@ export function AlbumPage() {
       {(a) => {
         const stuck = Object.values(a.stickers).filter((x) => x.stuck).length;
         const pg = data.pages[page];
-        const off = !online || a.offline;
+        const off = !online;
         return (
           <div className={sel ? 'album-pasting' : ''}>
             <PageHeader title={a.name} subtitle={`${stuck} de ${a.total} figurinhas coladas`} />
@@ -450,7 +423,6 @@ export function AlbumPage() {
                 <span className="small muted center"><Repeat size={12} /> {a.repeats} repetida{a.repeats !== 1 ? 's' : ''}</span>
               </div>
             </div>
-            {off && <Card className="small offline-note">Sem internet: dá para ver o álbum e colar as figurinhas que você já tem. Abrir pacotinhos e comprar precisam de internet. O que você colar agora é salvo quando a internet voltar.</Card>}
 
             {toPaste.length > 0 && (
               <Section title={`Para colar (${toPaste.length})`}>

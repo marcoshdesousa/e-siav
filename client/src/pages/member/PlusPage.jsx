@@ -72,6 +72,12 @@ export default function PlusPage() {
             </ul>
             <h3 className="plus-h">Planos ({d.days} dias)</h3>
             <div className="plus-plans">
+              <div className="plus-plan free">
+                <b>Grátis</b>
+                <span className="plus-price">R$ 0</span>
+                <ul className="plus-free">{(d.free || []).map((t) => <li key={t}><Check size={14} />{t}</li>)}</ul>
+                <span className="plus-current">{d.mine?.active ? 'Sempre disponível' : 'Seu plano atual'}</span>
+              </div>
               {d.plans.map((p) => (
                 <div key={p.id} className={'plus-plan' + (p.specialties ? ' gold' : '')}>
                   <b>{p.name}</b>
@@ -114,7 +120,7 @@ export function PlusNudge({ to }) {
     <Modal title="Seja DBV+" onClose={close}>
       <div className="plus-nudge">
         <img src="/marca/logo.svg" alt="" />
-        <p>Ajude o App do DBV a crescer! Com o <b>DBV+</b> você ganha áudio nas leituras, Bom Líder, 30 pacotinhos de figurinhas por mês, figurinhas em dobro, mini-jogos sem internet e o selo de verificado.</p>
+        <p>Ajude o App do DBV a crescer! Com o <b>DBV+</b> você ganha áudio nas leituras, Bom Líder, 30 pacotinhos de figurinhas por mês, figurinhas em dobro e o selo de verificado.</p>
         <a className="btn btn-primary btn-block" href={to} onClick={close}>Ver os planos</a>
         <Button block variant="secondary" onClick={close}>Agora não</Button>
       </div>

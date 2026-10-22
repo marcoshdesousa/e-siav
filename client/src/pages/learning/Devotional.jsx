@@ -1,11 +1,12 @@
 // Meditação Diária e Lição da Escola Sabatina: cada uma com a sua sequência.
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { CheckCircle2, ChevronLeft, ChevronRight, Flame, Gift, Lock, PlayCircle, RotateCcw, Sparkles, Trophy, X } from 'lucide-react';
+import { CheckCircle2, ChevronLeft, ChevronRight, Flame, Lock, PlayCircle, RotateCcw, Sparkles, Trophy, X } from 'lucide-react';
 import { api } from '../../api.js';
 import { Button, Card, Loading, PageHeader, Tabs, useAsync, useLoad } from '../../ui.jsx';
 import { BackButton, PlayButton, VoiceAudio, useBack, useFocusMode } from './Learning.jsx';
 import { useNarration } from './voice.js';
+import { PackReward } from './PackReward.jsx';
 import './devotional.css';
 
 const br = (iso) => (iso ? iso.split('-').reverse().join('/') : '');
@@ -37,7 +38,7 @@ function Quiz({ questions, send, pass, onAgain, done }) {
           {result.passed ? (
             <>
               <p><b>Concluído!</b>{result.on_time ? ' A sua sequência subiu!' : ''}</p>
-              {result.pack && <p className="quiz-gift"><Gift size={18} /> Você ganhou 1 pacotinho do Álbum Bíblico!</p>}
+              {result.pack && <PackReward />}
               {result.points?.member > 0 && <p className="quiz-gift"><Trophy size={18} /> +{result.points.member} pontos no ranking{result.points.unit ? `, +${result.points.unit} para a sua unidade` : ''} e +{result.points.club} para o seu clube!</p>}
             </>
           ) : <p>Faltou pouco! Precisa acertar {result.pass}. Releia e tente de novo.</p>}

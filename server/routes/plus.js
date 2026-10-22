@@ -13,12 +13,19 @@ const admin = requireAuth('admin');
 onPaid('dbvplus', (p, ref) => activatePlus(p.member_id, ref.plan));
 
 /** Benefícios (os que ainda não estão prontos aparecem por último, como "em breve"). */
+// O que todos têm de graça, sem pagar nada.
+export const FREE = [
+  'Ano Bíblico, Meditação Diária e Escola Sabatina com as sequências',
+  'Áudio dos 5 primeiros dias do Ano Bíblico e da Meditação',
+  'Mini-jogos, álbuns de figurinhas e pacotinhos ganhos nos estudos',
+  'Perfil, especialidades, classes e rankings do distrito',
+];
+
 export const BENEFITS = [
-  { text: 'Áudio do Ano Bíblico, da Meditação e do Bom Líder' },
+  { text: 'Áudio de todos os dias do Ano Bíblico e da Meditação, e do Bom Líder' },
   { text: 'Bom Líder: Manual Administrativo e Nisto Cremos' },
   { text: `${PLUS_PACKS} pacotinhos de figurinhas a cada ${PLUS_DAYS} dias` },
   { text: 'Figurinhas em dobro: 2 pacotinhos pelo preço de 1' },
-  { text: 'Mini-jogos sem internet' },
   { text: 'Participa do ranking dos mini-jogos' },
   { text: 'Selo de verificado (logo dourada) no perfil' },
   { text: 'Especialidades físicas entregues pela equipe (planos de R$ 24,90 e R$ 39,90)' },
@@ -29,7 +36,7 @@ export const BENEFITS = [
 r.get('/plus', member, (req, res) => {
   const p = plusOf(req.actor.id);
   res.json({
-    plans: Object.values(PLANS), benefits: BENEFITS, days: PLUS_DAYS, packs: PLUS_PACKS,
+    plans: Object.values(PLANS), benefits: BENEFITS, free: FREE, days: PLUS_DAYS, packs: PLUS_PACKS,
     mine: p, open: plusOpen(req.actor.id),
     picks_names: p?.picks ? all(`SELECT id, name, category FROM content WHERE id IN (${p.picks.map(() => '?').join(',')})`, ...p.picks) : [],
   });

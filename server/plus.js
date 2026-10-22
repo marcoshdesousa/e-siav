@@ -38,7 +38,10 @@ export const isPlus = (memberId) => !!plusOf(memberId)?.active;
 export const plusOpen = (memberId) => setting('biblia_teste') !== '0' || isPlus(memberId);
 
 /** Áudio só para quem tem o DBV+ (ou no modo de teste): { audio } ou { audio: null, audio_locked: true }. */
-export const gatedAudio = (memberId, audio) => (!audio ? { audio: null } : plusOpen(memberId) ? { audio } : { audio: null, audio_locked: true });
+/** Áudio da leitura: os primeiros (free) são de graça para todos; os outros são do DBV+. */
+export const gatedAudio = (memberId, audio, free = false) => (!audio ? { audio: null } : free || plusOpen(memberId) ? { audio } : { audio: null, audio_locked: true });
+/** Quantos áudios do começo do Ano Bíblico e da Meditação são de graça. */
+export const FREE_AUDIOS = 5;
 
 /** Pagamento confirmado: +30 dias (somando ao que falta), 30 pacotinhos e, se o plano tiver, a escolha das especialidades. */
 export function activatePlus(memberId, planId) {

@@ -7,19 +7,19 @@ async function request(method, url, body) {
     opts.body = JSON.stringify(body);
   }
   let res;
-  try {
-    res = await fetch('/api' + url, opts);
-  } catch {
-    // Sem internet (ou servidor inalcançável).
-    const err = new Error('Sem internet. Conecte-se para usar esta parte do app.');
-    err.offline = true;
-    throw err;
+  // Servidor reiniciando (502/503/504): tenta de novo em silêncio, sem trocar de tela.
+  for (let tryN = 0; ; tryN++) {
+    try {
+      res = await fetch('/api' + url, opts);
+    } catch {
+      const err = new Error('Sem internet. Conecte-se para usar o app.');
+      err.offline = true;
+      throw err;
+    }
+    if (![502, 503, 504].includes(res.status) || tryN >= 5) break;
+    await new Promise((r) => setTimeout(r, 1500 * (tryN + 1)));
   }
-  // Servidor fora do ar (atualização ou erro): vai para a tela "Sistema em atualização".
-  if ([502, 503, 504].includes(res.status)) {
-    location.replace('/atualizando.html?volta=' + encodeURIComponent(location.pathname + location.search));
-    throw new Error('Sistema em atualização');
-  }
+  if ([502, 503, 504].includes(res.status)) throw new Error('O servidor está demorando para responder. Tente de novo em instantes.');
   const data = res.headers.get('content-type')?.includes('json') ? await res.json() : null;
   if (!res.ok) {
     const err = new Error(data?.error || 'Algo deu errado. Tente de novo.');

@@ -142,3 +142,28 @@
 .bible-chapter.reading { color: #b45309; }
 .bible-controls .icon-btn:disabled { opacity: .3; }
 .voice-note { text-align: center; font-size: .75rem; font-weight: 700; color: var(--muted, #64748b); margin: 0 0 .4rem; }
+
+/* Pacotinho ganho: "Coletar" */
+.pack-reward { position: relative; display: flex; flex-direction: column; align-items: center; gap: .7rem; margin: .9rem auto .4rem; padding: 1.1rem 1rem 1rem; max-width: 320px; border-radius: 22px; background: radial-gradient(circle at 50% 20%, #1e3a8a, #0f2744 70%); color: #fff; overflow: hidden; box-shadow: 0 10px 30px rgba(15,39,68,.35); animation: pr-in .5s cubic-bezier(.2,1.4,.4,1) both; }
+.pack-reward-glow { position: absolute; inset: -40%; background: conic-gradient(from 0deg, transparent, rgba(245,197,24,.35), transparent 30%, rgba(245,197,24,.25), transparent 60%); animation: pr-spin 6s linear infinite; pointer-events: none; }
+.pack-reward-pack { position: relative; width: 116px; height: 150px; border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .3rem; background: linear-gradient(160deg, #f5c518, #e09b0b 55%, #b77905); color: #0f2744; box-shadow: 0 8px 20px rgba(0,0,0,.35), inset 0 0 0 3px rgba(255,255,255,.35); overflow: hidden; animation: pr-float 2.4s ease-in-out infinite; }
+.pack-reward-pack::before, .pack-reward-pack::after { content: ''; position: absolute; left: 0; right: 0; height: 10px; background: repeating-linear-gradient(90deg, rgba(0,0,0,.18) 0 6px, transparent 6px 12px); }
+.pack-reward-pack::before { top: 0; } .pack-reward-pack::after { bottom: 0; }
+.pack-reward-pack img { width: 54px; height: 54px; }
+.pack-reward-pack b { font-size: .85rem; font-weight: 900; }
+.pack-reward-pack small { font-size: .7rem; font-weight: 700; opacity: .8; }
+.pack-reward-shine { position: absolute; top: -50%; left: -60%; width: 40%; height: 200%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.7), transparent); transform: rotate(20deg); animation: pr-shine 2.2s ease-in-out infinite; }
+.pack-reward-text { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: .15rem; }
+.pack-reward-text b { display: inline-flex; align-items: center; gap: .3rem; color: #fde68a; }
+.pack-reward-text small { color: rgba(255,255,255,.75); font-size: .78rem; }
+.pack-reward-btn { position: relative; display: inline-flex; align-items: center; gap: .45rem; border: 0; border-radius: 999px; padding: .75rem 2rem; font-weight: 900; font-size: 1rem; color: #0f2744; background: linear-gradient(135deg, #fde047, #f5c518 50%, #d4a017); box-shadow: 0 4px 0 #a16207, 0 8px 18px rgba(245,197,24,.4); cursor: pointer; animation: pr-pulse 1.6s ease-in-out infinite; }
+.pack-reward-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #a16207; }
+.pack-reward.going .pack-reward-pack { animation: pr-fly .75s cubic-bezier(.5,-0.3,.7,1) forwards; }
+.pack-reward.going .pack-reward-btn { animation: none; opacity: .85; }
+@keyframes pr-in { from { opacity: 0; transform: scale(.7); } }
+@keyframes pr-spin { to { transform: rotate(360deg); } }
+@keyframes pr-float { 50% { transform: translateY(-6px) rotate(-2deg); } }
+@keyframes pr-shine { 0%, 40% { left: -60%; } 100% { left: 130%; } }
+@keyframes pr-pulse { 50% { transform: scale(1.06); } }
+@keyframes pr-fly { 30% { transform: scale(1.15) rotate(-8deg); } 100% { transform: translate(140px, -260px) scale(.2) rotate(25deg); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .pack-reward, .pack-reward * { animation: none !important; } }

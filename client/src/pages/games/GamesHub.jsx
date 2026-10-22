@@ -44,7 +44,7 @@ function MiniRankings({ base, online, initial }) {
         {GAMES.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
       </select>
       <p className="small muted">{gameById(rankGame).mode === 'sum' ? 'Os pontos de todas as partidas vão somando.' : 'Vale a melhor partida de cada um.'} Ranking geral de todos os membros.</p>
-      {online ? <GameRanking key={rankGame} game={gameById(rankGame)} base={base} /> : <Card className="small center">Os rankings precisam de internet. Sem internet, dá para jogar, mas as partidas não entram no ranking.</Card>}
+      {online ? <GameRanking key={rankGame} game={gameById(rankGame)} base={base} /> : <Card className="small center">Sem internet. Conecte-se para ver os rankings.</Card>}
     </>
   );
 }
@@ -152,8 +152,6 @@ function useFitToScreen(ref, active) {
 
 /** Tela de um jogo: instruções, partida (com Desistir) e resultado. */
 export function GamePage({ base }) {
-  const { actor } = useAuth();
-  const onlineNow = useOnline();
   const { id } = useParams();
   const nav = useNavigate();
   const game = gameById(id);
@@ -188,16 +186,6 @@ export function GamePage({ base }) {
   }, [phase]);
 
   if (!game) return <Navigate to={`${base}/jogos`} replace />;
-  // Jogar sem internet é benefício do DBV+.
-  if (!onlineNow && !actor?.plus_open) {
-    return (
-      <Card className="center">
-        <p><b>Sem internet, os mini-jogos são do DBV+.</b></p>
-        <p className="small muted">Conecte-se para jogar, ou assine o DBV+ para jogar até sem internet.</p>
-        <Link to={`${base}/dbv-mais`} className="btn btn-primary btn-block">Ver o DBV+</Link>
-      </Card>
-    );
-  }
 
   const start = () => {
     unlockAudio();

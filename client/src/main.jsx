@@ -9,10 +9,8 @@ createRoot(document.getElementById('root')).render(
   </StrictMode>,
 );
 
-if ('serviceWorker' in navigator && import.meta.env.PROD) {
-  // O service worker é quem mostra "Sistema em atualização" quando o servidor está fora do ar.
-  // Procura versão nova sempre que o app abre ou volta para a tela.
-  navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' }).then((reg) => {
-    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') reg.update().catch(() => {}); });
-  }).catch(() => {});
+// Sem modo offline: tira o service worker antigo (e o que ele guardou) dos aparelhos.
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then((list) => list.forEach((r) => r.unregister())).catch(() => {});
+  if (window.caches) window.caches.keys().then((keys) => keys.forEach((k) => window.caches.delete(k))).catch(() => {});
 }

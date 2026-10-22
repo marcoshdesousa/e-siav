@@ -13,7 +13,7 @@ import {
 } from '../bible.js';
 import { audioOf, audioSummary } from '../audio.js';
 import { giveBiblePack } from '../streaks.js';
-import { gatedAudio, plusOpen } from '../plus.js';
+import { FREE_AUDIOS, gatedAudio, plusOpen } from '../plus.js';
 
 const r = Router();
 const member = requireAuth('member');
@@ -117,7 +117,7 @@ r.get('/ano-biblico/dia/:n', member, (req, res) => {
     }),
     // Áudio gravado do dia (um arquivo; starts = onde começa o título de cada capítulo e cada versículo).
     // O áudio é benefício do DBV+ (no modo de teste fica liberado).
-    ...gatedAudio(req.actor.id, audioOf('ano-biblico', String(d.day).padStart(3, '0'))),
+    ...gatedAudio(req.actor.id, audioOf('ano-biblico', String(d.day).padStart(3, '0')), d.day <= FREE_AUDIOS),
     quiz: quiz ? quiz.map((q) => ({ q: q.q, options: q.options })) : null,
   });
 });

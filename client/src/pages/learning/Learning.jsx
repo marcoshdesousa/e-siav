@@ -2,14 +2,12 @@
 // Bom Líder (em breve, só 16+). O card "Sequência" aparece no perfil.
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
-import {
-  ArrowLeft, BookOpen, BookOpenText, Check, CheckCircle2, ChevronLeft, ChevronRight, Flame, Gift, Headphones,
-  Lock, Medal, Pause, Play, RotateCcw, Sparkles, Timer, Trophy, Users, X,
-} from 'lucide-react';
+import { ArrowLeft, BookOpen, BookOpenText, Check, CheckCircle2, ChevronLeft, ChevronRight, Flame, Headphones, Lock, Medal, Pause, Play, RotateCcw, Sparkles, Timer, Trophy, Users, X } from 'lucide-react';
 import { api } from '../../api.js';
 import { Button, Card, Loading, PageHeader, Section, useLoad } from '../../ui.jsx';
 import { useOnline } from '../../offline.js';
 import { useNarration } from './voice.js';
+import { PackReward } from './PackReward.jsx';
 import './learning.css';
 import './devotional.css';
 
@@ -404,7 +402,7 @@ function BibleQuiz({ d, back, onRead, reload }) {
           {result.passed ? (
             <>
               <p><b>Dia concluído!</b>{result.on_time ? ' A sua sequência subiu!' : ''}</p>
-              {result.pack && <p className="quiz-gift"><Gift size={18} /> Você ganhou 1 pacotinho do Álbum Bíblico!</p>}
+              {result.pack && <PackReward />}
               {result.points?.member > 0 && (
                 <p className="quiz-gift">
                   <Trophy size={18} /> +{result.points.member} pontos no ranking
