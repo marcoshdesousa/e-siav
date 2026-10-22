@@ -24,7 +24,7 @@ export function StreakMini({ s, label }) {
 }
 
 /** Perguntas uma por vez + resultado (meditação e lição). */
-function Quiz({ questions, send, pass, onAgain, done }) {
+export function Quiz({ questions, send, pass, onAgain, done }) {
   const [answers, setAnswers] = useState(() => questions.map(() => null));
   const [qi, setQi] = useState(0);
   const [result, setResult] = useState(null);

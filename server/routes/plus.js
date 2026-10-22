@@ -18,6 +18,7 @@ export const FREE = [
   'Ano Bíblico, Meditação Diária e Escola Sabatina com as sequências',
   'Áudio dos 5 primeiros dias do Ano Bíblico e da Meditação',
   'Mini-jogos, álbuns de figurinhas e pacotinhos ganhos nos estudos',
+  'As 3 primeiras aulas em vídeo de cada classe',
   'Perfil, especialidades, classes e rankings do distrito',
 ];
 
@@ -29,8 +30,8 @@ export const BENEFITS = [
   { text: 'Participa do ranking dos mini-jogos' },
   { text: 'Selo de verificado (logo dourada) no perfil' },
   { text: 'Especialidades físicas entregues pela equipe (planos de R$ 19,90 e R$ 34,90)' },
+  { text: 'Aulas em vídeo das Classes (as 3 primeiras de cada classe são grátis)' },
   { text: 'Livro do Ano', soon: true },
-  { text: 'Estudo das Classes e Agrupadas', soon: true },
 ];
 
 r.get('/plus', member, (req, res) => {
