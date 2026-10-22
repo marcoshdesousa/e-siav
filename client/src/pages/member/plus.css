@@ -39,3 +39,7 @@
 .plus-bar-btn { flex: none; padding: .45rem .8rem; border-radius: 999px; font-size: .78rem; font-weight: 900; color: #0f2744; text-decoration: none; background: linear-gradient(135deg, #fde047, #f5c518); }
 .plus-bar-x { flex: none; width: 28px; height: 28px; display: grid; place-items: center; border: 0; border-radius: 50%; background: rgba(255,255,255,.12); color: #fff; cursor: pointer; }
 @keyframes plus-bar-in { from { opacity: 0; transform: translateY(-6px); } }
+.plus-picks-bar { position: fixed; left: 50%; transform: translateX(-50%); width: min(560px, calc(100% - 32px)); bottom: calc(92px + env(safe-area-inset-bottom)); z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: .6rem; margin-top: .8rem; padding: .55rem .6rem .55rem 1rem; border-radius: 999px; background: #0f2744; color: #fff; box-shadow: 0 6px 20px rgba(0,0,0,.35); border: 1px solid rgba(245,197,24,.5); }
+.plus-picks-bar span { font-size: .85rem; white-space: nowrap; }
+.plus-picks-bar b { color: #fde68a; font-size: 1.05rem; }
+.plus-picks-card { padding-bottom: 4.5rem; }

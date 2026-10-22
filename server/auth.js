@@ -66,7 +66,7 @@ export function loadActor(type, id) {
     const { status: _s, terms_token: _t, approved_at: _a, cleared_year: _c, ...rest } = m;
     const kind = memberKind(m.birth_date);
     const p = plusOf(m.id);
-    return { type, ...rest, cargo: cargoOf(kind, rest.cargo), waiting, kind, role: roleOf(kind, m.cargo), plus: p?.active ? { plan: p.plan, until: p.until } : null, plus_open: plusOpen(m.id) };
+    return { type, ...rest, cargo: cargoOf(kind, rest.cargo), waiting, kind, role: roleOf(kind, m.cargo), plus: p?.active ? { plan: p.plan, until: p.until, picks_pending: !!(p.picks_needed && !p.picks) } : null, plus_open: plusOpen(m.id) };
   }
   return null;
 }

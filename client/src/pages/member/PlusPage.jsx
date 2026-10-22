@@ -1,12 +1,13 @@
 // DBV+: assinatura de 30 dias que ajuda o app e libera benefícios.
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { BadgeCheck, Check, Clock, Gift, Sparkles, X } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Button, Card, Loading, Modal, PageHeader, useAsync, useLoad } from '../../ui.jsx';
 import { PixCheckout, money } from '../Payment.jsx';
 import CatalogPicker from '../Catalog.jsx';
+import { PackReward } from '../learning/PackReward.jsx';
 import './plus.css';
 
 const br = (iso) => (iso ? new Date(iso).toLocaleDateString('pt-BR') : '');
@@ -16,7 +17,7 @@ export function Verified({ size = 20 }) {
   return <img src="/marca/logo.svg" alt="Verificado DBV+" title="Verificado DBV+" className="plus-verified" style={{ width: size, height: size }} />;
 }
 
-function Picks({ d, reload }) {
+function Picks({ d, reload, done }) {
   const cat = useLoad(() => api.get('/catalog?type=especialidade'));
   const [sel, setSel] = useState(new Set());
   const [busy, run] = useAsync();
@@ -31,18 +32,29 @@ function Picks({ d, reload }) {
     );
   }
   return (
-    <Card>
+    <Card className="plus-picks-card">
       <p><b>Escolha {n} especialidades</b> que você gostaria de ganhar. A equipe compra {n === 15 ? 3 : 7} delas e entrega para você (é surpresa!).</p>
       <p className="small muted">{sel.size} de {n} escolhidas</p>
       <Loading {...cat}>{(items) => <CatalogPicker type="especialidade" items={items} selected={sel} onChange={(s) => s.size <= n && setSel(s)} />}</Loading>
-      <Button block busy={busy} disabled={sel.size !== n} onClick={() => run(() => api.put('/plus/especialidades', { ids: [...sel] }), 'Especialidades escolhidas!').then(reload)}>Enviar as {n} especialidades</Button>
+      <div className="plus-picks-bar">
+        <span><b>{sel.size}</b> de {n}</span>
+        <Button busy={busy} disabled={sel.size !== n} onClick={() => run(() => api.put('/plus/especialidades', { ids: [...sel] }), 'Em breve alguém da equipe distrital irá entregar suas especialidades.').then(reload).then(done)}>Enviar as {n} especialidades</Button>
+      </div>
     </Card>
   );
 }
 
 export default function PlusPage() {
   const { refresh } = useAuth();
+  const nav = useNavigate();
+  const { pathname } = useLocation();
   const state = useLoad(() => api.get('/plus'));
+  // Pagou: coleta os pacotinhos; se o plano tem especialidades, a escolha vem logo em seguida (obrigatória).
+  const finish = async () => {
+    setOrder(null); setPaid(false); state.reload();
+    const a = await refresh();
+    if (!a?.plus?.picks_pending) nav(`/${pathname.split('/')[1]}/albuns/biblico`);
+  };
   const [order, setOrder] = useState(null);
   const [paid, setPaid] = useState(false);
   const [busy, run] = useAsync();
@@ -89,12 +101,12 @@ export default function PlusPage() {
               ))}
             </div>
             {order && (
-              <Modal title={paid ? 'Bem-vindo ao DBV+!' : 'Pague com Pix'} onClose={() => { setOrder(null); setPaid(false); state.reload(); refresh(); }}>
+              <Modal title={paid ? 'Bem-vindo ao DBV+!' : 'Pague com Pix'} onClose={() => (paid ? finish() : (setOrder(null), state.reload()))}>
                 {paid ? (
                   <div className="pix-box center">
                     <BadgeCheck size={44} className="plus-ok" />
-                    <p><b>Assinatura ativa!</b> Os seus {d.packs} pacotinhos já estão no Álbum Bíblico.</p>
-                    <Button block onClick={() => { setOrder(null); setPaid(false); state.reload(); refresh(); }}>Continuar</Button>
+                    <p><b>Assinatura ativa!</b> Colete os seus pacotinhos de presente.</p>
+                    <PackReward packs={d.packs} onCollect={finish} />
                   </div>
                 ) : <PixCheckout payment={order} onPaid={() => setPaid(true)} onNotified={() => { setOrder(null); state.reload(); }} />}
               </Modal>
@@ -126,5 +138,26 @@ export function PlusNudge({ to }) {
       <Link to={to} className="plus-bar-btn">Ver planos</Link>
       <button type="button" className="plus-bar-x" aria-label="Fechar" onClick={close}><X size={16} /></button>
     </div>
+  );
+}
+
+/**
+ * Plano com especialidades e a escolha ainda não feita: o app só continua depois de escolher
+ * (mesmo fechando e abrindo de novo).
+ */
+export function PlusPicksGate() {
+  const { refresh } = useAuth();
+  const state = useLoad(() => api.get('/plus'));
+  return (
+    <>
+      <div className="plus-hero">
+        <img src="/marca/logo.svg" alt="" />
+        <div>
+          <b>Escolha as suas especialidades</b>
+          <p>Para continuar usando o app, escolha agora as especialidades do seu plano DBV+.</p>
+        </div>
+      </div>
+      <Loading {...state}>{(d) => (d.mine?.picks_needed ? <Picks d={d} reload={state.reload} done={refresh} /> : null)}</Loading>
+    </>
   );
 }

@@ -12,8 +12,10 @@ export function AuthProvider({ children }) {
     try {
       const { actor } = await api.get('/auth/me');
       setActor(actor);
+      return actor;
     } catch {
       setActor(null);
+      return null;
     }
   }, []);
 

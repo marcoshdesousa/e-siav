@@ -19,7 +19,7 @@ import { GamePage, GamesHub } from '../games/GamesHub.jsx';
 import { AlbumPage, AlbumsPage } from '../albums/AlbumsHub.jsx';
 import { BibleDay, BibleYear, BomDeBiblia, BomDeBibliaPhase, LearningHub, StreakCard } from '../learning/Learning.jsx';
 import { MeditationDay, MeditationList, SabbathHub, SabbathLesson } from '../learning/Devotional.jsx';
-import PlusPage, { PlusNudge } from './PlusPage.jsx';
+import PlusPage, { PlusNudge, PlusPicksGate } from './PlusPage.jsx';
 import { BomLider, BomLiderLesson } from '../learning/BomLider.jsx';
 
 const base = '/membro';
@@ -120,7 +120,7 @@ export default function MemberApp() {
         element={
           <Shell tabs={tabs} parentOf={parentOf}>
             {!actor.waiting && <PlusNudge to={`${base}/dbv-mais`} />}
-            {actor.waiting ? <Waiting text={actor.waiting} /> : <Routes>
+            {actor.waiting ? <Waiting text={actor.waiting} /> : actor.plus?.picks_pending ? <PlusPicksGate /> : <Routes>
               <Route index element={<MyProfile />} />
               <Route path="requisitos" element={<RequirementsAndRanking isDbv={isDbv} />} />
               <Route path="especialidades" element={<MyAchievements key="e" type="especialidade" />} />

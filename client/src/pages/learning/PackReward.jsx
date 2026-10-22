@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BookImage, Sparkles } from 'lucide-react';
 
-export function PackReward({ packs = 1 }) {
+export function PackReward({ packs = 1, onCollect }) {
   const nav = useNavigate();
   const { pathname } = useLocation();
   const [going, setGoing] = useState(false);
@@ -12,7 +12,7 @@ export function PackReward({ packs = 1 }) {
   const collect = () => {
     if (going) return;
     setGoing(true);
-    setTimeout(() => nav(`${base}/albuns/biblico`), 750);
+    setTimeout(() => (onCollect ? onCollect() : nav(`${base}/albuns/biblico`)), 750);
   };
   return (
     <div className={'pack-reward' + (going ? ' going' : '')}>
