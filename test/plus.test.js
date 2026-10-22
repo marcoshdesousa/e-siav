@@ -71,7 +71,7 @@ test('DBV+: sem assinatura (modo de teste desligado) fica bloqueado; assinando, 
   assert.match(normal.title, /^1 pacotinho/);
   // assina o plano de 3 especialidades e a equipe confirma o Pix
   const pay = (await pedro.post('/plus/assinar', { plan: 'plus3' })).body;
-  assert.equal(pay.amount_cents, 2490);
+  assert.equal(pay.amount_cents, 1990);
   const before = (await pedro.get('/albuns/biblico')).body.packs_unopened;
   assert.equal((await admin.post(`/admin/pagamentos/${pay.id}/confirmar`)).status, 200);
   plus = (await pedro.get('/plus')).body;

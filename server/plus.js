@@ -1,7 +1,7 @@
 // DBV+ (assinatura de 30 dias para membros): ajuda o app e libera benefícios.
-//   DBV+          R$ 9,90  — benefícios do app
-//   DBV+ 3 Espec. R$ 24,90 — + 3 especialidades físicas (escolhe 15, a equipe compra 3)
-//   DBV+ 7 Espec. R$ 39,90 — + 7 especialidades físicas (escolhe 20, a equipe compra 7)
+//   DBV+          R$ 4,90  — benefícios do app
+//   DBV+ 3 Espec. R$ 19,90 — + 3 especialidades físicas (escolhe 15, a equipe compra 3)
+//   DBV+ 7 Espec. R$ 34,90 — + 7 especialidades físicas (escolhe 20, a equipe compra 7)
 // Todo plano: áudio das leituras, Bom Líder, ranking dos mini-jogos, 30 pacotinhos a
 // cada 30 dias, figurinhas em dobro na compra e o selo de verificado. Só para quem assina (ou ganhou do
 // administrador geral); o modo de teste não libera o DBV+.
@@ -19,9 +19,9 @@ run(`CREATE TABLE IF NOT EXISTS member_plus (
 )`);
 
 export const PLANS = {
-  plus: { id: 'plus', name: 'DBV+', price_cents: 990, specialties: 0, pick: 0 },
-  plus3: { id: 'plus3', name: 'DBV+ 3 Especialidades', price_cents: 2490, specialties: 3, pick: 15 },
-  plus7: { id: 'plus7', name: 'DBV+ 7 Especialidades', price_cents: 3990, specialties: 7, pick: 20 },
+  plus: { id: 'plus', name: 'DBV+', price_cents: 490, specialties: 0, pick: 0 },
+  plus3: { id: 'plus3', name: 'DBV+ 3 Especialidades', price_cents: 1990, specialties: 3, pick: 15 },
+  plus7: { id: 'plus7', name: 'DBV+ 7 Especialidades', price_cents: 3490, specialties: 7, pick: 20 },
 };
 export const PLUS_DAYS = 30;
 export const PLUS_PACKS = 30;

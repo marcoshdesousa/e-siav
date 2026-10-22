@@ -28,7 +28,7 @@ export const BENEFITS = [
   { text: 'Figurinhas em dobro: 2 pacotinhos pelo preço de 1' },
   { text: 'Participa do ranking dos mini-jogos' },
   { text: 'Selo de verificado (logo dourada) no perfil' },
-  { text: 'Especialidades físicas entregues pela equipe (planos de R$ 24,90 e R$ 39,90)' },
+  { text: 'Especialidades físicas entregues pela equipe (planos de R$ 19,90 e R$ 34,90)' },
   { text: 'Livro do Ano', soon: true },
   { text: 'Estudo das Classes e Agrupadas', soon: true },
 ];
