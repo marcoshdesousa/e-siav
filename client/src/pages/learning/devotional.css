@@ -41,3 +41,9 @@
 .learn-card.c6 { background: linear-gradient(135deg, #0d9488, #115e59); }
 .learn-card.c7 { background: linear-gradient(135deg, #475569, #1e293b); }
 
+.dv-char { display: table; margin-top: .45rem; padding: .2rem .65rem; border-radius: 999px; font-family: var(--font); font-size: .78rem; font-weight: 800; letter-spacing: 0; color: #7c2d12; background: #fde68a; }
+.dv-theme { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: .15rem; padding: 1.1rem 1.2rem; margin-bottom: .9rem; border-radius: 20px; color: #fff; background: radial-gradient(circle at 90% 10%, rgba(249,199,29,.4), transparent 45%), linear-gradient(135deg, #7c2d12, #c2410c 55%, #ea580c); box-shadow: 0 10px 24px rgba(194,65,12,.3); }
+.dv-theme small { font-weight: 900; letter-spacing: .14em; text-transform: uppercase; font-size: .7rem; color: #fde68a; }
+.dv-theme b { font-family: var(--font-title); font-size: 1.6rem; line-height: 1.1; }
+.dv-theme span { font-size: .85rem; opacity: .92; }
+.dv-today-char { display: block; font-style: normal; font-weight: 800; font-size: .8rem; opacity: .9; margin-top: .1rem; }

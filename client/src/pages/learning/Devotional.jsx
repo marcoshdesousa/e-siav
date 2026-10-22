@@ -87,7 +87,7 @@ export function MeditationList({ base }) {
   const state = useLoad(() => api.get('/meditacao'));
   return (
     <>
-      <PageHeader title="Meditação Diária" subtitle="Uma mensagem por dia para começar com Deus" />
+      <PageHeader title="Meditação Diária" subtitle="Uma história por dia para começar com Deus" />
       <Loading {...state}>
         {(d) => {
           const today = d.days.find((x) => x.date === d.today);
@@ -97,7 +97,7 @@ export function MeditationList({ base }) {
             const body = (
               <>
                 <span className="dv-date"><b>{Number(x.date.slice(8))}</b><small>{MONTHS[Number(x.date.slice(5, 7)) - 1].slice(0, 3)}</small></span>
-                <span className="grow"><b>{x.title}</b><small>{x.status === 'feito' ? 'Feita no dia' : x.status === 'feito-depois' ? 'Feita depois' : x.status === 'perdido' ? 'Ainda dá para ler' : x.status === 'futuro' ? `Libera em ${br(x.date)}` : x.status === 'hoje' ? 'Hoje' : 'Liberada para teste'}</small></span>
+                <span className="grow"><b>{x.title}</b><small>{x.personagem ? `${x.personagem.replace(/\s*\(.*\)$/, '')} · ` : ''}{x.status === 'feito' ? 'Feita no dia' : x.status === 'feito-depois' ? 'Feita depois' : x.status === 'perdido' ? 'Ainda dá para ler' : x.status === 'futuro' ? `Libera em ${br(x.date)}` : x.status === 'hoje' ? 'Hoje' : 'Liberada para teste'}</small></span>
                 <span className={'day-st ' + x.status}>{x.status === 'futuro' ? <Lock size={16} /> : x.status.startsWith('feito') ? <CheckCircle2 size={18} /> : <ChevronRight size={18} />}</span>
               </>
             );
@@ -105,12 +105,20 @@ export function MeditationList({ base }) {
           };
           return (
             <>
+              {d.theme && (
+                <div className="dv-theme">
+                  <small>Tema do ano</small>
+                  <b>{d.theme}</b>
+                  <span>Todo dia, a história de alguém que Deus escolheu, da Bíblia até hoje.</span>
+                </div>
+              )}
               <StreakMini s={d} label="Meditação" />
               {d.today < d.start && <Card className="small center">A Meditação Diária começa em <b>{br(d.start)}</b>.{d.test ? ' No modo de teste você já pode ler todas.' : ''}</Card>}
               {today && (
                 <Link to={`${base}/aprendizagem/meditacao/${today.date}`} className={'dv-today' + (today.status.startsWith('feito') ? ' done' : '')}>
                   <small>Meditação de hoje · {longDate(today.date)}</small>
                   <b>{today.title}</b>
+                  {today.personagem && <em className="dv-today-char">{today.personagem}</em>}
                   <span>{today.status.startsWith('feito') ? <><CheckCircle2 size={16} /> Feita</> : <><PlayCircle size={16} /> Ler agora</>}</span>
                 </Link>
               )}
@@ -195,7 +203,7 @@ function MeditationBody({ d, base }) {
               {pages[page].map((x) => {
                 const hl = v.pos === x.k ? ' reading' : '';
                 const tap = () => v.available && v.startAt(x.k);
-                if (x.kind === 'titulo') return <h1 key="t" className={'dv-title' + hl} onClick={tap}><small>{longDate(d.date)}</small>{x.text}</h1>;
+                if (x.kind === 'titulo') return <h1 key="t" className={'dv-title' + hl} onClick={tap}><small>{longDate(d.date)}{d.theme ? ` · ${d.theme}` : ''}</small>{x.text}{d.personagem && <span className="dv-char">{d.personagem}</span>}</h1>;
                 if (x.kind === 'verso') return <blockquote key="v" className={'dv-verse' + hl} onClick={tap}>{x.text}</blockquote>;
                 if (x.kind === 'oracao') return <p key="o" className={'dv-prayer' + hl} onClick={tap}><b>Oração:</b> {x.text}</p>;
                 return <p key={x.k} className={'dv-par' + hl} onClick={tap}>{x.text}</p>;

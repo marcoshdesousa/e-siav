@@ -90,6 +90,8 @@ function loadMeditations() {
 }
 const MEDS = loadMeditations();
 export const MED_PASS = 2; // acertos (de 3)
+/** Tema do ano da Meditação Diária. */
+export const MED_THEME = 'Os Escolhidos';
 /** A meditação começa em 1/1/2027 (o admin pode mudar). */
 export const medStart = () => setting('meditacao_inicio') || '2027-01-01';
 /** Ano mostrado: o do início, ou o ano de hoje depois que começar. */
@@ -118,9 +120,9 @@ r.get('/meditacao', member, (req, res) => {
     if (!m || d < medStart()) continue;
     const row = rows.get(d);
     const status = row?.completed_at ? (row.on_time ? 'feito' : 'feito-depois') : d === today ? 'hoje' : d > today ? (testMode() ? 'teste' : 'futuro') : 'perdido';
-    days.push({ date: d, title: m.title, status, best: row?.best || 0 });
+    days.push({ date: d, title: m.title, personagem: m.personagem || null, status, best: row?.best || 0 });
   }
-  res.json({ ...meditationSummary(req.actor.id, today), test: testMode(), days });
+  res.json({ ...meditationSummary(req.actor.id, today), theme: MED_THEME, test: testMode(), days });
 });
 
 r.get('/meditacao/:date', member, (req, res) => {
@@ -131,7 +133,7 @@ r.get('/meditacao/:date', member, (req, res) => {
   if (!openDate(date, today) || (date < medStart() && !testMode())) fail(403, `Esta meditação libera no dia ${date.split('-').reverse().join('/')}.`);
   const row = get('SELECT best, completed_at, on_time FROM meditation_progress WHERE member_id = ? AND date = ?', req.actor.id, date);
   res.json({
-    date, title: m.title, verse: m.verse, text: m.text, prayer: m.prayer || null, pass: MED_PASS,
+    date, title: m.title, personagem: m.personagem || null, theme: MED_THEME, verse: m.verse, text: m.text, prayer: m.prayer || null, pass: MED_PASS,
     questions: m.questions.map((q) => ({ q: q.q, options: q.options })),
     best: row?.best || 0, completed: !!row?.completed_at, ...gatedAudio(req.actor.id, audioOf('meditacao', date.slice(5)), date.slice(5) <= `01-${String(FREE_AUDIOS).padStart(2, '0')}`),
   });
