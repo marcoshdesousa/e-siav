@@ -108,7 +108,8 @@ export function LearningHub({ base }) {
                 <small>{d.bdb.passed} de {d.bdb.total} fases</small>
               </Link>
               {d.leader && (
-                <Link to={`${base}/aprendizagem/bom-lider`} className="learn-card c4">
+                <Link to={d.plus ? `${base}/aprendizagem/bom-lider` : `${base}/dbv-mais`} className="learn-card c4">
+                  {!d.plus && <span className="plus">DBV+</span>}
                   <span className="learn-ico"><Users size={30} /></span>
                   <b>Bom Líder</b>
                   <small>Manual Administrativo (50 aulas) e Nisto Cremos (16 anos ou mais)</small>
@@ -235,8 +236,9 @@ function DayRow({ x, to }) {
 
 // ───────────── Voz: barra de carregamento, botão Ouvir e velocidade ─────────────
 
-export function PlayButton({ v, onToggle }) {
-  if (!v.available) return null;
+export function PlayButton({ v, onToggle, locked }) {
+  // Áudio é benefício do DBV+: sem assinatura, o botão leva para os planos.
+  if (!v.available) return locked ? <Link to="/membro/dbv-mais" className="plus-lock"><Headphones size={20} /> Ouvir com DBV+</Link> : null;
   return (
     <>
       <button type="button" className="play-btn" onClick={onToggle} aria-label={v.playing ? 'Pausar' : 'Ouvir'}>
@@ -356,7 +358,7 @@ function BibleDayBody({ d, back, base, reload }) {
 
       <div className="bible-controls">
         <button type="button" className="icon-btn" disabled={page === 0 || playing} onClick={() => go(page - 1)} aria-label="Página anterior"><ChevronLeft size={22} /></button>
-        <PlayButton v={v} onToggle={toggle} />
+        <PlayButton v={v} onToggle={toggle} locked={d.audio_locked} />
         <button type="button" className="icon-btn" disabled={last || playing} onClick={() => go(page + 1)} aria-label="Próxima página"><ChevronRight size={22} /></button>
       </div>
       <VoiceAudio v={v} />

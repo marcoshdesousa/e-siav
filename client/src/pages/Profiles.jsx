@@ -1,5 +1,6 @@
 import { Link, useParams, Navigate } from 'react-router-dom';
 import { useMemo, useState } from 'react';
+import { Verified } from './member/PlusPage.jsx';
 import { Award, CalendarDays, ChevronDown, ChevronRight, ChevronUp, Compass, Flag, Flame, MapPin, Hash, Tent, Users } from 'lucide-react';
 import { Attachments } from './admin/Events.jsx';
 import { api } from '../api.js';
@@ -205,7 +206,7 @@ export function MemberProfileView({ member: m, linkBase, photoAction, extra }) {
         <div className="profile-head">
           <Avatar src={m.photo} name={m.name} size={104} />
           {photoAction}
-          <h1>{m.name}</h1>
+          <h1>{m.name}{m.verified && <Verified size={24} />}</h1>
           <span className="handle-chip"><Hash size={14} /> {m.code}</span>
           <div className="chips">
             <span className="chip yellow">{m.cargo}</span>

@@ -152,6 +152,8 @@ function useFitToScreen(ref, active) {
 
 /** Tela de um jogo: instruções, partida (com Desistir) e resultado. */
 export function GamePage({ base }) {
+  const { actor } = useAuth();
+  const onlineNow = useOnline();
   const { id } = useParams();
   const nav = useNavigate();
   const game = gameById(id);
@@ -186,6 +188,16 @@ export function GamePage({ base }) {
   }, [phase]);
 
   if (!game) return <Navigate to={`${base}/jogos`} replace />;
+  // Jogar sem internet é benefício do DBV+.
+  if (!onlineNow && !actor?.plus_open) {
+    return (
+      <Card className="center">
+        <p><b>Sem internet, os mini-jogos são do DBV+.</b></p>
+        <p className="small muted">Conecte-se para jogar, ou assine o DBV+ para jogar até sem internet.</p>
+        <Link to={`${base}/dbv-mais`} className="btn btn-primary btn-block">Ver o DBV+</Link>
+      </Card>
+    );
+  }
 
   const start = () => {
     unlockAudio();

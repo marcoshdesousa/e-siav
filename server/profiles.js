@@ -1,5 +1,6 @@
 import { all, get } from './db.js';
 import { ageFrom, memberKind, roleOf, cargoOf } from './util.js';
+import { isPlus } from './plus.js';
 import { clubsRanking, unitsRanking, clubUnitsRanking, membersRanking, leadersRanking, clubMembersRanking, clubLeadersRanking, positionOf } from './rankings.js';
 
 export function medalsOf(type, id) {
@@ -97,6 +98,7 @@ export function memberProfile(where, value) {
     unit_district: unitRanks ? withTotal(unitsRanking(m.district_id), m.unit_id) : null,
     club_district: withTotal(clubsRanking(m.district_id), m.club_id),
   };
+  m.verified = isPlus(m.id); // selo de verificado do DBV+
   m.events = eventsOf('member', m.id);
   m.medals = medalsOf('member', m.id);
   return m;

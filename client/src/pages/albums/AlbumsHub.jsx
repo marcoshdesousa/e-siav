@@ -85,6 +85,8 @@ function SupportNote() {
  * dados). Com a SyncPay ligada, libera sozinho quando o Pix cai.
  */
 function BuyModal({ album, onClose, onDone, onOpen }) {
+  const { actor } = useAuth();
+  const dbl = actor?.plus ? 2 : 1; // DBV+: pacotinhos em dobro pelo mesmo preço
   const [order, setOrder] = useState(null);
   const [paid, setPaid] = useState(null);
   const [busy, run] = useAsync();
@@ -104,8 +106,8 @@ function BuyModal({ album, onClose, onDone, onOpen }) {
             {album.options.map((n) => (
               <button key={n} type="button" className="buy-option" disabled={busy || !album.pix_ready} onClick={() => create(n)}>
                 <Package size={26} />
-                <b>{n} pacotinho{n > 1 ? 's' : ''}</b>
-                <small>{n * album.pack_size} figurinhas</small>
+                <b>{n * dbl} pacotinho{n * dbl > 1 ? 's' : ''}</b>
+                <small>{n * dbl * album.pack_size} figurinhas{dbl > 1 ? ' · dobro DBV+' : ''}</small>
                 <span>{money(n * album.price_cents)}</span>
               </button>
             ))}

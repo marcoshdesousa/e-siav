@@ -13,6 +13,7 @@ import {
 } from '../bible.js';
 import { audioOf, audioSummary } from '../audio.js';
 import { giveBiblePack } from '../streaks.js';
+import { gatedAudio, plusOpen } from '../plus.js';
 
 const r = Router();
 const member = requireAuth('member');
@@ -75,7 +76,7 @@ r.get('/aprendizagem', member, async (req, res) => {
   const { meditationSummary, sabbathSummary } = await import('./devotional.js');
   res.json({
     bible, meditation: meditationSummary(req.actor.id), sabbath: sabbathSummary(req.actor.id),
-    bdb: { passed: bdb, total: BDB.length }, leader: req.actor.kind === 'lideranca' || testMode(), test: testMode(),
+    bdb: { passed: bdb, total: BDB.length }, leader: req.actor.kind === 'lideranca' || testMode(), test: testMode(), plus: plusOpen(req.actor.id),
   });
 });
 
@@ -115,7 +116,8 @@ r.get('/ano-biblico/dia/:n', member, (req, res) => {
       return { book: b, chapter: c, title: chapterTitle(b, c), part: rg ? `versículos ${rangesLabel(rg)}` : null, verses: nums.map((n) => text[n - 1]), nums };
     }),
     // Áudio gravado do dia (um arquivo; starts = onde começa o título de cada capítulo e cada versículo).
-    audio: audioOf('ano-biblico', String(d.day).padStart(3, '0')),
+    // O áudio é benefício do DBV+ (no modo de teste fica liberado).
+    ...gatedAudio(req.actor.id, audioOf('ano-biblico', String(d.day).padStart(3, '0'))),
     quiz: quiz ? quiz.map((q) => ({ q: q.q, options: q.options })) : null,
   });
 });

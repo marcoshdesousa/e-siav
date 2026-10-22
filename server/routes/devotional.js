@@ -17,6 +17,7 @@ import { audioOf } from '../audio.js';
 import { awardStudyDay } from '../rankings.js';
 import { bestDateStreak, dateStreak, giveBiblePack } from '../streaks.js';
 import { testMode } from './learning.js';
+import { gatedAudio } from '../plus.js';
 
 const r = Router();
 const member = requireAuth('member');
@@ -132,7 +133,7 @@ r.get('/meditacao/:date', member, (req, res) => {
   res.json({
     date, title: m.title, verse: m.verse, text: m.text, prayer: m.prayer || null, pass: MED_PASS,
     questions: m.questions.map((q) => ({ q: q.q, options: q.options })),
-    best: row?.best || 0, completed: !!row?.completed_at, audio: audioOf('meditacao', date.slice(5)),
+    best: row?.best || 0, completed: !!row?.completed_at, ...gatedAudio(req.actor.id, audioOf('meditacao', date.slice(5))),
   });
 });
 

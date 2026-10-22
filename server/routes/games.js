@@ -5,6 +5,11 @@ import { all, get, run } from '../db.js';
 import { requireAuth } from '../auth.js';
 import { fail } from '../util.js';
 import { GAMES } from '../games.js';
+import { setting } from '../fees.js';
+
+// Só quem tem o DBV+ entra no ranking dos mini-jogos (no modo de teste, todos).
+const PLUS_SQL = `(? = 1 OR m.id IN (SELECT member_id FROM member_plus WHERE until > strftime('%Y-%m-%dT%H:%M:%fZ','now')))`;
+const allRanked = () => (setting('biblia_teste') !== '0' ? 1 : 0);
 
 const r = Router();
 const member = requireAuth('member');
@@ -17,7 +22,7 @@ const game = (id) => {
 const col = (g) => (g.mode === 'sum' ? 'total' : 'best');
 const myPosition = (id, g, value) => (value > 0
   ? get(`SELECT COUNT(*) + 1 n FROM game_scores s JOIN members m ON m.id = s.member_id
-      WHERE s.game = ? AND m.status = 'ativo' AND s.${col(g)} > ?`, id, value).n
+      WHERE s.game = ? AND m.status = 'ativo' AND ${PLUS_SQL} AND s.${col(g)} > ?`, id, allRanked(), value).n
   : null);
 
 // Meus recordes em todos os jogos.
@@ -52,8 +57,8 @@ r.get('/jogos/:id/ranking', member, (req, res) => {
   const c = col(g);
   const rows = all(`SELECT m.id, m.code, m.name, m.photo, c.name AS club_name, s.${c} AS value, s.plays
     FROM game_scores s JOIN members m ON m.id = s.member_id JOIN clubs c ON c.id = m.club_id
-    WHERE s.game = ? AND m.status = 'ativo' AND s.${c} > 0
-    ORDER BY s.${c} DESC, s.updated_at ASC LIMIT 50`, req.params.id);
+    WHERE s.game = ? AND m.status = 'ativo' AND ${PLUS_SQL} AND s.${c} > 0
+    ORDER BY s.${c} DESC, s.updated_at ASC LIMIT 50`, req.params.id, allRanked());
   const mine = get(`SELECT ${c} AS value, plays FROM game_scores WHERE member_id = ? AND game = ?`, req.actor.id, req.params.id);
   res.json({
     mode: g.mode,

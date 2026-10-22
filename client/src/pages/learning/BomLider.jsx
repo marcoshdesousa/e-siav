@@ -185,7 +185,7 @@ function Lesson({ d, base }) {
           </div>
           <div className="bible-controls">
             <button type="button" className="icon-btn" disabled={page === 0 || v.playing} onClick={() => go(page - 1)} aria-label="Página anterior"><ChevronLeft size={22} /></button>
-            <PlayButton v={v} onToggle={toggle} />
+            <PlayButton v={v} onToggle={toggle} locked={d.audio_locked} />
             <button type="button" className="icon-btn" disabled={last || v.playing} onClick={() => go(page + 1)} aria-label="Próxima página"><ChevronRight size={22} /></button>
           </div>
           <VoiceAudio v={v} />

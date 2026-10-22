@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import {
-  BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, Waypoints, Hourglass, Flame,
-} from 'lucide-react';
+  BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, Waypoints, Hourglass, Flame, BadgeCheck } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Loading, PageHeader, useAsync, useLoad } from '../../ui.jsx';
@@ -20,6 +19,7 @@ import { GamePage, GamesHub } from '../games/GamesHub.jsx';
 import { AlbumPage, AlbumsPage } from '../albums/AlbumsHub.jsx';
 import { BibleDay, BibleYear, BomDeBiblia, BomDeBibliaPhase, LearningHub, StreakCard } from '../learning/Learning.jsx';
 import { MeditationDay, MeditationList, SabbathHub, SabbathLesson } from '../learning/Devotional.jsx';
+import PlusPage, { PlusNudge } from './PlusPage.jsx';
 import { BomLider, BomLiderLesson } from '../learning/BomLider.jsx';
 
 const base = '/membro';
@@ -104,6 +104,7 @@ export default function MemberApp() {
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
+    { to: `${base}/dbv-mais`, icon: BadgeCheck, label: 'DBV+', hint: actor.plus ? `Assinante até ${new Date(actor.plus.until).toLocaleDateString('pt-BR')}` : 'Assine e ganhe benefícios' },
     { to: `${base}/aprendizagem`, icon: Flame, label: 'Estudo Diário', hint: 'Ano Bíblico, Meditação, Escola Sabatina e mais' },
     { to: `${base}/especialidades`, icon: Waypoints, label: 'Especialidades e classes', hint: 'As suas especialidades e classes' },
     { to: `${base}/albuns`, icon: BookImage, label: 'Álbuns de figurinhas', hint: 'Álbum Bíblico' },
@@ -118,6 +119,7 @@ export default function MemberApp() {
         path="*"
         element={
           <Shell tabs={tabs} offlineOk={(path) => ['jogos', 'albuns', 'mais'].includes(path.split('/')[2])} parentOf={parentOf}>
+            {!actor.waiting && <PlusNudge to={`${base}/dbv-mais`} />}
             {actor.waiting ? <Waiting text={actor.waiting} /> : <Routes>
               <Route index element={<MyProfile />} />
               <Route path="requisitos" element={<RequirementsAndRanking isDbv={isDbv} />} />
@@ -127,6 +129,7 @@ export default function MemberApp() {
               <Route path="suporte" element={<SupportChat />} />
               <Route path="jogos" element={<GamesHub base={base} />} />
               <Route path="jogos/:id" element={<GamePage base={base} />} />
+              <Route path="dbv-mais" element={<PlusPage />} />
               <Route path="albuns" element={<AlbumsPage base={base} />} />
               <Route path="albuns/:id" element={<AlbumPage />} />
               <Route path="aprendizagem" element={<LearningHub base={base} />} />

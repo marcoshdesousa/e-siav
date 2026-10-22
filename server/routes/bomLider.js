@@ -15,6 +15,7 @@ import { HttpError, fail, int } from '../util.js';
 import { setSetting, setting } from '../fees.js';
 import { testMode } from './learning.js';
 import { audioOf } from '../audio.js';
+import { gatedAudio, isPlus } from '../plus.js';
 
 const r = Router();
 const member = requireAuth('member');
@@ -106,11 +107,12 @@ function loadLessons() {
   return all.sort((a, b) => (a.n || 0) - (b.n || 0));
 }
 const LESSONS = loadLessons();
-const canSee = (actor) => actor.kind === 'lideranca' || testMode();
+// Bom Líder: liderança (16+) com o DBV+; no modo de teste, todos.
+const canSee = (actor) => testMode() || (actor.kind === 'lideranca' && isPlus(actor.id));
 const lessonRows = (memberId) => new Map(all('SELECT lesson, score, total, completed_at FROM bom_lider_progress WHERE member_id = ?', memberId).map((x) => [x.lesson, x]));
 
 r.get('/bom-lider', member, (req, res) => {
-  if (!canSee(req.actor)) fail(403, 'O Bom Líder é para a liderança (16 anos ou mais)');
+  if (!canSee(req.actor)) fail(403, req.actor.kind === 'lideranca' ? 'O Bom Líder é um benefício do DBV+. Assine para estudar.' : 'O Bom Líder é para a liderança (16 anos ou mais)');
   const rows = lessonRows(req.actor.id);
   const list = LESSONS.map((l, i) => {
     const row = rows.get(i + 1);
@@ -136,7 +138,7 @@ r.get('/bom-lider/aula/:n', member, (req, res) => {
     content: l.content || [], verse: l.verse || null, activity: l.activity || null,
     questions: l.questions.map((q) => (q.type === 'escrita' ? { type: 'escrita', q: q.q, min: q.min || 20 } : { type: 'escolha', q: q.q, options: q.options })),
     done: !!row?.completed_at, score: row?.score || 0, written: row?.written ? JSON.parse(row.written) : null,
-    audio: audioOf('bom-lider', String(n).padStart(2, '0')),
+    ...gatedAudio(req.actor.id, audioOf('bom-lider', String(n).padStart(2, '0'))),
   });
 });
 

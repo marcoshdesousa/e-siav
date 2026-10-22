@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { plusOf, plusOpen } from './plus.js';
 import bcrypt from 'bcryptjs';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -64,7 +65,8 @@ export function loadActor(type, id) {
     const waiting = m.status === 'pendente' ? waitingMessage(pendingReason(m)) : null;
     const { status: _s, terms_token: _t, approved_at: _a, cleared_year: _c, ...rest } = m;
     const kind = memberKind(m.birth_date);
-    return { type, ...rest, cargo: cargoOf(kind, rest.cargo), waiting, kind, role: roleOf(kind, m.cargo) };
+    const p = plusOf(m.id);
+    return { type, ...rest, cargo: cargoOf(kind, rest.cargo), waiting, kind, role: roleOf(kind, m.cargo), plus: p?.active ? { plan: p.plan, until: p.until } : null, plus_open: plusOpen(m.id) };
   }
   return null;
 }

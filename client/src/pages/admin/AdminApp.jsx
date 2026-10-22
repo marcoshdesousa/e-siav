@@ -25,6 +25,7 @@ import StickersAdmin from './StickersAdmin.jsx';
 import LearningAdmin from './LearningAdmin.jsx';
 import PaymentsAdmin from './PaymentsAdmin.jsx';
 import StreaksAdmin from './StreaksAdmin.jsx';
+import PlusAdmin from './PlusAdmin.jsx';
 
 const base = '/admin';
 
@@ -344,6 +345,7 @@ export default function AdminApp() {
     { to: `${base}/explorar`, icon: Map, label: 'Explorar clubes', hint: 'Perfis públicos' },
   ] : [
     { to: `${base}/sequencias`, icon: Flame, label: 'Sequências', hint: 'Porcentagem por distrito e clube' },
+    { to: `${base}/dbv-mais`, icon: Wallet, label: 'DBV+', hint: 'Assinantes e especialidades escolhidas' },
     { to: `${base}/suporte`, icon: MessageCircle, label: 'Suporte', hint: 'Responder os clubes e membros' },
     { to: `${base}/pagamentos`, icon: Wallet, label: 'Pagamentos', hint: 'Pix (SyncPay) e confirmações' },
     { to: `${base}/figurinhas`, icon: BookImage, label: 'Figurinhas', hint: 'Álbuns completos e presentes' },
@@ -382,6 +384,7 @@ export default function AdminApp() {
         <Route path="medalhas" element={<Navigate to={`${base}/conteudo?aba=medalhas`} replace />} />
         <Route path="ranking" element={<RankingHub base={base} />} />
         <Route path="sequencias" element={<StreaksAdmin />} />
+        <Route path="dbv-mais" element={<PlusAdmin />} />
         <Route path="explorar" element={<ClubsBrowser base={base} />} />
         <Route path="ver/:kind/:id" element={<InAppProfile base={base} />} />
         <Route path="mais" element={<><PageHeader title="Mais" /><MoreMenu items={more} /></>} />
