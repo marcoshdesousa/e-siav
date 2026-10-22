@@ -75,7 +75,7 @@ export default function PlusPage() {
             {d.mine?.active && (
               <Card className="plus-status">
                 <BadgeCheck size={26} />
-                <div><b>Você é {d.mine.plan_name}!</b><small><Clock size={12} /> Válido até {br(d.mine.until)} · renove quando quiser (soma mais {d.days} dias)</small></div>
+                <div><b>Você é {d.mine.plan_name}!</b><small><Clock size={12} /> Válido até {br(d.mine.until)} · um novo plano fica disponível nesse dia</small></div>
               </Card>
             )}
             {d.mine?.active && d.mine.picks_needed > 0 && <Picks d={d} reload={state.reload} />}
@@ -95,8 +95,10 @@ export default function PlusPage() {
                 <div key={p.id} className={'plus-plan' + (p.specialties ? ' gold' : '')}>
                   <b>{p.name}</b>
                   <span className="plus-price">{money(p.price_cents)}</span>
-                  <small>{p.specialties ? `Todos os benefícios + ${p.specialties} especialidades físicas (você escolhe ${p.pick})` : 'Todos os benefícios do app'}</small>
-                  <Button block busy={busy} onClick={() => buy(p.id)}>{d.mine?.active ? 'Renovar' : 'Assinar'}</Button>
+                  <small>{p.specialties ? `Todos os benefícios + ${d.packs} pacotinhos + ${p.specialties} especialidades físicas (você escolhe ${p.pick})` : `Todos os benefícios do app + ${d.packs} pacotinhos de figurinhas`}</small>
+                  {d.mine?.active
+                    ? <span className="plus-soon-date"><Clock size={15} /> Disponível em {br(d.mine.until)}</span>
+                    : <Button block busy={busy} onClick={() => buy(p.id)}>Assinar</Button>}
                 </div>
               ))}
             </div>

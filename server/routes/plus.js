@@ -46,6 +46,9 @@ r.get('/plus', member, (req, res) => {
 r.post('/plus/assinar', member, async (req, res) => {
   const plan = PLANS[req.body.plan];
   if (!plan) fail(400, 'Escolha um plano');
+  // Um plano por vez: só dá para assinar de novo quando o atual vencer.
+  const cur = plusOf(req.actor.id);
+  if (cur?.active) fail(409, `Você já tem o ${cur.plan_name}. Um novo plano fica disponível em ${new Date(cur.until).toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })}.`);
   const pay = await createPayment({ memberId: req.actor.id, purpose: 'dbvplus', ref: { plan: plan.id }, title: `${plan.name} (${PLUS_DAYS} dias)`, amountCents: plan.price_cents });
   res.json(await paymentOut(pay));
 });

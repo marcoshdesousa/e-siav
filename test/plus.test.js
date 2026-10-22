@@ -76,6 +76,7 @@ test('DBV+: sem assinatura (modo de teste desligado) fica bloqueado; assinando, 
   assert.equal((await admin.post(`/admin/pagamentos/${pay.id}/confirmar`)).status, 200);
   plus = (await pedro.get('/plus')).body;
   assert.equal(plus.mine.active, true);
+  assert.equal((await pedro.post('/plus/assinar', { plan: 'plus' })).status, 409, 'um plano por vez: só assina de novo quando vencer');
   assert.equal(plus.mine.picks_needed, 15);
   assert.equal((await pedro.get('/albuns/biblico')).body.packs_unopened, before + 30, '30 pacotinhos');
   const me = (await pedro.get('/auth/me')).body.actor;
