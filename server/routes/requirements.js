@@ -117,8 +117,10 @@ r.post('/requirements', requireAuth('admin', 'club', 'unit'), imageUpload.array(
   if (a.type === 'admin') {
     audience = b.audience;
     if (!['club', 'unit', 'member'].includes(audience)) fail(400, 'Escolha o público');
-    scope = b.scope === 'distrito' ? 'distrito' : 'geral';
-    if (scope === 'distrito') {
+    // Administrador de distrito cria só para o distrito dele.
+    scope = a.district_id || b.scope === 'distrito' ? 'distrito' : 'geral';
+    if (a.district_id) districtId = a.district_id;
+    else if (scope === 'distrito') {
       districtId = int(b.district_id);
       if (!get('SELECT 1 FROM districts WHERE id = ?', districtId)) fail(400, 'Escolha o distrito');
     }
@@ -168,7 +170,7 @@ r.post('/requirements', requireAuth('admin', 'club', 'unit'), imageUpload.array(
 
 /** Filtro SQL dos requisitos criados pela conta logada (t = alias da tabela). */
 const ownedFilter = (a, t = '') =>
-  a.type === 'admin' ? [`${t}creator_type = 'admin'`]
+  a.type === 'admin' ? (a.district_id ? [`${t}creator_type = 'admin' AND ${t}district_id = ?`, a.district_id] : [`${t}creator_type = 'admin'`])
     : a.type === 'club' ? [`${t}creator_type = 'club' AND ${t}club_id = ?`, a.id]
       : [`${t}creator_type = 'unit' AND ${t}unit_id = ?`, a.id];
 

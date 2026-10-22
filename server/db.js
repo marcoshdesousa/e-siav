@@ -654,6 +654,8 @@ function migrate() {
   // Skin escolhida para os jogos (personagem m01..m30 / f01..f30 e skate b01..b30)
   add('members', 'game_skin', 'TEXT');
   add('members', 'game_board', 'TEXT');
+  // Administrador de distrito: cuida só do distrito dele (sem distrito = administrador geral).
+  add('admins', 'district_id', 'INTEGER REFERENCES districts(id)');
   if (!flag('member-cleared-year-v1')) {
     db.prepare('UPDATE members SET cleared_year = ? WHERE cleared_year IS NULL AND fee_cleared_at IS NOT NULL').run(new Date().getFullYear());
     setFlag('member-cleared-year-v1');

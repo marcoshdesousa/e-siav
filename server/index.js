@@ -5,7 +5,7 @@ import path from 'node:path';
 import fs from 'node:fs';
 import multer from 'multer';
 import { UPLOAD_DIR, ROOT, all, get } from './db.js';
-import { attachActor } from './auth.js';
+import { attachActor, districtAdminGuard } from './auth.js';
 import { HttpError } from './util.js';
 import authRoutes from './routes/auth.js';
 import publicRoutes from './routes/public.js';
@@ -27,6 +27,7 @@ import albumRoutes from './routes/albums.js';
 import paymentRoutes from './routes/payments.js';
 import learningRoutes from './routes/learning.js';
 import bomLiderRoutes from './routes/bomLider.js';
+import signupRoutes from './routes/signup.js';
 import { startPaymentSweep } from './payments.js';
 import { syncCatalog } from './catalog.js';
 import { createInitialAdmin, resetClubsForDbvOnce, resetToDemoClubsOnce, resetToTestClubsOnce, giftTestPacksOnce, seed } from './seed.js';
@@ -61,6 +62,7 @@ app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(attachActor);
+app.use(districtAdminGuard);
 
 // Modo manutenção: com MANUTENCAO=1 no Render, todo mundo vê "Sistema em atualização".
 const MANUTENCAO = process.env.MANUTENCAO === '1';
@@ -78,7 +80,7 @@ if (MANUTENCAO) {
 
 const api = express.Router();
 api.get('/health', (_req, res) => res.json({ ok: true }));
-for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, transferRoutes, clubToolRoutes, supportRoutes, gameRoutes, albumRoutes, paymentRoutes, learningRoutes, bomLiderRoutes]) api.use(r);
+for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, transferRoutes, clubToolRoutes, supportRoutes, gameRoutes, albumRoutes, paymentRoutes, learningRoutes, bomLiderRoutes, signupRoutes]) api.use(r);
 api.use((_req, _res, next) => next(new HttpError(404, 'Rota não encontrada')));
 app.use('/api', api);
 

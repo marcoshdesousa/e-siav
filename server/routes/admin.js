@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { all, get, run, tx } from '../db.js';
-import { requireAuth, setLogin, getUsername } from '../auth.js';
+import { adminDistrict, requireAuth, requireGeneral, setLogin, getUsername } from '../auth.js';
 import { imageUpload, fileUrl, attachmentUpload } from '../uploads.js';
 import { NOME_UNIDADE_LIDERANCA } from '../config.js';
 import { listMembers, listUnits, memberFicha } from '../clubData.js';
@@ -13,31 +13,45 @@ import { fail, int, str, validDate, parseJson, memberKind, newClubCode, newClubN
 const r = Router();
 r.use('/admin', requireAuth('admin'));
 
-r.get('/admin/overview', (_req, res) => {
-  const n = (sql) => get(sql).n;
+r.get('/admin/overview', (req, res) => {
+  const d = adminDistrict(req.actor);
+  // Administrador de distrito: só os números do distrito dele.
+  const n = (sql, sqlD = sql) => (d ? get(sqlD, d).n : get(sql).n);
   res.json({
-    districts: n('SELECT COUNT(*) n FROM districts'),
-    clubs: n('SELECT COUNT(*) n FROM clubs'),
-    units: n('SELECT COUNT(*) n FROM units WHERE is_leadership = 0'),
-    members: n(`SELECT COUNT(*) n FROM members WHERE status = 'ativo'`),
-    pending_reviews: n(`SELECT COUNT(*) n FROM submissions s JOIN requirements r ON r.id = s.requirement_id WHERE r.creator_type = 'admin' AND s.status = 'enviado'`),
-    open_reports: n(`SELECT COUNT(*) n FROM reports WHERE status = 'aberta'`),
-    pending_purchases: n(`SELECT COUNT(*) n FROM purchases WHERE status = 'pendente'`),
-    requirements: n(`SELECT COUNT(*) n FROM requirements WHERE creator_type = 'admin'`),
+    general: !d,
+    district_name: req.actor.district_name || null,
+    districts: d ? 1 : n('SELECT COUNT(*) n FROM districts'),
+    clubs: n('SELECT COUNT(*) n FROM clubs', 'SELECT COUNT(*) n FROM clubs WHERE district_id = ?'),
+    units: n('SELECT COUNT(*) n FROM units WHERE is_leadership = 0', 'SELECT COUNT(*) n FROM units u JOIN clubs c ON c.id = u.club_id WHERE u.is_leadership = 0 AND c.district_id = ?'),
+    members: n(`SELECT COUNT(*) n FROM members WHERE status = 'ativo'`, `SELECT COUNT(*) n FROM members m JOIN clubs c ON c.id = m.club_id WHERE m.status = 'ativo' AND c.district_id = ?`),
+    pending_reviews: n(`SELECT COUNT(*) n FROM submissions s JOIN requirements r ON r.id = s.requirement_id WHERE r.creator_type = 'admin' AND s.status = 'enviado'`,
+      `SELECT COUNT(*) n FROM submissions s JOIN requirements r ON r.id = s.requirement_id WHERE r.creator_type = 'admin' AND r.district_id = ? AND s.status = 'enviado'`),
+    open_reports: d ? 0 : n(`SELECT COUNT(*) n FROM reports WHERE status = 'aberta'`),
+    pending_purchases: d ? 0 : n(`SELECT COUNT(*) n FROM purchases WHERE status = 'pendente'`),
+    requirements: n(`SELECT COUNT(*) n FROM requirements WHERE creator_type = 'admin'`, `SELECT COUNT(*) n FROM requirements WHERE creator_type = 'admin' AND district_id = ?`),
   });
 });
 
+/** Clube do distrito do administrador (o geral pode qualquer um). */
+function ownClub(req, id) {
+  const c = get('SELECT id, district_id FROM clubs WHERE id = ?', id);
+  const d = adminDistrict(req.actor);
+  if (!c || (d && c.district_id !== d)) fail(404, 'Clube não encontrado');
+  return c;
+}
+
 // ---------- Distritos ----------
-r.get('/admin/districts', (_req, res) => {
-  res.json(all(`SELECT d.*, (SELECT COUNT(*) FROM clubs c WHERE c.district_id = d.id) AS club_count FROM districts d ORDER BY d.name`));
+r.get('/admin/districts', (req, res) => {
+  const d = adminDistrict(req.actor);
+  res.json(all(`SELECT d.*, (SELECT COUNT(*) FROM clubs c WHERE c.district_id = d.id) AS club_count FROM districts d ${d ? 'WHERE d.id = ?' : ''} ORDER BY d.name`, ...(d ? [d] : [])));
 });
-r.post('/admin/districts', (req, res) => {
+r.post('/admin/districts', requireGeneral, (req, res) => {
   const name = str(req.body.name, 80);
   if (!name) fail(400, 'Informe o nome do distrito');
   const { lastInsertRowid } = run('INSERT INTO districts (name) VALUES (?)', name);
   res.json({ id: Number(lastInsertRowid) });
 });
-r.put('/admin/districts/:id', (req, res) => {
+r.put('/admin/districts/:id', requireGeneral, (req, res) => {
   const name = str(req.body.name, 80);
   if (!name) fail(400, 'Informe o nome do distrito');
   run('UPDATE districts SET name = ? WHERE id = ?', name, int(req.params.id));
@@ -51,12 +65,14 @@ function associates(v) {
   return list.length ? list.join('\n') : null;
 }
 
-r.get('/admin/clubs', (_req, res) => {
+r.get('/admin/clubs', (req, res) => {
+  const d = adminDistrict(req.actor);
   const rows = all(
     `SELECT c.id, c.name, c.number, c.logo, c.code, c.director_name, c.associate_directors, c.district_id, d.name AS district_name,
             (SELECT COUNT(*) FROM members m WHERE m.club_id = c.id AND m.status = 'ativo') AS member_count,
             (SELECT COUNT(*) FROM units u WHERE u.club_id = c.id) AS unit_count
-     FROM clubs c JOIN districts d ON d.id = c.district_id ORDER BY c.number`,
+     FROM clubs c JOIN districts d ON d.id = c.district_id ${d ? 'WHERE c.district_id = ?' : ''} ORDER BY c.number`,
+    ...(d ? [d] : []),
   );
   res.json(rows);
 });
@@ -67,7 +83,7 @@ r.get('/admin/clubs', (_req, res) => {
  */
 r.post('/admin/clubs', (req, res) => {
   const name = str(req.body.name, 100);
-  const districtId = int(req.body.district_id);
+  const districtId = adminDistrict(req.actor) || int(req.body.district_id);
   const director = str(req.body.director_name, 100);
   if (!name || clubDisplayName(0, name) === 'Clube ') fail(400, 'Informe o nome do clube');
   if (!director) fail(400, 'Informe o nome do diretor do clube');
@@ -86,12 +102,11 @@ r.post('/admin/clubs', (req, res) => {
 });
 
 r.put('/admin/clubs/:id', (req, res) => {
-  const id = int(req.params.id);
-  if (!get('SELECT 1 FROM clubs WHERE id = ?', id)) fail(404, 'Clube não encontrado');
+  const id = ownClub(req, int(req.params.id)).id;
   tx(() => {
     const name = str(req.body.name, 100);
     if (name && clubDisplayName(0, name) !== 'Clube ') run('UPDATE clubs SET name = ? WHERE id = ?', clubDisplayName(get('SELECT number FROM clubs WHERE id = ?', id).number, name), id);
-    const districtId = int(req.body.district_id);
+    const districtId = adminDistrict(req.actor) ? 0 : int(req.body.district_id);
     if (districtId) {
       if (!get('SELECT 1 FROM districts WHERE id = ?', districtId)) fail(400, 'Distrito inválido');
       run('UPDATE clubs SET district_id = ? WHERE id = ?', districtId, id);
@@ -108,39 +123,49 @@ r.put('/admin/clubs/:id', (req, res) => {
 
 // Visualizar o clube por dentro: membros, fichas e unidades. Só leitura — o admin não edita nada.
 r.get('/admin/clubs/:id/view', (req, res) => {
-  const id = int(req.params.id);
+  const id = ownClub(req, int(req.params.id)).id;
   const club = clubProfile(id);
   if (!club) fail(404, 'Clube não encontrado');
   res.json({ club, members: listMembers(id), units: listUnits(id) });
 });
 r.get('/admin/clubs/:id/members/:mid/ficha', (req, res) => {
-  const f = memberFicha(int(req.params.id), int(req.params.mid));
+  const f = memberFicha(ownClub(req, int(req.params.id)).id, int(req.params.mid));
   if (!f) fail(404, 'Membro não encontrado');
   res.json(f);
 });
 
 // ---------- Administradores ----------
-r.get('/admin/admins', (_req, res) => {
-  const rows = all('SELECT id, name, created_at FROM admins ORDER BY id');
+// Só existe um administrador geral; os outros cuidam cada um de um distrito.
+r.get('/admin/admins', requireGeneral, (_req, res) => {
+  const rows = all('SELECT a.id, a.name, a.district_id, d.name AS district_name, a.created_at FROM admins a LEFT JOIN districts d ON d.id = a.district_id ORDER BY a.district_id IS NOT NULL, a.id');
   rows.forEach((a) => (a.username = getUsername('admin', a.id)));
   res.json(rows);
 });
-r.post('/admin/admins', (req, res) => {
+const districtOf = (v) => {
+  const id = int(v);
+  if (!get('SELECT 1 FROM districts WHERE id = ?', id)) fail(400, 'Escolha o distrito que esse administrador vai cuidar');
+  return id;
+};
+r.post('/admin/admins', requireGeneral, (req, res) => {
   const name = str(req.body.name, 100);
   if (!name) fail(400, 'Informe o nome');
+  const district = districtOf(req.body.district_id);
   const id = tx(() => {
-    const id = Number(run('INSERT INTO admins (name, created_by) VALUES (?, ?)', name, req.actor.id).lastInsertRowid);
+    const id = Number(run('INSERT INTO admins (name, created_by, district_id) VALUES (?, ?, ?)', name, req.actor.id, district).lastInsertRowid);
     setLogin('admin', id, req.body.username, req.body.password);
     return id;
   });
   res.json({ id });
 });
-r.put('/admin/admins/:id', (req, res) => {
+r.put('/admin/admins/:id', requireGeneral, (req, res) => {
   const id = int(req.params.id);
-  if (!get('SELECT 1 FROM admins WHERE id = ?', id)) fail(404, 'Administrador não encontrado');
+  const a = get('SELECT id, district_id FROM admins WHERE id = ?', id);
+  if (!a) fail(404, 'Administrador não encontrado');
   tx(() => {
     const name = str(req.body.name, 100);
     if (name) run('UPDATE admins SET name = ? WHERE id = ?', name, id);
+    // O geral continua geral; administrador de distrito pode mudar de distrito.
+    if (a.district_id && req.body.district_id) run('UPDATE admins SET district_id = ? WHERE id = ?', districtOf(req.body.district_id), id);
     if (req.body.username || req.body.password) setLogin('admin', id, req.body.username, req.body.password);
   });
   res.json({ ok: true });
@@ -150,6 +175,14 @@ r.put('/admin/admins/:id', (req, res) => {
 r.get('/admin/targets', (req, res) => {
   const q = '%' + str(req.query.q, 60) + '%';
   const type = req.query.type;
+  const d = adminDistrict(req.actor);
+  if (d) {
+    const rows = type === 'club' ? all(`SELECT c.id, c.name, c.logo, d.name AS sub FROM clubs c JOIN districts d ON d.id = c.district_id WHERE c.district_id = ? AND c.name LIKE ? ORDER BY c.name LIMIT 30`, d, q)
+      : type === 'unit' ? all(`SELECT u.id, u.name, u.logo, c.name AS sub FROM units u JOIN clubs c ON c.id = u.club_id WHERE c.district_id = ? AND (u.name LIKE ? OR c.name LIKE ?) ORDER BY c.name, u.name LIMIT 30`, d, q, q)
+        : type === 'member' ? all(`SELECT m.id, m.name, m.photo, m.code, c.name || ' · ' || m.code AS sub FROM members m JOIN clubs c ON c.id = m.club_id WHERE c.district_id = ? AND m.status = 'ativo' AND (m.name LIKE ? OR m.code LIKE ?) ORDER BY m.name LIMIT 30`, d, q, q)
+          : fail(400, 'Tipo inválido');
+    return res.json(rows);
+  }
   if (type === 'club') {
     return res.json(all(`SELECT c.id, c.name, c.logo, d.name AS sub FROM clubs c JOIN districts d ON d.id = c.district_id WHERE c.name LIKE ? ORDER BY c.name LIMIT 30`, q));
   }

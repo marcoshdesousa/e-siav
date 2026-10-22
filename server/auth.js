@@ -36,8 +36,8 @@ export function actorFromToken(token) {
 
 export function loadActor(type, id) {
   if (type === 'admin') {
-    const a = get('SELECT id, name FROM admins WHERE id = ?', id);
-    return a && { type, ...a };
+    const a = get('SELECT a.id, a.name, a.district_id, d.name AS district_name FROM admins a LEFT JOIN districts d ON d.id = a.district_id WHERE a.id = ?', id);
+    return a && { type, ...a, general: !a.district_id };
   }
   if (type === 'club') {
     const c = get('SELECT id, name, district_id, logo, photo, code FROM clubs WHERE id = ?', id);
@@ -79,6 +79,26 @@ export function attachActor(req, _res, next) {
   req.actor = actorFromToken(req.cookies?.[COOKIE]);
   next();
 }
+
+// Administrador de distrito: só as telas do distrito dele (clubes, links de inscrição, requisitos,
+// avaliações e as sequências). O resto do painel é só do administrador geral.
+const DISTRICT_ADMIN_OK = /^\/api\/admin\/(overview|districts|clubs|targets|inscricoes|sequencias)(\/|$)/;
+export function districtAdminGuard(req, _res, next) {
+  const a = req.actor;
+  const path = req.originalUrl.split('?')[0];
+  if (a?.type === 'admin' && a.district_id
+    && ((path.startsWith('/api/admin/') && !DISTRICT_ADMIN_OK.test(path)) || (path.startsWith('/api/announcements') && req.method !== 'GET'))) {
+    fail(403, 'Só o administrador geral pode fazer isso');
+  }
+  next();
+}
+/** Só o administrador geral. */
+export const requireGeneral = (req, _res, next) => {
+  if (req.actor?.type !== 'admin' || req.actor.district_id) fail(403, 'Só o administrador geral pode fazer isso');
+  next();
+};
+/** Distrito do administrador (null = geral, vê tudo). */
+export const adminDistrict = (a) => (a?.type === 'admin' ? a.district_id || null : null);
 
 export const requireAuth = (...types) => (req, _res, next) => {
   if (!req.actor) fail(401, 'Faça login para continuar');

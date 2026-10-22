@@ -35,8 +35,8 @@ function AdminHome() {
       <div className="hero">
         <div style={{ position: 'relative', zIndex: 1 }}>
           <p className="muted small">Painel do</p>
-          <h1>Administrador Geral</h1>
-          <p className="muted">Olá, {actor.name}! Você cuida de toda a plataforma.</p>
+          <h1>{actor.district_id ? 'Administrador do Distrito' : 'Administrador Geral'}</h1>
+          <p className="muted">Olá, {actor.name}! {actor.district_id ? <>Você cuida do distrito <b>{actor.district_name}</b>.</> : 'Você cuida de toda a plataforma.'}</p>
         </div>
       </div>
       <Loading {...state}>
@@ -53,6 +53,15 @@ function AdminHome() {
           </Section>
         )}
       </Loading>
+      {actor.district_id ? (
+        <Section title="Atalhos">
+          <MoreMenu items={[
+            { to: `${base}/clubes`, icon: Tent, label: 'Clubes do distrito', hint: 'Criar clubes e links de inscrição' },
+            { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos do distrito', hint: 'Criar e avaliar' },
+            { to: `${base}/sequencias`, icon: Flame, label: 'Sequências', hint: 'Porcentagem de cada clube' },
+          ]} />
+        </Section>
+      ) : (
       <Section title="Atalhos">
         <MoreMenu items={[
           { to: `${base}/suporte`, icon: MessageCircle, label: 'Suporte', hint: 'Responder os clubes e membros' },
@@ -67,6 +76,7 @@ function AdminHome() {
           { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios' },
         ]} />
       </Section>
+      )}
       <p className="muted small mt center">Os dados pessoais dos membros são editados somente pelo clube de cada um.</p>
     </>
   );
@@ -101,11 +111,13 @@ function ClubForm({ item, nextNumber, districts, onClose, onCreated, onSaved }) 
             <input value={f.name} onChange={(e) => setF({ ...f, name: baseName(e.target.value) })} placeholder="Ex.: Titãs" aria-label="Nome do clube (sem a palavra Clube)" />
           </div>
         </Field>
-        <Field label="Distrito">
-          <select value={f.district_id} onChange={(e) => setF({ ...f, district_id: e.target.value })}>
-            {districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
-          </select>
-        </Field>
+        {districts.length > 1 && (
+          <Field label="Distrito">
+            <select value={f.district_id} onChange={(e) => setF({ ...f, district_id: e.target.value })}>
+              {districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
+            </select>
+          </Field>
+        )}
         <Field label="Diretor(a) do clube" hint="Responsável pelo clube. Só o administrativo troca (todo ano)."><input value={f.director_name} onChange={(e) => setF({ ...f, director_name: e.target.value })} /></Field>
         <Field label="Diretores associados (opcional)" hint="Um nome por linha.">
           <textarea rows={3} value={f.associate_directors} onChange={(e) => setF({ ...f, associate_directors: e.target.value })} placeholder={'Ex.: Ana Souza\nJoão Lima'} />
@@ -124,7 +136,7 @@ function NameLoginForm({ title, item, withDistrict, districts, onClose, onSave }
       <div className="form">
         <Field label="Nome"><input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
         {withDistrict && (
-          <Field label="Distrito">
+          <Field label="Distrito que ele vai cuidar" hint="Ele cria clubes e requisitos desse distrito e só vê esse distrito.">
             <select value={f.district_id} onChange={(e) => setF({ ...f, district_id: e.target.value })}>
               {districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
             </select>
@@ -139,12 +151,47 @@ function NameLoginForm({ title, item, withDistrict, districts, onClose, onSave }
   );
 }
 
+/** Links de inscrição de cada clube: ligar/desligar, copiar e trocar o link. */
+function SignupLinksAdmin() {
+  const list = useLoad(() => api.get('/admin/inscricoes'));
+  const [busy, run] = useAsync();
+  const url = (t) => `${location.origin}/inscricao/${t}`;
+  const toggle = (c) => run(() => api.put(`/admin/inscricoes/${c.id}`, { enabled: !c.enabled }), c.enabled ? 'Link desligado' : 'Link ligado').then(list.reload);
+  const renew = (c) => confirm('Gerar um link novo? O link antigo para de funcionar.') && run(() => api.post(`/admin/inscricoes/${c.id}/novo-link`), 'Link novo gerado (desligado)').then(list.reload);
+  const copy = async (c) => { try { await navigator.clipboard.writeText(url(c.token)); window.alert('Link copiado!'); } catch { prompt('Copie o link:', url(c.token)); } };
+  return (
+    <>
+      <p className="small muted">Quem entra pelo link já fica no clube, escolhe a unidade e ganha o login na hora (código + ano de nascimento). O link não aparece para o clube: só você passa para ele.</p>
+      <div className="list">
+        <Loading {...list} empty="Nenhum clube.">
+          {(rows) => rows.map((c) => (
+            <div key={c.id} className="list-item">
+              <Avatar src={c.logo} name={c.name} size={44} square />
+              <div className="grow">
+                <div className="title">{c.name}</div>
+                <div className="sub">{c.district_name} · {plural(c.unit_count, 'unidade', 'unidades')} · {plural(c.signups, 'inscrição', 'inscrições')}</div>
+                {c.token && c.enabled ? <div className="sub"><code>{url(c.token)}</code></div> : <div className="sub">{c.token ? 'Link desligado' : 'Ainda sem link'}</div>}
+              </div>
+              <div className="stack" style={{ gap: '.35rem' }}>
+                <Button small busy={busy} variant={c.enabled ? 'secondary' : undefined} onClick={() => toggle(c)}>{c.enabled ? 'Desligar' : 'Ligar link'}</Button>
+                {!!c.enabled && <Button small variant="secondary" onClick={() => copy(c)}>Copiar</Button>}
+                {c.token && <Button small variant="secondary" busy={busy} onClick={() => renew(c)}>Novo link</Button>}
+              </div>
+            </div>
+          ))}
+        </Loading>
+      </div>
+    </>
+  );
+}
+
 function ClubsAdmin() {
-  const { refreshMeta } = useAuth();
+  const { actor, refreshMeta } = useAuth();
+  const general = !actor.district_id;
   const [tab, setTab] = useState('clubes');
   const districts = useLoad(() => api.get('/admin/districts'));
   const clubs = useLoad(() => api.get('/admin/clubs'));
-  const admins = useLoad(() => api.get('/admin/admins'));
+  const admins = useLoad(() => (general ? api.get('/admin/admins') : Promise.resolve([])));
   const [modal, setModal] = useState(null);
   const [newDistrict, setNewDistrict] = useState('');
   const [busy, run] = useAsync();
@@ -165,8 +212,9 @@ function ClubsAdmin() {
 
   return (
     <>
-      <PageHeader title="Clubes e acessos" />
-      <Tabs tabs={[['clubes', 'Clubes'], ['distritos', 'Distritos'], ['admins', 'Administradores']]} value={tab} onChange={setTab} />
+      <PageHeader title="Clubes e acessos" subtitle={general ? null : `Distrito ${actor.district_name}`} />
+      <Tabs tabs={general ? [['clubes', 'Clubes'], ['links', 'Links de inscrição'], ['distritos', 'Distritos'], ['admins', 'Administradores']] : [['clubes', 'Clubes'], ['links', 'Links de inscrição']]} value={tab} onChange={setTab} />
+      {tab === 'links' && <SignupLinksAdmin />}
       {tab === 'distritos' && (
         <>
           <Card>
@@ -213,13 +261,14 @@ function ClubsAdmin() {
       )}
       {tab === 'admins' && (
         <>
-          <Button block onClick={() => setModal({ kind: 'admin' })}>+ Novo administrador</Button>
+          <p className="small muted">Você é o único administrador geral. Cada novo administrador cuida de um distrito: cria clubes e requisitos desse distrito e vê só ele.</p>
+          <Button block onClick={() => setModal({ kind: 'admin' })}>+ Novo administrador de distrito</Button>
           <div className="list mt">
             <Loading {...admins}>
               {(list) => list.map((a) => (
                 <div key={a.id} className="list-item">
                   <Avatar name={a.name} size={42} />
-                  <div className="grow"><div className="title">{a.name}</div><div className="sub">@{a.username}</div></div>
+                  <div className="grow"><div className="title">{a.name}</div><div className="sub">@{a.username} · {a.district_id ? `Distrito ${a.district_name}` : 'Administrador geral'}</div></div>
                   <Button small variant="secondary" onClick={() => setModal({ kind: 'admin', item: a })}>Editar</Button>
                 </div>
               ))}
@@ -248,7 +297,8 @@ function ClubsAdmin() {
       )}
       {modal?.kind === 'admin' && (
         <NameLoginForm
-          title={modal.item ? 'Editar administrador' : 'Novo administrador'} item={modal.item}
+          title={modal.item ? 'Editar administrador' : 'Novo administrador do distrito'} item={modal.item}
+          withDistrict={!modal.item || !!modal.item.district_id} districts={districts.data || []}
           onClose={() => setModal(null)}
           onSave={(f) => (modal.item ? api.put('/admin/admins/' + modal.item.id, f) : api.post('/admin/admins', f)).then(admins.reload)}
         />
@@ -273,14 +323,26 @@ function RequirementsAdmin() {
 
 /** Painel do Administrador Geral. */
 export default function AdminApp() {
-  const tabs = [
+  const { actor } = useAuth();
+  const general = !actor.district_id;
+  const tabs = !general ? [
+    { to: base, icon: House, label: 'Início', end: true },
+    { to: `${base}/clubes`, icon: Tent, label: 'Clubes' },
+    { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },
+    { to: `${base}/sequencias`, icon: Flame, label: 'Sequências' },
+    { to: `${base}/mais`, icon: Menu, label: 'Mais' },
+  ] : [
     { to: base, icon: House, label: 'Início', end: true },
     { to: `${base}/clubes`, icon: Tent, label: 'Clubes' },
     { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },
     { to: `${base}/conteudo`, icon: Library, label: 'Conteúdo' },
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
-  const more = [
+  const more = !general ? [
+    { to: `${base}/ranking`, icon: Trophy, label: 'Rankings', hint: 'Tabelas do distrito' },
+    { to: `${base}/explorar`, icon: Map, label: 'Explorar clubes', hint: 'Perfis públicos' },
+  ] : [
+    { to: `${base}/sequencias`, icon: Flame, label: 'Sequências', hint: 'Porcentagem por distrito e clube' },
     { to: `${base}/suporte`, icon: MessageCircle, label: 'Suporte', hint: 'Responder os clubes e membros' },
     { to: `${base}/pagamentos`, icon: Wallet, label: 'Pagamentos', hint: 'Pix (SyncPay) e confirmações' },
     { to: `${base}/figurinhas`, icon: BookImage, label: 'Figurinhas', hint: 'Álbuns completos e presentes' },

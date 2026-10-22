@@ -3,7 +3,7 @@
 
 // desbravador = Desbravador (10–15 anos); lideranca = Liderança (16+). Os nomes internos não mudam.
 // Diretoria do clube e conselheiros/instrutores (16+).
-export const CARGOS_LIDERANCA = ['Diretor', 'Diretora', 'Diretor Associado', 'Diretora Associada', 'Secretário', 'Tesoureiro', 'Capelão'];
+export const CARGOS_LIDERANCA = ['Diretoria', 'Diretor', 'Diretora', 'Diretor Associado', 'Diretora Associada', 'Secretário', 'Tesoureiro', 'Capelão'];
 export const CARGOS_TUTORES = ['Conselheiro', 'Conselheira', 'Conselheiro Associado', 'Conselheira Associada', 'Instrutor', 'Instrutora'];
 export const CARGOS = {
   desbravador: ['Desbravador', 'Capitão', 'Secretário', 'Tesoureiro', 'Padioleiro', 'Almoxarife', 'Capelão'],

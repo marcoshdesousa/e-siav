@@ -171,13 +171,15 @@ export function RequirementForm({ audience: fixedAudience, onClose, onDone }) {
                 {AUDIENCES.map(([k, l]) => <option key={k} value={k}>{l}</option>)}
               </select>
             </Field>
-            <Field label="Alcance">
-              <select value={f.scope} onChange={set('scope')}>
-                <option value="geral">Geral (todos os distritos)</option>
-                <option value="distrito">Distrito</option>
-              </select>
-            </Field>
-            {f.scope === 'distrito' && (
+            {!actor?.district_id && (
+              <Field label="Alcance">
+                <select value={f.scope} onChange={set('scope')}>
+                  <option value="geral">Geral (todos os distritos)</option>
+                  <option value="distrito">Distrito</option>
+                </select>
+              </Field>
+            )}
+            {f.scope === 'distrito' && !actor?.district_id && (
               <Field label="Distrito">
                 <select value={f.district_id} onChange={set('district_id')}>
                   {meta.districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
