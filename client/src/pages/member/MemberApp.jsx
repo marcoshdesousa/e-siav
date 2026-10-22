@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import {
-  BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, Waypoints, Hourglass, Flame, BadgeCheck } from 'lucide-react';
+import { BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, BookOpenText, Waypoints, Hourglass, BadgeCheck } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Loading, PageHeader, useAsync, useLoad } from '../../ui.jsx';
@@ -87,7 +86,7 @@ function Waiting({ text }) {
 /** Para onde o "Voltar" do topo leva em cada tela. */
 function parentOf(path) {
   const [seg, sub, sub2] = path.split('/').slice(2);
-  if (seg === 'aprendizagem') return ['meditacao', 'escola-sabatina'].includes(sub) && sub2 ? `${base}/aprendizagem/${sub}` : sub === 'bom-lider' && sub2 ? `${base}/aprendizagem/bom-lider` : sub === 'bom-de-biblia' && sub2 ? `${base}/aprendizagem/bom-de-biblia` : sub === 'ano-biblico' && sub2 ? `${base}/aprendizagem/ano-biblico` :  sub ? `${base}/aprendizagem` : `${base}/mais`;
+  if (seg === 'aprendizagem') return ['meditacao', 'escola-sabatina'].includes(sub) && sub2 ? `${base}/aprendizagem/${sub}` : sub === 'bom-lider' && sub2 ? `${base}/aprendizagem/bom-lider` : sub === 'bom-de-biblia' && sub2 ? `${base}/aprendizagem/bom-de-biblia` : sub === 'ano-biblico' && sub2 ? `${base}/aprendizagem/ano-biblico` :  sub ? `${base}/aprendizagem` : base;
   if ((seg === 'jogos' || seg === 'albuns') && sub) return `${base}/${seg}`;
   if (['cursos', 'clubes', 'agenda', 'suporte', 'especialidades', 'albuns'].includes(seg)) return `${base}/mais`;
   return base;
@@ -99,13 +98,13 @@ export default function MemberApp() {
   const tabs = [
     { to: base, icon: UserRound, label: 'Perfil', end: true },
     { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },
+    { to: `${base}/aprendizagem`, icon: BookOpenText, label: 'Estudos' },
     { to: `${base}/jogos`, icon: Gamepad2, label: 'Mini-jogos' },
     { to: `${base}/cartao`, icon: IdCard, label: 'Cartão' },
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
     { to: `${base}/dbv-mais`, icon: BadgeCheck, label: 'DBV+', hint: actor.plus ? `Assinante até ${new Date(actor.plus.until).toLocaleDateString('pt-BR')}` : 'Assine e ganhe benefícios' },
-    { to: `${base}/aprendizagem`, icon: Flame, label: 'Estudo Diário', hint: 'Ano Bíblico, Meditação, Escola Sabatina e mais' },
     { to: `${base}/especialidades`, icon: Waypoints, label: 'Especialidades e classes', hint: 'As suas especialidades e classes' },
     { to: `${base}/albuns`, icon: BookImage, label: 'Álbuns de figurinhas', hint: 'Álbum Bíblico' },
     { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas do clube e do App' },

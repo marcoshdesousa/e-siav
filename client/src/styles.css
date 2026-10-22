@@ -896,3 +896,5 @@ input::-webkit-datetime-edit { padding: 0; }
 .st-item.on { border-color: rgba(74,222,128,.5); }
 @keyframes st-glow { 50% { box-shadow: 0 0 26px rgba(251,146,60,.85); transform: scale(1.05); } }
 @media (prefers-reduced-motion: reduce) { .st-item.lit .st-flame { animation: none; } }
+.bottom-nav-inner:has(> a:nth-child(6)) a { white-space: nowrap; padding-left: 0; padding-right: 0; }
+@media (max-width: 370px) { .bottom-nav-inner:has(> a:nth-child(6)) a { font-size: .56rem; } .bottom-nav-inner:has(> a:nth-child(6)) .nav-ico { width: 36px; } }
