@@ -76,7 +76,7 @@ r.get('/aprendizagem', member, async (req, res) => {
   const { meditationSummary, sabbathSummary } = await import('./devotional.js');
   res.json({
     bible, meditation: meditationSummary(req.actor.id), sabbath: sabbathSummary(req.actor.id),
-    bdb: { passed: bdb, total: BDB.length }, leader: req.actor.kind === 'lideranca' || testMode(), test: testMode(), plus: plusOpen(req.actor.id),
+    bdb: { passed: bdb, total: BDB.length }, leader: req.actor.kind === 'lideranca', test: testMode(), plus: plusOpen(req.actor.id),
   });
 });
 

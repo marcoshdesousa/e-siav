@@ -52,7 +52,7 @@ async function login(mode, username, password) {
     const r = await fetch(BASE + url, opts);
     return { status: r.status, body: await r.json().catch(() => null) };
   };
-  return { actor, get: (u) => call('GET', u), post: (u, b = {}) => call('POST', u, b), put: (u, b = {}) => call('PUT', u, b) };
+  return { actor, cookie, get: (u) => call('GET', u), post: (u, b = {}) => call('POST', u, b), put: (u, b = {}) => call('PUT', u, b) };
 }
 
 test('DBV+: sem assinatura (modo de teste desligado) fica bloqueado; assinando, libera tudo', async () => {
@@ -92,4 +92,23 @@ test('DBV+: sem assinatura (modo de teste desligado) fica bloqueado; assinando, 
   // selo de verificado no perfil
   assert.equal((await pedro.get('/me/profile')).body.verified, true);
   await admin.put('/admin/biblia-teste', { on: true });
+});
+
+test('DBV+: o modo de teste não libera o premium; contas de teste metade premium; admin dá e tira', async () => {
+  const admin = await login('membros', 'admin', 'admin123');
+  const list = (await admin.get('/admin/plus')).body;
+  const base = list.filter((x) => x.active && x.code !== '100001');
+  assert.ok(base.length > 0, 'algumas contas de teste já são premium');
+  const free = await login('membros', '100002');
+  const plus = (await free.get('/plus')).body;
+  const isBase = base.some((x) => x.code === '100002');
+  assert.equal(plus.open, isBase, 'com o modo de teste ligado, só quem tem DBV+ tem o premium');
+  assert.equal((await admin.post('/admin/plus/dar', { code: '999999', plan: 'plus' })).status, 404);
+  const g = await admin.post('/admin/plus/dar', { code: '100002', plan: 'plus3', days: 10 });
+  assert.equal(g.status, 200);
+  assert.equal((await free.get('/plus')).body.open, true);
+  const id = (await admin.get('/admin/plus')).body.find((x) => x.code === '100002').member_id;
+  const del = await fetch(BASE + '/admin/plus/' + id, { method: 'DELETE', headers: { cookie: admin.cookie } });
+  assert.equal(del.status, 200);
+  assert.equal((await free.get('/plus')).body.open, false);
 });

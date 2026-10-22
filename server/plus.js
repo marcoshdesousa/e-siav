@@ -2,10 +2,10 @@
 //   DBV+          R$ 9,90  — benefícios do app
 //   DBV+ 3 Espec. R$ 24,90 — + 3 especialidades físicas (escolhe 15, a equipe compra 3)
 //   DBV+ 7 Espec. R$ 39,90 — + 7 especialidades físicas (escolhe 20, a equipe compra 7)
-// Todo plano: áudio das leituras, Bom Líder, mini-jogos sem internet e no ranking, 30 pacotinhos a
-// cada 30 dias, figurinhas em dobro na compra e o selo de verificado. No modo de teste fica tudo liberado.
-import { get, run } from './db.js';
-import { setting } from './fees.js';
+// Todo plano: áudio das leituras, Bom Líder, ranking dos mini-jogos, 30 pacotinhos a
+// cada 30 dias, figurinhas em dobro na compra e o selo de verificado. Só para quem assina (ou ganhou do
+// administrador geral); o modo de teste não libera o DBV+.
+import { all, get, run, tx } from './db.js';
 
 run(`CREATE TABLE IF NOT EXISTS member_plus (
   member_id INTEGER PRIMARY KEY REFERENCES members(id) ON DELETE CASCADE,
@@ -32,12 +32,11 @@ export function plusOf(memberId) {
   if (!p) return null;
   return { ...p, picks: p.picks ? JSON.parse(p.picks) : null, active: p.until > new Date().toISOString(), plan_name: PLANS[p.plan]?.name || 'DBV+' };
 }
-/** Assinante ativo (sem contar o modo de teste). */
+/** Assinante ativo. */
 export const isPlus = (memberId) => !!plusOf(memberId)?.active;
-/** Benefício liberado: assinante ativo ou modo de teste ligado. */
-export const plusOpen = (memberId) => setting('biblia_teste') !== '0' || isPlus(memberId);
+/** Benefício do DBV+ liberado (assinante ativo). */
+export const plusOpen = (memberId) => isPlus(memberId);
 
-/** Áudio só para quem tem o DBV+ (ou no modo de teste): { audio } ou { audio: null, audio_locked: true }. */
 /** Áudio da leitura: os primeiros (free) são de graça para todos; os outros são do DBV+. */
 export const gatedAudio = (memberId, audio, free = false) => (!audio ? { audio: null } : free || plusOpen(memberId) ? { audio } : { audio: null, audio_locked: true });
 /** Quantos áudios do começo do Ano Bíblico e da Meditação são de graça. */
@@ -56,4 +55,33 @@ export function activatePlus(memberId, planId) {
   run('INSERT OR IGNORE INTO album_progress (member_id, album) VALUES (?, ?)', memberId, 'biblico');
   run('UPDATE album_progress SET packs_unopened = packs_unopened + ? WHERE member_id = ? AND album = ?', PLUS_PACKS, memberId, 'biblico');
   return until;
+}
+
+/** Administrador geral dá (ou tira) o DBV+ de um membro, sem pagamento: dias de validade a partir de hoje. */
+export function grantPlus(memberId, planId, days) {
+  const plan = PLANS[planId] || PLANS.plus;
+  const until = new Date(Date.now() + days * 864e5).toISOString();
+  run(`INSERT INTO member_plus (member_id, plan, until, picks_needed) VALUES (?, ?, ?, ?)
+    ON CONFLICT (member_id) DO UPDATE SET plan = excluded.plan, until = excluded.until, picks_needed = excluded.picks_needed,
+      picks = CASE WHEN excluded.plan = member_plus.plan THEN picks ELSE NULL END,
+      picks_at = CASE WHEN excluded.plan = member_plus.plan THEN picks_at ELSE NULL END`, memberId, plan.id, until, plan.pick);
+  return until;
+}
+export const removePlus = (memberId) => run('DELETE FROM member_plus WHERE member_id = ?', memberId);
+
+/**
+ * Base de teste (uma vez): nos clubes de teste, um membro sim, outro não ganha o DBV+ por 1 ano,
+ * revezando os 3 planos; os outros ficam no plano grátis.
+ */
+export function testPlusOnce() {
+  const KEY = 'dbvplus-teste-v1';
+  if (get('SELECT 1 FROM app_flags WHERE key = ?', KEY)) return;
+  const members = all(`SELECT m.id FROM members m JOIN clubs c ON c.id = m.club_id
+    WHERE c.code IN ('4821','7350') AND m.status = 'ativo' ORDER BY c.code, m.id`);
+  if (!members.length) return;
+  const plans = ['plus', 'plus3', 'plus7'];
+  tx(() => {
+    members.forEach((m, i) => { if (i % 2 === 1) grantPlus(m.id, plans[((i - 1) / 2) % 3], 365); });
+    run('INSERT OR IGNORE INTO app_flags (key) VALUES (?)', KEY);
+  });
 }

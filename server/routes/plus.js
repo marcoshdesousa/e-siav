@@ -4,7 +4,7 @@ import { all, get, run } from '../db.js';
 import { requireAuth, requireGeneral } from '../auth.js';
 import { fail, int } from '../util.js';
 import { createPayment, onPaid, paymentOut } from '../payments.js';
-import { PLANS, PLUS_DAYS, PLUS_PACKS, activatePlus, plusOf, plusOpen } from '../plus.js';
+import { PLANS, PLUS_DAYS, PLUS_PACKS, activatePlus, grantPlus, plusOf, plusOpen, removePlus } from '../plus.js';
 
 const r = Router();
 const member = requireAuth('member');
@@ -73,6 +73,19 @@ r.get('/admin/plus', admin, requireGeneral, (_req, res) => {
     plan: x.plan, plan_name: PLANS[x.plan]?.name || x.plan, until: x.until, active: x.until > now, started_at: x.started_at, renewals: x.renewals,
     picks_needed: x.picks_needed, picks_at: x.picks_at, picks: x.picks ? JSON.parse(x.picks).map((id) => names.get(id) || `#${id}`) : [],
   })));
+});
+
+// Administrador geral: dar o DBV+ sem pagamento (contas de teste, cortesia) ou tirar.
+r.post('/admin/plus/dar', admin, requireGeneral, (req, res) => {
+  const m = get('SELECT id, name FROM members WHERE code = ?', String(req.body.code || '').trim());
+  if (!m) fail(404, 'Membro não encontrado');
+  if (!PLANS[req.body.plan]) fail(400, 'Escolha um plano');
+  const days = Math.min(Math.max(int(req.body.days) || PLUS_DAYS, 1), 3650);
+  res.json({ ok: true, name: m.name, until: grantPlus(m.id, req.body.plan, days) });
+});
+r.delete('/admin/plus/:memberId', admin, requireGeneral, (req, res) => {
+  removePlus(int(req.params.memberId));
+  res.json({ ok: true });
 });
 
 export default r;

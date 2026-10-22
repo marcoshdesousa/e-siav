@@ -62,3 +62,5 @@
 .bl-quiz.turn-next { animation: page-next .4s ease-out; }
 .bl-ok { color: #16a34a; vertical-align: -3px; }
 .bl-no { color: #dc2626; vertical-align: -3px; }
+.tab-locked { display: inline-flex; align-items: center; gap: .3rem; opacity: .55; cursor: not-allowed; }
+.tab-locked em { font-style: normal; font-size: .62rem; font-weight: 800; text-transform: uppercase; background: #fde68a; color: #92400e; border-radius: 999px; padding: .05rem .4rem; }

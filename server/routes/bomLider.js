@@ -108,7 +108,7 @@ function loadLessons() {
 }
 const LESSONS = loadLessons();
 // Bom Líder: liderança (16+) com o DBV+; no modo de teste, todos.
-const canSee = (actor) => testMode() || (actor.kind === 'lideranca' && isPlus(actor.id));
+const canSee = (actor) => actor.kind === 'lideranca' && isPlus(actor.id);
 const lessonRows = (memberId) => new Map(all('SELECT lesson, score, total, completed_at FROM bom_lider_progress WHERE member_id = ?', memberId).map((x) => [x.lesson, x]));
 
 r.get('/bom-lider', member, (req, res) => {

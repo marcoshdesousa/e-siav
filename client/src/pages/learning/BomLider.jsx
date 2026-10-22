@@ -11,18 +11,12 @@ import './bomlider.css';
 
 export function BomLider({ base }) {
   const state = useLoad(() => api.get('/bom-lider'));
-  const [tab, setTab] = useState('manual');
   return (
     <>
       <PageHeader title="Bom Líder" subtitle="Livros de liderança: leia, ouça, responda e escreva com as suas palavras" />
-      <Tabs tabs={[['manual', 'Manual Administrativo'], ['nisto', 'Nisto Cremos']]} value={tab} onChange={setTab} />
-      {tab === 'nisto' ? (
-        <Card className="center">
-          <BookOpen size={34} />
-          <p><b>Nisto Cremos — em breve</b></p>
-          <p className="small muted">As 28 crenças fundamentais da Igreja Adventista, em aulas no mesmo formato de livro, com áudio e perguntas.</p>
-        </Card>
-      ) : (
+      {/* Nisto Cremos: bloqueado até o livro chegar. */}
+      <Tabs tabs={[['manual', 'Manual Administrativo'], ['nisto', <span key="n" className="tab-locked"><Lock size={13} /> Nisto Cremos <em>em breve</em></span>]]} value="manual" onChange={() => {}} />
+      {(
         <Loading {...state}>
           {(d) => (d.preparing ? (
             <Card className="center">
