@@ -1,6 +1,6 @@
 import { all, get } from './db.js';
 import { ageFrom, memberKind, roleOf, cargoOf } from './util.js';
-import { clubsRanking, unitsRanking, clubUnitsRanking, membersRanking, leadersRanking, positionOf } from './rankings.js';
+import { clubsRanking, unitsRanking, clubUnitsRanking, membersRanking, leadersRanking, clubMembersRanking, clubLeadersRanking, positionOf } from './rankings.js';
 
 export function medalsOf(type, id) {
   return all(
@@ -84,7 +84,19 @@ export function memberProfile(where, value) {
   m.specialties = ach.filter((a) => a.type === 'especialidade');
   m.courses = ach.filter((a) => a.type === 'curso');
   // Desbravadores e liderança têm rankings separados.
-  m.ranking = pos(positionOf(m.kind === 'desbravador' ? membersRanking(m.district_id) : leadersRanking(m.district_id), m.id)); // no distrito
+  const districtRows = m.kind === 'desbravador' ? membersRanking(m.district_id) : leadersRanking(m.district_id);
+  m.ranking = pos(positionOf(districtRows, m.id)); // no distrito
+  // Os 5 rankings do perfil: o membro no clube e no distrito, a unidade no clube e no distrito e o clube no distrito.
+  const withTotal = (rows, id) => { const r = pos(positionOf(rows, id)); return r ? { ...r, total: rows.length } : null; };
+  const clubRows = m.kind === 'desbravador' ? clubMembersRanking(m.club_id) : clubLeadersRanking(m.club_id);
+  const unitRanks = m.unit_id && !m.unit_is_leadership;
+  m.ranks = {
+    member_club: withTotal(clubRows, m.id),
+    member_district: withTotal(districtRows, m.id),
+    unit_club: unitRanks ? withTotal(clubUnitsRanking(m.club_id), m.unit_id) : null,
+    unit_district: unitRanks ? withTotal(unitsRanking(m.district_id), m.unit_id) : null,
+    club_district: withTotal(clubsRanking(m.district_id), m.club_id),
+  };
   m.events = eventsOf('member', m.id);
   m.medals = medalsOf('member', m.id);
   return m;

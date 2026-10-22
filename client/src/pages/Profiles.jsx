@@ -1,8 +1,6 @@
 import { Link, useParams, Navigate } from 'react-router-dom';
-import { useState } from 'react';
-import {
-  Award, CalendarDays, ChevronDown, ChevronRight, ChevronUp, Compass, Flag, Flame, MapPin, Hash, Tent, Trophy, Users,
-} from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Award, CalendarDays, ChevronDown, ChevronRight, ChevronUp, Compass, Flag, Flame, MapPin, Hash, Tent, Users } from 'lucide-react';
 import { Attachments } from './admin/Events.jsx';
 import { api } from '../api.js';
 import { fmtDate, plural } from '../format.js';
@@ -47,28 +45,39 @@ export const EventsList = ({ events }) => (
   <RowSection title="Eventos" items={events} empty="Nenhum evento registrado ainda." emptyIcon="tent" render={(e) => <EventCard key={e.id} e={e} />} />
 );
 
-const PREVIEW = 2;
+const PREVIEW = 3;
 
 /**
  * Classes e especialidades do perfil: só o nome (com o ícone da área, sem foto).
  * Mostra as 2 primeiras e o botão "Ver mais" abre todas.
  */
-function NameList({ title, items = [], empty, emptyIcon }) {
+/** Classes e especialidades: as 3 primeiras; "Ver mais" mostra tudo separado por categoria (com quantas). */
+function NameList({ title, items = [], empty, emptyIcon, icon, byCategory }) {
   const [open, setOpen] = useState(false);
   const extra = items.length - PREVIEW;
-  const shown = open ? items : items.slice(0, PREVIEW);
+  const row = (c) => (
+    <span key={c.id} className="name-item" title={c.category || ''}>
+      <span className="ach-img"><AppIcon name={icon} size={16} /></span>
+      <span className="grow ellipsis">{c.name}</span>
+    </span>
+  );
+  const groups = useMemo(() => {
+    const m = new Map();
+    for (const c of items) { const g = byCategory ? c.category || 'Outras' : c.leader ? 'Classes de liderança' : 'Classes regulares e avançadas'; if (!m.has(g)) m.set(g, []); m.get(g).push(c); }
+    return [...m.entries()].sort((a, b) => b[1].length - a[1].length);
+  }, [items, byCategory]);
   return (
     <Section title={`${title}${items.length ? ` (${items.length})` : ''}`}>
       {items.length ? (
         <>
-          <div className="name-list">
-            {shown.map((c) => (
-              <span key={c.id} className="name-item" title={c.category || ''}>
-                <span className="ach-img"><AppIcon name={c.icon} size={16} /></span>
-                <span className="grow ellipsis">{c.name}</span>
-              </span>
-            ))}
-          </div>
+          {open ? (
+            groups.map(([g, list]) => (
+              <div key={g} className="name-group">
+                <div className="name-group-head"><b>{g}</b><span>{list.length}</span></div>
+                <div className="name-list">{list.map(row)}</div>
+              </div>
+            ))
+          ) : <div className="name-list">{items.slice(0, PREVIEW).map(row)}</div>}
           {extra > 0 && (
             <button type="button" className="see-more name-more" onClick={() => setOpen((o) => !o)}>
               {open ? <>Ver menos <ChevronUp size={14} /></> : <>Ver mais ({extra}) <ChevronDown size={14} /></>}
@@ -80,20 +89,41 @@ function NameList({ title, items = [], empty, emptyIcon }) {
   );
 }
 
+/** Os 5 rankings do membro (no clube e no distrito, da unidade e do clube). */
+function RanksGrid({ r }) {
+  if (!r) return null;
+  const items = [
+    ['Você no clube', r.member_club], ['Você no distrito', r.member_district],
+    ['Sua unidade no clube', r.unit_club], ['Sua unidade no distrito', r.unit_district], ['Seu clube no distrito', r.club_district],
+  ].filter(([, x]) => x);
+  if (!items.length) return null;
+  return (
+    <Section title="Rankings">
+      <div className="ranks-grid">
+        {items.map(([label, x]) => (
+          <div key={label} className="rank-tile">
+            <b>{x.position}º</b>
+            <small>{label}</small>
+            <span>{x.points} pts · de {x.total}</span>
+          </div>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
 /** Sequência do Ano Bíblico, que todo mundo vê no link do perfil. */
 const dias = (n) => `${n} ${n === 1 ? 'dia' : 'dias'}`;
-function BibleStreak({ b }) {
+function BibleStreak({ list }) {
   return (
-    <Section title="Ano Bíblico">
-      <div className="streak-pub">
-        <div className={'streak-pub-box' + (b.streak ? ' on' : '')}>
-          <Flame size={22} />
-          <span><b>{dias(b.streak)}</b><small>Sequência atual</small></span>
-        </div>
-        <div className="streak-pub-box best">
-          <Trophy size={20} />
-          <span><b>{dias(b.best_streak)}</b><small>Melhor sequência</small></span>
-        </div>
+    <Section title="Sequências">
+      <div className="streak-pub three">
+        {list.map((x) => (
+          <div key={x.name} className={'streak-pub-box' + (x.streak ? ' on' : '')}>
+            <Flame size={22} />
+            <span><b>{dias(x.streak)}</b><small>{x.name} · recorde {dias(x.best_streak)}</small></span>
+          </div>
+        ))}
       </div>
     </Section>
   );
@@ -194,9 +224,10 @@ export function MemberProfileView({ member: m, linkBase, photoAction, extra }) {
       </div>
 
       {extra}
-      {m.bible && <BibleStreak b={m.bible} />}
-      <NameList title="Classes" items={m.classes} empty="Nenhuma classe ainda." emptyIcon="compass" />
-      <NameList title="Especialidades" items={m.specialties} empty="Nenhuma especialidade ainda." emptyIcon="knot" />
+      {m.streaks && <BibleStreak list={m.streaks} />}
+      <RanksGrid r={m.ranks} />
+      <NameList title="Classes" items={m.classes} empty="Nenhuma classe ainda." emptyIcon="compass" icon="compass" />
+      <NameList title="Especialidades" items={m.specialties} empty="Nenhuma especialidade ainda." emptyIcon="knot" icon="award" byCategory />
       {m.courses?.length ? <NameList title="Cursos concluídos" items={m.courses} /> : null}
       <MedalList medals={m.medals} />
       <EventsList events={m.events} />

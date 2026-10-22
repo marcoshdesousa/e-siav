@@ -867,3 +867,13 @@ input::-webkit-datetime-edit { padding: 0; }
 .seq-bar span { height: 10px; border-radius: 999px; background: var(--surface-2, #eef2f7); overflow: hidden; }
 .seq-bar i { display: block; height: 100%; border-radius: 999px; }
 .seq-bar b { text-align: right; }
+/* Perfil: especialidades por categoria e os 5 rankings */
+.name-group { margin-bottom: .6rem; }
+.name-group-head { display: flex; justify-content: space-between; align-items: center; font-size: .85rem; margin: .2rem 0 .35rem; }
+.name-group-head span { min-width: 24px; text-align: center; padding: .05rem .45rem; border-radius: 999px; background: var(--primary, #1d4ed8); color: #fff; font-weight: 800; font-size: .75rem; }
+.ranks-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .5rem; }
+.rank-tile { display: flex; flex-direction: column; gap: .1rem; padding: .7rem .8rem; border-radius: 14px; background: var(--surface, #fff); box-shadow: 0 2px 8px rgba(15,23,42,.08); }
+.rank-tile b { font-size: 1.5rem; color: var(--primary, #1d4ed8); line-height: 1; }
+.rank-tile small { font-weight: 800; }
+.rank-tile span { font-size: .75rem; color: var(--muted, #64748b); }
+.streak-pub.three { display: grid; grid-template-columns: 1fr; gap: .45rem; }

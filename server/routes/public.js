@@ -67,13 +67,22 @@ r.get('/public/units/:id', (req, res) => {
   res.json(u);
 });
 
-r.get('/public/members/:code', (req, res) => {
+r.get('/public/members/:code', async (req, res) => {
   // Link do perfil: /p/membro/123456 (código do membro).
   const m = memberProfile('code', String(req.params.code).trim());
   if (!m) fail(404, 'Membro não encontrado');
   // Classes e especialidades aparecem só pelo nome (sem fotos: o perfil fica leve).
   for (const c of [...m.classes, ...m.specialties]) c.image = null;
   m.bible = bibleStreak(m.id);
+  // As 3 sequências (Ano Bíblico, Meditação e Escola Sabatina) para todo mundo ver.
+  const { meditationSummary, sabbathSummary } = await import('./devotional.js');
+  const med = meditationSummary(m.id);
+  const ss = sabbathSummary(m.id);
+  m.streaks = [
+    { name: 'Ano Bíblico', streak: m.bible.streak, best_streak: m.bible.best_streak },
+    { name: 'Meditação', streak: med.streak, best_streak: med.best_streak },
+    { name: 'Escola Sabatina', streak: ss.streak, best_streak: ss.best_streak },
+  ];
   delete m.id;
   res.json(m);
 });

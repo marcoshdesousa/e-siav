@@ -87,7 +87,7 @@ function Waiting({ text }) {
 /** Para onde o "Voltar" do topo leva em cada tela. */
 function parentOf(path) {
   const [seg, sub, sub2] = path.split('/').slice(2);
-  if (seg === 'aprendizagem') return sub === 'bom-lider' && sub2 ? `${base}/aprendizagem/bom-lider` : sub === 'bom-de-biblia' && sub2 ? `${base}/aprendizagem/bom-de-biblia` : sub === 'ano-biblico' && sub2 ? `${base}/aprendizagem/ano-biblico` : sub ? `${base}/aprendizagem` : `${base}/mais`;
+  if (seg === 'aprendizagem') return ['meditacao', 'escola-sabatina'].includes(sub) && sub2 ? `${base}/aprendizagem/${sub}` : sub === 'bom-lider' && sub2 ? `${base}/aprendizagem/bom-lider` : sub === 'bom-de-biblia' && sub2 ? `${base}/aprendizagem/bom-de-biblia` : sub === 'ano-biblico' && sub2 ? `${base}/aprendizagem/ano-biblico` : sub ? `${base}/aprendizagem` : `${base}/mais`;
   if ((seg === 'jogos' || seg === 'albuns') && sub) return `${base}/${seg}`;
   if (['cursos', 'clubes', 'agenda', 'suporte', 'especialidades', 'albuns'].includes(seg)) return `${base}/mais`;
   return base;

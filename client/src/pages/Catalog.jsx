@@ -13,9 +13,9 @@ export function groupCatalog(type, items) {
   return [...groups.entries()];
 }
 
-/** Ícone do item do catálogo (o da área). Classes e especialidades não usam foto: só o nome. */
+/** Ícone do item do catálogo: todas as especialidades com o mesmo ícone (e todas as classes com outro). */
 export const CatalogBadge = ({ c, size = 48 }) => (
-  <span className="cat-badge" style={{ width: size, height: size }}><ContentIcon c={{ icon: c.icon }} size={Math.round(size * 0.5)} /></span>
+  <span className="cat-badge" style={{ width: size, height: size }}><ContentIcon c={{ icon: c.category ? 'award' : 'compass' }} size={Math.round(size * 0.5)} /></span>
 );
 
 /**
