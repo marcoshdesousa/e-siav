@@ -35,7 +35,7 @@ function GameRanking({ game, base, limit }) {
   );
 }
 
-/** Ranking dos mini-jogos (fica dentro da aba Mini-jogos). */
+/** Ranking dos jogos (fica dentro da aba Jogos). */
 function MiniRankings({ base, online, initial }) {
   const [rankGame, setRankGame] = useState(GAMES.some((g) => g.id === initial) ? initial : GAMES[0].id);
   return (
@@ -49,7 +49,7 @@ function MiniRankings({ base, online, initial }) {
   );
 }
 
-/** Aba Mini-jogos: jogar e o ranking de cada jogo. */
+/** Aba Jogos: jogar e o ranking de cada jogo. */
 export function GamesHub({ base }) {
   const [params] = useSearchParams();
   const [sub, setSub] = useState(() => (params.get('aba') === 'ranking' ? 'ranking' : 'jogar'));
@@ -58,7 +58,7 @@ export function GamesHub({ base }) {
   const online = useOnline();
   return (
     <>
-      <PageHeader title="Mini-jogos" subtitle={`${GAMES.length} mini-jogos para fazer pontos e subir no ranking. Sem anúncios!`} />
+      <PageHeader title="Jogos" subtitle={`${GAMES.length} jogos para fazer pontos e subir no ranking. Sem anúncios!`} />
       <div className="seg games-sub" role="tablist">
         <button type="button" className={sub === 'jogar' ? 'active' : ''} onClick={() => setSub('jogar')}><Play size={14} /> Jogar</button>
         <button type="button" className={sub === 'ranking' ? 'active' : ''} onClick={() => setSub('ranking')}><Trophy size={14} /> Ranking</button>

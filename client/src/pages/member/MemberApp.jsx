@@ -99,7 +99,7 @@ export default function MemberApp() {
     { to: base, icon: UserRound, label: 'Perfil', end: true },
     { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },
     { to: `${base}/aprendizagem`, icon: BookOpenText, label: 'Estudos' },
-    { to: `${base}/jogos`, icon: Gamepad2, label: 'Mini-jogos' },
+    { to: `${base}/jogos`, icon: Gamepad2, label: 'Jogos' },
     { to: `${base}/cartao`, icon: IdCard, label: 'Cartão' },
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
