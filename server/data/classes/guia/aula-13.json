@@ -110,18 +110,36 @@
   "quiz": [
     {
       "q": "Quantas leituras tem a lista de leitura bíblica da classe Guia?",
-      "options": ["Trinta", "Quarenta e cinco", "Cem", "Sessenta e uma"],
+      "options": [
+        "Trinta",
+        "Quarenta e cinco",
+        "Cem",
+        "Sessenta e uma"
+      ],
       "answer": 3
     },
     {
       "q": "Em qual capítulo de Atos acontece a conversão de Saulo?",
-      "options": ["Capítulo 2", "Capítulo 9", "Capítulo 15", "Capítulo 28"],
+      "options": [
+        "Capítulo 2",
+        "Capítulo 9",
+        "Capítulo 15",
+        "Capítulo 28"
+      ],
       "answer": 1
     },
     {
       "q": "Qual destes temas aparece em Apocalipse 21?",
-      "options": ["A Nova Jerusalém", "A conversão de Cornélio", "O naufrágio de Paulo", "O fruto do Espírito"],
+      "options": [
+        "A Nova Jerusalém",
+        "A conversão de Cornélio",
+        "O naufrágio de Paulo",
+        "O fruto do Espírito"
+      ],
       "answer": 0
     }
+  ],
+  "paginas": [
+    19
   ]
 }

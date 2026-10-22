@@ -133,18 +133,38 @@
   "quiz": [
     {
       "q": "Segundo 1 Coríntios 12:11, quem decide qual dom cada pessoa recebe?",
-      "options": ["A própria pessoa", "O pastor da igreja", "O Espírito Santo, conforme Ele quer", "A comissão da igreja"],
+      "options": [
+        "A própria pessoa",
+        "O pastor da igreja",
+        "O Espírito Santo, conforme Ele quer",
+        "A comissão da igreja"
+      ],
       "answer": 2
     },
     {
       "q": "Segundo Efésios 4:12, para que Cristo deu os dons à igreja?",
-      "options": ["Para preparar o povo de Deus para o serviço e construir o corpo de Cristo", "Para mostrar quem é mais importante", "Para substituir o estudo da Bíblia", "Para que só os líderes trabalhem"],
+      "options": [
+        "Para preparar o povo de Deus para o serviço e construir o corpo de Cristo",
+        "Para mostrar quem é mais importante",
+        "Para substituir o estudo da Bíblia",
+        "Para que só os líderes trabalhem"
+      ],
       "answer": 0
     },
     {
       "q": "Em Atos 11:27-28, Ágabo anunciou uma grande fome. Qual dom ele usou?",
-      "options": ["Línguas", "Cura", "Hospitalidade", "Profecia"],
+      "options": [
+        "Línguas",
+        "Cura",
+        "Hospitalidade",
+        "Profecia"
+      ],
       "answer": 3
     }
+  ],
+  "paginas": [
+    11,
+    12,
+    13
   ]
 }

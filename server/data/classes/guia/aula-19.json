@@ -103,18 +103,38 @@
   "quiz": [
     {
       "q": "Segundo Gênesis 1, como Deus avaliou tudo o que criou, inclusive o homem e a mulher?",
-      "options": ["Como algo sem importância", "Como algo vergonhoso", "Como algo temporário", "Como muito bom"],
+      "options": [
+        "Como algo sem importância",
+        "Como algo vergonhoso",
+        "Como algo temporário",
+        "Como muito bom"
+      ],
       "answer": 3
     },
     {
       "q": "Segundo o caderno, o que deve acontecer com os desejos até o casamento?",
-      "options": ["Devem ser controlados e dominados", "Devem ser seguidos sem limites", "Devem ser negados como algo mau", "Devem ser expostos nas redes"],
+      "options": [
+        "Devem ser controlados e dominados",
+        "Devem ser seguidos sem limites",
+        "Devem ser negados como algo mau",
+        "Devem ser expostos nas redes"
+      ],
       "answer": 0
     },
     {
       "q": "Qual texto bíblico serve como filtro para o que vemos e ouvimos?",
-      "options": ["Gênesis 39", "Filipenses 4:8", "Êxodo 20:9", "Atos 9"],
+      "options": [
+        "Gênesis 39",
+        "Filipenses 4:8",
+        "Êxodo 20:9",
+        "Atos 9"
+      ],
       "answer": 1
     }
+  ],
+  "paginas": [
+    26,
+    27,
+    28
   ]
 }

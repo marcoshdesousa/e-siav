@@ -108,18 +108,36 @@
   "quiz": [
     {
       "q": "Segundo Mateus 25:40, quando servimos a um dos pequeninos, a quem estamos servindo?",
-      "options": ["Ao pastor", "Ao próprio Jesus", "Somente à pessoa ajudada", "Ao diretor do clube"],
+      "options": [
+        "Ao pastor",
+        "Ao próprio Jesus",
+        "Somente à pessoa ajudada",
+        "Ao diretor do clube"
+      ],
       "answer": 1
     },
     {
       "q": "Qual destas atitudes é correta em uma visita a um doente?",
-      "options": ["Ficar várias horas", "Ir mesmo estando gripado", "Recomendar remédios", "Fazer uma visita curta e ouvir com atenção"],
+      "options": [
+        "Ficar várias horas",
+        "Ir mesmo estando gripado",
+        "Recomendar remédios",
+        "Fazer uma visita curta e ouvir com atenção"
+      ],
       "answer": 3
     },
     {
       "q": "O que o requisito pede além de participar da atividade?",
-      "options": ["Ajudar a organizá-la", "Pagar todas as despesas", "Fazer tudo sozinho", "Publicar nas redes sociais"],
+      "options": [
+        "Ajudar a organizá-la",
+        "Pagar todas as despesas",
+        "Fazer tudo sozinho",
+        "Publicar nas redes sociais"
+      ],
       "answer": 0
     }
+  ],
+  "paginas": [
+    20
   ]
 }

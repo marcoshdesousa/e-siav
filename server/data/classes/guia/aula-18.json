@@ -101,18 +101,38 @@
   "quiz": [
     {
       "q": "Segundo o caderno, qual é a maneira ideal de conviver com amigos no meio da adolescência?",
-      "options": ["Namorar sério o quanto antes", "Sair em grupo com os amigos", "Evitar qualquer amizade", "Sair sempre sozinho com alguém"],
+      "options": [
+        "Namorar sério o quanto antes",
+        "Sair em grupo com os amigos",
+        "Evitar qualquer amizade",
+        "Sair sempre sozinho com alguém"
+      ],
       "answer": 1
     },
     {
       "q": "Qual destes NÃO é um dos três testes do sentimento?",
-      "options": ["Teste do tempo", "Teste da separação", "Teste da aparência", "Teste do companheirismo"],
+      "options": [
+        "Teste do tempo",
+        "Teste da separação",
+        "Teste da aparência",
+        "Teste do companheirismo"
+      ],
       "answer": 2
     },
     {
       "q": "Do que depende mais um casamento feliz, segundo o caderno?",
-      "options": ["De tornar-se a pessoa certa", "De achar alguém muito bonito", "De casar cedo", "De ter muito dinheiro"],
+      "options": [
+        "De tornar-se a pessoa certa",
+        "De achar alguém muito bonito",
+        "De casar cedo",
+        "De ter muito dinheiro"
+      ],
       "answer": 0
     }
+  ],
+  "paginas": [
+    24,
+    25,
+    26
   ]
 }

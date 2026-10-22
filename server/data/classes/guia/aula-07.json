@@ -113,18 +113,36 @@
   "quiz": [
     {
       "q": "Segundo 2 Crônicas 7:14, o que Deus promete fazer?",
-      "options": ["Dar riquezas ao povo", "Ouvir, perdoar os pecados e sarar a terra", "Construir um novo templo", "Derrotar todos os inimigos"],
+      "options": [
+        "Dar riquezas ao povo",
+        "Ouvir, perdoar os pecados e sarar a terra",
+        "Construir um novo templo",
+        "Derrotar todos os inimigos"
+      ],
       "answer": 1
     },
     {
       "q": "Em que situação Deus disse as palavras de 2 Crônicas 7:14?",
-      "options": ["Na travessia do Mar Vermelho", "No nascimento de Jesus", "Ao responder à oração de Salomão na dedicação do templo", "Na volta do exílio da Babilônia"],
+      "options": [
+        "Na travessia do Mar Vermelho",
+        "No nascimento de Jesus",
+        "Ao responder à oração de Salomão na dedicação do templo",
+        "Na volta do exílio da Babilônia"
+      ],
       "answer": 2
     },
     {
       "q": "O que Jesus manda buscar em primeiro lugar em Mateus 6:33?",
-      "options": ["O reino de Deus e a sua justiça", "Comida e roupa", "Um bom emprego", "A aprovação das pessoas"],
+      "options": [
+        "O reino de Deus e a sua justiça",
+        "Comida e roupa",
+        "Um bom emprego",
+        "A aprovação das pessoas"
+      ],
       "answer": 0
     }
+  ],
+  "paginas": [
+    10
   ]
 }

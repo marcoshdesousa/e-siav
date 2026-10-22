@@ -109,18 +109,37 @@
   "quiz": [
     {
       "q": "Quando Deus deu trabalho ao ser humano pela primeira vez?",
-      "options": ["Somente depois do dilúvio", "Antes do pecado, para cuidar do Éden", "Na saída do Egito", "Na época de Paulo"],
+      "options": [
+        "Somente depois do dilúvio",
+        "Antes do pecado, para cuidar do Éden",
+        "Na saída do Egito",
+        "Na época de Paulo"
+      ],
       "answer": 1
     },
     {
       "q": "Qual destas NÃO é uma das qualidades para o sucesso citadas no caderno?",
-      "options": ["Integridade", "Perseverança", "Confiança", "Fama"],
+      "options": [
+        "Integridade",
+        "Perseverança",
+        "Confiança",
+        "Fama"
+      ],
       "answer": 3
     },
     {
       "q": "Segundo o caderno, o que acontece quanto mais você estuda?",
-      "options": ["Você terá mais opções de profissões", "Você não precisa mais orar", "Você não precisa ouvir os pais", "Nada muda"],
+      "options": [
+        "Você terá mais opções de profissões",
+        "Você não precisa mais orar",
+        "Você não precisa ouvir os pais",
+        "Nada muda"
+      ],
       "answer": 0
     }
+  ],
+  "paginas": [
+    22,
+    23
   ]
 }

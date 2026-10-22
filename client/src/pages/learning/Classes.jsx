@@ -1,7 +1,7 @@
 // Classes e Agrupadas: aulas em vídeo para cumprir o caderno de cada classe.
 import { useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { BadgeCheck, CheckCircle2, ChevronLeft, ChevronRight, Lock, NotebookPen, PlayCircle, Video } from 'lucide-react';
+import { BadgeCheck, BookOpen, CheckCircle2, ChevronLeft, ChevronRight, Lock, NotebookPen, PlayCircle, Video, X } from 'lucide-react';
 import { api } from '../../api.js';
 import { Button, Card, Loading, PageHeader, Tabs, useLoad } from '../../ui.jsx';
 import { useBack } from './Learning.jsx';
@@ -87,6 +87,7 @@ export function ClassLesson({ base }) {
   const video = useRef(null);
   const [slide, setSlide] = useState(0);
   const [tab, setTab] = useState('aula');
+  const [zoom, setZoom] = useState(null);
   return (
     <Loading {...state}>
       {(a) => {
@@ -117,7 +118,7 @@ export function ClassLesson({ base }) {
                     <video ref={video} key={a.video.url} src={a.video.url} poster={a.video.poster || undefined} controls playsInline preload="metadata" onTimeUpdate={onTime} />
                   </div>
                 ) : <Card className="center small muted">O vídeo desta aula está sendo preparado. Enquanto isso, veja o que fazer no caderno.</Card>}
-                <Tabs tabs={[['aula', 'Tópicos'], ['caderno', 'No caderno'], ['quiz', a.completed ? 'Quiz ✓' : 'Quiz']]} value={tab} onChange={setTab} />
+                <Tabs tabs={[['aula', 'Tópicos'], ['caderno', 'No caderno'], ['material', 'Material'], ['quiz', a.completed ? 'Quiz ✓' : 'Quiz']]} value={tab} onChange={setTab} />
                 {tab === 'aula' && (
                   <>
                     <Card className="small"><b>Requisito:</b> {a.requisito}</Card>
@@ -135,6 +136,32 @@ export function ClassLesson({ base }) {
                     <p className="cls-todo-h"><NotebookPen size={20} /> Para cumprir no seu caderno</p>
                     <ol>{a.caderno.map((t, i) => <li key={i}>{t}</li>)}</ol>
                   </Card>
+                )}
+                {tab === 'material' && (
+                  <>
+                    <Card className="small cls-intro"><BookOpen size={18} /><span>Páginas do Caderno de Atividades da classe usadas nesta aula. Toque para ampliar.</span></Card>
+                    <div className="cls-pages">
+                      {a.paginas.map((pg, i) => (
+                        <button key={pg.p} type="button" className="cls-page" onClick={() => setZoom(i)}>
+                          <img src={pg.url} alt={`Página ${pg.p} do caderno`} loading="lazy" />
+                          <span>Página {pg.p}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+                {zoom != null && a.paginas[zoom] && (
+                  <div className="cls-zoom" onClick={() => setZoom(null)}>
+                    <div className="cls-zoom-top" onClick={(e) => e.stopPropagation()}>
+                      <span>Página {a.paginas[zoom].p} · {zoom + 1} de {a.paginas.length}</span>
+                      <button type="button" className="icon-btn" aria-label="Fechar" onClick={() => setZoom(null)}><X size={20} /></button>
+                    </div>
+                    <div className="cls-zoom-img" onClick={(e) => e.stopPropagation()}><img src={a.paginas[zoom].url} alt="" /></div>
+                    <div className="cls-zoom-nav" onClick={(e) => e.stopPropagation()}>
+                      <Button variant="secondary" disabled={zoom === 0} onClick={() => setZoom(zoom - 1)}><ChevronLeft size={16} /> Anterior</Button>
+                      <Button variant="secondary" disabled={zoom === a.paginas.length - 1} onClick={() => setZoom(zoom + 1)}>Próxima <ChevronRight size={16} /></Button>
+                    </div>
+                  </div>
                 )}
                 {tab === 'quiz' && (
                   <Quiz questions={a.quiz} pass={a.pass} send={(answers) => api.post(`/classes/${id}/aula/${a.n}/quiz`, { answers })} onAgain={() => {}} done={() => (a.next ? go(a.next) : back())} />

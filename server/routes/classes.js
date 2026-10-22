@@ -5,7 +5,7 @@ import { Router } from 'express';
 import { all, get, run } from '../db.js';
 import { requireAuth } from '../auth.js';
 import { fail, int } from '../util.js';
-import { CLASSES, lessonsOf, videoOf } from '../classLessons.js';
+import { CLASSES, lessonsOf, pageFile, videoOf } from '../classLessons.js';
 import { plusOpen } from '../plus.js';
 import { giveBiblePack } from '../streaks.js';
 
@@ -61,6 +61,7 @@ r.get('/classes/:id/aula/:n', member, (req, res) => {
   res.json({
     ...base, locked: false, video: videoOf(c.id, a),
     slides: a.slides.map((s) => s.titulo || (s.tipo === 'versiculo' ? s.ref : '')),
+    paginas: (a.paginas || []).map((p) => ({ p, url: `/api/classes/${c.id}/pagina/${p}` })),
     caderno: a.caderno, quiz: a.quiz.map((q) => ({ q: q.q, options: q.options })), pass: PASS,
     best: row?.best || 0, completed: !!row?.completed_at,
   });
@@ -82,6 +83,15 @@ r.post('/classes/:id/aula/:n/quiz', member, (req, res) => {
   // Aula concluída pela primeira vez: 1 pacotinho do Álbum Bíblico.
   if (first) giveBiblePack(req.actor.id);
   res.json({ score, total: a.quiz.length, passed, pass: PASS, pack: first, correct: a.quiz.map((q) => q.answer) });
+});
+
+// Páginas do caderno usadas nas aulas (só para membros que entraram no app).
+r.get('/classes/:id/pagina/:p', member, (req, res) => {
+  const c = classOf(req.params.id);
+  const f = pageFile(c.id, int(req.params.p));
+  if (!f) fail(404, 'Página não encontrada');
+  res.set('Cache-Control', 'private, max-age=604800');
+  res.sendFile(f);
 });
 
 export default r;

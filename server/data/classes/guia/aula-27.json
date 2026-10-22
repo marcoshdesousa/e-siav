@@ -20,25 +20,49 @@
     {
       "tipo": "texto",
       "titulo": "Passo 1: o cardápio",
-      "itens": ["Escolha um café da manhã, um almoço e um jantar", "Prefira receitas simples e vegetarianas", "Use alimentos que não estragam fácil", "Calcule as quantidades por pessoa"],
+      "itens": [
+        "Escolha um café da manhã, um almoço e um jantar",
+        "Prefira receitas simples e vegetarianas",
+        "Use alimentos que não estragam fácil",
+        "Calcule as quantidades por pessoa"
+      ],
       "narracao": "O primeiro passo é planejar o cardápio. Escolha três refeições, de preferência um café da manhã, um almoço e um jantar. No acampamento, simplicidade é sabedoria: receitas com poucos ingredientes e pouco tempo de preparo. Siga o estilo de vida adventista, com um cardápio vegetariano, rico em cereais, legumes, verduras e frutas. Escolha alimentos que aguentem a viagem sem geladeira, e deixe os mais perecíveis para a primeira refeição. Depois calcule as quantidades pelo número de pessoas e faça a lista de compras."
     },
     {
       "tipo": "lista",
       "titulo": "Exemplo de cardápio",
-      "itens": ["Café: pão na chapa", "Café: mingau de aveia", "Café: frutas", "Almoço: arroz e feijão", "Almoço: legumes refogados", "Almoço: salada", "Jantar: sopa de legumes", "Jantar: pão e chá"],
+      "itens": [
+        "Café: pão na chapa",
+        "Café: mingau de aveia",
+        "Café: frutas",
+        "Almoço: arroz e feijão",
+        "Almoço: legumes refogados",
+        "Almoço: salada",
+        "Jantar: sopa de legumes",
+        "Jantar: pão e chá"
+      ],
       "narracao": "Veja um exemplo de cardápio simples e saudável. No café da manhã, pão aquecido na chapa, mingau de aveia e frutas. No almoço, arroz, feijão, que pode ir já cozido de casa para economizar tempo e gás, legumes refogados e uma salada bem lavada. No jantar, uma sopa de legumes quentinha, com pão e um chá de ervas. Você pode trocar por outras receitas, como macarrão com molho de tomate, cuscuz ou panqueca. O importante é que seja nutritivo, viável e que você mesmo prepare."
     },
     {
       "tipo": "texto",
       "titulo": "Passo 2: preparar tudo antes",
-      "itens": ["Lista de ingredientes e de utensílios", "Panelas, colher de pau, faca, tábua, fósforos", "Separe e embale as porções em casa", "Leve água potável e sabão"],
+      "itens": [
+        "Lista de ingredientes e de utensílios",
+        "Panelas, colher de pau, faca, tábua, fósforos",
+        "Separe e embale as porções em casa",
+        "Leve água potável e sabão"
+      ],
       "narracao": "O segundo passo é a preparação. Faça duas listas: uma de ingredientes e outra de utensílios. Entre os utensílios, não esqueça panelas, chaleira, colher de pau, concha, faca, tábua, abridor de latas, pegador de panela, fósforos ou isqueiro e esponja. Em casa, separe e embale as porções de cada refeição em sacos identificados. Leve água potável suficiente para cozinhar e beber, além de sabão para lavar as mãos e a louça. Quanto mais coisas prontas antes de sair, mais tranquila será a hora de cozinhar."
     },
     {
       "tipo": "texto",
       "titulo": "Passo 3: o fogo com segurança",
-      "itens": ["Só acenda fogo onde é permitido", "Limpe a área e faça o fogo longe das barracas", "Tenha água ou areia sempre por perto", "Nunca deixe o fogo sozinho"],
+      "itens": [
+        "Só acenda fogo onde é permitido",
+        "Limpe a área e faça o fogo longe das barracas",
+        "Tenha água ou areia sempre por perto",
+        "Nunca deixe o fogo sozinho"
+      ],
       "narracao": "Agora o fogo. Antes de tudo, só acenda fogo em locais permitidos e sempre com a supervisão de um adulto. Escolha um lugar longe das barracas, de árvores e de capim seco, e limpe bem a área ao redor. Mantenha um balde com água ou areia por perto. Use primeiro gravetos finos e secos, depois galhos médios e só então lenha mais grossa. Para cozinhar, o melhor é a brasa, que dá calor constante. Use pegadores, cuidado com o vento e nunca deixe o fogo sozinho, nem por um minuto."
     },
     {
@@ -50,7 +74,12 @@
     {
       "tipo": "texto",
       "titulo": "Higiene na cozinha de campo",
-      "itens": ["Lave as mãos antes de cozinhar e de comer", "Lave bem frutas, verduras e legumes", "Guarde a comida tampada e protegida", "Lave a louça e recolha todo o lixo"],
+      "itens": [
+        "Lave as mãos antes de cozinhar e de comer",
+        "Lave bem frutas, verduras e legumes",
+        "Guarde a comida tampada e protegida",
+        "Lave a louça e recolha todo o lixo"
+      ],
       "narracao": "No acampamento, a higiene é ainda mais importante, porque não temos a estrutura de casa. Lave as mãos com sabão antes de cozinhar e antes de comer. Lave bem frutas, verduras e legumes com água potável. Mantenha a comida tampada, protegida do sol, dos insetos e dos animais. Depois da refeição, lave a louça longe de rios e nascentes, para não poluir a água. E recolha todo o lixo. Assim ninguém passa mal e o lugar fica limpo. Cuidar da saúde da unidade também é uma forma de liderança."
     },
     {
@@ -62,7 +91,13 @@
     {
       "tipo": "tarefa",
       "titulo": "No seu caderno",
-      "itens": ["Escreva o cardápio das três refeições", "Liste ingredientes, quantidades e utensílios", "Cozinhe as três refeições ao ar livre", "Cole fotos e conte como foi", "Peça o visto do instrutor"],
+      "itens": [
+        "Escreva o cardápio das três refeições",
+        "Liste ingredientes, quantidades e utensílios",
+        "Cozinhe as três refeições ao ar livre",
+        "Cole fotos e conte como foi",
+        "Peça o visto do instrutor"
+      ],
       "narracao": "Agora o caderno. No espaço deste requisito, escreva o cardápio das três refeições que você vai fazer. Abaixo, liste os ingredientes com as quantidades e os utensílios necessários. Depois, num acampamento ou atividade ao ar livre com o clube, prepare e cozinhe as três refeições, com a supervisão do seu instrutor ou conselheiro. Se possível, cole fotos do preparo e das refeições prontas e escreva algumas linhas contando como foi, o que deu certo e o que você faria diferente. Então peça o visto do instrutor."
     },
     {
@@ -82,18 +117,36 @@
   "quiz": [
     {
       "q": "Quantas refeições ao ar livre o requisito pede?",
-      "options": ["Uma", "Duas", "Três", "Seis"],
+      "options": [
+        "Uma",
+        "Duas",
+        "Três",
+        "Seis"
+      ],
       "answer": 2
     },
     {
       "q": "Qual destas atitudes é correta com o fogo?",
-      "options": ["Acender perto da barraca", "Ter água ou areia sempre por perto", "Deixar queimando à noite sozinho", "Usar gasolina para acender"],
+      "options": [
+        "Acender perto da barraca",
+        "Ter água ou areia sempre por perto",
+        "Deixar queimando à noite sozinho",
+        "Usar gasolina para acender"
+      ],
       "answer": 1
     },
     {
       "q": "Em João 21, o que Jesus fez na praia?",
-      "options": ["Preparou uma refeição para os discípulos", "Construiu um barco", "Pescou sozinho", "Ensinou sobre o sábado"],
+      "options": [
+        "Preparou uma refeição para os discípulos",
+        "Construiu um barco",
+        "Pescou sozinho",
+        "Ensinou sobre o sábado"
+      ],
       "answer": 0
     }
+  ],
+  "paginas": [
+    43
   ]
 }

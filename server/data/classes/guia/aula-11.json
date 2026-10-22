@@ -117,18 +117,39 @@
   "quiz": [
     {
       "q": "Segundo o caderno, o que significa a palavra expiação em hebraico?",
-      "options": ["Cobrir", "Celebrar", "Construir", "Separar"],
+      "options": [
+        "Cobrir",
+        "Celebrar",
+        "Construir",
+        "Separar"
+      ],
       "answer": 0
     },
     {
       "q": "O que aconteceu com o véu do templo quando Jesus morreu?",
-      "options": ["Foi trocado por um novo", "Pegou fogo", "Rasgou-se de alto a baixo", "Foi levado para o Céu"],
+      "options": [
+        "Foi trocado por um novo",
+        "Pegou fogo",
+        "Rasgou-se de alto a baixo",
+        "Foi levado para o Céu"
+      ],
       "answer": 2
     },
     {
       "q": "Segundo Hebreus 7:25, o que Jesus faz hoje por nós no Céu?",
-      "options": ["Oferece cordeiros todos os dias", "Vive sempre para interceder por nós", "Constrói um novo templo na Terra", "Descansa até o fim do mundo"],
+      "options": [
+        "Oferece cordeiros todos os dias",
+        "Vive sempre para interceder por nós",
+        "Constrói um novo templo na Terra",
+        "Descansa até o fim do mundo"
+      ],
       "answer": 1
     }
+  ],
+  "paginas": [
+    14,
+    15,
+    16,
+    17
   ]
 }

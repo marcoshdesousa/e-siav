@@ -14,19 +14,35 @@
     {
       "tipo": "texto",
       "titulo": "Onde montar um abrigo",
-      "itens": ["Terreno plano, firme e um pouco mais alto", "Longe de galhos secos e árvores mortas", "Nunca no leito de rio seco ou em baixadas", "Protegido do vento e com a entrada bem pensada"],
+      "itens": [
+        "Terreno plano, firme e um pouco mais alto",
+        "Longe de galhos secos e árvores mortas",
+        "Nunca no leito de rio seco ou em baixadas",
+        "Protegido do vento e com a entrada bem pensada"
+      ],
       "narracao": "Antes de pensar no tipo de abrigo, é preciso saber escolher o lugar. Procure um terreno plano, firme e um pouco mais alto, para a água da chuva não entrar. Olhe para cima: evite ficar debaixo de galhos secos ou árvores mortas, que podem cair com o vento. Nunca monte o abrigo no leito de um rio seco ou numa baixada, porque uma chuva forte pode trazer uma enxurrada. Aproveite barreiras naturais contra o vento e pense para onde vai virar a entrada. Um bom lugar já é metade de um bom abrigo."
     },
     {
       "tipo": "lista",
       "titulo": "Tipos de abrigo",
-      "itens": ["Barraca de lona em A", "Meia-água de lona", "Abrigo de galhos e folhas", "Tenda de cone", "Rede com cobertura"],
+      "itens": [
+        "Barraca de lona em A",
+        "Meia-água de lona",
+        "Abrigo de galhos e folhas",
+        "Tenda de cone",
+        "Rede com cobertura"
+      ],
       "narracao": "Existem vários tipos de abrigo que você pode projetar. A barraca de lona em forma de A, com uma corda esticada entre duas árvores e a lona caindo dos dois lados. A meia-água de lona, com um só lado inclinado, aberta na frente. O abrigo de galhos e folhas, uma estrutura de galhos coberta com folhagem, usado em situações de sobrevivência. A tenda em forma de cone, com varas unidas no alto. E a rede com uma lona por cima, muito usada em matas. Você vai escolher três diferentes para o seu projeto."
     },
     {
       "tipo": "texto",
       "titulo": "Exemplo: lona em A e meia-água",
-      "itens": ["Lona em A: corda entre duas árvores", "Lona sobre a corda, cantos presos com estacas", "Meia-água: uma borda alta e outra no chão", "Boa para abrigar a cozinha ou uma fogueira"],
+      "itens": [
+        "Lona em A: corda entre duas árvores",
+        "Lona sobre a corda, cantos presos com estacas",
+        "Meia-água: uma borda alta e outra no chão",
+        "Boa para abrigar a cozinha ou uma fogueira"
+      ],
       "narracao": "Veja dois exemplos. Na lona em A, você estica uma corda bem firme entre duas árvores, a mais ou menos um metro do chão, coloca a lona por cima e prende os cantos no chão com estacas. Ela protege dos dois lados, da chuva e do vento. Na meia-água, uma borda da lona fica presa no alto, numa corda ou num tronco, e a outra fica presa no chão, formando uma rampa. Ela abriga bem do vento que vem de um lado e é muito usada para cobrir a área da cozinha. Sempre deixe a lona bem esticada, para a água escorrer."
     },
     {
@@ -44,7 +60,12 @@
     {
       "tipo": "texto",
       "titulo": "Os temas à luz da Bíblia",
-      "itens": ["Bullying e violência ferem quem Deus ama", "Drogas escravizam e destroem o templo do Espírito", "A vida é dom de Deus desde o ventre", "O plano de Deus para a sexualidade protege"],
+      "itens": [
+        "Bullying e violência ferem quem Deus ama",
+        "Drogas escravizam e destroem o templo do Espírito",
+        "A vida é dom de Deus desde o ventre",
+        "O plano de Deus para a sexualidade protege"
+      ],
       "narracao": "Você vai escolher dois temas. Bullying e violência ferem pessoas que Deus ama, e Jesus nos ensinou a tratar os outros como queremos ser tratados, em Mateus capítulo sete, verso doze. As drogas, incluindo álcool e cigarro, escravizam e destroem o corpo, que é templo do Espírito Santo. A Bíblia mostra que a vida é um dom de Deus desde o ventre, e por isso o tema do aborto precisa ser tratado com seriedade e compaixão. E o plano de Deus para a sexualidade, dentro do casamento e com fidelidade, protege contra muitas doenças e sofrimentos."
     },
     {
@@ -56,7 +77,12 @@
     {
       "tipo": "texto",
       "titulo": "Revisão e investidura",
-      "itens": ["Confira se todos os requisitos têm o visto", "Organize fotos, relatórios e assinaturas", "O instrutor e o diretor fazem a avaliação", "A investidura celebra o caminho percorrido"],
+      "itens": [
+        "Confira se todos os requisitos têm o visto",
+        "Organize fotos, relatórios e assinaturas",
+        "O instrutor e o diretor fazem a avaliação",
+        "A investidura celebra o caminho percorrido"
+      ],
       "narracao": "Você chegou ao fim das aulas da classe Guia. Agora é hora de revisar. Folheie o seu caderno do começo ao fim e confira se cada requisito tem a data de conclusão e o visto do instrutor. Organize as fotos, relatórios e assinaturas que ainda faltam. No final do caderno há um espaço para a avaliação, feita pelo instrutor e pelo diretor, e para a autorização da investidura. A investidura é a cerimônia em que o clube reconhece publicamente que você concluiu a classe. Mais do que um distintivo, ela marca um compromisso de servir."
     },
     {
@@ -68,7 +94,13 @@
     {
       "tipo": "tarefa",
       "titulo": "No seu caderno",
-      "itens": ["Desenhe três abrigos e explique o uso de cada um", "Monte um no acampamento e cole uma foto", "Assista a um seminário ou dê uma palestra", "Escreva o que aprendeu sobre os dois temas", "Peça o visto do instrutor em cada requisito"],
+      "itens": [
+        "Desenhe três abrigos e explique o uso de cada um",
+        "Monte um no acampamento e cole uma foto",
+        "Assista a um seminário ou dê uma palestra",
+        "Escreva o que aprendeu sobre os dois temas",
+        "Peça o visto do instrutor em cada requisito"
+      ],
       "narracao": "Vamos ao caderno. No requisito dos abrigos, desenhe o primeiro, o segundo e o terceiro abrigo nos espaços indicados e, ao lado de cada um, explique o seu uso. Depois de montar um deles num acampamento, cole uma foto no espaço indicado. No requisito dos temas, assista a um seminário ou apresente uma palestra sobre dois dos temas, participe de uma discussão sobre eles e escreva, em cada coluna, o nome do tema e o que você aprendeu. Em cada requisito, peça o visto do instrutor. Por fim, revise o caderno inteiro."
     },
     {
@@ -88,18 +120,38 @@
   "quiz": [
     {
       "q": "Qual é um lugar perigoso para montar um abrigo?",
-      "options": ["Terreno plano e alto", "Local protegido do vento", "Leito de rio seco", "Clareira sem galhos secos acima"],
+      "options": [
+        "Terreno plano e alto",
+        "Local protegido do vento",
+        "Leito de rio seco",
+        "Clareira sem galhos secos acima"
+      ],
       "answer": 2
     },
     {
       "q": "Quantos temas o requisito pede que você estude no seminário ou palestra?",
-      "options": ["Dois", "Um", "Três", "Todos os cinco"],
+      "options": [
+        "Dois",
+        "Um",
+        "Três",
+        "Todos os cinco"
+      ],
       "answer": 0
     },
     {
       "q": "Segundo 1 Timóteo 4:12, o jovem deve ser:",
-      "options": ["Desprezado pelos mais velhos", "Exemplo dos fiéis", "Silencioso na igreja", "Líder só depois dos trinta anos"],
+      "options": [
+        "Desprezado pelos mais velhos",
+        "Exemplo dos fiéis",
+        "Silencioso na igreja",
+        "Líder só depois dos trinta anos"
+      ],
       "answer": 1
     }
+  ],
+  "paginas": [
+    53,
+    54,
+    55
   ]
 }

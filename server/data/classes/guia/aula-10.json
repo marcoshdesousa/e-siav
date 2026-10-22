@@ -121,18 +121,36 @@
   "quiz": [
     {
       "q": "Qual era o único móvel do Lugar Santíssimo?",
-      "options": ["O candelabro", "A arca da aliança", "A mesa dos pães", "A pia de bronze"],
+      "options": [
+        "O candelabro",
+        "A arca da aliança",
+        "A mesa dos pães",
+        "A pia de bronze"
+      ],
       "answer": 1
     },
     {
       "q": "Onde ficava o altar do holocausto?",
-      "options": ["No pátio, diante da porta da tenda", "No Lugar Santo", "Atrás do véu", "Fora do acampamento"],
+      "options": [
+        "No pátio, diante da porta da tenda",
+        "No Lugar Santo",
+        "Atrás do véu",
+        "Fora do acampamento"
+      ],
       "answer": 0
     },
     {
       "q": "O que havia dentro da arca da aliança, segundo Êxodo 40:20?",
-      "options": ["O candelabro de ouro", "Os pães da mesa", "As vestes do sumo sacerdote", "As tábuas com os Dez Mandamentos"],
+      "options": [
+        "O candelabro de ouro",
+        "Os pães da mesa",
+        "As vestes do sumo sacerdote",
+        "As tábuas com os Dez Mandamentos"
+      ],
       "answer": 3
     }
+  ],
+  "paginas": [
+    14
   ]
 }

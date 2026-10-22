@@ -69,6 +69,11 @@ test('classes: lista, aula grátis com quiz e pacotinho, aula do DBV+ trancada',
   const a1 = (await pedro.get('/classes/guia/aula/1')).body;
   assert.ok(a1.caderno.length && a1.quiz.length === 3 && a1.slides.length);
   assert.ok(a1.quiz.every((q) => q.answer === undefined), 'a resposta certa não vai para o celular');
+  assert.ok(a1.paginas.length, 'páginas do caderno usadas na aula');
+  const pg = await fetch(BASE.replace('/api', '') + a1.paginas[0].url, { headers: { cookie: pedro.cookie } });
+  assert.equal(pg.status, 200);
+  assert.match(pg.headers.get('content-type'), /image\/jpeg/);
+  assert.equal((await fetch(BASE.replace('/api', '') + a1.paginas[0].url)).status, 401, 'só para quem entrou no app');
   const wrong = (await pedro.post('/classes/guia/aula/1/quiz', { answers: [9, 9, 9] })).body;
   assert.equal(wrong.passed, false);
   const right = (await pedro.post('/classes/guia/aula/1/quiz', { answers: wrong.correct })).body;

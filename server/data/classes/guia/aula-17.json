@@ -105,18 +105,37 @@
   "quiz": [
     {
       "q": "Segundo Efésios 6, qual é o primeiro mandamento com promessa?",
-      "options": ["Não furtar", "Guardar o sábado", "Respeitar pai e mãe", "Não matar"],
+      "options": [
+        "Não furtar",
+        "Guardar o sábado",
+        "Respeitar pai e mãe",
+        "Não matar"
+      ],
       "answer": 2
     },
     {
       "q": "O que Lucas 2:51 diz sobre Jesus em relação aos Seus pais?",
-      "options": ["Que Ele era submisso a eles", "Que Ele morava sozinho", "Que Ele discutia com eles", "Que Ele não os conhecia"],
+      "options": [
+        "Que Ele era submisso a eles",
+        "Que Ele morava sozinho",
+        "Que Ele discutia com eles",
+        "Que Ele não os conhecia"
+      ],
       "answer": 0
     },
     {
       "q": "Segundo o caderno, quando os pais costumam ser mais compreensivos?",
-      "options": ["Quando o filho grita", "Quando o filho fala com respeito", "Quando o filho fica em silêncio por dias", "Quando o filho sai de casa"],
+      "options": [
+        "Quando o filho grita",
+        "Quando o filho fala com respeito",
+        "Quando o filho fica em silêncio por dias",
+        "Quando o filho sai de casa"
+      ],
       "answer": 1
     }
+  ],
+  "paginas": [
+    23,
+    24
   ]
 }

@@ -9,6 +9,11 @@ import { fileURLToPath } from 'node:url';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 export const VIDEO_ROOT = process.env.VIDEO_DIR || path.join(HERE, '..', 'video');
 const DATA = path.join(HERE, 'data', 'classes');
+/** Página do caderno da classe (imagem), ou null. */
+export const pageFile = (classe, p) => {
+  const f = path.join(DATA, classe, 'paginas', `${String(p).padStart(2, '0')}.jpg`);
+  return /^[a-z0-9-]+$/.test(classe) && fs.existsSync(f) ? f : null;
+};
 
 /** Classes regulares e agrupadas (só as que têm aulas ficam abertas). */
 export const CLASSES = [

@@ -119,18 +119,36 @@
   "quiz": [
     {
       "q": "Segundo 1 Coríntios 13:13, qual é o maior entre a fé, a esperança e o amor?",
-      "options": ["A fé", "A esperança", "Todos são iguais", "O amor"],
+      "options": [
+        "A fé",
+        "A esperança",
+        "Todos são iguais",
+        "O amor"
+      ],
       "answer": 3
     },
     {
       "q": "O que acontece com quem fala as línguas dos homens e dos anjos sem amor?",
-      "options": ["Torna-se um grande profeta", "É como o bronze que soa ou o címbalo que retine", "Recebe mais dons", "Ganha a admiração de todos"],
+      "options": [
+        "Torna-se um grande profeta",
+        "É como o bronze que soa ou o címbalo que retine",
+        "Recebe mais dons",
+        "Ganha a admiração de todos"
+      ],
       "answer": 1
     },
     {
       "q": "Qual destas características NÃO faz parte do amor em 1 Coríntios 13:4-7?",
-      "options": ["É paciente", "Não guarda rancor", "Procura os próprios interesses", "Alegra-se com a verdade"],
+      "options": [
+        "É paciente",
+        "Não guarda rancor",
+        "Procura os próprios interesses",
+        "Alegra-se com a verdade"
+      ],
       "answer": 2
     }
+  ],
+  "paginas": [
+    10
   ]
 }

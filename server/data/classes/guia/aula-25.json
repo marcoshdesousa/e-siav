@@ -20,13 +20,23 @@
     {
       "tipo": "texto",
       "titulo": "Um lar simples em Nazaré",
-      "itens": ["Cresceu na pequena cidade de Nazaré", "Era obediente a Maria e a José", "Aprendeu o ofício de carpinteiro", "Conhecia bem as Escrituras"],
+      "itens": [
+        "Cresceu na pequena cidade de Nazaré",
+        "Era obediente a Maria e a José",
+        "Aprendeu o ofício de carpinteiro",
+        "Conhecia bem as Escrituras"
+      ],
       "narracao": "Depois da visita ao templo, quando tinha doze anos, Jesus voltou para Nazaré com Maria e José e, como diz Lucas capítulo dois, verso cinquenta e um, era obediente a eles. Nazaré era uma cidade pequena e humilde. Em Marcos capítulo seis, verso três, as pessoas chamam Jesus de carpinteiro, o que mostra que Ele trabalhou com as próprias mãos. E durante o Seu ministério, Ele citava as Escrituras com tanta facilidade que fica claro que as estudou desde cedo. No capítulo sete, Ellen White descreve essa vida simples, de trabalho, estudo e obediência."
     },
     {
       "tipo": "texto",
       "titulo": "A natureza como sala de aula",
-      "itens": ["Jesus observava plantas, animais e o céu", "Via em tudo o cuidado do Pai", "Aprendia lições espirituais da criação", "Tinha momentos a sós com Deus ao ar livre"],
+      "itens": [
+        "Jesus observava plantas, animais e o céu",
+        "Via em tudo o cuidado do Pai",
+        "Aprendia lições espirituais da criação",
+        "Tinha momentos a sós com Deus ao ar livre"
+      ],
       "narracao": "Um dos pontos mais bonitos desse capítulo é mostrar que a natureza foi uma grande sala de aula para Jesus. Ao observar as plantas crescendo, os pássaros, os animais e o céu, Ele aprendia sobre o caráter de Deus, o Criador. Cada coisa criada era como uma lição sobre o amor e o cuidado do Pai. Mais tarde, nos evangelhos, vemos que Jesus muitas vezes se retirava para os montes e lugares tranquilos para orar. Essa intimidade com Deus em meio à criação começou cedo, na Sua infância em Nazaré."
     },
     {
@@ -38,7 +48,14 @@
     {
       "tipo": "lista",
       "titulo": "A natureza no ensino de Jesus",
-      "itens": ["As aves do céu", "Os lírios do campo", "O semeador e a semente", "O grão de mostarda", "A videira e os ramos", "O bom pastor e as ovelhas"],
+      "itens": [
+        "As aves do céu",
+        "Os lírios do campo",
+        "O semeador e a semente",
+        "O grão de mostarda",
+        "A videira e os ramos",
+        "O bom pastor e as ovelhas"
+      ],
       "narracao": "O que Jesus aprendeu na infância apareceu depois no Seu ministério. Ele ensinava usando a natureza. Em Mateus capítulo seis, falou das aves do céu e dos lírios do campo para mostrar que Deus cuida de nós. Em Mateus capítulo treze, contou a parábola do semeador e a do grão de mostarda. Em João capítulo quinze, falou da videira e dos ramos. E em João capítulo dez, apresentou-se como o bom pastor. As pessoas entendiam essas lições porque viam essas coisas todos os dias. A natureza tornou a mensagem de Jesus simples e inesquecível."
     },
     {
@@ -50,13 +67,25 @@
     {
       "tipo": "texto",
       "titulo": "Preparando a apresentação",
-      "itens": ["Combine data e grupo com seu instrutor", "Comece com um elemento da natureza na mão", "Conte a infância de Jesus em poucas palavras", "Mostre três lições da natureza com textos bíblicos", "Termine com um desafio prático"],
+      "itens": [
+        "Combine data e grupo com seu instrutor",
+        "Comece com um elemento da natureza na mão",
+        "Conte a infância de Jesus em poucas palavras",
+        "Mostre três lições da natureza com textos bíblicos",
+        "Termine com um desafio prático"
+      ],
       "narracao": "Agora a apresentação. Combine com seu instrutor a data e o grupo, que pode ser sua unidade, uma classe do clube ou outro grupo. Uma ótima forma de começar é levar algo da natureza nas mãos, como uma semente, uma flor ou uma folha, e perguntar o que aquilo ensina sobre Deus. Depois conte de forma breve como foi a infância de Jesus. Em seguida, apresente três lições da natureza usadas por Jesus, cada uma com seu texto bíblico. Termine com um desafio, como passar dez minutos por dia observando a criação e orando."
     },
     {
       "tipo": "tarefa",
       "titulo": "No seu caderno",
-      "itens": ["Leia o capítulo 7 de O Desejado de Todas as Nações", "Descreva no caderno como foi a infância de Jesus", "Mostre a importância da natureza no Seu desenvolvimento", "Apresente as lições para um grupo, clube ou unidade", "Peça o visto do instrutor"],
+      "itens": [
+        "Leia o capítulo 7 de O Desejado de Todas as Nações",
+        "Descreva no caderno como foi a infância de Jesus",
+        "Mostre a importância da natureza no Seu desenvolvimento",
+        "Apresente as lições para um grupo, clube ou unidade",
+        "Peça o visto do instrutor"
+      ],
       "narracao": "Vamos resumir o que você vai fazer. Primeiro, leia o capítulo sete de O Desejado de Todas as Nações. Depois, no espaço do caderno, descreva com suas palavras como foi a infância de Jesus, mostrando a importância que a natureza teve para o Seu desenvolvimento. Use as suas anotações e inclua alguns textos bíblicos. Em seguida, faça a apresentação para um grupo, clube ou unidade, mostrando como a natureza fez parte da educação e do ministério de Jesus. Se possível, peça para alguém tirar uma foto. Então peça o visto do instrutor."
     },
     {
@@ -75,18 +104,36 @@
   "quiz": [
     {
       "q": "Segundo Lucas 2:52, Jesus crescia em:",
-      "options": ["Riqueza e fama", "Sabedoria, estatura e graça", "Poder político", "Força militar"],
+      "options": [
+        "Riqueza e fama",
+        "Sabedoria, estatura e graça",
+        "Poder político",
+        "Força militar"
+      ],
       "answer": 1
     },
     {
       "q": "Em que cidade Jesus passou a infância?",
-      "options": ["Jerusalém", "Belém", "Cafarnaum", "Nazaré"],
+      "options": [
+        "Jerusalém",
+        "Belém",
+        "Cafarnaum",
+        "Nazaré"
+      ],
       "answer": 3
     },
     {
       "q": "Qual destes exemplos da natureza Jesus usou em Mateus 6 para mostrar o cuidado de Deus?",
-      "options": ["Os lírios do campo", "O leão e o urso", "Os peixes do Jordão", "As estrelas do céu"],
+      "options": [
+        "Os lírios do campo",
+        "O leão e o urso",
+        "Os peixes do Jordão",
+        "As estrelas do céu"
+      ],
       "answer": 0
     }
+  ],
+  "paginas": [
+    40
   ]
 }

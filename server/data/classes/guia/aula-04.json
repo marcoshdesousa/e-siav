@@ -116,18 +116,37 @@
   "quiz": [
     {
       "q": "Qual é a ordem correta das três primeiras igrejas?",
-      "options": ["Sardes, Tiatira, Éfeso", "Éfeso, Esmirna, Pérgamo", "Esmirna, Éfeso, Laodiceia", "Pérgamo, Filadélfia, Éfeso"],
+      "options": [
+        "Sardes, Tiatira, Éfeso",
+        "Éfeso, Esmirna, Pérgamo",
+        "Esmirna, Éfeso, Laodiceia",
+        "Pérgamo, Filadélfia, Éfeso"
+      ],
       "answer": 1
     },
     {
       "q": "Qual igreja Jesus descreveu como morna?",
-      "options": ["Filadélfia", "Esmirna", "Éfeso", "Laodiceia"],
+      "options": [
+        "Filadélfia",
+        "Esmirna",
+        "Éfeso",
+        "Laodiceia"
+      ],
       "answer": 3
     },
     {
       "q": "O que Jesus disse que a igreja de Éfeso havia abandonado?",
-      "options": ["O primeiro amor", "O sábado", "As reuniões", "A cidade"],
+      "options": [
+        "O primeiro amor",
+        "O sábado",
+        "As reuniões",
+        "A cidade"
+      ],
       "answer": 0
     }
+  ],
+  "paginas": [
+    9,
+    10
   ]
 }

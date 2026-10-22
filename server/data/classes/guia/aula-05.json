@@ -115,18 +115,37 @@
   "quiz": [
     {
       "q": "Qual é a pedra do primeiro fundamento da Nova Jerusalém?",
-      "options": ["Ametista", "Diamante", "Jaspe", "Safira"],
+      "options": [
+        "Ametista",
+        "Diamante",
+        "Jaspe",
+        "Safira"
+      ],
       "answer": 2
     },
     {
       "q": "Qual destas pedras NÃO está entre os doze fundamentos?",
-      "options": ["Berilo", "Topázio", "Crisópraso", "Diamante"],
+      "options": [
+        "Berilo",
+        "Topázio",
+        "Crisópraso",
+        "Diamante"
+      ],
       "answer": 3
     },
     {
       "q": "Segundo Apocalipse 21:14, o que está escrito nos doze fundamentos?",
-      "options": ["Os nomes dos doze apóstolos", "Os nomes das doze tribos", "Os Dez Mandamentos", "Os nomes dos profetas"],
+      "options": [
+        "Os nomes dos doze apóstolos",
+        "Os nomes das doze tribos",
+        "Os Dez Mandamentos",
+        "Os nomes dos profetas"
+      ],
       "answer": 0
     }
+  ],
+  "paginas": [
+    9,
+    10
   ]
 }

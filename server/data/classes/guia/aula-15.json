@@ -107,18 +107,37 @@
   "quiz": [
     {
       "q": "Segundo o texto de Ellen G. White no caderno, quem tem maior influência sobre os jovens?",
-      "options": ["Os pregadores idosos", "Os jovens consagrados", "Os professores", "Os famosos da internet"],
+      "options": [
+        "Os pregadores idosos",
+        "Os jovens consagrados",
+        "Os professores",
+        "Os famosos da internet"
+      ],
       "answer": 1
     },
     {
       "q": "Como Jesus começou a conversa com a mulher samaritana?",
-      "options": ["Pedindo água", "Corrigindo os erros dela", "Pregando um sermão longo", "Fazendo um milagre"],
+      "options": [
+        "Pedindo água",
+        "Corrigindo os erros dela",
+        "Pregando um sermão longo",
+        "Fazendo um milagre"
+      ],
       "answer": 0
     },
     {
       "q": "Segundo Mateus 5:16, para que nossa luz deve brilhar?",
-      "options": ["Para sermos admirados", "Para ganharmos discussões", "Para ficarmos famosos", "Para que glorifiquem ao Pai que está nos céus"],
+      "options": [
+        "Para sermos admirados",
+        "Para ganharmos discussões",
+        "Para ficarmos famosos",
+        "Para que glorifiquem ao Pai que está nos céus"
+      ],
       "answer": 3
     }
+  ],
+  "paginas": [
+    20,
+    21
   ]
 }

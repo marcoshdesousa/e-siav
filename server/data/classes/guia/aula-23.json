@@ -20,25 +20,44 @@
     {
       "tipo": "lista",
       "titulo": "Escolha uma opção",
-      "itens": ["Curso para conselheiros", "Convenção de liderança", "Seis reuniões de diretoria"],
+      "itens": [
+        "Curso para conselheiros",
+        "Convenção de liderança",
+        "Seis reuniões de diretoria"
+      ],
       "narracao": "Você só precisa cumprir uma das três opções. A primeira é o curso para conselheiros, que prepara quem vai cuidar de uma unidade. A segunda é a convenção de liderança, um encontro organizado pela sua Associação ou Missão para diretores, conselheiros e líderes dos clubes. A terceira é participar de seis reuniões de diretoria do seu próprio clube. Converse com seu diretor para saber qual delas está disponível neste ano. Muitas vezes o curso e a convenção têm datas marcadas, então fique atento para não perder a inscrição."
     },
     {
       "tipo": "texto",
       "titulo": "Curso para conselheiros",
-      "itens": ["Prepara para cuidar de uma unidade", "Ensina a conhecer e aconselhar os juvenis", "Mostra como planejar reuniões e atividades", "Ajuda a dar bom exemplo dentro e fora do clube"],
+      "itens": [
+        "Prepara para cuidar de uma unidade",
+        "Ensina a conhecer e aconselhar os juvenis",
+        "Mostra como planejar reuniões e atividades",
+        "Ajuda a dar bom exemplo dentro e fora do clube"
+      ],
       "narracao": "O conselheiro é o líder mais próximo dos desbravadores. Ele acompanha a unidade, conhece cada membro pelo nome, percebe quando alguém está triste ou se afastando e ajuda a unidade a cumprir as classes. No curso para conselheiros você aprende como os juvenis pensam e sentem, como conduzir uma reunião de unidade, como manter a disciplina com amor e como ser exemplo. Como a classe Guia prepara futuros líderes, esse curso é uma ótima escolha. Talvez em breve você mesmo seja conselheiro de uma unidade."
     },
     {
       "tipo": "texto",
       "titulo": "Convenção de liderança",
-      "itens": ["Organizada pela Associação ou Missão", "Reúne líderes de vários clubes", "Tem palestras, oficinas e momentos espirituais", "Apresenta os planos e eventos do ano"],
+      "itens": [
+        "Organizada pela Associação ou Missão",
+        "Reúne líderes de vários clubes",
+        "Tem palestras, oficinas e momentos espirituais",
+        "Apresenta os planos e eventos do ano"
+      ],
       "narracao": "A convenção de liderança é um encontro organizado pela sua Associação ou Missão, que reúne diretores, conselheiros, instrutores e outros líderes de muitos clubes. Normalmente tem momentos de adoração, palestras, oficinas práticas e a apresentação dos planos para o ano, como camporis e eventos regionais. É uma ótima oportunidade de ver como o ministério funciona além do seu clube e de fazer amizade com líderes de outras igrejas. Leve um caderninho e anote o que aprender em cada atividade, porque isso vai ajudar muito no relatório."
     },
     {
       "tipo": "texto",
       "titulo": "Reuniões de diretoria",
-      "itens": ["Diretor, associados, secretaria, tesouraria", "Capelão, conselheiros e instrutores", "Planejam o calendário e avaliam atividades", "Você observa, aprende e pode contribuir"],
+      "itens": [
+        "Diretor, associados, secretaria, tesouraria",
+        "Capelão, conselheiros e instrutores",
+        "Planejam o calendário e avaliam atividades",
+        "Você observa, aprende e pode contribuir"
+      ],
       "narracao": "A diretoria do clube é o grupo que planeja e coordena tudo. Ela é formada pelo diretor, pelos diretores associados, pela secretaria, pela tesouraria, pelo capelão e, muitas vezes, pelos conselheiros e instrutores. Nas reuniões eles oram juntos, planejam o calendário, organizam acampamentos, avaliam o que deu certo e o que precisa melhorar e cuidam das finanças. Se você escolher esta opção, peça autorização ao diretor para participar de seis reuniões. Chegue no horário, ouça com atenção, respeite o que for confidencial e, quando for convidado, dê ideias com educação."
     },
     {
@@ -50,13 +69,25 @@
     {
       "tipo": "lista",
       "titulo": "Roteiro do relatório",
-      "itens": ["Atividade escolhida", "Datas e local", "Quem participou", "Assuntos tratados", "O que você aprendeu", "Como vai aplicar"],
+      "itens": [
+        "Atividade escolhida",
+        "Datas e local",
+        "Quem participou",
+        "Assuntos tratados",
+        "O que você aprendeu",
+        "Como vai aplicar"
+      ],
       "narracao": "Na hora de escrever, siga este roteiro. Comece dizendo qual atividade você escolheu. Depois informe as datas e o local. Conte quem participou e quem conduziu. Em seguida, resuma os principais assuntos tratados, sem copiar tudo, apenas o essencial. A parte mais importante vem agora: o que você aprendeu sobre liderança e sobre servir. Por fim, diga como pretende aplicar isso no seu clube e na sua vida. Um bom relatório mostra que você não apenas esteve presente, mas que realmente aprendeu algo."
     },
     {
       "tipo": "tarefa",
       "titulo": "No seu caderno",
-      "itens": ["Marque a opção escolhida: a, b ou c", "Participe e faça anotações em cada encontro", "Escreva o relatório seguindo o roteiro", "Peça o visto do instrutor"],
+      "itens": [
+        "Marque a opção escolhida: a, b ou c",
+        "Participe e faça anotações em cada encontro",
+        "Escreva o relatório seguindo o roteiro",
+        "Peça o visto do instrutor"
+      ],
       "narracao": "Vamos ao caderno. Primeiro, marque qual opção você escolheu: o curso para conselheiros, a convenção de liderança ou as seis reuniões de diretoria. Depois participe de verdade, com atenção, e faça suas anotações em cada encontro. Quando terminar, use o espaço do caderno para escrever o relatório seguindo o roteiro que vimos: atividade, datas, local, participantes, assuntos, o que aprendeu e como vai aplicar. Se tiver um certificado do curso ou da convenção, mostre também. Então apresente ao seu instrutor e peça o visto."
     },
     {
@@ -75,18 +106,36 @@
   "quiz": [
     {
       "q": "Quantas reuniões de diretoria o requisito pede, se você escolher essa opção?",
-      "options": ["Duas", "Quatro", "Seis", "Dez"],
+      "options": [
+        "Duas",
+        "Quatro",
+        "Seis",
+        "Dez"
+      ],
       "answer": 2
     },
     {
       "q": "Segundo Marcos 10:43-45, quem quer ser grande deve:",
-      "options": ["Servir aos outros", "Mandar mais", "Aparecer mais", "Falar mais alto"],
+      "options": [
+        "Servir aos outros",
+        "Mandar mais",
+        "Aparecer mais",
+        "Falar mais alto"
+      ],
       "answer": 0
     },
     {
       "q": "Quem organiza a convenção de liderança?",
-      "options": ["A Associação Geral", "A Associação ou Missão", "A escola", "A prefeitura"],
+      "options": [
+        "A Associação Geral",
+        "A Associação ou Missão",
+        "A escola",
+        "A prefeitura"
+      ],
       "answer": 1
     }
+  ],
+  "paginas": [
+    38
   ]
 }

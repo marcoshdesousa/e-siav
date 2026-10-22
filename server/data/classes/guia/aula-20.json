@@ -131,18 +131,39 @@
   "quiz": [
     {
       "q": "Qual destes NÃO faz parte dos oito remédios naturais?",
-      "options": ["Ar puro", "Repouso", "Uso de água", "Refrigerante"],
+      "options": [
+        "Ar puro",
+        "Repouso",
+        "Uso de água",
+        "Refrigerante"
+      ],
       "answer": 3
     },
     {
       "q": "O que significa o remédio chamado abstinência?",
-      "options": ["Nunca se alimentar", "Evitar o que faz mal e usar com moderação o que é bom", "Dormir o dia todo", "Fazer exercício sem parar"],
+      "options": [
+        "Nunca se alimentar",
+        "Evitar o que faz mal e usar com moderação o que é bom",
+        "Dormir o dia todo",
+        "Fazer exercício sem parar"
+      ],
       "answer": 1
     },
     {
       "q": "Segundo o texto do caderno, qual regime alimentar foi escolhido pelo Criador?",
-      "options": ["Cereais, frutas, nozes e verduras", "Doces e frituras", "Somente carnes", "Apenas líquidos"],
+      "options": [
+        "Cereais, frutas, nozes e verduras",
+        "Doces e frituras",
+        "Somente carnes",
+        "Apenas líquidos"
+      ],
       "answer": 0
     }
+  ],
+  "paginas": [
+    29,
+    30,
+    31,
+    32
   ]
 }

@@ -111,18 +111,37 @@
   "quiz": [
     {
       "q": "Onde o requisito pede que você conte as histórias dos pioneiros?",
-      "options": ["Apenas para a família", "Em uma rede social", "Na reunião do clube, no culto JA ou na Escola Sabatina", "Somente por escrito"],
+      "options": [
+        "Apenas para a família",
+        "Em uma rede social",
+        "Na reunião do clube, no culto JA ou na Escola Sabatina",
+        "Somente por escrito"
+      ],
       "answer": 2
     },
     {
       "q": "Qual destas perguntas faz parte do roteiro para resumir a história?",
-      "options": ["Como Deus agiu na situação?", "Quanto dinheiro o pioneiro tinha?", "Qual era a cor favorita dele?", "Quantos irmãos ele tinha?"],
+      "options": [
+        "Como Deus agiu na situação?",
+        "Quanto dinheiro o pioneiro tinha?",
+        "Qual era a cor favorita dele?",
+        "Quantos irmãos ele tinha?"
+      ],
       "answer": 0
     },
     {
       "q": "Qual é uma boa dica para contar a história?",
-      "options": ["Ler tudo sem olhar para o público", "Falar por trinta minutos", "Ensaiar e usar um cartão só com tópicos", "Inventar detalhes para ficar emocionante"],
+      "options": [
+        "Ler tudo sem olhar para o público",
+        "Falar por trinta minutos",
+        "Ensaiar e usar um cartão só com tópicos",
+        "Inventar detalhes para ficar emocionante"
+      ],
       "answer": 2
     }
+  ],
+  "paginas": [
+    18,
+    19
   ]
 }

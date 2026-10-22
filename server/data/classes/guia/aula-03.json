@@ -109,18 +109,36 @@
   "quiz": [
     {
       "q": "Qual anjo anuncia que chegou a hora do juízo e chama a adorar o Criador?",
-      "options": ["O segundo anjo", "O terceiro anjo", "O primeiro anjo", "O anjo da colheita"],
+      "options": [
+        "O segundo anjo",
+        "O terceiro anjo",
+        "O primeiro anjo",
+        "O anjo da colheita"
+      ],
       "answer": 2
     },
     {
       "q": "O que o segundo anjo anuncia?",
-      "options": ["Que caiu a grande Babilônia", "Que os mortos ressuscitaram", "Que a Nova Jerusalém desceu", "Que o templo foi reconstruído"],
+      "options": [
+        "Que caiu a grande Babilônia",
+        "Que os mortos ressuscitaram",
+        "Que a Nova Jerusalém desceu",
+        "Que o templo foi reconstruído"
+      ],
       "answer": 0
     },
     {
       "q": "Segundo Apocalipse 14:12, como são descritos os santos?",
-      "options": ["Os que fazem milagres", "Os que guardam os mandamentos de Deus e a fé em Jesus", "Os que nunca enfrentam dificuldades", "Os que conhecem todas as profecias"],
+      "options": [
+        "Os que fazem milagres",
+        "Os que guardam os mandamentos de Deus e a fé em Jesus",
+        "Os que nunca enfrentam dificuldades",
+        "Os que conhecem todas as profecias"
+      ],
       "answer": 1
     }
+  ],
+  "paginas": [
+    9
   ]
 }

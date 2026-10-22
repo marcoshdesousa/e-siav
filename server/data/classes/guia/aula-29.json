@@ -20,7 +20,12 @@
     {
       "tipo": "texto",
       "titulo": "Escolha: amigos ou série jovem",
-      "itens": ["A: trazer dois amigos a duas reuniões diferentes", "Ex.: culto jovem, culto de sábado, clube", "B: ajudar a planejar uma série evangelística", "B: participar de pelo menos quatro domingos"],
+      "itens": [
+        "A: trazer dois amigos a duas reuniões diferentes",
+        "Ex.: culto jovem, culto de sábado, clube",
+        "B: ajudar a planejar uma série evangelística",
+        "B: participar de pelo menos quatro domingos"
+      ],
       "narracao": "O primeiro requisito tem duas opções. Na opção A, você traz dois amigos para assistir a duas reuniões diferentes da igreja. Por exemplo, um amigo vai a um culto jovem e outro vai ao culto de sábado, ou a uma reunião do clube. Na opção B, você ajuda a planejar e participa de pelo menos quatro domingos de uma série de evangelismo jovem, que pode ser na sua igreja ou no seu distrito. Nessa opção você pode ajudar na recepção, na música, na decoração, na oração ou convidando pessoas."
     },
     {
@@ -32,7 +37,13 @@
     {
       "tipo": "texto",
       "titulo": "Como influenciar amigos para Cristo",
-      "itens": ["Seja um amigo de verdade, não um projeto", "Viva o que você acredita", "Ouça mais do que fala", "Conte o que Jesus fez por você", "Ore por eles todos os dias"],
+      "itens": [
+        "Seja um amigo de verdade, não um projeto",
+        "Viva o que você acredita",
+        "Ouça mais do que fala",
+        "Conte o que Jesus fez por você",
+        "Ore por eles todos os dias"
+      ],
       "narracao": "O segundo requisito pede uma página ou uma palestra sobre como influenciar amigos para Cristo. Aqui vão alguns princípios para o seu texto. Primeiro, seja um amigo de verdade: as pessoas percebem quando são tratadas só como um alvo. Segundo, viva o que você acredita, porque o exemplo fala mais alto que as palavras. Terceiro, ouça com atenção, interesse-se pela vida do seu amigo. Quarto, quando surgir a oportunidade, conte com simplicidade o que Jesus fez por você. E quinto, ore por seus amigos todos os dias."
     },
     {
@@ -44,19 +55,34 @@
     {
       "tipo": "texto",
       "titulo": "Quem são os diáconos?",
-      "itens": ["A igreja primitiva escolheu sete homens", "Tinham boa reputação e eram cheios do Espírito", "Cuidavam das necessidades práticas da igreja", "Assim os apóstolos se dedicavam à Palavra"],
+      "itens": [
+        "A igreja primitiva escolheu sete homens",
+        "Tinham boa reputação e eram cheios do Espírito",
+        "Cuidavam das necessidades práticas da igreja",
+        "Assim os apóstolos se dedicavam à Palavra"
+      ],
       "narracao": "Agora o terceiro requisito: observar o trabalho dos diáconos. A origem desse serviço está em Atos capítulo seis. A igreja crescia e algumas viúvas estavam sendo esquecidas na distribuição diária. Os apóstolos pediram que a igreja escolhesse sete homens de boa reputação, cheios do Espírito Santo e de sabedoria, para cuidar dessa tarefa. Assim os apóstolos podiam se dedicar à oração e à pregação. Entre esses sete estavam Estêvão e Filipe. Hoje, diáconos e diaconisas continuam servindo a igreja em muitas tarefas práticas e importantes."
     },
     {
       "tipo": "lista",
       "titulo": "O que você vai observar",
-      "itens": ["Cuidado da propriedade", "Cerimônia de lava-pés", "Cerimônia de batismo", "Dízimos e ofertas"],
+      "itens": [
+        "Cuidado da propriedade",
+        "Cerimônia de lava-pés",
+        "Cerimônia de batismo",
+        "Dízimos e ofertas"
+      ],
       "narracao": "Durante dois meses, você vai observar os diáconos em quatro áreas. A primeira é o cuidado da propriedade da igreja: abrir e fechar o templo, cuidar da limpeza, da ordem e da segurança. A segunda é a cerimônia do lava-pés, que acontece junto com a Santa Ceia. A terceira é a cerimônia de batismo. E a quarta é o recolhimento dos dízimos e ofertas durante o culto. O caderno também pede que você leia, no Manual da Igreja, o capítulo que fala sobre as atividades dos diáconos."
     },
     {
       "tipo": "texto",
       "titulo": "Lava-pés e batismo",
-      "itens": ["Lava-pés: Jesus nos deu o exemplo em João 13", "Diáconos preparam bacias, água e toalhas", "Batismo: preparam o batistério e as vestes", "Ajudam o candidato a entrar e sair com segurança"],
+      "itens": [
+        "Lava-pés: Jesus nos deu o exemplo em João 13",
+        "Diáconos preparam bacias, água e toalhas",
+        "Batismo: preparam o batistério e as vestes",
+        "Ajudam o candidato a entrar e sair com segurança"
+      ],
       "narracao": "No lava-pés, lembramos o exemplo de Jesus em João capítulo treze, quando Ele lavou os pés dos discípulos e disse que também devemos lavar os pés uns dos outros. Os diáconos preparam as bacias, a água e as toalhas e organizam o local, e as diaconisas fazem o mesmo do lado das irmãs. No batismo, eles preparam o batistério, as vestes batismais e ajudam os candidatos a entrar e sair da água com segurança e reverência. Observe com atenção cada detalhe, porque tudo é feito para que esses momentos sejam santos e organizados."
     },
     {
@@ -68,7 +94,13 @@
     {
       "tipo": "tarefa",
       "titulo": "No seu caderno",
-      "itens": ["Preencha nomes, reuniões e datas dos amigos ou a série", "Escreva a página ou apresente a palestra", "Descreva as quatro áreas do trabalho dos diáconos", "Cole fotos ou desenhos e peça a assinatura", "Peça o visto do instrutor em cada requisito"],
+      "itens": [
+        "Preencha nomes, reuniões e datas dos amigos ou a série",
+        "Escreva a página ou apresente a palestra",
+        "Descreva as quatro áreas do trabalho dos diáconos",
+        "Cole fotos ou desenhos e peça a assinatura",
+        "Peça o visto do instrutor em cada requisito"
+      ],
       "narracao": "Vamos ao caderno. No primeiro requisito, escreva o nome de cada amigo, a reunião de que ele participou, a data e o horário, ou então descreva sua participação na série evangelística. No segundo, escreva sua página ou anote quando e para quem apresentou a palestra. No terceiro, depois de dois meses de observação, descreva nos quatro espaços a atuação dos diáconos em cada área, cole uma foto, ilustração ou desenho em cada uma, escreva o que aprendeu com o diácono-chefe e peça a assinatura dele. Em cada requisito, peça o visto do instrutor."
     },
     {
@@ -88,18 +120,38 @@
   "quiz": [
     {
       "q": "Quem levou Simão Pedro a Jesus, segundo João 1:41-42?",
-      "options": ["Filipe", "João", "Tiago", "André"],
+      "options": [
+        "Filipe",
+        "João",
+        "Tiago",
+        "André"
+      ],
       "answer": 3
     },
     {
       "q": "Em qual capítulo de Atos a igreja escolheu os sete para servir?",
-      "options": ["Atos 2", "Atos 6", "Atos 9", "Atos 15"],
+      "options": [
+        "Atos 2",
+        "Atos 6",
+        "Atos 9",
+        "Atos 15"
+      ],
       "answer": 1
     },
     {
       "q": "Por quanto tempo você deve observar o trabalho dos diáconos?",
-      "options": ["Dois meses", "Um sábado", "Duas semanas", "Um ano"],
+      "options": [
+        "Dois meses",
+        "Um sábado",
+        "Duas semanas",
+        "Um ano"
+      ],
       "answer": 0
     }
+  ],
+  "paginas": [
+    50,
+    51,
+    52
   ]
 }

@@ -116,18 +116,36 @@
   "quiz": [
     {
       "q": "Segundo o voto, a mensagem da Bíblia é a de um Salvador...",
-      "options": ["Somente crucificado", "Crucificado, ressurreto e prestes a vir", "Que virá apenas no fim do milênio", "Que salva por nossas boas obras"],
+      "options": [
+        "Somente crucificado",
+        "Crucificado, ressurreto e prestes a vir",
+        "Que virá apenas no fim do milênio",
+        "Que salva por nossas boas obras"
+      ],
       "answer": 1
     },
     {
       "q": "O que significa a palavra fidelidade no voto?",
-      "options": ["Ler a Bíblia só no sábado", "Saber muitos versos de cor", "Lealdade e compromisso firme com a Palavra de Deus", "Concordar com a Bíblia quando for fácil"],
+      "options": [
+        "Ler a Bíblia só no sábado",
+        "Saber muitos versos de cor",
+        "Lealdade e compromisso firme com a Palavra de Deus",
+        "Concordar com a Bíblia quando for fácil"
+      ],
       "answer": 2
     },
     {
       "q": "Qual verso fala da promessa de Jesus voltar para nos buscar?",
-      "options": ["João 14:3", "Salmo 23:1", "Gênesis 1:1", "Provérbios 3:5"],
+      "options": [
+        "João 14:3",
+        "Salmo 23:1",
+        "Gênesis 1:1",
+        "Provérbios 3:5"
+      ],
       "answer": 0
     }
+  ],
+  "paginas": [
+    5
   ]
 }

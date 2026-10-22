@@ -125,18 +125,37 @@
   "quiz": [
     {
       "q": "Qual é a idade mínima para a classe Guia?",
-      "options": ["12 anos", "13 anos", "14 anos", "15 anos"],
+      "options": [
+        "12 anos",
+        "13 anos",
+        "14 anos",
+        "15 anos"
+      ],
       "answer": 3
     },
     {
       "q": "O que o caderno pede para comprovar a idade?",
-      "options": ["Colar o documento original", "Colar uma cópia da identidade ou certidão de nascimento", "Escrever a data de nascimento", "Uma assinatura do pastor"],
+      "options": [
+        "Colar o documento original",
+        "Colar uma cópia da identidade ou certidão de nascimento",
+        "Escrever a data de nascimento",
+        "Uma assinatura do pastor"
+      ],
       "answer": 1
     },
     {
       "q": "Para cumprir o requisito de membro ativo, o que você faz ao final do ano?",
-      "options": ["Um relatório das atividades com fotos dos momentos marcantes", "Uma prova escrita sobre o clube", "Uma redação sobre o uniforme", "Uma lista dos membros da unidade"],
+      "options": [
+        "Um relatório das atividades com fotos dos momentos marcantes",
+        "Uma prova escrita sobre o clube",
+        "Uma redação sobre o uniforme",
+        "Uma lista dos membros da unidade"
+      ],
       "answer": 0
     }
+  ],
+  "paginas": [
+    3,
+    4
   ]
 }

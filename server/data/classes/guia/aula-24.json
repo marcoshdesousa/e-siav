@@ -20,25 +20,48 @@
     {
       "tipo": "lista",
       "titulo": "Classes anteriores",
-      "itens": ["Amigo: 10 anos", "Companheiro: 11 anos", "Pesquisador: 12 anos", "Pioneiro: 13 anos", "Excursionista: 14 anos"],
+      "itens": [
+        "Amigo: 10 anos",
+        "Companheiro: 11 anos",
+        "Pesquisador: 12 anos",
+        "Pioneiro: 13 anos",
+        "Excursionista: 14 anos"
+      ],
       "narracao": "O requisito pede que você ensine uma das classes regulares anteriores à sua. Elas são Amigo, para dez anos, Companheiro, para onze, Pesquisador, para doze, Pioneiro, para treze, e Excursionista, para catorze. Isso é importante, porque o jeito de ensinar muda conforme a idade. Para um Amigo, a aula precisa ser mais curta, com muita atividade e linguagem simples. Para um Excursionista, você pode aprofundar mais e dar desafios maiores. Pense sempre em quem vai estar na sua frente."
     },
     {
       "tipo": "texto",
       "titulo": "Passo 1: escolher e estudar",
-      "itens": ["Decida com o instrutor e a diretoria", "Escolha algo que você conhece bem", "Leia todos os requisitos da especialidade", "Estude mais do que vai ensinar"],
+      "itens": [
+        "Decida com o instrutor e a diretoria",
+        "Escolha algo que você conhece bem",
+        "Leia todos os requisitos da especialidade",
+        "Estude mais do que vai ensinar"
+      ],
       "narracao": "O primeiro passo é escolher a especialidade junto com seu instrutor e a diretoria do clube. Prefira uma especialidade que você já tem ou que conhece bem, e que seja útil para a classe que vai receber a aula. Depois, leia todos os requisitos com atenção e escolha os dois que você vai ensinar. Então estude. Um bom professor sabe mais do que vai falar na aula, porque assim consegue responder às perguntas com segurança. Se não souber algo, não invente: diga que vai pesquisar e traga a resposta depois."
     },
     {
       "tipo": "texto",
       "titulo": "Passo 2: montar o plano de aula",
-      "itens": ["Objetivo: o que eles vão saber fazer no fim", "Tempo de cada parte da aula", "Materiais que você vai precisar", "Atividade prática para cada requisito"],
+      "itens": [
+        "Objetivo: o que eles vão saber fazer no fim",
+        "Tempo de cada parte da aula",
+        "Materiais que você vai precisar",
+        "Atividade prática para cada requisito"
+      ],
       "narracao": "O segundo passo é montar um plano de aula por escrito. Comece pelo objetivo: no fim da aula, o que a turma vai saber fazer? Por exemplo, identificar cinco árvores ou fazer dois nós. Depois divida o tempo, porque uma reunião de clube tem horário. Liste os materiais: cartazes, cordas, amostras, figuras, papel, lápis. E planeje uma atividade prática para cada requisito. Desbravador aprende fazendo. Mostre o plano ao seu instrutor antes da aula, pois ele pode dar ótimas sugestões."
     },
     {
       "tipo": "lista",
       "titulo": "Roteiro de uma boa aula",
-      "itens": ["Abertura que chama atenção", "Explicação curta e clara", "Demonstração", "Prática em grupo", "Revisão e verificação", "Oração final"],
+      "itens": [
+        "Abertura que chama atenção",
+        "Explicação curta e clara",
+        "Demonstração",
+        "Prática em grupo",
+        "Revisão e verificação",
+        "Oração final"
+      ],
       "narracao": "Um bom roteiro tem estas partes. Uma abertura que chama atenção, como uma pergunta curiosa, um objeto diferente ou uma pequena história. Depois, uma explicação curta e clara, sem discursos longos. Em seguida, a demonstração: você mostra como se faz. Depois vem a prática, quando cada um tenta fazer sozinho ou em grupo, enquanto você ajuda. No final, a revisão e a verificação, com perguntas ou um pequeno desafio para saber se aprenderam. E feche com uma oração, agradecendo a Deus pelo aprendizado."
     },
     {
@@ -50,13 +73,24 @@
     {
       "tipo": "texto",
       "titulo": "Passo 3: verificar e registrar",
-      "itens": ["Confira se cada um cumpriu os requisitos", "Anote os nomes de quem participou", "Peça uma avaliação ao seu instrutor", "Pense no que você faria melhor"],
+      "itens": [
+        "Confira se cada um cumpriu os requisitos",
+        "Anote os nomes de quem participou",
+        "Peça uma avaliação ao seu instrutor",
+        "Pense no que você faria melhor"
+      ],
       "narracao": "Depois de ensinar, chegou a hora de verificar. Confira se cada desbravador realmente cumpriu os dois requisitos, por exemplo fazendo o nó, respondendo às perguntas ou entregando a atividade. Anote os nomes de quem participou e entregue a lista ao instrutor da classe ou à secretaria do clube. Peça ao seu instrutor uma avaliação sincera da sua aula. E faça uma autoavaliação: o que funcionou bem e o que você faria diferente da próxima vez. É assim que um bom professor cresce."
     },
     {
       "tipo": "tarefa",
       "titulo": "No seu caderno",
-      "itens": ["Escreva a especialidade escolhida", "Escreva a classe regular que vai receber a aula", "Anote a data do primeiro requisito ensinado", "Anote a data do segundo requisito ensinado", "Peça o visto do instrutor"],
+      "itens": [
+        "Escreva a especialidade escolhida",
+        "Escreva a classe regular que vai receber a aula",
+        "Anote a data do primeiro requisito ensinado",
+        "Anote a data do segundo requisito ensinado",
+        "Peça o visto do instrutor"
+      ],
       "narracao": "No caderno, a página deste requisito tem alguns campos para preencher. Escreva o nome da especialidade escolhida e a classe regular para a qual você ensinou, por exemplo Companheiro ou Pioneiro. Depois anote a data de apresentação do primeiro requisito e a data de apresentação do segundo requisito. É uma boa ideia guardar junto o seu plano de aula. Quando terminar as duas aulas, mostre tudo ao seu instrutor e peça o visto. Lembre-se: o planejamento é feito com o instrutor e a diretoria do clube."
     },
     {
@@ -76,18 +110,36 @@
   "quiz": [
     {
       "q": "Para quem você deve ensinar os requisitos da especialidade?",
-      "options": ["Para a diretoria", "Para os pais", "Para uma classe regular anterior", "Para outra igreja"],
+      "options": [
+        "Para a diretoria",
+        "Para os pais",
+        "Para uma classe regular anterior",
+        "Para outra igreja"
+      ],
       "answer": 2
     },
     {
       "q": "No mínimo, quantos requisitos o requisito pede que você ensine?",
-      "options": ["Dois", "Um", "Cinco", "Todos"],
+      "options": [
+        "Dois",
+        "Um",
+        "Cinco",
+        "Todos"
+      ],
       "answer": 0
     },
     {
       "q": "Qual parte da aula ajuda a saber se a turma realmente aprendeu?",
-      "options": ["A abertura", "A lista de materiais", "A oração final", "A revisão e verificação"],
+      "options": [
+        "A abertura",
+        "A lista de materiais",
+        "A oração final",
+        "A revisão e verificação"
+      ],
       "answer": 3
     }
+  ],
+  "paginas": [
+    38
   ]
 }

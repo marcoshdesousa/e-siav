@@ -119,18 +119,36 @@
   "quiz": [
     {
       "q": "Qual é a última promessa de Jesus em Apocalipse 22:20?",
-      "options": ["Darei a terra aos mansos", "Certamente, venho sem demora", "Estarei convosco todos os dias", "Enviarei o Consolador"],
+      "options": [
+        "Darei a terra aos mansos",
+        "Certamente, venho sem demora",
+        "Estarei convosco todos os dias",
+        "Enviarei o Consolador"
+      ],
       "answer": 1
     },
     {
       "q": "Em 2 Timóteo 4:7, o que Paulo diz que fez?",
-      "options": ["Construiu muitas igrejas", "Escreveu todo o Novo Testamento", "Venceu todos os inimigos", "Combateu o bom combate, completou a carreira e guardou a fé"],
+      "options": [
+        "Construiu muitas igrejas",
+        "Escreveu todo o Novo Testamento",
+        "Venceu todos os inimigos",
+        "Combateu o bom combate, completou a carreira e guardou a fé"
+      ],
       "answer": 3
     },
     {
       "q": "Segundo Romanos 8:38-39, o que pode nos separar do amor de Deus em Cristo?",
-      "options": ["Nada do que existe no universo", "A morte", "Os poderes do mundo", "As coisas do futuro"],
+      "options": [
+        "Nada do que existe no universo",
+        "A morte",
+        "Os poderes do mundo",
+        "As coisas do futuro"
+      ],
       "answer": 0
     }
+  ],
+  "paginas": [
+    10
   ]
 }
