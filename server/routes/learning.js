@@ -9,9 +9,10 @@ import { requireAuth } from '../auth.js';
 import { fail, int, validDate } from '../util.js';
 import { setSetting, setting } from '../fees.js';
 import {
-  PLAN, QUIZZES, TOTAL_DAYS, VOICE_RE, audioStatus, chapterText, chapterTitle, dateOfDay, dayVoiceStatus, planStart,
-  rangesLabel, requestDayVoice, startAudioGenerator, testVoice, todayBR, todayDay, verseNumbers, voiceFile, voiceName, voiceReady,
+  PLAN, QUIZZES, TOTAL_DAYS, chapterText, chapterTitle, dateOfDay, planStart, rangesLabel, todayBR, todayDay, verseNumbers,
 } from '../bible.js';
+import { audioOf, audioSummary } from '../audio.js';
+import { giveBiblePack } from '../streaks.js';
 
 const r = Router();
 const member = requireAuth('member');
@@ -67,11 +68,15 @@ const dayStatus = (d, t, row) => {
 };
 
 // Resumo para o card "Sequência" do perfil e para a página da Aprendizagem Diária.
-r.get('/aprendizagem', member, (req, res) => {
+r.get('/aprendizagem', member, async (req, res) => {
   const b = bibleSummary(req.actor.id);
   const bdb = get('SELECT COUNT(*) n FROM bdb_progress WHERE member_id = ? AND passed_at IS NOT NULL', req.actor.id).n;
   const { rows: _r, missedDays: _m, ...bible } = b;
-  res.json({ bible, bdb: { passed: bdb, total: BDB.length }, leader: req.actor.kind === 'lideranca' || testMode(), test: testMode() });
+  const { meditationSummary, sabbathSummary } = await import('./devotional.js');
+  res.json({
+    bible, meditation: meditationSummary(req.actor.id), sabbath: sabbathSummary(req.actor.id),
+    bdb: { passed: bdb, total: BDB.length }, leader: req.actor.kind === 'lideranca' || testMode(), test: testMode(),
+  });
 });
 
 r.get('/ano-biblico', member, (req, res) => {
@@ -103,17 +108,14 @@ r.get('/ano-biblico/dia/:n', member, (req, res) => {
   res.json({
     day: d.day, date: dateOfDay(d.day), label: d.label, status: dayStatus(d.day, t, row),
     best: row?.best || 0, attempts: row?.attempts || 0, completed: !!row?.completed_at, pass: PASS,
-    // Cada capítulo: só os versículos do dia (nums = número de cada um) e o nome do áudio de cada um.
+    // Cada capítulo: só os versículos do dia (nums = número de cada um).
     chapters: d.chapters.map(([b, c, rg]) => {
       const nums = verseNumbers(b, c, rg);
       const text = chapterText(b, c);
-      return {
-        book: b, chapter: c, title: chapterTitle(b, c), part: rg ? `versículos ${rangesLabel(rg)}` : null,
-        verses: nums.map((n) => text[n - 1]), nums,
-        voice: { title: voiceName(b, c, 0), verses: nums.map((n) => voiceName(b, c, n)) },
-      };
+      return { book: b, chapter: c, title: chapterTitle(b, c), part: rg ? `versículos ${rangesLabel(rg)}` : null, verses: nums.map((n) => text[n - 1]), nums };
     }),
-    voice: dayVoiceStatus(d.day),
+    // Áudio gravado do dia (um arquivo; starts = onde começa o título de cada capítulo e cada versículo).
+    audio: audioOf('ano-biblico', String(d.day).padStart(3, '0')),
     quiz: quiz ? quiz.map((q) => ({ q: q.q, options: q.options })) : null,
   });
 });
@@ -135,10 +137,7 @@ r.post('/ano-biblico/dia/:n/quiz', member, async (req, res) => {
       completed_at = COALESCE(completed_at, excluded.completed_at), on_time = max(on_time, excluded.on_time)`,
   req.actor.id, d.day, score, passed ? new Date().toISOString() : null, onTime);
   // Prêmio: 1 pacotinho do Álbum Bíblico por dia concluído (só na primeira vez).
-  if (first) {
-    run('INSERT OR IGNORE INTO album_progress (member_id, album) VALUES (?, ?)', req.actor.id, 'biblico');
-    run('UPDATE album_progress SET packs_unopened = packs_unopened + 1 WHERE member_id = ? AND album = ?', req.actor.id, 'biblico');
-  }
+  if (first) giveBiblePack(req.actor.id);
   // Ranking (Leitura bíblica): 100 pontos para o membro, 100 para a unidade e 25 para o clube, só na
   // primeira vez que conclui o dia. Dia futuro aberto no modo de teste não pontua.
   const { awardBibleDay } = await import('../rankings.js');
@@ -149,22 +148,6 @@ r.post('/ano-biblico/dia/:n/quiz', member, async (req, res) => {
     correct: quiz.map((q) => q.answer), refs: quiz.map((q) => q.ref || null),
     streak: b.streak, done: b.done, all_done: b.all_done,
   });
-});
-
-// Voz do dia: põe os versículos do dia na frente da fila e diz quantos já estão prontos.
-r.post('/ano-biblico/dia/:n/voz', member, (req, res) => {
-  const d = planDay(req.params.n);
-  if (!openDay(d.day, todayDay())) fail(403, 'Este dia ainda não chegou');
-  res.json(requestDayVoice(d.day));
-});
-r.get('/ano-biblico/dia/:n/voz', member, (req, res) => res.json(dayVoiceStatus(planDay(req.params.n).day)));
-
-r.get('/ano-biblico/voz/:name', member, (req, res) => {
-  const name = String(req.params.name).replace(/\.mp3$/, '');
-  if (!VOICE_RE.test(name) || !voiceReady(name)) fail(404, 'Áudio ainda sendo preparado');
-  res.set('Cache-Control', 'private, max-age=2592000, immutable');
-  res.type('audio/mpeg');
-  res.sendFile(voiceFile(name));
 });
 
 // Admin: situação do áudio e dos quizzes, quem concluiu o Ano Bíblico (ganha o arganel) e data de início.
@@ -178,7 +161,7 @@ r.get('/admin/ano-biblico', admin, (req, res) => {
   const readers = get('SELECT COUNT(DISTINCT member_id) n FROM bible_progress WHERE completed_at IS NOT NULL').n;
   res.json({
     start: planStart(), default_start: PLAN.start, end: dateOfDay(TOTAL_DAYS), total: TOTAL_DAYS, quizzes: QUIZZES.size,
-    audio: audioStatus(), completers, readers, bdb: { phases: BDB.length, medals: bdbMedals }, test: testMode(),
+    audio: audioSummary(), completers, readers, bdb: { phases: BDB.length, medals: bdbMedals }, test: testMode(),
   });
 });
 
@@ -193,13 +176,6 @@ r.put('/admin/ano-biblico/inicio', admin, (req, res) => {
 r.put('/admin/biblia-teste', admin, (req, res) => {
   setSetting('biblia_teste', req.body.on ? '1' : '0');
   res.json({ test: testMode() });
-});
-
-r.post('/admin/ano-biblico/voz-teste', admin, async (req, res) => res.json(await testVoice()));
-
-r.post('/admin/ano-biblico/audio', admin, (req, res) => {
-  startAudioGenerator().catch(() => {});
-  res.json(audioStatus());
 });
 
 // ───────────── Bom de Bíblia ─────────────

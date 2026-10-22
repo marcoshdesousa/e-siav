@@ -858,3 +858,12 @@ input::-webkit-datetime-edit { padding: 0; }
 .event-card.has-cover .grow { padding: 0 .9rem; min-width: 0; }
 .event-cover { display: block; width: 100%; height: 120px; object-fit: cover; background: var(--blue-soft); flex: none; }
 .event-cover.empty { display: grid; place-items: center; background: var(--yellow-soft); color: var(--yellow-ink); }
+/* Sequências (admin) */
+.seq-card { margin-bottom: .6rem; }
+.seq-head { display: flex; align-items: center; gap: .4rem; margin-bottom: .5rem; }
+.seq-head small { margin-left: auto; color: var(--muted); }
+.seq-bars { display: flex; flex-direction: column; gap: .35rem; }
+.seq-bar { display: grid; grid-template-columns: 110px 1fr 44px; align-items: center; gap: .5rem; font-size: .82rem; }
+.seq-bar span { height: 10px; border-radius: 999px; background: var(--surface-2, #eef2f7); overflow: hidden; }
+.seq-bar i { display: block; height: 100%; border-radius: 999px; }
+.seq-bar b { text-align: right; }

@@ -1,0 +1,48 @@
+/* Meditação Diária (tons de nascer do sol) e Escola Sabatina. */
+.dv-streak { display: flex; align-items: center; gap: .8rem; padding: .8rem 1rem; border-radius: 16px; background: linear-gradient(135deg, #fff7ed, #ffedd5); color: #7c2d12; margin-bottom: .8rem; }
+.dv-streak div { display: flex; flex-direction: column; }
+.dv-streak small { opacity: .8; }
+.dv-today { display: flex; flex-direction: column; gap: .3rem; padding: 1.1rem 1.2rem; border-radius: 18px; margin-bottom: 1rem; text-decoration: none; color: #fff;
+  background: radial-gradient(circle at 85% 15%, rgba(255,255,255,.35), transparent 40%), linear-gradient(135deg, #f97316, #db2777 60%, #7c3aed); box-shadow: 0 10px 26px rgba(219,39,119,.3); }
+.dv-today small { font-weight: 800; text-transform: uppercase; letter-spacing: .04em; opacity: .9; font-size: .74rem; }
+.dv-today b { font-size: 1.25rem; line-height: 1.25; }
+.dv-today span { display: inline-flex; align-items: center; gap: .35rem; align-self: flex-start; margin-top: .4rem; padding: .35rem .8rem; border-radius: 999px; background: rgba(255,255,255,.22); font-weight: 800; font-size: .85rem; }
+.dv-today.done { background: linear-gradient(135deg, #16a34a, #0d9488); }
+.dv-h { font-size: .9rem; margin: 1rem 0 .4rem; color: var(--muted, #64748b); }
+.dv-date { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; background: #fff7ed; color: #c2410c; flex: none; line-height: 1; }
+.dv-date b { font-size: 1.1rem; }
+.dv-date small { font-size: .62rem; font-weight: 800; text-transform: uppercase; }
+.dv-day { display: flex; flex-direction: column; gap: .8rem; max-width: 760px; margin: 0 auto; }
+.dv-page { position: relative; min-height: calc(100dvh - 260px); padding: 1.5rem 1.3rem 2.2rem; border-radius: 18px; transform-origin: left center; color: #3b2414;
+  background: linear-gradient(180deg, #fffaf0, #fff4e0); box-shadow: 0 12px 30px rgba(124,45,18,.18), inset 0 0 0 1px rgba(194,65,12,.12); font-family: Georgia, 'Times New Roman', serif; font-size: 1.08rem; line-height: 1.7; }
+.dv-page.turn-next { animation: page-next .45s ease-out; }
+.dv-page.turn-prev { animation: page-prev .45s ease-out; }
+.dv-title { margin: 0 0 .8rem; font-size: 1.5rem; line-height: 1.25; color: #9a3412; }
+.dv-title small { display: block; font-size: .72rem; font-family: var(--font); text-transform: uppercase; letter-spacing: .06em; color: #c2410c; margin-bottom: .3rem; }
+.dv-verse { margin: 0 0 1rem; padding: .8rem 1rem; border-left: 4px solid #f97316; background: rgba(249,115,22,.08); border-radius: 0 12px 12px 0; font-style: italic; }
+.dv-par { margin: 0 0 1rem; text-indent: 1.2em; }
+.dv-prayer { margin: .4rem 0 1rem; padding: .7rem .9rem; border-radius: 12px; background: rgba(124,58,237,.08); color: #4c1d95; }
+.dv-page .reading { background: rgba(253,224,71,.45); box-shadow: 0 0 0 4px rgba(253,224,71,.45); border-radius: 6px; }
+.dv-quiz { padding: 1.1rem; border-radius: 16px; background: linear-gradient(160deg, #7c2d12, #9a3412 50%, #be185d); color: #fff; }
+.dv-quiz small { color: #fde68a; font-weight: 800; font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; }
+.dv-quiz > p { font-size: 1.08rem; font-weight: 700; margin: .4rem 0 .9rem; }
+.dv-quiz .quiz-opt { background: rgba(255,255,255,.1); color: #fff; border-color: rgba(255,255,255,.2); }
+.dv-quiz .quiz-opt.picked { background: #fde68a; color: #7c2d12; border-color: #fde68a; }
+.dv-video { position: relative; padding-top: 56.25%; border-radius: 16px; overflow: hidden; background: #000; }
+.dv-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.dv-pdf { display: flex; justify-content: center; border-radius: 12px; overflow: hidden; background: #fff; box-shadow: 0 10px 26px rgba(15,23,42,.18); transform-origin: left center; }
+.dv-pdf canvas { display: block; max-width: 100%; }
+.dv-pdf.turn-next { animation: page-next .45s ease-out; }
+.dv-pdf.turn-prev { animation: page-prev .45s ease-out; }
+.streak-trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+.streak-trio > div { display: flex; flex-direction: column; align-items: center; gap: .15rem; padding: .7rem .4rem; border-radius: 14px; background: rgba(255,255,255,.65); text-align: center; }
+.streak-trio small { font-size: .72rem; font-weight: 800; line-height: 1.2; }
+.streak-trio .on { box-shadow: inset 0 0 0 2px #f97316; }
+.streak-box { display: block; padding: .9rem; border-radius: 18px; background: linear-gradient(135deg, #fff7ed, #fde68a); color: #7c2d12; text-decoration: none; box-shadow: 0 8px 22px rgba(249,115,22,.2); }
+.streak-box-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: .6rem; font-weight: 900; }
+.learn-card.lock { opacity: .75; }
+.learn-card .plus { position: absolute; top: .6rem; right: .6rem; font-size: .66rem; font-weight: 900; padding: .15rem .45rem; border-radius: 999px; background: linear-gradient(135deg, #f5c518, #d4a017); color: #0f2744; }
+.learn-card { position: relative; }
+.learn-card.c5 { background: linear-gradient(135deg, #f97316, #db2777); }
+.learn-card.c6 { background: linear-gradient(135deg, #0d9488, #115e59); }
+.learn-card.c7 { background: linear-gradient(135deg, #475569, #1e293b); }

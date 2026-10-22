@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Copy, FileText, Medal, Trash2, Trophy, Upload } from 'lucide-react';
 import { api } from '../../api.js';
 import { fmtDate } from '../../format.js';
+import SabbathAdmin from './SabbathAdmin.jsx';
 import { Button, Card, Field, Loading, PageHeader, Section, Tabs, useAsync, useLoad } from '../../ui.jsx';
 
 function People({ rows, icon: Icon, empty }) {
@@ -96,9 +97,6 @@ export default function LearningAdmin() {
   const [date, setDate] = useState('');
   const [busy, run] = useAsync();
   const save = async (value) => { await run(() => api.put('/admin/ano-biblico/inicio', { date: value }), 'Data salva!'); state.reload(); };
-  const gen = async () => { await run(() => api.post('/admin/ano-biblico/audio'), 'Preparo do áudio iniciado'); state.reload(); };
-  const [voiceTest, setVoiceTest] = useState(null);
-  const testVoice = async () => { setVoiceTest({ busy: true }); try { setVoiceTest(await api.post('/admin/ano-biblico/voz-teste')); } catch (e) { setVoiceTest({ ok: false, error: e.message }); } };
   const setTest = async (on) => { await run(() => api.put('/admin/biblia-teste', { on }), on ? 'Modo de teste ligado' : 'Modo de teste desligado'); state.reload(); };
   return (
     <>
@@ -106,8 +104,9 @@ export default function LearningAdmin() {
       <Loading {...state}>
         {(d) => (
           <>
-            <Tabs tabs={[['arganel', `Arganel (${d.completers.length})`], ['medalha', `Medalha (${d.bdb.medals.length})`], ['lider', 'Bom Líder'], ['config', 'Ajustes']]} value={tab} onChange={setTab} />
+            <Tabs tabs={[['arganel', `Arganel (${d.completers.length})`], ['medalha', `Medalha (${d.bdb.medals.length})`], ['sabatina', 'Escola Sabatina'], ['lider', 'Bom Líder'], ['config', 'Ajustes']]} value={tab} onChange={setTab} />
             {tab === 'lider' && <BomLiderAdmin />}
+            {tab === 'sabatina' && <SabbathAdmin />}
             {tab === 'arganel' && (
               <>
                 <p className="small muted">Quem leu todos os {d.total} dias ganha o arganel personalizado, entregue no evento de encerramento. {d.readers} membro(s) já concluíram pelo menos um dia.</p>
@@ -140,19 +139,10 @@ export default function LearningAdmin() {
                     </div>
                   </Card>
                 </Section>
-                <Section title="Áudio (voz Piper)">
+                <Section title="Áudio gravado">
                   <Card className="small">
-                    <p>Versículos com voz: <b>{d.audio.done}</b>{d.audio.total ? ` de ${d.audio.total}` : ''}.{d.audio.running ? ` Preparando agora: ${d.audio.current || '...'}` : ' Parado.'}</p>
-                    {d.audio.error && <p className="muted">Último erro: {d.audio.error}</p>}
-                    {d.audio.piperError && <p className="muted">Erro do Piper: {d.audio.piperError}</p>}
-                    <p className="muted">A voz é preparada versículo por versículo: primeiro o dia (ou a aula do Bom Líder) que alguém abriu, depois os próximos dias, em segundo plano. Fica salva no disco do servidor. Se a voz do servidor falhar, o app usa a voz do próprio celular.</p>
-                    <div className="row">
-                      <Button small busy={busy} disabled={d.audio.running} onClick={gen}>Preparar agora</Button>
-                      <Button small variant="secondary" busy={voiceTest?.busy} onClick={testVoice}>Testar voz</Button>
-                    </div>
-                    {voiceTest && !voiceTest.busy && (voiceTest.ok
-                      ? <p><b>A voz funcionou</b> ({voiceTest.seconds} s de fala em {(voiceTest.ms / 1000).toFixed(1)} s).</p>
-                      : <p style={{ color: 'var(--danger)' }}><b>A voz falhou:</b> {voiceTest.error}{voiceTest.piperError ? ` · ${voiceTest.piperError}` : ''}</p>)}
+                    <p>Os áudios são gravados antes, com a voz Faber (grátis), e vão junto com o app: tocam na hora, sem gerar nada no servidor.</p>
+                    <p>Ano Bíblico: <b>{d.audio['ano-biblico'].done}</b> de {d.audio['ano-biblico'].total} dias · Meditação: <b>{d.audio.meditacao.done}</b> de {d.audio.meditacao.total} · Bom Líder: <b>{d.audio['bom-lider'].done}</b> de {d.audio['bom-lider'].total} aulas</p>
                   </Card>
                 </Section>
               </>

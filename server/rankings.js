@@ -160,6 +160,15 @@ export function awardBibleDay(memberId, day) {
   return { member: BIBLE_POINTS.member, unit: m.unit_id && !m.is_leadership ? BIBLE_POINTS.unit : 0, club: BIBLE_POINTS.club };
 }
 
+/**
+ * Meditação e Escola Sabatina valem como a leitura bíblica (membro 100, unidade 100, clube 25), um
+ * registro por dia concluído. A chave do dia fica numa faixa própria de cada estudo (não se misturam).
+ */
+const STUDY_BASE = { meditacao: 100_000_000, sabatina: 200_000_000 };
+export function awardStudyDay(memberId, kind, date) {
+  return awardBibleDay(memberId, STUDY_BASE[kind] + Number(String(date).replaceAll('-', '')));
+}
+
 /** Distrito do ranking: o do próprio usuário; o Administrador Geral escolhe (padrão: o primeiro). */
 export function rankingDistrict(actor, requested) {
   if (actor.type !== 'admin') return actor.district_id;

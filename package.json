@@ -19,13 +19,13 @@
     "test": "node --disable-warning=ExperimentalWarning --test test/*.test.js"
   },
   "dependencies": {
-    "@breezystack/lamejs": "^1.2.7",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^1.52.0",
     "multer": "^2.4.0",
+    "pdfjs-dist": "^4.10.38",
     "qrcode": "^1.5.4",
     "ws": "^8.22.0"
   },

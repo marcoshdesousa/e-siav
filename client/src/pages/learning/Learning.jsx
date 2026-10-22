@@ -9,8 +9,9 @@ import {
 import { api } from '../../api.js';
 import { Button, Card, Loading, PageHeader, Section, useLoad } from '../../ui.jsx';
 import { useOnline } from '../../offline.js';
-import { useVoice } from './voice.js';
+import { useNarration } from './voice.js';
 import './learning.css';
+import './devotional.css';
 
 /** Na leitura e no jogo, a barra de baixo e o "Voltar" do topo somem (tela inteira para o livro). */
 export function useFocusMode() {
@@ -18,6 +19,19 @@ export function useFocusMode() {
     document.body.classList.add('learn-focus');
     return () => document.body.classList.remove('learn-focus');
   }, []);
+}
+
+/**
+ * Voltar de uma leitura/quiz: volta no histórico (para a lista de onde veio) em vez de empilhar
+ * a lista de novo — assim o "voltar" do celular não reabre o estudo.
+ */
+export function useBack(fallback) {
+  const nav = useNavigate();
+  return () => (window.history.state?.idx > 0 ? nav(-1) : nav(fallback, { replace: true }));
+}
+export function BackButton({ to }) {
+  const back = useBack(to);
+  return <button type="button" className="icon-btn" aria-label="Voltar" onClick={back}><ArrowLeft size={20} /></button>;
 }
 
 const br = (iso) => (iso ? iso.split('-').reverse().join('/') : '');
@@ -28,25 +42,29 @@ const dias = (n) => `${n} dia${n === 1 ? '' : 's'}`;
 
 // ───────────── Card "Sequência" (perfil) ─────────────
 
+/** As 3 sequências (Ano Bíblico, Meditação e Escola Sabatina), cada uma com o seu foguinho. */
+export function StreakTrio({ d }) {
+  const items = [['Ano Bíblico', d.bible], ['Meditação', d.meditation], ['Escola Sabatina', d.sabbath]];
+  return (
+    <div className="streak-trio">
+      {items.map(([label, s]) => (
+        <div key={label} className={s?.today_done ? 'on' : ''}>
+          <span className="streak-flame"><Flame size={26} /><b>{s?.streak || 0}</b></span>
+          <small>{label}</small>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function StreakCard({ base }) {
   const online = useOnline();
   const state = useLoad(() => (online ? api.get('/aprendizagem') : Promise.resolve(null)), [online]);
-  const b = state.data?.bible;
-  if (!b) return null;
-  const started = b.today_day >= 1;
-  const running = started && b.today_day <= b.total;
+  if (!state.data) return null;
   return (
-    <Link to={`${base}/aprendizagem`} className={'streak-card' + (b.today_done ? ' done' : '')}>
-      <span className="streak-flame"><Flame size={30} /><b>{b.streak}</b></span>
-      <span className="grow">
-        <b>Sequência: {dias(b.streak)}</b>
-        <small>
-          {!started ? `O Ano Bíblico começa em ${br(b.start)}`
-            : !running ? `Ano Bíblico encerrado · ${b.done} de ${b.total} dias`
-              : b.today_done ? `Leitura de hoje feita! ${b.today_label}` : `Hoje: ${b.today_label}`}
-        </small>
-      </span>
-      <ChevronRight size={20} />
+    <Link to={`${base}/aprendizagem`} className="streak-box">
+      <div className="streak-box-head"><span>Ver sequências</span><ChevronRight size={20} /></div>
+      <StreakTrio d={state.data} />
     </Link>
   );
 }
@@ -57,25 +75,31 @@ export function LearningHub({ base }) {
   const state = useLoad(() => api.get('/aprendizagem'));
   return (
     <>
-      <PageHeader title="Aprendizagem Diária" subtitle="Um pouquinho por dia: leitura da Bíblia, quiz e desafios" />
+      <PageHeader title="Estudo Diário" subtitle="Um pouquinho por dia: Bíblia, meditação, lição e muito mais" />
       <Loading {...state}>
         {(d) => (
           <>
-            <StreakBanner b={d.bible} />
-            <div className="learn-grid">
+            <StreakTrio d={d} />
+            <div className="learn-grid mt">
               <Link to={`${base}/aprendizagem/ano-biblico`} className="learn-card c1">
                 <span className="learn-ico"><BookOpenText size={30} /></span>
                 <b>Ano Bíblico</b>
-                <small>A Bíblia inteira de {br(d.bible.start).slice(0, 5)} a {br(d.bible.end).slice(0, 5)}: leitura com áudio e quiz</small>
+                <small>A Bíblia de {br(d.bible.start).slice(0, 5)} a {br(d.bible.end).slice(0, 5)}: leitura com áudio e quiz</small>
                 <span className="learn-bar"><i style={{ width: `${(d.bible.done / d.bible.total) * 100}%` }} /></span>
                 <small>{d.bible.done} de {d.bible.total} dias</small>
               </Link>
-              <div className="learn-card c2 soon">
+              <Link to={`${base}/aprendizagem/meditacao`} className="learn-card c5">
+                <span className="learn-ico"><Sparkles size={30} /></span>
+                <b>Meditação Diária</b>
+                <small>{d.meditation.today_title ? `Hoje: ${d.meditation.today_title}` : 'Uma mensagem por dia, com áudio e 3 perguntas'}</small>
+                <small>{d.meditation.done} feitas</small>
+              </Link>
+              <Link to={`${base}/aprendizagem/escola-sabatina`} className="learn-card c6">
                 <span className="learn-ico"><BookOpen size={30} /></span>
-                <b>Livro do Ano</b>
-                <small>Um capítulo por semana</small>
-                <span className="chip">Em breve</span>
-              </div>
+                <b>Lição da Escola Sabatina</b>
+                <small>Juvenis, adolescentes, jovens e adultos: a lição do dia, vídeo e perguntas</small>
+                <small>{d.sabbath.done} lições feitas</small>
+              </Link>
               <Link to={`${base}/aprendizagem/bom-de-biblia`} className="learn-card c3">
                 <span className="learn-ico"><Trophy size={30} /></span>
                 <b>Bom de Bíblia</b>
@@ -87,12 +111,26 @@ export function LearningHub({ base }) {
                 <Link to={`${base}/aprendizagem/bom-lider`} className="learn-card c4">
                   <span className="learn-ico"><Users size={30} /></span>
                   <b>Bom Líder</b>
-                  <small>50 aulas de liderança com perguntas para marcar e para escrever (16 anos ou mais)</small>
+                  <small>Manual Administrativo (50 aulas) e Nisto Cremos (16 anos ou mais)</small>
                 </Link>
               )}
+              <div className="learn-card c2 soon lock">
+                <span className="plus">DBV+</span>
+                <span className="learn-ico"><BookOpen size={30} /></span>
+                <b>Livro do Ano</b>
+                <small>Um capítulo por semana</small>
+                <span className="chip">Em breve</span>
+              </div>
+              <div className="learn-card c7 soon lock">
+                <span className="plus">DBV+</span>
+                <span className="learn-ico"><Lock size={30} /></span>
+                <b>Classes e Agrupadas</b>
+                <small>Estudo das classes regulares e agrupadas</small>
+                <span className="chip">Em breve</span>
+              </div>
             </div>
-            {d.test && <p className="small center"><b>Modo de teste:</b> todos os dias do Ano Bíblico e o Bom Líder estão liberados.</p>}
-            <p className="small muted center">Só o Ano Bíblico feito no dia certo conta para a sequência.</p>
+            {d.test && <p className="small center"><b>Modo de teste:</b> todos os dias e lições estão liberados para testar.</p>}
+            <p className="small muted center">Cada sequência conta o que você faz no próprio dia. Cada dia concluído dá pontos no ranking (você, sua unidade e seu clube) e 1 pacotinho de figurinhas.</p>
           </>
         )}
       </Loading>
@@ -197,34 +235,20 @@ function DayRow({ x, to }) {
 
 // ───────────── Voz: barra de carregamento, botão Ouvir e velocidade ─────────────
 
-export function VoiceBar({ v }) {
-  if (v.device) return <p className="voice-note">Voz do aparelho (a voz do app ainda não ficou pronta)</p>;
-  if (!v.loading) return null;
-  return (
-    <div className="voice-load" role="status">
-      <span>{v.voice.done === 0 ? 'Carregando a voz' : 'Preparando a voz'}… {v.percent}%</span>
-      <i style={{ width: `${v.percent}%` }} />
-    </div>
-  );
-}
 export function PlayButton({ v, onToggle }) {
+  if (!v.available) return null;
   return (
     <>
-      <button type="button" className={'play-btn' + (v.waiting ? ' wait' : '')} onClick={onToggle} aria-label={v.playing ? 'Pausar' : 'Ouvir'}>
-        {v.waiting ? <span className="play-spin" /> : v.playing ? <Pause size={22} /> : <Headphones size={22} />}
-        <span>{v.waiting ? `Carregando ${v.percent}%` : v.playing ? 'Pausar' : 'Ouvir'}</span>
+      <button type="button" className="play-btn" onClick={onToggle} aria-label={v.playing ? 'Pausar' : 'Ouvir'}>
+        {v.playing ? <Pause size={22} /> : <Headphones size={22} />}
+        <span>{v.playing ? 'Pausar' : 'Ouvir'}</span>
       </button>
       <button type="button" className="rate-btn" onClick={v.changeRate} aria-label="Velocidade da voz">{String(v.rate).replace('.', ',')}x</button>
     </>
   );
 }
 export function VoiceAudio({ v }) {
-  return (
-    <>
-      <audio ref={v.audioRef} preload="auto" onEnded={v.onEnded} />
-      <audio ref={v.preRef} preload="auto" muted />
-    </>
-  );
+  return v.audioProps ? <audio {...v.audioProps} /> : null;
 }
 
 // ───────────── Ano Bíblico: leitura do dia ─────────────
@@ -270,13 +294,10 @@ function BibleDayBody({ d, back, base, reload }) {
     setTurn(p > page ? 'turn-next' : 'turn-prev');
     setPage(p);
   };
-  // Voz: um áudio pequeno por versículo (o título do capítulo e depois cada versículo), tocados em
-  // sequência; a marcação segue o versículo e a página vira sozinha.
-  const seq = useMemo(() => d.chapters.flatMap((c, ci) => [
-    { ci, vi: -1, name: c.voice.title, text: c.part ? `${c.title}, ${c.part}.` : `${c.title}.` },
-    ...c.verses.map((text, vi) => ({ ci, vi, name: c.voice.verses[vi], text })),
-  ]), [d.chapters]);
-  const v = useVoice({ seq, url: `/ano-biblico/dia/${d.day}/voz`, initial: d.voice });
+  // Voz: um áudio só para o dia; cada trecho (título do capítulo e cada versículo) tem o seu início,
+  // então a marcação segue a voz e a página vira sozinha.
+  const seq = useMemo(() => d.chapters.flatMap((c, ci) => [{ ci, vi: -1 }, ...c.verses.map((_t, vi) => ({ ci, vi }))]), [d.chapters]);
+  const v = useNarration(d.audio);
   const { pos, playing } = v;
   const verse = pos >= 0 && seq[pos]?.vi >= 0 ? seq[pos] : null;
   useEffect(() => {
@@ -287,11 +308,11 @@ function BibleDayBody({ d, back, base, reload }) {
   const stopAll = v.stop;
   const toggle = () => {
     if (playing) { v.stop(); return; }
-    if (verse && pages[page].some((x) => x.ci === verse.ci && x.vi === verse.vi)) { v.startAt(pos); return; }
+    if (verse && pages[page].some((x) => x.ci === verse.ci && x.vi === verse.vi)) { v.startAt(-1); return; }
     const first = pages[page][0];
     v.startAt(seq.findIndex((x) => x.ci === first.ci && x.vi === (first.vi === 0 ? -1 : first.vi)));
   };
-  const tapVerse = (ci, vi) => v.startAt(seq.findIndex((x) => x.ci === ci && x.vi === vi));
+  const tapVerse = (ci, vi) => v.available && v.startAt(seq.findIndex((x) => x.ci === ci && x.vi === vi));
 
   // Arrastar para o lado vira a página (com a voz tocando, a página vira sozinha).
   const touch = useRef(null);
@@ -309,7 +330,7 @@ function BibleDayBody({ d, back, base, reload }) {
   return (
     <div className="bible-day">
       <div className="bible-top">
-        <Link to={back} className="icon-btn" aria-label="Voltar"><ArrowLeft size={20} /></Link>
+        <BackButton to={back} />
         <div className="grow">
           <b>Dia {d.day} · {d.label}</b>
           <small>{br(d.date)}{d.completed ? ` · concluído (nota ${d.best}/5)` : d.status === 'perdido' ? ' · dia perdido' : ''}</small>
@@ -333,7 +354,6 @@ function BibleDayBody({ d, back, base, reload }) {
         </div>
       </div>
 
-      <VoiceBar v={v} />
       <div className="bible-controls">
         <button type="button" className="icon-btn" disabled={page === 0 || playing} onClick={() => go(page - 1)} aria-label="Página anterior"><ChevronLeft size={22} /></button>
         <PlayButton v={v} onToggle={toggle} />
@@ -353,7 +373,7 @@ function BibleDayBody({ d, back, base, reload }) {
 }
 
 function BibleQuiz({ d, back, onRead, reload }) {
-  const nav = useNavigate();
+  const goBack = useBack(back);
   const [answers, setAnswers] = useState(() => Array(d.quiz?.length || 5).fill(null));
   const [result, setResult] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -395,7 +415,7 @@ function BibleQuiz({ d, back, onRead, reload }) {
           ) : <p>Faltou pouco! Precisa acertar {result.pass}. Releia e tente de novo.</p>}
           <div className="quiz-actions">
             <Button variant="secondary" onClick={retry}><RotateCcw size={16} /> Tentar de novo</Button>
-            <Button onClick={() => nav(back)}>Continuar</Button>
+            <Button onClick={goBack}>Continuar</Button>
           </div>
         </div>
       )}
@@ -520,7 +540,7 @@ function PhasePlay({ d, back, base }) {
           <Timer size={36} />
           <p>10 perguntas, <b>{d.seconds} segundos</b> para cada uma. Acerte <b>{d.pass}</b> para passar de fase.</p>
           <div className="quiz-actions">
-            <Button variant="secondary" onClick={() => nav(back)}><ArrowLeft size={16} /> Voltar</Button>
+            <Button variant="secondary" onClick={() => nav(back, { replace: true })}><ArrowLeft size={16} /> Voltar</Button>
             <Button onClick={() => { setStep(0); setLeft(d.seconds); }}><Play size={16} /> Iniciar</Button>
           </div>
         </Card>
@@ -535,7 +555,7 @@ function PhasePlay({ d, back, base }) {
           <p>{result.passed ? <b>Fase {d.phase} concluída!</b> : `Precisa acertar ${result.pass}. Tente de novo!`}</p>
           {result.medal && <p><Medal size={18} /> Você passou todas as fases! Ganhou a medalha personalizada.</p>}
           <div className="quiz-actions">
-            <Button variant="secondary" onClick={() => nav(back)}>Fases</Button>
+            <Button variant="secondary" onClick={() => nav(back, { replace: true })}>Fases</Button>
             {result.next
               ? <Button onClick={() => nav(`${base}/aprendizagem/bom-de-biblia/${result.next}`)}>Próxima fase <ChevronRight size={16} /></Button>
               : <Button onClick={() => { setStep(-1); setAnswers([]); setShown(null); setResult(null); }}><RotateCcw size={16} /> Jogar de novo</Button>}

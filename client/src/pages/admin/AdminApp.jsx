@@ -24,6 +24,7 @@ import SupportAdmin, { LinksAdmin } from './SupportAdmin.jsx';
 import StickersAdmin from './StickersAdmin.jsx';
 import LearningAdmin from './LearningAdmin.jsx';
 import PaymentsAdmin from './PaymentsAdmin.jsx';
+import StreaksAdmin from './StreaksAdmin.jsx';
 
 const base = '/admin';
 
@@ -380,6 +381,7 @@ export default function AdminApp() {
         <Route path="anuncios" element={<AnnouncementsAdmin />} />
         <Route path="medalhas" element={<Navigate to={`${base}/conteudo?aba=medalhas`} replace />} />
         <Route path="ranking" element={<RankingHub base={base} />} />
+        <Route path="sequencias" element={<StreaksAdmin />} />
         <Route path="explorar" element={<ClubsBrowser base={base} />} />
         <Route path="ver/:kind/:id" element={<InAppProfile base={base} />} />
         <Route path="mais" element={<><PageHeader title="Mais" /><MoreMenu items={more} /></>} />

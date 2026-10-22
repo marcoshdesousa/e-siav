@@ -14,7 +14,7 @@ import { MAX_UPLOAD_MB } from '../config.js';
 import { HttpError, fail, int } from '../util.js';
 import { setSetting, setting } from '../fees.js';
 import { testMode } from './learning.js';
-import { requestVoice, textVoiceItems, voiceStatus } from '../bible.js';
+import { audioOf } from '../audio.js';
 
 const r = Router();
 const member = requireAuth('member');
@@ -128,34 +128,15 @@ function lessonOf(req) {
   return { n, l };
 }
 
-/** O que a voz lê na aula, na ordem das páginas: abertura, versículo, cada parágrafo e a atividade. */
-export function lessonTexts(n, l) {
-  return [
-    `Aula ${n}. ${l.title}.${l.objective ? ` Objetivo: ${l.objective}` : ''}`,
-    ...(l.verse ? [l.verse.replace(/\(([^)]+)\)\s*$/, '. $1.')] : []),
-    ...(l.content || []),
-    ...(l.activity ? [`Atividade: ${l.activity}`] : []),
-  ];
-}
-r.post('/bom-lider/aula/:n/voz', member, (req, res) => {
-  const { n, l } = lessonOf(req);
-  res.json(requestVoice(textVoiceItems(lessonTexts(n, l))));
-});
-r.get('/bom-lider/aula/:n/voz', member, (req, res) => {
-  const { n, l } = lessonOf(req);
-  res.json(voiceStatus(textVoiceItems(lessonTexts(n, l))));
-});
-
 r.get('/bom-lider/aula/:n', member, (req, res) => {
   const { n, l } = lessonOf(req);
-  const items = textVoiceItems(lessonTexts(n, l));
   const row = get('SELECT score, total, written, completed_at FROM bom_lider_progress WHERE member_id = ? AND lesson = ?', req.actor.id, n);
   res.json({
     n, total: LESSONS.length, title: l.title, theme: l.theme || null, objective: l.objective || null, reading: l.reading || null,
     content: l.content || [], verse: l.verse || null, activity: l.activity || null,
     questions: l.questions.map((q) => (q.type === 'escrita' ? { type: 'escrita', q: q.q, min: q.min || 20 } : { type: 'escolha', q: q.q, options: q.options })),
     done: !!row?.completed_at, score: row?.score || 0, written: row?.written ? JSON.parse(row.written) : null,
-    voice: { names: items.map((it) => it.name), ...voiceStatus(items) },
+    audio: audioOf('bom-lider', String(n).padStart(2, '0')),
   });
 });
 

@@ -4,42 +4,51 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, BookOpen, CheckCircle2, ChevronLeft, ChevronRight, ListChecks, Lock, PenLine, RotateCcw, Users, X } from 'lucide-react';
 import { api } from '../../api.js';
-import { Button, Card, Loading, PageHeader, useAsync, useLoad } from '../../ui.jsx';
-import { PlayButton, VoiceAudio, VoiceBar, useFocusMode } from './Learning.jsx';
-import { useVoice } from './voice.js';
+import { Button, Card, Loading, PageHeader, Tabs, useAsync, useLoad } from '../../ui.jsx';
+import { BackButton, PlayButton, VoiceAudio, useFocusMode } from './Learning.jsx';
+import { useNarration } from './voice.js';
 import './bomlider.css';
 
 export function BomLider({ base }) {
   const state = useLoad(() => api.get('/bom-lider'));
+  const [tab, setTab] = useState('manual');
   return (
     <>
-      <PageHeader title="Bom Líder" subtitle="Aulas de liderança: leia, responda e escreva com as suas palavras" />
-      <Loading {...state}>
-        {(d) => (d.preparing ? (
-          <Card className="center">
-            <Users size={34} />
-            <p><b>As aulas estão sendo preparadas.</b></p>
-            <p className="small muted">Serão {50} aulas com leitura, perguntas de marcar e perguntas para escrever. Assim que estiverem prontas, aparecem aqui.</p>
-          </Card>
-        ) : (
-          <>
-            <Card className="small center">{d.done} de {d.total} aulas concluídas</Card>
-            <div className="day-list">
-              {d.lessons.map((l) => {
-                const body = (
-                  <>
-                    <span className="day-n">{l.n}</span>
-                    <span className="grow"><b>{l.title}</b>{l.theme && <small>{l.theme}</small>}</span>
-                    <span className="day-st">{l.done ? <CheckCircle2 size={18} /> : l.locked ? <Lock size={16} /> : <ChevronRight size={18} />}</span>
-                  </>
-                );
-                return l.locked ? <div key={l.n} className="day-row locked">{body}</div>
-                  : <Link key={l.n} to={`${base}/aprendizagem/bom-lider/${l.n}`} className={'day-row' + (l.done ? ' feito' : '')}>{body}</Link>;
-              })}
-            </div>
-          </>
-        ))}
-      </Loading>
+      <PageHeader title="Bom Líder" subtitle="Livros de liderança: leia, ouça, responda e escreva com as suas palavras" />
+      <Tabs tabs={[['manual', 'Manual Administrativo'], ['nisto', 'Nisto Cremos']]} value={tab} onChange={setTab} />
+      {tab === 'nisto' ? (
+        <Card className="center">
+          <BookOpen size={34} />
+          <p><b>Nisto Cremos — em breve</b></p>
+          <p className="small muted">As 28 crenças fundamentais da Igreja Adventista, em aulas no mesmo formato de livro, com áudio e perguntas.</p>
+        </Card>
+      ) : (
+        <Loading {...state}>
+          {(d) => (d.preparing ? (
+            <Card className="center">
+              <Users size={34} />
+              <p><b>As aulas estão sendo preparadas.</b></p>
+            </Card>
+          ) : (
+            <>
+              <Card className="small center">{d.done} de {d.total} aulas concluídas · Manual Administrativo do Clube de Desbravadores</Card>
+              <div className="day-list">
+                {d.lessons.map((l) => {
+                  const body = (
+                    <>
+                      <span className="day-n">{l.n}</span>
+                      <span className="grow"><b>{l.title}</b>{l.theme && <small>{l.theme}</small>}</span>
+                      <span className="day-st">{l.done ? <CheckCircle2 size={18} /> : l.locked ? <Lock size={16} /> : <ChevronRight size={18} />}</span>
+                    </>
+                  );
+                  return l.locked ? <div key={l.n} className="day-row locked">{body}</div>
+                    : <Link key={l.n} to={`${base}/aprendizagem/bom-lider/${l.n}`} className={'day-row' + (l.done ? ' feito' : '')}>{body}</Link>;
+                })}
+              </div>
+            </>
+          ))}
+        </Loading>
+      )}
     </>
   );
 }
@@ -85,15 +94,15 @@ function Lesson({ d, base }) {
     setPage(p);
   };
 
-  // Voz: abertura, versículo, cada parágrafo e a atividade (na ordem das páginas).
+  // Voz: abertura, versículo, cada parágrafo e a atividade (na ordem das páginas), num áudio só.
   const seq = useMemo(() => {
     const out = [{ at: 'capa' }];
     if (d.verse) out.push({ at: 'verso' });
     d.content.forEach((_t, i) => out.push({ at: `p${i}` }));
     if (d.activity) out.push({ at: 'atividade' });
-    return out.map((x, k) => ({ ...x, name: d.voice.names[k] }));
+    return out;
   }, [d]);
-  const v = useVoice({ seq, url: `/bom-lider/aula/${d.n}/voz`, initial: d.voice });
+  const v = useNarration(d.audio);
   const at = v.pos >= 0 ? seq[v.pos]?.at : null;
   const pageOf = (key) => (key === 'capa' || key === 'verso' ? 0 : key === 'atividade' ? pages.length - 1 : pages.findIndex((pg) => pg.some((x) => x.kind === 'p' && `p${x.i}` === key)));
   useEffect(() => {
@@ -103,7 +112,7 @@ function Lesson({ d, base }) {
   }, [at]);
   const toggle = () => {
     if (v.playing) { v.stop(); return; }
-    if (at && pageOf(at) === page) { v.startAt(v.pos); return; }
+    if (at && pageOf(at) === page) { v.startAt(-1); return; }
     const first = pages[page][0];
     const key = first.kind === 'capa' ? 'capa' : first.kind === 'atividade' ? 'atividade' : `p${first.i}`;
     v.startAt(seq.findIndex((x) => x.at === key));
@@ -130,7 +139,7 @@ function Lesson({ d, base }) {
   return (
     <div className="bl-lesson">
       <div className="bl-top">
-        <Link to={`${base}/aprendizagem/bom-lider`} className="icon-btn" aria-label="Voltar"><ArrowLeft size={20} /></Link>
+        <BackButton to={`${base}/aprendizagem/bom-lider`} />
         <div className="grow"><small>Bom Líder · Aula {d.n} de {d.total}</small><b>{d.title}</b></div>
         {d.done && <CheckCircle2 size={20} className="bl-done" />}
       </div>
@@ -169,12 +178,11 @@ function Lesson({ d, base }) {
                   <p className="bl-hint">Terminou o estudo? Agora vêm as perguntas para escrever e depois o quiz.</p>
                 </div>
               ) : (
-                <p key={x.i} className={'bl-par' + hl(`p${x.i}`)} onClick={() => v.startAt(seq.findIndex((s2) => s2.at === `p${x.i}`))}>{x.text}</p>
+                <p key={x.i} className={'bl-par' + hl(`p${x.i}`)} onClick={() => v.available && v.startAt(seq.findIndex((s2) => s2.at === `p${x.i}`))}>{x.text}</p>
               )))}
               <span className="bl-pg">{page + 1} / {pages.length}</span>
             </div>
           </div>
-          <VoiceBar v={v} />
           <div className="bible-controls">
             <button type="button" className="icon-btn" disabled={page === 0 || v.playing} onClick={() => go(page - 1)} aria-label="Página anterior"><ChevronLeft size={22} /></button>
             <PlayButton v={v} onToggle={toggle} />
