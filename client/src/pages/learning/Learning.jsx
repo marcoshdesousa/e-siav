@@ -2,7 +2,7 @@
 // Bom Líder (em breve, só 16+). O card "Sequência" aparece no perfil.
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, BookOpen, BookOpenText, Check, CheckCircle2, ChevronLeft, ChevronRight, Flame, Headphones, Lock, Medal, Pause, Play, RotateCcw, Sparkles, Timer, Trophy, Users, Video, X } from 'lucide-react';
+import { ArrowLeft, BookOpen, BookOpenText, Check, CheckCircle2, ChevronLeft, ChevronRight, Flame, Headphones, Lock, Medal, Pause, Play, RotateCcw, Sparkles, Timer, Trophy, Users, X } from 'lucide-react';
 import { api } from '../../api.js';
 import { Button, Card, Loading, PageHeader, Section, useLoad } from '../../ui.jsx';
 import { useOnline } from '../../offline.js';
@@ -126,12 +126,13 @@ export function LearningHub({ base }) {
                 <small>Um capítulo por semana</small>
                 <span className="chip">Em breve</span>
               </div>
-              <Link to={`${base}/aprendizagem/classes`} className="learn-card c7">
-                <span className="learn-ico"><Video size={30} /></span>
+              <div className="learn-card c7 soon lock">
+                <span className="plus">DBV+</span>
+                <span className="learn-ico"><Lock size={30} /></span>
                 <b>Classes e Agrupadas</b>
-                <small>Aulas em vídeo para cumprir o caderno da sua classe</small>
-                <span className="chip">Novo · Classe Guia</span>
-              </Link>
+                <small>Estudo das classes regulares e agrupadas</small>
+                <span className="chip">Em breve</span>
+              </div>
             </div>
             {d.test && <p className="small center"><b>Modo de teste:</b> todos os dias e lições estão liberados para testar.</p>}
             <p className="small muted center">Cada sequência conta o que você faz no próprio dia. Cada dia concluído dá pontos no ranking (você, sua unidade e seu clube) e 1 pacotinho de figurinhas.</p>
