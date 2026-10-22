@@ -13,11 +13,6 @@
 .plus-benefits li.soon { background: transparent; border: 1px dashed var(--border, #cbd5e1); color: var(--muted); }
 .plus-benefits li.soon svg { color: #d4a017; }
 .plus-benefits em { margin-left: .4rem; font-style: normal; font-size: .7rem; font-weight: 800; text-transform: uppercase; padding: .05rem .4rem; border-radius: 999px; background: rgba(245,197,24,.2); color: #92400e; }
-.plus-plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: .6rem; }
-.plus-plan { display: flex; flex-direction: column; gap: .35rem; padding: 1rem; border-radius: 18px; background: var(--surface, #fff); box-shadow: 0 4px 14px rgba(15,23,42,.1); border: 2px solid transparent; }
-.plus-plan.gold { border-color: #f5c518; background: linear-gradient(180deg, #fffbeb, var(--surface, #fff)); }
-.plus-price { font-size: 1.6rem; font-weight: 900; color: #0f2744; }
-.plus-plan small { color: var(--muted); min-height: 2.6em; }
 .plus-picks-done { display: flex; flex-direction: column; align-items: center; text-align: center; margin-top: .8rem; }
 .plus-picks-done svg { color: #d4a017; }
 .plus-ok { color: #d4a017; margin: 0 auto; }
@@ -26,11 +21,6 @@
 .plus-nudge img { width: 72px; height: 72px; filter: sepia(1) saturate(4) hue-rotate(5deg) drop-shadow(0 0 10px rgba(245,197,24,.6)); }
 .plus-nudge p { margin: 0; }
 .plus-lock { display: inline-flex; align-items: center; gap: .4rem; border: 0; border-radius: 999px; padding: .65rem 1.2rem; background: linear-gradient(135deg, #f5c518, #d4a017); color: #0f2744; font-weight: 900; text-decoration: none; }
-.plus-plan.free { background: linear-gradient(180deg, #f0f9ff, var(--surface, #fff)); border-color: #bae6fd; }
-.plus-free { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .3rem; font-size: .85rem; color: var(--muted); }
-.plus-free li { display: flex; gap: .35rem; align-items: flex-start; }
-.plus-free svg { flex: none; margin-top: .15rem; color: #0284c7; }
-.plus-current { margin-top: auto; text-align: center; font-weight: 800; color: #0369a1; padding: .55rem; border-radius: 12px; background: #e0f2fe; }
 .plus-bar { display: flex; align-items: center; gap: .6rem; margin: .2rem 0 .9rem; padding: .5rem .5rem .5rem .7rem; border-radius: 16px; background: linear-gradient(135deg, #0f2744, #1e3a8a); color: #fff; box-shadow: 0 4px 14px rgba(15,39,68,.25); border: 1px solid rgba(245,197,24,.45); animation: plus-bar-in .35s ease-out both; }
 .plus-bar img { width: 30px; height: 30px; flex: none; filter: sepia(1) saturate(4) hue-rotate(5deg) drop-shadow(0 0 6px rgba(245,197,24,.6)); }
 .plus-bar-text { flex: 1; min-width: 0; display: flex; flex-direction: column; color: inherit; text-decoration: none; line-height: 1.2; }
@@ -43,3 +33,19 @@
 .plus-picks-bar span { font-size: .85rem; white-space: nowrap; }
 .plus-picks-bar b { color: #fde68a; font-size: 1.05rem; }
 .plus-picks-card { padding-bottom: 4.5rem; }
+/* Planos: cartões com cores próprias (iguais no tema claro e no escuro) */
+.plus-plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .75rem; }
+.plus-plan { position: relative; display: flex; flex-direction: column; gap: .45rem; padding: 1.1rem 1.1rem 1rem; border-radius: 20px; color: #e2e8f0; background: linear-gradient(160deg, #1e3a5f, #0f2744); border: 1.5px solid rgba(147,197,253,.35); box-shadow: 0 8px 22px rgba(15,23,42,.25); overflow: hidden; }
+.plus-plan > b { font-size: 1.05rem; font-weight: 900; color: #fff; }
+.plus-price { font-size: 1.9rem; font-weight: 900; line-height: 1.1; color: #fff; }
+.plus-plan small { color: #cbd5e1; font-size: .85rem; line-height: 1.35; }
+.plus-plan .btn { margin-top: auto; }
+.plus-plan.gold { border-color: #f5c518; background: radial-gradient(circle at 100% 0%, rgba(245,197,24,.28), transparent 50%), linear-gradient(160deg, #2a2410, #0f2744 70%); box-shadow: 0 8px 26px rgba(245,197,24,.18); }
+.plus-plan.gold > b { color: #fde68a; }
+.plus-plan.gold .plus-price { background: linear-gradient(180deg, #fef08a, #f5c518); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.plus-plan.gold .btn { background: linear-gradient(135deg, #fde047, #f5c518 55%, #d4a017); color: #0f2744; border: 0; }
+.plus-plan.free { background: linear-gradient(160deg, #1e293b, #0f172a); border-color: rgba(148,163,184,.35); }
+.plus-free { list-style: none; margin: .1rem 0 .3rem; padding: 0; display: flex; flex-direction: column; gap: .4rem; font-size: .86rem; color: #cbd5e1; }
+.plus-free li { display: flex; gap: .45rem; align-items: flex-start; line-height: 1.35; }
+.plus-free svg { flex: none; margin-top: .15rem; color: #4ade80; }
+.plus-current { margin-top: auto; text-align: center; font-weight: 800; font-size: .9rem; color: #e2e8f0; padding: .6rem; border-radius: 999px; border: 1.5px solid rgba(148,163,184,.45); }
