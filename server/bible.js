@@ -236,7 +236,9 @@ async function work() {
 /** Alguém abriu o dia (ou a aula): os itens vão para a frente da fila. Devolve como está a voz deles. */
 export function requestVoice(items) {
   if (audioState.failing && Date.now() - failedAt > 2 * 60_000) { audioState.failing = false; fails = 0; }
-  if (!audioState.failing) {
+  // Gerar voz no servidor pesa (processador e memória): só com LIVE_VOICE=1. No ar, os áudios
+  // vêm prontos (gravados antes) e ficam no disco.
+  if (!audioState.failing && process.env.LIVE_VOICE === '1') {
     enqueue(items, true);
     work().catch(() => {});
   }

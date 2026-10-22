@@ -27,8 +27,6 @@ import albumRoutes from './routes/albums.js';
 import paymentRoutes from './routes/payments.js';
 import learningRoutes from './routes/learning.js';
 import bomLiderRoutes from './routes/bomLider.js';
-import { startAudioGenerator } from './bible.js';
-import { attachOnline } from './online/hub.js';
 import { startPaymentSweep } from './payments.js';
 import { syncCatalog } from './catalog.js';
 import { createInitialAdmin, resetClubsForDbvOnce, resetToDemoClubsOnce, resetToTestClubsOnce, giftTestPacksOnce, seed } from './seed.js';
@@ -54,10 +52,6 @@ giftTestPacksOnce();
 
 syncCatalog();
 startPaymentSweep();
-// Áudio do Ano Bíblico: preparado aos poucos, em segundo plano (no ar, ou com BIBLE_AUDIO=1).
-if (process.env.BIBLE_AUDIO === '1' || (process.env.NODE_ENV === 'production' && process.env.BIBLE_AUDIO !== '0')) {
-  setTimeout(() => startAudioGenerator().catch((e) => console.error('[ano bíblico] áudio:', e.message)), 60_000).unref();
-}
 
 const app = express();
 app.disable('x-powered-by');
@@ -115,7 +109,6 @@ app.use((err, _req, res, _next) => {
 });
 
 const server = http.createServer(app);
-attachOnline(server);
 const PORT = Number(process.env.PORT) || 3000;
 // Um erro inesperado fica registrado no log, mas não derruba o app (senão todo mundo vê
 // "Sistema em atualização" enquanto o Render reinicia o servidor).

@@ -1,11 +1,11 @@
-import { lazy, Suspense, useState } from 'react';
+import { useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import {
   BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, Waypoints, Hourglass, Flame,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
-import { Loading, PageHeader, Spinner, useAsync, useLoad } from '../../ui.jsx';
+import { Loading, PageHeader, useAsync, useLoad } from '../../ui.jsx';
 import Shell, { MoreMenu } from '../Shell.jsx';
 import { InAppProfile, MemberProfileView } from '../Profiles.jsx';
 import { RequirementsTodo } from '../Requirements.jsx';
@@ -16,9 +16,7 @@ import MyAchievements from './MyAchievements.jsx';
 import { AgendaLeitura, ProximasDatas } from '../club/Folders.jsx';
 import { EmbeddedSite, SupportChat } from '../Shared.jsx';
 import { GamePage, GamesHub } from '../games/GamesHub.jsx';
-import UnoPage from '../online/Uno.jsx';
 
-const StumblePage = lazy(() => import('../online/stumble/Stumble.jsx'));
 import { AlbumPage, AlbumsPage } from '../albums/AlbumsHub.jsx';
 import { BibleDay, BibleYear, BomDeBiblia, BomDeBibliaPhase, LearningHub, StreakCard } from '../learning/Learning.jsx';
 import { BomLider, BomLiderLesson } from '../learning/BomLider.jsx';
@@ -100,7 +98,7 @@ export default function MemberApp() {
   const tabs = [
     { to: base, icon: UserRound, label: 'Perfil', end: true },
     { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },
-    { to: `${base}/jogos`, icon: Gamepad2, label: 'Jogos' },
+    { to: `${base}/jogos`, icon: Gamepad2, label: 'Mini-jogos' },
     { to: `${base}/cartao`, icon: IdCard, label: 'Cartão' },
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
@@ -127,8 +125,6 @@ export default function MemberApp() {
               <Route path="cartao" element={<EmbeddedSite title="Cartão DBV" linkKey="link_cartao" subtitle="Entre com o código e a senha que o seu clube passar" />} />
               <Route path="suporte" element={<SupportChat />} />
               <Route path="jogos" element={<GamesHub base={base} />} />
-              <Route path="jogos/uno" element={<UnoPage base={base} />} />
-              <Route path="jogos/stumble" element={<Suspense fallback={<Spinner />}><StumblePage base={base} /></Suspense>} />
               <Route path="jogos/:id" element={<GamePage base={base} />} />
               <Route path="albuns" element={<AlbumsPage base={base} />} />
               <Route path="albuns/:id" element={<AlbumPage />} />

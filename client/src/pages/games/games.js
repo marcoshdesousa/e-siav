@@ -1,11 +1,6 @@
 // Lista dos mini jogos. id igual ao do servidor (server/games.js). Cada jogo é carregado só quando abre.
 import {
-  lazy } from 'react'; import {   Apple, ArrowUpFromLine, ArrowUpRight, Bird, Blocks, Bomb, BookOpen, Brain,
-  Calculator, Car, Cherry, ChessKnight, Circle, CircleDot, Clock3, Club, Cookie, Crown, Dice5, Dices, Disc3, Eye,
-  Feather, Fish, Gamepad2, Gem, Ghost, Goal, Grid2x2, Grid3x3, Hammer, Hash, Hexagon, KeyRound, Layers, LayoutGrid,
-  MessageCircleQuestion, Music, Orbit, Package, Radio, Rocket, ScanEye, Search, Ship, Shuffle, Spade, SpellCheck,
-  Spline, Square, Swords, Target, TrafficCone, Type, Volleyball, Waypoints, Workflow,
-} from 'lucide-react';
+  lazy } from 'react'; import { Apple, ArrowUpRight, Bird, Blocks, Bomb, BookOpen, Brain, Calculator, ChessKnight, Circle, CircleDot, Clock3, Crown, Dices, Disc3, Eye, Gamepad2, Gem, Grid2x2, Grid3x3, Hash, Hexagon, KeyRound, LayoutGrid, MessageCircleQuestion, Package, Radio, ScanEye, Search, Shuffle, Spade, SpellCheck, Spline, TrafficCone, Type, Waypoints, Workflow } from 'lucide-react';
 
 // mode: 'best' = vale o recorde de uma partida; 'sum' = os pontos das partidas vão somando.
 const ALL = [
@@ -17,15 +12,11 @@ const ALL = [
   { id: 'blocos', name: 'Blocos', icon: Blocks, mode: 'best', file: 'Tetris', how: 'Encaixe as peças e complete linhas para elas sumirem.' },
   { id: 'memoria', name: 'Jogo da memória', icon: Brain, mode: 'best', file: 'Memory', how: 'Vire duas cartas por vez e ache todos os pares com o menor número de jogadas.' },
   { id: 'passaro', name: 'Voo do pássaro', icon: Bird, mode: 'best', file: 'Flappy', how: 'Toque (ou espaço) para bater as asas e passar entre os canos.' },
-  { id: 'tijolos', name: 'Quebra-tijolos', icon: Square, mode: 'best', file: 'Breakout', how: 'Mova a barra para rebater a bola e quebrar todos os tijolos.' },
   { id: 'minado', name: 'Campo minado', icon: Bomb, mode: 'best', file: 'Minesweeper', how: 'Abra os quadrados sem bombas. Os números dizem quantas bombas há em volta. Segure (ou use a bandeira) para marcar.' },
   { id: 'genius', name: 'Genius', icon: CircleDot, mode: 'best', file: 'Simon', how: 'Repita a sequência de cores. A cada rodada ela fica maior.' },
-  { id: 'toupeira', name: 'Acerte a toupeira', icon: Hammer, mode: 'best', file: 'Whack', how: 'Toque nas toupeiras antes que elas se escondam. Cuidado com as bombas!' },
-  { id: 'pong', name: 'Pingue-pongue', icon: Swords, mode: 'best', file: 'Pong', how: 'Arraste a sua raquete e não deixe a bola passar. Cada ponto contra o computador conta.' },
   { id: 'forca', name: 'Forca', icon: SpellCheck, mode: 'best', file: 'Hangman', how: 'Descubra a palavra letra por letra antes de completar a forca.' },
   { id: 'quiz', name: 'Quiz bíblico', icon: MessageCircleQuestion, mode: 'best', file: 'Quiz', how: 'Responda perguntas da Bíblia e dos Desbravadores. Errou três, acabou.' },
   { id: 'matematica', name: 'Conta rápida', icon: Calculator, mode: 'best', file: 'MathRush', how: 'Responda as contas antes do tempo acabar. Cada acerto dá mais tempo.' },
-  { id: 'nave', name: 'Nave espacial', icon: Rocket, mode: 'best', file: 'Shooter', how: 'Mova a nave e destrua os invasores. A nave atira sozinha.' },
   { id: 'lig4', name: 'Lig 4', icon: Grid2x2, mode: 'sum', file: 'Connect4', how: 'Ligue 4 peças em linha antes do computador. Vitória vale 3 pontos e empate 1.' },
   // ---------- Tabuleiro e cartas ----------
   { id: 'xadrez', name: 'Xadrez', icon: ChessKnight, mode: 'sum', file: 'Chess', how: 'Dê xeque-mate no computador. Toque na peça e depois na casa. Vitória vale 3 pontos e empate 1.' },
@@ -34,10 +25,7 @@ const ALL = [
   { id: 'trilha', name: 'Trilha', icon: Hexagon, mode: 'sum', file: 'Morris', how: 'Forme linhas de 3 (moinho) para tirar peças do computador. Vitória vale 3 pontos.' },
   { id: 'mancala', name: 'Mancala', icon: Circle, mode: 'sum', file: 'Mancala', how: 'Semeie as sementes pelas casas e junte mais no seu depósito que o computador. Vitória vale 3 pontos.' },
   { id: 'pontinhos', name: 'Pontinhos', icon: Grid2x2, mode: 'sum', file: 'DotsBoxes', how: 'Ligue os pontos e feche quadrados. Quem fechar mais quadrados ganha (3 pontos).' },
-  { id: 'batalha-naval', name: 'Batalha naval', icon: Ship, mode: 'best', file: 'Battleship', how: 'Afunde os navios do computador antes que ele afunde os seus. Menos tiros = mais pontos.' },
   { id: 'paciencia', name: 'Paciência', icon: Spade, mode: 'best', file: 'Solitaire', how: 'Monte as pilhas de cada naipe do Ás ao Rei. Toque na carta e depois onde quer colocar.' },
-  { id: 'vinteum', name: 'Vinte e um', icon: Club, mode: 'best', file: 'Blackjack', how: 'Chegue perto de 21 sem passar e vença a banca. Cada rodada ganha soma pontos; perdeu 3, acabou.' },
-  { id: 'general', name: 'General', icon: Dice5, mode: 'best', file: 'Yahtzee', how: 'Jogue os dados até 3 vezes por rodada e escolha onde marcar. Faça a maior pontuação.' },
   // ---------- Quebra-cabeças ----------
   { id: 'sudoku', name: 'Sudoku', icon: Hash, mode: 'best', file: 'Sudoku', how: 'Complete a grade sem repetir números na linha, na coluna e no quadrado.' },
   { id: 'nonograma', name: 'Nonograma', icon: Grid3x3, mode: 'best', file: 'Nonogram', how: 'Pinte os quadrados seguindo os números das linhas e colunas para revelar o desenho.' },
@@ -46,10 +34,8 @@ const ALL = [
   { id: 'canos', name: 'Encanador', icon: Workflow, mode: 'best', file: 'Pipes', how: 'Gire os canos para levar a água da fonte até o fim.' },
   { id: 'sokoban', name: 'Empurre as caixas', icon: Package, mode: 'best', file: 'Sokoban', how: 'Empurre as caixas até os lugares marcados. Não dá para puxar!' },
   { id: 'ligue', name: 'Ligue as cores', icon: Spline, mode: 'best', file: 'Flow', how: 'Ligue os pontos da mesma cor sem cruzar os caminhos e preencha tudo.' },
-  { id: 'mahjong', name: 'Mahjong', icon: Layers, mode: 'best', file: 'Mahjong', how: 'Junte pares de pedras iguais que estejam livres dos lados.' },
   { id: 'labirinto', name: 'Labirinto', icon: Waypoints, mode: 'best', file: 'Maze', how: 'Saia do labirinto o mais rápido possível. Cada fase é maior.' },
   { id: 'joias', name: 'Joias', icon: Gem, mode: 'best', file: 'Match3', how: 'Troque joias vizinhas para formar linhas de 3 ou mais iguais.' },
-  { id: 'bolhas', name: 'Bolhas', icon: Cookie, mode: 'best', file: 'Bubbles', how: 'Mire e atire bolhas para juntar 3 da mesma cor e estourar.' },
   // ---------- Palavras, Bíblia e Desbravadores ----------
   { id: 'caca-palavras', name: 'Caça-palavras', icon: Search, mode: 'best', file: 'WordSearch', how: 'Arraste o dedo sobre as letras para achar as palavras escondidas.' },
   { id: 'embaralhada', name: 'Palavra embaralhada', icon: Shuffle, mode: 'best', file: 'Anagram', how: 'Coloque as letras na ordem certa para formar a palavra.' },
@@ -61,19 +47,8 @@ const ALL = [
   { id: 'diferenca', name: 'Cor diferente', icon: Eye, mode: 'best', file: 'OddColor', how: 'Ache o quadrado com a cor um pouquinho diferente. Fica mais difícil a cada acerto.' },
   { id: 'grade', name: 'Grade da memória', icon: ScanEye, mode: 'best', file: 'GridMemory', how: 'Memorize os quadrados que acendem e toque neles depois.' },
   // ---------- Ação ----------
-  { id: 'asteroides', name: 'Asteroides', icon: Orbit, mode: 'best', file: 'Asteroids', how: 'Gire a nave, acelere e atire nos asteroides sem ser atingido.' },
   { id: 'atravesse', name: 'Atravesse a rua', icon: TrafficCone, mode: 'best', file: 'Frogger', how: 'Atravesse ruas e rios sem ser pego pelos carros. Cada linha vale pontos.' },
-  { id: 'comecome', name: 'Come-come', icon: Ghost, mode: 'best', file: 'Pacman', how: 'Coma todas as bolinhas do labirinto e fuja dos fantasmas.' },
-  { id: 'corrida', name: 'Corrida', icon: Car, mode: 'best', file: 'Racing', how: 'Troque de faixa para desviar dos carros. A estrada fica cada vez mais rápida.' },
-  { id: 'pescaria', name: 'Pescaria', icon: Fish, mode: 'best', file: 'Fishing', how: 'Solte o anzol na hora certa e fisgue os peixes. Cuidado com o lixo!' },
-  { id: 'basquete', name: 'Basquete', icon: Volleyball, mode: 'best', file: 'Basketball', how: 'Arraste e solte para arremessar a bola na cesta.' },
-  { id: 'penalti', name: 'Pênalti', icon: Goal, mode: 'best', file: 'Penalty', how: 'Escolha o canto e chute. Fuja do goleiro! Errou 3, acabou.' },
-  { id: 'boliche', name: 'Boliche', icon: Target, mode: 'best', file: 'Bowling', how: 'Mire e escolha a força para derrubar os pinos. 10 jogadas.' },
   { id: 'arco', name: 'Arco e flecha', icon: ArrowUpRight, mode: 'best', file: 'Archery', how: 'Puxe e solte para atirar a flecha. Repare no vento!' },
-  { id: 'estilingue', name: 'Estilingue', icon: Feather, mode: 'best', file: 'Slingshot', how: 'Puxe o estilingue e derrube as latas com poucas pedras.' },
-  { id: 'pulapula', name: 'Pula-pula', icon: ArrowUpFromLine, mode: 'best', file: 'Jumper', how: 'Pule de plataforma em plataforma e suba o mais alto que puder. Incline com as setas ou tocando nos lados.' },
-  { id: 'ritmo', name: 'Ritmo', icon: Music, mode: 'best', file: 'Rhythm', how: 'Toque nas notas quando elas chegarem na linha. Não deixe passar!' },
-  { id: 'frutas', name: 'Corte as frutas', icon: Cherry, mode: 'best', file: 'FruitSlice', how: 'Passe o dedo para cortar as frutas. Não corte as bombas!' },
 ];
 
 const modules = import.meta.glob('./g/*.jsx');

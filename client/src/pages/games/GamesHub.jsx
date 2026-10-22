@@ -1,18 +1,16 @@
-// Jogos dos membros (jogos grandes + mini-jogos): lista de jogos, tela de cada jogo e ranking geral de cada um.
-import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+// Mini-jogos dos membros: lista de jogos, tela de cada jogo e ranking de cada um.
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, Flag, Gamepad2, Keyboard, Layers, Lightbulb, Smartphone, Target, PersonStanding, Shirt, Play, RotateCcw, Trophy, Volume2, VolumeX } from 'lucide-react';
+import { ArrowLeft, Flag, Keyboard, Lightbulb, Smartphone, Target, Play, RotateCcw, Trophy, Volume2, VolumeX } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
-import { Button, Card, Loading, PageHeader, Section, Spinner, Tabs, useLoad } from '../../ui.jsx';
+import { Button, Card, Loading, PageHeader, Section, Spinner, useLoad } from '../../ui.jsx';
 import { RankingTable } from '../Ranking.jsx';
 import { GAMES, gameById, gameComponent } from './games.js';
 import { isMuted, onMuteChange, setMuted, sfx, startMusic, stopMusic, unlockAudio } from './audio.js';
 import { useOnline } from '../../offline.js';
 import TUTORIALS from './tutorials.json';
 import './games.css';
-
-const SkinPage = lazy(() => import('../online/avatar/SkinPage.jsx'));
 
 const valueLabel = (g) => (g.mode === 'sum' ? 'Total de pontos' : 'Recorde');
 
@@ -37,48 +35,6 @@ function GameRanking({ game, base, limit }) {
   );
 }
 
-/** Jogos grandes (online). Ficam "em breve" até cada um ficar pronto. */
-export const BIG_GAMES = [
-  { id: 'uno', name: 'Uno DBV', logo: ['UNO', 'DBV'], theme: 'uno', hint: 'Uno de verdade na mesa, de 2 a 6 jogadores, com chat de voz. Celular em pé.', icon: Layers, ranks: [['uno', 'Vitórias']], ready: true },
-  { id: 'stumble', name: 'Stumble DBV', logo: ['STUMBLE', 'DBV'], theme: 'stumble', hint: 'Até 10 jogadores em fases malucas de obstáculos. Só o 1º vence. Celular deitado.', icon: PersonStanding, ranks: [['stumble', 'Vitórias']], ready: true },
-  { id: 'play', name: 'Desbrava Play', logo: ['DESBRAVA', 'PLAY'], theme: 'play', hint: 'Um jogo novo dos Desbravadores está sendo preparado.', icon: Gamepad2, ranks: [], ready: false },
-];
-
-function BigGames({ base, onSkin }) {
-  return (
-    <div className="big-games">
-      {BIG_GAMES.map((g) => {
-        const body = (
-          <>
-            <span className={'big-game-logo ' + g.theme}>
-              <img src="/marca/logo.svg?v=4" alt="" />
-              <b>{g.logo[0]}</b>
-              <i>{g.logo[1]}</i>
-            </span>
-            <div className="grow">
-              <b>{g.name}</b>
-              <small>{g.hint}</small>
-            </div>
-            {g.ready ? <Play size={26} /> : <span className="chip">Em breve</span>}
-          </>
-        );
-        return g.ready
-          ? <Link key={g.id} to={`${base}/jogos/${g.id}`} className={'big-game ' + g.theme}>{body}</Link>
-          : <div key={g.id} className={'big-game soon ' + g.theme} aria-disabled="true">{body}</div>;
-      })}
-      <button type="button" onClick={onSkin} className="big-game skin-link">
-        <span className="big-game-ico"><Shirt size={34} /></span>
-        <div className="grow">
-          <b>Meu personagem</b>
-          <small>Monte o seu: pele, cabelo, chapéu, camisa, calça ou saia, calçado e o lenço. Vale para todos os jogos</small>
-        </div>
-        <Play size={26} />
-      </button>
-      <p className="small muted center">O Uno DBV e o Stumble DBV precisam de internet.</p>
-    </div>
-  );
-}
-
 /** Ranking dos mini-jogos (fica dentro da aba Mini-jogos). */
 function MiniRankings({ base, online, initial }) {
   const [rankGame, setRankGame] = useState(GAMES.some((g) => g.id === initial) ? initial : GAMES[0].id);
@@ -93,84 +49,31 @@ function MiniRankings({ base, online, initial }) {
   );
 }
 
-/** Ranking dos jogos grandes (fica dentro da aba Jogos). */
-function BigRankings({ base, online, initial }) {
-  const ranked = BIG_GAMES.filter((g) => g.ranks.length);
-  const initialBig = ranked.find((g) => g.ranks.some((r) => r[0] === initial));
-  const [big, setBig] = useState(initialBig?.id || ranked[0].id);
-  const bigGame = ranked.find((g) => g.id === big);
-  const [board, setBoard] = useState(initialBig ? initial : bigGame.ranks[0][0]);
-  const boardId = bigGame.ranks.some((r) => r[0] === board) ? board : bigGame.ranks[0][0];
-  return (
-    <>
-      <select value={big} onChange={(e) => setBig(e.target.value)} aria-label="Jogo">
-        {ranked.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
-      </select>
-      {bigGame.ranks.length > 1 && (
-        <div className="seg games-rank-kind" role="tablist">
-          {bigGame.ranks.map(([id, label]) => <button key={id} type="button" className={boardId === id ? 'active' : ''} onClick={() => setBoard(id)}>{label}</button>)}
-        </div>
-      )}
-      {online ? <><p className="small muted">{bigGame.ranks.find((r) => r[0] === boardId)[1]} · ranking geral de todos os membros.</p><GameRanking key={boardId} game={{ id: boardId, mode: 'sum' }} base={base} /></>
-        : <Card className="small center">Os rankings precisam de internet.</Card>}
-    </>
-  );
-}
-
-const isBigRank = (id) => BIG_GAMES.some((g) => g.ranks.some((r) => r[0] === id));
-
-/** Aba Jogos: duas abas (Jogos e Mini-jogos), cada uma com o seu ranking dentro. */
+/** Aba Mini-jogos: jogar e o ranking de cada jogo. */
 export function GamesHub({ base }) {
   const [params] = useSearchParams();
-  const wantRank = params.get('aba') === 'ranking';
-  const rankOf = params.get('jogo');
-  const [tab, setTab] = useState(() => {
-    if (wantRank) return isBigRank(rankOf) ? 'jogos' : 'mini';
-    if (params.get('aba') === 'skin') return 'jogos';
-    try { const t = window.sessionStorage.getItem('dbv-games-tab'); return ['jogos', 'mini'].includes(t) ? t : 'mini'; } catch { return 'mini'; }
-  });
-  // Dentro da aba Jogos: jogar, skin (vale para os jogos) e ranking; nos Mini-jogos: jogar e ranking
-  const [sub, setSub] = useState(() => (params.get('aba') === 'skin' ? 'skin' : wantRank && isBigRank(rankOf) ? 'ranking' : 'jogar'));
-  const [miniSub, setMiniSub] = useState(() => (wantRank && !isBigRank(rankOf) ? 'ranking' : 'jogar'));
-  const pick = (t) => { setTab(t); try { window.sessionStorage.setItem('dbv-games-tab', t); } catch { /* sem armazenamento */ } };
+  const [sub, setSub] = useState(() => (params.get('aba') === 'ranking' ? 'ranking' : 'jogar'));
   const mine = useLoad(() => api.get('/jogos/meus'));
   const my = mine.data || {};
   const online = useOnline();
   return (
     <>
-      <PageHeader title="Jogos" subtitle={`Jogos online e ${GAMES.length} mini-jogos para fazer pontos e subir no ranking. Sem anúncios!`} />
-      <Tabs tabs={[['jogos', 'Jogos'], ['mini', 'Mini-jogos']]} value={tab} onChange={pick} />
-      {tab === 'jogos' && (
-        <>
-          <div className="seg games-sub" role="tablist">
-            <button type="button" className={sub === 'jogar' ? 'active' : ''} onClick={() => setSub('jogar')}><Play size={14} /> Jogar</button>
-            <button type="button" className={sub === 'skin' ? 'active' : ''} onClick={() => setSub('skin')}><Shirt size={14} /> Personagem</button>
-            <button type="button" className={sub === 'ranking' ? 'active' : ''} onClick={() => setSub('ranking')}><Trophy size={14} /> Ranking</button>
-          </div>
-          {sub === 'jogar' && <BigGames base={base} onSkin={() => setSub('skin')} />}
-          {sub === 'skin' && <Suspense fallback={<Spinner />}><SkinPage /></Suspense>}
-          {sub === 'ranking' && <BigRankings base={base} online={online} initial={rankOf} />}
-        </>
-      )}
-      {tab === 'mini' && (
-        <>
-          <div className="seg games-sub" role="tablist">
-            <button type="button" className={miniSub === 'jogar' ? 'active' : ''} onClick={() => setMiniSub('jogar')}><Play size={14} /> Jogar</button>
-            <button type="button" className={miniSub === 'ranking' ? 'active' : ''} onClick={() => setMiniSub('ranking')}><Trophy size={14} /> Ranking</button>
-          </div>
-          {miniSub === 'jogar' ? (
-            <div className="games-grid">
-              {GAMES.map((g) => (
-                <Link key={g.id} to={`${base}/jogos/${g.id}`} className="game-tile">
-                  <span className="game-ico"><g.icon size={26} /></span>
-                  <b>{g.name}</b>
-                  <small>{my[g.id]?.value ? `${my[g.id].value} pts${my[g.id].position ? ` · ${my[g.id].position}º` : ''}` : 'Jogar'}</small>
-                </Link>
-              ))}
-            </div>
-          ) : <MiniRankings base={base} online={online} initial={rankOf} />}
-        </>
-      )}
+      <PageHeader title="Mini-jogos" subtitle={`${GAMES.length} mini-jogos para fazer pontos e subir no ranking. Sem anúncios!`} />
+      <div className="seg games-sub" role="tablist">
+        <button type="button" className={sub === 'jogar' ? 'active' : ''} onClick={() => setSub('jogar')}><Play size={14} /> Jogar</button>
+        <button type="button" className={sub === 'ranking' ? 'active' : ''} onClick={() => setSub('ranking')}><Trophy size={14} /> Ranking</button>
+      </div>
+      {sub === 'jogar' ? (
+        <div className="games-grid">
+          {GAMES.map((g) => (
+            <Link key={g.id} to={`${base}/jogos/${g.id}`} className="game-tile">
+              <span className="game-ico"><g.icon size={26} /></span>
+              <b>{g.name}</b>
+              <small>{my[g.id]?.value ? `${my[g.id].value} pts${my[g.id].position ? ` · ${my[g.id].position}º` : ''}` : 'Jogar'}</small>
+            </Link>
+          ))}
+        </div>
+      ) : <MiniRankings base={base} online={online} initial={params.get('jogo')} />}
     </>
   );
 }
