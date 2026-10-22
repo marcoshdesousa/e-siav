@@ -119,7 +119,7 @@ export function ClassLesson({ base }) {
                     <video ref={video} key={a.video.url} src={a.video.url} poster={a.video.poster || undefined} controls playsInline preload="metadata" onTimeUpdate={onTime} />
                   </div>
                 ) : <Card className="center small muted">O vídeo desta aula está sendo preparado. Enquanto isso, veja o que fazer no caderno.</Card>}
-                <Tabs tabs={[['aula', 'Tópicos'], ['caderno', 'No caderno'], ['material', 'Material'], ['quiz', a.completed ? 'Quiz ✓' : 'Quiz']]} value={tab} onChange={setTab} />
+                <Tabs tabs={[['aula', 'Tópicos'], ['caderno', 'Respostas'], ['material', 'Material'], ['quiz', a.completed ? 'Quiz ✓' : 'Quiz']]} value={tab} onChange={setTab} />
                 {tab === 'aula' && (
                   <>
                     <Card className="small"><b>Requisito:</b> {a.requisito}</Card>
@@ -133,10 +133,26 @@ export function ClassLesson({ base }) {
                   </>
                 )}
                 {tab === 'caderno' && (
-                  <Card className="cls-todo">
-                    <p className="cls-todo-h"><NotebookPen size={20} /> Para cumprir no seu caderno</p>
-                    <ol>{a.caderno.map((t, i) => <li key={i}>{t}</li>)}</ol>
-                  </Card>
+                  <>
+                    <Card className="cls-todo">
+                      <p className="cls-todo-h"><NotebookPen size={20} /> Para cumprir no seu caderno</p>
+                      <ol>{a.caderno.map((t, i) => <li key={i}>{t}</li>)}</ol>
+                    </Card>
+                    {a.respostas.length > 0 && (
+                      <>
+                        <h3 className="cls-sec">Respostas do caderno</h3>
+                        <p className="small muted">Use como ajuda e escreva com as suas palavras.</p>
+                        <div className="cls-answers">
+                          {a.respostas.map((x, i) => (
+                            <details key={i} className="cls-answer">
+                              <summary><span>{i + 1}</span>{x.campo}</summary>
+                              <p>{x.resposta}</p>
+                            </details>
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </>
                 )}
                 {tab === 'material' && a.paginas[page] && (
                   <>

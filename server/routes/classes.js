@@ -62,7 +62,7 @@ r.get('/classes/:id/aula/:n', member, (req, res) => {
     ...base, locked: false, video: videoOf(c.id, a),
     slides: a.slides.map((s) => s.titulo || (s.tipo === 'versiculo' ? s.ref : '')),
     paginas: (a.paginas || []).map((p) => ({ p, url: `/api/classes/${c.id}/pagina/${p}` })),
-    caderno: a.caderno, quiz: a.quiz.map((q) => ({ q: q.q, options: q.options })), pass: PASS,
+    caderno: a.caderno, respostas: a.respostas || [], quiz: a.quiz.map((q) => ({ q: q.q, options: q.options })), pass: PASS,
     best: row?.best || 0, completed: !!row?.completed_at,
   });
 });

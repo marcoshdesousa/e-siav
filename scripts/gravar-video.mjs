@@ -75,6 +75,10 @@ h2 span{color:#F9C71D}
 .task h2{display:flex;align-items:center;gap:16px}
 .task .ic{width:70px;height:70px;border-radius:20px;background:#18875A;display:grid;place-items:center;flex:none}
 .task .item em{background:#4ade80;color:#052e16}
+.answers{display:flex;flex-direction:column;gap:16px}
+.ans{padding:20px 24px;border-radius:22px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.16);border-left:8px solid #4ade80}
+.ans small{display:block;font-size:24px;font-weight:800;color:#bfdbfe;margin-bottom:8px;line-height:1.25}
+.ans b{display:block;font-size:32px;line-height:1.3;color:#fff}
 .end{align-items:center;text-align:center}
 .end .ic{width:170px;height:170px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#fde047,#F9C71D 55%,#e0a800);color:#0B2259;box-shadow:0 0 70px rgba(249,199,29,.55);margin:0 auto 44px}
 .end h1{font-size:72px}.end p{margin-top:24px;font-size:34px;line-height:1.4;color:#dbe4f7}
@@ -92,6 +96,8 @@ async function slideHtml(aula, s, i, total, fontsCss, logo) {
   } else if (s.tipo === 'lista') {
     const two = (s.itens || []).length > 6;
     main = `<div class="main"><h2>${esc(s.titulo)}</h2><div class="grid ${two ? 'two' : ''}">${(s.itens || []).map((t, k) => `<div class="chip"><em>${k + 1}</em><span>${esc(t)}</span></div>`).join('')}</div></div>`;
+  } else if (s.tipo === 'respostas') {
+    main = `<div class="main"><h2>${esc(s.titulo || 'Respostas')}</h2><div class="answers">${(s.itens || []).map((x) => `<div class="ans"><small>${esc(x.p)}</small><b>${esc(x.r)}</b></div>`).join('')}</div></div>`;
   } else if (s.tipo === 'dica') {
     main = `<div class="main"><div class="tip"><div class="ic">${await icon('lightbulb', 50)}</div><b class="t">${esc(s.titulo || 'Dica')}</b><p>${esc(s.texto)}</p></div></div>`;
   } else if (s.tipo === 'tarefa') {
