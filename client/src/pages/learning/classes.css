@@ -43,3 +43,7 @@
 .cls-zoom-img { flex: 1; overflow: auto; padding: 0 .6rem; -webkit-overflow-scrolling: touch; }
 .cls-zoom-img img { display: block; width: 100%; max-width: 900px; margin: 0 auto; border-radius: 8px; background: #fff; }
 .cls-zoom-nav { display: flex; justify-content: space-between; gap: .6rem; padding: .8rem 1rem calc(.8rem + env(safe-area-inset-bottom)); }
+
+.cls-page-h { margin: .8rem 0 .4rem; text-align: center; font-weight: 900; }
+.cls-page-big { display: block; width: 100%; max-width: 520px; margin: 0 auto; padding: 0; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: #fff; cursor: zoom-in; }
+.cls-page-big img { display: block; width: 100%; }

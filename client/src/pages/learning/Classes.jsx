@@ -88,6 +88,7 @@ export function ClassLesson({ base }) {
   const [slide, setSlide] = useState(0);
   const [tab, setTab] = useState('aula');
   const [zoom, setZoom] = useState(null);
+  const [page, setPage] = useState(0);
   return (
     <Loading {...state}>
       {(a) => {
@@ -137,17 +138,13 @@ export function ClassLesson({ base }) {
                     <ol>{a.caderno.map((t, i) => <li key={i}>{t}</li>)}</ol>
                   </Card>
                 )}
-                {tab === 'material' && (
+                {tab === 'material' && a.paginas[page] && (
                   <>
-                    <Card className="small cls-intro"><BookOpen size={18} /><span>Páginas do Caderno de Atividades da classe usadas nesta aula. Toque para ampliar.</span></Card>
-                    <div className="cls-pages">
-                      {a.paginas.map((pg, i) => (
-                        <button key={pg.p} type="button" className="cls-page" onClick={() => setZoom(i)}>
-                          <img src={pg.url} alt={`Página ${pg.p} do caderno`} loading="lazy" />
-                          <span>Página {pg.p}</span>
-                        </button>
-                      ))}
-                    </div>
+                    <Card className="small cls-intro"><BookOpen size={18} /><span>Página do Caderno de Atividades usada nesta aula. Toque na página para ampliar.</span></Card>
+                    <p className="cls-page-h">Página {a.paginas[page].p} · {page + 1} de {a.paginas.length}</p>
+                    <button type="button" className="cls-page-big" onClick={() => setZoom(page)}>
+                      <img src={a.paginas[page].url} alt={`Página ${a.paginas[page].p} do caderno`} />
+                    </button>
                   </>
                 )}
                 {zoom != null && a.paginas[zoom] && (
@@ -168,10 +165,17 @@ export function ClassLesson({ base }) {
                 )}
               </>
             )}
-            <div className="bl-nav mt">
-              <Button variant="secondary" disabled={!a.prev} onClick={() => go(a.prev)}><ChevronLeft size={16} /> Aula anterior</Button>
-              <Button variant="secondary" disabled={!a.next} onClick={() => go(a.next)}>Próxima aula <ChevronRight size={16} /></Button>
-            </div>
+            {tab === 'material' && !a.locked ? (
+              <div className="bl-nav mt">
+                <Button variant="secondary" disabled={page === 0} onClick={() => setPage(page - 1)}><ChevronLeft size={16} /> Página anterior</Button>
+                <Button variant="secondary" disabled={page >= (a.paginas?.length || 1) - 1} onClick={() => setPage(page + 1)}>Próxima página <ChevronRight size={16} /></Button>
+              </div>
+            ) : (
+              <div className="bl-nav mt">
+                <Button variant="secondary" disabled={!a.prev} onClick={() => { setPage(0); setTab('aula'); go(a.prev); }}><ChevronLeft size={16} /> Aula anterior</Button>
+                <Button variant="secondary" disabled={!a.next} onClick={() => { setPage(0); setTab('aula'); go(a.next); }}>Próxima aula <ChevronRight size={16} /></Button>
+              </div>
+            )}
           </div>
         );
       }}
