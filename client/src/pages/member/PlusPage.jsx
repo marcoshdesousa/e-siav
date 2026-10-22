@@ -119,18 +119,17 @@ export default function PlusPage() {
 }
 
 /** Aviso para assinar/renovar (uma vez por dia, com X para fechar). O app funciona igual sem assinar. */
-/** Faixa discreta no topo convidando para o DBV+ (só membros sem o plano). O X esconde por 7 dias. */
+// Fechou a faixa: some até a pessoa abrir o app de novo.
+let barClosed = false;
+
+/** Faixa discreta no topo convidando para o DBV+ (só membros sem o plano). O X esconde até abrir o app de novo. */
 export function PlusNudge({ to }) {
   const { actor } = useAuth();
   const { pathname } = useLocation();
-  const key = 'dbvplus-faixa';
-  const [open, setOpen] = useState(() => {
-    if (actor?.type !== 'member' || actor.plus) return false;
-    try { return Number(localStorage.getItem(key) || 0) < Date.now(); } catch { return true; }
-  });
+  const [open, setOpen] = useState(() => !barClosed && actor?.type === 'member' && !actor.plus);
   // Só nas telas principais das abas (não atrapalha leitura, quiz nem jogo).
   if (!open || pathname.startsWith(to) || pathname.split('/').filter(Boolean).length > 2) return null;
-  const close = () => { try { localStorage.setItem(key, String(Date.now() + 7 * 864e5)); } catch { /* sem armazenamento */ } setOpen(false); };
+  const close = () => { barClosed = true; setOpen(false); };
   return (
     <div className="plus-bar">
       <img src="/marca/logo.svg" alt="" />
