@@ -192,6 +192,21 @@ const QUARTER_WEEK = new Map(QUARTERS.flatMap((qt) => qt.days.map((d) => [`${qt.
   lesson: d.lesson, lesson_title: qt.days.find((x) => x.lesson === d.lesson)?.title,
   print_from: d.page_from + (qt.print_offset || 0), print_to: d.page_to + (qt.print_offset || 0),
 }])));
+// Páginas da lição (imagens) e áudio: ficam em content/escola-sabatina/<trimestre> e audio/escola-sabatina.
+const CONTENT_DIR = path.join(HERE, '..', '..', 'content', 'escola-sabatina');
+const hasPages = (key) => fs.existsSync(path.join(CONTENT_DIR, key, '003.webp'));
+const pageNo = (n) => String(n).padStart(3, '0');
+function ssMedia(l, memberId) {
+  const qt = QUARTERS.find((x) => x.key === l.source);
+  const d = qt?.days.find((x) => x.date === l.date);
+  if (!d || !hasPages(qt.key)) return { pages: [] };
+  // O primeiro sábado do trimestre mostra também a capa e a apresentação.
+  const from = d === qt.days[0] ? 1 : d.page_from;
+  const pages = [];
+  for (let n = from; n <= d.page_to; n++) if (fs.existsSync(path.join(CONTENT_DIR, qt.key, `${pageNo(n)}.webp`))) pages.push(`/api/escola-sabatina/pagina/${qt.key}/${n}`);
+  const idx = qt.days.indexOf(d);
+  return { pages, ...gatedAudio(memberId, audioOf('escola-sabatina', `${qt.key}_${d.date}`), idx < FREE_AUDIOS) };
+}
 const quarterPdf = (key) => get('SELECT id FROM sabbath_pdfs WHERE quarter = ? ORDER BY id DESC LIMIT 1', key)?.id || null;
 /** Cria ou atualiza as lições dos trimestres prontos (as criadas à mão pelo admin ficam como estão). */
 function syncQuarters() {
@@ -206,8 +221,22 @@ function syncQuarters() {
   }
 }
 syncQuarters();
-const ssQuestions = (l) => { try { return JSON.parse(l.questions) || []; } catch { return []; } };
+const ssQuestions = (l) => {
+  if (l.source) return SS_DAILY;
+  try { return JSON.parse(l.questions) || []; } catch { return []; }
+};
 const ssPass = (n) => Math.max(1, Math.ceil(n * 0.6));
+// Pergunta de escrever (a lição pede para anotar ou refletir): vale se a resposta tiver pelo menos uma frase.
+const SS_MIN_TEXT = 10;
+const ssRight = (q, a) => (q.type === 'texto' ? typeof a === 'string' && a.trim().length >= SS_MIN_TEXT
+  : q.type === 'nota' ? q.options.includes(Number(a)) : Number(a) === q.answer);
+// Lições dos trimestres prontos: todo dia as mesmas duas perguntas (nota e o que aprendeu).
+const SS_DAILY = [
+  { type: 'nota', q: 'De 7 a 10, quanto você gostou da lição de hoje?', options: [7, 8, 9, 10] },
+  { type: 'texto', q: 'O que você gostou na lição e o que aprendeu hoje?' },
+];
+try { run('ALTER TABLE sabbath_progress ADD COLUMN rating INTEGER'); } catch { /* já existe */ }
+try { run('ALTER TABLE sabbath_progress ADD COLUMN note TEXT'); } catch { /* já existe */ }
 const ssRows = (memberId) => all('SELECT lesson_id, date, best, completed_at, on_time FROM sabbath_progress WHERE member_id = ?', memberId);
 export function sabbathSummary(memberId, today = todayBR()) {
   const rows = ssRows(memberId);
@@ -244,7 +273,9 @@ r.get('/escola-sabatina/licao/:id', member, (req, res) => {
     id: l.id, category: l.category, category_name: SS_CATEGORIES.find((c) => c.id === l.category)?.name, date: l.date, title: l.title,
     ...QUARTER_WEEK.get(`${l.category}|${l.date}`),
     pdf: l.pdf_id ? `/api/escola-sabatina/pdf/${l.pdf_id}` : null, page_from: l.page_from, page_to: l.page_to, youtube: l.youtube || null,
-    questions: qs.map((q) => ({ q: q.q, options: q.options })), pass: ssPass(qs.length), completed: !!row?.completed_at, best: row?.best || 0,
+    ...ssMedia(l, req.actor.id),
+    questions: qs.map((q) => (q.type === 'texto' ? { q: q.q, type: 'texto', min: SS_MIN_TEXT } : q.type === 'nota' ? { q: q.q, type: 'nota', options: q.options } : { q: q.q, options: q.options })),
+    pass: l.source ? qs.length : ssPass(qs.length), completed: !!row?.completed_at, best: row?.best || 0,
   });
 });
 r.post('/escola-sabatina/licao/:id/quiz', member, (req, res) => {
@@ -252,8 +283,9 @@ r.post('/escola-sabatina/licao/:id/quiz', member, (req, res) => {
   const today = todayBR();
   const qs = ssQuestions(l);
   const answers = Array.isArray(req.body.answers) ? req.body.answers : [];
-  const score = qs.reduce((n, q, i) => n + (Number(answers[i]) === q.answer ? 1 : 0), 0);
-  const passed = score >= ssPass(qs.length);
+  const score = qs.reduce((n, q, i) => n + (ssRight(q, answers[i]) ? 1 : 0), 0);
+  const need = l.source ? qs.length : ssPass(qs.length);
+  const passed = score >= need;
   const before = get('SELECT completed_at FROM sabbath_progress WHERE member_id = ? AND lesson_id = ?', req.actor.id, l.id);
   const first = passed && !before?.completed_at;
   // Vale para a sequência a lição do dia de hoje (de qualquer categoria) feita hoje.
@@ -262,11 +294,26 @@ r.post('/escola-sabatina/licao/:id/quiz', member, (req, res) => {
     ON CONFLICT (member_id, lesson_id) DO UPDATE SET best = max(best, excluded.best),
       completed_at = COALESCE(completed_at, excluded.completed_at), on_time = max(on_time, excluded.on_time)`,
   req.actor.id, l.id, l.date, score, passed ? new Date().toISOString() : null, onTime);
+  // Nota e o que a pessoa escreveu (lições prontas): guarda a última resposta.
+  if (l.source && passed) {
+    run('UPDATE sabbath_progress SET rating = ?, note = ? WHERE member_id = ? AND lesson_id = ?',
+      Number(answers[0]), String(answers[1]).trim().slice(0, 2000), req.actor.id, l.id);
+  }
   // Prêmio: uma vez por dia (mesmo fazendo lições de várias categorias no mesmo dia).
   const reward = first && l.date <= today;
   const points = reward ? awardStudyDay(req.actor.id, 'sabatina', l.date) : null;
   if (points) giveBiblePack(req.actor.id);
-  res.json({ score, total: qs.length, passed, pass: ssPass(qs.length), first, on_time: !!onTime, pack: !!points, points, correct: qs.map((q) => q.answer), ...sabbathSummary(req.actor.id, today) });
+  res.json({ score, total: qs.length, passed, pass: need, first, on_time: !!onTime, pack: !!points, points, correct: qs.map((q) => (q.type === 'texto' ? null : q.answer)), ...sabbathSummary(req.actor.id, today) });
+});
+// Página da lição (imagem): só para quem entrou no app; não é para baixar.
+r.get('/escola-sabatina/pagina/:key/:n', requireAuth('member', 'admin'), (req, res) => {
+  const qt = QUARTERS.find((x) => x.key === req.params.key);
+  const n = int(req.params.n);
+  const f = qt && n > 0 && path.join(CONTENT_DIR, qt.key, `${pageNo(n)}.webp`);
+  if (!f || !fs.existsSync(f)) fail(404, 'Página não encontrada');
+  res.set('Cache-Control', 'private, max-age=604800');
+  res.set('Content-Disposition', 'inline');
+  res.type('image/webp').sendFile(f);
 });
 r.get('/escola-sabatina/pdf/:id', requireAuth('member', 'admin'), (req, res) => {
   const p = get('SELECT file FROM sabbath_pdfs WHERE id = ?', int(req.params.id));

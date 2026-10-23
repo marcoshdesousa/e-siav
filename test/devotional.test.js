@@ -116,6 +116,16 @@ test('escola sabatina: trimestre pronto dos jovens aparece mesmo sem PDF; com PD
   const noPdf = (await pedro.get(`/escola-sabatina/licao/${before.find((l) => l.date === '2026-10-02').id}`)).body;
   assert.equal(noPdf.pdf, null);
   assert.deepEqual([noPdf.lesson, noPdf.lesson_title, noPdf.print_from, noPdf.print_to], [1, 'O Criador fala', 12, 14], 'páginas da revista');
+  assert.deepEqual(noPdf.questions.map((q) => q.type), ['nota', 'texto'], 'todo dia: nota de 7 a 10 e o que aprendeu');
+  const short = (await pedro.post(`/escola-sabatina/licao/${noPdf.id}/quiz`, { answers: [9, 'ok'] })).body;
+  assert.equal(short.passed, false, 'precisa escrever pelo menos uma frase');
+  const done = (await pedro.post(`/escola-sabatina/licao/${noPdf.id}/quiz`, { answers: [9, 'Aprendi que Deus continua falando comigo.'] })).body;
+  assert.equal(done.passed, true);
+  if (noPdf.pages.length) {
+    assert.equal(noPdf.pages.length, 3, 'sexta: as páginas do dia');
+    const img = await fetch(BASE.replace('/api', '') + noPdf.pages[0]);
+    assert.equal(img.status, 401, 'página só para quem entrou');
+  }
   const fd = new FormData();
   fd.append('file', new Blob(['%PDF-1.4 teste'], { type: 'application/pdf' }), 'licao.pdf');
   assert.equal((await admin.post('/admin/escola-sabatina/trimestres/jovens-2026-4/pdf', fd)).status, 200);
@@ -125,6 +135,7 @@ test('escola sabatina: trimestre pronto dos jovens aparece mesmo sem PDF; com PD
   const l = (await pedro.get(`/escola-sabatina/licao/${first.id}`)).body;
   assert.equal(l.title, 'O Criador fala');
   assert.equal(l.page_from, 3);
-  assert.equal(l.questions.length, 3);
+  assert.equal(l.questions.length, 2);
   assert.ok(l.pdf);
+  if (l.pages.length) assert.equal(l.pages.length, 3, 'primeiro sábado: capa, apresentação e a lição');
 });

@@ -74,6 +74,19 @@ export function audioJobs(kind) {
       return { id: pad(l.n, 2), hash: hashOf(segments), segments };
     });
   }
+  if (kind === 'escola-sabatina') {
+    // Lições da Escola Sabatina: o texto de cada dia fica em content/escola-sabatina/<trimestre>/texto.json.
+    const dir = path.join(DATA, '..', '..', 'content', 'escola-sabatina');
+    if (!fs.existsSync(dir)) return [];
+    return fs.readdirSync(dir).sort().flatMap((key) => {
+      const f = path.join(dir, key, 'texto.json');
+      if (!fs.existsSync(f)) return [];
+      return Object.entries(readJson(f)).sort(([a], [b]) => a.localeCompare(b)).map(([date, segs]) => {
+        const segments = segs.map((text, i) => ({ text, pause: i === 0 ? 0.8 : 0.6 }));
+        return { id: `${key}_${date}`, hash: hashOf(segments), segments };
+      });
+    });
+  }
   throw new Error('tipo de áudio desconhecido: ' + kind);
 }
 export const segmentHash = hashOf;

@@ -5,7 +5,7 @@ import path from 'node:path';
 import fs from 'node:fs';
 import multer from 'multer';
 import { UPLOAD_DIR, ROOT, all, get } from './db.js';
-import { attachActor, districtAdminGuard } from './auth.js';
+import { attachActor, districtAdminGuard, requireAuth } from './auth.js';
 import { HttpError } from './util.js';
 import authRoutes from './routes/auth.js';
 import publicRoutes from './routes/public.js';
@@ -75,6 +75,8 @@ for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementR
 api.use((_req, _res, next) => next(new HttpError(404, 'Rota não encontrada')));
 app.use('/api', api);
 
+// Áudio da lição da Escola Sabatina: só para quem entrou no app (o material é da revista).
+app.use('/audio/escola-sabatina', requireAuth('member', 'admin'));
 app.use('/audio', express.static(AUDIO_ROOT, { maxAge: '30d', immutable: true, fallthrough: false }));
 app.use('/uploads', express.static(UPLOAD_DIR, { maxAge: '7d', setHeaders: (res) => res.setHeader('X-Content-Type-Options', 'nosniff') }));
 

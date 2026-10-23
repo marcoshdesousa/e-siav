@@ -24,6 +24,11 @@ export function StreakMini({ s, label }) {
 }
 
 /** Perguntas uma por vez + resultado (meditação e lição). */
+/** Pergunta de escrever: precisa de pelo menos uma frase. */
+const isWritten = (q, a) => typeof a === 'string' && a.trim().length >= (q.min || 10);
+const answered = (q, a) => (q.type === 'texto' ? isWritten(q, a) : a != null);
+const isRight = (q, a, c) => (q.type === 'texto' ? isWritten(q, a) : q.type === 'nota' ? a != null : c === a);
+
 export function Quiz({ questions, send, pass, onAgain, done }) {
   const [answers, setAnswers] = useState(() => questions.map(() => null));
   const [qi, setQi] = useState(0);
@@ -49,8 +54,8 @@ export function Quiz({ questions, send, pass, onAgain, done }) {
         </div>
         {questions.map((q, k) => (
           <Card key={k} className="lesson-q">
-            <p>{result.correct[k] === answers[k] ? <CheckCircle2 size={16} className="bl-ok" /> : <X size={16} className="bl-no" />} <b>{k + 1}.</b> {q.q}</p>
-            <small className="muted">Certa: {q.options[result.correct[k]]}</small>
+            <p>{isRight(q, answers[k], result.correct[k]) ? <CheckCircle2 size={16} className="bl-ok" /> : <X size={16} className="bl-no" />} <b>{k + 1}.</b> {q.q}</p>
+            <small className="muted">{q.type === 'texto' ? `Sua resposta: ${answers[k]}` : q.type === 'nota' ? `Sua nota: ${answers[k]}` : `Certa: ${q.options[result.correct[k]]}`}</small>
           </Card>
         ))}
       </>
@@ -59,10 +64,23 @@ export function Quiz({ questions, send, pass, onAgain, done }) {
   const q = questions[qi];
   return (
     <>
-      <div className="bl-dots">{questions.map((_x, k) => <i key={k} className={(k === qi ? 'on' : '') + (answers[k] != null ? ' ok' : '')} onClick={() => setQi(k)} />)}</div>
+      <div className="bl-dots">{questions.map((x, k) => <i key={k} className={(k === qi ? 'on' : '') + (answered(x, answers[k]) ? ' ok' : '')} onClick={() => setQi(k)} />)}</div>
       <div key={qi} className="dv-quiz">
-        <small>Pergunta {qi + 1} de {questions.length} · acerte {pass}</small>
+        <small>Pergunta {qi + 1} de {questions.length}{questions.every((x) => x.type) ? '' : ` · acerte ${pass}`}</small>
         <p>{q.q}</p>
+        {q.type === 'nota' ? (
+          <div className="quiz-rate">
+            {q.options.map((o) => (
+              <button key={o} type="button" className={'quiz-rate-btn' + (answers[qi] === o ? ' picked' : '')} onClick={() => setAnswers(answers.map((a, j) => (j === qi ? o : a)))}>{o}</button>
+            ))}
+          </div>
+        ) : q.type === 'texto' ? (
+          <>
+            <textarea className="quiz-text" rows={5} placeholder="Escreva aqui com as suas palavras..." value={answers[qi] || ''}
+              onChange={(e) => setAnswers(answers.map((a, j) => (j === qi ? e.target.value : a)))} />
+            {!isWritten(q, answers[qi]) && <small className="muted">Escreva pelo menos uma frase.</small>}
+          </>
+        ) : (
         <div className="quiz-opts">
           {q.options.map((o, k) => (
             <button key={k} type="button" className={'quiz-opt' + (answers[qi] === k ? ' picked' : '')} onClick={() => setAnswers(answers.map((a, j) => (j === qi ? k : a)))}>
@@ -70,12 +88,13 @@ export function Quiz({ questions, send, pass, onAgain, done }) {
             </button>
           ))}
         </div>
+        )}
       </div>
       <div className="bl-nav">
         <Button variant="secondary" disabled={qi === 0} onClick={() => setQi(qi - 1)}><ChevronLeft size={16} /> Anterior</Button>
         {qi < questions.length - 1
-          ? <Button disabled={answers[qi] == null} onClick={() => setQi(qi + 1)}>Próxima <ChevronRight size={16} /></Button>
-          : <Button busy={busy} disabled={answers.some((a) => a == null)} onClick={submit}><CheckCircle2 size={16} /> Enviar</Button>}
+          ? <Button disabled={!answered(q, answers[qi])} onClick={() => setQi(qi + 1)}>Próxima <ChevronRight size={16} /></Button>
+          : <Button busy={busy} disabled={questions.some((x, k) => !answered(x, answers[k]))} onClick={submit}><CheckCircle2 size={16} /> Enviar</Button>}
       </div>
     </>
   );
@@ -385,11 +404,22 @@ export function SabbathLesson({ base }) {
   return <Loading {...state}>{(d) => <SabbathBody key={id} d={d} base={base} />}</Loading>;
 }
 
+/** Páginas da lição (imagens): uma embaixo da outra, sem opção de baixar. */
+function LessonPages({ pages }) {
+  return (
+    <div className="ss-pages" onContextMenu={(e) => e.preventDefault()}>
+      {pages.map((src, k) => <img key={src} src={src} alt={`Página ${k + 1} da lição`} loading={k ? 'lazy' : 'eager'} draggable={false} />)}
+    </div>
+  );
+}
+
 function SabbathBody({ d, base }) {
   useFocusMode();
   const back = `${base}/aprendizagem/escola-sabatina`;
   const goBack = useBack(back);
   const [mode, setMode] = useState('estudo');
+  const v = useNarration(d.audio);
+  const toggle = () => (v.playing ? v.stop() : v.startAt(-1));
   const yt = ytId(d.youtube);
   return (
     <div className="dv-day">
@@ -404,7 +434,14 @@ function SabbathBody({ d, base }) {
               <iframe src={`https://www.youtube-nocookie.com/embed/${yt}`} title="Vídeo da lição" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
             </div>
           )}
-          {d.lesson && (
+          {(d.audio || d.audio_locked) && (
+            <div className="bible-controls ss-listen">
+              <PlayButton v={v} onToggle={toggle} locked={d.audio_locked} />
+            </div>
+          )}
+          <VoiceAudio v={v} />
+          {d.pages?.length > 0 && <LessonPages pages={d.pages} />}
+          {d.lesson && !d.pages?.length && (
             <Card className="ss-read">
               <small>Lição {d.lesson} · Tema da semana</small>
               <b>{d.lesson_title}</b>
@@ -412,7 +449,7 @@ function SabbathBody({ d, base }) {
             </Card>
           )}
           {d.pdf && <PdfBook url={d.pdf} from={d.page_from} to={d.page_to} />}
-          <Button block onClick={() => { setMode('quiz'); window.scrollTo({ top: 0 }); }}><Sparkles size={18} /> {d.completed ? 'Responder de novo' : 'Responder as perguntas'}</Button>
+          <Button block onClick={() => { v.stop(); setMode('quiz'); window.scrollTo({ top: 0 }); }}><Sparkles size={18} /> {d.completed ? 'Responder de novo' : 'Responder as perguntas'}</Button>
         </>
       ) : (
         <Quiz questions={d.questions} pass={d.pass} send={(answers) => api.post(`/escola-sabatina/licao/${d.id}/quiz`, { answers })} done={goBack} />
