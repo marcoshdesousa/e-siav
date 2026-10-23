@@ -122,7 +122,7 @@ test('escola sabatina: trimestre pronto dos jovens aparece mesmo sem PDF; com PD
   const done = (await pedro.post(`/escola-sabatina/licao/${noPdf.id}/quiz`, { answers: [9, 'Aprendi que Deus continua falando comigo.'] })).body;
   assert.equal(done.passed, true);
   if (noPdf.pages.length) {
-    assert.equal(noPdf.pages.length, 3, 'sexta: as páginas do dia');
+    assert.equal(noPdf.pages.length, 2, 'sexta: as páginas do dia, sem a do pequeno grupo');
     const img = await fetch(BASE.replace('/api', '') + noPdf.pages[0]);
     assert.equal(img.status, 401, 'página só para quem entrou');
   }

@@ -202,9 +202,11 @@ function ssMedia(l, memberId) {
   if (!d || !hasPages(qt.key)) return { pages: [], text: [] };
   // O primeiro sábado do trimestre mostra também a capa e a apresentação.
   const from = d === qt.days[0] ? 1 : d.page_from;
-  const pages = [];
-  for (let n = from; n <= d.page_to; n++) if (fs.existsSync(path.join(CONTENT_DIR, qt.key, `${pageNo(n)}.webp`))) pages.push(`/api/escola-sabatina/pagina/${qt.key}/${n}`);
+  // Sexta: sem a última página ("Com Unidade", que é para o pequeno grupo, não para o aluno).
   const idx = qt.days.indexOf(d);
+  const to = idx % 7 === 6 ? d.page_to - 1 : d.page_to;
+  const pages = [];
+  for (let n = from; n <= to; n++) if (fs.existsSync(path.join(CONTENT_DIR, qt.key, `${pageNo(n)}.webp`))) pages.push(`/api/escola-sabatina/pagina/${qt.key}/${n}`);
   let text = [];
   let marks = [];
   try { text = JSON.parse(fs.readFileSync(path.join(CONTENT_DIR, qt.key, 'texto.json'), 'utf8'))[d.date] || []; } catch { /* sem texto */ }
