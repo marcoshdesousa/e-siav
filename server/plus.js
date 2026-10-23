@@ -2,8 +2,8 @@
 //   DBV+          R$ 7,90  — benefícios do app
 //   DBV+ 3 Espec. R$ 19,90 — + 3 especialidades físicas (escolhe 15, a equipe compra 3)
 //   DBV+ 7 Espec. R$ 34,90 — + 7 especialidades físicas (escolhe 20, a equipe compra 7)
-// Todo plano: áudio das leituras, Bom Líder, ranking dos mini-jogos, 30 pacotinhos a
-// cada 30 dias, figurinhas em dobro na compra e o selo de verificado. Só para quem assina (ou ganhou do
+// Todo plano: Bom Líder, ranking dos jogos, jogos sem internet, 40 pacotinhos a cada 30 dias,
+// figurinhas em triplo na compra e o selo de verificado. Os áudios das leituras são de graça para todos. Só para quem assina (ou ganhou do
 // administrador geral); o modo de teste não libera o DBV+.
 import { all, get, run, tx } from './db.js';
 
@@ -24,7 +24,9 @@ export const PLANS = {
   plus7: { id: 'plus7', name: 'DBV+ 7 Especialidades', price_cents: 3490, specialties: 7, pick: 20 },
 };
 export const PLUS_DAYS = 30;
-export const PLUS_PACKS = 30;
+export const PLUS_PACKS = 40;
+/** Compra de pacotinhos: o assinante leva 3 pelo preço de 1. */
+export const PLUS_PACK_MULT = 3;
 
 /** Assinatura do membro (ativa ou não). */
 export function plusOf(memberId) {
@@ -37,12 +39,10 @@ export const isPlus = (memberId) => !!plusOf(memberId)?.active;
 /** Benefício do DBV+ liberado (assinante ativo). */
 export const plusOpen = (memberId) => isPlus(memberId);
 
-/** Áudio da leitura: os primeiros (free) são de graça para todos; os outros são do DBV+. */
-export const gatedAudio = (memberId, audio, free = false) => (!audio ? { audio: null } : free || plusOpen(memberId) ? { audio } : { audio: null, audio_locked: true });
-/** Quantos áudios do começo do Ano Bíblico e da Meditação são de graça. */
-export const FREE_AUDIOS = 5;
+/** Áudio das leituras: liberado para todos (plano grátis também). */
+export const gatedAudio = (_memberId, audio) => ({ audio: audio || null });
 
-/** Pagamento confirmado: +30 dias (somando ao que falta), 30 pacotinhos e, se o plano tiver, a escolha das especialidades. */
+/** Pagamento confirmado: +30 dias (somando ao que falta), 40 pacotinhos e, se o plano tiver, a escolha das especialidades. */
 export function activatePlus(memberId, planId) {
   const plan = PLANS[planId] || PLANS.plus;
   const cur = get('SELECT until FROM member_plus WHERE member_id = ?', memberId);

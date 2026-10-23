@@ -17,7 +17,7 @@ import { audioOf } from '../audio.js';
 import { awardStudyDay } from '../rankings.js';
 import { bestDateStreak, dateStreak, giveBiblePack } from '../streaks.js';
 import { testMode } from './learning.js';
-import { FREE_AUDIOS, gatedAudio } from '../plus.js';
+import { gatedAudio } from '../plus.js';
 
 const r = Router();
 const member = requireAuth('member');
@@ -135,7 +135,7 @@ r.get('/meditacao/:date', member, (req, res) => {
   res.json({
     date, title: m.title, personagem: m.personagem || null, theme: MED_THEME, verse: m.verse, text: m.text, prayer: m.prayer || null, pass: MED_PASS,
     questions: m.questions.map((q) => ({ q: q.q, options: q.options })),
-    best: row?.best || 0, completed: !!row?.completed_at, ...gatedAudio(req.actor.id, audioOf('meditacao', date.slice(5)), date.slice(5) <= `01-${String(FREE_AUDIOS).padStart(2, '0')}`),
+    best: row?.best || 0, completed: !!row?.completed_at, ...gatedAudio(req.actor.id, audioOf('meditacao', date.slice(5))),
   });
 });
 
@@ -209,7 +209,7 @@ function ssMedia(l, memberId) {
   for (let n = from; n <= to; n++) if (fs.existsSync(path.join(CONTENT_DIR, qt.key, `${pageNo(n)}.webp`))) pages.push(`/api/escola-sabatina/pagina/${qt.key}/${n}`);
   let text = [];
   try { text = JSON.parse(fs.readFileSync(path.join(CONTENT_DIR, qt.key, 'texto.json'), 'utf8'))[d.date] || []; } catch { /* sem texto */ }
-  return { pages, text, ...gatedAudio(memberId, audioOf('escola-sabatina', `${qt.key}_${d.date}`), idx < FREE_AUDIOS) };
+  return { pages, text, ...gatedAudio(memberId, audioOf('escola-sabatina', `${qt.key}_${d.date}`)) };
 }
 const quarterPdf = (key) => get('SELECT id FROM sabbath_pdfs WHERE quarter = ? ORDER BY id DESC LIMIT 1', key)?.id || null;
 /** Cria ou atualiza as lições dos trimestres prontos (as criadas à mão pelo admin ficam como estão). */

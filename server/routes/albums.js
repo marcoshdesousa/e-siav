@@ -6,7 +6,7 @@ import { requireAuth } from '../auth.js';
 import { fail, int } from '../util.js';
 import { ALBUMS, MIN_PACKS_TO_COMPLETE, PACK_OPTIONS, REPEATS_PER_FREE_PACK, drawPack } from '../stickers.js';
 import { createPayment, onPaid, payMode, paymentOut } from '../payments.js';
-import { isPlus } from '../plus.js';
+import { PLUS_PACK_MULT, isPlus } from '../plus.js';
 
 const r = Router();
 const member = requireAuth('member');
@@ -60,11 +60,11 @@ r.post('/albuns/:id/pedidos', member, async (req, res) => {
   const a = activeAlbum(req.params.id);
   const packs = int(req.body.packs);
   if (!PACK_OPTIONS.includes(packs)) fail(400, 'Escolha 1, 10, 20 ou 50 pacotinhos');
-  // DBV+: figurinhas em dobro (2 pacotinhos pelo preço de 1).
-  const got = isPlus(req.actor.id) ? packs * 2 : packs;
+  // DBV+: figurinhas em triplo (3 pacotinhos pelo preço de 1).
+  const got = isPlus(req.actor.id) ? packs * PLUS_PACK_MULT : packs;
   const p = await createPayment({
     memberId: req.actor.id, purpose: 'figurinhas', ref: { album: a.id, packs: got },
-    title: `${got} pacotinho${got > 1 ? 's' : ''} de figurinhas${got > packs ? ' (dobro DBV+)' : ''}`, amountCents: packs * a.price_cents,
+    title: `${got} pacotinho${got > 1 ? 's' : ''} de figurinhas${got > packs ? ' (triplo DBV+)' : ''}`, amountCents: packs * a.price_cents,
   });
   res.json(await paymentOut(p));
 });

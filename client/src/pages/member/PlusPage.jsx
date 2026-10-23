@@ -135,7 +135,7 @@ export function PlusNudge({ to }) {
   return (
     <div className="plus-bar">
       <img src="/marca/logo.svg" alt="" />
-      <Link to={to} className="plus-bar-text"><b>Seja DBV+</b><small>Áudio, Bom Líder e figurinhas em dobro</small></Link>
+      <Link to={to} className="plus-bar-text"><b>Seja DBV+</b><small>Bom Líder, jogos sem internet e figurinhas em triplo</small></Link>
       <Link to={to} className="plus-bar-btn">Ver planos</Link>
       <button type="button" className="plus-bar-x" aria-label="Fechar" onClick={close}><X size={16} /></button>
     </div>

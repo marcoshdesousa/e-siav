@@ -1,4 +1,4 @@
-// DBV+: assinatura pelo Pix, benefícios, especialidades escolhidas e figurinhas em dobro.
+// DBV+: assinatura pelo Pix, benefícios, especialidades escolhidas e figurinhas em triplo.
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
@@ -78,11 +78,11 @@ test('DBV+: sem assinatura (modo de teste desligado) fica bloqueado; assinando, 
   assert.equal(plus.mine.active, true);
   assert.equal((await pedro.post('/plus/assinar', { plan: 'plus' })).status, 409, 'um plano por vez: só assina de novo quando vencer');
   assert.equal(plus.mine.picks_needed, 15);
-  assert.equal((await pedro.get('/albuns/biblico')).body.packs_unopened, before + 30, '30 pacotinhos');
+  assert.equal((await pedro.get('/albuns/biblico')).body.packs_unopened, before + 40, '40 pacotinhos');
   const me = (await pedro.get('/auth/me')).body.actor;
   assert.ok(me.plus && me.plus_open);
   const dbl = (await pedro.post('/albuns/biblico/pedidos', { packs: 1 })).body;
-  assert.match(dbl.title, /^2 pacotinhos.*dobro/, 'figurinhas em dobro');
+  assert.match(dbl.title, /^3 pacotinhos.*triplo/, 'figurinhas em triplo');
   // escolhe 15 especialidades
   const cat = (await pedro.get('/catalog?type=especialidade')).body;
   assert.equal((await pedro.put('/plus/especialidades', { ids: cat.slice(0, 3).map((c) => c.id) })).status, 400, 'precisa ser 15');

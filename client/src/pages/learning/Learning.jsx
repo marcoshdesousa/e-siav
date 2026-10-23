@@ -119,8 +119,7 @@ export function LearningHub({ base }) {
                   <small>Manual Administrativo (50 aulas) e Nisto Cremos (16 anos ou mais)</small>
                 </Link>
               )}
-              <div className="learn-card c2 soon lock">
-                <span className="plus">DBV+</span>
+              <div className="learn-card c2 soon">
                 <span className="learn-ico"><BookOpen size={30} /></span>
                 <b>Livro do Ano</b>
                 <small>Um capítulo por semana</small>
