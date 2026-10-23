@@ -123,7 +123,7 @@ export default function SignupPage() {
                 </div>
               </div>
               <CadastroFlow local={`${c.name} — sistema online`} submitLabel="Enviar inscrição" busy={busy} onSubmit={send} />
-              <p className="muted small center">Cada pessoa pode estar em um clube só. Se você já é de outro clube, peça para este clube solicitar a sua transferência.</p>
+              <p className="muted small center">Saiu de outro clube? É só fazer a inscrição aqui: este clube confere e aprova.</p>
             </>
           )}
         </Loading>

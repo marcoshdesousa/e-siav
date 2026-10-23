@@ -21,7 +21,6 @@ r.get('/club/overview', (req, res) => {
   const id = req.actor.id;
   const profile = clubProfile(id);
   profile.signup_pending = get(`SELECT COUNT(*) n FROM members WHERE club_id = ? AND status = 'pendente'`, id).n;
-  profile.transfers_pending = get(`SELECT COUNT(*) n FROM transfers WHERE (from_club_id = ? AND status = 'pendente_origem') OR (to_club_id = ? AND status = 'pendente_destino')`, id, id).n;
   profile.pending_reviews = get(`SELECT COUNT(*) n FROM submissions s JOIN requirements r ON r.id = s.requirement_id WHERE r.creator_type = 'club' AND r.club_id = ? AND s.status = 'enviado'`, id).n;
   profile.pending_achievements = get(`SELECT COUNT(*) n FROM achievement_requests q JOIN members m ON m.id = q.member_id JOIN content c ON c.id = q.content_id WHERE m.club_id = ? AND q.status = 'pendente' AND c.type = 'especialidade'`, id).n;
   profile.open_reports = get(`SELECT COUNT(*) n FROM reports WHERE status = 'aberta' AND (club_id = ? OR reported_club_id = ?)`, id, id).n;

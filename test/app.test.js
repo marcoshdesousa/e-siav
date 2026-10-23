@@ -317,21 +317,6 @@ test('clube: número automático, código, senhas geradas (2 letras + 4 números
 
 const pedroFicha = async () => (await login('membros', 'pedro')).get('/club/members/1/ficha');
 
-test('transferência: clube novo pede, clube atual aceita e pronto', async () => {
-  const aguias = await login('clube', 'aguias', 'AG2026');
-  const leoes = await login('clube', 'leoes', 'LE2026');
-  const gabriel = (await aguias.get('/club/members')).body.find((m) => m.name === 'Gabriel Oliveira');
-  assert.equal((await leoes.post('/club/transfers', { name: 'Gabriel Errado', code: gabriel.code })).status, 404, 'nome e código precisam bater');
-  const t = await leoes.post('/club/transfers', { name: 'gabriel oliveira', code: gabriel.code });
-  assert.equal(t.status, 200);
-  assert.equal((await leoes.post(`/club/transfers/${t.body.id}/destino`, { accept: true })).status, 400, 'clube atual ainda não aceitou');
-  assert.equal((await leoes.post(`/club/transfers/${t.body.id}/origem`, { accept: true })).status, 400, 'só o clube atual aceita a saída');
-  assert.ok((await aguias.get('/club/members')).body.some((m) => m.id === gabriel.id), 'ainda no clube antigo');
-  assert.equal((await aguias.post(`/club/transfers/${t.body.id}/origem`, { accept: true })).status, 200);
-  assert.ok(!(await aguias.get('/club/members')).body.some((m) => m.id === gabriel.id));
-  assert.ok((await leoes.get('/club/members')).body.some((m) => m.id === gabriel.id), 'agora no clube novo');
-});
-
 test('unidade cria requisito para os próprios desbravadores; requisito só para conselheiros', async () => {
   const falcoes = await login('clube', '4821', 'FA1111');
   const deadline = new Date(Date.now() + 864e5).toISOString();

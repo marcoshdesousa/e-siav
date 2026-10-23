@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import {
-  ArrowLeftRight, Award, BadgeCheck, KeyRound, UserPlus, CalendarDays, Check, Megaphone, Plus, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, ClipboardCheck, Globe, FolderOpen, BookOpen, Wrench, LifeBuoy,
+  Award, BadgeCheck, KeyRound, UserPlus, CalendarDays, Check, Megaphone, Plus, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, ClipboardCheck, Globe, FolderOpen, BookOpen, Wrench, LifeBuoy,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { KIND_LABEL, plural } from '../../format.js';
 import { MembersBrowser, memberActions } from './Members.jsx';
 import { AccessInfo } from '../Signup.jsx';
-import TransfersPage from './Transfers.jsx';
 import {
   AgendaPage, BibliotecaPage, CertificadoPage, FerramentasPage, FinancasPage, MembrosPorGrupo,
 } from './Folders.jsx';
@@ -62,7 +61,6 @@ function ClubHome() {
               <Stat icon={Flag} value={c.unit_count} label="Unidades" to={`${base}/unidades`} />
               <Stat icon={BadgeCheck} value={c.pending_achievements} label="Especialidades p/ aprovar" to={`${base}/biblioteca`} accent={c.pending_achievements > 0} />
               <Stat icon={Inbox} value={c.pending_reviews} label="Envios p/ avaliar" to={`${base}/requisitos?aba=corrigir`} accent={c.pending_reviews > 0} />
-              <Stat icon={ArrowLeftRight} value={c.transfers_pending} label="Transferências" to={`${base}/transferencias`} accent={c.transfers_pending > 0} />
             </div>
           </Section>
 
@@ -470,7 +468,7 @@ const pasta = (title, subtitle, items) => <><PageHeader title={title} subtitle={
 
 /** Pasta de cima de cada tela do clube (para o botão Voltar). */
 const PARENT = {
-  agenda: 'secretaria', membros: 'secretaria', transferencias: 'secretaria',
+  agenda: 'secretaria', membros: 'secretaria',
   secretaria: 'mais', unidades: 'mais', financas: 'mais', biblioteca: 'mais', ferramentas: 'mais', suporte: 'mais', eventos: 'mais', anuncios: 'mais', clubes: 'mais',
 };
 const clubParent = (path) => {
@@ -491,10 +489,9 @@ export default function ClubApp() {
   const secretaria = [
     { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Reuniões, acampamentos e datas do App' },
     { to: `${base}/membros`, icon: Users, label: 'Membros', hint: 'Cadastrar e ver os membros' },
-    { to: `${base}/transferencias`, icon: ArrowLeftRight, label: 'Transferências', hint: 'Que foram, que vieram e pendentes' },
   ];
   const more = [
-    { to: `${base}/secretaria`, icon: FolderOpen, label: 'Secretaria', hint: 'Agenda, membros e transferências' },
+    { to: `${base}/secretaria`, icon: FolderOpen, label: 'Secretaria', hint: 'Agenda e membros' },
     { to: `${base}/unidades`, icon: Flag, label: 'Unidades', hint: 'Unidades, ranking e membros' },
     { to: `${base}/financas`, icon: Wallet, label: 'Tesouraria', hint: 'Balancete do clube' },
     { to: `${base}/biblioteca`, icon: BookOpen, label: 'Biblioteca', hint: 'Especialidades e classes' },
@@ -513,11 +510,10 @@ export default function ClubApp() {
           <Shell tabs={tabs} parentOf={clubParent}>
             <Routes>
               <Route index element={<ClubHome />} />
-              <Route path="secretaria" element={pasta('Secretaria', 'Agenda, membros e transferências', secretaria)} />
+              <Route path="secretaria" element={pasta('Secretaria', 'Agenda e membros', secretaria)} />
               <Route path="agenda" element={<AgendaPage />} />
               <Route path="membros" element={<MembersPage />} />
               <Route path="membros/novo" element={<NewMemberPage />} />
-              <Route path="transferencias" element={<TransfersPage />} />
               <Route path="requisitos" element={<RankingFolder />} />
               <Route path="ranking" element={<RankingHub base={base} />} />
               <Route path="sgc" element={<EmbeddedSite title="SGC" linkKey="link_sgc" subtitle="Sistema de Gestão de Clubes" />} />
