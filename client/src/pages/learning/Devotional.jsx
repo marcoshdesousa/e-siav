@@ -404,30 +404,11 @@ export function SabbathLesson({ base }) {
   return <Loading {...state}>{(d) => <SabbathBody key={id} d={d} base={base} />}</Loading>;
 }
 
-/**
- * Páginas da lição (imagens): uma embaixo da outra, sem opção de baixar. Enquanto a voz lê,
- * uma faixa colorida marca as linhas do trecho (marks[trecho] = [[página, x, y, w, h], ...] em %).
- */
-function LessonPages({ pages, marks = [], pos = -1, follow = false }) {
-  const ref = useRef(null);
-  const cur = marks[pos] || [];
-  useEffect(() => {
-    if (!follow || !cur.length) return;
-    ref.current?.querySelector('.ss-mark')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, [pos, follow, cur.length]);
+/** Páginas da lição (imagens): uma embaixo da outra, sem opção de baixar. */
+function LessonPages({ pages }) {
   return (
-    <div className="ss-pages" ref={ref} onContextMenu={(e) => e.preventDefault()}>
-      {pages.map((src, k) => {
-        const n = Number(src.split('/').pop());
-        return (
-          <div key={src} className="ss-page">
-            <img src={src} alt={`Página ${k + 1} da lição`} loading={k ? 'lazy' : 'eager'} draggable={false} />
-            {cur.filter((r) => r[0] === n).map((r, j) => (
-              <span key={j} className="ss-mark" style={{ left: `${r[1]}%`, top: `${r[2]}%`, width: `${r[3]}%`, height: `${r[4]}%` }} />
-            ))}
-          </div>
-        );
-      })}
+    <div className="ss-pages" onContextMenu={(e) => e.preventDefault()}>
+      {pages.map((src, k) => <img key={src} src={src} alt={`Página ${k + 1} da lição`} loading={k ? 'lazy' : 'eager'} draggable={false} />)}
     </div>
   );
 }
@@ -488,7 +469,7 @@ function SabbathBody({ d, base }) {
             </div>
           )}
           {hasText && view === 'texto' && <LessonText text={d.text} v={v} />}
-          {d.pages?.length > 0 && (!hasText || view === 'revista') && <LessonPages pages={d.pages} marks={d.marks} pos={v.pos} follow={v.playing} />}
+          {d.pages?.length > 0 && (!hasText || view === 'revista') && <LessonPages pages={d.pages} />}
           {d.lesson && !d.pages?.length && !hasText && (
             <Card className="ss-read">
               <small>Lição {d.lesson} · Tema da semana</small>

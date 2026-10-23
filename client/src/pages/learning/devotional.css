@@ -72,7 +72,5 @@
 .ss-text h2 { font-size: 1.15rem; margin: 0 0 .6rem; }
 .ss-text p { font-size: 1.02rem; line-height: 1.6; margin: 0 0 .75rem; border-radius: 8px; transition: background .2s; }
 .ss-text .reading { background: rgba(249, 115, 22, .16); }
-.ss-page { position: relative; }
-.ss-mark { position: absolute; background: rgba(249, 168, 37, .6); border-radius: 4px; mix-blend-mode: multiply; transition: all .25s; pointer-events: none; }
 .ss-text span { border-radius: 6px; transition: background .2s; cursor: pointer; }
 .ss-text span.reading, .ss-text h2.reading { background: rgba(249, 168, 37, .38); }
