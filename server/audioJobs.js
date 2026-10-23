@@ -61,7 +61,9 @@ export function audioJobs(kind) {
     });
   }
   if (kind === 'meditacao') {
-    return loadDir(path.join(DATA, 'meditacao')).map((m) => {
+    // Um dia pode aparecer em mais de um arquivo: vale o último (o mesmo que o servidor usa).
+    const byDate = new Map(loadDir(path.join(DATA, 'meditacao')).map((m) => [m.date, m]));
+    return [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date)).map((m) => {
       const segments = meditationSegments(m);
       return { id: m.date, hash: hashOf(segments), segments };
     });
