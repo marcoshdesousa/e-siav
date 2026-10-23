@@ -419,8 +419,10 @@ function SabbathBody({ d, base }) {
   const goBack = useBack(back);
   const [mode, setMode] = useState('estudo');
   const v = useNarration(d.audio);
-  const toggle = () => (v.playing ? v.stop() : v.startAt(-1));
+  const toggle = () => (v.playing ? v.stop() : v.startAt(v.pos < 0 ? 0 : -1));
   const yt = ytId(d.youtube);
+  const hasText = d.text?.length > 0;
+  const [view, setView] = useState(hasText ? 'texto' : 'revista');
   return (
     <div className="dv-day">
       <div className="bible-top">
@@ -440,8 +442,21 @@ function SabbathBody({ d, base }) {
             </div>
           )}
           <VoiceAudio v={v} />
-          {d.pages?.length > 0 && <LessonPages pages={d.pages} />}
-          {d.lesson && !d.pages?.length && (
+          {hasText && d.pages?.length > 0 && (
+            <div className="seg ss-view" role="tablist">
+              <button type="button" className={view === 'texto' ? 'active' : ''} onClick={() => setView('texto')}>Texto</button>
+              <button type="button" className={view === 'revista' ? 'active' : ''} onClick={() => setView('revista')}>Revista</button>
+            </div>
+          )}
+          {hasText && view === 'texto' && (
+            <div className="ss-text">
+              {d.text.map((t, k) => (k === 0
+                ? <h2 key={k} className={v.pos === k ? 'reading' : ''} onClick={() => v.available && v.startAt(k)}>{t}</h2>
+                : <p key={k} className={v.pos === k ? 'reading' : ''} onClick={() => v.available && v.startAt(k)}>{t}</p>))}
+            </div>
+          )}
+          {d.pages?.length > 0 && (!hasText || view === 'revista') && <LessonPages pages={d.pages} />}
+          {d.lesson && !d.pages?.length && !hasText && (
             <Card className="ss-read">
               <small>Lição {d.lesson} · Tema da semana</small>
               <b>{d.lesson_title}</b>

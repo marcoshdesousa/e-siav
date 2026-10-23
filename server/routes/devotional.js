@@ -199,13 +199,15 @@ const pageNo = (n) => String(n).padStart(3, '0');
 function ssMedia(l, memberId) {
   const qt = QUARTERS.find((x) => x.key === l.source);
   const d = qt?.days.find((x) => x.date === l.date);
-  if (!d || !hasPages(qt.key)) return { pages: [] };
+  if (!d || !hasPages(qt.key)) return { pages: [], text: [] };
   // O primeiro sábado do trimestre mostra também a capa e a apresentação.
   const from = d === qt.days[0] ? 1 : d.page_from;
   const pages = [];
   for (let n = from; n <= d.page_to; n++) if (fs.existsSync(path.join(CONTENT_DIR, qt.key, `${pageNo(n)}.webp`))) pages.push(`/api/escola-sabatina/pagina/${qt.key}/${n}`);
   const idx = qt.days.indexOf(d);
-  return { pages, ...gatedAudio(memberId, audioOf('escola-sabatina', `${qt.key}_${d.date}`), idx < FREE_AUDIOS) };
+  let text = [];
+  try { text = JSON.parse(fs.readFileSync(path.join(CONTENT_DIR, qt.key, 'texto.json'), 'utf8'))[d.date] || []; } catch { /* sem texto */ }
+  return { pages, text, ...gatedAudio(memberId, audioOf('escola-sabatina', `${qt.key}_${d.date}`), idx < FREE_AUDIOS) };
 }
 const quarterPdf = (key) => get('SELECT id FROM sabbath_pdfs WHERE quarter = ? ORDER BY id DESC LIMIT 1', key)?.id || null;
 /** Cria ou atualiza as lições dos trimestres prontos (as criadas à mão pelo admin ficam como estão). */

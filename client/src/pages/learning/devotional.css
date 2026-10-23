@@ -67,3 +67,8 @@
 .quiz-rate { display: grid; grid-template-columns: repeat(4, 1fr); gap: .6rem; margin-top: .6rem; }
 .quiz-rate-btn { padding: 1rem 0; border-radius: 16px; border: 2px solid rgba(255,255,255,.5); background: #fff; color: #0E2A6B; font: inherit; font-size: 1.6rem; font-weight: 800; cursor: pointer; }
 .quiz-rate-btn.picked { border-color: #f97316; background: #fff7ed; color: #c2410c; }
+.ss-view { margin-bottom: .7rem; }
+.ss-text { background: var(--surface); border: 1px solid var(--line, var(--border)); border-radius: 16px; padding: 1rem 1.1rem; margin-bottom: .8rem; }
+.ss-text h2 { font-size: 1.15rem; margin: 0 0 .6rem; }
+.ss-text p { font-size: 1.02rem; line-height: 1.6; margin: 0 0 .75rem; border-radius: 8px; transition: background .2s; }
+.ss-text .reading { background: rgba(249, 115, 22, .16); }
