@@ -89,8 +89,7 @@ r.post('/inscricao/:token', (req, res) => {
     if (!unitId) fail(400, 'Escolha a unidade em que você é conselheiro');
   } else fail(400, 'Com 16 anos ou mais, escolha Diretoria ou Conselheiro');
   // Evita cadastro repetido (mesmo nome e nascimento no mesmo clube).
-  const dup = get(`SELECT code FROM members WHERE club_id = ? AND lower(name) = lower(?) AND birth_date = ? AND status <> 'inativo'`, s.club_id, name, birth);
-  if (dup) fail(409, `Você já tem cadastro neste clube. Entre com o código ${dup.code} e o ano de nascimento.`);
+  // Nome repetido no mesmo clube é permitido (pode ser coincidência): cada pessoa tem o seu código.
   const out = tx(() => {
     const code = newMemberCode();
     const id = Number(run(

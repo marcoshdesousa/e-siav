@@ -7,9 +7,9 @@ import { fail, int } from '../util.js';
 const r = Router();
 r.use('/rankings', requireAuth());
 
-// Não existe ranking geral de todos os distritos: cada um vê o do seu distrito
-// (membros, unidades e clubes do distrito). O Administrador Geral escolhe o distrito.
-const district = (req) => rankingDistrict(req.actor, int(req.query.district_id));
+// Rankings: Brasil (todo mundo do app, ?escopo=brasil), distrito (o do usuário; o Administrador
+// Geral escolhe) e clube (rotas /rankings/club/...).
+const district = (req) => (req.query.escopo === 'brasil' ? null : rankingDistrict(req.actor, int(req.query.district_id)));
 
 r.get('/rankings/members', (req, res) => res.json(membersRanking(district(req))));
 r.get('/rankings/clubs', (req, res) => res.json(clubsRanking(district(req))));
@@ -41,7 +41,7 @@ r.get('/rankings/club/:clubId/leaders', (req, res) => {
 
 const pick = (row) => (row ? { position: row.position, points: row.points, bible_points: row.bible_points } : null);
 
-// Resumo: a posição do membro, da sua unidade e do seu clube de uma vez (no clube e no distrito).
+// Resumo: a posição do membro, da sua unidade e do seu clube de uma vez (no clube, no distrito e no Brasil).
 r.get('/rankings/summary', (req, res) => {
   const a = req.actor;
   if (a.type === 'admin') return res.json({});
@@ -52,13 +52,15 @@ r.get('/rankings/summary', (req, res) => {
   res.json({
     district: d ? get('SELECT id, name FROM districts WHERE id = ?', d) : null,
     member: a.type === 'member' && a.kind === 'desbravador' ? pick(positionOf(membersRanking(d), a.id)) : null,
+    member_brasil: a.type === 'member' && a.kind === 'desbravador' ? pick(positionOf(membersRanking(null), a.id)) : null,
     member_club: a.type === 'member' && a.kind === 'desbravador' ? pick(positionOf(clubMembersRanking(clubId), a.id)) : null,
     leader: a.type === 'member' && a.kind === 'lideranca' ? pick(positionOf(leadersRanking(d), a.id)) : null,
+    leader_brasil: a.type === 'member' && a.kind === 'lideranca' ? pick(positionOf(leadersRanking(null), a.id)) : null,
     leader_club: a.type === 'member' && a.kind === 'lideranca' ? pick(positionOf(clubLeadersRanking(clubId), a.id)) : null,
     unit: unitRow && !unitRow.is_leadership
-      ? { name: unitRow.name, id: unitRow.id, club: pick(positionOf(clubUnitsRanking(clubId), unitId)), general: pick(positionOf(unitsRanking(d), unitId)) }
+      ? { name: unitRow.name, id: unitRow.id, club: pick(positionOf(clubUnitsRanking(clubId), unitId)), general: pick(positionOf(unitsRanking(d), unitId)), brasil: pick(positionOf(unitsRanking(null), unitId)) }
       : null,
-    club: { id: clubId, name: get('SELECT name FROM clubs WHERE id = ?', clubId).name, ...pick(positionOf(clubsRanking(d), clubId)) },
+    club: { id: clubId, name: get('SELECT name FROM clubs WHERE id = ?', clubId).name, ...pick(positionOf(clubsRanking(d), clubId)), brasil: pick(positionOf(clubsRanking(null), clubId)) },
   });
 });
 

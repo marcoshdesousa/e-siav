@@ -898,3 +898,4 @@ input::-webkit-datetime-edit { padding: 0; }
 @media (prefers-reduced-motion: reduce) { .st-item.lit .st-flame { animation: none; } }
 .bottom-nav-inner:has(> a:nth-child(6)) a { white-space: nowrap; padding-left: 0; padding-right: 0; }
 @media (max-width: 370px) { .bottom-nav-inner:has(> a:nth-child(6)) a { font-size: .56rem; } .bottom-nav-inner:has(> a:nth-child(6)) .nav-ico { width: 36px; } }
+.rank-scope { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }

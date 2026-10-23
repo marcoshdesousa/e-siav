@@ -100,7 +100,7 @@ test('link de inscrição: desbravador, diretoria e conselheiro entram no clube 
   assert.ok(kid.cookie, 'já entra logado');
   const again = await login('membros', kid.body.code, kid.body.password);
   assert.equal(again.actor.unit_id, unit);
-  assert.equal((await anon('POST', `/inscricao/${on.token}`, { name: 'Joãozinho Teste', birth_date: yearsAgo(12), cargo: 'desbravador', unit_id: unit })).status, 409, 'cadastro repetido');
+  assert.equal((await anon('POST', `/inscricao/${on.token}`, { name: 'Joãozinho Teste', birth_date: yearsAgo(12), cargo: 'desbravador', unit_id: unit })).status, 200, 'mesmo nome no mesmo clube pode (coincidência)');
   assert.equal((await anon('POST', `/inscricao/${on.token}`, { name: 'Pequeno Demais', birth_date: yearsAgo(8), cargo: 'desbravador', unit_id: unit })).status, 400);
   assert.equal((await anon('POST', `/inscricao/${on.token}`, { name: 'Menino Diretor', birth_date: yearsAgo(13), cargo: 'diretoria' })).status, 400, 'até 15 anos só desbravador');
   const dir = await anon('POST', `/inscricao/${on.token}`, { name: 'Ana Diretoria', birth_date: yearsAgo(30), cargo: 'diretoria' });

@@ -48,9 +48,9 @@ const BIBLE_COLS = 'COALESCE(bp.points, 0) AS bible_points, bp.last_at AS bible_
 /** Ranking de membros do distrito: só desbravadores, requisitos do App (Distrito) + Leitura bíblica. */
 export function membersRanking(districtId = null) {
   const rows = all(
-    `SELECT m.id, m.name, m.photo, m.code, m.birth_date, c.id AS club_id, c.name AS club_name,
+    `SELECT m.id, m.name, m.photo, m.code, m.birth_date, c.id AS club_id, c.name AS club_name, d.name AS district_name,
             COALESCE(sc.points, 0) AS points, sc.last_at, ${BIBLE_COLS}
-     FROM members m JOIN clubs c ON c.id = m.club_id
+     FROM members m JOIN clubs c ON c.id = m.club_id JOIN districts d ON d.id = c.district_id
      ${scoreJoin('member', 'm.id', "r.creator_type = 'admin' AND r.audience = 'member'")}
      ${bibleJoin('member_id', 'm.id', BIBLE_POINTS.member)}
      WHERE m.status = 'ativo' AND (? IS NULL OR c.district_id = ?)`,
@@ -84,9 +84,9 @@ export function clubMembersRanking(clubId) {
  */
 export function leadersRanking(districtId = null) {
   const rows = all(
-    `SELECT m.id, m.name, m.photo, m.code, m.cargo, m.birth_date, c.id AS club_id, c.name AS club_name,
+    `SELECT m.id, m.name, m.photo, m.code, m.cargo, m.birth_date, c.id AS club_id, c.name AS club_name, d.name AS district_name,
             COALESCE(sc.points, 0) AS points, sc.last_at, ${BIBLE_COLS}
-     FROM members m JOIN clubs c ON c.id = m.club_id
+     FROM members m JOIN clubs c ON c.id = m.club_id JOIN districts d ON d.id = c.district_id
      ${scoreJoin('member', 'm.id', "r.creator_type = 'admin' AND r.audience = 'member'")}
      ${bibleJoin('member_id', 'm.id', BIBLE_POINTS.member)}
      WHERE m.status = 'ativo' AND (? IS NULL OR c.district_id = ?)`,
@@ -127,9 +127,9 @@ export function clubsRanking(districtId = null) {
 /** Ranking de unidades do distrito: requisitos gerais de unidade + 100 por dia de Leitura bíblica dos membros. */
 export function unitsRanking(districtId = null) {
   return rank(all(
-    `SELECT u.id, u.name, u.logo, c.id AS club_id, c.name AS club_name,
+    `SELECT u.id, u.name, u.logo, c.id AS club_id, c.name AS club_name, d.name AS district_name,
             COALESCE(sc.points, 0) AS points, sc.last_at, ${BIBLE_COLS}
-     FROM units u JOIN clubs c ON c.id = u.club_id
+     FROM units u JOIN clubs c ON c.id = u.club_id JOIN districts d ON d.id = c.district_id
      ${scoreJoin('unit', 'u.id', "r.creator_type = 'admin' AND r.audience = 'unit'")}
      ${bibleJoin('unit_id', 'u.id', BIBLE_POINTS.unit)}
      WHERE u.is_leadership = 0 AND (? IS NULL OR c.district_id = ?)`,
