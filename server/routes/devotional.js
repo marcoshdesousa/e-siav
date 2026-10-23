@@ -187,6 +187,8 @@ const QUARTER_DIR = path.join(HERE, '..', 'data', 'escola-sabatina');
 const QUARTERS = fs.existsSync(QUARTER_DIR)
   ? fs.readdirSync(QUARTER_DIR).filter((f) => f.endsWith('.json')).sort().map((f) => JSON.parse(fs.readFileSync(path.join(QUARTER_DIR, f), 'utf8')))
   : [];
+// Lição (semana) de cada dia dos trimestres prontos: número e título da lição.
+const QUARTER_WEEK = new Map(QUARTERS.flatMap((qt) => qt.days.map((d) => [`${qt.category}|${d.date}`, { lesson: d.lesson, lesson_title: qt.days.find((x) => x.lesson === d.lesson)?.title }])));
 const quarterPdf = (key) => get('SELECT id FROM sabbath_pdfs WHERE quarter = ? ORDER BY id DESC LIMIT 1', key)?.id || null;
 /** Cria ou atualiza as lições dos trimestres prontos (as criadas à mão pelo admin ficam como estão). */
 function syncQuarters() {
@@ -220,7 +222,7 @@ r.get('/escola-sabatina', member, (req, res) => {
   const list = all(`SELECT id, category, date, title, youtube IS NOT NULL AS has_video FROM sabbath_lessons
     WHERE category IN (${SS_IDS.map(() => '?').join(',')}) AND (pdf_id IS NOT NULL OR youtube IS NOT NULL) ORDER BY date DESC, category`, ...SS_IDS).map((l) => {
     const row = rows.get(l.id);
-    return { ...l, has_video: !!l.has_video, locked: !openDate(l.date, today), done: !!row?.completed_at, today: l.date === today };
+    return { ...l, ...QUARTER_WEEK.get(`${l.category}|${l.date}`), has_video: !!l.has_video, locked: !openDate(l.date, today), done: !!row?.completed_at, today: l.date === today };
   });
   res.json({ ...sabbathSummary(req.actor.id, today), test: testMode(), categories: SS_CATEGORIES, mine: ssCategoryFor(req.actor.birth_date), lessons: list });
 });

@@ -245,18 +245,7 @@ export function SabbathHub({ base }) {
               <Tabs tabs={d.categories.map((x) => [x.id, x.name])} value={c} onChange={setCat} />
               <p className="small muted">{d.categories.find((x) => x.id === c)?.ages}{c === d.mine ? ' · a sua idade' : ''}. Todas as lições ficam abertas: a lição do dia, de qualquer categoria, vale para a sequência.</p>
               {!list.length ? <Card className="small center">As lições de {d.categories.find((x) => x.id === c)?.name} ainda vão ser colocadas.</Card> : (
-                <div className="day-list">
-                  {list.map((l) => {
-                    const body = (
-                      <>
-                        <span className="dv-date"><b>{Number(l.date.slice(8))}</b><small>{MONTHS[Number(l.date.slice(5, 7)) - 1].slice(0, 3)}</small></span>
-                        <span className="grow"><b>{l.title}</b><small>{l.today ? 'Hoje · ' : ''}{l.has_video ? 'Com vídeo · ' : ''}{l.done ? 'Concluída' : l.locked ? `Libera em ${br(l.date)}` : 'Estudar'}</small></span>
-                        <span className="day-st">{l.locked ? <Lock size={16} /> : l.done ? <CheckCircle2 size={18} /> : <ChevronRight size={18} />}</span>
-                      </>
-                    );
-                    return l.locked ? <div key={l.id} className="day-row locked">{body}</div> : <Link key={l.id} to={`${base}/aprendizagem/escola-sabatina/${l.id}`} className={'day-row' + (l.done ? ' feito' : '')}>{body}</Link>;
-                  })}
-                </div>
+                <SabbathWeeks list={list} today={d.today} base={base} />
               )}
             </>
           );
@@ -264,6 +253,61 @@ export function SabbathHub({ base }) {
       </Loading>
     </>
   );
+}
+
+const WEEKDAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+const weekday = (iso) => new Date(iso + 'T12:00:00Z').getUTCDay();
+/** Sábado que abre a semana da lição (a semana vai de sábado a sexta). */
+const weekStart = (iso) => {
+  const d = new Date(iso + 'T12:00:00Z');
+  d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
+  return d.toISOString().slice(0, 10);
+};
+const dm = (iso) => iso.slice(8) + '/' + iso.slice(5, 7);
+
+/** As lições separadas por semana (sábado a sexta), com o dia a dia dentro. A semana de hoje vem aberta. */
+function SabbathWeeks({ list, today, base }) {
+  const weeks = useMemo(() => {
+    const map = new Map();
+    for (const l of [...list].sort((a, b) => a.date.localeCompare(b.date))) {
+      const k = weekStart(l.date);
+      if (!map.has(k)) map.set(k, []);
+      map.get(k).push(l);
+    }
+    return [...map.entries()].map(([start, days], i) => {
+      const end = new Date(start + 'T12:00:00Z');
+      end.setUTCDate(end.getUTCDate() + 6);
+      const first = days.find((x) => x.lesson_title) || days[0];
+      return { start, end: end.toISOString().slice(0, 10), days, n: first.lesson || i + 1, title: first.lesson_title || days.find((x) => weekday(x.date) === 6)?.title || `Semana de ${dm(start)}` };
+    });
+  }, [list]);
+  const current = weekStart(today);
+  const openRef = useRef(null);
+  useEffect(() => { openRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, []);
+  return weeks.map((w) => {
+    const done = w.days.filter((x) => x.done).length;
+    const isNow = w.start === current;
+    return (
+      <details key={w.start} className={'month ss-week' + (isNow ? ' now' : '')} open={isNow} ref={isNow ? openRef : null}>
+        <summary>
+          <span className="grow"><small>Lição {w.n} · {dm(w.start)} a {dm(w.end)}{isNow ? ' · esta semana' : ''}</small><b>{w.title}</b></span>
+          <small className={done === w.days.length ? 'ss-done' : ''}>{done}/{w.days.length}</small>
+        </summary>
+        <div className="day-list">
+          {w.days.map((l) => {
+            const body = (
+              <>
+                <span className="dv-date"><b>{Number(l.date.slice(8))}</b><small>{WEEKDAYS[weekday(l.date)].slice(0, 3)}</small></span>
+                <span className="grow"><b>{l.title}</b><small>{l.today ? 'Hoje · ' : ''}{l.has_video ? 'Com vídeo · ' : ''}{l.done ? 'Concluída' : l.locked ? `Libera em ${br(l.date)}` : 'Estudar'}</small></span>
+                <span className="day-st">{l.locked ? <Lock size={16} /> : l.done ? <CheckCircle2 size={18} /> : <ChevronRight size={18} />}</span>
+              </>
+            );
+            return l.locked ? <div key={l.id} className="day-row locked">{body}</div> : <Link key={l.id} to={`${base}/aprendizagem/escola-sabatina/${l.id}`} className={'day-row' + (l.done ? ' feito' : '') + (l.today ? ' hoje' : '')}>{body}</Link>;
+          })}
+        </div>
+      </details>
+    );
+  });
 }
 
 const ytId = (url) => (url || '').match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/)?.[1] || null;
