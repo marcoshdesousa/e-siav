@@ -48,7 +48,8 @@ async function login(mode, username, password) {
   const { actor } = await res.json();
   const call = async (method, url, body) => {
     const opts = { method, headers: { cookie } };
-    if (body) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
+    if (body instanceof FormData) opts.body = body;
+    else if (body) { opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
     const r = await fetch(BASE + url, opts);
     return { status: r.status, body: await r.json().catch(() => null) };
   };
@@ -91,7 +92,7 @@ test('escola sabatina: admin cria a lição do dia; membro estuda e conta na seq
   })).body.id;
   assert.ok(id);
   const hub = (await pedro.get('/escola-sabatina')).body;
-  assert.equal(hub.categories.length, 4);
+  assert.deepEqual(hub.categories.map((c) => c.id), ['juvenis', 'adolescentes', 'jovens'], 'sem lição de adultos');
   assert.ok(hub.lessons.some((l) => l.id === id && l.has_video));
   const l = (await pedro.get(`/escola-sabatina/licao/${id}`)).body;
   assert.equal(l.pass, 2);
@@ -102,4 +103,25 @@ test('escola sabatina: admin cria a lição do dia; membro estuda e conta na seq
   const st = (await admin.get('/admin/sequencias')).body;
   const club = st.clubs.find((c) => c.members > 0 && c.sabbath > 0);
   assert.ok(club && club.pct.sabbath > 0, 'porcentagem por clube');
+});
+
+test('escola sabatina: trimestre pronto dos jovens aparece quando o admin envia o PDF', async () => {
+  const admin = await login('membros', 'admin', 'admin123');
+  const pedro = await login('membros', '100001');
+  const qt = (await admin.get('/admin/escola-sabatina')).body.quarters.find((q) => q.key === 'jovens-2026-4');
+  assert.equal(qt.days, 91);
+  assert.equal(qt.pdf, false);
+  const before = (await pedro.get('/escola-sabatina')).body.lessons.filter((l) => l.category === 'jovens');
+  assert.equal(before.length, 0, 'sem PDF, as lições do trimestre não aparecem');
+  const fd = new FormData();
+  fd.append('file', new Blob(['%PDF-1.4 teste'], { type: 'application/pdf' }), 'licao.pdf');
+  assert.equal((await admin.post('/admin/escola-sabatina/trimestres/jovens-2026-4/pdf', fd)).status, 200);
+  const after = (await pedro.get('/escola-sabatina')).body.lessons.filter((l) => l.category === 'jovens');
+  assert.equal(after.length, 91);
+  const first = after.find((l) => l.date === '2026-09-26');
+  const l = (await pedro.get(`/escola-sabatina/licao/${first.id}`)).body;
+  assert.equal(l.title, 'O Criador fala');
+  assert.equal(l.page_from, 3);
+  assert.equal(l.questions.length, 3);
+  assert.ok(l.pdf);
 });

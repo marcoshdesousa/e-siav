@@ -69,10 +69,36 @@ export default function SabbathAdmin() {
     await run(() => api.post('/admin/escola-sabatina/pdfs', form), 'PDF enviado!');
     state.reload();
   };
+  const quarterPdf = async (key, file) => {
+    if (!file) return;
+    const form = new FormData();
+    form.append('file', file);
+    await run(() => api.post(`/admin/escola-sabatina/trimestres/${key}/pdf`, form), 'PDF enviado! As lições do trimestre já estão no ar.');
+    state.reload();
+  };
   return (
     <Loading {...state}>
       {(d) => (
         <>
+          {d.quarters.length > 0 && (
+            <Section title="Trimestres prontos">
+              <p className="small muted">As lições de cada dia (páginas e perguntas) já estão prontas. Envie o PDF da lição e elas aparecem para os membros.</p>
+              <div className="list">
+                {d.quarters.map((q) => (
+                  <div key={q.key} className="list-item">
+                    <FileText size={22} />
+                    <div className="grow">
+                      <div className="title">{q.name}</div>
+                      <div className="sub">{q.days} lições · {br(q.from)} a {br(q.to)} · {q.pdf ? 'PDF enviado: no ar' : 'Falta enviar o PDF'}</div>
+                    </div>
+                    <label className={'btn btn-sm ' + (q.pdf ? 'btn-secondary' : 'btn-primary')}><Upload size={14} /> {q.pdf ? 'Trocar PDF' : 'Enviar PDF'}
+                      <input type="file" accept="application/pdf" hidden onChange={(e) => quarterPdf(q.key, e.target.files[0])} />
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </Section>
+          )}
           <Section title="PDFs das lições">
             <label className="btn btn-primary btn-block"><Upload size={16} /> Enviar PDF<input type="file" accept="application/pdf" multiple hidden onChange={(e) => upload(e.target.files)} /></label>
             <div className="list mt">

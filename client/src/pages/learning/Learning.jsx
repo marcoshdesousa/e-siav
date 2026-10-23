@@ -101,7 +101,7 @@ export function LearningHub({ base }) {
               <Link to={`${base}/aprendizagem/escola-sabatina`} className="learn-card c6">
                 <span className="learn-ico"><BookOpen size={30} /></span>
                 <b>Lição da Escola Sabatina</b>
-                <small>Juvenis, adolescentes, jovens e adultos: a lição do dia, vídeo e perguntas</small>
+                <small>Juvenis, adolescentes e jovens: a lição do dia e perguntas</small>
                 <small>{d.sabbath.done} lições feitas</small>
               </Link>
               <Link to={`${base}/aprendizagem/bom-de-biblia`} className="learn-card c3">

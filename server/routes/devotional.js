@@ -169,14 +169,38 @@ r.get('/admin/meditacao', admin, (_req, res) => res.json({ start: medStart(), to
 export const SS_CATEGORIES = [
   { id: 'juvenis', name: 'Juvenis', ages: '10 a 12 anos' },
   { id: 'adolescentes', name: 'Adolescentes', ages: '13 a 15 anos' },
-  { id: 'jovens', name: 'Jovens', ages: '16 a 29 anos' },
-  { id: 'adultos', name: 'Adultos', ages: '30 anos ou mais' },
+  { id: 'jovens', name: 'Jovens', ages: '16 anos ou mais' },
 ];
+const SS_IDS = SS_CATEGORIES.map((c) => c.id);
 /** Categoria sugerida pela idade (todas ficam abertas para todos). */
 export const ssCategoryFor = (birth) => {
   const a = ageFrom(birth);
-  return a <= 12 ? 'juvenis' : a <= 15 ? 'adolescentes' : a <= 29 ? 'jovens' : 'adultos';
+  return a <= 12 ? 'juvenis' : a <= 15 ? 'adolescentes' : 'jovens';
 };
+
+// Trimestres prontos (server/data/escola-sabatina): as lições de cada dia (título, páginas e
+// perguntas) já vêm prontas; falta só o administrador enviar o PDF da lição, que não fica no
+// repositório. Enquanto o PDF não chega, as lições do trimestre não aparecem para os membros.
+try { run('ALTER TABLE sabbath_lessons ADD COLUMN source TEXT'); } catch { /* já existe */ }
+try { run('ALTER TABLE sabbath_pdfs ADD COLUMN quarter TEXT'); } catch { /* já existe */ }
+const QUARTER_DIR = path.join(HERE, '..', 'data', 'escola-sabatina');
+const QUARTERS = fs.existsSync(QUARTER_DIR)
+  ? fs.readdirSync(QUARTER_DIR).filter((f) => f.endsWith('.json')).sort().map((f) => JSON.parse(fs.readFileSync(path.join(QUARTER_DIR, f), 'utf8')))
+  : [];
+const quarterPdf = (key) => get('SELECT id FROM sabbath_pdfs WHERE quarter = ? ORDER BY id DESC LIMIT 1', key)?.id || null;
+/** Cria ou atualiza as lições dos trimestres prontos (as criadas à mão pelo admin ficam como estão). */
+function syncQuarters() {
+  for (const qt of QUARTERS) {
+    const pdf = quarterPdf(qt.key);
+    for (const d of qt.days) {
+      const row = get('SELECT id, source FROM sabbath_lessons WHERE category = ? AND date = ?', qt.category, d.date);
+      const fields = [d.title, pdf, d.page_from, d.page_to, JSON.stringify(d.questions)];
+      if (!row) run('INSERT INTO sabbath_lessons (title, pdf_id, page_from, page_to, questions, category, date, source) VALUES (?,?,?,?,?,?,?,?)', ...fields, qt.category, d.date, qt.key);
+      else if (row.source === qt.key) run('UPDATE sabbath_lessons SET title = ?, pdf_id = ?, page_from = ?, page_to = ?, questions = ? WHERE id = ?', ...fields, row.id);
+    }
+  }
+}
+syncQuarters();
 const ssQuestions = (l) => { try { return JSON.parse(l.questions) || []; } catch { return []; } };
 const ssPass = (n) => Math.max(1, Math.ceil(n * 0.6));
 const ssRows = (memberId) => all('SELECT lesson_id, date, best, completed_at, on_time FROM sabbath_progress WHERE member_id = ?', memberId);
@@ -193,7 +217,8 @@ export function sabbathSummary(memberId, today = todayBR()) {
 r.get('/escola-sabatina', member, (req, res) => {
   const today = todayBR();
   const rows = new Map(ssRows(req.actor.id).map((x) => [x.lesson_id, x]));
-  const list = all('SELECT id, category, date, title, youtube IS NOT NULL AS has_video FROM sabbath_lessons ORDER BY date DESC, category').map((l) => {
+  const list = all(`SELECT id, category, date, title, youtube IS NOT NULL AS has_video FROM sabbath_lessons
+    WHERE category IN (${SS_IDS.map(() => '?').join(',')}) AND (pdf_id IS NOT NULL OR youtube IS NOT NULL) ORDER BY date DESC, category`, ...SS_IDS).map((l) => {
     const row = rows.get(l.id);
     return { ...l, has_video: !!l.has_video, locked: !openDate(l.date, today), done: !!row?.completed_at, today: l.date === today };
   });
@@ -202,7 +227,7 @@ r.get('/escola-sabatina', member, (req, res) => {
 
 function lessonOf(req) {
   const l = get('SELECT * FROM sabbath_lessons WHERE id = ?', int(req.params.id));
-  if (!l) fail(404, 'Lição não encontrada');
+  if (!l || (!l.pdf_id && !l.youtube)) fail(404, 'Lição não encontrada');
   if (!openDate(l.date, todayBR())) fail(403, `Esta lição libera no dia ${l.date.split('-').reverse().join('/')}.`);
   return l;
 }
@@ -256,6 +281,7 @@ const upload = multer({
 r.get('/admin/escola-sabatina', admin, (_req, res) => {
   res.json({
     categories: SS_CATEGORIES,
+    quarters: QUARTERS.map((qt) => ({ key: qt.key, name: qt.name, category: qt.category, days: qt.days.length, from: qt.days[0]?.date, to: qt.days.at(-1)?.date, pdf: !!quarterPdf(qt.key) })),
     pdfs: all('SELECT id, name, size, created_at FROM sabbath_pdfs ORDER BY id DESC'),
     lessons: all('SELECT l.*, p.name AS pdf_name, (SELECT COUNT(*) FROM sabbath_progress s WHERE s.lesson_id = l.id AND s.completed_at IS NOT NULL) AS done FROM sabbath_lessons l LEFT JOIN sabbath_pdfs p ON p.id = l.pdf_id ORDER BY l.date DESC, l.category')
       .map((l) => ({ ...l, questions: ssQuestions(l) })),
@@ -263,6 +289,15 @@ r.get('/admin/escola-sabatina', admin, (_req, res) => {
 });
 r.post('/admin/escola-sabatina/pdfs', admin, upload.array('files', 10), (req, res) => {
   for (const f of req.files || []) run('INSERT INTO sabbath_pdfs (name, file, size) VALUES (?, ?, ?)', String(f.originalname || 'licao.pdf').slice(0, 120), f.filename, f.size);
+  res.json({ ok: true });
+});
+// PDF de um trimestre pronto: liga o PDF a todas as lições do trimestre.
+r.post('/admin/escola-sabatina/trimestres/:key/pdf', admin, upload.single('file'), (req, res) => {
+  const qt = QUARTERS.find((x) => x.key === req.params.key);
+  if (!qt) { if (req.file) fs.rm(req.file.path, { force: true }, () => {}); fail(404, 'Trimestre não encontrado'); }
+  if (!req.file) fail(400, 'Envie o PDF da lição');
+  run('INSERT INTO sabbath_pdfs (name, file, size, quarter) VALUES (?, ?, ?, ?)', qt.name.slice(0, 120), req.file.filename, req.file.size, qt.key);
+  syncQuarters();
   res.json({ ok: true });
 });
 r.delete('/admin/escola-sabatina/pdfs/:id', admin, (req, res) => {
