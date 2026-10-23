@@ -404,11 +404,50 @@ export function SabbathLesson({ base }) {
   return <Loading {...state}>{(d) => <SabbathBody key={id} d={d} base={base} />}</Loading>;
 }
 
-/** Páginas da lição (imagens): uma embaixo da outra, sem opção de baixar. */
-function LessonPages({ pages }) {
+/**
+ * Páginas da lição (imagens): uma embaixo da outra, sem opção de baixar. Enquanto a voz lê,
+ * uma faixa colorida marca as linhas do trecho (marks[trecho] = [[página, x, y, w, h], ...] em %).
+ */
+function LessonPages({ pages, marks = [], pos = -1, follow = false }) {
+  const ref = useRef(null);
+  const cur = marks[pos] || [];
+  useEffect(() => {
+    if (!follow || !cur.length) return;
+    ref.current?.querySelector('.ss-mark')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [pos, follow, cur.length]);
   return (
-    <div className="ss-pages" onContextMenu={(e) => e.preventDefault()}>
-      {pages.map((src, k) => <img key={src} src={src} alt={`Página ${k + 1} da lição`} loading={k ? 'lazy' : 'eager'} draggable={false} />)}
+    <div className="ss-pages" ref={ref} onContextMenu={(e) => e.preventDefault()}>
+      {pages.map((src, k) => {
+        const n = Number(src.split('/').pop());
+        return (
+          <div key={src} className="ss-page">
+            <img src={src} alt={`Página ${k + 1} da lição`} loading={k ? 'lazy' : 'eager'} draggable={false} />
+            {cur.filter((r) => r[0] === n).map((r, j) => (
+              <span key={j} className="ss-mark" style={{ left: `${r[1]}%`, top: `${r[2]}%`, width: `${r[3]}%`, height: `${r[4]}%` }} />
+            ))}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/** Texto da lição: frases agrupadas em parágrafos; a frase que a voz está lendo fica marcada. */
+function LessonText({ text, v }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (v.playing) ref.current?.querySelector('.reading')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, [v.pos, v.playing]);
+  const paras = [];
+  text.slice(1).forEach((t, i) => {
+    if (i % 4 === 0) paras.push([]);
+    paras.at(-1).push([t, i + 1]);
+  });
+  const span = ([t, k]) => <span key={k} className={v.pos === k ? 'reading' : ''} onClick={() => v.available && v.startAt(k)}>{t} </span>;
+  return (
+    <div className="ss-text" ref={ref}>
+      <h2 className={v.pos === 0 ? 'reading' : ''}>{text[0]}</h2>
+      {paras.map((p, i) => <p key={i}>{p.map(span)}</p>)}
     </div>
   );
 }
@@ -448,14 +487,8 @@ function SabbathBody({ d, base }) {
               <button type="button" className={view === 'revista' ? 'active' : ''} onClick={() => setView('revista')}>Revista</button>
             </div>
           )}
-          {hasText && view === 'texto' && (
-            <div className="ss-text">
-              {d.text.map((t, k) => (k === 0
-                ? <h2 key={k} className={v.pos === k ? 'reading' : ''} onClick={() => v.available && v.startAt(k)}>{t}</h2>
-                : <p key={k} className={v.pos === k ? 'reading' : ''} onClick={() => v.available && v.startAt(k)}>{t}</p>))}
-            </div>
-          )}
-          {d.pages?.length > 0 && (!hasText || view === 'revista') && <LessonPages pages={d.pages} />}
+          {hasText && view === 'texto' && <LessonText text={d.text} v={v} />}
+          {d.pages?.length > 0 && (!hasText || view === 'revista') && <LessonPages pages={d.pages} marks={d.marks} pos={v.pos} follow={v.playing} />}
           {d.lesson && !d.pages?.length && !hasText && (
             <Card className="ss-read">
               <small>Lição {d.lesson} · Tema da semana</small>

@@ -206,8 +206,10 @@ function ssMedia(l, memberId) {
   for (let n = from; n <= d.page_to; n++) if (fs.existsSync(path.join(CONTENT_DIR, qt.key, `${pageNo(n)}.webp`))) pages.push(`/api/escola-sabatina/pagina/${qt.key}/${n}`);
   const idx = qt.days.indexOf(d);
   let text = [];
+  let marks = [];
   try { text = JSON.parse(fs.readFileSync(path.join(CONTENT_DIR, qt.key, 'texto.json'), 'utf8'))[d.date] || []; } catch { /* sem texto */ }
-  return { pages, text, ...gatedAudio(memberId, audioOf('escola-sabatina', `${qt.key}_${d.date}`), idx < FREE_AUDIOS) };
+  try { marks = JSON.parse(fs.readFileSync(path.join(CONTENT_DIR, qt.key, 'destaque.json'), 'utf8'))[d.date] || []; } catch { /* sem destaque */ }
+  return { pages, text, marks, ...gatedAudio(memberId, audioOf('escola-sabatina', `${qt.key}_${d.date}`), idx < FREE_AUDIOS) };
 }
 const quarterPdf = (key) => get('SELECT id FROM sabbath_pdfs WHERE quarter = ? ORDER BY id DESC LIMIT 1', key)?.id || null;
 /** Cria ou atualiza as lições dos trimestres prontos (as criadas à mão pelo admin ficam como estão). */
