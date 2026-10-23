@@ -105,14 +105,17 @@ test('escola sabatina: admin cria a lição do dia; membro estuda e conta na seq
   assert.ok(club && club.pct.sabbath > 0, 'porcentagem por clube');
 });
 
-test('escola sabatina: trimestre pronto dos jovens aparece quando o admin envia o PDF', async () => {
+test('escola sabatina: trimestre pronto dos jovens aparece mesmo sem PDF; com PDF mostra as páginas', async () => {
   const admin = await login('membros', 'admin', 'admin123');
   const pedro = await login('membros', '100001');
   const qt = (await admin.get('/admin/escola-sabatina')).body.quarters.find((q) => q.key === 'jovens-2026-4');
   assert.equal(qt.days, 91);
   assert.equal(qt.pdf, false);
   const before = (await pedro.get('/escola-sabatina')).body.lessons.filter((l) => l.category === 'jovens');
-  assert.equal(before.length, 0, 'sem PDF, as lições do trimestre não aparecem');
+  assert.equal(before.length, 91, 'sem PDF, as lições já aparecem');
+  const noPdf = (await pedro.get(`/escola-sabatina/licao/${before.find((l) => l.date === '2026-10-02').id}`)).body;
+  assert.equal(noPdf.pdf, null);
+  assert.deepEqual([noPdf.lesson, noPdf.lesson_title, noPdf.print_from, noPdf.print_to], [1, 'O Criador fala', 12, 14], 'páginas da revista');
   const fd = new FormData();
   fd.append('file', new Blob(['%PDF-1.4 teste'], { type: 'application/pdf' }), 'licao.pdf');
   assert.equal((await admin.post('/admin/escola-sabatina/trimestres/jovens-2026-4/pdf', fd)).status, 200);

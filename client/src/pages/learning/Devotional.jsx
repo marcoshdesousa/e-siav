@@ -263,6 +263,12 @@ const weekStart = (iso) => {
   d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
   return d.toISOString().slice(0, 10);
 };
+/** "17 a 23 de outubro" ou "31 de outubro a 6 de novembro". */
+const range = (a, z) => {
+  const day = (iso) => Number(iso.slice(8));
+  const mon = (iso) => MONTHS[Number(iso.slice(5, 7)) - 1];
+  return mon(a) === mon(z) ? `${day(a)} a ${day(z)} de ${mon(z)}` : `${day(a)} de ${mon(a)} a ${day(z)} de ${mon(z)}`;
+};
 const dm = (iso) => iso.slice(8) + '/' + iso.slice(5, 7);
 
 /** As lições separadas por semana (sábado a sexta), com o dia a dia dentro. A semana de hoje vem aberta. */
@@ -290,15 +296,15 @@ function SabbathWeeks({ list, today, base }) {
     return (
       <details key={w.start} className={'month ss-week' + (isNow ? ' now' : '')} open={isNow} ref={isNow ? openRef : null}>
         <summary>
-          <span className="grow"><small>Lição {w.n} · {dm(w.start)} a {dm(w.end)}{isNow ? ' · esta semana' : ''}</small><b>{w.title}</b></span>
+          <span className="grow"><small>Lição {w.n} · {range(w.start, w.end)}{isNow ? ' · esta semana' : ''}</small><span className="ss-theme">Tema da semana</span><b>{w.title}</b></span>
           <small className={done === w.days.length ? 'ss-done' : ''}>{done}/{w.days.length}</small>
         </summary>
         <div className="day-list">
           {w.days.map((l) => {
             const body = (
               <>
-                <span className="dv-date"><b>{Number(l.date.slice(8))}</b><small>{WEEKDAYS[weekday(l.date)].slice(0, 3)}</small></span>
-                <span className="grow"><b>{l.title}</b><small>{l.today ? 'Hoje · ' : ''}{l.has_video ? 'Com vídeo · ' : ''}{l.done ? 'Concluída' : l.locked ? `Libera em ${br(l.date)}` : 'Estudar'}</small></span>
+                <span className="dv-date"><b>{Number(l.date.slice(8))}</b><small>{MONTHS[Number(l.date.slice(5, 7)) - 1].slice(0, 3)}</small></span>
+                <span className="grow"><b>{l.title}</b><small>{WEEKDAYS[weekday(l.date)]} · {l.today ? 'Hoje · ' : ''}{l.has_video ? 'Com vídeo · ' : ''}{l.done ? 'Concluída' : l.locked ? `Libera em ${br(l.date)}` : 'Estudar'}</small></span>
                 <span className="day-st">{l.locked ? <Lock size={16} /> : l.done ? <CheckCircle2 size={18} /> : <ChevronRight size={18} />}</span>
               </>
             );
@@ -397,6 +403,13 @@ function SabbathBody({ d, base }) {
             <div className="dv-video">
               <iframe src={`https://www.youtube-nocookie.com/embed/${yt}`} title="Vídeo da lição" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
             </div>
+          )}
+          {d.lesson && (
+            <Card className="ss-read">
+              <small>Lição {d.lesson} · Tema da semana</small>
+              <b>{d.lesson_title}</b>
+              {d.print_from && <span>Leia na sua lição {d.print_from === d.print_to ? `a página ${d.print_from}` : `as páginas ${d.print_from} a ${d.print_to}`}{d.pdf ? ' (abaixo)' : ''}.</span>}
+            </Card>
           )}
           {d.pdf && <PdfBook url={d.pdf} from={d.page_from} to={d.page_to} />}
           <Button block onClick={() => { setMode('quiz'); window.scrollTo({ top: 0 }); }}><Sparkles size={18} /> {d.completed ? 'Responder de novo' : 'Responder as perguntas'}</Button>

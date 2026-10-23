@@ -180,7 +180,7 @@ export const ssCategoryFor = (birth) => {
 
 // Trimestres prontos (server/data/escola-sabatina): as lições de cada dia (título, páginas e
 // perguntas) já vêm prontas; falta só o administrador enviar o PDF da lição, que não fica no
-// repositório. Enquanto o PDF não chega, as lições do trimestre não aparecem para os membros.
+// repositório. Sem o PDF, a lição aparece com as páginas da revista para ler e as perguntas.
 try { run('ALTER TABLE sabbath_lessons ADD COLUMN source TEXT'); } catch { /* já existe */ }
 try { run('ALTER TABLE sabbath_pdfs ADD COLUMN quarter TEXT'); } catch { /* já existe */ }
 const QUARTER_DIR = path.join(HERE, '..', 'data', 'escola-sabatina');
@@ -188,7 +188,10 @@ const QUARTERS = fs.existsSync(QUARTER_DIR)
   ? fs.readdirSync(QUARTER_DIR).filter((f) => f.endsWith('.json')).sort().map((f) => JSON.parse(fs.readFileSync(path.join(QUARTER_DIR, f), 'utf8')))
   : [];
 // Lição (semana) de cada dia dos trimestres prontos: número e título da lição.
-const QUARTER_WEEK = new Map(QUARTERS.flatMap((qt) => qt.days.map((d) => [`${qt.category}|${d.date}`, { lesson: d.lesson, lesson_title: qt.days.find((x) => x.lesson === d.lesson)?.title }])));
+const QUARTER_WEEK = new Map(QUARTERS.flatMap((qt) => qt.days.map((d) => [`${qt.category}|${d.date}`, {
+  lesson: d.lesson, lesson_title: qt.days.find((x) => x.lesson === d.lesson)?.title,
+  print_from: d.page_from + (qt.print_offset || 0), print_to: d.page_to + (qt.print_offset || 0),
+}])));
 const quarterPdf = (key) => get('SELECT id FROM sabbath_pdfs WHERE quarter = ? ORDER BY id DESC LIMIT 1', key)?.id || null;
 /** Cria ou atualiza as lições dos trimestres prontos (as criadas à mão pelo admin ficam como estão). */
 function syncQuarters() {
@@ -220,7 +223,7 @@ r.get('/escola-sabatina', member, (req, res) => {
   const today = todayBR();
   const rows = new Map(ssRows(req.actor.id).map((x) => [x.lesson_id, x]));
   const list = all(`SELECT id, category, date, title, youtube IS NOT NULL AS has_video FROM sabbath_lessons
-    WHERE category IN (${SS_IDS.map(() => '?').join(',')}) AND (pdf_id IS NOT NULL OR youtube IS NOT NULL) ORDER BY date DESC, category`, ...SS_IDS).map((l) => {
+    WHERE category IN (${SS_IDS.map(() => '?').join(',')}) AND (pdf_id IS NOT NULL OR youtube IS NOT NULL OR source IS NOT NULL) ORDER BY date DESC, category`, ...SS_IDS).map((l) => {
     const row = rows.get(l.id);
     return { ...l, ...QUARTER_WEEK.get(`${l.category}|${l.date}`), has_video: !!l.has_video, locked: !openDate(l.date, today), done: !!row?.completed_at, today: l.date === today };
   });
@@ -229,7 +232,7 @@ r.get('/escola-sabatina', member, (req, res) => {
 
 function lessonOf(req) {
   const l = get('SELECT * FROM sabbath_lessons WHERE id = ?', int(req.params.id));
-  if (!l || (!l.pdf_id && !l.youtube)) fail(404, 'Lição não encontrada');
+  if (!l || (!l.pdf_id && !l.youtube && !l.source)) fail(404, 'Lição não encontrada');
   if (!openDate(l.date, todayBR())) fail(403, `Esta lição libera no dia ${l.date.split('-').reverse().join('/')}.`);
   return l;
 }
@@ -239,6 +242,7 @@ r.get('/escola-sabatina/licao/:id', member, (req, res) => {
   const qs = ssQuestions(l);
   res.json({
     id: l.id, category: l.category, category_name: SS_CATEGORIES.find((c) => c.id === l.category)?.name, date: l.date, title: l.title,
+    ...QUARTER_WEEK.get(`${l.category}|${l.date}`),
     pdf: l.pdf_id ? `/api/escola-sabatina/pdf/${l.pdf_id}` : null, page_from: l.page_from, page_to: l.page_to, youtube: l.youtube || null,
     questions: qs.map((q) => ({ q: q.q, options: q.options })), pass: ssPass(qs.length), completed: !!row?.completed_at, best: row?.best || 0,
   });
