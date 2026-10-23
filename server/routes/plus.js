@@ -27,6 +27,7 @@ export const BENEFITS = [
   { text: `${PLUS_PACKS} pacotinhos de figurinhas a cada ${PLUS_DAYS} dias` },
   { text: 'Figurinhas em dobro: 2 pacotinhos pelo preço de 1' },
   { text: 'Participa do ranking dos jogos' },
+  { text: 'Jogos sem internet (modo offline)' },
   { text: 'Selo de verificado (logo dourada) no perfil' },
   { text: 'Especialidades físicas entregues pela equipe (planos de R$ 19,90 e R$ 34,90)' },
   { text: 'Livro do Ano', soon: true },

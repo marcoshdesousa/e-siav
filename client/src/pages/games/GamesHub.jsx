@@ -1,7 +1,7 @@
 // Mini-jogos dos membros: lista de jogos, tela de cada jogo e ranking de cada um.
 import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, Flag, Keyboard, Lightbulb, Smartphone, Target, Play, RotateCcw, Trophy, Volume2, VolumeX } from 'lucide-react';
+import { ArrowLeft, BadgeCheck, ChevronRight, Flag, Keyboard, Lightbulb, Smartphone, Target, Play, RotateCcw, Trophy, Volume2, VolumeX } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Button, Card, Loading, PageHeader, Section, Spinner, useLoad } from '../../ui.jsx';
@@ -21,7 +21,12 @@ function GameRanking({ game, base, limit }) {
     <Loading {...state}>
       {(d) => (
         <>
-          {d.me && <Card className="small center"><b>Você:</b> {d.me.position}º lugar · {d.me.value} pts · {d.me.plays} partida{d.me.plays > 1 ? 's' : ''}</Card>}
+          {!d.in_ranking && (
+            <Link to={`${base}/dbv-mais`} className="rank-plus-hint">
+              <BadgeCheck size={16} /><span>Você não aparece no ranking. <b>Seja DBV+</b></span><ChevronRight size={16} />
+            </Link>
+          )}
+          {d.me && d.in_ranking && <Card className="small center"><b>Você:</b> {d.me.position}º lugar · {d.me.value} pts · {d.me.plays} partida{d.me.plays > 1 ? 's' : ''}</Card>}
           <RankingTable
             rows={d.rows.slice(0, limit || 50).map((r) => ({ ...r, points: r.value }))}
             highlight={actor.id}
@@ -263,6 +268,7 @@ export function GamePage({ base }) {
                     {result.record ? <b>Novo recorde! </b> : null}
                     {game.mode === 'sum' ? `Total: ${result.total} pts` : `Seu recorde: ${result.best} pts`}
                     {result.position ? ` · ${result.position}º no ranking` : ''}
+                    {result.in_ranking === false && <><br /><Link to={`${base}/dbv-mais`}>Seja DBV+ para entrar no ranking</Link></>}
                   </p>
                 )}
                 <Button block onClick={start}><RotateCcw size={16} /> Jogar de novo</Button>

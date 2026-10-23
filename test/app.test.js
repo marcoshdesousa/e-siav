@@ -719,7 +719,9 @@ test('mini jogos: recorde, soma, ranking geral só dos jogos', async () => {
   assert.equal((await marcos.post('/jogos/cobrinha/pontos', { score: 999999 })).body.best, 5000, 'limite por partida');
   const rk = (await pedro.get('/jogos/cobrinha/ranking')).body;
   assert.equal(rk.rows[0].name.split(' ')[0], 'Marcos');
-  assert.equal(rk.me.position, 2);
+  assert.equal(rk.in_ranking, false, 'pedro não é DBV+: não aparece no ranking');
+  assert.equal(rk.me.position, null);
+  assert.equal(rk.rows.some((x) => x.name.startsWith('Pedro')), false);
   await pedro.post('/jogos/velha/pontos', { score: 3 });
   assert.equal((await pedro.post('/jogos/velha/pontos', { score: 1 })).body.total, 4, 'jogo da velha soma');
   assert.equal((await pedro.get('/jogos/meus')).body.velha.value, 4);

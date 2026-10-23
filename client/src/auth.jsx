@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { api } from './api.js';
+import { savedActor, syncOffline } from './offline.js';
 
 const AuthCtx = createContext(null);
 
@@ -7,15 +8,18 @@ export function AuthProvider({ children }) {
   const [actor, setActor] = useState(undefined); // undefined = carregando
   const [meta, setMeta] = useState({ cargos: { desbravador: [], lideranca: [] }, districts: [] });
 
-  // O app só funciona com internet: sem internet a conta não abre (aparece o aviso para conectar).
+  // Sem internet a conta só abre para quem é DBV+ (e só os jogos funcionam).
   const refresh = useCallback(async () => {
     try {
       const { actor } = await api.get('/auth/me');
       setActor(actor);
+      syncOffline(actor);
       return actor;
-    } catch {
-      setActor(null);
-      return null;
+    } catch (e) {
+      const local = e.offline ? savedActor() : null;
+      if (e.status === 401) syncOffline(null);
+      setActor(local);
+      return local;
     }
   }, []);
 
@@ -36,6 +40,7 @@ export function AuthProvider({ children }) {
     try {
       const { actor } = await api.post('/auth/login', { mode, username, password });
       setActor(actor);
+      syncOffline(actor);
       return actor;
     } catch (e) {
       if (e.offline) throw new Error('Sem internet. O App do DBV precisa de internet para funcionar.');
@@ -44,6 +49,7 @@ export function AuthProvider({ children }) {
   };
   const logout = async () => {
     await api.post('/auth/logout').catch(() => {});
+    syncOffline(null);
     setActor(null);
   };
 
