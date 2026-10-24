@@ -3,6 +3,7 @@ import { get, run } from '../db.js';
 import { COOKIE, requireAuth } from '../auth.js';
 import { checkMemberPassword } from '../memberStatus.js';
 import { deleteMember } from '../accounts.js';
+import { setHandle } from '../handles.js';
 import { imageUpload, fileUrl } from '../uploads.js';
 import { memberProfile, unitProfile } from '../profiles.js';
 import { fail, str } from '../util.js';
@@ -25,6 +26,9 @@ r.put('/me/bio', requireAuth('unit'), (req, res) => {
   run('UPDATE units SET bio = ? WHERE id = ?', str(req.body.bio, 1000) || null, req.actor.id);
   res.json({ ok: true });
 });
+
+// O membro cria o próprio @ (uma vez só; não dá para trocar depois).
+r.post('/me/arroba', requireAuth('member'), (req, res) => res.json({ handle: setHandle(req.actor.id, req.body.handle) }));
 
 // O membro apaga a própria conta (de vez), confirmando com a senha. O clube não se apaga:
 // isso é com o administrador do distrito ou o geral.

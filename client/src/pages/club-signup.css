@@ -25,3 +25,6 @@
 .csu-chips button.on:disabled { opacity: 1; }
 .csu .row > * { flex: 1; }
 .csu .row > :first-child { flex: 0 0 96px; }
+.handle-input { display: flex; align-items: center; border: 1px solid var(--line, #e2e8f0); border-radius: 12px; background: var(--surface-2, #f8fafc); overflow: hidden; }
+.handle-input span { padding: 0 .2rem 0 .75rem; font-weight: 800; color: var(--muted, #64748b); }
+.handle-input input { border: 0 !important; background: transparent !important; box-shadow: none !important; padding-left: .2rem; }

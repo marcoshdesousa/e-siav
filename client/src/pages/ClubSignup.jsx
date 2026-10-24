@@ -6,6 +6,7 @@ import { CheckCircle2, KeyRound, ShieldCheck, UserPlus, Users } from 'lucide-rea
 import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { Avatar, Button, Card, Field, Loading, LogoHorizontal, useAsync, useLoad } from '../ui.jsx';
+import { HandleField } from './AppSignup.jsx';
 import './club-signup.css';
 
 const ageOf = (d) => {
@@ -31,7 +32,7 @@ export default function ClubSignup() {
 function Form({ d, token }) {
   const nav = useNavigate();
   const { setActor } = useAuth();
-  const [f, setF] = useState({ name: '', birth_date: '', cargo: '', unit_id: null });
+  const [f, setF] = useState({ name: '', birth_date: '', cargo: '', unit_id: null, handle: '' });
   const [done, setDone] = useState(null);
   const [busy, run] = useAsync();
   const age = ageOf(f.birth_date);
@@ -52,6 +53,7 @@ function Form({ d, token }) {
           <div><small>Código</small><b>{done.code}</b></div>
           <div><small>Senha</small><b>{done.password}</b></div>
         </div>
+        {done.actor.handle && <p style={{ margin: 0 }}>Você também entra com <b>@{done.actor.handle}</b>.</p>}
         <p className="small muted">A senha é o ano em que você nasceu.</p>
         <Button block onClick={() => { setActor(done.actor); nav('/membro', { replace: true }); }}>Entrar no app</Button>
       </Card>
@@ -102,6 +104,7 @@ function Form({ d, token }) {
               ) : <p className="small muted">O clube ainda não tem unidades. Fale com a diretoria.</p>}
             </Field>
           )}
+          <HandleField value={f.handle} onChange={(handle) => setF({ ...f, handle })} />
           <Button block busy={busy} disabled={!ready} onClick={send}><KeyRound size={18} /> Criar minha conta</Button>
         </div>
       </Card>

@@ -16,6 +16,15 @@ const ageOf = (d) => {
   return a >= 0 && a < 120 ? a : null;
 };
 
+/** Campo do @ (opcional na criação da conta): único no app e sem troca depois. */
+export function HandleField({ value, onChange }) {
+  return (
+    <Field label="Seu @ (opcional)" hint="Dá para entrar com ele no lugar do código. Ninguém pesquisa pelo @, e depois de criado ele não muda.">
+      <div className="handle-input"><span>@</span><input value={value} onChange={(e) => onChange(e.target.value.replace(/\s/g, '').toLowerCase())} placeholder="seu.nome" autoCapitalize="none" spellCheck={false} maxLength={21} /></div>
+    </Field>
+  );
+}
+
 const Top = () => (
   <>
     <div className="csu-top"><LogoHorizontal /></div>
@@ -27,7 +36,7 @@ const Top = () => (
 export function CreateAccount() {
   const nav = useNavigate();
   const { setActor } = useAuth();
-  const [f, setF] = useState({ name: '', birth_date: '' });
+  const [f, setF] = useState({ name: '', birth_date: '', handle: '' });
   const [done, setDone] = useState(null);
   const [busy, run] = useAsync();
   const age = ageOf(f.birth_date);
@@ -48,6 +57,7 @@ export function CreateAccount() {
             <div><small>Código</small><b>{done.code}</b></div>
             <div><small>Senha</small><b>{done.password}</b></div>
           </div>
+          {done.actor.handle && <p style={{ margin: 0 }}>Você também entra com <b>@{done.actor.handle}</b>.</p>}
           <p className="small muted">A senha é o ano em que você nasceu.</p>
           <Button block onClick={() => { setActor(done.actor); nav('/membro', { replace: true }); }}>Entrar no app</Button>
         </Card>
@@ -86,6 +96,7 @@ export function CreateAccount() {
               </div>
             </Field>
           )}
+          <HandleField value={f.handle} onChange={(handle) => setF({ ...f, handle })} />
           <Button block busy={busy} disabled={!ready} onClick={send}><KeyRound size={18} /> Criar minha conta</Button>
         </div>
       </Card>

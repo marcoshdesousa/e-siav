@@ -120,7 +120,7 @@ export default function Login() {
               <button type="button" role="tab" aria-selected={mode === 'clube'} onClick={() => setMode('clube')}><Tent size={17} /> Clube</button>
             </div>
 
-            <FloatField label={mode === 'clube' ? 'Código do clube' : 'Seu código'} value={username} onChange={setUsername} autoComplete="username" inputMode={mode === 'clube' ? 'numeric' : undefined} />
+            <FloatField label={mode === 'clube' ? 'Código do clube' : 'Seu código ou @'} value={username} onChange={setUsername} autoComplete="username" inputMode={mode === 'clube' ? 'numeric' : undefined} />
             <FloatField
               label="Senha" type={show ? 'text' : 'password'} value={password} onChange={setPassword} autoComplete="current-password"
               right={password ? <button type="button" className="ig-show" onClick={() => setShow((s) => !s)}>{show ? 'Ocultar' : 'Mostrar'}</button> : null}
@@ -131,7 +131,7 @@ export default function Login() {
             {error && <p className="ig-error" role="alert">{error}</p>}
             <p className="ig-hint">{mode === 'clube'
               ? 'Coloque o código do clube e a senha. Para entrar como unidade, use a senha da sua unidade.'
-              : 'Coloque o seu código e a sua senha.'}</p>
+              : 'Coloque o seu código (ou o seu @) e a sua senha.'}</p>
 
           </form>
 

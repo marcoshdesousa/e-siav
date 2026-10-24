@@ -163,3 +163,26 @@ test('admin apaga clube (o do distrito só os dele)', async () => {
   assert.equal((await geral.del(`/admin/clubs/${c.id}`)).status, 200);
   assert.ok(!(await geral.get('/admin/clubs')).body.some((x) => x.id === c.id));
 });
+
+test('@ do membro: único, entra com ele, aparece no perfil e não muda', async () => {
+  const a = await anon('POST', '/criar-conta', { name: 'Davi Arroba Souza', birth_date: yearsAgo(14), handle: '@Davi.Souza' });
+  assert.equal(a.status, 200);
+  assert.equal(a.body.actor.handle, 'davi.souza');
+  assert.equal((await anon('POST', '/criar-conta', { name: 'Outro Davi Lima', birth_date: yearsAgo(14), handle: 'DAVI.SOUZA' })).status, 409, '@ repetido');
+  assert.equal((await anon('POST', '/criar-conta', { name: 'Outro Davi Lima', birth_date: yearsAgo(14), handle: 'admin' })).status, 409, 'não usa usuário de admin');
+  assert.equal((await anon('POST', '/criar-conta', { name: 'Outro Davi Lima', birth_date: yearsAgo(14), handle: '123456' })).status, 400, 'só números não');
+  for (const u of ['@davi.souza', 'Davi.Souza']) {
+    const r = await fetch(BASE + '/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'membros', username: u, password: a.body.password }) });
+    assert.equal(r.status, 200, 'entra com ' + u);
+  }
+  const bad = await fetch(BASE + '/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'membros', username: '@davi.souza', password: '1900' }) });
+  assert.equal(bad.status, 401);
+  assert.equal((await anon('GET', `/public/members/${a.body.code}`)).body.handle, 'davi.souza', 'aparece no perfil');
+  assert.equal((await anon('GET', '/public/members/davi.souza')).status, 404, 'não acha pelo @');
+  // Sem @ na criação: cria depois, uma vez só.
+  const b = await anon('POST', '/criar-conta', { name: 'Ester Sem Arroba', birth_date: yearsAgo(13) });
+  const eb = await login('membros', b.body.code, b.body.password);
+  assert.equal((await eb.post('/me/arroba', { handle: 'davi.souza' })).status, 409);
+  assert.equal((await eb.post('/me/arroba', { handle: 'ester_s' })).body.handle, 'ester_s');
+  assert.equal((await eb.post('/me/arroba', { handle: 'ester2' })).status, 409, 'não troca');
+});

@@ -212,7 +212,10 @@ export function MemberProfileView({ member: m, linkBase, photoAction, extra }) {
           <Avatar src={m.photo} name={m.name} size={104} />
           {photoAction}
           <h1>{m.name}{m.verified && <Verified size={24} />}</h1>
-          <span className="handle-chip"><Hash size={14} /> {m.code}</span>
+          <div className="row wrap" style={{ justifyContent: 'center', gap: '.35rem' }}>
+            {m.handle && <span className="handle-chip">@{m.handle}</span>}
+            <span className="handle-chip"><Hash size={14} /> {m.code}</span>
+          </div>
           <div className="chips">
             <span className="chip yellow">{m.cargo}</span>
             <span className="chip">{m.age} anos</span>

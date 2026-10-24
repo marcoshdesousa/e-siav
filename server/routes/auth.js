@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { COOKIE, checkAccountPassword, checkLogin, signToken, loadActor, requireLogin, getUsername } from '../auth.js';
+import { memberByHandle } from '../handles.js';
 import { CARGOS, CARGOS_18, CARGOS_LIDERANCA, IDADE_MIN_DIRETOR, MODELOS_ENVIO } from '../config.js';
 import { all, get } from '../db.js';
 import { fail } from '../util.js';
@@ -35,7 +36,7 @@ setInterval(() => {
  * Descobre a conta pelo que foi digitado:
  * - Login Clube: código do clube (4 números) + senha. A senha do clube abre o Sistema do Clube;
  *   a senha de uma unidade (4 números) abre o Portal daquela unidade.
- * - Login Membros: código do membro (6 números) + ano de nascimento, ou usuário (administrador e contas antigas).
+ * - Login Membros: código do membro (6 números) ou o @ dele + ano de nascimento, ou usuário (administrador e contas antigas).
  */
 function findAccount(mode, username, password) {
   const user = String(username || '').trim();
@@ -59,6 +60,9 @@ function findAccount(mode, username, password) {
     if (!m || !checkMemberPassword(m.id, pw)) return null;
     return { account_type: 'member', account_id: m.id };
   }
+  // @ do membro (com ou sem o @ na frente).
+  const byHandle = (user.startsWith('@') || !get('SELECT 1 FROM logins WHERE username = ?', user)) && memberByHandle(user);
+  if (byHandle) return checkMemberPassword(byHandle.id, pw) ? { account_type: 'member', account_id: byHandle.id } : null;
   const row = get('SELECT account_type, account_id FROM logins WHERE username = ?', user);
   if (row?.account_type === 'member') return checkMemberPassword(row.account_id, pw) ? row : null;
   return checkLogin(user, pw, ['admin']);

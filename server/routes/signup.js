@@ -10,6 +10,7 @@ import { APP, appClub, appUnit } from '../appBrasil.js';
 import { fail, int, str, validDate, memberKind, newMemberCode, ageFrom } from '../util.js';
 import { createMemberLogin, memberPassword } from '../memberStatus.js';
 import { APP_TRIAL_DAYS, grantPlus } from '../plus.js';
+import { checkHandle } from '../handles.js';
 
 const r = Router();
 
@@ -57,7 +58,7 @@ r.get('/inscricao/:token', (req, res) => {
 // cargo: desbravador (até 15 anos) | diretoria | conselheiro (16 anos ou mais)
 r.post('/inscricao/:token', (req, res) => {
   const s = clubOf(req.params.token);
-  const { name, birth, kind } = person(req.body);
+  const { name, birth, kind, handle } = person(req.body);
   const cargo = String(req.body.cargo || '');
   const list = units(s.club_id);
   const leadership = list.find((u) => u.is_leadership);
@@ -86,6 +87,7 @@ r.post('/inscricao/:token', (req, res) => {
       s.club_id, unitId, name, birth, cargoName, code, new Date().getFullYear(),
     ).lastInsertRowid);
     createMemberLogin(id, code);
+    if (handle) run('UPDATE members SET handle = ? WHERE id = ?', handle, id);
     run('UPDATE club_signup SET signups = signups + 1 WHERE club_id = ?', s.club_id);
     return { id, code };
   });
@@ -107,14 +109,16 @@ function person(body) {
   if (!validDate(birth) || birth > new Date().toISOString().slice(0, 10)) fail(400, 'Informe a data de nascimento');
   const kind = memberKind(birth);
   if (!kind) fail(400, 'Para criar a conta é preciso ter pelo menos 10 anos');
-  return { name, birth, kind };
+  // O @ é opcional na criação (dá para criar depois em Minha conta).
+  const handle = String(body.handle || '').trim() ? checkHandle(body.handle) : null;
+  return { name, birth, kind, handle };
 }
 
 // Criar conta pelo app (sem o link de um clube): entra no Clube App Brasil, na Unidade App
 // (desbravador, até 15 anos) ou na Unidade App Liderança (16 anos ou mais). Sem cargo e sem
 // escolher clube ou unidade. Já entra com 3 dias de DBV para conhecer; depois precisa assinar.
 r.post('/criar-conta', (req, res) => {
-  const { name, birth, kind } = person(req.body);
+  const { name, birth, kind, handle } = person(req.body);
   const c = appClub();
   if (!c) fail(503, 'Tente de novo daqui a pouco');
   const leader = kind === 'lideranca';
@@ -126,6 +130,7 @@ r.post('/criar-conta', (req, res) => {
       c.id, appUnit(c.id, leader), name, birth, leader ? 'Liderança' : 'Desbravador', code, new Date().getFullYear(),
     ).lastInsertRowid);
     createMemberLogin(id, code);
+    if (handle) run('UPDATE members SET handle = ? WHERE id = ?', handle, id);
     grantPlus(id, 'app', APP_TRIAL_DAYS);
     return { id, code };
   });

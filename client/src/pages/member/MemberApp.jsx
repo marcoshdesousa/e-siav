@@ -20,6 +20,7 @@ import { BibleDay, BibleYear, BomDeBiblia, BomDeBibliaPhase, LearningHub, Streak
 import { MeditationDay, MeditationList, SabbathHub, SabbathLesson } from '../learning/Devotional.jsx';
 import PlusPage, { PlusNudge, PlusPicksGate } from './PlusPage.jsx';
 import { BomLider, BomLiderLesson } from '../learning/BomLider.jsx';
+import { HandleField } from '../AppSignup.jsx';
 
 const base = '/membro';
 
@@ -114,6 +115,33 @@ function AppLock({ children }) {
   );
 }
 
+/** O @ do membro: cria uma vez (não muda depois) e entra com ele no lugar do código. */
+function HandleCard() {
+  const { actor, refresh } = useAuth();
+  const [h, setH] = useState('');
+  const [busy, run] = useAsync();
+  const save = () => {
+    if (!confirm(`Criar o @${h.replace(/^@/, '')}? Depois de criado ele não pode ser trocado.`)) return;
+    run(() => api.post('/me/arroba', { handle: h }), 'Seu @ foi criado!').then((r) => r && refresh());
+  };
+  return (
+    <Card style={{ marginBottom: '.8rem' }}>
+      <div className="form">
+        <p style={{ margin: 0 }}><b>Seu @</b></p>
+        {actor.handle ? (
+          <p className="small" style={{ margin: 0 }}>Você é <b>@{actor.handle}</b>. Dá para entrar com ele no lugar do código. Ele aparece no seu perfil, mas ninguém pesquisa pelo @.</p>
+        ) : (
+          <>
+            <p className="small muted" style={{ margin: 0 }}>Crie o seu @ para entrar com ele no lugar do código. Cada @ é de uma pessoa só e, depois de criado, não muda.</p>
+            <HandleField value={h} onChange={setH} />
+            <Button busy={busy} disabled={h.replace(/^@/, '').length < 3} onClick={save}>Criar meu @</Button>
+          </>
+        )}
+      </div>
+    </Card>
+  );
+}
+
 /** Minha conta: o membro pode apagar a própria conta (de vez), confirmando com a senha. */
 function AccountPage() {
   const { actor, logout } = useAuth();
@@ -127,6 +155,7 @@ function AccountPage() {
   return (
     <>
       <PageHeader title="Minha conta" subtitle={`${actor.name} · código ${actor.code}`} />
+      <HandleCard />
       <Card>
         <div className="form">
           <p style={{ margin: 0 }}><b>Apagar minha conta</b></p>
@@ -167,7 +196,7 @@ export default function MemberApp() {
     { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },
     { to: `${base}/cursos`, icon: GraduationCap, label: 'Cursos', hint: 'Aulas' },
     { to: `${base}/clubes`, icon: Tent, label: 'Clubes', hint: 'Por distrito' },
-    { to: `${base}/conta`, icon: UserCog, label: 'Minha conta', hint: 'Apagar a conta' },
+    { to: `${base}/conta`, icon: UserCog, label: 'Minha conta', hint: 'Seu @ e apagar a conta' },
   ];
   return (
     <Routes>
