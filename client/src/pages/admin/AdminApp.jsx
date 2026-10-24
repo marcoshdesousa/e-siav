@@ -132,11 +132,13 @@ function ClubForm({ item, nextNumber, districts, onClose, onCreated, onSaved }) 
               <option value="pago">Pago</option><option value="gratis">Grátis</option>
             </select>
           </Field>
-          <Field label="Os membros" hint={f.member_billing === 'pago' ? 'Cada membro assina o DBV (R$ 3,90)' : f.club_billing === 'pago' ? 'Grátis enquanto o clube estiver em dia' : 'Grátis (só o DBV+ é opcional)'}>
-            <select value={f.member_billing} onChange={(e) => setF({ ...f, member_billing: e.target.value })}>
-              <option value="gratis">Grátis</option><option value="pago">Pagam</option>
-            </select>
-          </Field>
+          {f.club_billing === 'gratis' ? (
+            <Field label="Os membros" hint={f.member_billing === 'pago' ? 'Cada membro assina o DBV (R$ 3,90); o clube pode assumir' : 'Grátis (o DBV+ continua opcional)'}>
+              <select value={f.member_billing} onChange={(e) => setF({ ...f, member_billing: e.target.value })}>
+                <option value="gratis">Grátis</option><option value="pago">Pagam</option>
+              </select>
+            </Field>
+          ) : <Field label="Os membros" hint="Grátis enquanto o clube pagar; se o clube não pagar, os membros passam a pagar"><input value="Grátis" disabled /></Field>}
         </div>
         {!item && <p className="muted small">O app cria o código do clube e a senha (2 letras + 4 números). A senha não pode ser trocada. As unidades entram com o mesmo código e a senha de cada unidade.</p>}
       </div>
@@ -170,7 +172,7 @@ function NameLoginForm({ title, item, withDistrict, districts, appDistrict, onCl
   );
 }
 
-const PLAN_LABEL = { ok: 'em dia', gratis: 'grátis (jan/dez)', carencia: 'venceu (carência de 3 dias)', vencido: 'vencido' };
+const PLAN_LABEL = { membros_pagam: 'clube não assumiu', ok: 'em dia', gratis: 'grátis (jan/dez)', carencia: 'venceu (carência de 3 dias)', vencido: 'vencido' };
 
 function ClubsAdmin() {
   const { actor, refreshMeta } = useAuth();
@@ -243,7 +245,7 @@ function ClubsAdmin() {
                   <div className="grow">
                     <div className="title">{c.name}</div>
                     <div className="sub">{c.district_name} · {plural(c.unit_count, 'unidade', 'unidades')} · {plural(c.member_count, 'membro', 'membros')}</div>
-                    {c.plan && <div className="sub">Clube <b>{c.club_billing === 'gratis' ? 'grátis' : 'pago'}</b> · membros <b>{c.member_billing === 'pago' ? 'pagam' : 'grátis'}</b>{c.club_billing === 'pago' ? <> · plano <b>{PLAN_LABEL[c.plan.state]}</b>{c.plan.paid_until ? ` até ${new Date(c.plan.paid_until).toLocaleDateString('pt-BR')}` : ''}</> : null}</div>}
+                    {c.plan && <div className="sub">Clube <b>{c.club_billing === 'gratis' ? 'grátis' : 'pago'}</b> · membros <b>{c.club_billing === 'pago' ? 'grátis (se o clube pagar)' : c.member_billing === 'pago' ? 'pagam' : 'grátis'}</b>{c.club_billing === 'pago' || c.member_billing === 'pago' ? <> · plano <b>{PLAN_LABEL[c.plan.state]}</b>{c.plan.paid_until ? ` até ${new Date(c.plan.paid_until).toLocaleDateString('pt-BR')}` : ''}</> : null}</div>}
                     {c.is_app ? <div className="sub">Automático: quem cria a conta pelo app (sem clube) entra aqui. Não aparece nos rankings de clube, unidade e distrito.</div> : <div className="sub">Código <b>{c.code}</b>{c.director_name ? <> · Diretor(a): {c.director_name}</> : ''}{c.associate_directors ? <> · Associados: {c.associate_directors.split('\n').join(', ')}</> : ''}</div>}
                   </div>
                   <div className="stack" style={{ gap: '.35rem' }}>

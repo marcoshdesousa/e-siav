@@ -1,9 +1,11 @@
 // Plano do clube: o clube paga R$ 15 a cada 30 dias (só mensal) para que os membros usem o app de
-// graça. O administrador escolhe, por clube, se o clube paga ou é grátis e se os membros pagam ou não:
-//   clube grátis + membro grátis: ninguém paga (o membro só vê o DBV+ de R$ 7,90);
-//   clube grátis + membro pago: o clube não vê cobrança; cada membro assina o DBV (R$ 3,90) ou o DBV+;
-//   clube pago + membro pago: o clube paga e cada membro também assina;
-//   clube pago + membro grátis: o clube paga pelos membros; se o clube não pagar, os membros passam a pagar. Janeiro e dezembro são grátis para todos os clubes (férias) e não gastam os
+// graça. O administrador escolhe, por clube:
+//   clube pago: o clube paga e os membros usam de graça; se o clube não pagar, os membros passam a
+//     pagar o DBV (R$ 3,90) até o clube pagar (o portal do clube continua funcionando);
+//   clube grátis + membros grátis: ninguém paga e o clube não vê cobrança;
+//   clube grátis + membros pagam: cada membro assina o DBV; o clube pode, se quiser, assumir a
+//     cobrança (R$ 15 por mês) e aí os membros usam de graça.
+// O DBV+ (R$ 7,90) continua sempre disponível para todos. Janeiro e dezembro são grátis para todos os clubes (férias) e não gastam os
 // dias pagos. Ao ser cadastrado, o clube já ganha os primeiros 30 dias.
 // Se o plano vence, o clube tem 3 dias de carência; depois disso o portal do clube e o login das
 // unidades continuam funcionando, mas os membros precisam assinar o DBV (R$ 3,90) ou o DBV+ para usar
@@ -36,7 +38,13 @@ export function clubStatus(clubId, now = new Date()) {
   const c = get('SELECT paid_until, is_app, club_billing, member_billing FROM clubs WHERE id = ?', clubId);
   if (!c || c.is_app) return null;
   const billing = { club_billing: c.club_billing, member_billing: c.member_billing };
-  if (c.club_billing === 'gratis') return { state: 'gratis_sempre', paid_until: null, grace_until: null, free_month: isFreeMonth(now), ...billing };
+  if (c.club_billing === 'gratis' && c.member_billing !== 'pago') return { state: 'gratis_sempre', paid_until: null, grace_until: null, free_month: isFreeMonth(now), ...billing };
+  if (c.club_billing === 'gratis') {
+    // Os membros pagam, mas o clube pode assumir: em dia, todos usam de graça (sem carência nem cobrança).
+    const iso = now.toISOString();
+    const state = c.paid_until && c.paid_until > iso ? 'ok' : isFreeMonth(now) ? 'gratis' : 'membros_pagam';
+    return { state, optional: true, paid_until: c.paid_until, grace_until: null, free_month: isFreeMonth(now), ...billing };
+  }
   const until = c.paid_until;
   const graceUntil = until ? new Date(Date.parse(until) + GRACE_DAYS * 864e5).toISOString() : null;
   const iso = now.toISOString();
@@ -53,7 +61,7 @@ export function clubStatus(clubId, now = new Date()) {
 export function membersMustPay(clubId) {
   const st = clubStatus(clubId);
   if (!st) return null;
-  if (st.member_billing === 'pago') return { reason: 'membro_pago' };
+  if (st.state === 'membros_pagam') return { reason: 'membro_pago' };
   if (st.state === 'vencido') return { reason: 'clube_vencido' };
   if (st.state === 'carencia') return { grace: true, grace_until: st.grace_until };
   return null;

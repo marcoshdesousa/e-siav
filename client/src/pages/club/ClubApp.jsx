@@ -28,7 +28,7 @@ import AnnouncementsAdmin from '../admin/Announcements.jsx';
 const base = '/clube';
 
 const STATE_TEXT = {
-  ok: ['green', 'Em dia'], gratis: ['green', 'Grátis (janeiro e dezembro)'], carencia: ['yellow', 'Venceu: pague em até 3 dias'], vencido: ['red', 'Vencido'],
+  membros_pagam: ['yellow', 'Os membros pagam'], ok: ['green', 'Em dia'], gratis: ['green', 'Grátis (janeiro e dezembro)'], carencia: ['yellow', 'Venceu: pague em até 3 dias'], vencido: ['red', 'Vencido'],
 };
 const brDate = (iso) => (iso ? new Date(iso).toLocaleDateString('pt-BR') : '—');
 
@@ -38,14 +38,15 @@ const brDate = (iso) => (iso ? new Date(iso).toLocaleDateString('pt-BR') : '—'
  */
 export function ClubPlanCard() {
   const { actor } = useAuth();
-  const state = useLoad(() => (actor.club_billing === 'gratis' ? Promise.resolve(null) : api.get('/club/plano')));
+  // Clube grátis com membros grátis: nada de cobrança. Clube grátis com membros que pagam: pode assumir.
+  const hidden = actor.club_billing === 'gratis' && actor.member_billing !== 'pago';
+  const state = useLoad(() => (hidden ? Promise.resolve(null) : api.get('/club/plano')));
   const [order, setOrder] = useState(null);
   const [paid, setPaid] = useState(false);
   const [busy, run] = useAsync();
   const buy = async (plan) => { const o = await run(() => api.post('/club/plano/assinar', { plan }), null); if (o) setOrder(o); };
   const close = () => { setOrder(null); setPaid(false); state.reload(); };
-  // Clube grátis: nada de cobrança.
-  if (actor.club_billing === 'gratis') return null;
+  if (hidden) return null;
   return (
     <Section title="Plano do clube">
       <Card>
@@ -57,9 +58,11 @@ export function ClubPlanCard() {
                 <div className="row between"><b>Situação</b><Badge kind={kind}>{label}</Badge></div>
                 <p className="small" style={{ margin: 0 }}>
                   {d.status.paid_until ? <>Pago até <b>{brDate(d.status.paid_until)}</b>. </> : null}
-                  {actor.member_billing === 'pago' ? 'Os membros do seu clube assinam o DBV para usar o app.' : <>Com o plano em dia, todos os membros do clube usam o app <b>de graça</b>.</>} Janeiro e dezembro são grátis para todos os clubes.
+                  {d.status.optional
+                    ? <>Hoje cada desbravador do clube paga <b>R$ 3,90</b> para usar o app. Se quiser, o clube pode <b>assumir a cobrança</b>: pagando R$ 15 por mês, todos usam de graça.</>
+                    : <>Com o plano em dia, todos os membros do clube usam o app <b>de graça</b>.</>} Janeiro e dezembro são grátis para todos os clubes.
                 </p>
-                {['carencia', 'vencido'].includes(d.status.state) && (
+                {!d.status.optional && ['carencia', 'vencido'].includes(d.status.state) && (
                   <p className="small" style={{ margin: 0, color: 'var(--red-ink)' }}>
                     {d.status.state === 'carencia' ? `O plano venceu. Até ${brDate(d.status.grace_until)} os membros continuam de graça; depois disso cada um vai precisar assinar para usar o app.` : 'O plano venceu: o portal do clube continua funcionando, mas os membros precisam assinar (R$ 3,90) para usar o app. Renove para liberar todos de novo.'}
                   </p>
@@ -623,7 +626,7 @@ export default function ClubApp() {
     { to: `${base}/membros`, icon: Users, label: 'Membros', hint: 'Cadastrar e ver os membros' },
   ];
   const more = [
-    ...(actor.club_billing === 'gratis' ? [] : [{ to: `${base}/plano`, icon: Wallet, label: 'Plano do clube', hint: 'R$ 15 a cada 30 dias' }]),
+    ...(actor.club_billing === 'gratis' && actor.member_billing !== 'pago' ? [] : [{ to: `${base}/plano`, icon: Wallet, label: 'Plano do clube', hint: actor.club_billing === 'gratis' ? 'Assumir a cobrança dos membros' : 'R$ 15 a cada 30 dias' }]),
     { to: `${base}/secretaria`, icon: FolderOpen, label: 'Secretaria', hint: 'Agenda e membros' },
     { to: `${base}/unidades`, icon: Flag, label: 'Unidades', hint: 'Unidades, ranking e membros' },
     { to: `${base}/financas`, icon: Wallet, label: 'Tesouraria', hint: 'Balancete do clube' },

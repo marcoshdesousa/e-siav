@@ -99,7 +99,8 @@ r.post('/admin/clubs', (req, res) => {
     const number = newClubNumber();
     const full = clubDisplayName(number, name);
     const id = Number(run('INSERT INTO clubs (district_id, name, number, code, director_name, associate_directors, club_billing, member_billing) VALUES (?,?,?,?,?,?,?,?)',
-      districtId, full, number, code, director, associates(req.body.associate_directors), billingOf(req.body.club_billing, 'pago'), billingOf(req.body.member_billing, 'gratis')).lastInsertRowid);
+      districtId, full, number, code, director, associates(req.body.associate_directors), billingOf(req.body.club_billing, 'pago'),
+      billingOf(req.body.club_billing, 'pago') === 'pago' ? 'gratis' : billingOf(req.body.member_billing, 'gratis')).lastInsertRowid);
     run('INSERT INTO units (club_id, name, is_leadership, pin) VALUES (?, ?, 1, ?)', id, NOME_UNIDADE_LIDERANCA, newUnitPin(id, (p) => p === password));
     setLogin('club', id, 'cla' + code, password);
     startClubPlan(id); // já entra com os primeiros 30 dias do plano do clube
@@ -131,6 +132,8 @@ r.put('/admin/clubs/:id', (req, res) => {
       startClubPlan(id); // passou a ser pago e ainda não tinha plano: começa com 30 dias
     }
     if (req.body.member_billing !== undefined) run('UPDATE clubs SET member_billing = ? WHERE id = ?', billingOf(req.body.member_billing, 'gratis'), id);
+    // Clube pago: os membros são sempre grátis (só pagam se o clube não pagar).
+    run(`UPDATE clubs SET member_billing = 'gratis' WHERE id = ? AND club_billing = 'pago'`, id);
   });
   res.json({ ok: true });
 });

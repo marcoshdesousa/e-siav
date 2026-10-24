@@ -244,25 +244,34 @@ test('ranking por lugar: o clube reinicia e pausa o dele; o distrito não muda',
   await admin.put('/ranking/controle', { action: 'resume', district_id: pedro.actor.district_id });
 });
 
-test('quem paga: clube grátis/pago e membro grátis/pago (o administrador escolhe e muda)', async () => {
+test('quem paga: clube pago (membros grátis), clube grátis + membros grátis, clube grátis + membros pagam (o clube pode assumir)', async () => {
   const admin = await login('membros', 'admin', 'admin123');
   const aguias = await login('clube', 'aguias', 'AG2026');
   const clubId = aguias.actor.id;
+  const month = Number(new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', month: '2-digit' }).format(new Date()));
+  const free = month === 1 || month === 12;
   const plansOf = async () => (await (await login('membros', 'pedro')).get('/plus')).body.plans.map((p) => p.id);
-  // Clube grátis + membro grátis: nada para o clube pagar; o membro só vê o DBV+.
+  // Clube grátis + membros grátis: nada para o clube pagar; o membro só vê o DBV+.
   assert.equal((await admin.put(`/admin/clubs/${clubId}`, { club_billing: 'gratis', member_billing: 'gratis' })).status, 200);
   assert.equal((await aguias.get('/club/plano')).body.status.state, 'gratis_sempre');
   assert.equal((await aguias.post('/club/plano/assinar', { plan: 'mensal' })).status, 400, 'clube grátis não tem cobrança');
   assert.deepEqual(await plansOf(), ['plus']);
-  // Clube grátis + membro pago: o membro precisa do DBV (R$ 3,90) ou DBV+.
+  // Clube grátis + membros pagam: o membro precisa do DBV (R$ 3,90); o clube pode assumir.
+  const db = new DatabaseSync(path.join(dataDir, 'dbv.sqlite'));
+  try { db.prepare('UPDATE clubs SET paid_until = NULL WHERE id = ?').run(clubId); } finally { db.close(); }
   await admin.put(`/admin/clubs/${clubId}`, { member_billing: 'pago' });
-  const pedro = await login('membros', 'pedro');
-  assert.equal(pedro.actor.club_plan?.reason, 'membro_pago');
-  assert.deepEqual(await plansOf(), ['app', 'plus']);
-  // Clube pago + membro grátis: volta ao normal (o clube paga pelos membros).
-  await admin.put(`/admin/clubs/${clubId}`, { club_billing: 'pago', member_billing: 'gratis' });
-  assert.notEqual((await aguias.get('/club/plano')).body.status.state, 'gratis_sempre');
-  assert.equal((await login('membros', 'pedro')).actor.club_plan, null);
+  const st = (await aguias.get('/club/plano')).body.status;
+  assert.equal(st.optional, true);
+  if (!free) {
+    assert.equal(st.state, 'membros_pagam');
+    assert.equal((await login('membros', 'pedro')).actor.club_plan?.reason, 'membro_pago');
+    assert.deepEqual(await plansOf(), ['app', 'plus']);
+    const pay = (await aguias.post('/club/plano/assinar', { plan: 'mensal' })).body;
+    assert.equal((await admin.post(`/admin/pagamentos/${pay.id}/confirmar`)).status, 200);
+    assert.equal((await login('membros', 'pedro')).actor.club_plan, null, 'o clube assumiu: membros de graça');
+  }
+  // Clube pago: os membros ficam sempre grátis (não dá para os dois pagarem).
+  await admin.put(`/admin/clubs/${clubId}`, { club_billing: 'pago', member_billing: 'pago' });
   const list = (await admin.get('/admin/clubs')).body.find((c) => c.id === clubId);
   assert.equal(list.club_billing, 'pago');
   assert.equal(list.member_billing, 'gratis');
