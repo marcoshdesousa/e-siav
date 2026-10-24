@@ -174,7 +174,15 @@ export default function Game({ onScore, onEnd }) {
             );
           })}
           <div className="sokoban-obj sokoban-me" style={{ left: s.player.x * cw + '%', top: s.player.y * ch + '%', width: cw + '%', height: ch + '%' }}>
-            <div className={'sokoban-player sokoban-face-' + s.dir}><i /><i /></div>
+            <svg className={'sokoban-builder sokoban-face-' + s.dir} viewBox="0 0 40 40" aria-hidden="true">
+              <ellipse cx="20" cy="36" rx="11" ry="3" fill="rgba(0,0,0,.25)" />
+              <path d="M10 36 L13 20 Q20 15 27 20 L30 36 Z" fill="#2B54B0" />
+              <path d="M17 20 L20 30 L23 20 Z" fill="#F9C71D" />
+              <circle cx="20" cy="13" r="7" fill="#E8B98C" />
+              <path d="M12.5 13 Q13 4.5 20 4.5 Q27 4.5 27.5 13 Q27 9 20 8.5 Q13 9 12.5 13 Z" fill="#F2EBDD" />
+              <path d="M12.5 12.5 Q11 18 12 22 L14 21 Q13.5 17 14 13 Z M27.5 12.5 Q29 18 28 22 L26 21 Q26.5 17 26 13 Z" fill="#F2EBDD" />
+              <circle cx="17.5" cy="13.5" r="1.1" fill="#1B1F2A" /><circle cx="22.5" cy="13.5" r="1.1" fill="#1B1F2A" />
+            </svg>
           </div>
         </div>
         {s.done && (

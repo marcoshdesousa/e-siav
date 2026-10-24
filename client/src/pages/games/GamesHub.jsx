@@ -11,6 +11,7 @@ import { isMuted, onMuteChange, setMuted, sfx, startMusic, stopMusic, unlockAudi
 import { useOnline } from '../../offline.js';
 import TUTORIALS from './tutorials.json';
 import './games.css';
+import './modern.css';
 
 const valueLabel = (g) => (g.mode === 'sum' ? 'Total de pontos' : 'Recorde');
 

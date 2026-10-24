@@ -1,0 +1,71 @@
+/* Visual moderno comum dos mini jogos (tabuleiro, quebra-cabeças e palavras): fundo de "arena"
+   escuro com brilho, painéis de vidro e textos claros. Os jogos com cenário próprio (canvas,
+   Paciência, Água da rocha, Pedras do muro, Blocos) ficam com o deles. */
+.game-stage {
+  --ink: #EAF0FF;
+  --muted: #A9B6D6;
+  --surface: rgba(255, 255, 255, .06);
+  --surface-2: rgba(255, 255, 255, .08);
+  --line: rgba(160, 190, 255, .18);
+  --blue-soft: rgba(91, 140, 255, .2);
+  --green-soft: rgba(91, 211, 138, .22);
+  --yellow-soft: rgba(249, 199, 29, .2);
+  --red-soft: rgba(233, 42, 47, .2);
+  --surface-3: rgba(255, 255, 255, .12);
+  --navy-3: #2B54B0;
+  --blue-ink: #8FB6FF;
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, .3);
+  color: var(--ink);
+}
+
+/* Controles (setas) em vidro com volume */
+.game-stage .dpad-btn {
+  background: linear-gradient(180deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, .06));
+  border: 1px solid rgba(255, 255, 255, .18); color: #fff;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, .35), 0 8px 16px rgba(0, 0, 0, .25);
+}
+.game-stage .dpad-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0, 0, 0, .35); background: linear-gradient(180deg, #3B6CD8, #2448A0); }
+.game-stage .hangman-wood { stroke: #C9D6F5; }
+.game-stage > div:first-child:not(.pipes):not(.sokoban):not(.solitaire):not(.tetris) {
+  background:
+    radial-gradient(120% 70% at 50% -10%, rgba(91, 140, 255, .35), transparent 60%),
+    radial-gradient(80% 60% at 100% 110%, rgba(167, 107, 255, .22), transparent 60%),
+    linear-gradient(180deg, #111C45, #0A1130) !important;
+  color: var(--ink) !important;
+  border: 1px solid rgba(127, 178, 255, .18) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 14px 34px rgba(7, 12, 32, .35), inset 0 1px 0 rgba(255, 255, 255, .08);
+  padding: 12px !important;
+  box-sizing: border-box;
+}
+.game-stage > .pipes, .game-stage > .sokoban, .game-stage > .solitaire, .game-stage > .tetris {
+  border-radius: 22px; box-shadow: 0 14px 34px rgba(7, 12, 32, .35), inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+.game-stage > div:first-child b { color: inherit; }
+
+/* Pílulas de status (vez do jogador, resultado) */
+.game-stage [class$='-status'] {
+  background: rgba(255, 255, 255, .08) !important; color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, .14); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .25);
+}
+.game-stage [class$='-status-win'] { background: linear-gradient(135deg, rgba(91, 211, 138, .35), rgba(24, 135, 90, .35)) !important; }
+
+/* Números e destaques em amarelo dourado */
+.game-stage [class$='-top'] b, .game-stage [class$='-head'] b { color: #FFD54A; font-variant-numeric: tabular-nums; }
+
+/* Peças com volume e brilho */
+.game-stage .connect4-board, .game-stage .tictactoe-board, .game-stage .reversi-board {
+  background: linear-gradient(160deg, #2448A0, #0E2A6B) !important;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .35), inset 0 1px 0 rgba(255, 255, 255, .15) !important;
+}
+.game-stage .connect4-hole { background: #0A1536; box-shadow: inset 0 4px 8px rgba(0, 0, 0, .55); }
+.game-stage .connect4-p { background: radial-gradient(circle at 35% 30%, #FF8A8D, #E92A2F 55%, #A8161A); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .25), 0 0 10px rgba(233, 42, 47, .45); }
+.game-stage .connect4-c { background: radial-gradient(circle at 35% 30%, #FFF0A8, #F9C71D 55%, #C99400); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .2), 0 0 10px rgba(249, 199, 29, .45); }
+.game-stage .tictactoe-cell { background: rgba(255, 255, 255, .07); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08); }
+.game-stage .tictactoe-x { color: #FF6B6F; }
+.game-stage .tictactoe-o { color: #FFD54A; }
+.game-stage .reversi-sq { background: linear-gradient(160deg, #1FA36B, #13744B); }
+.game-stage .reversi-last { background: linear-gradient(160deg, #2EC07F, #1A8C5B); }
+.game-stage .checkers-dark { background: linear-gradient(160deg, #3F64B0, #2A4A8C); }
+.game-stage .checkers-light { background: #E6ECF8; }
