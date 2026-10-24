@@ -1,5 +1,6 @@
 // DBV+ (assinatura de 30 dias para membros): ajuda o app e libera benefícios.
-//   App Brasil    R$ 3,90  — só para quem criou a conta pelo app (sem clube): libera o app, como o plano grátis
+//   DBV-          R$ 3,90  — só para quem criou a conta pelo app (sem clube): libera o app, como o plano grátis.
+//                            A conta nova já entra com 3 dias de DBV- para conhecer o app.
 //   DBV+          R$ 7,90  — benefícios do app
 //   DBV+ 3 Espec. R$ 19,90 — + 3 especialidades físicas (escolhe 15, a equipe compra 3)
 //   DBV+ 7 Espec. R$ 34,90 — + 7 especialidades físicas (escolhe 20, a equipe compra 7)
@@ -20,12 +21,14 @@ run(`CREATE TABLE IF NOT EXISTS member_plus (
 )`);
 
 export const PLANS = {
-  app: { id: 'app', name: 'Plano App', price_cents: 390, specialties: 0, pick: 0, access_only: true },
+  app: { id: 'app', name: 'DBV-', price_cents: 390, specialties: 0, pick: 0, access_only: true },
   plus: { id: 'plus', name: 'DBV+', price_cents: 790, specialties: 0, pick: 0 },
   plus3: { id: 'plus3', name: 'DBV+ 3 Especialidades', price_cents: 1990, specialties: 3, pick: 15 },
   plus7: { id: 'plus7', name: 'DBV+ 7 Especialidades', price_cents: 3490, specialties: 7, pick: 20 },
 };
 export const PLUS_DAYS = 30;
+/** Conta nova do App Brasil: dias de DBV- para conhecer o app antes de assinar. */
+export const APP_TRIAL_DAYS = 3;
 export const PLUS_PACKS = 40;
 /** Compra de pacotinhos: o assinante leva 3 pelo preço de 1. */
 export const PLUS_PACK_MULT = 3;
@@ -36,11 +39,11 @@ export function plusOf(memberId) {
   if (!p) return null;
   return { ...p, picks: p.picks ? JSON.parse(p.picks) : null, active: p.until > new Date().toISOString(), plan_name: PLANS[p.plan]?.name || 'DBV+' };
 }
-/** Assinante ativo do DBV+ (o Plano App só libera o acesso, sem os benefícios). */
+/** Assinante ativo do DBV+ (o DBV- só libera o acesso, sem os benefícios). */
 export const isPlus = (memberId) => { const p = plusOf(memberId); return !!p?.active && p.plan !== 'app'; };
-/** Algum plano ativo (o Plano App também conta): libera o app para quem entrou pelo App Brasil. */
+/** Algum plano ativo (o DBV- também conta): libera o app para quem entrou pelo App Brasil. */
 export const hasAccess = (memberId) => !!plusOf(memberId)?.active;
-/** Planos que cada conta pode assinar: quem é do App Brasil só tem o Plano App e o DBV+ (sem especialidades). */
+/** Planos que cada conta pode assinar: quem é do App Brasil só tem o DBV- e o DBV+ (sem especialidades). */
 export const plansFor = (isApp) => Object.values(PLANS).filter((p) => (isApp ? ['app', 'plus'].includes(p.id) : p.id !== 'app'));
 /** Benefício do DBV+ liberado (assinante ativo). */
 export const plusOpen = (memberId) => isPlus(memberId);

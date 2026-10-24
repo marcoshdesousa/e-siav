@@ -2,7 +2,8 @@
 // "Unidade App" (desbravadores) ou na "Unidade App Liderança" (16 anos ou mais).
 // O distrito e o clube ficam escondidos: não aparecem nas listas, não abrem perfil e não
 // disputam o ranking de clubes, de unidades nem de distrito. Os membros só disputam o ranking Brasil.
-// Para usar o app é preciso uma assinatura (R$ 3,90 ou o DBV+ de R$ 7,90): evita contas falsas.
+// A conta nova já entra com 3 dias de DBV- (tudo do plano grátis dos clubes); depois precisa assinar
+// o DBV- (R$ 3,90) ou o DBV+ (R$ 7,90): evita contas falsas.
 import { get, run, tx } from './db.js';
 
 export const APP = { district: 'App Brasil', club: 'Clube App Brasil', unit: 'Unidade App', leaders: 'Unidade App Liderança', logo: '/marca/logo.png' };

@@ -102,12 +102,12 @@ function AppLock({ children }) {
   };
   return (
     <>
-      <Link to={`${base}/dbv-mais`} className="app-lock-bar"><Lock size={16} /><span><b>Libere o seu acesso</b><small>Planos a partir de R$ 3,90 por mês</small></span><span className="app-lock-btn">Ver planos</span></Link>
+      <Link to={`${base}/dbv-mais`} className="app-lock-bar"><Lock size={16} /><span><b>O seu acesso terminou</b><small>Assine o DBV- ou o DBV+ para continuar</small></span><span className="app-lock-btn">Ver planos</span></Link>
       <div className="app-locked" onClickCapture={stop} onSubmitCapture={stop}>{children}</div>
       {ask && (
-        <Modal title="Assine para usar o app" onClose={() => setAsk(false)} footer={<><Button variant="secondary" onClick={() => setAsk(false)}>Agora não</Button><Button onClick={() => { setAsk(false); nav(`${base}/dbv-mais`); }}>Ver planos</Button></>}>
-          <p>Você criou a conta pelo <b>App do DBV</b>, sem clube. Para usar o app é preciso assinar um plano: isso evita contas falsas e ajuda a manter o app no ar.</p>
-          <p className="small muted">Com <b>R$ 3,90</b> por mês você usa tudo do plano grátis dos clubes. O <b>DBV+</b> (R$ 7,90) libera todos os benefícios. Faz parte de um clube? Peça o link de inscrição dele: pelo clube é de graça.</p>
+        <Modal title="Assine para continuar" onClose={() => setAsk(false)} footer={<><Button variant="secondary" onClick={() => setAsk(false)}>Agora não</Button><Button onClick={() => { setAsk(false); nav(`${base}/dbv-mais`); }}>Ver planos</Button></>}>
+          <p>O seu acesso ao <b>App do DBV</b> terminou. Para continuar, assine um plano: assim você ajuda a manter o app no ar.</p>
+          <p className="small muted">O <b>DBV-</b> (R$ 3,90) tem tudo do plano grátis dos clubes. O <b>DBV+</b> (R$ 7,90) libera todos os benefícios. Faz parte de um clube? Peça o link de inscrição dele.</p>
         </Modal>
       )}
     </>

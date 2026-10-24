@@ -48,8 +48,8 @@ export function CreateAccount() {
             <div><small>Código</small><b>{done.code}</b></div>
             <div><small>Senha</small><b>{done.password}</b></div>
           </div>
-          <p className="small muted">A senha é o ano em que você nasceu. Para usar o app, escolha um plano a partir de R$ 3,90.</p>
-          <Button block onClick={() => { setActor(done.actor); nav('/membro/dbv-mais', { replace: true }); }}>Entrar no app</Button>
+          <p className="small muted">A senha é o ano em que você nasceu.</p>
+          <Button block onClick={() => { setActor(done.actor); nav('/membro', { replace: true }); }}>Entrar no app</Button>
         </Card>
       </div>
     );
@@ -66,7 +66,7 @@ export function CreateAccount() {
       </div>
       <div className="csu-notice">
         <Info size={20} />
-        <p>Você está criando a conta pelo <b>App do DBV (App Brasil)</b>. Você <b>não terá registro de clube nem de unidade</b> e participa só do <b>ranking Brasil</b>. Para usar o app é preciso assinar um plano (a partir de <b>R$ 3,90</b>).<br />Faz parte de um clube? <b>Peça o link de inscrição do seu clube</b> e cadastre-se por ele: assim você entra direto no clube, de graça.</p>
+        <p>Você está criando a conta pelo <b>App do DBV (App Brasil)</b>. Você <b>não terá registro de clube nem de unidade</b> e participa só do <b>ranking Brasil</b>.<br />Faz parte de um clube? <b>Peça o link de inscrição do seu clube</b> e cadastre-se por ele: assim você entra direto no clube, de graça.</p>
       </div>
       <Card className="csu-card">
         <div className="form">
@@ -78,10 +78,11 @@ export function CreateAccount() {
           </Field>
           {young && <p className="small csu-warn">Para criar a conta é preciso ter pelo menos 10 anos.</p>}
           {age != null && !young && (
-            <Field label="Você entra como" hint="A idade define: até 15 anos é Desbravador, com 16 ou mais é Liderança">
+            <Field label="Cargo" hint={leader ? 'Com 16 anos ou mais você entra na Liderança' : 'Até 15 anos você entra como Desbravador'}>
               <div className="csu-chips">
-                <button type="button" className={!leader ? 'on' : ''} disabled><Compass size={18} /> Desbravador</button>
-                <button type="button" className={leader ? 'on' : ''} disabled><Award size={18} /> Liderança</button>
+                {leader
+                  ? <button type="button" className="on" disabled><Award size={18} /> Liderança</button>
+                  : <button type="button" className="on" disabled><Compass size={18} /> Desbravador</button>}
               </div>
             </Field>
           )}

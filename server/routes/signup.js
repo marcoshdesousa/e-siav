@@ -9,6 +9,7 @@ import { COOKIE, loadActor, requireAuth, signToken } from '../auth.js';
 import { APP, appClub, appUnit } from '../appBrasil.js';
 import { fail, int, str, validDate, memberKind, newMemberCode, ageFrom } from '../util.js';
 import { createMemberLogin, memberPassword } from '../memberStatus.js';
+import { APP_TRIAL_DAYS, grantPlus } from '../plus.js';
 
 const r = Router();
 
@@ -111,7 +112,7 @@ function person(body) {
 
 // Criar conta pelo app (sem o link de um clube): entra no Clube App Brasil, na Unidade App
 // (desbravador, até 15 anos) ou na Unidade App Liderança (16 anos ou mais). Sem cargo e sem
-// escolher clube ou unidade. Para usar o app precisa assinar um plano (evita contas falsas).
+// escolher clube ou unidade. Já entra com 3 dias de DBV- para conhecer; depois precisa assinar.
 r.post('/criar-conta', (req, res) => {
   const { name, birth, kind } = person(req.body);
   const c = appClub();
@@ -125,6 +126,7 @@ r.post('/criar-conta', (req, res) => {
       c.id, appUnit(c.id, leader), name, birth, leader ? 'Liderança' : 'Desbravador', code, new Date().getFullYear(),
     ).lastInsertRowid);
     createMemberLogin(id, code);
+    grantPlus(id, 'app', APP_TRIAL_DAYS);
     return { id, code };
   });
   enterNow(res, out, birth);

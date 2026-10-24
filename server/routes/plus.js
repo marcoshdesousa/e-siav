@@ -33,7 +33,7 @@ export const BENEFITS = [
   { text: 'Estudo das Classes e Agrupadas', soon: true },
 ];
 
-// Quem entrou pelo App Brasil (sem clube) precisa de um plano para usar o app: o Plano App (R$ 3,90),
+// Quem entrou pelo App Brasil (sem clube) precisa de um plano para usar o app: o DBV- (R$ 3,90),
 // com o mesmo do plano grátis, ou o DBV+ (R$ 7,90). As especialidades físicas são só para quem tem clube.
 export const APP_FREE = FREE.map((t) => t.replace('rankings do distrito', 'ranking Brasil'));
 
@@ -50,9 +50,9 @@ r.get('/plus', member, (req, res) => {
 r.post('/plus/assinar', member, async (req, res) => {
   const plan = plansFor(!!req.actor.app).find((p) => p.id === req.body.plan);
   if (!plan) fail(400, 'Escolha um plano');
-  // Um plano por vez: só dá para assinar de novo quando o atual vencer (do Plano App dá para subir para o DBV+).
+  // Um plano por vez: só dá para assinar de novo quando o atual vencer (quem está no DBV- pode renovar ou subir para o DBV+ a qualquer hora).
   const cur = plusOf(req.actor.id);
-  if (cur?.active && !(cur.plan === 'app' && plan.id !== 'app')) fail(409, `Você já tem o ${cur.plan_name}. Um novo plano fica disponível em ${new Date(cur.until).toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })}.`);
+  if (cur?.active && cur.plan !== 'app') fail(409, `Você já tem o ${cur.plan_name}. Um novo plano fica disponível em ${new Date(cur.until).toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })}.`);
   const pay = await createPayment({ memberId: req.actor.id, purpose: 'dbvplus', ref: { plan: plan.id }, title: `${plan.name} (${PLUS_DAYS} dias)`, amountCents: plan.price_cents });
   res.json(await paymentOut(pay));
 });

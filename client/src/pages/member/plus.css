@@ -58,4 +58,4 @@
 .app-lock-btn { background: #f5c518; color: #0f2744; font-weight: 800; border-radius: 999px; padding: .4rem .8rem; font-size: .82rem; flex: none; }
 .app-locked { cursor: not-allowed; }
 .app-locked input, .app-locked textarea, .app-locked select { pointer-events: none; }
-.plus-hero.app b { font-size: 1.15rem; }
+.plus-hero-app b { font-size: 1.15rem; }

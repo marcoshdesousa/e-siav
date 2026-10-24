@@ -61,8 +61,8 @@ export default function PlusPage() {
   const [paid, setPaid] = useState(false);
   const [busy, run] = useAsync();
   const buy = async (plan) => { const o = await run(() => api.post('/plus/assinar', { plan }), null); if (o) { setBought(plan); setOrder(o); } };
-  // Um plano por vez; quem está no Plano App pode subir para o DBV+.
-  const canBuy = (d, p) => !d.mine?.active || (d.mine.plan === 'app' && p.id !== 'app');
+  // Um plano por vez; quem está no DBV- pode renovar ou subir para o DBV+ a qualquer hora.
+  const canBuy = (d) => !d.mine?.active || d.mine.plan === 'app';
   return (
     <>
       <PageHeader title={actor.app ? 'Planos' : 'DBV+'} subtitle={actor.app ? 'Escolha um plano para usar o App do DBV' : 'Ajude o App do DBV a crescer e ganhe benefícios'} />
@@ -70,11 +70,11 @@ export default function PlusPage() {
         {(d) => (
           <>
             {d.app ? (
-              <div className="plus-hero app">
+              <div className="plus-hero plus-hero-app">
                 <img src="/marca/logo.svg" alt="" />
                 <div>
-                  <b>{d.app.locked ? 'Libere o seu acesso ao App do DBV' : 'Obrigado por ajudar o App do DBV!'}</b>
-                  <p>Quem cria a conta pelo app, sem clube, assina um plano: isso <b>evita contas falsas</b> e ajuda a <b>manter o app no ar</b> para milhares de desbravadores. Com <b>R$ 3,90</b> por mês você já usa tudo do plano grátis dos clubes. Quer mais? O <b>DBV+</b> libera todos os benefícios.</p>
+                  <b>{d.app.locked ? 'Continue usando o App do DBV' : `Você está no ${d.mine?.plan_name || 'DBV-'}`}</b>
+                  <p>{d.app.locked ? 'O seu acesso terminou. ' : d.mine?.active ? `Acesso liberado até ${br(d.mine.until)}. ` : ''}Assinando você <b>ajuda a manter o app no ar</b> e evita contas falsas. O <b>DBV-</b> tem tudo do plano grátis dos clubes; o <b>DBV+</b> libera todos os benefícios.</p>
                 </div>
               </div>
             ) : (
@@ -89,7 +89,7 @@ export default function PlusPage() {
             {d.mine?.active && (
               <Card className="plus-status">
                 <BadgeCheck size={26} />
-                <div><b>Você é {d.mine.plan_name}!</b><small><Clock size={12} /> Válido até {br(d.mine.until)} · um novo plano fica disponível nesse dia</small></div>
+                <div><b>Você é {d.mine.plan_name}!</b><small><Clock size={12} /> Válido até {br(d.mine.until)} · {d.mine.plan === 'app' ? 'renove ou mude para o DBV+ quando quiser' : 'um novo plano fica disponível nesse dia'}</small></div>
               </Card>
             )}
             {d.mine?.active && d.mine.picks_needed > 0 && <Picks d={d} reload={state.reload} />}
@@ -115,8 +115,8 @@ export default function PlusPage() {
                     ? <ul className="plus-free">{(d.free || []).map((t) => <li key={t}><Check size={14} />{t}</li>)}</ul>
                     : <small>{p.specialties ? `Todos os benefícios + ${d.packs} pacotinhos + ${p.specialties} especialidades físicas (você escolhe ${p.pick})` : `Todos os benefícios do app + ${d.packs} pacotinhos de figurinhas`}</small>}
                   {d.mine?.active && d.mine.plan === p.id && <span className="plus-current">Seu plano atual</span>}
-                  {canBuy(d, p)
-                    ? <Button block busy={busy} onClick={() => buy(p.id)}>{d.mine?.active ? 'Mudar para este' : 'Assinar'}</Button>
+                  {canBuy(d)
+                    ? <Button block busy={busy} onClick={() => buy(p.id)}>{d.mine?.active && d.mine.plan !== p.id ? 'Mudar para este' : 'Assinar'}</Button>
                     : d.mine.plan !== p.id && <span className="plus-soon-date"><Clock size={15} /> Disponível em {br(d.mine.until)}</span>}
                 </div>
               ))}
