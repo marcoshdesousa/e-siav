@@ -49,13 +49,13 @@ const diffDays = (a, b) => Math.round((new Date(a + 'T12:00:00Z') - new Date(b +
 /** Início do plano: 1/3/2027. O admin pode mudar (por exemplo, para testar antes). */
 export const planStart = () => setting('ano_biblico_inicio') || PLAN.start;
 /**
- * Uma vez (pedido do dono do app): o Ano Bíblico começa hoje, para já funcionar com a sequência
- * (antes começava em 1/3/2027). Se o admin já escolheu uma data, ela fica.
+ * Uma vez (pedido do dono do app): o Ano Bíblico segue o calendário, de 1º de março (Gênesis) a
+ * 30 de novembro (Apocalipse) do ano atual. Hoje é o dia do calendário; os dias antes ficam atrasados.
  */
 export function bibleStartTodayOnce({ justSeeded = false } = {}) {
-  const KEY = 'ano-biblico-comeca-hoje-v1';
+  const KEY = 'ano-biblico-1-marco-v1';
   if (get('SELECT 1 FROM app_flags WHERE key = ?', KEY)) return;
-  if (!justSeeded && !setting('ano_biblico_inicio')) setSetting('ano_biblico_inicio', todayBR());
+  if (!justSeeded) setSetting('ano_biblico_inicio', `${todayBR().slice(0, 4)}-03-01`);
   run('INSERT OR IGNORE INTO app_flags (key) VALUES (?)', KEY);
 }
 

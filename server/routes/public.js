@@ -86,6 +86,9 @@ r.get('/public/members/:code', async (req, res) => {
     { name: 'Meditação', streak: med.streak, best_streak: med.best_streak },
     { name: 'Escola Sabatina', streak: ss.streak, best_streak: ss.best_streak },
   ];
+  const { presenceSummary } = await import('../presence.js');
+  const ap = presenceSummary(m.id);
+  m.app_streak = { name: 'No app', streak: ap.streak, best_streak: ap.best_streak };
   delete m.id;
   res.json(m);
 });

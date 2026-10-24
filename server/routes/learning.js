@@ -1,6 +1,7 @@
 // Aprendizagem Diária (só membros): Ano Bíblico (leitura do dia + áudio + quiz, sequência e
 // pacotinho do Álbum Bíblico por dia concluído) e Bom de Bíblia (200 fases de perguntas).
 import fs from 'node:fs';
+import { presenceSummary } from '../presence.js';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Router } from 'express';
@@ -21,7 +22,13 @@ const admin = requireAuth('admin');
 const PASS = 3; // acertos (de 5) para concluir o dia
 // Modo de teste (ligado até o admin desligar): todos os dias do Ano Bíblico e o Bom Líder ficam
 // abertos para testar antes do lançamento.
-export const testMode = () => setting('biblia_teste') !== '0';
+// Modo de teste (libera os dias que ainda não chegaram e as aulas fora de ordem): desligado, só
+// liga se o administrador ligar. Desligado de vez uma vez para o que já estava no ar.
+export const testMode = () => setting('biblia_teste') === '1';
+if (!get(`SELECT 1 FROM app_flags WHERE key = 'modo-teste-desligado-v1'`)) {
+  setSetting('biblia_teste', '0');
+  run(`INSERT OR IGNORE INTO app_flags (key) VALUES ('modo-teste-desligado-v1')`);
+}
 const openDay = (day, t) => day <= t || testMode();
 const BDB_PASS = 7; // acertos (de 10) para passar de fase
 
@@ -75,7 +82,7 @@ r.get('/aprendizagem', member, async (req, res) => {
   const { rows: _r, missedDays: _m, ...bible } = b;
   const { meditationSummary, sabbathSummary } = await import('./devotional.js');
   res.json({
-    bible, meditation: meditationSummary(req.actor.id), sabbath: sabbathSummary(req.actor.id),
+    bible, meditation: meditationSummary(req.actor.id), sabbath: sabbathSummary(req.actor.id), app: presenceSummary(req.actor.id),
     bdb: { passed: bdb, total: BDB.length }, leader: req.actor.kind === 'lideranca', test: testMode(), plus: plusOpen(req.actor.id),
   });
 });

@@ -1,5 +1,5 @@
-// Virada do ano (a partir de 1º de janeiro de 2027): o Ano Bíblico recomeça do dia 1 e todos os
-// rankings zeram (requisitos, estudos e mini-jogos). Os dias do ano anterior não ficam mais
+// Virada do ano (a partir de 1º de janeiro de 2027): o Ano Bíblico recomeça do zero (o dia 1,
+// Gênesis, é 1º de março; até lá não tem leitura) e todos os rankings zeram (requisitos, estudos e mini-jogos). Os dias do ano anterior não ficam mais
 // disponíveis. O Bom Líder, as especialidades, as classes, as figurinhas e as medalhas continuam.
 // O que existia vai para tabelas de arquivo (com o ano), sem se perder.
 import { all, get, run, tx } from './db.js';
@@ -24,7 +24,7 @@ export function yearTurnover(today = todayBR()) {
       run(`INSERT INTO ${t}_arquivo (ano, ${cols.join(', ')}) SELECT ?, ${cols.join(', ')} FROM ${t}`, year - 1);
       run(`DELETE FROM ${t}`);
     }
-    setSetting('ano_biblico_inicio', `${year}-01-01`);
+    setSetting('ano_biblico_inicio', `${year}-03-01`);
     // Meia-noite de Brasília (UTC-3).
     setSetting('ranking_inicio', `${year}-01-01T03:00:00.000Z`);
     setSetting('ranking_pausa', '');

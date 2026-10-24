@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, BookOpenText, Waypoints, Hourglass, BadgeCheck, Lock, Trash2, UserCog, Download } from 'lucide-react';
 import { api, toForm } from '../../api.js';
@@ -182,8 +182,19 @@ function parentOf(path) {
   return base;
 }
 
+/** "Estou aqui" a cada minuto com o app aberto e visível: 5 minutos no dia = 1 dia na sequência do app. */
+function usePresence() {
+  useEffect(() => {
+    const t = setInterval(() => {
+      if (document.visibilityState === 'visible' && navigator.onLine !== false) api.post('/me/presenca').catch(() => {});
+    }, 60e3);
+    return () => clearInterval(t);
+  }, []);
+}
+
 export default function MemberApp() {
   const { actor } = useAuth();
+  usePresence();
   const isDbv = actor.kind === 'desbravador';
   const tabs = [
     { to: base, icon: UserRound, label: 'Perfil', end: true },

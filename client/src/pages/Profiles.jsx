@@ -115,7 +115,7 @@ function RanksGrid({ r }) {
 
 /** Sequência do Ano Bíblico, que todo mundo vê no link do perfil. */
 const dias = (n) => `${n} ${n === 1 ? 'dia' : 'dias'}`;
-function BibleStreak({ list }) {
+function BibleStreak({ list, app }) {
   return (
     <Section title="Sequências">
       <div className="streak-box">
@@ -130,6 +130,7 @@ function BibleStreak({ list }) {
             </div>
           ))}
         </div>
+        {app && <div className={'app-streak' + (app.streak ? ' lit' : '')}><span className="st-flame"><Flame size={22} strokeWidth={2.2} /></span><div className="grow"><b>{dias(app.streak)} no app</b><small>recorde {dias(app.best_streak)}</small></div></div>}
       </div>
     </Section>
   );
@@ -248,7 +249,7 @@ export function MemberProfileView({ member: m, linkBase, photoAction, extra }) {
       </div>
 
       {extra}
-      {m.streaks && <BibleStreak list={m.streaks} />}
+      {m.streaks && <BibleStreak list={m.streaks} app={m.app_streak} />}
       <RanksGrid r={m.ranks} />
       <NameList title="Classes" items={m.classes} empty="Nenhuma classe ainda." emptyIcon="compass" icon="compass" />
       <NameList title="Especialidades" items={m.specialties} empty="Nenhuma especialidade ainda." emptyIcon="knot" icon="award" byCategory />

@@ -41,9 +41,25 @@ const dias = (n) => `${n} dia${n === 1 ? '' : 's'}`;
 // ───────────── Card "Sequência" (perfil) ─────────────
 
 /** As 3 sequências (Ano Bíblico, Meditação e Escola Sabatina), cada uma com o seu foguinho. */
+/** Sequência no app: um dia a cada dia com pelo menos 5 minutos no app. */
+export function AppStreak({ s }) {
+  if (!s) return null;
+  const left = Math.max(0, (s.need || 5) - (s.today_minutes || 0));
+  return (
+    <div className={'app-streak' + (s.today_done ? ' on' : '') + (s.streak ? ' lit' : '')}>
+      <span className="st-flame"><Flame size={22} strokeWidth={2.2} /></span>
+      <div className="grow">
+        <b>{s.streak} {s.streak === 1 ? 'dia' : 'dias'} no app</b>
+        <small>{s.today_done ? 'Hoje já contou!' : `Fique ${left} min no app hoje para contar`}{s.best_streak ? ` · recorde ${s.best_streak}` : ''}</small>
+      </div>
+    </div>
+  );
+}
+
 export function StreakTrio({ d }) {
   const items = [['Ano Bíblico', d.bible], ['Meditação', d.meditation], ['Escola Sabatina', d.sabbath]];
   return (
+    <>
     <div className="streak-trio">
       {items.map(([label, s]) => {
         const n = s?.streak || 0;
@@ -58,6 +74,8 @@ export function StreakTrio({ d }) {
         );
       })}
     </div>
+    <AppStreak s={d.app} />
+    </>
   );
 }
 

@@ -4,6 +4,7 @@ import { COOKIE, requireAuth } from '../auth.js';
 import { checkMemberPassword } from '../memberStatus.js';
 import { deleteMember } from '../accounts.js';
 import { setHandle } from '../handles.js';
+import { ping } from '../presence.js';
 import { imageUpload, fileUrl } from '../uploads.js';
 import { memberProfile, unitProfile } from '../profiles.js';
 import { fail, str } from '../util.js';
@@ -26,6 +27,9 @@ r.put('/me/bio', requireAuth('unit'), (req, res) => {
   run('UPDATE units SET bio = ? WHERE id = ?', str(req.body.bio, 1000) || null, req.actor.id);
   res.json({ ok: true });
 });
+
+// "Estou aqui": a cada minuto com o app aberto (5 minutos no dia = 1 dia na sequência do app).
+r.post('/me/presenca', requireAuth('member'), (req, res) => res.json(ping(req.actor.id)));
 
 // O membro cria o próprio @ (uma vez só; não dá para trocar depois).
 r.post('/me/arroba', requireAuth('member'), (req, res) => res.json({ handle: setHandle(req.actor.id, req.body.handle) }));

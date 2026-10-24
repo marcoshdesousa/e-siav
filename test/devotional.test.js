@@ -60,6 +60,9 @@ const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', 
 
 test('meditação: abre por data, 2 de 3 acertos conta, dá ponto e pacotinho', async () => {
   const pedro = await login('membros', '100001');
+  const admin = await login('membros', 'admin', 'admin123');
+  assert.equal((await pedro.get(`/meditacao/${today}`)).status, 403, 'a meditação só libera em 2027 (modo de teste desligado)');
+  await admin.put('/admin/biblia-teste', { on: true });
   const list = (await pedro.get('/meditacao')).body;
   assert.ok(list.days.length >= 365, 'um ano de meditações');
   const d = (await pedro.get(`/meditacao/${today}`)).body;
@@ -79,6 +82,7 @@ test('meditação: abre por data, 2 de 3 acertos conta, dá ponto e pacotinho', 
   assert.equal(sum.meditation.streak, 1);
   assert.ok('sabbath' in sum && 'bible' in sum, 'as 3 sequências');
   assert.equal((await pedro.get('/meditacao/2026-13-40')).status, 404);
+  await admin.put('/admin/biblia-teste', { on: false });
 });
 
 test('escola sabatina: admin cria a lição do dia; membro estuda e conta na sequência', async () => {

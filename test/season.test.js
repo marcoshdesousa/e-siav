@@ -27,8 +27,22 @@ test('virada: arquiva e zera Ano Bíblico, pontos e jogos; o Bom Líder continua
     assert.equal(get(`SELECT COUNT(*) n FROM ${t}`).n, 0, t + ' zerado');
     assert.equal(get(`SELECT COUNT(*) n FROM ${t}_arquivo WHERE ano = 2026`).n, 1, t + ' arquivado');
   }
-  assert.equal(setting('ano_biblico_inicio'), '2027-01-01');
+  assert.equal(setting('ano_biblico_inicio'), '2027-03-01');
   assert.equal(setting('ranking_inicio'), '2027-01-01T03:00:00.000Z');
   if (bl) assert.equal(get(`SELECT COUNT(*) n FROM ${bl}`).n, blCount, 'Bom Líder continua');
   assert.equal(yearTurnover('2028-01-01'), true, 'e no ano seguinte de novo');
+});
+
+test('sequência no app: 5 minutos no dia contam 1 dia; várias entradas no mesmo dia contam 1', async () => {
+  const { ping, presenceSummary } = await import('../server/presence.js');
+  const d = Number(run(`INSERT INTO districts (name) VALUES ('D2')`).lastInsertRowid);
+  const c = Number(run('INSERT INTO clubs (district_id, name) VALUES (?, ?)', d, 'C2').lastInsertRowid);
+  const m = Number(run(`INSERT INTO members (club_id, name, birth_date, cargo, code) VALUES (?, 'P Q', '2013-01-01', 'Desbravador', '999002')`, c).lastInsertRowid);
+  const t0 = Date.now() - 10 * 60e3;
+  for (let i = 0; i < 4; i++) ping(m, t0 + i * 60e3);
+  assert.equal(ping(m, t0 + 4 * 1e3).today_minutes, 4, 'ping em menos de 50 s não conta');
+  assert.equal(presenceSummary(m).streak, 0, '4 minutos ainda não contam');
+  const s = ping(m, t0 + 5 * 60e3);
+  assert.equal(s.today_done, true);
+  assert.equal(s.streak, 1);
 });
