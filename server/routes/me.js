@@ -4,7 +4,7 @@ import { COOKIE, requireAuth } from '../auth.js';
 import { checkMemberPassword } from '../memberStatus.js';
 import { deleteMember } from '../accounts.js';
 import { setHandle } from '../handles.js';
-import { ping } from '../presence.js';
+import { clubEntered, clubPresenceSummary, ping } from '../presence.js';
 import { imageUpload, fileUrl } from '../uploads.js';
 import { memberProfile, unitProfile } from '../profiles.js';
 import { fail, str } from '../util.js';
@@ -30,6 +30,10 @@ r.put('/me/bio', requireAuth('unit'), (req, res) => {
 
 // "Estou aqui": a cada minuto com o app aberto (5 minutos no dia = 1 dia na sequência do app).
 r.post('/me/presenca', requireAuth('member'), (req, res) => res.json(ping(req.actor.id)));
+
+// O clube entrou hoje: sequência do clube, 100 pontos e um pacotinho para cada membro (uma vez por dia).
+r.post('/club/presenca', requireAuth('club'), (req, res) => res.json(clubEntered(req.actor.id)));
+r.get('/club/presenca', requireAuth('club'), (req, res) => res.json(clubPresenceSummary(req.actor.id)));
 
 // O membro cria o próprio @ (uma vez só; não dá para trocar depois).
 r.post('/me/arroba', requireAuth('member'), (req, res) => res.json({ handle: setHandle(req.actor.id, req.body.handle) }));

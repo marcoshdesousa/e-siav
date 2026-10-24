@@ -776,6 +776,15 @@ function migrate() {
     completed_at TEXT,
     PRIMARY KEY (member_id, album)
   )`);
+  // Pacotinhos do "clube entrou hoje": depois dos 5 primeiros pacotinhos, vêm com figurinhas repetidas.
+  add('album_progress', 'repeat_packs', 'INTEGER NOT NULL DEFAULT 0');
+  // O clube entrou no portal (uma vez por dia): sequência do clube e 100 pontos no ranking de clubes.
+  db.exec(`CREATE TABLE IF NOT EXISTS club_presence (
+    club_id INTEGER NOT NULL REFERENCES clubs(id) ON DELETE CASCADE,
+    date TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+    PRIMARY KEY (club_id, date)
+  )`);
   db.exec(`CREATE TABLE IF NOT EXISTS album_stickers (
     member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
     album TEXT NOT NULL,
@@ -815,6 +824,8 @@ function migrate() {
   )`);
   // Estudo feito atrasado (dia que já passou) vale menos: late = 1.
   add('bible_points', 'late', 'INTEGER NOT NULL DEFAULT 0');
+  // Tipo do ponto: estudo (padrão) ou 'app' (5 minutos no app no dia: só 10 pontos para o membro).
+  add('bible_points', 'kind', "TEXT NOT NULL DEFAULT 'estudo'");
   db.exec('CREATE INDEX IF NOT EXISTS idx_bible_points_unit ON bible_points(unit_id)');
   db.exec('CREATE INDEX IF NOT EXISTS idx_bible_points_club ON bible_points(club_id)');
   // Dias já concluídos antes de existir a pontuação também valem (uma vez só; a chave impede repetir).

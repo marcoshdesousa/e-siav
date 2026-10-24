@@ -50,7 +50,7 @@ export function AppStreak({ s }) {
       <span className="st-flame"><Flame size={22} strokeWidth={2.2} /></span>
       <div className="grow">
         <b>{s.streak} {s.streak === 1 ? 'dia' : 'dias'} no app</b>
-        <small>{s.today_done ? 'Hoje já contou!' : `Fique ${left} min no app hoje para contar`}{s.best_streak ? ` · recorde ${s.best_streak}` : ''}</small>
+        <small>{s.today_done ? 'Hoje já contou: +1 pacotinho e 10 pontos' : `Fique ${left} min no app hoje: +1 pacotinho e 10 pontos`}{s.best_streak ? ` · recorde ${s.best_streak}` : ''}</small>
       </div>
     </div>
   );

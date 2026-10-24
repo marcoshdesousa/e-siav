@@ -24,7 +24,7 @@ export function bestDateStreak(dates) {
 }
 
 /** 1 pacotinho do Álbum Bíblico. */
-export function giveBiblePack(memberId, packs = 1) {
+export function giveBiblePack(memberId, packs = 1, { repeat = false } = {}) {
   run('INSERT OR IGNORE INTO album_progress (member_id, album) VALUES (?, ?)', memberId, 'biblico');
-  run('UPDATE album_progress SET packs_unopened = packs_unopened + ? WHERE member_id = ? AND album = ?', packs, memberId, 'biblico');
+  run('UPDATE album_progress SET packs_unopened = packs_unopened + ?, repeat_packs = repeat_packs + ? WHERE member_id = ? AND album = ?', packs, repeat ? packs : 0, memberId, 'biblico');
 }

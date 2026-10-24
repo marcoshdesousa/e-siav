@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import {
-  Award, BadgeCheck, KeyRound, UserPlus, CalendarDays, Check, Megaphone, Plus, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, ClipboardCheck, Globe, FolderOpen, BookOpen, Wrench, LifeBuoy, Share2,
+  Award, BadgeCheck, KeyRound, UserPlus, CalendarDays, Check, Megaphone, Plus, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, ClipboardCheck, Globe, FolderOpen, BookOpen, Wrench, LifeBuoy, Share2, Flame,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -14,7 +14,7 @@ import {
 } from './Folders.jsx';
 import { EmbeddedSite, SupportChat } from '../Shared.jsx';
 import {
-  Avatar, Badge, Button, Card, Confirm, Field, ImagePicker, Loading, MedalList, Modal, PageHeader, PositionBadge, Section, ShareButton, Stat, Tabs, useAsync, useLoad,
+  Avatar, Badge, Button, Card, Confirm, Field, ImagePicker, Loading, MedalList, Modal, PageHeader, PositionBadge, Section, ShareButton, Stat, Tabs, notify, useAsync, useLoad,
 } from '../../ui.jsx';
 import Shell, { MoreMenu } from '../Shell.jsx';
 import { EventsList, InAppProfile } from '../Profiles.jsx';
@@ -86,6 +86,29 @@ export function ClubPlanCard() {
   );
 }
 
+/** O clube entrou hoje (uma vez por dia): sequência, 100 pontos e 1 pacotinho para cada membro. */
+function useClubPresence() {
+  useEffect(() => {
+    api.post('/club/presenca').then((r) => {
+      if (r?.first) notify(`Bom dia de clube! +100 pontos para o clube e ${r.packs} ${r.packs === 1 ? 'membro ganhou' : 'membros ganharam'} 1 pacotinho de figurinhas.`);
+    }).catch(() => {});
+  }, []);
+}
+
+function ClubStreak() {
+  const s = useLoad(() => api.get('/club/presenca'));
+  if (!s.data) return null;
+  return (
+    <div className="streak-box" style={{ marginTop: '.8rem' }}>
+      <div className={'app-streak' + (s.data.streak ? ' lit' : '') + (s.data.today_done ? ' on' : '')} style={{ marginTop: 0 }}>
+        <span className="st-flame"><Flame size={22} strokeWidth={2.2} /></span>
+        <div className="grow"><b>{s.data.streak} {s.data.streak === 1 ? 'dia' : 'dias'} de clube no app</b>
+          <small>Entrar uma vez por dia: +100 pontos para o clube e 1 pacotinho para cada membro{s.data.best_streak ? ` · recorde ${s.data.best_streak}` : ''}</small></div>
+      </div>
+    </div>
+  );
+}
+
 /** Link de inscrição do clube: quem entra por ele já fica no clube. O clube compartilha, liga/desliga e troca. */
 function SignupLinkCard() {
   const state = useLoad(() => api.get('/club/inscricao'));
@@ -150,6 +173,7 @@ function ClubHome() {
             </div>
           </div>
 
+          <ClubStreak />
           <ClubPlanCard />
           <SignupLinkCard />
 
@@ -582,6 +606,7 @@ const clubParent = (path) => {
 
 /** Sistema do Clube: Perfil, Requisitos, Ranking, SGC e o resto em Mais. */
 export default function ClubApp() {
+  useClubPresence();
   const tabs = [
     { to: base, icon: Tent, label: 'Perfil', end: true },
     { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },

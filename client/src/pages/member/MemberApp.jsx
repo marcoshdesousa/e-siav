@@ -3,7 +3,7 @@ import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-r
 import { BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, BookOpenText, Waypoints, Hourglass, BadgeCheck, Lock, Trash2, UserCog, Download } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
-import { Button, Card, Field, Loading, Modal, PageHeader, useAsync, useLoad } from '../../ui.jsx';
+import { Button, Card, Field, Loading, Modal, PageHeader, notify, useAsync, useLoad } from '../../ui.jsx';
 import Shell, { MoreMenu } from '../Shell.jsx';
 import { InAppProfile, MemberProfileView } from '../Profiles.jsx';
 import { RequirementsTodo } from '../Requirements.jsx';
@@ -186,7 +186,10 @@ function parentOf(path) {
 function usePresence() {
   useEffect(() => {
     const t = setInterval(() => {
-      if (document.visibilityState === 'visible' && navigator.onLine !== false) api.post('/me/presenca').catch(() => {});
+      if (document.visibilityState !== 'visible' || navigator.onLine === false) return;
+      api.post('/me/presenca').then((r) => {
+        if (r?.rewarded_now) notify('Você usou o app hoje: ganhou 1 pacotinho de figurinhas e 10 pontos no ranking!');
+      }).catch(() => {});
     }, 60e3);
     return () => clearInterval(t);
   }, []);

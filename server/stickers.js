@@ -40,11 +40,12 @@ function weightedPick(items) {
  * Sorteia um pacotinho. owned: Set com as figurinhas que a pessoa já tem (coladas ou não).
  * packsOpened: quantos pacotinhos ela já abriu antes deste.
  */
-export function drawPack(album, owned, packsOpened) {
+export function drawPack(album, owned, packsOpened, { repeat = false } = {}) {
   const a = ALBUMS[album];
   const ids = Object.keys(a.rarity).map(Number);
   const fresh = packsOpened < ODDS.freshPacks;
-  const allRepeats = !fresh && owned.size > 0 && randomFloat() < ODDS.allRepeatsPack;
+  // Pacotinho do "clube entrou hoje": só repetidas (menos nos primeiros pacotinhos, que nunca repetem).
+  const allRepeats = !fresh && owned.size > 0 && (repeat || randomFloat() < ODDS.allRepeatsPack);
   const have = new Set(owned);
   const out = [];
   const thisPack = packsOpened + 1;

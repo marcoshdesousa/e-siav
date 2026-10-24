@@ -82,7 +82,9 @@ r.post('/albuns/:id/abrir', member, (req, res) => {
     const p = progress(req.actor.id, a.id);
     if (p.packs_unopened < 1) fail(400, 'Você não tem pacotinhos para abrir');
     const owned = new Set(all('SELECT sticker FROM album_stickers WHERE member_id = ? AND album = ?', req.actor.id, a.id).map((x) => x.sticker));
-    const cards = drawPack(a.id, owned, p.packs_opened);
+    const repeat = p.repeat_packs > 0;
+    const cards = drawPack(a.id, owned, p.packs_opened, { repeat });
+    if (repeat) run('UPDATE album_progress SET repeat_packs = repeat_packs - 1 WHERE member_id = ? AND album = ?', req.actor.id, a.id);
     for (const c of cards) {
       run(`INSERT INTO album_stickers (member_id, album, sticker) VALUES (?,?,?)
         ON CONFLICT (member_id, album, sticker) DO UPDATE SET qty = qty + 1`, req.actor.id, a.id, c.id);

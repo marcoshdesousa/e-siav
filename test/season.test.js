@@ -46,3 +46,28 @@ test('sequência no app: 5 minutos no dia contam 1 dia; várias entradas no mesm
   assert.equal(s.today_done, true);
   assert.equal(s.streak, 1);
 });
+
+test('usar o app: membro ganha pacotinho e 10 pontos; clube que entra ganha 100 pontos e um pacotinho (repetido) para cada membro', async () => {
+  const { ping, clubEntered } = await import('../server/presence.js');
+  const { clubsRanking, membersRanking } = await import('../server/rankings.js');
+  const { setSetting } = await import('../server/fees.js');
+  setSetting('ranking_inicio', ''); // o teste da virada deixou a temporada em 2028
+  const d = Number(run(`INSERT INTO districts (name) VALUES ('D3')`).lastInsertRowid);
+  const c = Number(run('INSERT INTO clubs (district_id, name) VALUES (?, ?)', d, 'C3').lastInsertRowid);
+  const m = Number(run(`INSERT INTO members (club_id, name, birth_date, cargo, code, status) VALUES (?, 'R S', '2013-01-01', 'Desbravador', '999003', 'ativo')`, c).lastInsertRowid);
+  const packs = () => ({ ...(get(`SELECT packs_unopened, repeat_packs FROM album_progress WHERE member_id = ? AND album = 'biblico'`, m) || { packs_unopened: 0, repeat_packs: 0 }) });
+  const t0 = Date.now() - 10 * 60e3;
+  let last;
+  for (let i = 0; i < 5; i++) last = ping(m, t0 + i * 60e3);
+  assert.equal(last.rewarded_now, true);
+  assert.equal(packs().packs_unopened, 1, '1 pacotinho por usar o app');
+  assert.equal(ping(m, t0 + 6 * 60e3).rewarded_now, false, 'só uma vez por dia');
+  assert.equal(membersRanking(d).find((r) => r.id === m).points, 10, '10 pontos');
+  const e1 = clubEntered(c);
+  assert.equal(e1.first, true);
+  assert.equal(e1.streak, 1);
+  assert.deepEqual(packs(), { packs_unopened: 2, repeat_packs: 1 }, 'pacotinho do clube (repetido)');
+  assert.equal(clubEntered(c).first, false, 'entrar de novo no mesmo dia não conta');
+  assert.equal(packs().packs_unopened, 2);
+  assert.equal(clubsRanking(d).find((r) => r.id === c).points, 100, '100 pontos para o clube');
+});

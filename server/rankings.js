@@ -10,6 +10,9 @@ import { setting } from './fees.js';
 export const BIBLE_POINTS = { member: 100, unit: 100, club: 25 };
 /** Estudo feito depois do dia certo (atrasado) vale bem menos. */
 export const LATE_POINTS = { member: 20, unit: 20, club: 5 };
+/** Usar o app: 10 pontos por dia para o membro (5 minutos no app); 100 por dia para o clube que entra. */
+export const APP_POINTS = { member: 10, unit: 0, club: 0 };
+export const CLUB_DAY_POINTS = 100;
 
 /**
  * Temporada do ranking: só contam os pontos ganhos a partir do início (zera todo 1º de janeiro).
@@ -55,7 +58,8 @@ function rank(rows) {
   rows.forEach((r) => {
     r.requirement_points = r.points || 0;
     r.bible_points = r.bible_points || 0;
-    r.points = r.requirement_points + r.bible_points;
+    r.app_points = r.app_points || 0;
+    r.points = r.requirement_points + r.bible_points + r.app_points;
     const last = [r.last_at, r.bible_last_at].filter(Boolean).sort().pop() || null;
     r.last_at = last;
     delete r.bible_last_at;
@@ -79,10 +83,11 @@ const scoreJoin = (type, idCol, reqFilter, scope = null) => `
   ) sc ON sc.submitter_id = ${idCol}`;
 
 /** Pontos da Leitura bíblica agrupados por membro, unidade ou clube (opcionalmente só os feitos num clube). */
-const LATE_OF = new Map(Object.keys(BIBLE_POINTS).map((k) => [BIBLE_POINTS[k], LATE_POINTS[k]]));
+// Quem recebe pela coluna: membro, unidade ou clube.
+const ROLE_OF = { member_id: 'member', unit_id: 'unit', club_id: 'club' };
 const bibleJoin = (col, idCol, each, clubId = null, scope = null) => `
   LEFT JOIN (
-    SELECT ${col} AS target_id, SUM(CASE WHEN late = 1 THEN ${Number(LATE_OF.get(each) ?? each)} ELSE ${Number(each)} END) AS points, MAX(created_at) AS last_at
+    SELECT ${col} AS target_id, SUM(CASE WHEN kind = 'app' THEN ${Number(APP_POINTS[ROLE_OF[col]] ?? 0)} WHEN late = 1 THEN ${Number(LATE_POINTS[ROLE_OF[col]] ?? each)} ELSE ${Number(each)} END) AS points, MAX(created_at) AS last_at
     FROM bible_points WHERE ${col} IS NOT NULL${clubId != null ? ' AND club_id = ' + Number(clubId) : ''}${seasonFilter('created_at', scope)}
     GROUP BY ${col}
   ) bp ON bp.target_id = ${idCol}`;
@@ -158,8 +163,9 @@ export function clubLeadersRanking(clubId) {
 export function clubsRanking(districtId = null) {
   return rank(all(
     `SELECT c.id, c.name, c.logo, c.district_id, d.name AS district_name,
-            COALESCE(sc.points, 0) AS points, sc.last_at, ${BIBLE_COLS}
+            COALESCE(sc.points, 0) AS points, sc.last_at, ${BIBLE_COLS}, COALESCE(cp.n, 0) * ${CLUB_DAY_POINTS} AS app_points
      FROM clubs c JOIN districts d ON d.id = c.district_id
+     LEFT JOIN (SELECT club_id, COUNT(*) n FROM club_presence WHERE 1 = 1${seasonFilter('created_at', districtScope(districtId))} GROUP BY club_id) cp ON cp.club_id = c.id
      ${scoreJoin('club', 'c.id', "r.creator_type = 'admin' AND r.audience = 'club'", districtScope(districtId))}
      ${bibleJoin('club_id', 'c.id', BIBLE_POINTS.club, null, districtScope(districtId))}
      WHERE c.is_app = 0 AND (? IS NULL OR c.district_id = ?)`,
