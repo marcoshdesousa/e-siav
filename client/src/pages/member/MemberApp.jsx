@@ -22,7 +22,7 @@ import PlusPage, { PlusNudge, PlusPicksGate } from './PlusPage.jsx';
 import { BomLider, BomLiderLesson } from '../learning/BomLider.jsx';
 import { HandleField } from '../AppSignup.jsx';
 import { DownloadsPage, MemberCertificatePage } from './Downloads.jsx';
-import { currentSubscription, enablePush, needsInstall, pushSupported, syncPush } from '../../push.js';
+import { currentSubscription, enablePush, installedApp, pushSupported, syncPush } from '../../push.js';
 
 const base = '/membro';
 
@@ -161,34 +161,28 @@ function parentOf(path) {
   return base;
 }
 
-/**
- * Ligar os lembretes no celular (estudos do dia, entrar no app, requisito, joguinho e figurinhas,
- * espalhados entre 9h e 21h). Some quando já está ligado.
- */
+/** Ligar as notificações: só aparece no app baixado (aberto pela tela de início) e some quando já estão ligadas. */
 function PushCard() {
-  const [state, setState] = useState(null); // null = conferindo; 'on' | 'off' | 'denied' | 'install' | 'none'
+  const [state, setState] = useState(null); // null = conferindo/escondido; 'off' | 'denied'
   const [busy, run] = useAsync();
   useEffect(() => {
-    if (!pushSupported()) { setState(needsInstall() ? 'install' : 'none'); return; }
+    if (!pushSupported() || !installedApp()) return;
     if (Notification.permission === 'denied') { setState('denied'); return; }
-    currentSubscription().then((s) => setState(s && Notification.permission === 'granted' ? 'on' : 'off')).catch(() => setState('off'));
+    currentSubscription().then((s) => setState(s && Notification.permission === 'granted' ? null : 'off')).catch(() => setState('off'));
   }, []);
   const turnOn = () => run(async () => {
     const ok = await enablePush();
-    setState(ok ? 'on' : Notification.permission === 'denied' ? 'denied' : 'off');
-    if (ok) notify('Lembretes ligados!');
+    setState(ok ? null : Notification.permission === 'denied' ? 'denied' : 'off');
+    if (ok) notify('Notificações ativadas!');
   }).catch(() => {});
-  if (!state || state === 'on' || state === 'none') return null;
+  if (!state) return null;
   return (
     <Card className="push-card">
-      <div className="row" style={{ alignItems: 'flex-start', gap: '.7rem' }}>
+      <div className="row" style={{ alignItems: 'center', gap: '.7rem' }}>
         <span className="trophy-bg"><Bell size={22} /></span>
         <div className="grow">
-          <b>Lembretes no celular</b>
-          <p className="small muted" style={{ margin: '.2rem 0 .6rem' }}>Um aviso para a Meditação, o Ano Bíblico, a Escola Sabatina e o que mais faltar no dia, entre 9h e 21h. O que você já fez não é lembrado.</p>
-          {state === 'off' && <Button small busy={busy} onClick={turnOn}><Bell size={14} /> Ligar lembretes</Button>}
-          {state === 'denied' && <p className="small" style={{ margin: 0 }}>As notificações estão bloqueadas para o App do DBV. Libere nas configurações do navegador (no cadeado ao lado do endereço) e volte aqui.</p>}
-          {state === 'install' && <p className="small" style={{ margin: 0 }}>No iPhone, toque em <b>Compartilhar</b> e depois em <b>Adicionar à Tela de Início</b>. Abra o app por lá para ligar os lembretes.</p>}
+          {state === 'off' ? <Button small busy={busy} onClick={turnOn}><Bell size={14} /> Ativar notificações</Button>
+            : <span className="small">Notificações bloqueadas. Libere nas configurações do celular.</span>}
         </div>
       </div>
     </Card>

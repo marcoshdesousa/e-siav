@@ -2,8 +2,8 @@
 import { api } from './api.js';
 
 export const pushSupported = () => typeof window !== 'undefined' && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
-/** iPhone/iPad só recebe lembretes com o app adicionado à tela de início. */
-export const needsInstall = () => /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.matchMedia?.('(display-mode: standalone)').matches && !navigator.standalone;
+/** Os lembretes são só para quem baixou o app (aberto pela tela de início, não pelo navegador). */
+export const installedApp = () => typeof window !== 'undefined' && (!!window.matchMedia?.('(display-mode: standalone)').matches || navigator.standalone === true);
 
 const b64 = (s) => {
   const raw = window.atob((s + '='.repeat((4 - (s.length % 4)) % 4)).replace(/-/g, '+').replace(/_/g, '/'));
@@ -25,7 +25,7 @@ export async function currentSubscription() {
 
 /** Pede a permissão (precisa ser num toque) e cadastra o aparelho. true = lembretes ligados. */
 export async function enablePush() {
-  if (!pushSupported()) return false;
+  if (!pushSupported() || !installedApp()) return false;
   if ((await Notification.requestPermission()) !== 'granted') return false;
   const reg = await registration();
   let sub = await reg.pushManager.getSubscription();
@@ -43,7 +43,7 @@ export async function enablePush() {
 
 /** Ao abrir o app: com a permissão já dada, garante o aparelho cadastrado (pode ter trocado). */
 export async function syncPush() {
-  if (!pushSupported() || Notification.permission !== 'granted') return;
+  if (!pushSupported() || !installedApp() || Notification.permission !== 'granted') return;
   try { await enablePush(); } catch { /* sem internet ou sem suporte */ }
 }
 
