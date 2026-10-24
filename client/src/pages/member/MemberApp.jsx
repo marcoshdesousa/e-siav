@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, BookOpenText, Waypoints, Hourglass, BadgeCheck, Lock, Download, Bell } from 'lucide-react';
+import { BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, BookOpenText, Waypoints, Hourglass, BadgeCheck, Lock, Download, Bell, X } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Button, Card, Loading, Modal, PageHeader, notify, useAsync, useLoad } from '../../ui.jsx';
@@ -22,7 +22,7 @@ import PlusPage, { PlusNudge, PlusPicksGate } from './PlusPage.jsx';
 import { BomLider, BomLiderLesson } from '../learning/BomLider.jsx';
 import { HandleField } from '../AppSignup.jsx';
 import { DownloadsPage, MemberCertificatePage } from './Downloads.jsx';
-import { currentSubscription, enablePush, installedApp, pushSupported, syncPush } from '../../push.js';
+import { enablePush, installedApp, pushSupported, syncPush } from '../../push.js';
 
 const base = '/membro';
 
@@ -161,31 +161,32 @@ function parentOf(path) {
   return base;
 }
 
-/** Ligar as notificações: só aparece no app baixado (aberto pela tela de início) e some quando já estão ligadas. */
+const PUSH_SEEN = 'dbv-push-aviso';
+/**
+ * Convite para ativar as notificações: só no app baixado (aberto pela tela de início), pequeno e uma
+ * vez só por aparelho (na próxima vez que abrir, não aparece mais).
+ */
 function PushCard() {
-  const [state, setState] = useState(null); // null = conferindo/escondido; 'off' | 'denied'
+  const [show, setShow] = useState(false);
   const [busy, run] = useAsync();
   useEffect(() => {
-    if (!pushSupported() || !installedApp()) return;
-    if (Notification.permission === 'denied') { setState('denied'); return; }
-    currentSubscription().then((s) => setState(s && Notification.permission === 'granted' ? null : 'off')).catch(() => setState('off'));
+    if (!pushSupported() || !installedApp() || Notification.permission !== 'default') return;
+    try { if (localStorage.getItem(PUSH_SEEN)) return; localStorage.setItem(PUSH_SEEN, '1'); } catch { /* sem armazenamento */ }
+    setShow(true);
   }, []);
   const turnOn = () => run(async () => {
     const ok = await enablePush();
-    setState(ok ? null : Notification.permission === 'denied' ? 'denied' : 'off');
+    setShow(false);
     if (ok) notify('Notificações ativadas!');
-  }).catch(() => {});
-  if (!state) return null;
+  }).catch(() => setShow(false));
+  if (!show) return null;
   return (
-    <Card className="push-card">
-      <div className="row" style={{ alignItems: 'center', gap: '.7rem' }}>
-        <span className="trophy-bg"><Bell size={22} /></span>
-        <div className="grow">
-          {state === 'off' ? <Button small busy={busy} onClick={turnOn}><Bell size={14} /> Ativar notificações</Button>
-            : <span className="small">Notificações bloqueadas. Libere nas configurações do celular.</span>}
-        </div>
-      </div>
-    </Card>
+    <div className="push-card">
+      <Bell size={16} />
+      <span className="grow">Receba lembretes dos seus estudos do dia</span>
+      <Button small busy={busy} onClick={turnOn}>Ativar</Button>
+      <button type="button" className="push-x" aria-label="Fechar" onClick={() => setShow(false)}><X size={15} /></button>
+    </div>
   );
 }
 
