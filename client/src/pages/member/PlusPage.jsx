@@ -61,7 +61,7 @@ export default function PlusPage() {
   const [paid, setPaid] = useState(false);
   const [busy, run] = useAsync();
   const buy = async (plan) => { const o = await run(() => api.post('/plus/assinar', { plan }), null); if (o) { setBought(plan); setOrder(o); } };
-  // Um plano por vez; quem está no DBV- pode renovar ou subir para o DBV+ a qualquer hora.
+  // Um plano por vez; quem está no DBV pode renovar ou subir para o DBV+ a qualquer hora.
   const canBuy = (d) => !d.mine?.active || d.mine.plan === 'app';
   return (
     <>
@@ -73,8 +73,8 @@ export default function PlusPage() {
               <div className="plus-hero plus-hero-app">
                 <img src="/marca/logo.svg" alt="" />
                 <div>
-                  <b>{d.app.locked ? 'Continue usando o App do DBV' : `Você está no ${d.mine?.plan_name || 'DBV-'}`}</b>
-                  <p>{d.app.locked ? 'O seu acesso terminou. ' : d.mine?.active ? `Acesso liberado até ${br(d.mine.until)}. ` : ''}Assinando você <b>ajuda a manter o app no ar</b> e evita contas falsas. O <b>DBV-</b> tem tudo do plano grátis dos clubes; o <b>DBV+</b> libera todos os benefícios.</p>
+                  <b>{d.app.locked ? 'Continue usando o App do DBV' : `Você está no ${d.mine?.plan_name || 'DBV'}`}</b>
+                  <p>{d.app.locked ? 'O seu acesso terminou. ' : d.mine?.active ? `Acesso liberado até ${br(d.mine.until)}. ` : ''}Assinando você <b>ajuda a manter o app no ar</b> e evita contas falsas. O <b>DBV</b> tem tudo do plano grátis dos clubes; o <b>DBV+</b> libera todos os benefícios.</p>
                 </div>
               </div>
             ) : (

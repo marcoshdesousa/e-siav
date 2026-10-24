@@ -3,7 +3,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { setting } from './fees.js';
+import { setSetting, setting } from './fees.js';
+import { get, run } from './db.js';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const DATA = path.join(HERE, 'data');
@@ -47,6 +48,17 @@ const diffDays = (a, b) => Math.round((new Date(a + 'T12:00:00Z') - new Date(b +
 
 /** Início do plano: 1/3/2027. O admin pode mudar (por exemplo, para testar antes). */
 export const planStart = () => setting('ano_biblico_inicio') || PLAN.start;
+/**
+ * Uma vez (pedido do dono do app): o Ano Bíblico começa hoje, para já funcionar com a sequência
+ * (antes começava em 1/3/2027). Se o admin já escolheu uma data, ela fica.
+ */
+export function bibleStartTodayOnce({ justSeeded = false } = {}) {
+  const KEY = 'ano-biblico-comeca-hoje-v1';
+  if (get('SELECT 1 FROM app_flags WHERE key = ?', KEY)) return;
+  if (!justSeeded && !setting('ano_biblico_inicio')) setSetting('ano_biblico_inicio', todayBR());
+  run('INSERT OR IGNORE INTO app_flags (key) VALUES (?)', KEY);
+}
+
 /** Data do dia N do plano. */
 export const dateOfDay = (n) => addDays(planStart(), n - 1);
 /** Dia do plano que é hoje (0 = ainda não começou; > TOTAL = já terminou). */

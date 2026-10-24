@@ -112,7 +112,7 @@ function person(body) {
 
 // Criar conta pelo app (sem o link de um clube): entra no Clube App Brasil, na Unidade App
 // (desbravador, até 15 anos) ou na Unidade App Liderança (16 anos ou mais). Sem cargo e sem
-// escolher clube ou unidade. Já entra com 3 dias de DBV- para conhecer; depois precisa assinar.
+// escolher clube ou unidade. Já entra com 3 dias de DBV para conhecer; depois precisa assinar.
 r.post('/criar-conta', (req, res) => {
   const { name, birth, kind } = person(req.body);
   const c = appClub();

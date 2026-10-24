@@ -31,10 +31,11 @@ import devotionalRoutes from './routes/devotional.js';
 import plusRoutes from './routes/plus.js';
 import { testPlusOnce } from './plus.js';
 import { ensureAppClub } from './appBrasil.js';
+import { bibleStartTodayOnce } from './bible.js';
 import { AUDIO_ROOT } from './audio.js';
 import { startPaymentSweep } from './payments.js';
 import { syncCatalog } from './catalog.js';
-import { createInitialAdmin, resetClubsForDbvOnce, resetToDemoClubsOnce, resetToTestClubsOnce, giftTestPacksOnce, seed } from './seed.js';
+import { createInitialAdmin, resetClubsForDbvOnce, resetToDemoClubsOnce, resetToTestClubsOnce, removeTestClubsOnce, giftTestPacksOnce, seed } from './seed.js';
 
 // Banco vazio: cria só o administrador. Os dados de exemplo completos só entram com
 // SEED_DEMO=1 (testes e desenvolvimento). Nada que já existe é apagado na inicialização,
@@ -52,6 +53,8 @@ if (!get('SELECT 1 FROM admins LIMIT 1')) {
 resetToDemoClubsOnce({ justSeeded });
 resetClubsForDbvOnce({ justSeeded });
 resetToTestClubsOnce({ justSeeded });
+removeTestClubsOnce({ justSeeded });
+bibleStartTodayOnce({ justSeeded });
 giftTestPacksOnce();
 testPlusOnce();
 ensureAppClub();

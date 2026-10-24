@@ -9,6 +9,7 @@ import { cleanCpf } from './util.js';
 import { saveFicha } from './ficha.js';
 import { NOME_UNIDADE_LIDERANCA } from './config.js';
 import { syncCatalog } from './catalog.js';
+import { deleteClub } from './accounts.js';
 
 const day = 864e5;
 const iso = (offsetDays, hour = 23, min = 59) => {
@@ -466,10 +467,23 @@ export function resetToDemoClubsOnce({ justSeeded = false } = {}) {
 export function resetToTestClubsOnce({ justSeeded = false } = {}) {
   const KEY = 'clubes-teste-v2';
   if (get('SELECT 1 FROM app_flags WHERE key = ?', KEY)) return;
+  // Não cria mais os clubes de teste no ar (as contas teste foram apagadas a pedido do dono do app).
+  void justSeeded;
+  run('INSERT OR IGNORE INTO app_flags (key) VALUES (?)', KEY);
+}
+
+/**
+ * Uma vez (pedido do dono do app): apaga as contas teste do ar, os clubes de teste Águias do Vale
+ * (4821) e Leões de Judá (7350) com as unidades, os membros e tudo deles. Os outros clubes, o
+ * administrador e o catálogo continuam. Com os dados de exemplo (SEED_DEMO=1), só marca.
+ */
+export function removeTestClubsOnce({ justSeeded = false } = {}) {
+  const KEY = 'apagar-contas-teste-v1';
+  if (get('SELECT 1 FROM app_flags WHERE key = ?', KEY)) return;
   if (!justSeeded) {
-    wipeClubs();
-    seed({ production: true });
-    console.log('Clubes apagados e clubes de teste criados (o administrador continua o mesmo).');
+    const test = all(`SELECT id, name FROM clubs WHERE (code = '4821' AND name LIKE '%Águias do Vale%') OR (code = '7350' AND name LIKE '%Leões de Judá%')`);
+    for (const c of test) deleteClub(c.id);
+    if (test.length) console.log('Contas teste apagadas:', test.map((c) => c.name).join(', '));
   }
   run('INSERT OR IGNORE INTO app_flags (key) VALUES (?)', KEY);
 }

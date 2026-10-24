@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { Compass, Download, Monitor, Share, Smartphone, SquarePlus, Tent, MoreVertical } from 'lucide-react';
-import { api } from '../api.js';
+
 import { homeFor, useAuth } from '../auth.jsx';
 import { platform, useInstall } from '../install.js';
 import { LogoIcon, Modal, Spinner } from '../ui.jsx';
@@ -71,26 +71,6 @@ function InstallSection() {
   );
 }
 
-/** IMPROVISO PARA TESTES (tirar depois): entrar com um clique nas contas de exemplo. */
-function QuickLogin({ mode, onPick }) {
-  const [list, setList] = useState(null);
-  useEffect(() => { api.get('/auth/contas-teste').then(setList).catch(() => setList({ clube: [], membros: [] })); }, []);
-  const items = list?.[mode] || [];
-  if (!items.length) return null;
-  return (
-    <>
-      <div className="ig-or"><span />ENTRAR COMO (TESTE)<span /></div>
-      <div className="ig-demo">
-        {items.map((a) => (
-          <button type="button" key={a.username + a.label} onClick={() => onPick(a)}>
-            <b>{a.label}</b><span>{a.sub}</span>
-          </button>
-        ))}
-      </div>
-    </>
-  );
-}
-
 /** Tela de entrada (também é a página inicial do site). */
 export default function Login() {
   const { actor, login } = useAuth();
@@ -123,11 +103,6 @@ export default function Login() {
     e.preventDefault();
     enter(username, password);
   };
-  const pick = (a) => {
-    setUsername(a.username);
-    setPassword(a.password || '');
-    if (a.password) enter(a.username, a.password);
-  };
 
   return (
     <div className="ig">
@@ -154,7 +129,6 @@ export default function Login() {
               {busy ? <span className="btn-spin" /> : 'Entrar'}
             </button>
             {error && <p className="ig-error" role="alert">{error}</p>}
-            <QuickLogin mode={mode} onPick={pick} />
             <p className="ig-hint">{mode === 'clube'
               ? 'Coloque o código do clube e a senha. Para entrar como unidade, use a senha da sua unidade.'
               : 'Coloque o seu código e a sua senha.'}</p>
