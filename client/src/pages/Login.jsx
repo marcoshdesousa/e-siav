@@ -135,11 +135,17 @@ export default function Login() {
 
           </form>
 
-          <div className="ig-card ig-signup">
-            <span>Não tem uma conta? <Link to="/criar-conta"><b>Criar conta</b></Link></span>
-            <span className="small">Tem clube? Cadastre-se pelo link de inscrição do seu clube.</span>
-            <Link to="/registrar-clube" className="ig-register"><Tent size={15} /> Registrar o meu clube</Link>
-          </div>
+          {mode === 'membros' ? (
+            <div className="ig-card ig-signup">
+              <span>Não tem uma conta? <Link to="/criar-conta"><b>Criar conta</b></Link></span>
+              <span className="small">Tem clube? Cadastre-se pelo link de inscrição do seu clube.</span>
+            </div>
+          ) : (
+            <div className="ig-card ig-signup">
+              <span>O seu clube ainda não está no app?</span>
+              <Link to="/registrar-clube" className="ig-register"><Tent size={15} /> Registrar o meu clube</Link>
+            </div>
+          )}
 
           <InstallSection />
         </div>

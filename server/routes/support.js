@@ -62,9 +62,11 @@ const okUrl = (v) => {
 };
 // WhatsApp da equipe: para onde vão os pedidos de "Registrar clube" (só números, com DDI e DDD).
 const WHATS = 'whatsapp_clube';
+const WHATS_PADRAO = '5562992097369'; // WhatsApp da equipe (o admin pode trocar)
 const digits = (v) => String(v || '').replace(/\D/g, '').slice(0, 15);
-r.get('/public/whatsapp', (_req, res) => res.json({ number: digits(setting(WHATS)) }));
-r.get('/admin/configuracoes', admin, (_req, res) => res.json({ ...Object.fromEntries(Object.values(LINKS).map((k) => [k, setting(k) || ''])), [WHATS]: digits(setting(WHATS)) }));
+const whats = () => digits(setting(WHATS)) || WHATS_PADRAO;
+r.get('/public/whatsapp', (_req, res) => res.json({ number: whats() }));
+r.get('/admin/configuracoes', admin, (_req, res) => res.json({ ...Object.fromEntries(Object.values(LINKS).map((k) => [k, setting(k) || ''])), [WHATS]: whats() }));
 r.put('/admin/configuracoes', admin, (req, res) => {
   for (const k of Object.values(LINKS)) if (req.body[k] !== undefined) setSetting(k, okUrl(req.body[k]));
   if (req.body[WHATS] !== undefined) setSetting(WHATS, digits(req.body[WHATS]));
