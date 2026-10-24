@@ -75,8 +75,8 @@ export default function PlusPage() {
               <div className="plus-hero plus-hero-app">
                 <img src="/marca/logo.svg" alt="" />
                 <div>
-                  <b>{d.app.locked ? 'Continue usando o App do DBV' : d.mine?.trial ? 'Você está no teste grátis' : `Você está no ${d.mine?.plan_name || 'DBV'}`}</b>
-                  <p>{d.app.locked ? (d.mine?.trial_ended ? 'O seu teste grátis de 3 dias terminou. ' : 'O seu acesso terminou. ') : d.mine?.trial ? `O seu teste grátis de 3 dias vai até ${br(d.mine.until)}. Para continuar usando depois disso, assine um plano. ` : d.mine?.active ? `Acesso liberado até ${br(d.mine.until)}. ` : ''}Assinando você <b>ajuda a manter o app no ar</b> e evita contas falsas. O <b>DBV</b> tem tudo do plano grátis dos clubes; o <b>DBV+</b> libera todos os benefícios.</p>
+                  <b>{d.app.locked ? 'Sua aventura não pode parar!' : d.mine?.trial ? 'Você está no teste grátis' : `Você está no ${d.mine?.plan_name || 'DBV'}`}</b>
+                  <p>{d.app.locked ? (d.mine?.trial_ended ? 'O seu teste grátis de 3 dias terminou. ' : 'O seu acesso terminou. ') : d.mine?.trial ? `O seu teste grátis vai até ${br(d.mine.until)}. ` : d.mine?.active ? `Acesso liberado até ${br(d.mine.until)}. ` : ''}Com o <b>DBV</b> você continua lendo a Bíblia todo dia, mantém as suas <b>sequências</b> e sobe no <b>ranking Brasil</b>. Com o <b>DBV+</b> você libera tudo. E cada assinatura ajuda o App do DBV a chegar a mais desbravadores!</p>
                 </div>
               </div>
             ) : (

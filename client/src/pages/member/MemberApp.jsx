@@ -107,8 +107,8 @@ function AppLock({ children }) {
       <div className="app-locked" onClickCapture={stop} onSubmitCapture={stop}>{children}</div>
       {ask && (
         <Modal title="Assine para continuar" onClose={() => setAsk(false)} footer={<><Button variant="secondary" onClick={() => setAsk(false)}>Agora não</Button><Button onClick={() => { setAsk(false); nav(`${base}/dbv-mais`); }}>Ver planos</Button></>}>
-          <p>{actor.app.trial_ended ? 'O seu teste grátis de 3 dias' : 'O seu acesso ao'} <b>App do DBV</b> terminou. Para continuar, assine um plano: assim você ajuda a manter o app no ar.</p>
-          <p className="small muted">O <b>DBV</b> (R$ 3,90) tem tudo do plano grátis dos clubes. O <b>DBV+</b> (R$ 7,90) libera todos os benefícios. Faz parte de um clube? Peça o link de inscrição dele.</p>
+          <p>{actor.app.trial_ended ? 'O seu teste grátis de 3 dias' : 'O seu acesso ao'} <b>App do DBV</b> terminou. Não perca as suas sequências e o seu lugar no ranking!</p>
+          <p className="small muted">Com o <b>DBV</b> (R$ 3,90) você continua lendo a Bíblia todo dia e subindo no ranking Brasil. O <b>DBV+</b> (R$ 7,90) libera todos os benefícios: Bom Líder, figurinhas em triplo, jogos sem internet e o selo de verificado.</p>
         </Modal>
       )}
     </>

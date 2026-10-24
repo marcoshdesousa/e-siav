@@ -76,7 +76,7 @@ export function CreateAccount() {
       </div>
       <div className="csu-notice">
         <Info size={20} />
-        <p>Você está criando a conta pelo <b>App do DBV (App Brasil)</b>. Você <b>não terá registro de clube nem de unidade</b> e participa só do <b>ranking Brasil</b>.<br />Faz parte de um clube? <b>Peça o link de inscrição do seu clube</b> e cadastre-se por ele: assim você entra direto no clube, de graça.</p>
+        <p>Você está criando a conta pelo <b>App do DBV (App Brasil)</b>. Você <b>não terá registro de clube nem de unidade</b> e participa só do <b>ranking Brasil</b>.<br />Faz parte de um clube? <b>Peça o link de inscrição do seu clube</b> e cadastre-se por ele: assim você entra direto no clube.</p>
       </div>
       <Card className="csu-card">
         <div className="form">
