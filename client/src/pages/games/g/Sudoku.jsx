@@ -2,6 +2,7 @@
 import { useEffect, useReducer, useRef } from 'react';
 import { shuffle, useKeys } from '../kit.js';
 import { sfx } from '../audio.js';
+import { X, Timer } from 'lucide-react';
 import './Sudoku.css';
 
 const LEVELS = { easy: { name: 'Fácil', clues: 38, mult: 1 }, medium: { name: 'Médio', clues: 30, mult: 1.5 } };
@@ -208,9 +209,9 @@ export default function Game({ onScore, onEnd }) {
             <button key={id} type="button" className={'sudoku-level' + (s.level === id ? ' sudoku-level-on' : '')} onClick={() => changeLevel(id)} disabled={!canChange && s.level !== id}>{l.name}</button>
           ))}
         </div>
-        <span>⏱ <b>{mm}:{ss}</b></span>
+        <span><Timer size={14} style={{ verticalAlign: '-2px' }} /> <b>{mm}:{ss}</b></span>
         <span className="sudoku-mistakes" aria-label={'Erros: ' + s.mistakes}>
-          {Array.from({ length: MAX_MISTAKES }, (_, k) => <i key={k} className={k < s.mistakes ? 'sudoku-x' : ''}>✕</i>)}
+          {Array.from({ length: MAX_MISTAKES }, (_, k) => <i key={k} className={k < s.mistakes ? 'sudoku-x' : ''}><X size={14} /></i>)}
         </span>
       </div>
       <div className={'sudoku-grid' + (s.state === 'won' ? ' sudoku-won' : s.state === 'lost' ? ' sudoku-lost' : '')}>
@@ -241,12 +242,12 @@ export default function Game({ onScore, onEnd }) {
       </div>
       <div className="sudoku-tools">
         <button type="button" className={'sudoku-tool' + (s.notesMode ? ' sudoku-tool-on' : '')} onClick={() => { st.current.notesMode = !st.current.notesMode; sfx('tap'); render(); }} disabled={s.state !== 'play'}>
-          ✏️ Anotações: {s.notesMode ? 'ligadas' : 'desligadas'}
+          Anotações: {s.notesMode ? 'ligadas' : 'desligadas'}
         </button>
         <button type="button" className="sudoku-tool" onClick={erase} disabled={s.state !== 'play'}>⌫ Apagar notas</button>
       </div>
       <div className={'sudoku-msg' + (s.state !== 'play' ? ' sudoku-msg-' + s.state : '')}>
-        {s.state === 'won' ? `Resolvido! ${s.final} pontos 🎉` : s.state === 'lost' ? '3 erros: fim de jogo.' : 'Escolha uma casa e depois o número.'}
+        {s.state === 'won' ? `Resolvido! ${s.final} pontos` : s.state === 'lost' ? '3 erros: fim de jogo.' : 'Escolha uma casa e depois o número.'}
       </div>
     </div>
   );

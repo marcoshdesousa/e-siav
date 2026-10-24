@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { shuffle } from '../kit.js';
 import { sfx } from '../audio.js';
+import { Hearts } from '../art.jsx';
 import './Hangman.css';
 
 const BIB = 'Personagem bíblico';
@@ -109,12 +110,12 @@ export default function Game({ onScore, onEnd }) {
     <div className="hangman">
       <div className="hangman-head">
         <span className="hangman-hint">{hint}</span>
-        <span className="hangman-score">⭐ {score}</span>
+        <span className="hangman-score">Pontos: {score}</span>
       </div>
       <div className="hangman-stage">
         <Gallows errors={errors} />
         <div className="hangman-lives" aria-label={`${lives} vidas`}>
-          {[...Array(MAX).keys()].map((i) => <span key={i}>{i < lives ? '❤️' : '🤍'}</span>)}
+          <Hearts n={lives} max={MAX} />
           <small>Palavra {idx + 1}</small>
         </div>
       </div>

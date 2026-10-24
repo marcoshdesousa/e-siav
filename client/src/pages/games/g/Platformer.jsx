@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { COLORS, clamp, rand, useCanvas, useKeys, useRaf } from '../kit.js';
 import DPad from '../DPad.jsx';
 import { sfx } from '../audio.js';
+import { drawHearts } from '../art.jsx';
 
 const W = 360;
 const H = 400;
@@ -359,8 +360,7 @@ export default function Game({ onScore, onEnd }) {
     ctx.font = 'bold 15px sans-serif';
     ctx.textBaseline = 'middle';
     ctx.textAlign = 'left';
-    ctx.fillStyle = COLORS.red;
-    ctx.fillText('❤'.repeat(Math.max(0, s.lives)), 16, 23);
+    drawHearts(ctx, Math.max(0, s.lives), 12, 23, 6);
     ctx.fillStyle = COLORS.yellow;
     ctx.fillText(`● ${s.coins}`, 92, 23);
     if (s.msgT > 0) {

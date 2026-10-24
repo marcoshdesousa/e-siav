@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { COLORS, rand, useCanvas, useKeys, useRaf, useSwipe } from '../kit.js';
 import DPad from '../DPad.jsx';
 import { sfx } from '../audio.js';
+import { FRUIT_KINDS, drawFruit } from '../art.jsx';
 
 const N = 18;
 const CELL = 20;
@@ -10,7 +11,7 @@ const W = N * CELL;
 const H = N * CELL;
 const VEC = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
 const OPP = { up: 'down', down: 'up', left: 'right', right: 'left' };
-const FRUITS = ['🍎', '🍓', '🍊', '🍇', '🍒'];
+const FRUITS = FRUIT_KINDS;
 
 const canvasStyle = { width: '100%', height: 'auto', display: 'block', touchAction: 'none', borderRadius: 16, userSelect: 'none' };
 
@@ -99,10 +100,7 @@ export default function Game({ onScore, onEnd }) {
       }
     }
     if (s.fruit) {
-      ctx.font = `${CELL - 2}px sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(s.fruitIcon, s.fruit.x * CELL + CELL / 2, s.fruit.y * CELL + CELL / 2 + 1);
+      drawFruit(ctx, s.fruitIcon, s.fruit.x * CELL + CELL / 2, s.fruit.y * CELL + CELL / 2 + 1, CELL / 2 - 1);
     }
     s.snake.forEach((p, i) => {
       const t = i / Math.max(1, s.snake.length - 1);

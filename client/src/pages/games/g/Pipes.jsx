@@ -1,9 +1,10 @@
-// Encanador: gire os canos para a água ir da fonte (esquerda) até a saída (direita).
+// Água da rocha (Moisés): gire os canais para a água ir da rocha (esquerda) até o acampamento (direita).
 // Cada fase nasce de um caminho aleatório já ligado; depois as peças são giradas ao acaso,
 // então sempre há solução.
 import { useEffect, useReducer, useRef } from 'react';
 import { rand, shuffle, useKeys } from '../kit.js';
 import { sfx } from '../audio.js';
+import { Mountain, Tent, Timer } from 'lucide-react';
 import './Pipes.css';
 
 const START_SECS = 120;
@@ -206,12 +207,12 @@ export default function Game({ onScore, onEnd }) {
     <div className="pipes">
       <div className="pipes-top">
         <span>Fase <b>{s.level}</b></span>
-        <span className={s.left <= 15 ? 'pipes-warn' : ''}>⏱ <b>{mm}:{ss}</b></span>
+        <span className={s.left <= 15 ? 'pipes-warn' : ''}><Timer size={14} style={{ verticalAlign: '-2px' }} /> <b>{mm}:{ss}</b></span>
         <span>Pontos: <b>{s.total}</b></span>
       </div>
       <div className="pipes-wrap">
         <div className="pipes-side">
-          <div className="pipes-tap" style={{ top: rowPct(s.rs) }}><span>💧</span><i className="pipes-stub pipes-wet" /></div>
+          <div className="pipes-tap" style={{ top: rowPct(s.rs) }}><span title="Rocha"><Mountain size={20} color="#8A7C66" fill="#B9AE98" /></span><i className="pipes-stub pipes-wet" /></div>
         </div>
         <div className={'pipes-board' + (s.done ? ' pipes-solved' : '')} style={{ gridTemplateColumns: `repeat(${s.n}, 1fr)` }}>
           {s.cells.map((c, i) => {
@@ -236,7 +237,7 @@ export default function Game({ onScore, onEnd }) {
           {s.over && !s.done && <div className="pipes-msg"><b>O tempo acabou!</b></div>}
         </div>
         <div className="pipes-side">
-          <div className="pipes-drain" style={{ top: rowPct(s.rd) }}><i className={'pipes-stub' + (drainWet ? ' pipes-wet' : '')} /><span>🏁</span></div>
+          <div className="pipes-drain" style={{ top: rowPct(s.rd) }}><i className={'pipes-stub' + (drainWet ? ' pipes-wet' : '')} /><span title="Acampamento"><Tent size={20} color="#F9C71D" /></span></div>
         </div>
       </div>
       <p className="pipes-hint">Toque num cano para girá-lo. No teclado: setas e espaço.</p>

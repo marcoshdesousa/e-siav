@@ -1,4 +1,4 @@
-// Empurre as caixas: leve todas as caixas até os lugares marcados. Fases feitas à mão e
+// Pedras do muro (Neemias): leve todas as pedras até os lugares marcados. Fases feitas à mão e
 // conferidas por um resolvedor (busca em largura), então todas têm solução.
 import { useEffect, useReducer, useRef } from 'react';
 import { useKeys, useSwipe } from '../kit.js';
@@ -185,7 +185,7 @@ export default function Game({ onScore, onEnd }) {
         )}
       </div>
       <div className="sokoban-bar">
-        <span className="sokoban-count">📦 {onGoal}/{s.boxes.length}</span>
+        <span className="sokoban-count">Pedras no lugar: {onGoal}/{s.boxes.length}</span>
         <button type="button" className="sokoban-btn" onClick={undo} disabled={s.done || !s.history.length}>↶ Desfazer</button>
         <button type="button" className="sokoban-btn" onClick={restart} disabled={s.done || !s.history.length}>↺ Recomeçar</button>
       </div>

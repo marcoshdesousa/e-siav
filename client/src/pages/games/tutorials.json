@@ -54,9 +54,9 @@
   ]
  },
  "velha": {
-  "objetivo": "Você é o ✕. Faça uma linha de 3 (reta ou diagonal) antes do computador (◯).",
+  "objetivo": "Você é o X. Faça uma linha de 3 (reta ou diagonal) antes do computador (O).",
   "celular": [
-   "Toque em uma casa vazia para colocar seu ✕",
+   "Toque em uma casa vazia para colocar seu X",
    "Espere o computador jogar e toque de novo"
   ],
   "computador": [
@@ -107,7 +107,7 @@
   ]
  },
  "memoria": {
-  "objetivo": "Vire duas cartas por vez e encontre os 8 pares de figuras iguais.",
+  "objetivo": "Vire duas cartas por vez e encontre os 8 pares de figuras iguais de histórias da Bíblia.",
   "celular": [
    "Toque numa carta para virá-la",
    "Toque em outra: se forem iguais ficam abertas; senão, viram de volta"
@@ -123,7 +123,7 @@
   ]
  },
  "passaro": {
-  "objetivo": "Faça o pássaro voar entre os canos sem bater neles nem no chão.",
+  "objetivo": "Ajude a pomba de Noé a levar o ramo de oliveira: voe entre as colunas sem bater nelas nem cair nas águas do dilúvio.",
   "celular": [
    "Toque na tela para começar e bater as asas",
    "Cada toque dá um impulso para cima; sem tocar ele cai"
@@ -132,11 +132,11 @@
    "Espaço, Enter ou ↑ para bater as asas",
    "Também dá para clicar na tela"
   ],
-  "pontos": "Cada cano que você passa vale 1 ponto. Acaba ao bater num cano ou no chão.",
+  "pontos": "Cada coluna que você passa vale 1 ponto. Acaba ao bater numa coluna ou cair na água.",
   "dicas": [
    "Toques curtos e ritmados funcionam melhor",
-   "Mire no meio da abertura do próximo cano",
-   "Com o tempo os canos ficam mais rápidos e a abertura menor"
+   "Mire no meio da abertura da próxima coluna",
+   "Com o tempo as colunas ficam mais rápidas e a abertura menor"
   ]
  },
  "tijolos": {
@@ -161,7 +161,7 @@
   "objetivo": "Abra todos os quadrados sem bombas (são 10 bombas escondidas em 9x9).",
   "celular": [
    "Toque num quadrado para abri-lo",
-   "Segure o dedo para marcar uma bandeira 🚩",
+   "Segure o dedo para marcar uma bandeira",
    "Ou ligue o \"Modo bandeira\" no botão abaixo do campo"
   ],
   "computador": [
@@ -194,10 +194,10 @@
   ]
  },
  "toupeira": {
-  "objetivo": "Acerte as toupeiras 🐹 antes que se escondam, durante 45 segundos, sem acertar as bombas.",
+  "objetivo": "Acerte as toupeiras antes que se escondam, durante 45 segundos, sem acertar as bombas.",
   "celular": [
    "Toque no buraco onde a toupeira apareceu",
-   "Não toque nas bombas 💣"
+   "Não toque nas bombas"
   ],
   "computador": [
    "Teclas 1 a 9 no formato do teclado numérico (7 8 9 em cima, 1 2 3 embaixo)",
@@ -342,7 +342,7 @@
   "pontos": "Vitória vale 3 pontos e empate 1. Regras brasileiras: pedra anda 1 casa para a frente na diagonal e come para a frente e para trás.",
   "dicas": [
    "Comer é obrigatório e pela maioria: vale o lance que captura mais peças",
-   "Pedra que chega à última linha vira dama ♛, que anda várias casas na diagonal",
+   "Pedra que chega à última linha vira dama (com coroa), que anda várias casas na diagonal",
    "Mantenha as pedras juntas e a última fileira protegida"
   ]
  },
@@ -416,7 +416,7 @@
   "objetivo": "Afunde os 5 navios escondidos do computador antes que ele afunde a sua frota.",
   "celular": [
    "Toque numa casa do mar inimigo (grade de cima) para atirar",
-   "✹ é acerto e • é água; depois o computador atira na sua grade de baixo",
+   "a marca vermelha é acerto e o ponto é água; depois o computador atira na sua grade de baixo",
    "Antes do 1º tiro, \"Sortear de novo\" muda a posição dos seus navios"
   ],
   "computador": [
@@ -508,11 +508,11 @@
   "celular": [
    "Toque numa casa para pintá-la; toque de novo para apagar",
    "Arraste o dedo para pintar várias casas de uma vez",
-   "Use \"✕ Marcar vazio\" para marcar casas que você sabe que ficam em branco"
+   "Use \"Marcar vazio\" para marcar casas que você sabe que ficam em branco"
   ],
   "computador": [
    "Use o mouse: clique ou arraste para pintar",
-   "Clique em \"■ Pintar\" ou \"✕ Marcar vazio\" para trocar o modo"
+   "Clique em \"Pintar\" ou \"Marcar vazio\" para trocar o modo"
   ],
   "pontos": "Cada desenho completo dá pontos pelo tamanho e pelo tempo que sobrou. Começa em 5x5 e passa a 7x7. Acaba se os 3 minutos de um desenho acabarem.",
   "dicas": [
@@ -556,10 +556,10 @@
   ]
  },
  "canos": {
-  "objetivo": "Gire os canos para a água sair da torneira 💧 (esquerda) e chegar até a bandeira 🏁 (direita).",
+  "objetivo": "Moisés feriu a rocha e saiu água: gire os canais para a água sair da rocha (à esquerda) e chegar ao acampamento (à direita).",
   "celular": [
-   "Toque num cano para girá-lo 90°",
-   "Os canos com água ficam azuis: siga o caminho até a saída"
+   "Toque num canal para girá-lo 90°",
+   "Os canais com água ficam azuis: siga o caminho até o acampamento"
   ],
   "computador": [
    "Setas para mover o cursor",
@@ -574,10 +574,10 @@
   ]
  },
  "sokoban": {
-  "objetivo": "Empurre todas as caixas até os lugares marcados no chão. Você só pode empurrar, nunca puxar.",
+  "objetivo": "Ajude Neemias a reconstruir o muro: empurre todas as pedras até os lugares marcados no chão. Você só pode empurrar, nunca puxar.",
   "celular": [
    "Deslize o dedo no tabuleiro ou use as setas na tela para andar",
-   "Ande contra uma caixa para empurrá-la",
+   "Ande contra uma pedra para empurrá-la",
    "Use \"↶ Desfazer\" ou \"↺ Recomeçar\" se travar"
   ],
   "computador": [
@@ -589,7 +589,7 @@
   "dicas": [
    "Caixa no canto da parede não sai mais: cuidado",
    "Pense antes de empurrar; desfazer é de graça",
-   "O contador 📦 mostra quantas caixas já estão no lugar"
+   "O contador mostra quantas pedras já estão no lugar"
   ]
  },
  "ligue": {
@@ -626,9 +626,9 @@
   ]
  },
  "labirinto": {
-  "objetivo": "Leve a bolinha até a saída no canto de baixo, à direita, antes do tempo acabar. Cada fase é maior.",
+  "objetivo": "Guie o peregrino pelo deserto até a terra prometida (o cacho de uvas, no canto de baixo à direita) antes do tempo acabar. Cada fase é maior.",
   "celular": [
-   "Deslize o dedo sobre o labirinto: a bolinha corre pelo corredor até uma bifurcação",
+   "Deslize o dedo sobre o labirinto: o peregrino corre pelo corredor até uma bifurcação",
    "Ou use as setas na tela (segure para continuar andando)"
   ],
   "computador": [
@@ -643,7 +643,7 @@
   ]
  },
  "joias": {
-  "objetivo": "Troque joias vizinhas para formar linhas de 3 ou mais iguais. Você tem 30 jogadas.",
+  "objetivo": "As pedras preciosas do peitoral do sumo sacerdote: troque pedras vizinhas para formar linhas de 3 ou mais iguais. Você tem 30 jogadas.",
   "celular": [
    "Deslize uma joia para o lado da vizinha que quer trocar",
    "Ou toque numa joia e depois na vizinha"
@@ -895,7 +895,7 @@
    "Espaço, Enter, ↓ ou S para soltar a linha",
    "Ou clique na tela"
   ],
-  "pontos": "Peixes mais fundos valem mais (veja os números do lado: 10, 20, 35, 50). Lixo 👢 🥫 🧦 tira pontos. Acaba em 60 s.",
+  "pontos": "Peixes mais fundos valem mais (veja os números do lado: 10, 20, 35, 50). Lixo (bota, lata e meia) tira pontos. Acaba em 60 s.",
   "dicas": [
    "Espere o anzol ficar em cima de um peixe fundo e sem lixo no caminho",
    "Peixe fundo demora mais para subir",
@@ -1034,7 +1034,7 @@
   "computador": [
    "Use o mouse: segure o botão e arraste sobre as frutas"
   ],
-  "pontos": "Cada fruta vale 1 ponto; 3 ou mais num só corte dão bônus. Cada fruta que cai inteira tira 1 de 3 vidas. Cortou bomba 💣, acabou.",
+  "pontos": "Cada fruta vale 1 ponto; 3 ou mais num só corte dão bônus. Cada fruta que cai inteira tira 1 de 3 vidas. Cortou bomba, acabou.",
   "dicas": [
    "Espere as frutas subirem e cortem todas juntas no alto",
    "Desvie o dedo das bombas",

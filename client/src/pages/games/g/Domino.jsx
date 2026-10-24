@@ -48,7 +48,7 @@ function applyPlay(s, who, t, side) {
   const h = s[key].filter((x) => !same(x, t));
   const chain = put(s.chain, t, side);
   const n = { ...s, [key]: h, chain, passes: 0, turn: who === 'p' ? 'c' : 'p', lastSide: side, note: '' };
-  if (!h.length) n.over = who === 'p' ? { pts: 3, title: 'Você bateu! 🎉', sub: 'Vitória!' } : { pts: 0, title: 'O computador bateu.', sub: 'Não foi desta vez.' };
+  if (!h.length) n.over = who === 'p' ? { pts: 3, title: 'Você bateu!', sub: 'Vitória!' } : { pts: 0, title: 'O computador bateu.', sub: 'Não foi desta vez.' };
   return n;
 }
 
@@ -57,7 +57,7 @@ function applyPass(s, who) {
   if (n.passes >= 2) {
     const a = sum(s.hand); const b = sum(s.cpu);
     const sub = `Jogo trancado: seus pontos ${a} × ${b} do computador.`;
-    n.over = a < b ? { pts: 3, title: 'Você venceu! 🎉', sub } : a > b ? { pts: 0, title: 'O computador venceu.', sub } : { pts: 1, title: 'Empate!', sub };
+    n.over = a < b ? { pts: 3, title: 'Você venceu!', sub } : a > b ? { pts: 0, title: 'O computador venceu.', sub } : { pts: 1, title: 'Empate!', sub };
   }
   return n;
 }
@@ -167,7 +167,7 @@ export default function Game({ onScore, onEnd }) {
     <div className="domino">
       <div className="domino-top">
         <div className="domino-cpu">
-          <span className="domino-label">🤖 Computador · {s.cpu.length}</span>
+          <span className="domino-label">Computador · {s.cpu.length}</span>
           <div className="domino-cpu-hand">
             {s.cpu.map((t, i) => <Tile key={i} t={t} vertical size="xs" back={!over} />)}
           </div>

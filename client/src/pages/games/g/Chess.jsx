@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { pick, rand } from '../kit.js';
 import { sfx } from '../audio.js';
 import './Chess.css';
+import { ChessPiece } from '../art.jsx';
 
 // #region logic
 // Casas 0..63: índice = linha * 8 + coluna, linha 0 = 8ª fileira (lado das pretas).
@@ -248,7 +249,6 @@ function aiMove(st, budget = 650) {
 }
 // #endregion
 
-const GLYPH = { k: '♚', q: '♛', r: '♜', b: '♝', n: '♞', p: '♟' };
 const FILES = 'abcdefgh';
 
 export default function Game({ onScore, onEnd }) {
@@ -314,7 +314,7 @@ export default function Game({ onScore, onEnd }) {
 
   const ksq = check ? kingSq(g.b, g.turn) : -1;
   const msg = res
-    ? res.kind === 'mate' ? (res.winner === 'w' ? 'Xeque-mate! Você venceu! 🎉' : 'Xeque-mate. O computador venceu.')
+    ? res.kind === 'mate' ? (res.winner === 'w' ? 'Xeque-mate! Você venceu!' : 'Xeque-mate. O computador venceu.')
       : res.kind === 'stalemate' ? 'Afogamento: empate!'
         : res.kind === 'material' ? 'Empate: material insuficiente.' : 'Empate: limite de 200 lances.'
     : g.turn === 'w' ? (check ? 'Xeque! Proteja seu rei.' : 'Sua vez (brancas)') : 'Computador pensando…';
@@ -334,7 +334,7 @@ export default function Game({ onScore, onEnd }) {
           if (tg) cls.push(tg.m.cap ? 'chess-cap' : 'chess-dot');
           return (
             <button key={sq} type="button" className={cls.join(' ')} onClick={() => tap(sq)} aria-label={FILES[c] + (8 - r) + (p ? ' ' + p : '')}>
-              {p && <span className={'chess-pc ' + (colorOf(p) === 'w' ? 'chess-w' : 'chess-b')}>{GLYPH[p.toLowerCase()] + '︎'}</span>}
+              {p && <span className={'chess-pc ' + (colorOf(p) === 'w' ? 'chess-w' : 'chess-b')}><ChessPiece type={p.toLowerCase()} white={colorOf(p) === 'w'} size="86%" /></span>}
               {c === 0 && <i className="chess-rank">{8 - r}</i>}
               {r === 7 && <i className="chess-file">{FILES[c]}</i>}
             </button>

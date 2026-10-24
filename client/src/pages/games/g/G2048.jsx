@@ -108,7 +108,7 @@ export default function Game({ onScore, onEnd }) {
   return (
     <div className="g2048">
       <div className="g2048-top">
-        <span className="g2048-info">Maior peça: <b>{s.best}</b>{s.best >= 2048 ? ' 🏆' : ''}</span>
+        <span className="g2048-info">Maior peça: <b>{s.best}</b>{s.best >= 2048 ? ' · Venceu!' : ''}</span>
         <button type="button" className="g2048-quit" onClick={finish} disabled={s.over}>Desistir</button>
       </div>
       <div className="g2048-board" ref={boardRef}>

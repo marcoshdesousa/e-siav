@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { shuffle, useInterval } from '../kit.js';
 import { sfx } from '../audio.js';
+import { Hearts } from '../art.jsx';
 import './Quiz.css';
 
 // [pergunta, resposta certa, errada, errada, errada]
@@ -180,10 +181,10 @@ export default function Game({ onScore, onEnd }) {
     <div className="quiz">
       <div className="quiz-head">
         <span className="quiz-lives" aria-label={`${lives} vidas`}>
-          {[...Array(LIVES).keys()].map((i) => <span key={i}>{i < lives ? '❤️' : '🤍'}</span>)}
+          <Hearts n={lives} max={LIVES} />
         </span>
         <span className="quiz-num">Pergunta {idx + 1}</span>
-        <span className="quiz-score">⭐ {score}</span>
+        <span className="quiz-score">Pontos: {score}</span>
       </div>
       <div className="quiz-timer">
         <div className={'quiz-bar' + (left <= 5 ? ' quiz-bar-low' : '')} style={{ width: pct + '%' }} />

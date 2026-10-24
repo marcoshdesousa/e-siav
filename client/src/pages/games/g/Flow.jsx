@@ -5,6 +5,7 @@ import { useEffect, useReducer, useRef } from 'react';
 import { rand } from '../kit.js';
 import { sfx } from '../audio.js';
 import './Flow.css';
+import { Timer } from 'lucide-react';
 
 const TOTAL_SECS = 180;
 const PALETTE = ['#E92A2F', '#F9C71D', '#2F7BFF', '#3CC46E', '#F58A3A', '#A66CE0', '#36D1DC', '#FF6FB5', '#E8E8E8'];
@@ -221,7 +222,7 @@ export default function Game({ onScore, onEnd }) {
     <div className="flow">
       <div className="flow-top">
         <span>Fase <b>{s.level}</b></span>
-        <span className={s.left <= 20 ? 'flow-warn' : ''}>⏱ <b>{mm}:{ss}</b></span>
+        <span className={s.left <= 20 ? 'flow-warn' : ''}><Timer size={14} style={{ verticalAlign: '-2px' }} /> <b>{mm}:{ss}</b></span>
         <span>Pontos: <b>{s.total}</b></span>
       </div>
       <div className="flow-wrap">

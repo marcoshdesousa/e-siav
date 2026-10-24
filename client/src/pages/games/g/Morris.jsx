@@ -234,7 +234,7 @@ export default function Game({ onScore, onEnd }) {
 
   const flyingMe = !placing && onBoard(st.b, P) === 3;
   const msg = outcome
-    ? outcome === 'win' ? 'Você venceu! 🎉' : outcome === 'lose' ? 'O computador venceu.' : 'Empate: limite de lances.'
+    ? outcome === 'win' ? 'Você venceu!' : outcome === 'lose' ? 'O computador venceu.' : 'Empate: limite de lances.'
     : st.turn === C ? (st.removing ? 'Moinho do computador!' : 'Computador pensando…')
       : st.removing ? 'Moinho! Remova uma peça vermelha.'
         : placing ? 'Coloque uma peça' : flyingMe ? 'Você pode voar: escolha qualquer casa' : 'Mova uma peça';

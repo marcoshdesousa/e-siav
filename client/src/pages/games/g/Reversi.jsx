@@ -137,7 +137,7 @@ export default function Game({ onScore, onEnd }) {
   };
 
   const msg = outcome
-    ? outcome === 'win' ? `Você venceu por ${nP} a ${nC}! 🎉` : outcome === 'lose' ? `O computador venceu por ${nC} a ${nP}.` : 'Empate!'
+    ? outcome === 'win' ? `Você venceu por ${nP} a ${nC}!` : outcome === 'lose' ? `O computador venceu por ${nC} a ${nP}.` : 'Empate!'
     : stuck ? (turn === P ? 'Sem lances para você…' : 'Computador sem lances…')
       : turn === P ? 'Sua vez (pretas)' : 'Computador pensando…';
   const showHints = turn === P && !over;

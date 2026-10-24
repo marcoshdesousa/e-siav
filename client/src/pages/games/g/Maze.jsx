@@ -1,9 +1,11 @@
-// Labirinto: leve a bolinha até a saída. Cada fase é um labirinto novo (busca em profundidade)
+// Rumo a Canaã: leve o peregrino pelo deserto até a terra prometida (o cacho de uvas). Cada fase é um labirinto novo (busca em profundidade)
 // e maior. Deslize para correr pelo corredor; segure as setas para continuar andando.
 import { useEffect, useRef, useState } from 'react';
 import { COLORS, shuffle, useCanvas, useKeys, useRaf, useSwipe } from '../kit.js';
 import DPad from '../DPad.jsx';
 import { sfx } from '../audio.js';
+import { drawFruit } from '../art.jsx';
+import { Timer } from 'lucide-react';
 
 const W = 360;
 const H = 360;
@@ -148,20 +150,20 @@ export default function Game({ onScore, onEnd }) {
     const s = st.current;
     const pad = 8;
     const cs = (W - pad * 2) / s.n;
-    ctx.fillStyle = COLORS.bg;
+    const sand = ctx.createLinearGradient(0, 0, 0, H);
+    sand.addColorStop(0, '#E8D5A8'); sand.addColorStop(1, '#D2B57E');
+    ctx.fillStyle = sand;
     ctx.fillRect(0, 0, W, H);
     // trilha
-    ctx.fillStyle = 'rgba(127,178,255,0.16)';
+    ctx.fillStyle = 'rgba(140,90,40,0.16)';
     s.trail.forEach((i) => ctx.fillRect(pad + (i % s.n) * cs, pad + Math.floor(i / s.n) * cs, cs, cs));
     // saída
     const ex = pad + (s.n - 1) * cs; const ey = pad + (s.n - 1) * cs;
-    ctx.fillStyle = 'rgba(91,211,138,0.35)';
+    ctx.fillStyle = 'rgba(91,170,90,0.45)';
     ctx.fillRect(ex, ey, cs, cs);
-    ctx.font = `${Math.floor(cs * 0.75)}px sans-serif`;
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText('🏁', ex + cs / 2, ey + cs / 2 + 1);
-    // paredes
-    ctx.strokeStyle = COLORS.sky;
+    drawFruit(ctx, 'uva', ex + cs / 2, ey + cs / 2 + cs * 0.05, cs * 0.4);
+    // paredes (rochas do deserto)
+    ctx.strokeStyle = '#7A5A34';
     ctx.lineWidth = Math.max(2, cs * 0.12);
     ctx.lineCap = 'round';
     ctx.beginPath();
@@ -178,17 +180,22 @@ export default function Game({ onScore, onEnd }) {
     ctx.stroke();
     // jogador
     const cx = pad + s.px * cs + cs / 2; const cy = pad + s.py * cs + cs / 2;
-    ctx.fillStyle = COLORS.yellow;
-    ctx.shadowColor = COLORS.yellow; ctx.shadowBlur = 10;
-    ctx.beginPath(); ctx.arc(cx, cy, cs * 0.32, 0, Math.PI * 2); ctx.fill();
-    ctx.shadowBlur = 0;
+    // peregrino: manto, cabeça e cajado
+    ctx.fillStyle = '#2B54B0';
+    ctx.beginPath(); ctx.moveTo(cx - cs * 0.24, cy + cs * 0.32); ctx.lineTo(cx, cy - cs * 0.1); ctx.lineTo(cx + cs * 0.24, cy + cs * 0.32); ctx.fill();
+    ctx.fillStyle = '#E8B98C';
+    ctx.beginPath(); ctx.arc(cx, cy - cs * 0.14, cs * 0.13, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#F2EBDD';
+    ctx.beginPath(); ctx.arc(cx, cy - cs * 0.18, cs * 0.14, Math.PI, 0); ctx.fill();
+    ctx.strokeStyle = '#5B3A1E'; ctx.lineWidth = Math.max(1.5, cs * 0.06);
+    ctx.beginPath(); ctx.moveTo(cx + cs * 0.28, cy + cs * 0.34); ctx.lineTo(cx + cs * 0.28, cy - cs * 0.3); ctx.stroke();
     if (s.flash > 0 || s.over) {
       ctx.fillStyle = 'rgba(11,20,48,0.7)';
       ctx.fillRect(0, 0, W, H);
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillStyle = '#fff';
       ctx.font = 'bold 28px sans-serif';
-      ctx.fillText(s.over ? 'O tempo acabou!' : 'Saída encontrada!', W / 2, H / 2 - 14);
+      ctx.fillText(s.over ? 'O tempo acabou!' : 'Chegou a Canaã!', W / 2, H / 2 - 14);
       if (!s.over) {
         ctx.fillStyle = COLORS.lime;
         ctx.font = 'bold 17px sans-serif';
@@ -231,7 +238,7 @@ export default function Game({ onScore, onEnd }) {
     <div>
       <div style={bar}>
         <span>Fase <b>{hud.level}</b></span>
-        <span style={hud.left <= 10 ? { color: COLORS.red } : undefined}>⏱ <b>{mm}:{ss}</b></span>
+        <span style={hud.left <= 10 ? { color: COLORS.red } : undefined}><Timer size={14} style={{ verticalAlign: '-2px' }} /> <b>{mm}:{ss}</b></span>
         <span>Pontos: <b>{hud.total}</b></span>
       </div>
       <canvas ref={canvasRef} style={canvasStyle} aria-label="Labirinto" />

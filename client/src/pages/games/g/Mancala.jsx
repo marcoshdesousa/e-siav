@@ -151,7 +151,7 @@ export default function Game({ onScore, onEnd }) {
   const pitCls = (i) => 'mancala-pit' + (frame?.at === i ? ' mancala-hot' : '') + (frame?.cap?.includes(i) ? ' mancala-cap' : '');
 
   const msg = outcome
-    ? outcome === 'win' ? `Você venceu por ${board[6]} a ${board[13]}! 🎉` : outcome === 'lose' ? `O computador venceu por ${board[13]} a ${board[6]}.` : `Empate: ${board[6]} a ${board[13]}!`
+    ? outcome === 'win' ? `Você venceu por ${board[6]} a ${board[13]}!` : outcome === 'lose' ? `O computador venceu por ${board[13]} a ${board[6]}.` : `Empate: ${board[6]} a ${board[13]}!`
     : anim ? (turn === P ? 'Semeando…' : 'Computador jogando…')
       : turn === P ? 'Sua vez: escolha uma casa de baixo' : 'Computador pensando…';
 

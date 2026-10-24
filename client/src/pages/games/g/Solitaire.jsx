@@ -4,6 +4,8 @@ import { useEffect, useReducer, useRef, useState } from 'react';
 import { shuffle } from '../kit.js';
 import { sfx } from '../audio.js';
 import './Solitaire.css';
+import { Suit } from '../art.jsx';
+import { Timer } from 'lucide-react';
 
 const SUITS = ['♠', '♥', '♦', '♣'];
 const RANKS = ['', 'A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
@@ -293,9 +295,9 @@ export default function Game({ onScore, onEnd }) {
   return (
     <div className="solitaire" ref={wrap}>
       <div className="solitaire-top">
-        <span>⏱ <b>{mm}:{ss}</b></span>
+        <span><Timer size={14} style={{ verticalAlign: '-2px' }} /> <b>{mm}:{ss}</b></span>
         <span>Pontos <b>{s.state === 'won' ? s.final : s.score}</b></span>
-        <span>🂠 <b>{s.stock.length}</b></span>
+        <span>Monte: <b>{s.stock.length}</b></span>
       </div>
       <div className="solitaire-board" style={{ height: H, '--cw': cw + 'px', '--ch': ch + 'px', fontSize: fs }}>
         <button type="button" className="solitaire-slot solitaire-slot-stock" style={{ left: x(0), top: 0 }} onClick={onStock} aria-label="Monte">
@@ -323,8 +325,8 @@ export default function Game({ onScore, onEnd }) {
             >
               {card.up && (
                 <>
-                  <span className="solitaire-corner">{RANKS[card.r]}<i>{SUITS[card.s]}</i></span>
-                  <span className="solitaire-big">{card.r > 10 ? RANKS[card.r] : SUITS[card.s]}</span>
+                  <span className="solitaire-corner">{RANKS[card.r]}<i><Suit s={SUITS[card.s]} /></i></span>
+                  <span className="solitaire-big">{card.r > 10 ? RANKS[card.r] : <Suit s={SUITS[card.s]} />}</span>
                 </>
               )}
             </div>

@@ -2,6 +2,7 @@
 import { useEffect, useReducer, useRef } from 'react';
 import { rand } from '../kit.js';
 import { sfx } from '../audio.js';
+import { Bomb, Flag, Pickaxe, Timer } from 'lucide-react';
 import './Minesweeper.css';
 
 const N = 9; const MINES = 10;
@@ -146,9 +147,9 @@ export default function Game({ onScore, onEnd }) {
   return (
     <div className="minesweeper">
       <div className="minesweeper-top">
-        <span>💣 <b>{MINES - flags}</b></span>
-        <span>{s.state === 'win' ? '😎 Venceu!' : s.state === 'lose' ? '💥 Boom!' : '🙂'}</span>
-        <span>⏱ <b>{s.secs}s</b></span>
+        <span className="ico"><Bomb size={15} /> <b>{MINES - flags}</b></span>
+        <span>{s.state === 'win' ? 'Venceu!' : s.state === 'lose' ? 'Explodiu!' : 'Boa sorte'}</span>
+        <span><Timer size={14} style={{ verticalAlign: '-2px' }} /> <b>{s.secs}s</b></span>
       </div>
       <div className="minesweeper-grid" onContextMenu={(e) => e.preventDefault()}>
         {s.cells.map((c, i) => (
@@ -164,7 +165,7 @@ export default function Game({ onScore, onEnd }) {
             onContextMenu={onContext(i)}
             aria-label={c.open ? (c.mine ? 'bomba' : String(c.n)) : c.flag ? 'bandeira' : 'fechado'}
           >
-            {c.open ? (c.mine ? '💣' : c.n || '') : c.flag ? '🚩' : ''}
+            {c.open ? (c.mine ? <Bomb size="60%" /> : c.n || '') : c.flag ? <Flag size="58%" color="#E5383B" fill="#E5383B" /> : ''}
           </button>
         ))}
       </div>
@@ -175,7 +176,7 @@ export default function Game({ onScore, onEnd }) {
           onClick={() => { s.flagMode = !s.flagMode; render(); }}
           disabled={s.state !== 'play'}
         >
-          {s.flagMode ? '🚩 Modo bandeira: ligado' : '⛏️ Modo abrir — toque para usar 🚩'}
+          {s.flagMode ? <><Flag size={14} /> Modo bandeira: ligado</> : <><Pickaxe size={14} /> Modo abrir: toque para usar a bandeira</>}
         </button>
       </div>
       <p className="minesweeper-hint">Segure o dedo ou use o botão direito para marcar uma bandeira.</p>

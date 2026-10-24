@@ -163,7 +163,7 @@ export default function Game({ onScore, onEnd }) {
     return () => window.removeEventListener('keydown', k);
   });
 
-  const msg = outcome === 'win' ? 'Você venceu! 🎉' : outcome === 'lose' ? 'O computador venceu.' : outcome === 'draw' ? 'Empate!'
+  const msg = outcome === 'win' ? 'Você venceu!' : outcome === 'lose' ? 'O computador venceu.' : outcome === 'draw' ? 'Empate!'
     : turn === P ? 'Sua vez: toque em uma coluna' : 'Computador pensando…';
   const canPlay = turn === P && !outcome;
 

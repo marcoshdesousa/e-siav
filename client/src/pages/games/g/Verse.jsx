@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { shuffle } from '../kit.js';
 import { sfx } from '../audio.js';
+import { Hearts } from '../art.jsx';
 import './Verse.css';
 
 // Texto no estilo da tradução de João Ferreira de Almeida.
@@ -146,12 +147,12 @@ export default function Game({ onScore, onEnd }) {
     <div className="verse">
       <div className="verse-hud">
         <span className="verse-lives" aria-label={'Erros: ' + errors + ' de ' + MAX_ERR}>
-          {Array.from({ length: MAX_ERR }, (_, i) => <b key={i} className={i < MAX_ERR - errors ? '' : 'verse-lost'}>❤</b>)}
+          <Hearts n={MAX_ERR - errors} max={MAX_ERR} />
         </span>
         <span className="verse-bonus">{phase === 'play' ? 'Bônus: ' + bonusLeft : ' '}</span>
         <span className="verse-score">{score} pts</span>
       </div>
-      <div className="verse-ref">📖 {round.ref}</div>
+      <div className="verse-ref">{round.ref}</div>
       <div className={'verse-text' + (phase === 'done' ? ' verse-ok' : '') + (phase === 'over' ? ' verse-fail' : '')}>
         {phase === 'over'
           ? round.words.map((w, i) => <span key={i} className={i < used.length ? '' : 'verse-missing'}>{w} </span>)

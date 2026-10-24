@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { pick, shuffle } from '../kit.js';
 import { sfx } from '../audio.js';
 import './MathRush.css';
+import { Timer } from 'lucide-react';
 
 const START = 30000;
 const BONUS = 3000;
@@ -123,7 +124,7 @@ export default function Game({ onScore, onEnd }) {
   return (
     <div className="mathrush">
       <div className="mathrush-hud">
-        <span className={'mathrush-time' + (secs < 6 ? ' mathrush-low' : '')}>⏱ {secs.toFixed(1)}s</span>
+        <span className={'mathrush-time' + (secs < 6 ? ' mathrush-low' : '')}><Timer size={14} style={{ verticalAlign: '-2px' }} /> {secs.toFixed(1)}s</span>
         <span className="mathrush-level">Nível {q.level}</span>
         <span className="mathrush-score">{score} pts</span>
       </div>

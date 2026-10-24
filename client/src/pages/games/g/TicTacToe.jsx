@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { pick, rand } from '../kit.js';
 import { sfx } from '../audio.js';
+import { Circle, X } from 'lucide-react';
 import './TicTacToe.css';
 
 const LINES = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
@@ -91,7 +92,7 @@ export default function Game({ onScore, onEnd }) {
   };
 
   const msg = result
-    ? result.who === 'X' ? 'Você venceu! 🎉' : result.who === 'O' ? 'O computador venceu.' : 'Deu velha! Empate.'
+    ? result.who === 'X' ? 'Você venceu!' : result.who === 'O' ? 'O computador venceu.' : 'Deu velha! Empate.'
     : turn === 'X' ? 'Sua vez (X)' : 'Computador pensando…';
 
   return (
@@ -107,13 +108,13 @@ export default function Game({ onScore, onEnd }) {
             disabled={!!v || turn !== 'X' || !!w}
             aria-label={'Casa ' + (i + 1) + (v ? ': ' + v : '')}
           >
-            {v && <span>{v === 'X' ? '✕' : '◯'}</span>}
+            {v && <span>{v === 'X' ? <X size="70%" strokeWidth={3} /> : <Circle size="62%" strokeWidth={3} />}</span>}
           </button>
         ))}
       </div>
       <div className="tictactoe-legend">
-        <span><b className="tictactoe-x">✕</b> Você</span>
-        <span><b className="tictactoe-o">◯</b> Computador</span>
+        <span><b className="tictactoe-x"><X size={16} strokeWidth={3} /></b> Você</span>
+        <span><b className="tictactoe-o"><Circle size={14} strokeWidth={3} /></b> Computador</span>
       </div>
     </div>
   );

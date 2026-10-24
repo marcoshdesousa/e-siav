@@ -119,7 +119,7 @@ export default function Game({ onScore, onEnd }) {
   };
 
   const msg = outcome
-    ? outcome === 'win' ? `Você venceu por ${mine} a ${theirs}! 🎉` : outcome === 'lose' ? `O computador venceu por ${theirs} a ${mine}.` : 'Empate: 8 a 8!'
+    ? outcome === 'win' ? `Você venceu por ${mine} a ${theirs}!` : outcome === 'lose' ? `O computador venceu por ${theirs} a ${mine}.` : 'Empate: 8 a 8!'
     : turn === P ? 'Sua vez: toque entre dois pontos' : 'Computador pensando…';
 
   return (

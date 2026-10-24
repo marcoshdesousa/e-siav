@@ -88,3 +88,7 @@
 .rank-plus-hint > svg { color: var(--yellow-ink); flex: none; }
 .rank-plus-hint span { flex: 1; }
 .rank-plus-hint b { color: var(--yellow-ink); }
+
+/* Corações de vida desenhados (sem emoji). */
+.game-hearts { display: inline-flex; gap: 3px; align-items: center; vertical-align: middle; }
+.game-hearts svg { display: block; }

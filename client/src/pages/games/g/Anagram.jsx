@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { shuffle } from '../kit.js';
 import { sfx } from '../audio.js';
 import './Anagram.css';
+import { Timer } from 'lucide-react';
 
 const START = 60000;
 const BONUS = 5000;
@@ -160,7 +161,7 @@ export default function Game({ onScore, onEnd }) {
   return (
     <div className="anagram">
       <div className="anagram-hud">
-        <span className={'anagram-time' + (secs < 10 ? ' anagram-low' : '')}>⏱ {secs.toFixed(1)}s</span>
+        <span className={'anagram-time' + (secs < 10 ? ' anagram-low' : '')}><Timer size={14} style={{ verticalAlign: '-2px' }} /> {secs.toFixed(1)}s</span>
         <span className="anagram-score">{score} pts</span>
       </div>
       <div className="anagram-bar"><i style={{ width: Math.min(100, (left / START) * 100) + '%' }} /></div>
@@ -176,7 +177,7 @@ export default function Game({ onScore, onEnd }) {
         ))}
       </div>
       <div className="anagram-answer">
-        {reveal ? <span className={status === 'ok' ? 'anagram-good' : 'anagram-bad'}>{status === 'ok' ? '✔ ' : 'Era: '}{round.word}</span> : ' '}
+        {reveal ? <span className={status === 'ok' ? 'anagram-good' : 'anagram-bad'}>{status === 'ok' ? 'Certo: ' : 'Era: '}{round.word}</span> : ' '}
       </div>
       <div className="anagram-tiles">
         {round.tiles.map((t) => (

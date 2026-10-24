@@ -14,9 +14,7 @@
 .chess-check { background: radial-gradient(circle, #ff6b6f 0%, #E92A2F 55%, transparent 80%) !important; }
 .chess-dot::after { content: ''; position: absolute; width: 28%; height: 28%; border-radius: 50%; background: rgba(24, 135, 90, .65); pointer-events: none; }
 .chess-cap::after { content: ''; position: absolute; inset: 6%; border-radius: 50%; border: 4px solid rgba(24, 135, 90, .75); pointer-events: none; }
-.chess-pc { font-size: clamp(1.6rem, 9.4vw, 2.7rem); line-height: 1; font-family: 'Segoe UI Symbol', 'DejaVu Sans', 'Noto Sans Symbols 2', serif; pointer-events: none; }
-.chess-w { color: #fff; text-shadow: 0 0 1px #101831, 1px 1px 0 #101831, -1px -1px 0 #101831, 1px -1px 0 #101831, -1px 1px 0 #101831, 0 2px 2px rgba(0, 0, 0, .35); }
-.chess-b { color: #101831; text-shadow: 0 1px 0 rgba(255, 255, 255, .35); }
+.chess-pc { width: 100%; height: 100%; display: grid; place-items: center; pointer-events: none; filter: drop-shadow(0 2px 1px rgba(0, 0, 0, .3)); }
 .chess-rank, .chess-file { position: absolute; font-style: normal; font-size: .58rem; font-weight: 700; color: rgba(14, 42, 107, .7); pointer-events: none; }
 .chess-rank { top: 2px; left: 3px; }
 .chess-file { bottom: 1px; right: 3px; }

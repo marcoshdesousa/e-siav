@@ -4,6 +4,7 @@ import { useEffect, useReducer, useRef } from 'react';
 import { shuffle } from '../kit.js';
 import { sfx } from '../audio.js';
 import './GridMemory.css';
+import { Hearts } from '../art.jsx';
 
 const MAX_LIVES = 3;
 const sizeFor = (lv) => Math.min(7, 3 + Math.floor((lv - 1) / 2));
@@ -82,7 +83,7 @@ export default function Game({ onScore, onEnd }) {
       <div className="gridmemory-top">
         <span>Nível <b>{L.lv}</b></span>
         <span className="gridmemory-lives" aria-label={`${s.lives} vidas`}>
-          {Array.from({ length: MAX_LIVES }, (_, i) => <i key={i} className={i < s.lives ? 'gridmemory-on' : ''}>♥</i>)}
+          <Hearts n={s.lives} max={MAX_LIVES} />
         </span>
         <span>Pontos <b>{s.score}</b></span>
       </div>

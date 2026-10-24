@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { COLORS, useCanvas, useKeys, useRaf, useSwipe } from '../kit.js';
 import DPad from '../DPad.jsx';
 import { sfx } from '../audio.js';
+import { drawBurst, drawFrog, drawHearts } from '../art.jsx';
 
 const CELL = 30;
 const COLS = 12;
@@ -177,8 +178,7 @@ export default function Game({ onScore, onEnd }) {
       ctx.fillStyle = '#1d4f9c';
       ctx.fillRect(x - 18, rowY(0) + 4, 36, CELL - 4);
       if (s.homes[i]) {
-        ctx.font = '22px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText('🐸', x, rowY(0) + CELL / 2 + 2);
+        drawFrog(ctx, x, rowY(0) + CELL / 2 + 2, 24);
       }
     });
     // rio
@@ -221,19 +221,16 @@ export default function Game({ onScore, onEnd }) {
       const y = rowY(f.row) + CELL / 2 + 2;
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       if (s.dying > 0) {
-        ctx.font = '24px sans-serif';
-        ctx.fillText(f.row >= 1 && f.row <= 5 ? '💦' : '💥', f.x, y);
+        drawBurst(ctx, f.x, y, 30, f.row >= 1 && f.row <= 5);
       } else {
-        ctx.font = `${f.hop > 0 ? 28 : 24}px sans-serif`;
-        ctx.fillText('🐸', f.x, y);
+        drawFrog(ctx, f.x, y, f.hop > 0 ? 30 : 26);
       }
     }
     // placar
     ctx.font = 'bold 14px sans-serif'; ctx.textBaseline = 'middle';
     ctx.textAlign = 'left'; ctx.fillStyle = COLORS.white;
     ctx.fillText(`Fase ${s.level}`, 10, TOP / 2);
-    ctx.textAlign = 'right'; ctx.fillStyle = COLORS.red;
-    ctx.fillText('❤'.repeat(Math.max(0, s.lives)), W - 10, TOP / 2);
+    drawHearts(ctx, Math.max(0, s.lives), W - 10, TOP / 2, 6, true);
     // barra de tempo
     ctx.fillStyle = 'rgba(255,255,255,0.15)'; ctx.fillRect(90, TOP / 2 - 4, 170, 8);
     ctx.fillStyle = s.time < 8 ? COLORS.red : COLORS.lime;

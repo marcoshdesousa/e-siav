@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { pick, rand, shuffle } from '../kit.js';
 import { sfx } from '../audio.js';
 import './WordSearch.css';
+import { Timer } from 'lucide-react';
 
 const N = 10;
 const TIME = 120000;
@@ -211,7 +212,7 @@ export default function Game({ onScore, onEnd }) {
   return (
     <div className="wordsearch">
       <div className="wordsearch-hud">
-        <span className={'wordsearch-time' + (secs <= 15 ? ' wordsearch-low' : '')}>⏱ {Math.floor(secs / 60)}:{String(secs % 60).padStart(2, '0')}</span>
+        <span className={'wordsearch-time' + (secs <= 15 ? ' wordsearch-low' : '')}><Timer size={14} style={{ verticalAlign: '-2px' }} /> {Math.floor(secs / 60)}:{String(secs % 60).padStart(2, '0')}</span>
         <span className="wordsearch-theme">{board.theme}</span>
         <span className="wordsearch-score">{score} pts</span>
       </div>

@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { pick, rand } from '../kit.js';
 import { sfx } from '../audio.js';
+import { Crown } from 'lucide-react';
 import './Checkers.css';
 
 // #region logic
@@ -251,7 +252,7 @@ export default function Game({ onScore, onEnd }) {
 
   const count = (s) => g.b.filter((p) => sideOf(p) === s).length;
   const msg = res
-    ? outcome === 'win' ? 'Você venceu! 🎉' : outcome === 'lose' ? 'O computador venceu.' : 'Empate!'
+    ? outcome === 'win' ? 'Você venceu!' : outcome === 'lose' ? 'O computador venceu.' : 'Empate!'
     : g.turn === 'w' ? (steps.length ? 'Continue capturando!' : mustCap ? 'Captura obrigatória!' : 'Sua vez (brancas)') : 'Computador pensando…';
 
   return (
@@ -270,7 +271,7 @@ export default function Game({ onScore, onEnd }) {
             <button key={sq} type="button" className={cls.join(' ')} onClick={() => tap(sq)} aria-label={'Casa ' + 'abcdefgh'[c] + (8 - r)}>
               {p && (
                 <span className={'checkers-pc ' + (sideOf(p) === 'w' ? 'checkers-w' : 'checkers-b') + (ghost.has(sq) ? ' checkers-ghost' : '')}>
-                  {isKing(p) && <b>♛{'︎'}</b>}
+                  {isKing(p) && <b><Crown size="60%" /></b>}
                 </span>
               )}
             </button>

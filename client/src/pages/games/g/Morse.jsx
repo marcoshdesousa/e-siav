@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { pick, rand, shuffle } from '../kit.js';
 import { sfx } from '../audio.js';
+import { Hearts } from '../art.jsx';
 import './Morse.css';
 
 const CODE = {
@@ -148,7 +149,7 @@ export default function Game({ onScore, onEnd }) {
   return (
     <div className="morse">
       <div className="morse-hud">
-        <span className="morse-lives">{Array.from({ length: LIVES }, (_, i) => <b key={i} className={i < lives ? '' : 'morse-lost'}>❤</b>)}</span>
+        <span className="morse-lives"><Hearts n={lives} max={LIVES} /></span>
         <span className="morse-kind">{q.word ? 'Palavra' : 'Letra'}</span>
         <span className="morse-score">{score} pts</span>
       </div>

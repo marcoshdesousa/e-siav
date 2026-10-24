@@ -2,6 +2,7 @@
 // começa com 5x5 e passa para 7x7. Quanto maior e mais rápido, mais pontos.
 import { useEffect, useReducer, useRef } from 'react';
 import { sfx } from '../audio.js';
+import { X, Timer } from 'lucide-react';
 import './Nonogram.css';
 
 const TIME = 180;
@@ -147,7 +148,7 @@ export default function Game({ onScore, onEnd }) {
     <div className="nonogram">
       <div className="nonogram-top">
         <span>Desenho <b>{s.level + 1}</b> <small>({n}x{n})</small></span>
-        <span className={left <= 20 ? 'nonogram-hurry' : ''}>⏱ <b>{timeTxt}</b></span>
+        <span className={left <= 20 ? 'nonogram-hurry' : ''}><Timer size={14} style={{ verticalAlign: '-2px' }} /> <b>{timeTxt}</b></span>
         <span>Pontos <b>{s.score}</b></span>
       </div>
       <div className="nonogram-timebar"><i style={{ width: (left / TIME) * 100 + '%' }} /></div>
@@ -182,14 +183,14 @@ export default function Game({ onScore, onEnd }) {
               data-i={i}
               className={'nonogram-cell' + (v === 1 ? ' nonogram-fill' : v === 2 ? ' nonogram-x' : '')}
             >
-              {v === 2 ? '✕' : ''}
+              {v === 2 ? <X size="70%" /> : ''}
             </div>
           ))}
         </div>
       </div>
       <div className="nonogram-modes">
         <button type="button" className={'nonogram-mode' + (s.mode === 'fill' ? ' nonogram-mode-on' : '')} onClick={() => setMode('fill')}>■ Pintar</button>
-        <button type="button" className={'nonogram-mode' + (s.mode === 'x' ? ' nonogram-mode-on' : '')} onClick={() => setMode('x')}>✕ Marcar vazio</button>
+        <button type="button" className={'nonogram-mode' + (s.mode === 'x' ? ' nonogram-mode-on' : '')} onClick={() => setMode('x')}><X size={14} /> Marcar vazio</button>
       </div>
       <div className={'nonogram-msg' + (s.pz.solved ? ' nonogram-msg-win' : s.over ? ' nonogram-msg-lose' : '')}>
         {s.over ? 'O tempo acabou!' : s.pz.solved ? `Desenho completo! +${s.last}` : 'Toque ou arraste para pintar as casas.'}

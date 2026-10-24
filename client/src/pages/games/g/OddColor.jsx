@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { rand } from '../kit.js';
 import { sfx } from '../audio.js';
 import './OddColor.css';
+import { Timer } from 'lucide-react';
 
 const TOTAL = 60000;
 const PENALTY = 3000;
@@ -83,7 +84,7 @@ export default function Game({ onScore, onEnd }) {
     <div className="oddcolor">
       <div className="oddcolor-hud">
         <span>Nível <b>{level + 1}</b></span>
-        <span className={secs <= 10 ? 'oddcolor-low' : ''}>⏱ <b>{secs}s</b>
+        <span className={secs <= 10 ? 'oddcolor-low' : ''}><Timer size={14} style={{ verticalAlign: '-2px' }} /> <b>{secs}s</b>
           {pen > 0 && !over && <em key={pen} className="oddcolor-pen">−3s</em>}
         </span>
         <span>Acertos <b>{level}</b></span>

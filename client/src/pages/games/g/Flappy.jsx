@@ -1,4 +1,4 @@
-// Voo do pássaro: toque para bater as asas e passe entre os canos.
+// Voo da pomba (Noé): toque para bater as asas e passe entre as colunas de pedra, sobre as águas do dilúvio.
 import { useEffect, useRef, useState } from 'react';
 import { COLORS, useCanvas, useKeys, useRaf } from '../kit.js';
 import { sfx } from '../audio.js';
@@ -110,45 +110,56 @@ export default function Game({ onScore, onEnd }) {
       ctx.arc(cx, y, 16, 0, Math.PI * 2); ctx.arc(cx + 18, y - 6, 20, 0, Math.PI * 2); ctx.arc(cx + 38, y, 15, 0, Math.PI * 2);
       ctx.fill();
     });
-    ctx.fillStyle = '#4FA36F';
-    ctx.beginPath();
-    ctx.moveTo(0, GROUND);
-    for (let x = 0; x <= W; x += 20) ctx.lineTo(x, GROUND - 40 - Math.sin(x / 50 + 1) * 18);
-    ctx.lineTo(W, GROUND); ctx.fill();
-    // canos
+    // monte Ararate e a arca ao longe
+    ctx.fillStyle = '#6E7F95';
+    ctx.beginPath(); ctx.moveTo(W * 0.45, GROUND - 30); ctx.lineTo(W * 0.72, GROUND - 120); ctx.lineTo(W, GROUND - 30); ctx.fill();
+    ctx.fillStyle = '#E9EEF5';
+    ctx.beginPath(); ctx.moveTo(W * 0.66, GROUND - 98); ctx.lineTo(W * 0.72, GROUND - 120); ctx.lineTo(W * 0.78, GROUND - 98); ctx.fill();
+    ctx.fillStyle = '#7A4E25';
+    ctx.beginPath(); ctx.moveTo(W * 0.62, GROUND - 34); ctx.lineTo(W * 0.84, GROUND - 34); ctx.lineTo(W * 0.8, GROUND - 22); ctx.lineTo(W * 0.66, GROUND - 22); ctx.fill();
+    ctx.fillRect(W * 0.67, GROUND - 46, W * 0.12, 12);
+    // colunas de pedra
     s.pipes.forEach((p) => {
       const g = ctx.createLinearGradient(p.x, 0, p.x + PIPE_W, 0);
-      g.addColorStop(0, COLORS.green); g.addColorStop(0.4, COLORS.lime); g.addColorStop(1, COLORS.green);
+      g.addColorStop(0, '#9C8E78'); g.addColorStop(0.45, '#D8CCB4'); g.addColorStop(1, '#8A7C66');
       ctx.fillStyle = g;
       ctx.fillRect(p.x, 0, PIPE_W, p.top);
       ctx.fillRect(p.x, p.top + p.gap, PIPE_W, GROUND - p.top - p.gap);
-      ctx.fillStyle = '#0F6A45';
-      ctx.fillRect(p.x - 4, p.top - 18, PIPE_W + 8, 18);
-      ctx.fillRect(p.x - 4, p.top + p.gap, PIPE_W + 8, 18);
+      ctx.strokeStyle = 'rgba(80,66,48,.35)'; ctx.lineWidth = 2;
+      for (let k = 1; k < 4; k++) { const fx = p.x + (PIPE_W / 4) * k; ctx.beginPath(); ctx.moveTo(fx, 0); ctx.lineTo(fx, p.top - 14); ctx.moveTo(fx, p.top + p.gap + 14); ctx.lineTo(fx, GROUND); ctx.stroke(); }
+      ctx.fillStyle = '#7D6F5A';
+      ctx.fillRect(p.x - 5, p.top - 16, PIPE_W + 10, 16);
+      ctx.fillRect(p.x - 5, p.top + p.gap, PIPE_W + 10, 16);
     });
-    // chão
-    ctx.fillStyle = '#C9A15A';
+    // águas do dilúvio
+    const sea = ctx.createLinearGradient(0, GROUND, 0, H);
+    sea.addColorStop(0, '#2F6FB2'); sea.addColorStop(1, '#173E70');
+    ctx.fillStyle = sea;
     ctx.fillRect(0, GROUND, W, H - GROUND);
-    ctx.fillStyle = COLORS.green;
-    ctx.fillRect(0, GROUND, W, 8);
-    ctx.fillStyle = '#B08640';
-    for (let x = -s.groundX; x < W; x += 24) ctx.fillRect(x, GROUND + 14, 12, 4);
+    ctx.strokeStyle = 'rgba(255,255,255,0.45)'; ctx.lineWidth = 2;
+    for (let x = -s.groundX; x < W + 24; x += 24) { ctx.beginPath(); ctx.moveTo(x, GROUND + 4); ctx.quadraticCurveTo(x + 6, GROUND - 2, x + 12, GROUND + 4); ctx.stroke(); }
     // pássaro
     const ang = s.started ? Math.max(-0.5, Math.min(1.2, s.vy / 600)) : 0;
     ctx.save();
     ctx.translate(BIRD_X, s.y);
     ctx.rotate(ang);
-    ctx.fillStyle = COLORS.yellow;
-    ctx.beginPath(); ctx.ellipse(0, 0, R + 2, R, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#E8A800';
-    const wing = Math.sin(s.t * 22) * 5;
-    ctx.beginPath(); ctx.ellipse(-4, 2 + wing * 0.4, 8, 5, -0.3, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = COLORS.white;
-    ctx.beginPath(); ctx.arc(6, -4, 5, 0, Math.PI * 2); ctx.fill();
+    // pomba branca com o ramo de oliveira
+    ctx.fillStyle = '#E3E8F0';
+    ctx.beginPath(); ctx.moveTo(-R - 1, -2); ctx.lineTo(-R - 9, -6); ctx.lineTo(-R - 9, 6); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = '#F8FAFD'; ctx.strokeStyle = '#A9B4C6'; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.ellipse(0, 0, R + 2, R - 1, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(R - 1, -R + 3, 6, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    const wing = Math.sin(s.t * 22) * 6;
+    ctx.fillStyle = '#DCE2EC';
+    ctx.beginPath(); ctx.ellipse(-3, -2 - wing, 10, 5, -0.5 - wing / 20, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
     ctx.fillStyle = COLORS.ink;
-    ctx.beginPath(); ctx.arc(7.5, -4, 2.2, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = COLORS.red;
-    ctx.beginPath(); ctx.moveTo(12, 0); ctx.lineTo(21, 3); ctx.lineTo(12, 6); ctx.fill();
+    ctx.beginPath(); ctx.arc(R + 1, -R + 2, 1.6, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#E7A33C';
+    ctx.beginPath(); ctx.moveTo(R + 4, -R + 3); ctx.lineTo(R + 10, -R + 5); ctx.lineTo(R + 4, -R + 6); ctx.fill();
+    ctx.strokeStyle = '#3F7D2C'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(R + 8, -R + 5); ctx.quadraticCurveTo(R + 14, -R + 8, R + 16, -R + 14); ctx.stroke();
+    ctx.fillStyle = '#5FA03A';
+    for (const [lx, ly, a] of [[R + 12, -R + 6, 0.8], [R + 15, -R + 10, -0.4], [R + 15, -R + 15, 0.9]]) { ctx.beginPath(); ctx.ellipse(lx, ly, 3.2, 1.6, a, 0, Math.PI * 2); ctx.fill(); }
     ctx.restore();
     // placar
     ctx.textAlign = 'center';
@@ -177,7 +188,7 @@ export default function Game({ onScore, onEnd }) {
     <canvas
       ref={canvasRef}
       style={canvasStyle}
-      aria-label="Voo do pássaro"
+      aria-label="Voo da pomba"
       onPointerDown={(e) => { e.preventDefault(); flap(); }}
       onContextMenu={(e) => e.preventDefault()}
     />

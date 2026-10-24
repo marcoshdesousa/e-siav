@@ -1,10 +1,12 @@
-// Jogo da memória: 8 pares de emojis de acampamento, natureza e Bíblia.
+// Jogo da memória: 8 pares de ilustrações de histórias da Bíblia.
 import { useEffect, useReducer, useRef } from 'react';
 import { shuffle } from '../kit.js';
 import { sfx } from '../audio.js';
+import { BookOpen, Timer } from 'lucide-react';
+import { BIBLE_ART, BibleArt } from '../art.jsx';
 import './Memory.css';
 
-const POOL = ['⛺', '🔥', '🧭', '🌲', '🏕️', '📖', '⭐', '🐦', '🌄', '🍃', '🕊️', '🐑', '🌈', '🔦', '🛶', '🦉', '🐟'];
+const POOL = Object.keys(BIBLE_ART);
 
 const calcScore = (moves, secs) => Math.max(50, 1000 - moves * 20 - secs * 5);
 
@@ -77,7 +79,7 @@ export default function Game({ onScore, onEnd }) {
       <div className="memory-top">
         <span>Jogadas: <b>{s.moves}</b></span>
         <span>Pares: <b>{s.pairs}/8</b></span>
-        <span>⏱ <b>{mm}:{ss}</b></span>
+        <span className="ico"><Timer size={14} /> <b>{mm}:{ss}</b></span>
       </div>
       <div className="memory-grid">
         {s.cards.map((c) => (
@@ -86,16 +88,16 @@ export default function Game({ onScore, onEnd }) {
             type="button"
             className={'memory-card' + (c.up || c.done ? ' memory-up' : '') + (c.done ? ' memory-done' : '')}
             onClick={() => flip(c)}
-            aria-label={c.up || c.done ? c.e : 'Carta virada'}
+            aria-label={c.up || c.done ? BIBLE_ART[c.e].name : 'Carta virada'}
           >
             <span className="memory-inner">
-              <span className="memory-back">✦</span>
-              <span className="memory-front">{c.e}</span>
+              <span className="memory-back"><BookOpen size={26} /></span>
+              <span className="memory-front"><BibleArt id={c.e} size="78%" /></span>
             </span>
           </button>
         ))}
       </div>
-      {s.over && <p className="memory-win">Muito bem! Todos os pares encontrados 🎉</p>}
+      {s.over && <p className="memory-win">Muito bem! Todos os pares encontrados!</p>}
     </div>
   );
 }
