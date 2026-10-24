@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { get, run } from '../db.js';
 import { requireAuth } from '../auth.js';
 import { setHandle } from '../handles.js';
+import { removeSubscription, saveSubscription, vapidKeys } from '../push.js';
 import { clubEntered, clubPresenceSummary, ping } from '../presence.js';
 import { imageUpload, fileUrl } from '../uploads.js';
 import { memberProfile, unitProfile } from '../profiles.js';
@@ -23,6 +24,17 @@ r.put('/me/photo', requireAuth('member'), imageUpload.single('photo'), (req, res
 // A unidade escreve a própria biografia (aparece no perfil da unidade).
 r.put('/me/bio', requireAuth('unit'), (req, res) => {
   run('UPDATE units SET bio = ? WHERE id = ?', str(req.body.bio, 1000) || null, req.actor.id);
+  res.json({ ok: true });
+});
+
+// Lembretes no celular: a chave pública e o cadastro do aparelho do membro.
+r.get('/push/chave', (_req, res) => res.json({ key: vapidKeys().publicKey }));
+r.post('/me/push', requireAuth('member'), (req, res) => {
+  if (!saveSubscription(req.actor.id, req.body.subscription)) fail(400, 'Aparelho inválido');
+  res.json({ ok: true });
+});
+r.post('/me/push/sair', requireAuth('member'), (req, res) => {
+  removeSubscription(req.actor.id, req.body.endpoint);
   res.json({ ok: true });
 });
 

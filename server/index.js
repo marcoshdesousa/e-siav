@@ -37,6 +37,7 @@ import { testPlusOnce } from './plus.js';
 import { ensureAppClub } from './appBrasil.js';
 import { bibleStartTodayOnce } from './bible.js';
 import { startYearWatch } from './season.js';
+import { startPushWatch } from './push.js';
 import { AUDIO_ROOT } from './audio.js';
 import { startPaymentSweep } from './payments.js';
 import { syncCatalog } from './catalog.js';
@@ -64,6 +65,7 @@ giftTestPacksOnce();
 testPlusOnce();
 ensureAppClub();
 startYearWatch();
+startPushWatch();
 initClubPlans();
 // Sem cobranças por enquanto: nada de parcelas, inscrição anual ou bloqueio na virada do ano.
 

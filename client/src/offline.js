@@ -36,6 +36,8 @@ export function syncOffline(actor) {
     return;
   }
   try { localStorage.removeItem(KEY); } catch { /* sem armazenamento */ }
-  navigator.serviceWorker.getRegistrations().then((list) => list.forEach((r) => r.unregister())).catch(() => {});
   if (window.caches) window.caches.keys().then((keys) => keys.forEach((k) => window.caches.delete(k))).catch(() => {});
+  // Membro sem DBV+: fica só o service worker dos lembretes (sem guardar nada); fora da conta, nenhum.
+  if (actor?.type === 'member' && import.meta.env.PROD) navigator.serviceWorker.register('/sw-lite.js', { updateViaCache: 'none' }).catch(() => {});
+  else navigator.serviceWorker.getRegistrations().then((list) => list.forEach((r) => r.unregister())).catch(() => {});
 }

@@ -1,6 +1,7 @@
 // Service worker do App do DBV: só é instalado para quem é DBV+ (veja client/src/offline.js).
 // Guarda o app no aparelho para os jogos funcionarem sem internet; o resto precisa de internet.
 // A lista de arquivos do app é colocada no build.
+importScripts('/sw-push.js');
 const BUILD = '__BUILD__';
 const CACHE = 'dbv-' + BUILD;
 const PRECACHE = self.__PRECACHE__ || [];

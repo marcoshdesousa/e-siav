@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { leavePush } from './push.js';
 import { api } from './api.js';
 import { savedActor, syncOffline } from './offline.js';
 
@@ -48,6 +49,7 @@ export function AuthProvider({ children }) {
     }
   };
   const logout = async () => {
+    if (actor?.type === 'member') await leavePush();
     await api.post('/auth/logout').catch(() => {});
     syncOffline(null);
     setActor(null);

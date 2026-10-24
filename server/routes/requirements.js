@@ -10,7 +10,7 @@ const r = Router();
 
 
 /** Este requisito vale para esta conta? */
-function applies(actor, req) {
+export function applies(actor, req) {
   const audience = { club: 'club', unit: 'unit', member: 'member' }[actor.type];
   if (req.audience !== audience) return false;
   // A unidade Liderança não entra no ranking de unidades: não recebe requisitos de unidade.

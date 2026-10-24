@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, BookOpenText, Waypoints, Hourglass, BadgeCheck, Lock, Download } from 'lucide-react';
+import { BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, BookOpenText, Waypoints, Hourglass, BadgeCheck, Lock, Download, Bell } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Button, Card, Loading, Modal, PageHeader, notify, useAsync, useLoad } from '../../ui.jsx';
@@ -22,6 +22,7 @@ import PlusPage, { PlusNudge, PlusPicksGate } from './PlusPage.jsx';
 import { BomLider, BomLiderLesson } from '../learning/BomLider.jsx';
 import { HandleField } from '../AppSignup.jsx';
 import { DownloadsPage, MemberCertificatePage } from './Downloads.jsx';
+import { currentSubscription, enablePush, needsInstall, pushSupported, syncPush } from '../../push.js';
 
 const base = '/membro';
 
@@ -56,6 +57,7 @@ function MyProfile() {
     <Loading {...state}>
       {(m) => (
         <>
+        <PushCard />
         <MemberProfileView
           member={m}
           linkBase={`${base}/ver`}
@@ -159,6 +161,40 @@ function parentOf(path) {
   return base;
 }
 
+/**
+ * Ligar os lembretes no celular (estudos do dia, entrar no app, requisito, joguinho e figurinhas,
+ * espalhados entre 9h e 21h). Some quando já está ligado.
+ */
+function PushCard() {
+  const [state, setState] = useState(null); // null = conferindo; 'on' | 'off' | 'denied' | 'install' | 'none'
+  const [busy, run] = useAsync();
+  useEffect(() => {
+    if (!pushSupported()) { setState(needsInstall() ? 'install' : 'none'); return; }
+    if (Notification.permission === 'denied') { setState('denied'); return; }
+    currentSubscription().then((s) => setState(s && Notification.permission === 'granted' ? 'on' : 'off')).catch(() => setState('off'));
+  }, []);
+  const turnOn = () => run(async () => {
+    const ok = await enablePush();
+    setState(ok ? 'on' : Notification.permission === 'denied' ? 'denied' : 'off');
+    if (ok) notify('Lembretes ligados!');
+  }).catch(() => {});
+  if (!state || state === 'on' || state === 'none') return null;
+  return (
+    <Card className="push-card">
+      <div className="row" style={{ alignItems: 'flex-start', gap: '.7rem' }}>
+        <span className="trophy-bg"><Bell size={22} /></span>
+        <div className="grow">
+          <b>Lembretes no celular</b>
+          <p className="small muted" style={{ margin: '.2rem 0 .6rem' }}>Um aviso para a Meditação, o Ano Bíblico, a Escola Sabatina e o que mais faltar no dia, entre 9h e 21h. O que você já fez não é lembrado.</p>
+          {state === 'off' && <Button small busy={busy} onClick={turnOn}><Bell size={14} /> Ligar lembretes</Button>}
+          {state === 'denied' && <p className="small" style={{ margin: 0 }}>As notificações estão bloqueadas para o App do DBV. Libere nas configurações do navegador (no cadeado ao lado do endereço) e volte aqui.</p>}
+          {state === 'install' && <p className="small" style={{ margin: 0 }}>No iPhone, toque em <b>Compartilhar</b> e depois em <b>Adicionar à Tela de Início</b>. Abra o app por lá para ligar os lembretes.</p>}
+        </div>
+      </div>
+    </Card>
+  );
+}
+
 /** "Estou aqui" a cada minuto com o app aberto e visível: 5 minutos no dia = 1 dia na sequência do app. */
 function usePresence() {
   useEffect(() => {
@@ -175,6 +211,7 @@ function usePresence() {
 export default function MemberApp() {
   const { actor } = useAuth();
   usePresence();
+  useEffect(() => { syncPush(); }, []);
   const isDbv = actor.kind === 'desbravador';
   const tabs = [
     { to: base, icon: UserRound, label: 'Perfil', end: true },
