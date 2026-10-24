@@ -4,7 +4,7 @@ import { all, get, run } from '../db.js';
 import { requireAuth, requireGeneral } from '../auth.js';
 import { fail, int } from '../util.js';
 import { createPayment, onPaid, paymentOut } from '../payments.js';
-import { PLANS, PLUS_DAYS, PLUS_PACKS, activatePlus, grantPlus, plusOf, plusOpen, removePlus } from '../plus.js';
+import { PLANS, PLUS_DAYS, PLUS_PACKS, activatePlus, grantPlus, plansFor, plusOf, plusOpen, removePlus } from '../plus.js';
 
 const r = Router();
 const member = requireAuth('member');
@@ -29,25 +29,30 @@ export const BENEFITS = [
   { text: 'Participa do ranking dos jogos' },
   { text: 'Jogos sem internet (modo offline)' },
   { text: 'Selo de verificado (logo dourada) no perfil' },
-  { text: 'Especialidades físicas entregues pela equipe (planos de R$ 19,90 e R$ 34,90)' },
+  { text: 'Especialidades físicas entregues pela equipe (planos de R$ 19,90 e R$ 34,90)', club_only: true },
   { text: 'Estudo das Classes e Agrupadas', soon: true },
 ];
 
+// Quem entrou pelo App Brasil (sem clube) precisa de um plano para usar o app: o Plano App (R$ 3,90),
+// com o mesmo do plano grátis, ou o DBV+ (R$ 7,90). As especialidades físicas são só para quem tem clube.
+export const APP_FREE = FREE.map((t) => t.replace('rankings do distrito', 'ranking Brasil'));
+
 r.get('/plus', member, (req, res) => {
   const p = plusOf(req.actor.id);
+  const isApp = !!req.actor.app;
   res.json({
-    plans: Object.values(PLANS), benefits: BENEFITS, free: FREE, days: PLUS_DAYS, packs: PLUS_PACKS,
-    mine: p, open: plusOpen(req.actor.id),
+    plans: plansFor(isApp), benefits: BENEFITS.filter((b) => !isApp || !b.club_only), free: isApp ? APP_FREE : FREE, days: PLUS_DAYS, packs: PLUS_PACKS,
+    app: req.actor.app, mine: p, open: plusOpen(req.actor.id),
     picks_names: p?.picks ? all(`SELECT id, name, category FROM content WHERE id IN (${p.picks.map(() => '?').join(',')})`, ...p.picks) : [],
   });
 });
 
 r.post('/plus/assinar', member, async (req, res) => {
-  const plan = PLANS[req.body.plan];
+  const plan = plansFor(!!req.actor.app).find((p) => p.id === req.body.plan);
   if (!plan) fail(400, 'Escolha um plano');
-  // Um plano por vez: só dá para assinar de novo quando o atual vencer.
+  // Um plano por vez: só dá para assinar de novo quando o atual vencer (do Plano App dá para subir para o DBV+).
   const cur = plusOf(req.actor.id);
-  if (cur?.active) fail(409, `Você já tem o ${cur.plan_name}. Um novo plano fica disponível em ${new Date(cur.until).toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })}.`);
+  if (cur?.active && !(cur.plan === 'app' && plan.id !== 'app')) fail(409, `Você já tem o ${cur.plan_name}. Um novo plano fica disponível em ${new Date(cur.until).toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })}.`);
   const pay = await createPayment({ memberId: req.actor.id, purpose: 'dbvplus', ref: { plan: plan.id }, title: `${plan.name} (${PLUS_DAYS} dias)`, amountCents: plan.price_cents });
   res.json(await paymentOut(pay));
 });

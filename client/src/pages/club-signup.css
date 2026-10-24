@@ -15,3 +15,13 @@
 .csu-login div { display: flex; flex-direction: column; align-items: center; padding: .6rem 1.1rem; border-radius: 14px; background: var(--surface-2, #f1f5f9); }
 .csu-login small { font-size: .72rem; font-weight: 800; color: var(--muted, #64748b); text-transform: uppercase; }
 .csu-login b { font-size: 1.8rem; letter-spacing: .08em; }
+.csu-back { align-self: flex-start; color: var(--muted, #64748b); text-decoration: none; display: inline-flex; gap: .3rem; align-items: center; }
+.csu-logo { width: 64px; height: 64px; border-radius: 14px; background: #fff; padding: 4px; object-fit: contain; }
+.csu-ico { width: 64px; height: 64px; border-radius: 14px; background: rgba(255,255,255,.12); display: grid; place-items: center; color: #f5c518; flex: none; }
+.csu-notice { display: flex; gap: .7rem; align-items: flex-start; padding: .9rem 1rem; border-radius: 14px; background: rgba(245,197,24,.14); border: 1px solid rgba(212,160,23,.45); }
+.csu-notice svg { flex: none; color: #b8860b; margin-top: 2px; }
+.csu-notice p { margin: 0; font-size: .9rem; line-height: 1.45; }
+.csu-chips button:disabled { cursor: default; opacity: .55; }
+.csu-chips button.on:disabled { opacity: 1; }
+.csu .row > * { flex: 1; }
+.csu .row > :first-child { flex: 0 0 96px; }

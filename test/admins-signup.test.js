@@ -52,7 +52,7 @@ async function login(mode, username, password) {
     const r = await fetch(BASE + url, opts);
     return { status: r.status, body: await r.json().catch(() => null) };
   };
-  return { actor, get: (u) => call('GET', u), post: (u, b = {}) => call('POST', u, b), put: (u, b = {}) => call('PUT', u, b) };
+  return { actor, get: (u) => call('GET', u), post: (u, b = {}) => call('POST', u, b), put: (u, b = {}) => call('PUT', u, b), del: (u) => call('DELETE', u) };
 }
 
 const anon = async (method, url, body) => {
@@ -86,10 +86,11 @@ test('admin de distrito: só o distrito dele; o geral cria admins com distrito',
 });
 
 test('link de inscrição: desbravador, diretoria e conselheiro entram no clube com login pronto', async () => {
-  const geral = await login('membros', 'admin', 'admin123');
-  const club = (await geral.get('/admin/inscricoes')).body[0];
+  const club = await login('clube', 'aguias', 'AG2026');
   assert.equal((await anon('GET', '/inscricao/naoexiste')).status, 404);
-  const on = (await geral.put(`/admin/inscricoes/${club.id}`, { enabled: true })).body;
+  const link = (await club.get('/club/inscricao')).body;
+  assert.ok(link.token && link.enabled, 'o clube já tem o link ligado');
+  const on = (await club.put('/club/inscricao', { enabled: true })).body;
   const info = (await anon('GET', `/inscricao/${on.token}`)).body;
   assert.ok(info.club.name && info.units.length, 'nome do clube e unidades');
   const unit = info.units[0].id;
@@ -109,6 +110,52 @@ test('link de inscrição: desbravador, diretoria e conselheiro entram no clube 
   const cons = await anon('POST', `/inscricao/${on.token}`, { name: 'Carlos Conselheiro', birth_date: yearsAgo(20), cargo: 'conselheiro', unit_id: unit });
   assert.equal(cons.status, 200);
   assert.equal(cons.body.actor.unit_id, unit);
-  await geral.put(`/admin/inscricoes/${club.id}`, { enabled: false });
+  await club.put('/club/inscricao', { enabled: false });
   assert.equal((await anon('GET', `/inscricao/${on.token}`)).status, 404, 'link desligado');
+  const novo = (await club.post('/club/inscricao/novo-link')).body;
+  assert.notEqual(novo.token, on.token);
+});
+
+test('App Brasil: cria conta sem clube, precisa de plano, só ranking Brasil, apaga a conta', async () => {
+  const geral = await login('membros', 'admin', 'admin123');
+  const kid = await anon('POST', '/criar-conta', { name: 'Bruno Sem Clube', birth_date: yearsAgo(13) });
+  assert.equal(kid.status, 200);
+  assert.equal(kid.body.actor.club_name, 'Clube App Brasil');
+  assert.equal(kid.body.actor.unit_name, 'Unidade App');
+  assert.equal(kid.body.actor.app.locked, true, 'sem plano fica bloqueado');
+  const lider = (await anon('POST', '/criar-conta', { name: 'Carla Sem Clube', birth_date: yearsAgo(25) })).body.actor;
+  assert.equal(lider.unit_name, 'Unidade App Liderança');
+  const b = await login('membros', kid.body.code, kid.body.password);
+  assert.equal((await b.post('/ano-biblico/dia/1/quiz', { answers: [0] })).status, 402, 'bloqueado até assinar');
+  const plus = (await b.get('/plus')).body;
+  assert.deepEqual(plus.plans.map((p) => [p.id, p.price_cents]), [['app', 390], ['plus', 790]]);
+  assert.equal((await b.post('/plus/assinar', { plan: 'plus3' })).status, 400, 'sem planos de especialidade');
+  assert.equal((await geral.post('/admin/plus/dar', { code: kid.body.code, plan: 'app', days: 30 })).status, 200, 'dar plano');
+  const b2 = await login('membros', kid.body.code, kid.body.password);
+  assert.equal(b2.actor.app.locked, false);
+  assert.equal(b2.actor.plus, null, 'Plano App não é DBV+');
+  assert.notEqual((await b2.post('/ano-biblico/dia/1/quiz', { answers: [0] })).status, 402);
+  // Rankings: só o Brasil.
+  const appClub = b2.actor.club_id;
+  assert.ok((await b2.get('/rankings/members')).body.some((r) => r.id === b2.actor.id), 'está no ranking Brasil');
+  assert.ok(!(await geral.get('/rankings/clubs?escopo=brasil')).body.some((c) => c.id === appClub), 'clube fora do ranking');
+  assert.ok(!(await geral.get('/rankings/units?escopo=brasil')).body.some((u) => u.club_id === appClub), 'unidades fora do ranking');
+  const sum = (await b2.get('/rankings/summary')).body;
+  assert.ok(sum.app && sum.member_brasil && !sum.club && !sum.unit);
+  assert.equal((await anon('GET', `/public/clubs/${appClub}`)).status, 404, 'clube não abre perfil');
+  assert.ok(!(await anon('GET', '/public/districts')).body.some((d) => d.name.startsWith('App Brasil')));
+  assert.equal((await geral.del(`/admin/clubs/${appClub}`)).status, 400, 'não apaga o Clube App Brasil');
+  // Apagar a própria conta.
+  assert.equal((await b2.post('/me/conta/apagar', { password: '0000' })).status, 400);
+  assert.equal((await b2.post('/me/conta/apagar', { password: kid.body.password })).status, 200, 'apagar');
+  const gone = await fetch(BASE + '/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'membros', username: kid.body.code, password: kid.body.password }) });
+  assert.notEqual(gone.status, 200, 'conta apagada');
+});
+
+test('admin apaga clube (o do distrito só os dele)', async () => {
+  const geral = await login('membros', 'admin', 'admin123');
+  const d = (await geral.get('/admin/districts')).body[0].id;
+  const c = (await geral.post('/admin/clubs', { name: 'Para Apagar', district_id: d, director_name: 'Fulano Silva' })).body;
+  assert.equal((await geral.del(`/admin/clubs/${c.id}`)).status, 200);
+  assert.ok(!(await geral.get('/admin/clubs')).body.some((x) => x.id === c.id));
 });

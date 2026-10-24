@@ -60,9 +60,14 @@ const okUrl = (v) => {
   if (!/^https?:\/\/[^\s]+$/i.test(s)) fail(400, 'O link precisa começar com https://');
   return s;
 };
-r.get('/admin/configuracoes', admin, (_req, res) => res.json(Object.fromEntries(Object.values(LINKS).map((k) => [k, setting(k) || '']))));
+// WhatsApp da equipe: para onde vão os pedidos de "Registrar clube" (só números, com DDI e DDD).
+const WHATS = 'whatsapp_clube';
+const digits = (v) => String(v || '').replace(/\D/g, '').slice(0, 15);
+r.get('/public/whatsapp', (_req, res) => res.json({ number: digits(setting(WHATS)) }));
+r.get('/admin/configuracoes', admin, (_req, res) => res.json({ ...Object.fromEntries(Object.values(LINKS).map((k) => [k, setting(k) || ''])), [WHATS]: digits(setting(WHATS)) }));
 r.put('/admin/configuracoes', admin, (req, res) => {
   for (const k of Object.values(LINKS)) if (req.body[k] !== undefined) setSetting(k, okUrl(req.body[k]));
+  if (req.body[WHATS] !== undefined) setSetting(WHATS, digits(req.body[WHATS]));
   frameCache.clear();
   res.json({ ok: true });
 });

@@ -45,7 +45,7 @@ function Picks({ d, reload, done }) {
 }
 
 export default function PlusPage() {
-  const { refresh } = useAuth();
+  const { actor, refresh } = useAuth();
   const nav = useNavigate();
   const { pathname } = useLocation();
   const state = useLoad(() => api.get('/plus'));
@@ -53,18 +53,31 @@ export default function PlusPage() {
   const finish = async () => {
     setOrder(null); setPaid(false); state.reload();
     const a = await refresh();
-    if (!a?.plus?.picks_pending) nav(`/${pathname.split('/')[1]}/albuns/biblico`);
+    if (bought === 'app') nav(`/${pathname.split('/')[1]}`);
+    else if (!a?.plus?.picks_pending) nav(`/${pathname.split('/')[1]}/albuns/biblico`);
   };
   const [order, setOrder] = useState(null);
+  const [bought, setBought] = useState(null);
   const [paid, setPaid] = useState(false);
   const [busy, run] = useAsync();
-  const buy = async (plan) => { const o = await run(() => api.post('/plus/assinar', { plan }), null); if (o) setOrder(o); };
+  const buy = async (plan) => { const o = await run(() => api.post('/plus/assinar', { plan }), null); if (o) { setBought(plan); setOrder(o); } };
+  // Um plano por vez; quem está no Plano App pode subir para o DBV+.
+  const canBuy = (d, p) => !d.mine?.active || (d.mine.plan === 'app' && p.id !== 'app');
   return (
     <>
-      <PageHeader title="DBV+" subtitle="Ajude o App do DBV a crescer e ganhe benefícios" />
+      <PageHeader title={actor.app ? 'Planos' : 'DBV+'} subtitle={actor.app ? 'Escolha um plano para usar o App do DBV' : 'Ajude o App do DBV a crescer e ganhe benefícios'} />
       <Loading {...state}>
         {(d) => (
           <>
+            {d.app ? (
+              <div className="plus-hero app">
+                <img src="/marca/logo.svg" alt="" />
+                <div>
+                  <b>{d.app.locked ? 'Libere o seu acesso ao App do DBV' : 'Obrigado por ajudar o App do DBV!'}</b>
+                  <p>Quem cria a conta pelo app, sem clube, assina um plano: isso <b>evita contas falsas</b> e ajuda a <b>manter o app no ar</b> para milhares de desbravadores. Com <b>R$ 3,90</b> por mês você já usa tudo do plano grátis dos clubes. Quer mais? O <b>DBV+</b> libera todos os benefícios.</p>
+                </div>
+              </div>
+            ) : (
             <div className="plus-hero">
               <img src="/marca/logo.svg" alt="" />
               <div>
@@ -72,6 +85,7 @@ export default function PlusPage() {
                 <p>Você ajuda o nosso app a ficar cada vez melhor e ainda ganha vários privilégios. O app continua funcionando normalmente para todos.</p>
               </div>
             </div>
+            )}
             {d.mine?.active && (
               <Card className="plus-status">
                 <BadgeCheck size={26} />
@@ -79,32 +93,43 @@ export default function PlusPage() {
               </Card>
             )}
             {d.mine?.active && d.mine.picks_needed > 0 && <Picks d={d} reload={state.reload} />}
-            <h3 className="plus-h">Benefícios</h3>
+            <h3 className="plus-h">{d.app ? 'Benefícios do DBV+' : 'Benefícios'}</h3>
             <ul className="plus-benefits">
               {d.benefits.map((b) => <li key={b.text} className={b.soon ? 'soon' : ''}>{b.soon ? <Sparkles size={16} /> : <Check size={16} />}<span>{b.text}{b.soon && <em>em breve</em>}</span></li>)}
             </ul>
             <h3 className="plus-h">Planos ({d.days} dias)</h3>
             <div className="plus-plans">
+              {!d.app && (
               <div className="plus-plan free">
                 <b>Grátis</b>
                 <span className="plus-price">R$ 0</span>
                 <ul className="plus-free">{(d.free || []).map((t) => <li key={t}><Check size={14} />{t}</li>)}</ul>
                 <span className="plus-current">{d.mine?.active ? 'Sempre disponível' : 'Seu plano atual'}</span>
               </div>
+              )}
               {d.plans.map((p) => (
-                <div key={p.id} className={'plus-plan' + (p.specialties ? ' gold' : '')}>
+                <div key={p.id} className={'plus-plan' + (p.specialties ? ' gold' : '') + (p.access_only ? ' free' : '')}>
                   <b>{p.name}</b>
                   <span className="plus-price">{money(p.price_cents)}</span>
-                  <small>{p.specialties ? `Todos os benefícios + ${d.packs} pacotinhos + ${p.specialties} especialidades físicas (você escolhe ${p.pick})` : `Todos os benefícios do app + ${d.packs} pacotinhos de figurinhas`}</small>
-                  {d.mine?.active
-                    ? <span className="plus-soon-date"><Clock size={15} /> Disponível em {br(d.mine.until)}</span>
-                    : <Button block busy={busy} onClick={() => buy(p.id)}>Assinar</Button>}
+                  {p.access_only
+                    ? <ul className="plus-free">{(d.free || []).map((t) => <li key={t}><Check size={14} />{t}</li>)}</ul>
+                    : <small>{p.specialties ? `Todos os benefícios + ${d.packs} pacotinhos + ${p.specialties} especialidades físicas (você escolhe ${p.pick})` : `Todos os benefícios do app + ${d.packs} pacotinhos de figurinhas`}</small>}
+                  {d.mine?.active && d.mine.plan === p.id && <span className="plus-current">Seu plano atual</span>}
+                  {canBuy(d, p)
+                    ? <Button block busy={busy} onClick={() => buy(p.id)}>{d.mine?.active ? 'Mudar para este' : 'Assinar'}</Button>
+                    : d.mine.plan !== p.id && <span className="plus-soon-date"><Clock size={15} /> Disponível em {br(d.mine.until)}</span>}
                 </div>
               ))}
             </div>
             {order && (
-              <Modal title={paid ? 'Bem-vindo ao DBV+!' : 'Pague com Pix'} onClose={() => (paid ? finish() : (setOrder(null), state.reload()))}>
-                {paid ? (
+              <Modal title={paid ? (bought === 'app' ? 'Acesso liberado!' : 'Bem-vindo ao DBV+!') : 'Pague com Pix'} onClose={() => (paid ? finish() : (setOrder(null), state.reload()))}>
+                {paid && bought === 'app' ? (
+                  <div className="pix-box center">
+                    <BadgeCheck size={44} className="plus-ok" />
+                    <p><b>Plano ativo!</b> Agora você já pode usar o App do DBV.</p>
+                    <Button block onClick={finish}>Começar</Button>
+                  </div>
+                ) : paid ? (
                   <div className="pix-box center">
                     <BadgeCheck size={44} className="plus-ok" />
                     <p><b>Assinatura ativa!</b> Colete os seus pacotinhos de presente.</p>
@@ -128,7 +153,7 @@ let barClosed = false;
 export function PlusNudge({ to }) {
   const { actor } = useAuth();
   const { pathname } = useLocation();
-  const [open, setOpen] = useState(() => !barClosed && actor?.type === 'member' && !actor.plus);
+  const [open, setOpen] = useState(() => !barClosed && actor?.type === 'member' && !actor.plus && !actor.app?.locked);
   // Só nas telas principais das abas (não atrapalha leitura, quiz nem jogo).
   if (!open || pathname.startsWith(to) || pathname.split('/').filter(Boolean).length > 2) return null;
   const close = () => { barClosed = true; setOpen(false); };

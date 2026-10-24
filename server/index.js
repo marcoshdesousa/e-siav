@@ -30,6 +30,7 @@ import signupRoutes from './routes/signup.js';
 import devotionalRoutes from './routes/devotional.js';
 import plusRoutes from './routes/plus.js';
 import { testPlusOnce } from './plus.js';
+import { ensureAppClub } from './appBrasil.js';
 import { AUDIO_ROOT } from './audio.js';
 import { startPaymentSweep } from './payments.js';
 import { syncCatalog } from './catalog.js';
@@ -53,6 +54,7 @@ resetClubsForDbvOnce({ justSeeded });
 resetToTestClubsOnce({ justSeeded });
 giftTestPacksOnce();
 testPlusOnce();
+ensureAppClub();
 // Sem cobranças por enquanto: nada de parcelas, inscrição anual ou bloqueio na virada do ano.
 
 syncCatalog();

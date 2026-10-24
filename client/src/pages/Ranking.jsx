@@ -61,6 +61,8 @@ export function RankingTable({ rows, highlight, sub, link, avatarSquare = true }
 function ScopeFilter({ value, onChange, withClub, district, onDistrict }) {
   const { actor, meta } = useAuth();
   const mine = meta.districts.find((d) => d.id === actor.district_id);
+  // App Brasil (conta sem clube): só o ranking Brasil.
+  if (actor.app) return <div className="rank-scope"><div className="seg" role="tablist"><button type="button" className="active">Brasil</button></div></div>;
   const opts = [...(withClub ? [['clube', 'Meu clube']] : []), ['distrito', actor.type === 'admin' ? 'Distrito' : mine?.name || 'Distrito'], ['brasil', 'Brasil']];
   return (
     <div className="rank-scope">
@@ -86,8 +88,8 @@ const subtitle = (kind, scope) => (scope === 'clube'
 function GeneralRanking({ kind, base, highlight, clubId }) {
   const { actor } = useAuth();
   // O administrador vê o "clube" só nas unidades (escolhe o clube acima da tabela).
-  const withClub = kind !== 'clubes' && !!clubId && (actor.type !== 'admin' || kind === 'unidades');
-  const [scope, setScope] = useState(withClub ? 'clube' : 'distrito');
+  const withClub = kind !== 'clubes' && !!clubId && !actor.app && (actor.type !== 'admin' || kind === 'unidades');
+  const [scope, setScope] = useState(actor.app ? 'brasil' : withClub ? 'clube' : 'distrito');
   const [district, setDistrict] = useState(null);
   const url = { membros: '/rankings/members', lideranca: '/rankings/leaders', unidades: '/rankings/units', clubes: '/rankings/clubs' }[kind];
   const clubUrl = { membros: 'members', lideranca: 'leaders', unidades: 'units' }[kind];
@@ -141,7 +143,7 @@ function SummaryCard({ icon, title, pos, onClick, gold }) {
 export default function RankingHub({ base }) {
   const { actor } = useAuth();
   const summary = useLoad(() => (actor.type === 'admin' ? Promise.resolve(null) : api.get('/rankings/summary')));
-  const adminClubs = useLoad(() => (actor.type === 'admin' ? api.get('/admin/clubs') : Promise.resolve([])));
+  const adminClubs = useLoad(() => (actor.type === 'admin' ? api.get('/admin/clubs').then((l) => l.filter((c) => !c.is_app)) : Promise.resolve([])));
   const [adminClub, setAdminClub] = useState(null);
   const clubId = actor.type === 'admin' ? adminClub ?? adminClubs.data?.[0]?.id : actor.club_id;
   const myUnit = actor.type === 'unit' ? actor.id : actor.unit_id;
@@ -153,7 +155,12 @@ export default function RankingHub({ base }) {
   return (
     <>
       <PageHeader title="Ranking" subtitle="Do seu clube, do seu distrito e do Brasil · cada dia do Ano Bíblico concluído vale pontos" />
-      {summary.data && (
+      {summary.data?.app && (
+        <div className="pos-grid">
+          <SummaryCard gold icon={<Globe size={16} />} title="Eu no Brasil" pos={actor.kind === 'desbravador' ? summary.data.member_brasil : summary.data.leader_brasil} onClick={() => setTab(isLeader ? 'lideranca' : 'membros')} />
+        </div>
+      )}
+      {summary.data && !summary.data.app && (
         <div className="pos-grid">
           {actor.type === 'member' && (
             actor.kind === 'desbravador'

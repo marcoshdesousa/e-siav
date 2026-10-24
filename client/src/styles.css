@@ -456,6 +456,9 @@ input[type='file'] { padding: .55rem; }
 .ig-demo button:hover { border-color: var(--link); }
 .ig-signup { padding: 1.1rem; text-align: center; font-size: .92rem; display: block; color: var(--ink); border-top: 1px solid var(--line); }
 .ig-signup b { color: var(--link); }
+.ig-signup { display: flex; flex-direction: column; gap: .45rem; align-items: center; }
+.ig-signup .small { color: var(--muted); font-size: .8rem; }
+.ig-register { display: inline-flex; align-items: center; gap: .35rem; font-weight: 800; color: var(--link); text-decoration: none; padding: .45rem .9rem; border: 1px solid var(--line); border-radius: 999px; }
 .ig-get { text-align: center; margin-top: .3rem; }
 .ig-get p { font-size: .92rem; margin-bottom: .75rem; }
 .ig-install { display: inline-flex; align-items: center; gap: .45rem; background: transparent; color: var(--link); border: 1.5px solid var(--line); border-radius: 999px; padding: .55rem 1.1rem; cursor: pointer; font-family: var(--font-title); font-weight: 700; font-size: .9rem; }
@@ -900,3 +903,4 @@ input::-webkit-datetime-edit { padding: 0; }
 .bottom-nav-inner:has(> a:nth-child(6)) a { white-space: nowrap; padding-left: 0; padding-right: 0; }
 @media (max-width: 370px) { .bottom-nav-inner:has(> a:nth-child(6)) a { font-size: .56rem; } .bottom-nav-inner:has(> a:nth-child(6)) .nav-ico { width: 36px; } }
 .rank-scope { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.signup-url { display: block; word-break: break-all; padding: .5rem .65rem; border-radius: 10px; background: var(--surface-2, #f1f5f9); font-size: .82rem; }

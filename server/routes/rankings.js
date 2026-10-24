@@ -9,7 +9,7 @@ r.use('/rankings', requireAuth());
 
 // Rankings: Brasil (todo mundo do app, ?escopo=brasil), distrito (o do usuário; o Administrador
 // Geral escolhe) e clube (rotas /rankings/club/...).
-const district = (req) => (req.query.escopo === 'brasil' ? null : rankingDistrict(req.actor, int(req.query.district_id)));
+const district = (req) => (req.query.escopo === 'brasil' || req.actor.app ? null : rankingDistrict(req.actor, int(req.query.district_id)));
 
 // Só os 50 primeiros aparecem; quem está abaixo vê apenas a própria linha, com a posição exata.
 const TOP = 50;
@@ -55,6 +55,14 @@ const pick = (row) => (row ? { position: row.position, points: row.points, bible
 r.get('/rankings/summary', (req, res) => {
   const a = req.actor;
   if (a.type === 'admin') return res.json({});
+  // App Brasil: só o ranking Brasil (sem clube, unidade e distrito).
+  if (a.app) {
+    return res.json({
+      app: true,
+      member_brasil: a.kind === 'desbravador' ? pick(positionOf(membersRanking(null), a.id)) : null,
+      leader_brasil: a.kind === 'lideranca' ? pick(positionOf(leadersRanking(null), a.id)) : null,
+    });
+  }
   const clubId = a.club_id;
   const unitId = a.type === 'unit' ? a.id : a.unit_id;
   const d = a.district_id;

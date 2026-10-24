@@ -108,6 +108,7 @@ export function RequirementsTodo({ originTabs = false, clubLabel = 'Do meu clube
   const state = useLoad(() => api.get('/requirements/mine'));
   const [sending, setSending] = useState(null);
   const [origin, setOrigin] = useState('brasil');
+  const noClub = !!useAuth().actor?.app; // App Brasil: sem requisitos de clube e de unidade
   const [filter, setFilter] = useState('abertos');
   const open = (r) => ['pendente', 'fora_do_prazo', 'recusado'].includes(r.state);
   return (
@@ -120,7 +121,7 @@ export function RequirementsTodo({ originTabs = false, clubLabel = 'Do meu clube
         return (
           <>
             {originTabs && (
-              <Tabs tabs={[['brasil', 'Brasil', openCount('brasil')], ...(all.some((r) => r.origin === 'distrito') ? [['distrito', 'Distrito', openCount('distrito')]] : []), ['clube', clubLabel, openCount('clube')], ...(groupTab ? [['grupo', 'Da minha unidade', openCount('grupo')]] : [])]} value={origin} onChange={setOrigin} />
+              <Tabs tabs={[['brasil', 'Brasil', openCount('brasil')], ...(all.some((r) => r.origin === 'distrito') ? [['distrito', 'Distrito', openCount('distrito')]] : []), ...(noClub ? [] : [['clube', clubLabel, openCount('clube')], ...(groupTab ? [['grupo', 'Da minha unidade', openCount('grupo')]] : [])])]} value={origin} onChange={setOrigin} />
             )}
             <div className="seg" style={{ marginBottom: '.9rem' }}>
               {[['abertos', 'A cumprir', counts.abertos], ['enviados', 'Em avaliação', counts.enviados], ['aprovados', 'Aprovados']].map(([k, l, n]) => (

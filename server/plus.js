@@ -1,4 +1,5 @@
 // DBV+ (assinatura de 30 dias para membros): ajuda o app e libera benefícios.
+//   App Brasil    R$ 3,90  — só para quem criou a conta pelo app (sem clube): libera o app, como o plano grátis
 //   DBV+          R$ 7,90  — benefícios do app
 //   DBV+ 3 Espec. R$ 19,90 — + 3 especialidades físicas (escolhe 15, a equipe compra 3)
 //   DBV+ 7 Espec. R$ 34,90 — + 7 especialidades físicas (escolhe 20, a equipe compra 7)
@@ -19,6 +20,7 @@ run(`CREATE TABLE IF NOT EXISTS member_plus (
 )`);
 
 export const PLANS = {
+  app: { id: 'app', name: 'Plano App', price_cents: 390, specialties: 0, pick: 0, access_only: true },
   plus: { id: 'plus', name: 'DBV+', price_cents: 790, specialties: 0, pick: 0 },
   plus3: { id: 'plus3', name: 'DBV+ 3 Especialidades', price_cents: 1990, specialties: 3, pick: 15 },
   plus7: { id: 'plus7', name: 'DBV+ 7 Especialidades', price_cents: 3490, specialties: 7, pick: 20 },
@@ -34,8 +36,12 @@ export function plusOf(memberId) {
   if (!p) return null;
   return { ...p, picks: p.picks ? JSON.parse(p.picks) : null, active: p.until > new Date().toISOString(), plan_name: PLANS[p.plan]?.name || 'DBV+' };
 }
-/** Assinante ativo. */
-export const isPlus = (memberId) => !!plusOf(memberId)?.active;
+/** Assinante ativo do DBV+ (o Plano App só libera o acesso, sem os benefícios). */
+export const isPlus = (memberId) => { const p = plusOf(memberId); return !!p?.active && p.plan !== 'app'; };
+/** Algum plano ativo (o Plano App também conta): libera o app para quem entrou pelo App Brasil. */
+export const hasAccess = (memberId) => !!plusOf(memberId)?.active;
+/** Planos que cada conta pode assinar: quem é do App Brasil só tem o Plano App e o DBV+ (sem especialidades). */
+export const plansFor = (isApp) => Object.values(PLANS).filter((p) => (isApp ? ['app', 'plus'].includes(p.id) : p.id !== 'app'));
 /** Benefício do DBV+ liberado (assinante ativo). */
 export const plusOpen = (memberId) => isPlus(memberId);
 
@@ -52,6 +58,7 @@ export function activatePlus(memberId, planId) {
     ON CONFLICT (member_id) DO UPDATE SET plan = excluded.plan, until = excluded.until, renewals = renewals + 1,
       picks_needed = excluded.picks_needed, picks = CASE WHEN excluded.picks_needed > 0 THEN NULL ELSE picks END,
       picks_at = CASE WHEN excluded.picks_needed > 0 THEN NULL ELSE picks_at END`, memberId, plan.id, until, plan.pick);
+  if (plan.access_only) return until;
   run('INSERT OR IGNORE INTO album_progress (member_id, album) VALUES (?, ?)', memberId, 'biblico');
   run('UPDATE album_progress SET packs_unopened = packs_unopened + ? WHERE member_id = ? AND album = ?', PLUS_PACKS, memberId, 'biblico');
   return until;

@@ -5,6 +5,7 @@ import { imageUpload, fileUrl, attachmentUpload } from '../uploads.js';
 import { NOME_UNIDADE_LIDERANCA } from '../config.js';
 import { listMembers, listUnits, memberFicha } from '../clubData.js';
 import { clubProfile } from '../profiles.js';
+import { deleteClub } from '../accounts.js';
 import { fail, int, str, validDate, parseJson, memberKind, newClubCode, newClubNumber, newClubPassword, newUnitPin, clubDisplayName } from '../util.js';
 
 // Painel do Administrador Geral.
@@ -20,9 +21,9 @@ r.get('/admin/overview', (req, res) => {
   res.json({
     general: !d,
     district_name: req.actor.district_name || null,
-    districts: d ? 1 : n('SELECT COUNT(*) n FROM districts'),
-    clubs: n('SELECT COUNT(*) n FROM clubs', 'SELECT COUNT(*) n FROM clubs WHERE district_id = ?'),
-    units: n('SELECT COUNT(*) n FROM units WHERE is_leadership = 0', 'SELECT COUNT(*) n FROM units u JOIN clubs c ON c.id = u.club_id WHERE u.is_leadership = 0 AND c.district_id = ?'),
+    districts: d ? 1 : n('SELECT COUNT(*) n FROM districts WHERE is_app = 0'),
+    clubs: n('SELECT COUNT(*) n FROM clubs WHERE is_app = 0', 'SELECT COUNT(*) n FROM clubs WHERE district_id = ?'),
+    units: n('SELECT COUNT(*) n FROM units u JOIN clubs c ON c.id = u.club_id WHERE u.is_leadership = 0 AND c.is_app = 0', 'SELECT COUNT(*) n FROM units u JOIN clubs c ON c.id = u.club_id WHERE u.is_leadership = 0 AND c.district_id = ?'),
     members: n(`SELECT COUNT(*) n FROM members WHERE status = 'ativo'`, `SELECT COUNT(*) n FROM members m JOIN clubs c ON c.id = m.club_id WHERE m.status = 'ativo' AND c.district_id = ?`),
     pending_reviews: n(`SELECT COUNT(*) n FROM submissions s JOIN requirements r ON r.id = s.requirement_id WHERE r.creator_type = 'admin' AND s.status = 'enviado'`,
       `SELECT COUNT(*) n FROM submissions s JOIN requirements r ON r.id = s.requirement_id WHERE r.creator_type = 'admin' AND r.district_id = ? AND s.status = 'enviado'`),
@@ -34,7 +35,7 @@ r.get('/admin/overview', (req, res) => {
 
 /** Clube do distrito do administrador (o geral pode qualquer um). */
 function ownClub(req, id) {
-  const c = get('SELECT id, district_id FROM clubs WHERE id = ?', id);
+  const c = get('SELECT id, district_id, is_app FROM clubs WHERE id = ?', id);
   const d = adminDistrict(req.actor);
   if (!c || (d && c.district_id !== d)) fail(404, 'Clube não encontrado');
   return c;
@@ -43,7 +44,7 @@ function ownClub(req, id) {
 // ---------- Distritos ----------
 r.get('/admin/districts', (req, res) => {
   const d = adminDistrict(req.actor);
-  res.json(all(`SELECT d.*, (SELECT COUNT(*) FROM clubs c WHERE c.district_id = d.id) AS club_count FROM districts d ${d ? 'WHERE d.id = ?' : ''} ORDER BY d.name`, ...(d ? [d] : [])));
+  res.json(all(`SELECT d.*, (SELECT COUNT(*) FROM clubs c WHERE c.district_id = d.id) AS club_count FROM districts d WHERE d.is_app = 0 ${d ? 'AND d.id = ?' : ''} ORDER BY d.name`, ...(d ? [d] : [])));
 });
 r.post('/admin/districts', requireGeneral, (req, res) => {
   const name = str(req.body.name, 80);
@@ -68,10 +69,10 @@ function associates(v) {
 r.get('/admin/clubs', (req, res) => {
   const d = adminDistrict(req.actor);
   const rows = all(
-    `SELECT c.id, c.name, c.number, c.logo, c.code, c.director_name, c.associate_directors, c.district_id, d.name AS district_name,
+    `SELECT c.id, c.name, c.number, c.logo, c.code, c.director_name, c.associate_directors, c.district_id, c.is_app, d.name AS district_name,
             (SELECT COUNT(*) FROM members m WHERE m.club_id = c.id AND m.status = 'ativo') AS member_count,
             (SELECT COUNT(*) FROM units u WHERE u.club_id = c.id) AS unit_count
-     FROM clubs c JOIN districts d ON d.id = c.district_id ${d ? 'WHERE c.district_id = ?' : ''} ORDER BY c.number`,
+     FROM clubs c JOIN districts d ON d.id = c.district_id ${d ? 'WHERE c.district_id = ?' : ''} ORDER BY c.is_app DESC, c.number`,
     ...(d ? [d] : []),
   );
   res.json(rows);
@@ -102,7 +103,9 @@ r.post('/admin/clubs', (req, res) => {
 });
 
 r.put('/admin/clubs/:id', (req, res) => {
-  const id = ownClub(req, int(req.params.id)).id;
+  const own = ownClub(req, int(req.params.id));
+  if (own.is_app) fail(400, 'O Clube App Brasil é automático e não é editado');
+  const id = own.id;
   tx(() => {
     const name = str(req.body.name, 100);
     if (name && clubDisplayName(0, name) !== 'Clube ') run('UPDATE clubs SET name = ? WHERE id = ?', clubDisplayName(get('SELECT number FROM clubs WHERE id = ?', id).number, name), id);
@@ -121,10 +124,19 @@ r.put('/admin/clubs/:id', (req, res) => {
   res.json({ ok: true });
 });
 
+// Apagar o clube (só o administrador geral ou o do distrito do clube): some com as unidades, os
+// membros e tudo do clube. O clube não consegue apagar a si mesmo. O Clube App Brasil não é apagado.
+r.delete('/admin/clubs/:id', (req, res) => {
+  const c = ownClub(req, int(req.params.id));
+  if (c.is_app) fail(400, 'O Clube App Brasil não pode ser apagado');
+  deleteClub(c.id);
+  res.json({ ok: true });
+});
+
 // Visualizar o clube por dentro: membros, fichas e unidades. Só leitura — o admin não edita nada.
 r.get('/admin/clubs/:id/view', (req, res) => {
   const id = ownClub(req, int(req.params.id)).id;
-  const club = clubProfile(id);
+  const club = clubProfile(id, { withApp: true });
   if (!club) fail(404, 'Clube não encontrado');
   res.json({ club, members: listMembers(id), units: listUnits(id) });
 });

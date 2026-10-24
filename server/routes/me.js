@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { get, run } from '../db.js';
-import { requireAuth } from '../auth.js';
+import { COOKIE, requireAuth } from '../auth.js';
+import { checkMemberPassword } from '../memberStatus.js';
+import { deleteMember } from '../accounts.js';
 import { imageUpload, fileUrl } from '../uploads.js';
 import { memberProfile, unitProfile } from '../profiles.js';
 import { fail, str } from '../util.js';
@@ -21,6 +23,15 @@ r.put('/me/photo', requireAuth('member'), imageUpload.single('photo'), (req, res
 // A unidade escreve a própria biografia (aparece no perfil da unidade).
 r.put('/me/bio', requireAuth('unit'), (req, res) => {
   run('UPDATE units SET bio = ? WHERE id = ?', str(req.body.bio, 1000) || null, req.actor.id);
+  res.json({ ok: true });
+});
+
+// O membro apaga a própria conta (de vez), confirmando com a senha. O clube não se apaga:
+// isso é com o administrador do distrito ou o geral.
+r.post('/me/conta/apagar', requireAuth('member'), (req, res) => {
+  if (!checkMemberPassword(req.actor.id, req.body.password)) fail(400, 'Senha errada');
+  deleteMember(req.actor.id);
+  res.clearCookie(COOKIE);
   res.json({ ok: true });
 });
 

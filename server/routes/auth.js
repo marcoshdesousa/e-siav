@@ -126,7 +126,7 @@ r.get('/auth/contas-teste', (_req, res) => {
 });
 
 r.get('/meta', (_req, res) => {
-  res.json({ cargos: CARGOS, cargos_lideranca: CARGOS_LIDERANCA, cargos_18: CARGOS_18, idade_min_diretor: IDADE_MIN_DIRETOR, modelos: MODELOS_ENVIO, districts: all('SELECT id, name FROM districts ORDER BY name') });
+  res.json({ cargos: CARGOS, cargos_lideranca: CARGOS_LIDERANCA, cargos_18: CARGOS_18, idade_min_diretor: IDADE_MIN_DIRETOR, modelos: MODELOS_ENVIO, districts: all('SELECT id, name FROM districts WHERE is_app = 0 ORDER BY name') });
 });
 
 export default r;

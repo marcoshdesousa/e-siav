@@ -79,6 +79,7 @@ export function LinksAdmin() {
                 <Field label="SGC (aparece só para o clube)"><input value={v.link_sgc} onChange={set('link_sgc')} placeholder="https://..." inputMode="url" /></Field>
                 <Field label="Cantinho da Unidade (aparece para as unidades)"><input value={v.link_cantinho} onChange={set('link_cantinho')} placeholder="https://..." inputMode="url" /></Field>
                 <Field label="Cartão DBV (aparece para os membros)"><input value={v.link_cartao} onChange={set('link_cartao')} placeholder="https://..." inputMode="url" /></Field>
+                <Field label="WhatsApp da equipe (Registrar clube)" hint="Com DDI e DDD, só números. Ex.: 5511999998888"><input value={v.whatsapp_clube || ''} onChange={set('whatsapp_clube')} placeholder="55..." inputMode="tel" /></Field>
                 <p className="small muted"><Globe size={13} style={{ verticalAlign: '-2px' }} /> Sem link, a pasta mostra “Em breve”. Alguns sites não deixam abrir dentro de outro; nesse caso aparece o botão “Abrir fora”.</p>
                 <Button busy={busy} disabled={!f} onClick={() => run(() => api.put('/admin/configuracoes', v), 'Links salvos!').then(() => { setF(null); state.reload(); })}>Salvar</Button>
               </div>

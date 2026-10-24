@@ -37,7 +37,7 @@ export default function PlusAdmin() {
                   <Field label="Código do membro (6 dígitos)"><input inputMode="numeric" value={f.code} onChange={(e) => setF({ ...f, code: e.target.value })} /></Field>
                   <Field label="Plano">
                     <select value={f.plan} onChange={(e) => setF({ ...f, plan: e.target.value })}>
-                      <option value="plus">DBV+</option><option value="plus3">DBV+ 3 Especialidades</option><option value="plus7">DBV+ 7 Especialidades</option>
+                      <option value="app">Plano App (R$ 3,90, conta sem clube)</option><option value="plus">DBV+</option><option value="plus3">DBV+ 3 Especialidades</option><option value="plus7">DBV+ 7 Especialidades</option>
                     </select>
                   </Field>
                   <Field label="Dias"><input type="number" min="1" value={f.days} onChange={(e) => setF({ ...f, days: e.target.value })} /></Field>

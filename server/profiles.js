@@ -24,11 +24,11 @@ export function eventsOf(type, id) {
 const pos = (r) => (r ? { position: r.position, points: r.points, bible_points: r.bible_points } : null);
 
 /** Perfil público do clube: só a QUANTIDADE de membros, nunca os nomes. */
-export function clubProfile(id) {
+export function clubProfile(id, { withApp = false } = {}) {
   const c = get(
     `SELECT c.id, c.name, c.number, c.logo, c.code, c.director_name, c.associate_directors, c.history, c.district_id, d.name AS district_name
-     FROM clubs c JOIN districts d ON d.id = c.district_id WHERE c.id = ?`,
-    id,
+     FROM clubs c JOIN districts d ON d.id = c.district_id WHERE c.id = ? AND (c.is_app = 0 OR ?)`,
+    id, withApp ? 1 : 0,
   );
   if (!c) return null;
   c.member_count = get(`SELECT COUNT(*) AS n FROM members WHERE club_id = ? AND status = 'ativo'`, id).n;
@@ -49,7 +49,7 @@ export function clubProfile(id) {
 export function unitProfile(id) {
   const u = get(
     `SELECT u.id, u.name, u.logo, u.bio, u.is_leadership, u.number, u.club_id, c.code AS club_code, c.name AS club_name, c.logo AS club_logo, c.district_id
-     FROM units u JOIN clubs c ON c.id = u.club_id WHERE u.id = ?`,
+     FROM units u JOIN clubs c ON c.id = u.club_id WHERE u.id = ? AND c.is_app = 0`,
     id,
   );
   if (!u) return null;
@@ -65,7 +65,7 @@ export function unitProfile(id) {
 export function memberProfile(where, value) {
   const m = get(
     `SELECT m.id, m.name, m.photo, m.code, m.cargo, m.birth_date, c.district_id,
-            m.club_id, c.code AS club_code, c.name AS club_name, c.logo AS club_logo, m.unit_id, u.name AS unit_name, u.number AS unit_number, u.is_leadership AS unit_is_leadership
+            m.club_id, c.code AS club_code, c.name AS club_name, c.logo AS club_logo, c.is_app AS club_is_app, m.unit_id, u.name AS unit_name, u.number AS unit_number, u.is_leadership AS unit_is_leadership
      FROM members m JOIN clubs c ON c.id = m.club_id LEFT JOIN units u ON u.id = m.unit_id
      WHERE m.status = 'ativo' AND ${where === 'code' ? 'm.code = ?' : 'm.id = ?'}`,
     value,
@@ -84,7 +84,19 @@ export function memberProfile(where, value) {
   m.classes = ach.filter((a) => a.type === 'classe');
   m.specialties = ach.filter((a) => a.type === 'especialidade');
   m.courses = ach.filter((a) => a.type === 'curso');
+  m.club_is_app = !!m.club_is_app;
   // Desbravadores e liderança têm rankings separados.
+  if (m.club_is_app) {
+    // App Brasil: sem clube, unidade e distrito de verdade; só o ranking Brasil.
+    const brasil = m.kind === 'desbravador' ? membersRanking(null) : leadersRanking(null);
+    m.ranking = null;
+    const r = pos(positionOf(brasil, m.id));
+    m.ranks = { member_brasil: r ? { ...r, total: brasil.length } : null };
+    m.verified = isPlus(m.id);
+    m.events = eventsOf('member', m.id);
+    m.medals = medalsOf('member', m.id);
+    return m;
+  }
   const districtRows = m.kind === 'desbravador' ? membersRanking(m.district_id) : leadersRanking(m.district_id);
   m.ranking = pos(positionOf(districtRows, m.id)); // no distrito
   // Os 5 rankings do perfil: o membro no clube e no distrito, a unidade no clube e no distrito e o clube no distrito.

@@ -94,7 +94,7 @@ function NameList({ title, items = [], empty, emptyIcon, icon, byCategory }) {
 function RanksGrid({ r }) {
   if (!r) return null;
   const items = [
-    ['Você no clube', r.member_club], ['Você no distrito', r.member_district],
+    ['Você no Brasil', r.member_brasil], ['Você no clube', r.member_club], ['Você no distrito', r.member_district],
     ['Sua unidade no clube', r.unit_club], ['Sua unidade no distrito', r.unit_district], ['Seu clube no distrito', r.club_district],
   ].filter(([, x]) => x);
   if (!items.length) return null;
@@ -218,10 +218,13 @@ export function MemberProfileView({ member: m, linkBase, photoAction, extra }) {
             <span className="chip">{m.age} anos</span>
             {m.cargo !== m.role && <span className="chip ico">{m.kind === 'desbravador' ? <Compass size={14} /> : <Award size={14} />} {m.role}</span>}
           </div>
-          <div className="chips">
+          {m.club_is_app ? (
+            // App Brasil: o clube e a unidade são automáticos, sem perfil para abrir.
+            <div className="chips"><span className="chip ico"><Tent size={14} /> {m.club_name}</span><span className="chip ico"><Flag size={14} /> {m.unit_name}</span></div>
+          ) : <div className="chips">
             <Link to={to(linkBase, 'clube', m.club_id, clanLink(m.club_code))} className="chip ico"><Tent size={14} /> {m.club_name}</Link>
             {m.unit_id ? <Link to={to(linkBase, 'unidade', m.unit_id, groupLink(m.club_code, m.unit_number, m.unit_is_leadership))} className="chip ico"><Flag size={14} /> {m.unit_name}</Link> : <span className="chip ico"><Flag size={14} /> Sem unidade</span>}
-          </div>
+          </div>}
           <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.4rem' }}>
             {m.ranking && <PositionBadge position={m.ranking.position} points={m.ranking.points} label={m.kind === 'desbravador' ? 'no ranking de desbravadores do distrito' : 'no ranking da liderança do distrito'} />}
           </div>

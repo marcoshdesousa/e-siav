@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import {
-  Award, BadgeCheck, KeyRound, UserPlus, CalendarDays, Check, Megaphone, Plus, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, ClipboardCheck, Globe, FolderOpen, BookOpen, Wrench, LifeBuoy,
+  Award, BadgeCheck, KeyRound, UserPlus, CalendarDays, Check, Megaphone, Plus, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, ClipboardCheck, Globe, FolderOpen, BookOpen, Wrench, LifeBuoy, Share2,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -25,6 +25,42 @@ import EventsAdmin from '../admin/Events.jsx';
 import AnnouncementsAdmin from '../admin/Announcements.jsx';
 
 const base = '/clube';
+
+/** Link de inscrição do clube: quem entra por ele já fica no clube. O clube compartilha, liga/desliga e troca. */
+function SignupLinkCard() {
+  const state = useLoad(() => api.get('/club/inscricao'));
+  const [busy, run] = useAsync();
+  const url = (t) => `${location.origin}/inscricao/${t}`;
+  const share = async (t) => {
+    const data = { title: 'Inscrição no clube', text: 'Faça a sua inscrição no nosso clube pelo App do DBV:', url: url(t) };
+    try {
+      if (navigator.share) return await navigator.share(data);
+      await navigator.clipboard.writeText(url(t));
+      window.alert('Link copiado!');
+    } catch (e) {
+      if (e?.name !== 'AbortError') prompt('Copie o link:', url(t));
+    }
+  };
+  return (
+    <Section title="Link de inscrição">
+      <Card>
+        <Loading {...state}>
+          {(l) => (
+            <div className="stack">
+              <p className="small muted" style={{ margin: 0 }}>Quem se inscreve por este link entra direto no clube, escolhe a unidade e já ganha o login (código + ano de nascimento). {l.signups ? <b>{plural(l.signups, 'inscrição', 'inscrições')} pelo link.</b> : null}</p>
+              {l.enabled ? <code className="signup-url">{url(l.token)}</code> : <p className="small" style={{ margin: 0 }}><b>Link desligado:</b> ninguém consegue se inscrever.</p>}
+              <div className="row wrap">
+                {!!l.enabled && <Button small onClick={() => share(l.token)}><Share2 size={15} /> Compartilhar link</Button>}
+                <Button small variant="secondary" busy={busy} onClick={() => run(() => api.put('/club/inscricao', { enabled: !l.enabled }), l.enabled ? 'Link desligado' : 'Link ligado').then(state.reload)}>{l.enabled ? 'Desligar' : 'Ligar link'}</Button>
+                <Button small variant="secondary" busy={busy} onClick={() => confirm('Gerar um link novo? O link antigo para de funcionar.') && run(() => api.post('/club/inscricao/novo-link'), 'Link novo gerado').then(state.reload)}>Trocar link</Button>
+              </div>
+            </div>
+          )}
+        </Loading>
+      </Card>
+    </Section>
+  );
+}
 
 // ---------- Início / perfil do clube ----------
 function ClubHome() {
@@ -53,6 +89,8 @@ function ClubHome() {
               </div>
             </div>
           </div>
+
+          <SignupLinkCard />
 
           <Section title="Resumo">
             <div className="stats">

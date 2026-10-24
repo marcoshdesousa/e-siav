@@ -153,40 +153,6 @@ function NameLoginForm({ title, item, withDistrict, districts, onClose, onSave }
   );
 }
 
-/** Links de inscrição de cada clube: ligar/desligar, copiar e trocar o link. */
-function SignupLinksAdmin() {
-  const list = useLoad(() => api.get('/admin/inscricoes'));
-  const [busy, run] = useAsync();
-  const url = (t) => `${location.origin}/inscricao/${t}`;
-  const toggle = (c) => run(() => api.put(`/admin/inscricoes/${c.id}`, { enabled: !c.enabled }), c.enabled ? 'Link desligado' : 'Link ligado').then(list.reload);
-  const renew = (c) => confirm('Gerar um link novo? O link antigo para de funcionar.') && run(() => api.post(`/admin/inscricoes/${c.id}/novo-link`), 'Link novo gerado (desligado)').then(list.reload);
-  const copy = async (c) => { try { await navigator.clipboard.writeText(url(c.token)); window.alert('Link copiado!'); } catch { prompt('Copie o link:', url(c.token)); } };
-  return (
-    <>
-      <p className="small muted">Quem entra pelo link já fica no clube, escolhe a unidade e ganha o login na hora (código + ano de nascimento). O link não aparece para o clube: só você passa para ele.</p>
-      <div className="list">
-        <Loading {...list} empty="Nenhum clube.">
-          {(rows) => rows.map((c) => (
-            <div key={c.id} className="list-item">
-              <Avatar src={c.logo} name={c.name} size={44} square />
-              <div className="grow">
-                <div className="title">{c.name}</div>
-                <div className="sub">{c.district_name} · {plural(c.unit_count, 'unidade', 'unidades')} · {plural(c.signups, 'inscrição', 'inscrições')}</div>
-                {c.token && c.enabled ? <div className="sub"><code>{url(c.token)}</code></div> : <div className="sub">{c.token ? 'Link desligado' : 'Ainda sem link'}</div>}
-              </div>
-              <div className="stack" style={{ gap: '.35rem' }}>
-                <Button small busy={busy} variant={c.enabled ? 'secondary' : undefined} onClick={() => toggle(c)}>{c.enabled ? 'Desligar' : 'Ligar link'}</Button>
-                {!!c.enabled && <Button small variant="secondary" onClick={() => copy(c)}>Copiar</Button>}
-                {c.token && <Button small variant="secondary" busy={busy} onClick={() => renew(c)}>Novo link</Button>}
-              </div>
-            </div>
-          ))}
-        </Loading>
-      </div>
-    </>
-  );
-}
-
 function ClubsAdmin() {
   const { actor, refreshMeta } = useAuth();
   const general = !actor.district_id;
@@ -204,6 +170,10 @@ function ClubsAdmin() {
     districts.reload();
     refreshMeta();
   };
+  const removeClub = (c) => {
+    if (prompt(`Apagar o ${c.name} de vez? Somem as unidades, os ${c.member_count} membros e tudo do clube. Para confirmar, escreva APAGAR`) !== 'APAGAR') return;
+    run(() => api.del('/admin/clubs/' + c.id), 'Clube apagado').then(() => { clubs.reload(); districts.reload(); });
+  };
   const renameDistrict = async (d) => {
     const name = prompt('Novo nome do distrito', d.name);
     if (!name) return;
@@ -215,8 +185,7 @@ function ClubsAdmin() {
   return (
     <>
       <PageHeader title="Clubes e acessos" subtitle={general ? null : `Distrito ${actor.district_name}`} />
-      <Tabs tabs={general ? [['clubes', 'Clubes'], ['links', 'Links de inscrição'], ['distritos', 'Distritos'], ['admins', 'Administradores']] : [['clubes', 'Clubes'], ['links', 'Links de inscrição']]} value={tab} onChange={setTab} />
-      {tab === 'links' && <SignupLinksAdmin />}
+      {general && <Tabs tabs={[['clubes', 'Clubes'], ['distritos', 'Distritos'], ['admins', 'Administradores']]} value={tab} onChange={setTab} />}
       {tab === 'distritos' && (
         <>
           <Card>
@@ -249,11 +218,12 @@ function ClubsAdmin() {
                   <div className="grow">
                     <div className="title">{c.name}</div>
                     <div className="sub">{c.district_name} · {plural(c.unit_count, 'unidade', 'unidades')} · {plural(c.member_count, 'membro', 'membros')}</div>
-                    <div className="sub">Código <b>{c.code}</b>{c.director_name ? <> · Diretor(a): {c.director_name}</> : ''}{c.associate_directors ? <> · Associados: {c.associate_directors.split('\n').join(', ')}</> : ''}</div>
+                    {c.is_app ? <div className="sub">Automático: quem cria a conta pelo app (sem clube) entra aqui. Não aparece nos rankings de clube, unidade e distrito.</div> : <div className="sub">Código <b>{c.code}</b>{c.director_name ? <> · Diretor(a): {c.director_name}</> : ''}{c.associate_directors ? <> · Associados: {c.associate_directors.split('\n').join(', ')}</> : ''}</div>}
                   </div>
                   <div className="stack" style={{ gap: '.35rem' }}>
                     <Link to={`${base}/clubes/${c.id}`}><Button small>Ver por dentro</Button></Link>
-                    <Button small variant="secondary" onClick={() => setModal({ kind: 'club', item: c })}>Editar</Button>
+                    {!c.is_app && <Button small variant="secondary" onClick={() => setModal({ kind: 'club', item: c })}>Editar</Button>}
+                    {!c.is_app && <Button small variant="danger" busy={busy} onClick={() => removeClub(c)}>Apagar</Button>}
                   </div>
                 </div>
               ))}

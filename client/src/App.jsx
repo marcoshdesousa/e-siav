@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import ClubSignup from './pages/ClubSignup.jsx';
+import { CreateAccount, RegisterClub } from './pages/AppSignup.jsx';
 import { AuthProvider, homeFor, useAuth } from './auth.jsx';
 import { Notices, Spinner } from './ui.jsx';
 import Login from './pages/Login.jsx';
@@ -44,7 +45,9 @@ export default function App() {
             <Route path="/p/:kind/:id" element={<PublicProfilePage />} />
             <Route path="/inscricao/:token" element={<ClubSignup />} />
             <Route path="/inscricao/*" element={<Navigate to="/" replace />} />
-            <Route path="/criar-clube" element={<Navigate to="/" replace />} />
+            <Route path="/criar-conta" element={<CreateAccount />} />
+            <Route path="/registrar-clube" element={<RegisterClub />} />
+            <Route path="/criar-clube" element={<Navigate to="/registrar-clube" replace />} />
             <Route path="/criar-cla" element={<Navigate to="/" replace />} />
             <Route path="/termo/*" element={<Navigate to="/" replace />} />
             <Route path="/admin/*" element={<Guard type="admin"><AdminApp /></Guard>} />

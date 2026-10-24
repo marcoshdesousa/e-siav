@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { Compass, Download, Monitor, Share, Smartphone, SquarePlus, Tent, MoreVertical } from 'lucide-react';
 import { api } from '../api.js';
 import { homeFor, useAuth } from '../auth.jsx';
@@ -162,7 +162,9 @@ export default function Login() {
           </form>
 
           <div className="ig-card ig-signup">
-            Não tem uma conta? <b>Peça ao seu clube para te cadastrar.</b>
+            <span>Não tem uma conta? <Link to="/criar-conta"><b>Criar conta</b></Link></span>
+            <span className="small">Tem clube? Cadastre-se pelo link de inscrição do seu clube.</span>
+            <Link to="/registrar-clube" className="ig-register"><Tent size={15} /> Registrar o meu clube</Link>
           </div>
 
           <InstallSection />

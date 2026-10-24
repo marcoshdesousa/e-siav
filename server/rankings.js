@@ -119,7 +119,7 @@ export function clubsRanking(districtId = null) {
      FROM clubs c JOIN districts d ON d.id = c.district_id
      ${scoreJoin('club', 'c.id', "r.creator_type = 'admin' AND r.audience = 'club'")}
      ${bibleJoin('club_id', 'c.id', BIBLE_POINTS.club)}
-     WHERE (? IS NULL OR c.district_id = ?)`,
+     WHERE c.is_app = 0 AND (? IS NULL OR c.district_id = ?)`,
     districtId, districtId,
   ));
 }
@@ -132,7 +132,7 @@ export function unitsRanking(districtId = null) {
      FROM units u JOIN clubs c ON c.id = u.club_id JOIN districts d ON d.id = c.district_id
      ${scoreJoin('unit', 'u.id', "r.creator_type = 'admin' AND r.audience = 'unit'")}
      ${bibleJoin('unit_id', 'u.id', BIBLE_POINTS.unit)}
-     WHERE u.is_leadership = 0 AND (? IS NULL OR c.district_id = ?)`,
+     WHERE u.is_leadership = 0 AND c.is_app = 0 AND (? IS NULL OR c.district_id = ?)`,
     districtId, districtId,
   ));
 }
@@ -172,7 +172,7 @@ export function awardStudyDay(memberId, kind, date) {
 /** Distrito do ranking: o do próprio usuário; o Administrador Geral escolhe (padrão: o primeiro). */
 export function rankingDistrict(actor, requested) {
   if (actor.type !== 'admin') return actor.district_id;
-  return (requested && get('SELECT id FROM districts WHERE id = ?', requested)?.id) || get('SELECT id FROM districts ORDER BY id LIMIT 1')?.id || 0;
+  return (requested && get('SELECT id FROM districts WHERE id = ? AND is_app = 0', requested)?.id) || get('SELECT id FROM districts WHERE is_app = 0 ORDER BY id LIMIT 1')?.id || 0;
 }
 
 export const positionOf = (rows, id) => rows.find((r) => r.id === id) || null;

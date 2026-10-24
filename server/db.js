@@ -897,6 +897,9 @@ function migrate() {
 
   // Número da unidade dentro do clube (1 a 10), usado no link: /cla/CÓDIGO/NÚMERO.
   add('units', 'number', 'INTEGER');
+  // Clube App Brasil: quem cria conta pelo app, sem o link de um clube (distrito e clube escondidos).
+  add('districts', 'is_app', 'INTEGER NOT NULL DEFAULT 0');
+  add('clubs', 'is_app', 'INTEGER NOT NULL DEFAULT 0');
   for (const u of db.prepare('SELECT id, club_id FROM units WHERE number IS NULL AND is_leadership = 0 ORDER BY id').all()) {
     const used = new Set(db.prepare('SELECT number FROM units WHERE club_id = ? AND number IS NOT NULL').all(u.club_id).map((x) => x.number));
     let n = 1;

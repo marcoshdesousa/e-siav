@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { plusOf, plusOpen } from './plus.js';
+import { hasAccess, plusOf, plusOpen } from './plus.js';
 import bcrypt from 'bcryptjs';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -55,7 +55,7 @@ export function loadActor(type, id) {
   if (type === 'member') {
     const m = get(
       `SELECT m.id, m.name, m.photo, m.code, m.cargo, m.birth_date, m.unit_id, m.club_id, m.status, m.terms_token, m.approved_at, m.cleared_year,
-              c.district_id, c.name AS club_name, u.name AS unit_name
+              c.district_id, c.name AS club_name, c.is_app, u.name AS unit_name
        FROM members m JOIN clubs c ON c.id = m.club_id LEFT JOIN units u ON u.id = m.unit_id
        WHERE m.id = ? AND m.status IN ('ativo', 'pendente')`,
       id,
@@ -63,10 +63,13 @@ export function loadActor(type, id) {
     if (!m) return null;
     // Pendente entra no app, mas só vê a mensagem de espera (nada de pagamento).
     const waiting = m.status === 'pendente' ? waitingMessage(pendingReason(m)) : null;
-    const { status: _s, terms_token: _t, approved_at: _a, cleared_year: _c, ...rest } = m;
+    const { status: _s, terms_token: _t, approved_at: _a, cleared_year: _c, is_app: isApp, ...rest } = m;
     const kind = memberKind(m.birth_date);
     const p = plusOf(m.id);
-    return { type, ...rest, cargo: cargoOf(kind, rest.cargo), waiting, kind, role: roleOf(kind, m.cargo), plus: p?.active ? { plan: p.plan, until: p.until, picks_pending: !!(p.picks_needed && !p.picks) } : null, plus_open: plusOpen(m.id) };
+    const plus = p?.active && p.plan !== 'app' ? { plan: p.plan, until: p.until, picks_pending: !!(p.picks_needed && !p.picks) } : null;
+    // App Brasil: entra e vê o app, mas só usa depois de assinar (Plano App ou DBV+).
+    const app = isApp ? { locked: !hasAccess(m.id), until: p?.active ? p.until : null } : null;
+    return { type, ...rest, cargo: cargoOf(kind, rest.cargo), waiting, kind, role: roleOf(kind, m.cargo), plus, plus_open: plusOpen(m.id), app };
   }
   return null;
 }
@@ -102,9 +105,12 @@ export const requireGeneral = (req, _res, next) => {
 /** Distrito do administrador (null = geral, vê tudo). */
 export const adminDistrict = (a) => (a?.type === 'admin' ? a.district_id || null : null);
 
+// Conta do App Brasil sem assinatura: só olha (GET); para fazer qualquer coisa precisa assinar.
+const LOCKED_OK = /^\/api\/(plus|payments|pagamentos|auth|me\/conta)(\/|$)/;
 export const requireAuth = (...types) => (req, _res, next) => {
   if (!req.actor) fail(401, 'Faça login para continuar');
   if (req.actor.waiting) fail(403, req.actor.waiting);
+  if (req.actor.app?.locked && req.method !== 'GET' && !LOCKED_OK.test(req.originalUrl.split('?')[0])) fail(402, 'Assine um plano para usar o app');
   if (types.length && !types.includes(req.actor.type)) fail(403, 'Acesso não permitido para esta conta');
   next();
 };
