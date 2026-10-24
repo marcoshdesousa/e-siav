@@ -1,5 +1,5 @@
-// Álbuns de figurinhas: lista, o Álbum Bíblico (comprar, abrir, colar, trocar repetidas)
-// e o Palmares 27 (em breve).
+// Álbuns de figurinhas: lista e o Álbum Bíblico (comprar, abrir, colar, trocar repetidas).
+// Quem completa o álbum ganha medalha e troféu (digitais, no perfil).
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, Gift, Heart, Package, Repeat, ShoppingCart, Sparkles, Trophy } from 'lucide-react';
@@ -15,7 +15,6 @@ import { AlbumCover, BibleEmblem } from './AlbumCover.jsx';
 import data from './biblico.json';
 import './albums.css';
 
-const PALMARES_LOGO = '/img/distrito-palmares.png';
 const BY_ID = Object.fromEntries(data.stickers.map((s) => [s.id, s]));
 const RARITY = { comum: 'Comum', rara: 'Rara', lendaria: 'Lendária' };
 
@@ -28,7 +27,7 @@ export function AlbumsPage({ base }) {
       <Loading {...state}>
         {(list) => (
           <div className="album-list">
-            {list.map((a) => (a.active ? (
+            {list.filter((a) => a.active).map((a) => (
               <Link key={a.id} to={`${base}/albuns/${a.id}`} className="album-card">
                 <div className="album-cover-art"><AlbumCover variant="biblico" width={110} /></div>
                 <div className="album-info">
@@ -38,16 +37,7 @@ export function AlbumsPage({ base }) {
                   {a.completed_at && <Badge kind="green">Completo!</Badge>}
                 </div>
               </Link>
-            ) : (
-              <div key={a.id} className="album-card is-soon">
-                <div className="album-cover-art"><AlbumCover variant="palmares27" width={110} logo={PALMARES_LOGO} /></div>
-                <div className="album-info">
-                  <h2>{a.name}</h2>
-                  <span className="badge badge-yellow">Em breve</span>
-                  <p className="small">Figurinhas com a foto dos membros dos clubes.</p>
-                </div>
-              </div>
-            )))}
+            ))}
           </div>
         )}
       </Loading>
@@ -74,7 +64,7 @@ function SupportNote() {
   return (
     <div className="support-note">
       <Heart size={18} />
-      <span>Além da diversão e da nostalgia, você ajuda o <b>App do DBV</b> a se manter e a ganhar novas atualizações. Quem completa o álbum ganha um <b>trunfo especial físico</b>!</span>
+      <span>Além da diversão e da nostalgia, você ajuda o <b>App do DBV</b> a se manter e a ganhar novas atualizações. Quem completa o álbum ganha uma <b>medalha</b> e um <b>troféu</b> no perfil!</span>
     </div>
   );
 }
@@ -376,7 +366,7 @@ export function AlbumPage() {
     setTimeout(() => setJustStuck(null), 1200);
     try {
       const r = await api.post(`/albuns/${id}/colar`, { ids: [sid] });
-      if (r.completed) { sfx('record'); notify('Parabéns! Você completou o álbum! Seu trunfo especial está garantido.'); state.reload(); }
+      if (r.completed) { sfx('record'); notify('Parabéns! Você completou o álbum e ganhou uma medalha e um troféu no seu perfil!'); state.reload(); }
       else {
         const pg = data.pages[PAGE_OF[sid]];
         if (pg.stickers.every((x) => x === sid || state.data?.stickers[x]?.stuck)) { setTimeout(() => sfx('win'), 350); notify(`Página "${pg.title}" completa!`); }
@@ -406,8 +396,8 @@ export function AlbumPage() {
             <PageHeader title={a.name} subtitle={`${stuck} de ${a.total} figurinhas coladas`} />
             <div className="album-bar big"><span style={{ width: `${(stuck / a.total) * 100}%` }} /></div>
             {a.completed_at
-              ? <Card className="album-done"><Trophy size={22} /> Álbum completo em {fmtDate(a.completed_at)}! Seu trunfo especial vai ser entregue pela equipe distrital ao diretor do seu clube.</Card>
-              : <Card className="album-prize"><Trophy size={22} /><span>Complete o álbum e ganhe um <b>trunfo especial físico</b>, entregue pela equipe distrital ao diretor do seu clube.</span></Card>}
+              ? <Card className="album-done"><Trophy size={22} /> Álbum completo em {fmtDate(a.completed_at)}! A medalha e o troféu já estão no seu perfil.</Card>
+              : <Card className="album-prize"><Trophy size={22} /><span>Complete o álbum e ganhe uma <b>medalha</b> e um <b>troféu</b> no seu perfil.</span></Card>}
 
             <div className="album-top">
               <button type="button" className={'album-packs' + (a.packs_unopened && !off ? ' has' : '')} disabled={!a.packs_unopened || off} onClick={() => setOpening(true)}>

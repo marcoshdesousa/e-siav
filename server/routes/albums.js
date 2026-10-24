@@ -1,5 +1,5 @@
 // Álbuns de figurinhas dos membros: comprar pacotinhos no Pix, abrir, colar e trocar repetidas.
-// O pagamento é o do site todo (server/payments.js). A equipe vê quem completou o álbum para entregar o trunfo.
+// O pagamento é o do site todo (server/payments.js). Quem completa o álbum ganha medalha e troféu (digitais).
 import { Router } from 'express';
 import { all, get, run, tx } from '../db.js';
 import { requireAuth } from '../auth.js';
@@ -7,6 +7,7 @@ import { fail, int } from '../util.js';
 import { ALBUMS, MIN_PACKS_TO_COMPLETE, PACK_OPTIONS, REPEATS_PER_FREE_PACK, drawPack } from '../stickers.js';
 import { createPayment, onPaid, payMode, paymentOut } from '../payments.js';
 import { PLUS_PACK_MULT, isPlus } from '../plus.js';
+import { awardAlbum } from '../awards.js';
 
 const r = Router();
 const member = requireAuth('member');
@@ -24,6 +25,11 @@ function progress(memberId, album) {
 }
 const repeatsOf = (memberId, album) => get('SELECT COALESCE(SUM(qty - 1), 0) n FROM album_stickers WHERE member_id = ? AND album = ? AND qty > 1', memberId, album).n;
 // Pacotinhos pagos: entram no álbum quando o Pix é confirmado (automático ou pela equipe).
+// Quem já tinha completado o álbum antes da troca do trunfo ganha a medalha e o troféu (uma vez).
+if (!get(`SELECT 1 FROM app_flags WHERE key = 'album-medalhas-v1'`)) {
+  for (const p of all('SELECT member_id, album FROM album_progress WHERE completed_at IS NOT NULL')) if (ALBUMS[p.album]) awardAlbum(p.member_id, ALBUMS[p.album].name);
+  run(`INSERT OR IGNORE INTO app_flags (key) VALUES ('album-medalhas-v1')`);
+}
 onPaid('figurinhas', (p, ref) => {
   progress(p.member_id, ref.album);
   run('UPDATE album_progress SET packs_unopened = packs_unopened + ? WHERE member_id = ? AND album = ?', int(ref.packs), p.member_id, ref.album);
@@ -100,6 +106,7 @@ r.post('/albuns/:id/colar', member, (req, res) => {
     let completed = false;
     if (stuck >= a.total && !p.completed_at) {
       run(`UPDATE album_progress SET completed_at = strftime('%Y-%m-%dT%H:%M:%fZ','now') WHERE member_id = ? AND album = ?`, req.actor.id, a.id);
+      awardAlbum(req.actor.id, a.name);
       completed = true;
     }
     return { stuck, completed };

@@ -24,6 +24,7 @@ import supportRoutes from './routes/support.js';
 import gameRoutes from './routes/games.js';
 import albumRoutes from './routes/albums.js';
 import paymentRoutes from './routes/payments.js';
+import certificateRoutes from './routes/certificates.js';
 import learningRoutes from './routes/learning.js';
 import bomLiderRoutes from './routes/bomLider.js';
 import signupRoutes from './routes/signup.js';
@@ -77,7 +78,7 @@ app.use(districtAdminGuard);
 
 const api = express.Router();
 api.get('/health', (_req, res) => res.json({ ok: true }));
-for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, clubToolRoutes, supportRoutes, gameRoutes, albumRoutes, paymentRoutes, learningRoutes, bomLiderRoutes, signupRoutes, devotionalRoutes, plusRoutes]) api.use(r);
+for (const r of [authRoutes, publicRoutes, adminRoutes, clubRoutes, requirementRoutes, contentRoutes, rankingRoutes, meRoutes, fileRoutes, announcementRoutes, achievementRoutes, clubEventRoutes, clubToolRoutes, supportRoutes, gameRoutes, albumRoutes, paymentRoutes, learningRoutes, bomLiderRoutes, signupRoutes, devotionalRoutes, plusRoutes, certificateRoutes]) api.use(r);
 api.use((_req, _res, next) => next(new HttpError(404, 'Rota não encontrada')));
 app.use('/api', api);
 

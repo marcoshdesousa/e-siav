@@ -14,7 +14,6 @@ export const ALBUMS = {
     total: biblico.stickers.length, pack_size: 6, price_cents: 185,
     rarity: Object.fromEntries(biblico.stickers.map((s) => [s.id, s.rarity])),
   },
-  palmares27: { id: 'palmares27', name: 'Palmares 27', active: false },
 };
 export const PACK_OPTIONS = [1, 10, 20, 50];
 export const REPEATS_PER_FREE_PACK = 25;

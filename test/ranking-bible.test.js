@@ -166,3 +166,23 @@ test('ranking: só os 50 primeiros; quem está abaixo vê a própria posição e
   assert.equal(rows.filter((r) => r.position > 50).length, 1, 'não mostra o 51º, 52º...');
   assert.equal((await pedro.get('/rankings/summary')).body.member.position, mine.position);
 });
+
+test('certificados: classe/especialidade e Ano Bíblico completo aparecem em Downloads', async () => {
+  const pedro = await login('membros', 'pedro');
+  const list = (await pedro.get('/me/certificados')).body;
+  assert.ok(Array.isArray(list));
+  const db = new DatabaseSync(path.join(dataDir, 'dbv.sqlite'));
+  try {
+    const total = JSON.parse(fs.readFileSync('server/data/ano-biblico-2027.json', 'utf8')).days.length;
+    const ins = db.prepare(`INSERT OR IGNORE INTO bible_progress (member_id, day, best, attempts, completed_at, on_time) VALUES (?, ?, 5, 1, '2026-10-01T10:00:00Z', 1)`);
+    for (let d = 1; d <= total; d++) ins.run(pedro.actor.id, d);
+  } finally {
+    db.close();
+  }
+  const after = (await pedro.get('/me/certificados')).body;
+  assert.ok(after.some((c) => c.kind === 'ano-biblico'), 'certificado do Ano Bíblico');
+  const cert = (await pedro.get('/me/certificados/ano-biblico/1')).body;
+  assert.equal(cert.member_name, 'Pedro Henrique Lima');
+  assert.match(cert.what, /Ano Bíblico|plano de leitura/);
+  assert.equal((await pedro.get('/me/certificados/ano-biblico/2')).status, 404);
+});

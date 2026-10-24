@@ -107,6 +107,12 @@ function loadLessons() {
   return all.sort((a, b) => (a.n || 0) - (b.n || 0));
 }
 const LESSONS = loadLessons();
+/** Manual Administrativo concluído (todas as aulas): para o certificado. */
+export function bomLiderFinished(memberId) {
+  if (!LESSONS.length) return null;
+  const r = get('SELECT COUNT(*) n, MAX(completed_at) at FROM bom_lider_progress WHERE member_id = ? AND completed_at IS NOT NULL', memberId);
+  return r.n >= LESSONS.length ? r.at : null;
+}
 // Bom Líder: liderança (16+) com o DBV+; no modo de teste, todos.
 const canSee = (actor) => actor.kind === 'lideranca' && isPlus(actor.id);
 const lessonRows = (memberId) => new Map(all('SELECT lesson, score, total, completed_at FROM bom_lider_progress WHERE member_id = ?', memberId).map((x) => [x.lesson, x]));

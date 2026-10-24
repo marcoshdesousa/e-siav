@@ -1,4 +1,4 @@
-// Equipe: quem completou os álbuns (para entregar o trunfo) e pacotinhos de presente.
+// Equipe: quem completou os álbuns (ganham medalha e troféu sozinhos) e pacotinhos de presente.
 // Os pagamentos ficam em Admin → Pagamentos.
 import { useState } from 'react';
 import { Gift, Trophy } from 'lucide-react';
@@ -12,7 +12,7 @@ function Completed() {
     <Loading {...state}>
       {(rows) => (
         <>
-          <p className="small muted">Quem completou o álbum ganha o trunfo especial físico, entregue pela equipe distrital ao diretor do clube.</p>
+          <p className="small muted">Quem completa o álbum ganha sozinho uma medalha e um troféu no perfil.</p>
           <div className="list">
             {rows.length === 0 && <p className="muted center">Ninguém completou ainda.</p>}
             {rows.map((x) => (
