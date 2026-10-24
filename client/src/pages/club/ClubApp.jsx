@@ -37,12 +37,15 @@ const brDate = (iso) => (iso ? new Date(iso).toLocaleDateString('pt-BR') : '—'
  * Janeiro e dezembro são grátis. Vencido, o portal continua funcionando, mas os membros precisam assinar.
  */
 export function ClubPlanCard() {
-  const state = useLoad(() => api.get('/club/plano'));
+  const { actor } = useAuth();
+  const state = useLoad(() => (actor.club_billing === 'gratis' ? Promise.resolve(null) : api.get('/club/plano')));
   const [order, setOrder] = useState(null);
   const [paid, setPaid] = useState(false);
   const [busy, run] = useAsync();
   const buy = async (plan) => { const o = await run(() => api.post('/club/plano/assinar', { plan }), null); if (o) setOrder(o); };
   const close = () => { setOrder(null); setPaid(false); state.reload(); };
+  // Clube grátis: nada de cobrança.
+  if (actor.club_billing === 'gratis') return null;
   return (
     <Section title="Plano do clube">
       <Card>
@@ -54,7 +57,7 @@ export function ClubPlanCard() {
                 <div className="row between"><b>Situação</b><Badge kind={kind}>{label}</Badge></div>
                 <p className="small" style={{ margin: 0 }}>
                   {d.status.paid_until ? <>Pago até <b>{brDate(d.status.paid_until)}</b>. </> : null}
-                  Com o plano em dia, todos os membros do clube usam o app <b>de graça</b>. Janeiro e dezembro são grátis para todos os clubes.
+                  {actor.member_billing === 'pago' ? 'Os membros do seu clube assinam o DBV para usar o app.' : <>Com o plano em dia, todos os membros do clube usam o app <b>de graça</b>.</>} Janeiro e dezembro são grátis para todos os clubes.
                 </p>
                 {['carencia', 'vencido'].includes(d.status.state) && (
                   <p className="small" style={{ margin: 0, color: 'var(--red-ink)' }}>
@@ -64,9 +67,9 @@ export function ClubPlanCard() {
                 <div className="club-plans">
                   {d.plans.map((p) => (
                     <div key={p.id} className="club-plan">
-                      <b>{p.id === 'anual' ? 'Ano todo' : '30 dias'}</b>
+                      <b>30 dias</b>
                       <span className="club-plan-price">{money(p.price_cents)}</span>
-                      <small>{p.id === 'anual' ? 'Paga uma vez e fica o ano todo' : 'Renova a cada 30 dias'}</small>
+                      <small>Pago por mês, a cada 30 dias</small>
                       <Button small block busy={busy} onClick={() => buy(p.id)}>Pagar no Pix</Button>
                     </div>
                   ))}
@@ -606,6 +609,7 @@ const clubParent = (path) => {
 
 /** Sistema do Clube: Perfil, Requisitos, Ranking, SGC e o resto em Mais. */
 export default function ClubApp() {
+  const { actor } = useAuth();
   useClubPresence();
   const tabs = [
     { to: base, icon: Tent, label: 'Perfil', end: true },
@@ -619,7 +623,7 @@ export default function ClubApp() {
     { to: `${base}/membros`, icon: Users, label: 'Membros', hint: 'Cadastrar e ver os membros' },
   ];
   const more = [
-    { to: `${base}/plano`, icon: Wallet, label: 'Plano do clube', hint: 'R$ 15 a cada 30 dias · membros de graça' },
+    ...(actor.club_billing === 'gratis' ? [] : [{ to: `${base}/plano`, icon: Wallet, label: 'Plano do clube', hint: 'R$ 15 a cada 30 dias' }]),
     { to: `${base}/secretaria`, icon: FolderOpen, label: 'Secretaria', hint: 'Agenda e membros' },
     { to: `${base}/unidades`, icon: Flag, label: 'Unidades', hint: 'Unidades, ranking e membros' },
     { to: `${base}/financas`, icon: Wallet, label: 'Tesouraria', hint: 'Balancete do clube' },

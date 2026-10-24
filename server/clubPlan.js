@@ -1,5 +1,9 @@
-// Plano do clube: o clube paga R$ 15 a cada 30 dias (ou o ano todo de uma vez) para que os membros
-// usem o app de graça. Janeiro e dezembro são grátis para todos os clubes (férias) e não gastam os
+// Plano do clube: o clube paga R$ 15 a cada 30 dias (só mensal) para que os membros usem o app de
+// graça. O administrador escolhe, por clube, se o clube paga ou é grátis e se os membros pagam ou não:
+//   clube grátis + membro grátis: ninguém paga (o membro só vê o DBV+ de R$ 7,90);
+//   clube grátis + membro pago: o clube não vê cobrança; cada membro assina o DBV (R$ 3,90) ou o DBV+;
+//   clube pago + membro pago: o clube paga e cada membro também assina;
+//   clube pago + membro grátis: o clube paga pelos membros; se o clube não pagar, os membros passam a pagar. Janeiro e dezembro são grátis para todos os clubes (férias) e não gastam os
 // dias pagos. Ao ser cadastrado, o clube já ganha os primeiros 30 dias.
 // Se o plano vence, o clube tem 3 dias de carência; depois disso o portal do clube e o login das
 // unidades continuam funcionando, mas os membros precisam assinar o DBV (R$ 3,90) ou o DBV+ para usar
@@ -8,7 +12,6 @@ import { get, run } from './db.js';
 
 export const CLUB_PLANS = {
   mensal: { id: 'mensal', name: 'Plano do clube (30 dias)', price_cents: 1500, days: 30 },
-  anual: { id: 'anual', name: 'Plano do clube (ano todo)', price_cents: 15000, days: 300 },
 };
 export const GRACE_DAYS = 3;
 export const FIRST_DAYS = 30;
@@ -30,8 +33,10 @@ export function addBillableDays(fromIso, days) {
 
 /** Situação do plano do clube: ok | gratis (jan/dez) | carencia (venceu há até 3 dias) | vencido. */
 export function clubStatus(clubId, now = new Date()) {
-  const c = get('SELECT paid_until, is_app FROM clubs WHERE id = ?', clubId);
+  const c = get('SELECT paid_until, is_app, club_billing, member_billing FROM clubs WHERE id = ?', clubId);
   if (!c || c.is_app) return null;
+  const billing = { club_billing: c.club_billing, member_billing: c.member_billing };
+  if (c.club_billing === 'gratis') return { state: 'gratis_sempre', paid_until: null, grace_until: null, free_month: isFreeMonth(now), ...billing };
   const until = c.paid_until;
   const graceUntil = until ? new Date(Date.parse(until) + GRACE_DAYS * 864e5).toISOString() : null;
   const iso = now.toISOString();
@@ -39,10 +44,20 @@ export function clubStatus(clubId, now = new Date()) {
   if (until && until > iso) state = 'ok';
   else if (isFreeMonth(now)) state = 'gratis';
   else if (graceUntil && graceUntil > iso) state = 'carencia';
-  return { state, paid_until: until, grace_until: graceUntil, free_month: isFreeMonth(now) };
+  return { state, paid_until: until, grace_until: graceUntil, free_month: isFreeMonth(now), ...billing };
 }
-/** Os membros do clube usam o app de graça? */
-export const clubCovers = (clubId) => ['ok', 'gratis', 'carencia'].includes(clubStatus(clubId)?.state);
+/**
+ * Os membros precisam assinar o DBV para usar o app? 'membro_pago' (o clube foi criado assim),
+ * 'clube_vencido' (o clube paga pelos membros e não pagou) ou null (usam de graça).
+ */
+export function membersMustPay(clubId) {
+  const st = clubStatus(clubId);
+  if (!st) return null;
+  if (st.member_billing === 'pago') return { reason: 'membro_pago' };
+  if (st.state === 'vencido') return { reason: 'clube_vencido' };
+  if (st.state === 'carencia') return { grace: true, grace_until: st.grace_until };
+  return null;
+}
 
 /** Pagamento confirmado: soma os dias (a partir de hoje ou do fim do plano atual). */
 export function extendClub(clubId, planId) {
@@ -54,9 +69,9 @@ export function extendClub(clubId, planId) {
 }
 /** Na inicialização: clube que ainda não tem plano ganha os primeiros 30 dias. */
 export function initClubPlans() {
-  run('UPDATE clubs SET paid_until = ? WHERE paid_until IS NULL AND is_app = 0', addBillableDays(null, FIRST_DAYS));
+  run(`UPDATE clubs SET paid_until = ? WHERE paid_until IS NULL AND is_app = 0 AND club_billing = 'pago'`, addBillableDays(null, FIRST_DAYS));
 }
 /** Clube novo (ou que ainda não tinha plano): os primeiros 30 dias. */
 export function startClubPlan(clubId) {
-  run('UPDATE clubs SET paid_until = ? WHERE id = ? AND paid_until IS NULL', addBillableDays(null, FIRST_DAYS), clubId);
+  run(`UPDATE clubs SET paid_until = ? WHERE id = ? AND paid_until IS NULL AND club_billing = 'pago'`, addBillableDays(null, FIRST_DAYS), clubId);
 }

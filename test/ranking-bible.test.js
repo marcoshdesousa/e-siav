@@ -192,7 +192,7 @@ test('plano do clube: 30 dias ao começar; vencido depois da carência, os membr
   const aguias = await login('clube', 'aguias', 'AG2026');
   const st = (await aguias.get('/club/plano')).body;
   assert.ok(['ok', 'gratis'].includes(st.status.state), 'clube começa com o plano em dia');
-  assert.deepEqual(st.plans.map((p) => [p.id, p.price_cents]), [['mensal', 1500], ['anual', 15000]]);
+  assert.deepEqual(st.plans.map((p) => [p.id, p.price_cents]), [['mensal', 1500]], 'só mensal');
   const setUntil = (iso) => {
     const db = new DatabaseSync(path.join(dataDir, 'dbv.sqlite'));
     try { db.prepare('UPDATE clubs SET paid_until = ? WHERE code = ?').run(iso, '4821'); } finally { db.close(); }
@@ -242,4 +242,28 @@ test('ranking por lugar: o clube reinicia e pausa o dele; o distrito não muda',
   assert.equal((await pedro.put('/ranking/controle', { action: 'pause' })).status, 403);
   assert.equal((await admin.put('/ranking/controle', { action: 'pause', district_id: pedro.actor.district_id })).body.paused, true);
   await admin.put('/ranking/controle', { action: 'resume', district_id: pedro.actor.district_id });
+});
+
+test('quem paga: clube grátis/pago e membro grátis/pago (o administrador escolhe e muda)', async () => {
+  const admin = await login('membros', 'admin', 'admin123');
+  const aguias = await login('clube', 'aguias', 'AG2026');
+  const clubId = aguias.actor.id;
+  const plansOf = async () => (await (await login('membros', 'pedro')).get('/plus')).body.plans.map((p) => p.id);
+  // Clube grátis + membro grátis: nada para o clube pagar; o membro só vê o DBV+.
+  assert.equal((await admin.put(`/admin/clubs/${clubId}`, { club_billing: 'gratis', member_billing: 'gratis' })).status, 200);
+  assert.equal((await aguias.get('/club/plano')).body.status.state, 'gratis_sempre');
+  assert.equal((await aguias.post('/club/plano/assinar', { plan: 'mensal' })).status, 400, 'clube grátis não tem cobrança');
+  assert.deepEqual(await plansOf(), ['plus']);
+  // Clube grátis + membro pago: o membro precisa do DBV (R$ 3,90) ou DBV+.
+  await admin.put(`/admin/clubs/${clubId}`, { member_billing: 'pago' });
+  const pedro = await login('membros', 'pedro');
+  assert.equal(pedro.actor.club_plan?.reason, 'membro_pago');
+  assert.deepEqual(await plansOf(), ['app', 'plus']);
+  // Clube pago + membro grátis: volta ao normal (o clube paga pelos membros).
+  await admin.put(`/admin/clubs/${clubId}`, { club_billing: 'pago', member_billing: 'gratis' });
+  assert.notEqual((await aguias.get('/club/plano')).body.status.state, 'gratis_sempre');
+  assert.equal((await login('membros', 'pedro')).actor.club_plan, null);
+  const list = (await admin.get('/admin/clubs')).body.find((c) => c.id === clubId);
+  assert.equal(list.club_billing, 'pago');
+  assert.equal(list.member_billing, 'gratis');
 });

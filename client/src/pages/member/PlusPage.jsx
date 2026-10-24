@@ -75,8 +75,8 @@ export default function PlusPage() {
               <div className="plus-hero plus-hero-app">
                 <img src="/marca/logo.svg" alt="" />
                 <div>
-                  <b>{d.app.club ? 'O plano do seu clube venceu' : d.app.locked ? 'Sua aventura não pode parar!' : d.mine?.trial ? 'Você é DBV no teste grátis' : `Você está no ${d.mine?.plan_name || 'DBV'}`}</b>
-                  <p>{d.app.club ? 'Para continuar usando o app, assine um plano (ou peça para a diretoria do clube renovar). ' : d.app.locked ? (d.mine?.trial_ended ? 'O seu teste grátis de 3 dias terminou. ' : 'O seu acesso terminou. ') : d.mine?.trial ? `O seu teste grátis vai até ${br(d.mine.until)}. ` : d.mine?.active ? `Acesso liberado até ${br(d.mine.until)}. ` : ''}Com o <b>DBV</b> você continua lendo a Bíblia todo dia, mantém as suas <b>sequências</b> e sobe no <b>ranking Brasil</b>. Com o <b>DBV+</b> você libera tudo. E cada assinatura ajuda o App do DBV a chegar a mais desbravadores!</p>
+                  <b>{d.app.reason === 'membro_pago' ? 'Assine o App do DBV' : d.app.club ? 'O plano do seu clube venceu' : d.app.locked ? 'Sua aventura não pode parar!' : d.mine?.trial ? 'Você é DBV no teste grátis' : `Você está no ${d.mine?.plan_name || 'DBV'}`}</b>
+                  <p>{d.app.reason === 'membro_pago' ? '' : d.app.club ? 'Para continuar usando o app, assine um plano (ou peça para a diretoria do clube renovar). ' : d.app.locked ? (d.mine?.trial_ended ? 'O seu teste grátis de 3 dias terminou. ' : 'O seu acesso terminou. ') : d.mine?.trial ? `O seu teste grátis vai até ${br(d.mine.until)}. ` : d.mine?.active ? `Acesso liberado até ${br(d.mine.until)}. ` : ''}Com o <b>DBV</b> você continua lendo a Bíblia todo dia, mantém as suas <b>sequências</b> e sobe no <b>ranking Brasil</b>. Com o <b>DBV+</b> você libera tudo. E cada assinatura ajuda o App do DBV a chegar a mais desbravadores!</p>
                 </div>
               </div>
             ) : (

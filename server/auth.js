@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { hasAccess, plusOf, plusOpen } from './plus.js';
-import { clubStatus } from './clubPlan.js';
+import { membersMustPay } from './clubPlan.js';
 import bcrypt from 'bcryptjs';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -45,7 +45,7 @@ export function loadActor(type, id) {
     return { type, ...rest, general: !a.district_id, app: !!isApp };
   }
   if (type === 'club') {
-    const c = get('SELECT id, name, district_id, logo, photo, code FROM clubs WHERE id = ?', id);
+    const c = get('SELECT id, name, district_id, logo, photo, code, club_billing, member_billing FROM clubs WHERE id = ?', id);
     return c && { type, ...c, club_id: c.id };
   }
   if (type === 'unit') {
@@ -76,9 +76,9 @@ export function loadActor(type, id) {
     // Clube com o plano vencido (depois dos 3 dias de carência): o membro precisa do DBV ou do DBV+.
     let clubPlan = null;
     if (!isApp) {
-      const st = clubStatus(m.club_id);
-      if (st?.state === 'carencia') clubPlan = { grace: true, grace_until: st.grace_until };
-      else if (st?.state === 'vencido') clubPlan = { expired: true, locked: !hasAccess(m.id), until: p?.active ? p.until : null, trial: false };
+      const must = membersMustPay(m.club_id);
+      if (must?.grace) clubPlan = { grace: true, grace_until: must.grace_until };
+      else if (must) clubPlan = { expired: true, reason: must.reason, locked: !hasAccess(m.id), until: p?.active ? p.until : null, trial: false };
     }
     return { type, ...rest, cargo: cargoOf(kind, rest.cargo), waiting, kind, role: roleOf(kind, m.cargo), plus, plus_open: plusOpen(m.id), app, club_plan: clubPlan };
   }

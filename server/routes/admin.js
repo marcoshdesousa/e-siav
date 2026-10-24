@@ -70,7 +70,7 @@ function associates(v) {
 r.get('/admin/clubs', (req, res) => {
   const d = adminDistrict(req.actor);
   const rows = all(
-    `SELECT c.id, c.name, c.number, c.logo, c.code, c.director_name, c.associate_directors, c.district_id, c.is_app, d.name AS district_name,
+    `SELECT c.id, c.name, c.number, c.logo, c.code, c.director_name, c.associate_directors, c.district_id, c.is_app, c.club_billing, c.member_billing, d.name AS district_name,
             (SELECT COUNT(*) FROM members m WHERE m.club_id = c.id AND m.status = 'ativo') AS member_count,
             (SELECT COUNT(*) FROM units u WHERE u.club_id = c.id) AS unit_count
      FROM clubs c JOIN districts d ON d.id = c.district_id ${d ? 'WHERE c.district_id = ?' : ''} ORDER BY c.is_app DESC, c.number`,
@@ -79,6 +79,8 @@ r.get('/admin/clubs', (req, res) => {
   for (const c of rows) c.plan = clubStatus(c.id);
   res.json(rows);
 });
+
+const billingOf = (v, def) => (['gratis', 'pago'].includes(v) ? v : def);
 
 /**
  * Novo clube: o admin só escreve o nome. O app dá o número (1º, 2º...), o código
@@ -96,7 +98,8 @@ r.post('/admin/clubs', (req, res) => {
     const code = newClubCode();
     const number = newClubNumber();
     const full = clubDisplayName(number, name);
-    const id = Number(run('INSERT INTO clubs (district_id, name, number, code, director_name, associate_directors) VALUES (?,?,?,?,?,?)', districtId, full, number, code, director, associates(req.body.associate_directors)).lastInsertRowid);
+    const id = Number(run('INSERT INTO clubs (district_id, name, number, code, director_name, associate_directors, club_billing, member_billing) VALUES (?,?,?,?,?,?,?,?)',
+      districtId, full, number, code, director, associates(req.body.associate_directors), billingOf(req.body.club_billing, 'pago'), billingOf(req.body.member_billing, 'gratis')).lastInsertRowid);
     run('INSERT INTO units (club_id, name, is_leadership, pin) VALUES (?, ?, 1, ?)', id, NOME_UNIDADE_LIDERANCA, newUnitPin(id, (p) => p === password));
     setLogin('club', id, 'cla' + code, password);
     startClubPlan(id); // já entra com os primeiros 30 dias do plano do clube
@@ -123,6 +126,11 @@ r.put('/admin/clubs/:id', (req, res) => {
       run('UPDATE clubs SET director_name = ? WHERE id = ?', director, id);
     }
     if (req.body.associate_directors !== undefined) run('UPDATE clubs SET associate_directors = ? WHERE id = ?', associates(req.body.associate_directors), id);
+    if (req.body.club_billing !== undefined) {
+      run('UPDATE clubs SET club_billing = ? WHERE id = ?', billingOf(req.body.club_billing, 'pago'), id);
+      startClubPlan(id); // passou a ser pago e ainda não tinha plano: começa com 30 dias
+    }
+    if (req.body.member_billing !== undefined) run('UPDATE clubs SET member_billing = ? WHERE id = ?', billingOf(req.body.member_billing, 'gratis'), id);
   });
   res.json({ ok: true });
 });

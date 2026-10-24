@@ -93,7 +93,8 @@ function AdminHome() {
 // Tira número antigo ("1º") e um "Clube"/"Club" digitado na frente: o app já coloca "Clube".
 const baseName = (n) => String(n || '').replace(/^\s+/, '').replace(/^\d+\s*º\s*/, '').replace(/^(clube|club|cl[ãa])\s+/i, '');
 function ClubForm({ item, nextNumber, districts, onClose, onCreated, onSaved }) {
-  const [f, setF] = useState({ name: baseName(item?.name), district_id: item?.district_id || districts?.[0]?.id || '', director_name: item?.director_name || '', associate_directors: item?.associate_directors || '' });
+  const [f, setF] = useState({ name: baseName(item?.name), district_id: item?.district_id || districts?.[0]?.id || '', director_name: item?.director_name || '', associate_directors: item?.associate_directors || '',
+    club_billing: item?.club_billing || 'pago', member_billing: item?.member_billing || 'gratis' });
   const [busy, run] = useAsync();
   const save = async () => {
     if (item) {
@@ -125,6 +126,18 @@ function ClubForm({ item, nextNumber, districts, onClose, onCreated, onSaved }) 
         <Field label="Diretores associados (opcional)" hint="Um nome por linha.">
           <textarea rows={3} value={f.associate_directors} onChange={(e) => setF({ ...f, associate_directors: e.target.value })} placeholder={'Ex.: Ana Souza\nJoão Lima'} />
         </Field>
+        <div className="grid2">
+          <Field label="O clube" hint={f.club_billing === 'pago' ? 'Paga R$ 15 por mês (já começa com 30 dias)' : 'Nunca vê cobrança'}>
+            <select value={f.club_billing} onChange={(e) => setF({ ...f, club_billing: e.target.value })}>
+              <option value="pago">Pago</option><option value="gratis">Grátis</option>
+            </select>
+          </Field>
+          <Field label="Os membros" hint={f.member_billing === 'pago' ? 'Cada membro assina o DBV (R$ 3,90)' : f.club_billing === 'pago' ? 'Grátis enquanto o clube estiver em dia' : 'Grátis (só o DBV+ é opcional)'}>
+            <select value={f.member_billing} onChange={(e) => setF({ ...f, member_billing: e.target.value })}>
+              <option value="gratis">Grátis</option><option value="pago">Pagam</option>
+            </select>
+          </Field>
+        </div>
         {!item && <p className="muted small">O app cria o código do clube e a senha (2 letras + 4 números). A senha não pode ser trocada. As unidades entram com o mesmo código e a senha de cada unidade.</p>}
       </div>
     </Modal>
@@ -230,13 +243,13 @@ function ClubsAdmin() {
                   <div className="grow">
                     <div className="title">{c.name}</div>
                     <div className="sub">{c.district_name} · {plural(c.unit_count, 'unidade', 'unidades')} · {plural(c.member_count, 'membro', 'membros')}</div>
-                    {c.plan && <div className="sub">Plano do clube: <b>{PLAN_LABEL[c.plan.state]}</b>{c.plan.paid_until ? ` · pago até ${new Date(c.plan.paid_until).toLocaleDateString('pt-BR')}` : ''}</div>}
+                    {c.plan && <div className="sub">Clube <b>{c.club_billing === 'gratis' ? 'grátis' : 'pago'}</b> · membros <b>{c.member_billing === 'pago' ? 'pagam' : 'grátis'}</b>{c.club_billing === 'pago' ? <> · plano <b>{PLAN_LABEL[c.plan.state]}</b>{c.plan.paid_until ? ` até ${new Date(c.plan.paid_until).toLocaleDateString('pt-BR')}` : ''}</> : null}</div>}
                     {c.is_app ? <div className="sub">Automático: quem cria a conta pelo app (sem clube) entra aqui. Não aparece nos rankings de clube, unidade e distrito.</div> : <div className="sub">Código <b>{c.code}</b>{c.director_name ? <> · Diretor(a): {c.director_name}</> : ''}{c.associate_directors ? <> · Associados: {c.associate_directors.split('\n').join(', ')}</> : ''}</div>}
                   </div>
                   <div className="stack" style={{ gap: '.35rem' }}>
                     <Link to={`${base}/clubes/${c.id}`}><Button small>Ver por dentro</Button></Link>
                     {!c.is_app && <Button small variant="secondary" onClick={() => setModal({ kind: 'club', item: c })}>Editar</Button>}
-                    {!c.is_app && general && <Button small variant="secondary" busy={busy} onClick={() => giveDays(c)}>Dar dias</Button>}
+                    {!c.is_app && general && c.club_billing === 'pago' && <Button small variant="secondary" busy={busy} onClick={() => giveDays(c)}>Dar dias</Button>}
                     {!c.is_app && <Button small variant="danger" busy={busy} onClick={() => removeClub(c)}>Apagar</Button>}
                   </div>
                 </div>

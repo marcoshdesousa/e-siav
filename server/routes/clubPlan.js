@@ -20,6 +20,7 @@ r.get('/club/plano', club, (req, res) => {
 });
 
 r.post('/club/plano/assinar', club, async (req, res) => {
+  if (clubStatus(req.actor.id)?.state === 'gratis_sempre') fail(400, 'O seu clube é grátis: não tem cobrança');
   const plan = CLUB_PLANS[req.body.plan];
   if (!plan) fail(400, 'Escolha o plano');
   const pay = await createPayment({ clubId: req.actor.id, purpose: 'clube', ref: { plan: plan.id }, title: plan.name, amountCents: plan.price_cents });
