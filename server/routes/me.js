@@ -1,8 +1,6 @@
 import { Router } from 'express';
 import { get, run } from '../db.js';
-import { COOKIE, requireAuth } from '../auth.js';
-import { checkMemberPassword } from '../memberStatus.js';
-import { deleteMember } from '../accounts.js';
+import { requireAuth } from '../auth.js';
 import { setHandle } from '../handles.js';
 import { clubEntered, clubPresenceSummary, ping } from '../presence.js';
 import { imageUpload, fileUrl } from '../uploads.js';
@@ -37,14 +35,5 @@ r.get('/club/presenca', requireAuth('club'), (req, res) => res.json(clubPresence
 
 // O membro cria o próprio @ (uma vez só; não dá para trocar depois).
 r.post('/me/arroba', requireAuth('member'), (req, res) => res.json({ handle: setHandle(req.actor.id, req.body.handle) }));
-
-// O membro apaga a própria conta (de vez), confirmando com a senha. O clube não se apaga:
-// isso é com o administrador do distrito ou o geral.
-r.post('/me/conta/apagar', requireAuth('member'), (req, res) => {
-  if (!checkMemberPassword(req.actor.id, req.body.password)) fail(400, 'Senha errada');
-  deleteMember(req.actor.id);
-  res.clearCookie(COOKIE);
-  res.json({ ok: true });
-});
 
 export default r;

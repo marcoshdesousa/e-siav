@@ -5,7 +5,7 @@ import { imageUpload, fileUrl, attachmentUpload } from '../uploads.js';
 import { NOME_UNIDADE_LIDERANCA } from '../config.js';
 import { listMembers, listUnits, memberFicha } from '../clubData.js';
 import { clubProfile } from '../profiles.js';
-import { deleteClub } from '../accounts.js';
+import { deleteClub, deleteMember } from '../accounts.js';
 import { clubStatus, startClubPlan } from '../clubPlan.js';
 import { fail, int, str, validDate, parseJson, memberKind, newClubCode, newClubNumber, newClubPassword, newUnitPin, clubDisplayName } from '../util.js';
 
@@ -144,6 +144,14 @@ r.delete('/admin/clubs/:id', (req, res) => {
   const c = ownClub(req, int(req.params.id));
   if (c.is_app) fail(400, 'O Clube App Brasil não pode ser apagado');
   deleteClub(c.id);
+  res.json({ ok: true });
+});
+
+// Apagar um membro de vez: só o administrador geral (o membro não apaga a própria conta).
+r.delete('/admin/members/:id', requireGeneral, (req, res) => {
+  const m = get('SELECT id FROM members WHERE id = ?', int(req.params.id));
+  if (!m) fail(404, 'Membro não encontrado');
+  deleteMember(m.id);
   res.json({ ok: true });
 });
 

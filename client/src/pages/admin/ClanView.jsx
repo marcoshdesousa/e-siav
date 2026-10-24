@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Trash2 } from 'lucide-react';
+import { useAuth } from '../../auth.jsx';
 import {
   Eye, KeyRound, MapPin,
 } from 'lucide-react';
 import { api } from '../../api.js';
 import { plural } from '../../format.js';
-import { Avatar, Badge, Card, Loading, Tabs, useLoad } from '../../ui.jsx';
+import { Avatar, Badge, Card, Confirm, Loading, Tabs, useAsync, useLoad } from '../../ui.jsx';
 import { MembersBrowser } from '../club/Members.jsx';
 
 /**
@@ -16,6 +18,13 @@ export default function ClanView({ base }) {
   const { id } = useParams();
   const state = useLoad(() => api.get(`/admin/clubs/${id}/view`), [id]);
   const [tab, setTab] = useState('membros');
+  const { actor } = useAuth();
+  const [, run] = useAsync();
+  // Só o administrador geral apaga uma conta (o membro não apaga a própria).
+  const remove = !actor.district_id ? (m) => (
+    <Confirm text={`Apagar a conta de ${m.name} de vez? Pontos, sequências, figurinhas e especialidades somem e não dá para desfazer.`}
+      onYes={() => run(() => api.del(`/admin/members/${m.id}`), 'Conta apagada').then(state.reload)}><Trash2 size={14} /> Apagar conta</Confirm>
+  ) : undefined;
   return (
     <>
       <Loading {...state}>
@@ -32,10 +41,10 @@ export default function ClanView({ base }) {
                 {c.director_name && <p className="small" style={{ margin: '.3rem 0 0' }}>Diretor(a): <b>{c.director_name}</b>{c.associate_directors ? <><br />Diretores associados: <b>{c.associate_directors.split('\n').join(', ')}</b></> : ''}</p>}
               </div>
             </div>
-            <Card className="small"><Eye size={14} style={{ verticalAlign: '-2px' }} /> Você está vendo o clube por dentro. <b>Nada pode ser editado daqui</b>: só o próprio clube altera os dados.</Card>
+            <Card className="small"><Eye size={14} style={{ verticalAlign: '-2px' }} /> Você está vendo o clube por dentro. <b>Nada pode ser editado daqui</b>: só o próprio clube altera os dados{!actor.district_id ? ' (você pode apagar uma conta)' : ''}.</Card>
             <Tabs tabs={[['membros', `Membros (${members.filter((m) => m.status !== 'inativo').length})`], ['grupos', `Unidades (${units.length})`]]} value={tab} onChange={setTab} />
             {tab === 'membros' ? (
-              <MembersBrowser list={members} units={units} />
+              <MembersBrowser list={members} units={units} actions={remove} />
             ) : (
               <div className="list">
                 {units.map((u) => (

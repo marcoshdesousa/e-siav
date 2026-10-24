@@ -156,9 +156,9 @@ test('App Brasil: cria conta sem clube, precisa de plano, só ranking Brasil, ap
   assert.equal((await anon('GET', `/public/clubs/${appClub}`)).status, 404, 'clube não abre perfil');
   assert.ok(!(await anon('GET', '/public/districts')).body.some((d) => d.name.startsWith('App Brasil')));
   assert.equal((await geral.del(`/admin/clubs/${appClub}`)).status, 400, 'não apaga o Clube App Brasil');
-  // Apagar a própria conta.
-  assert.equal((await b2.post('/me/conta/apagar', { password: '0000' })).status, 400);
-  assert.equal((await b2.post('/me/conta/apagar', { password: kid.body.password })).status, 200, 'apagar');
+  // O membro não apaga a própria conta: só o administrador geral.
+  assert.equal((await b2.post('/me/conta/apagar', { password: kid.body.password })).status, 404, 'não tem mais apagar a própria conta');
+  assert.equal((await geral.del(`/admin/members/${kid.body.actor.id}`)).status, 200, 'o geral apaga');
   const gone = await fetch(BASE + '/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'membros', username: kid.body.code, password: kid.body.password }) });
   assert.notEqual(gone.status, 200, 'conta apagada');
 });

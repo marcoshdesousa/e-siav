@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import {
-  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, Tent, Trophy, Users, Globe, MessageCircle, BookImage, Wallet, Flame, BadgeCheck,
+  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, Tent, Trophy, Users, Globe, MessageCircle, BookImage, Wallet, Flame, BadgeCheck, ArrowLeftRight,
 } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -27,6 +27,7 @@ import PaymentsAdmin from './PaymentsAdmin.jsx';
 import StreaksAdmin from './StreaksAdmin.jsx';
 import PlusAdmin from './PlusAdmin.jsx';
 import { ApprovalsPage } from '../club/ClubApp.jsx';
+import { AppTransfersPage } from '../club/Transfers.jsx';
 
 const base = '/admin';
 
@@ -340,7 +341,10 @@ export default function AdminApp() {
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   // Aprovações de quem é do Clube App Brasil: o geral e o administrador do App.
-  const appApprovals = general || actor.app ? [{ to: `${base}/aprovacoes`, icon: BadgeCheck, label: 'Aprovações do App', hint: 'Especialidades e classes de quem é do App Brasil' }] : [];
+  const appApprovals = general || actor.app ? [
+    { to: `${base}/aprovacoes`, icon: BadgeCheck, label: 'Aprovações do App', hint: 'Especialidades e classes de quem é do App Brasil' },
+    { to: `${base}/transferencias`, icon: ArrowLeftRight, label: 'Transferências do App', hint: 'Clubes pedindo quem é do App Brasil' },
+  ] : [];
   const more = !general ? [
     ...appApprovals,
     { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: actor.app ? 'Para quem é do App Brasil' : 'Para o seu distrito' },
@@ -385,6 +389,7 @@ export default function AdminApp() {
         <Route path="entregar" element={<Deliver />} />
         <Route path="eventos" element={<EventsAdmin />} />
         <Route path="anuncios" element={<AnnouncementsAdmin />} />
+        <Route path="transferencias" element={<AppTransfersPage />} />
         <Route path="aprovacoes" element={<ApprovalsPage url="/admin/app-aprovacoes" canAdd={false} subtitle="Especialidades e classes de quem é do Clube App Brasil" />} />
         <Route path="medalhas" element={<Navigate to={`${base}/conteudo?aba=medalhas`} replace />} />
         <Route path="ranking" element={<RankingHub base={base} />} />

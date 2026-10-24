@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, BookOpenText, Waypoints, Hourglass, BadgeCheck, Lock, Trash2, UserCog, Download } from 'lucide-react';
+import { BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, BookOpenText, Waypoints, Hourglass, BadgeCheck, Lock, UserCog, Download } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
-import { Button, Card, Field, Loading, Modal, PageHeader, notify, useAsync, useLoad } from '../../ui.jsx';
+import { Button, Card, Loading, Modal, PageHeader, notify, useAsync, useLoad } from '../../ui.jsx';
 import Shell, { MoreMenu } from '../Shell.jsx';
 import { InAppProfile, MemberProfileView } from '../Profiles.jsx';
 import { RequirementsTodo } from '../Requirements.jsx';
@@ -148,28 +148,13 @@ function HandleCard() {
   );
 }
 
-/** Minha conta: o membro pode apagar a própria conta (de vez), confirmando com a senha. */
+/** Minha conta: o @ e o código. A conta não é apagada pelo membro: só o administrador geral apaga. */
 function AccountPage() {
-  const { actor, logout } = useAuth();
-  const nav = useNavigate();
-  const [pw, setPw] = useState('');
-  const [busy, run] = useAsync();
-  const remove = () => {
-    if (!confirm('Apagar a sua conta de vez? Os seus pontos, sequências, figurinhas e especialidades somem e não dá para desfazer.')) return;
-    run(() => api.post('/me/conta/apagar', { password: pw }), 'Conta apagada').then((r) => { if (r) logout().then(() => nav('/', { replace: true })); });
-  };
+  const { actor } = useAuth();
   return (
     <>
       <PageHeader title="Minha conta" subtitle={`${actor.name} · código ${actor.code}`} />
       <HandleCard />
-      <Card>
-        <div className="form">
-          <p style={{ margin: 0 }}><b>Apagar minha conta</b></p>
-          <p className="small muted" style={{ margin: 0 }}>A conta some de vez, com os pontos, as sequências, as figurinhas e as especialidades. Não dá para desfazer.</p>
-          <Field label="Sua senha (ano de nascimento)"><input type="password" inputMode="numeric" value={pw} onChange={(e) => setPw(e.target.value)} /></Field>
-          <Button variant="red" busy={busy} disabled={pw.length < 4} onClick={remove}><Trash2 size={16} /> Apagar minha conta</Button>
-        </div>
-      </Card>
     </>
   );
 }
@@ -217,7 +202,7 @@ export default function MemberApp() {
     { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },
     { to: `${base}/cursos`, icon: GraduationCap, label: 'Cursos', hint: 'Aulas' },
     { to: `${base}/clubes`, icon: Tent, label: 'Clubes', hint: 'Por distrito' },
-    { to: `${base}/conta`, icon: UserCog, label: 'Minha conta', hint: 'Seu @ e apagar a conta' },
+    { to: `${base}/conta`, icon: UserCog, label: 'Minha conta', hint: 'Seu @ e código' },
   ];
   return (
     <Routes>

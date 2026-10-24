@@ -1,12 +1,14 @@
 // Transferência de membro entre clubes:
 // 1) O clube novo pede, informando o código do membro (6 números), o nome do clube em que ele está e o motivo.
 // 2) O clube atual aceita (o membro muda de clube levando todo o histórico) ou recusa.
-// Quem está no Clube App Brasil (conta criada pelo app, sem clube) muda na hora.
+// Quem está no Clube App Brasil (conta criada pelo app, sem clube): quem aceita é o administrador
+// geral ou o administrador do App.
 import { Router } from 'express';
 import { all, get, run, tx } from '../db.js';
 import { requireAuth } from '../auth.js';
 import { fail, int, str, memberKind } from '../util.js';
 import { norm } from '../catalog.js';
+import { appClub } from '../appBrasil.js';
 
 const r = Router();
 r.use('/club/transfers', requireAuth('club'));
@@ -55,10 +57,7 @@ r.post('/club/transfers', (req, res) => {
   if (m.club_id === req.actor.id) fail(400, 'Esta pessoa já é do seu clube');
   if (get(`SELECT 1 FROM transfers WHERE member_id = ? AND status IN ('pendente_origem','pendente_destino')`, m.id)) fail(409, 'Já existe um pedido de transferência em andamento para esta pessoa');
   const id = Number(run('INSERT INTO transfers (member_id, from_club_id, to_club_id, reason) VALUES (?,?,?,?)', m.id, m.club_id, req.actor.id, reason).lastInsertRowid);
-  // Sem clube de verdade (App Brasil): não tem quem aceitar, então já muda.
-  const done = !!m.is_app;
-  if (done) move(get('SELECT * FROM transfers WHERE id = ?', id));
-  res.json({ id, member_name: m.name, from_club_name: m.club_name, done });
+  res.json({ id, member_name: m.name, from_club_name: m.club_name, app: !!m.is_app });
 });
 
 function load(req) {
@@ -71,6 +70,24 @@ function load(req) {
 r.post('/club/transfers/:id/origem', (req, res) => {
   const t = load(req);
   if (t.from_club_id !== req.actor.id || t.status !== 'pendente_origem') fail(400, 'Este pedido não está esperando o seu clube');
+  if (req.body.accept) move(t);
+  else setStatus(t, 'recusada');
+  res.json({ ok: true });
+});
+
+// Administrador geral ou do App: pedidos para tirar alguém do Clube App Brasil.
+const appAdmin = (req, _res, next) => {
+  if (!(req.actor.district_id === null || req.actor.district_id === undefined) && !req.actor.app) fail(403, 'Só o administrador geral ou o do App');
+  next();
+};
+r.get('/admin/app-transferencias', requireAuth('admin'), appAdmin, (_req, res) => {
+  const c = appClub();
+  res.json(c ? all(`${LIST_SQL} WHERE t.from_club_id = ? AND t.status = 'pendente_origem' ORDER BY t.id DESC`, c.id) : []);
+});
+r.post('/admin/app-transferencias/:id', requireAuth('admin'), appAdmin, (req, res) => {
+  const c = appClub();
+  const t = get(`SELECT * FROM transfers WHERE id = ? AND from_club_id = ? AND status = 'pendente_origem'`, int(req.params.id), c?.id ?? 0);
+  if (!t) fail(404, 'Pedido não encontrado');
   if (req.body.accept) move(t);
   else setStatus(t, 'recusada');
   res.json({ ok: true });

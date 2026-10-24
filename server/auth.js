@@ -100,7 +100,7 @@ export function attachActor(req, _res, next) {
 
 // Administrador de distrito: só as telas do distrito dele (clubes, links de inscrição, requisitos,
 // avaliações e as sequências). O resto do painel é só do administrador geral.
-const DISTRICT_ADMIN_OK = /^\/api\/admin\/(overview|districts|clubs|targets|inscricoes|sequencias|app-aprovacoes)(\/|$)/;
+const DISTRICT_ADMIN_OK = /^\/api\/admin\/(overview|districts|clubs|targets|inscricoes|sequencias|app-aprovacoes|app-transferencias)(\/|$)/;
 export function districtAdminGuard(req, _res, next) {
   const a = req.actor;
   const path = req.originalUrl.split('?')[0];

@@ -294,17 +294,20 @@ test('transferência: código + clube atual + motivo; o clube atual aceita; do A
   assert.equal((await ask({ code: lucas.code, club_name: 'Leões de Judá', reason: 'Mudou de cidade' })).status, 404, 'clube errado');
   const ok = await ask({ code: lucas.code, club_name: 'aguias do vale', reason: 'Mudou de cidade' });
   assert.equal(ok.status, 200);
-  assert.equal(ok.body.done, false);
+  assert.equal(ok.body.app, false);
   assert.equal((await ask({ code: lucas.code, club_name: 'Águias', reason: 'De novo aqui' })).status, 409, 'um pedido por vez');
   const pend = (await aguias.get('/club/transfers')).body.received.find((t) => t.id === ok.body.id);
   assert.equal(pend.reason, 'Mudou de cidade');
   assert.equal((await aguias.post(`/club/transfers/${ok.body.id}/origem`, { accept: true })).status, 200);
   const moved = await login('membros', lucas.code);
   assert.equal(moved.actor.club_id, leoes.actor.id, 'agora é dos Leões');
-  // Conta do App Brasil: entra na hora.
+  // Conta do App Brasil: quem aceita é o administrador geral (ou o do App).
   const r = await fetch(BASE + '/criar-conta', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: 'Nina Sem Clube', birth_date: `${new Date().getFullYear() - 12}-02-02`, handle: 'nina.semclube' }) });
   const app = (await r.json());
   const t = await ask({ code: app.code, club_name: 'Clube App Brasil', reason: 'Entrou no clube' });
-  assert.equal(t.body.done, true);
+  assert.equal(t.body.app, true);
+  const admin = await login('membros', 'admin', 'admin123');
+  assert.ok((await admin.get('/admin/app-transferencias')).body.some((x) => x.id === t.body.id), 'aparece para o administrador');
+  assert.equal((await admin.post(`/admin/app-transferencias/${t.body.id}`, { accept: true })).status, 200);
   assert.equal((await login('membros', app.code)).actor.club_id, leoes.actor.id);
 });
