@@ -168,3 +168,6 @@
 @keyframes pr-pulse { 50% { transform: scale(1.06); } }
 @keyframes pr-fly { 30% { transform: scale(1.15) rotate(-8deg); } 100% { transform: translate(140px, -260px) scale(.2) rotate(25deg); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .pack-reward, .pack-reward * { animation: none !important; } }
+.bdb-feedback { margin: .7rem 0 0; font-weight: 800; font-size: 1.05rem; }
+.bdb-feedback.ok { color: #16a34a; }
+.bdb-feedback.no { color: #dc2626; }

@@ -546,6 +546,12 @@ function PhasePlay({ d, back, base }) {
     const r = await api.post(`/bom-de-biblia/fase/${d.phase}/confere`, { i, choice }).catch(() => null);
     setShown({ choice, answer: r ? r.answer : -2 }); // -2: sem internet para conferir agora
   };
+  // Mostrou se acertou: passa sozinho para a próxima pergunta (sem botão).
+  useEffect(() => {
+    if (!shown || shown.answer === null || result) return undefined;
+    const t = setTimeout(next, 1300);
+    return () => clearTimeout(t);
+  }, [shown]); // eslint-disable-line react-hooks/exhaustive-deps
   // Cronômetro de 15 segundos; acabou o tempo, conta como errada.
   useEffect(() => {
     if (step < 0 || shown || result) return undefined;
@@ -618,8 +624,7 @@ function PhasePlay({ d, back, base }) {
         </div>
         {shown && shown.answer !== null && (
           <>
-            <p className="small center">{shown.answer === -2 ? 'Resposta guardada.' : shown.choice === shown.answer ? 'Acertou!' : shown.choice === -1 ? 'Acabou o tempo!' : 'Errou!'}</p>
-            <Button block onClick={next}>{step + 1 < d.questions.length ? 'Próxima' : 'Ver resultado'} <ChevronRight size={16} /></Button>
+            <p className={'center bdb-feedback ' + (shown.choice === shown.answer ? 'ok' : 'no')}>{shown.answer === -2 ? 'Resposta guardada.' : shown.choice === shown.answer ? 'Acertou!' : shown.choice === -1 ? 'Acabou o tempo!' : 'Errou!'}</p>
           </>
         )}
       </Card>
