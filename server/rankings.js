@@ -21,16 +21,35 @@ const okIso = (v) => (ISO.test(v || '') ? v : null);
 export const seasonStart = () => okIso(setting('ranking_inicio'));
 export const pausedAt = () => okIso(setting('ranking_pausa'));
 export const isPaused = () => { const p = pausedAt(); return !!p && p <= new Date().toISOString(); };
-/** Filtro de datas da temporada (e da pausa, se já começou) para uma coluna de data. */
-function seasonFilter(col) {
+/**
+ * Pausa e reinício por lugar: o clube cuida dos rankings dele (membros e unidades do clube), o
+ * administrador do distrito do ranking do distrito, e o geral de todos (e do Brasil, nas configurações).
+ * Reiniciar = só contam os pontos ganhos a partir de agora naquele ranking.
+ */
+run(`CREATE TABLE IF NOT EXISTS ranking_scopes (scope TEXT PRIMARY KEY, start_at TEXT, paused_at TEXT)`);
+export const scopeState = (scope) => {
+  const r = scope ? get('SELECT start_at, paused_at FROM ranking_scopes WHERE scope = ?', scope) : null;
+  const paused = !!r?.paused_at && r.paused_at <= new Date().toISOString();
+  return { start: r?.start_at || null, paused_at: r?.paused_at || null, paused };
+};
+export function setScope(scope, { start, pause }) {
+  run('INSERT OR IGNORE INTO ranking_scopes (scope) VALUES (?)', scope);
+  if (start !== undefined) run('UPDATE ranking_scopes SET start_at = ? WHERE scope = ?', start, scope);
+  if (pause !== undefined) run('UPDATE ranking_scopes SET paused_at = ? WHERE scope = ?', pause, scope);
+}
+/** Filtro de datas: a temporada e a pausa do Brasil e, se tiver, as do clube ou do distrito. */
+function seasonFilter(col, scope = null) {
+  const sc = scopeState(scope);
+  const starts = [seasonStart(), okIso(sc.start)].filter(Boolean).sort();
+  const pauses = [isPaused() ? pausedAt() : null, sc.paused ? okIso(sc.paused_at) : null].filter(Boolean).sort();
   const parts = [];
-  const s = seasonStart();
-  if (s) parts.push(`${col} >= '${s}'`);
-  if (isPaused()) parts.push(`${col} <= '${pausedAt()}'`);
+  if (starts.length) parts.push(`${col} >= '${starts.at(-1)}'`);
+  if (pauses.length) parts.push(`${col} <= '${pauses[0]}'`);
   return parts.length ? ' AND ' + parts.join(' AND ') : '';
 }
 export const rankingState = () => ({ start: seasonStart(), paused_at: pausedAt(), paused: isPaused() });
-
+const districtScope = (d) => (d ? `district:${Number(d)}` : null);
+const clubScope = (c) => `club:${Number(c)}`;
 /** Ordena por pontos; no empate fica à frente quem chegou primeiro à pontuação. */
 function rank(rows) {
   rows.forEach((r) => {
@@ -51,20 +70,20 @@ function rank(rows) {
   return rows;
 }
 
-const scoreJoin = (type, idCol, reqFilter) => `
+const scoreJoin = (type, idCol, reqFilter, scope = null) => `
   LEFT JOIN (
     SELECT s.submitter_id, SUM(s.points) AS points, MAX(s.submitted_at) AS last_at
     FROM submissions s JOIN requirements r ON r.id = s.requirement_id
-    WHERE s.submitter_type = '${type}' AND s.status = 'aprovado' AND s.points > 0 AND ${reqFilter}${seasonFilter('s.submitted_at')}
+    WHERE s.submitter_type = '${type}' AND s.status = 'aprovado' AND s.points > 0 AND ${reqFilter}${seasonFilter('s.submitted_at', scope)}
     GROUP BY s.submitter_id
   ) sc ON sc.submitter_id = ${idCol}`;
 
 /** Pontos da Leitura bíblica agrupados por membro, unidade ou clube (opcionalmente só os feitos num clube). */
 const LATE_OF = new Map(Object.keys(BIBLE_POINTS).map((k) => [BIBLE_POINTS[k], LATE_POINTS[k]]));
-const bibleJoin = (col, idCol, each, clubId = null) => `
+const bibleJoin = (col, idCol, each, clubId = null, scope = null) => `
   LEFT JOIN (
     SELECT ${col} AS target_id, SUM(CASE WHEN late = 1 THEN ${Number(LATE_OF.get(each) ?? each)} ELSE ${Number(each)} END) AS points, MAX(created_at) AS last_at
-    FROM bible_points WHERE ${col} IS NOT NULL${clubId != null ? ' AND club_id = ' + Number(clubId) : ''}${seasonFilter('created_at')}
+    FROM bible_points WHERE ${col} IS NOT NULL${clubId != null ? ' AND club_id = ' + Number(clubId) : ''}${seasonFilter('created_at', scope)}
     GROUP BY ${col}
   ) bp ON bp.target_id = ${idCol}`;
 const BIBLE_COLS = 'COALESCE(bp.points, 0) AS bible_points, bp.last_at AS bible_last_at';
@@ -75,8 +94,8 @@ export function membersRanking(districtId = null) {
     `SELECT m.id, m.name, m.photo, m.link_token AS link, m.birth_date, c.id AS club_id, c.name AS club_name, d.name AS district_name,
             COALESCE(sc.points, 0) AS points, sc.last_at, ${BIBLE_COLS}
      FROM members m JOIN clubs c ON c.id = m.club_id JOIN districts d ON d.id = c.district_id
-     ${scoreJoin('member', 'm.id', "r.creator_type = 'admin' AND r.audience = 'member'")}
-     ${bibleJoin('member_id', 'm.id', BIBLE_POINTS.member)}
+     ${scoreJoin('member', 'm.id', "r.creator_type = 'admin' AND r.audience = 'member'", districtScope(districtId))}
+     ${bibleJoin('member_id', 'm.id', BIBLE_POINTS.member, null, districtScope(districtId))}
      WHERE m.status = 'ativo' AND (? IS NULL OR c.district_id = ?)`,
     districtId, districtId,
   ).filter((r) => memberKind(r.birth_date) === 'desbravador');
@@ -93,8 +112,8 @@ export function clubMembersRanking(clubId) {
     `SELECT m.id, m.name, m.photo, m.link_token AS link, m.birth_date, c.id AS club_id, u.name AS unit_name,
             COALESCE(sc.points, 0) AS points, sc.last_at, ${BIBLE_COLS}
      FROM members m JOIN clubs c ON c.id = m.club_id LEFT JOIN units u ON u.id = m.unit_id
-     ${scoreJoin('member', 'm.id', "r.creator_type IN ('club','unit') AND r.club_id = " + Number(clubId))}
-     ${bibleJoin('member_id', 'm.id', BIBLE_POINTS.member, clubId)}
+     ${scoreJoin('member', 'm.id', "r.creator_type IN ('club','unit') AND r.club_id = " + Number(clubId), clubScope(clubId))}
+     ${bibleJoin('member_id', 'm.id', BIBLE_POINTS.member, clubId, clubScope(clubId))}
      WHERE m.club_id = ? AND m.status = 'ativo'`,
     clubId,
   ).filter((r) => memberKind(r.birth_date) === 'desbravador');
@@ -111,8 +130,8 @@ export function leadersRanking(districtId = null) {
     `SELECT m.id, m.name, m.photo, m.link_token AS link, m.cargo, m.birth_date, c.id AS club_id, c.name AS club_name, d.name AS district_name,
             COALESCE(sc.points, 0) AS points, sc.last_at, ${BIBLE_COLS}
      FROM members m JOIN clubs c ON c.id = m.club_id JOIN districts d ON d.id = c.district_id
-     ${scoreJoin('member', 'm.id', "r.creator_type = 'admin' AND r.audience = 'member'")}
-     ${bibleJoin('member_id', 'm.id', BIBLE_POINTS.member)}
+     ${scoreJoin('member', 'm.id', "r.creator_type = 'admin' AND r.audience = 'member'", districtScope(districtId))}
+     ${bibleJoin('member_id', 'm.id', BIBLE_POINTS.member, null, districtScope(districtId))}
      WHERE m.status = 'ativo' AND (? IS NULL OR c.district_id = ?)`,
     districtId, districtId,
   ).filter((r) => memberKind(r.birth_date) === 'lideranca');
@@ -126,8 +145,8 @@ export function clubLeadersRanking(clubId) {
     `SELECT m.id, m.name, m.photo, m.link_token AS link, m.cargo, m.birth_date, c.id AS club_id,
             COALESCE(sc.points, 0) AS points, sc.last_at, ${BIBLE_COLS}
      FROM members m JOIN clubs c ON c.id = m.club_id
-     ${scoreJoin('member', 'm.id', "r.creator_type = 'club' AND r.club_id = " + Number(clubId))}
-     ${bibleJoin('member_id', 'm.id', BIBLE_POINTS.member, clubId)}
+     ${scoreJoin('member', 'm.id', "r.creator_type = 'club' AND r.club_id = " + Number(clubId), clubScope(clubId))}
+     ${bibleJoin('member_id', 'm.id', BIBLE_POINTS.member, clubId, clubScope(clubId))}
      WHERE m.club_id = ? AND m.status = 'ativo'`,
     clubId,
   ).filter((r) => memberKind(r.birth_date) === 'lideranca');
@@ -141,8 +160,8 @@ export function clubsRanking(districtId = null) {
     `SELECT c.id, c.name, c.logo, c.district_id, d.name AS district_name,
             COALESCE(sc.points, 0) AS points, sc.last_at, ${BIBLE_COLS}
      FROM clubs c JOIN districts d ON d.id = c.district_id
-     ${scoreJoin('club', 'c.id', "r.creator_type = 'admin' AND r.audience = 'club'")}
-     ${bibleJoin('club_id', 'c.id', BIBLE_POINTS.club)}
+     ${scoreJoin('club', 'c.id', "r.creator_type = 'admin' AND r.audience = 'club'", districtScope(districtId))}
+     ${bibleJoin('club_id', 'c.id', BIBLE_POINTS.club, null, districtScope(districtId))}
      WHERE c.is_app = 0 AND (? IS NULL OR c.district_id = ?)`,
     districtId, districtId,
   ));
@@ -154,8 +173,8 @@ export function unitsRanking(districtId = null) {
     `SELECT u.id, u.name, u.logo, c.id AS club_id, c.name AS club_name, d.name AS district_name,
             COALESCE(sc.points, 0) AS points, sc.last_at, ${BIBLE_COLS}
      FROM units u JOIN clubs c ON c.id = u.club_id JOIN districts d ON d.id = c.district_id
-     ${scoreJoin('unit', 'u.id', "r.creator_type = 'admin' AND r.audience = 'unit'")}
-     ${bibleJoin('unit_id', 'u.id', BIBLE_POINTS.unit)}
+     ${scoreJoin('unit', 'u.id', "r.creator_type = 'admin' AND r.audience = 'unit'", districtScope(districtId))}
+     ${bibleJoin('unit_id', 'u.id', BIBLE_POINTS.unit, null, districtScope(districtId))}
      WHERE u.is_leadership = 0 AND c.is_app = 0 AND (? IS NULL OR c.district_id = ?)`,
     districtId, districtId,
   ));
@@ -167,8 +186,8 @@ export function clubUnitsRanking(clubId) {
     `SELECT u.id, u.name, u.logo, u.club_id,
             COALESCE(sc.points, 0) AS points, sc.last_at, ${BIBLE_COLS}
      FROM units u
-     ${scoreJoin('unit', 'u.id', "r.creator_type = 'club' AND r.club_id = " + Number(clubId))}
-     ${bibleJoin('unit_id', 'u.id', BIBLE_POINTS.unit, clubId)}
+     ${scoreJoin('unit', 'u.id', "r.creator_type = 'club' AND r.club_id = " + Number(clubId), clubScope(clubId))}
+     ${bibleJoin('unit_id', 'u.id', BIBLE_POINTS.unit, clubId, clubScope(clubId))}
      WHERE u.club_id = ? AND u.is_leadership = 0`,
     clubId,
   ));

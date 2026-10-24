@@ -157,6 +157,8 @@ function NameLoginForm({ title, item, withDistrict, districts, appDistrict, onCl
   );
 }
 
+const PLAN_LABEL = { ok: 'em dia', gratis: 'grátis (jan/dez)', carencia: 'venceu (carência de 3 dias)', vencido: 'vencido' };
+
 function ClubsAdmin() {
   const { actor, refreshMeta } = useAuth();
   const general = !actor.district_id;
@@ -174,6 +176,11 @@ function ClubsAdmin() {
     setNewDistrict('');
     districts.reload();
     refreshMeta();
+  };
+  const giveDays = (c) => {
+    const days = Number(prompt(`Quantos dias de plano dar para o ${c.name}? (sem cobrança; janeiro e dezembro já são grátis)`, '30'));
+    if (!days) return;
+    run(() => api.post(`/admin/clubs/${c.id}/plano`, { days }), 'Dias adicionados').then(() => clubs.reload());
   };
   const removeClub = (c) => {
     if (prompt(`Apagar o ${c.name} de vez? Somem as unidades, os ${c.member_count} membros e tudo do clube. Para confirmar, escreva APAGAR`) !== 'APAGAR') return;
@@ -223,11 +230,13 @@ function ClubsAdmin() {
                   <div className="grow">
                     <div className="title">{c.name}</div>
                     <div className="sub">{c.district_name} · {plural(c.unit_count, 'unidade', 'unidades')} · {plural(c.member_count, 'membro', 'membros')}</div>
+                    {c.plan && <div className="sub">Plano do clube: <b>{PLAN_LABEL[c.plan.state]}</b>{c.plan.paid_until ? ` · pago até ${new Date(c.plan.paid_until).toLocaleDateString('pt-BR')}` : ''}</div>}
                     {c.is_app ? <div className="sub">Automático: quem cria a conta pelo app (sem clube) entra aqui. Não aparece nos rankings de clube, unidade e distrito.</div> : <div className="sub">Código <b>{c.code}</b>{c.director_name ? <> · Diretor(a): {c.director_name}</> : ''}{c.associate_directors ? <> · Associados: {c.associate_directors.split('\n').join(', ')}</> : ''}</div>}
                   </div>
                   <div className="stack" style={{ gap: '.35rem' }}>
                     <Link to={`${base}/clubes/${c.id}`}><Button small>Ver por dentro</Button></Link>
                     {!c.is_app && <Button small variant="secondary" onClick={() => setModal({ kind: 'club', item: c })}>Editar</Button>}
+                    {!c.is_app && general && <Button small variant="secondary" busy={busy} onClick={() => giveDays(c)}>Dar dias</Button>}
                     {!c.is_app && <Button small variant="danger" busy={busy} onClick={() => removeClub(c)}>Apagar</Button>}
                   </div>
                 </div>

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { get } from '../db.js';
 import { requireAuth, requireGeneral } from '../auth.js';
 import { setSetting } from '../fees.js';
-import { membersRanking, clubsRanking, unitsRanking, clubUnitsRanking, clubMembersRanking, leadersRanking, clubLeadersRanking, positionOf, rankingDistrict, rankingState } from '../rankings.js';
+import { membersRanking, clubsRanking, unitsRanking, clubUnitsRanking, clubMembersRanking, leadersRanking, clubLeadersRanking, positionOf, rankingDistrict, rankingState, scopeState, setScope } from '../rankings.js';
 import { fail, int } from '../util.js';
 
 const r = Router();
@@ -50,13 +50,56 @@ r.get('/rankings/club/:clubId/leaders', (req, res) => {
   res.json(top(clubLeadersRanking(clubId), me(req.actor)));
 });
 
-// Temporada e pausa do ranking (todo mundo vê o aviso; só o administrador geral pausa e retoma).
-r.get('/rankings/estado', (_req, res) => res.json(rankingState()));
+// Temporada e pausa do ranking. Cada um cuida do seu: o clube (rankings do clube e das unidades),
+// o administrador do distrito (ranking do distrito) e o geral (Brasil e qualquer distrito).
+const brState = () => rankingState();
+/** Rankings que esta conta vê com aviso de pausa (Brasil, o distrito e o clube dela). */
+function scopesFor(a, q = {}) {
+  const list = [{ key: 'brasil', label: 'Brasil', ...brState() }];
+  const d = a.type === 'admin' && !a.district_id ? int(q.district_id) : null;
+  if (d) list.push({ key: `district:${d}`, label: 'Distrito', ...scopeState(`district:${d}`) });
+  if (a.district_id) list.push({ key: `district:${a.district_id}`, label: 'Distrito', ...scopeState(`district:${a.district_id}`) });
+  if (a.club_id && a.type !== 'admin') list.push({ key: `club:${a.club_id}`, label: 'Clube', ...scopeState(`club:${a.club_id}`) });
+  return list;
+}
+r.get('/rankings/estado', (req, res) => res.json({ ...brState(), scopes: scopesFor(req.actor, req.query) }));
+
+/** Qual ranking esta conta pode pausar/reiniciar. */
+function scopeKey(a, body) {
+  if (a.type === 'club') return `club:${a.id}`;
+  if (a.type === 'admin' && a.district_id) return `district:${a.district_id}`;
+  if (a.type === 'admin') {
+    if (body.scope === 'brasil') return 'brasil';
+    const d = int(body.district_id);
+    if (!get('SELECT 1 FROM districts WHERE id = ?', d)) fail(400, 'Escolha o distrito');
+    return `district:${d}`;
+  }
+  fail(403, 'Sem permissão para mexer no ranking');
+}
+r.put('/ranking/controle', requireAuth('admin', 'club'), (req, res) => {
+  const key = scopeKey(req.actor, req.body);
+  const action = req.body.action;
+  const at = req.body.at ? new Date(req.body.at) : new Date();
+  if (Number.isNaN(at.getTime())) fail(400, 'Data inválida');
+  if (key === 'brasil') {
+    if (action === 'pause') setSetting('ranking_pausa', at.toISOString());
+    else if (action === 'resume') setSetting('ranking_pausa', '');
+    else if (action === 'reset') { setSetting('ranking_inicio', new Date().toISOString()); setSetting('ranking_pausa', ''); }
+    else fail(400, 'Ação inválida');
+    return res.json({ key, ...brState() });
+  }
+  if (action === 'pause') setScope(key, { pause: at.toISOString() });
+  else if (action === 'resume') setScope(key, { pause: null });
+  else if (action === 'reset') setScope(key, { start: new Date().toISOString(), pause: null });
+  else fail(400, 'Ação inválida');
+  res.json({ key, ...scopeState(key) });
+});
+// Endereço antigo (só o Brasil).
 r.put('/admin/ranking/pausa', requireAuth('admin'), requireGeneral, (req, res) => {
   const at = req.body.at ? new Date(req.body.at) : null;
   if (at && Number.isNaN(at.getTime())) fail(400, 'Data inválida');
   setSetting('ranking_pausa', at ? at.toISOString() : '');
-  res.json(rankingState());
+  res.json(brState());
 });
 
 const pick = (row) => (row ? { position: row.position, points: row.points, bible_points: row.bible_points } : null);

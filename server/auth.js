@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { hasAccess, plusOf, plusOpen } from './plus.js';
+import { clubStatus } from './clubPlan.js';
 import bcrypt from 'bcryptjs';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -72,7 +73,14 @@ export function loadActor(type, id) {
     const plus = p?.active && p.plan !== 'app' ? { plan: p.plan, until: p.until, picks_pending: !!(p.picks_needed && !p.picks) } : null;
     // App Brasil: entra e vê o app, mas só usa depois de assinar (DBV ou DBV+).
     const app = isApp ? { locked: !hasAccess(m.id), until: p?.active ? p.until : null, trial: !!p?.trial, trial_ended: !!p?.trial_ended } : null;
-    return { type, ...rest, cargo: cargoOf(kind, rest.cargo), waiting, kind, role: roleOf(kind, m.cargo), plus, plus_open: plusOpen(m.id), app };
+    // Clube com o plano vencido (depois dos 3 dias de carência): o membro precisa do DBV ou do DBV+.
+    let clubPlan = null;
+    if (!isApp) {
+      const st = clubStatus(m.club_id);
+      if (st?.state === 'carencia') clubPlan = { grace: true, grace_until: st.grace_until };
+      else if (st?.state === 'vencido') clubPlan = { expired: true, locked: !hasAccess(m.id), until: p?.active ? p.until : null, trial: false };
+    }
+    return { type, ...rest, cargo: cargoOf(kind, rest.cargo), waiting, kind, role: roleOf(kind, m.cargo), plus, plus_open: plusOpen(m.id), app, club_plan: clubPlan };
   }
   return null;
 }
@@ -113,7 +121,7 @@ const LOCKED_OK = /^\/api\/(plus|payments|pagamentos|auth|me\/conta)(\/|$)/;
 export const requireAuth = (...types) => (req, _res, next) => {
   if (!req.actor) fail(401, 'Faça login para continuar');
   if (req.actor.waiting) fail(403, req.actor.waiting);
-  if (req.actor.app?.locked && req.method !== 'GET' && !LOCKED_OK.test(req.originalUrl.split('?')[0])) fail(402, 'Assine um plano para usar o app');
+  if ((req.actor.app?.locked || req.actor.club_plan?.locked) && req.method !== 'GET' && !LOCKED_OK.test(req.originalUrl.split('?')[0])) fail(402, 'Assine um plano para usar o app');
   if (types.length && !types.includes(req.actor.type)) fail(403, 'Acesso não permitido para esta conta');
   next();
 };

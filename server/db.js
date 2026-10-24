@@ -886,6 +886,38 @@ function migrate() {
     setFlag('pagamentos-v1');
   }
   for (const k of ['pix_key', 'pix_name', 'pix_city']) db.prepare('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)').run(k, '');
+  // O clube também paga (plano do clube): pagamento de membro OU de clube.
+  if (!flag('pagamentos-clube-v1')) {
+    db.exec(`PRAGMA foreign_keys = OFF; BEGIN;
+      CREATE TABLE payments_new (
+        id INTEGER PRIMARY KEY,
+        member_id INTEGER REFERENCES members(id) ON DELETE CASCADE,
+        club_id INTEGER REFERENCES clubs(id) ON DELETE CASCADE,
+        purpose TEXT NOT NULL,
+        ref TEXT NOT NULL DEFAULT '{}',
+        title TEXT NOT NULL,
+        amount_cents INTEGER NOT NULL,
+        txid TEXT NOT NULL UNIQUE,
+        identifier TEXT,
+        pix_code TEXT,
+        status TEXT NOT NULL DEFAULT 'aberto' CHECK (status IN ('aberto','aguardando','pago','cancelado','recusado')),
+        created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+        notified_at TEXT,
+        paid_at TEXT,
+        checked_at INTEGER,
+        CHECK (member_id IS NOT NULL OR club_id IS NOT NULL)
+      );
+      INSERT INTO payments_new (id, member_id, purpose, ref, title, amount_cents, txid, identifier, pix_code, status, created_at, notified_at, paid_at, checked_at)
+        SELECT id, member_id, purpose, ref, title, amount_cents, txid, identifier, pix_code, status, created_at, notified_at, paid_at, checked_at FROM payments;
+      DROP TABLE payments;
+      ALTER TABLE payments_new RENAME TO payments;
+      CREATE INDEX IF NOT EXISTS idx_payments_member ON payments(member_id, purpose, id);
+      CREATE INDEX IF NOT EXISTS idx_payments_club ON payments(club_id, purpose, id);
+      COMMIT; PRAGMA foreign_keys = ON;`);
+    setFlag('pagamentos-clube-v1');
+  }
+  // Plano do clube (R$ 15 a cada 30 dias ou anual): até quando está pago.
+  add('clubs', 'paid_until', 'TEXT');
 
   // Volta para os Desbravadores: "Nº Clã X" vira "Nº Clube X" e a medalha de grupo vira de unidade.
   if (!flag('nomes-dbv-v1')) {

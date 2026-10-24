@@ -8,6 +8,7 @@ import { useAuth } from '../../auth.jsx';
 import { KIND_LABEL, plural } from '../../format.js';
 import { MembersBrowser, memberActions } from './Members.jsx';
 import { AccessInfo } from '../Signup.jsx';
+import { PixCheckout, money } from '../Payment.jsx';
 import {
   AgendaPage, BibliotecaPage, CertificadoPage, FerramentasPage, FinancasPage, MembrosPorGrupo,
 } from './Folders.jsx';
@@ -25,6 +26,65 @@ import EventsAdmin from '../admin/Events.jsx';
 import AnnouncementsAdmin from '../admin/Announcements.jsx';
 
 const base = '/clube';
+
+const STATE_TEXT = {
+  ok: ['green', 'Em dia'], gratis: ['green', 'Grátis (janeiro e dezembro)'], carencia: ['yellow', 'Venceu: pague em até 3 dias'], vencido: ['red', 'Vencido'],
+};
+const brDate = (iso) => (iso ? new Date(iso).toLocaleDateString('pt-BR') : '—');
+
+/**
+ * Plano do clube: R$ 15 a cada 30 dias (ou o ano todo) para os membros usarem o app de graça.
+ * Janeiro e dezembro são grátis. Vencido, o portal continua funcionando, mas os membros precisam assinar.
+ */
+export function ClubPlanCard() {
+  const state = useLoad(() => api.get('/club/plano'));
+  const [order, setOrder] = useState(null);
+  const [paid, setPaid] = useState(false);
+  const [busy, run] = useAsync();
+  const buy = async (plan) => { const o = await run(() => api.post('/club/plano/assinar', { plan }), null); if (o) setOrder(o); };
+  const close = () => { setOrder(null); setPaid(false); state.reload(); };
+  return (
+    <Section title="Plano do clube">
+      <Card>
+        <Loading {...state}>
+          {(d) => {
+            const [kind, label] = STATE_TEXT[d.status.state] || ['', d.status.state];
+            return (
+              <div className="stack">
+                <div className="row between"><b>Situação</b><Badge kind={kind}>{label}</Badge></div>
+                <p className="small" style={{ margin: 0 }}>
+                  {d.status.paid_until ? <>Pago até <b>{brDate(d.status.paid_until)}</b>. </> : null}
+                  Com o plano em dia, todos os membros do clube usam o app <b>de graça</b>. Janeiro e dezembro são grátis para todos os clubes.
+                </p>
+                {['carencia', 'vencido'].includes(d.status.state) && (
+                  <p className="small" style={{ margin: 0, color: 'var(--red-ink)' }}>
+                    {d.status.state === 'carencia' ? `O plano venceu. Até ${brDate(d.status.grace_until)} os membros continuam de graça; depois disso cada um vai precisar assinar para usar o app.` : 'O plano venceu: o portal do clube continua funcionando, mas os membros precisam assinar (R$ 3,90) para usar o app. Renove para liberar todos de novo.'}
+                  </p>
+                )}
+                <div className="club-plans">
+                  {d.plans.map((p) => (
+                    <div key={p.id} className="club-plan">
+                      <b>{p.id === 'anual' ? 'Ano todo' : '30 dias'}</b>
+                      <span className="club-plan-price">{money(p.price_cents)}</span>
+                      <small>{p.id === 'anual' ? 'Paga uma vez e fica o ano todo' : 'Renova a cada 30 dias'}</small>
+                      <Button small block busy={busy} onClick={() => buy(p.id)}>Pagar no Pix</Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          }}
+        </Loading>
+      </Card>
+      {order && (
+        <Modal title={paid ? 'Plano renovado!' : 'Pague com Pix'} onClose={close}>
+          {paid ? <div className="pix-box center"><p><b>Pagamento confirmado!</b> O plano do clube está em dia.</p><Button block onClick={close}>Fechar</Button></div>
+            : <PixCheckout payment={order} onPaid={() => setPaid(true)} onNotified={close} />}
+        </Modal>
+      )}
+    </Section>
+  );
+}
 
 /** Link de inscrição do clube: quem entra por ele já fica no clube. O clube compartilha, liga/desliga e troca. */
 function SignupLinkCard() {
@@ -90,6 +150,7 @@ function ClubHome() {
             </div>
           </div>
 
+          <ClubPlanCard />
           <SignupLinkCard />
 
           <Section title="Resumo">
@@ -533,6 +594,7 @@ export default function ClubApp() {
     { to: `${base}/membros`, icon: Users, label: 'Membros', hint: 'Cadastrar e ver os membros' },
   ];
   const more = [
+    { to: `${base}/plano`, icon: Wallet, label: 'Plano do clube', hint: 'R$ 15 a cada 30 dias · membros de graça' },
     { to: `${base}/secretaria`, icon: FolderOpen, label: 'Secretaria', hint: 'Agenda e membros' },
     { to: `${base}/unidades`, icon: Flag, label: 'Unidades', hint: 'Unidades, ranking e membros' },
     { to: `${base}/financas`, icon: Wallet, label: 'Tesouraria', hint: 'Balancete do clube' },
@@ -562,6 +624,7 @@ export default function ClubApp() {
               <Route path="unidades" element={<GruposFolder />} />
               <Route path="grupos" element={<Navigate to={`${base}/unidades`} replace />} />
               <Route path="financas" element={<FinancasPage />} />
+              <Route path="plano" element={<><PageHeader title="Plano do clube" /><ClubPlanCard /></>} />
               <Route path="tesouraria" element={<Navigate to={`${base}/financas`} replace />} />
               <Route path="biblioteca" element={<BibliotecaPage approvals={<ApprovalsPage />} />} />
               <Route path="aprovacoes" element={<Navigate to={`${base}/biblioteca`} replace />} />

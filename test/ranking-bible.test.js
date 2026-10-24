@@ -186,3 +186,60 @@ test('certificados: classe/especialidade e Ano Bíblico completo aparecem em Dow
   assert.match(cert.what, /Ano Bíblico|plano de leitura/);
   assert.equal((await pedro.get('/me/certificados/ano-biblico/2')).status, 404);
 });
+
+test('plano do clube: 30 dias ao começar; vencido depois da carência, os membros precisam do DBV; pagando, volta', async () => {
+  const admin = await login('membros', 'admin', 'admin123');
+  const aguias = await login('clube', 'aguias', 'AG2026');
+  const st = (await aguias.get('/club/plano')).body;
+  assert.ok(['ok', 'gratis'].includes(st.status.state), 'clube começa com o plano em dia');
+  assert.deepEqual(st.plans.map((p) => [p.id, p.price_cents]), [['mensal', 1500], ['anual', 15000]]);
+  const setUntil = (iso) => {
+    const db = new DatabaseSync(path.join(dataDir, 'dbv.sqlite'));
+    try { db.prepare('UPDATE clubs SET paid_until = ? WHERE code = ?').run(iso, '4821'); } finally { db.close(); }
+  };
+  const month = Number(new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', month: '2-digit' }).format(new Date()));
+  const free = month === 1 || month === 12;
+  // Venceu ontem: carência (os membros ainda usam de graça).
+  setUntil(new Date(Date.now() - 864e5).toISOString());
+  let pedro = await login('membros', 'pedro');
+  if (!free) assert.equal(pedro.actor.club_plan?.grace, true, 'carência de 3 dias');
+  // Venceu há 10 dias: o membro precisa do DBV (R$ 3,90) ou do DBV+.
+  setUntil(new Date(Date.now() - 10 * 864e5).toISOString());
+  pedro = await login('membros', 'pedro');
+  if (!free) {
+    assert.equal(pedro.actor.club_plan?.expired, true);
+    const plans = (await pedro.get('/plus')).body.plans.map((p) => p.id);
+    assert.deepEqual(plans, ['app', 'plus'], 'aparece o DBV de R$ 3,90');
+    if (!pedro.actor.plus) assert.equal((await pedro.post('/ano-biblico/dia/1/quiz', { answers: [0] })).status, 402);
+  }
+  // O portal do clube continua funcionando; o clube paga e volta para todos.
+  await admin.put('/admin/pagamentos-config/pix', { key: 'pix@appdodbv.com', name: 'App do DBV', city: 'Palmares' });
+  const pay = (await aguias.post('/club/plano/assinar', { plan: 'mensal' })).body;
+  assert.equal(pay.amount_cents, 1500);
+  assert.equal((await admin.post(`/admin/pagamentos/${pay.id}/confirmar`)).status, 200);
+  assert.equal((await aguias.get('/club/plano')).body.status.state, free ? 'gratis' : 'ok');
+  pedro = await login('membros', 'pedro');
+  assert.equal(pedro.actor.club_plan, null, 'membros de volta ao grátis');
+});
+
+test('ranking por lugar: o clube reinicia e pausa o dele; o distrito não muda', async () => {
+  const pedro = await login('membros', 'pedro');
+  const aguias = await login('clube', 'aguias', 'AG2026');
+  const admin = await login('membros', 'admin', 'admin123');
+  const clubId = pedro.actor.club_id;
+  const clubPts = async () => find((await pedro.get(`/rankings/club/${clubId}/members`)).body, pedro.actor.id).points;
+  const distPts = async () => find((await pedro.get('/rankings/members')).body, pedro.actor.id).points;
+  const d0 = await distPts();
+  assert.ok((await clubPts()) > 0, 'tem pontos no clube');
+  assert.equal((await aguias.put('/ranking/controle', { action: 'reset' })).status, 200);
+  assert.equal(await clubPts(), 0, 'o ranking do clube recomeçou');
+  assert.equal(await distPts(), d0, 'o do distrito continua igual');
+  assert.equal((await aguias.put('/ranking/controle', { action: 'pause' })).body.paused, true);
+  const st = (await pedro.get('/rankings/estado')).body.scopes.find((s) => s.key === `club:${clubId}`);
+  assert.equal(st.paused, true, 'o membro vê o aviso de pausa do clube');
+  await aguias.put('/ranking/controle', { action: 'resume' });
+  // O geral pausa um distrito; o membro não mexe.
+  assert.equal((await pedro.put('/ranking/controle', { action: 'pause' })).status, 403);
+  assert.equal((await admin.put('/ranking/controle', { action: 'pause', district_id: pedro.actor.district_id })).body.paused, true);
+  await admin.put('/ranking/controle', { action: 'resume', district_id: pedro.actor.district_id });
+});

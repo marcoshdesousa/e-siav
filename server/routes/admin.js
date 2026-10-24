@@ -6,6 +6,7 @@ import { NOME_UNIDADE_LIDERANCA } from '../config.js';
 import { listMembers, listUnits, memberFicha } from '../clubData.js';
 import { clubProfile } from '../profiles.js';
 import { deleteClub } from '../accounts.js';
+import { clubStatus, startClubPlan } from '../clubPlan.js';
 import { fail, int, str, validDate, parseJson, memberKind, newClubCode, newClubNumber, newClubPassword, newUnitPin, clubDisplayName } from '../util.js';
 
 // Painel do Administrador Geral.
@@ -75,6 +76,7 @@ r.get('/admin/clubs', (req, res) => {
      FROM clubs c JOIN districts d ON d.id = c.district_id ${d ? 'WHERE c.district_id = ?' : ''} ORDER BY c.is_app DESC, c.number`,
     ...(d ? [d] : []),
   );
+  for (const c of rows) c.plan = clubStatus(c.id);
   res.json(rows);
 });
 
@@ -97,6 +99,7 @@ r.post('/admin/clubs', (req, res) => {
     const id = Number(run('INSERT INTO clubs (district_id, name, number, code, director_name, associate_directors) VALUES (?,?,?,?,?,?)', districtId, full, number, code, director, associates(req.body.associate_directors)).lastInsertRowid);
     run('INSERT INTO units (club_id, name, is_leadership, pin) VALUES (?, ?, 1, ?)', id, NOME_UNIDADE_LIDERANCA, newUnitPin(id, (p) => p === password));
     setLogin('club', id, 'cla' + code, password);
+    startClubPlan(id); // já entra com os primeiros 30 dias do plano do clube
     return { id, code, number, name: full };
   });
   res.json({ ...out, password });

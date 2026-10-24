@@ -140,32 +140,51 @@ function SummaryCard({ icon, title, pos, onClick, gold }) {
  * Aba Ranking. O membro vê de uma vez a sua posição, a da sua unidade e a do seu clube,
  * e pode abrir cada tabela completa. Desbravadores e liderança têm rankings separados.
  */
-/** Ranking pausado (para apuração) e, para o administrador geral, o controle da pausa. */
+/**
+ * Aviso de ranking pausado e, para quem cuida, o controle: o clube pausa/reinicia os rankings do
+ * clube (membros e unidades), o administrador do distrito o do distrito e o geral o Brasil ou um distrito.
+ */
 function RankingPause() {
-  const { actor } = useAuth();
-  const state = useLoad(() => api.get('/rankings/estado'));
+  const { actor, meta } = useAuth();
+  const general = actor.type === 'admin' && !actor.district_id;
+  const canControl = actor.type === 'club' || actor.type === 'admin';
+  const [target, setTarget] = useState('brasil');
+  const state = useLoad(() => api.get('/rankings/estado' + (general && target !== 'brasil' ? `?district_id=${target}` : '')), [target]);
   const [at, setAt] = useState('');
   const [busy, run] = useAsync();
-  const general = actor.type === 'admin' && !actor.district_id;
   const s = state.data;
   if (!s) return null;
   const br = (iso) => new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
-  const save = (v) => run(() => api.put('/admin/ranking/pausa', { at: v }), v ? 'Pausa marcada' : 'Ranking retomado').then(state.reload);
+  const myKey = actor.type === 'club' ? `club:${actor.id}` : actor.type === 'admin' && actor.district_id ? `district:${actor.district_id}` : target === 'brasil' ? 'brasil' : `district:${target}`;
+  const cur = s.scopes.find((x) => x.key === myKey) || { key: myKey };
+  const name = actor.type === 'club' ? 'do clube (membros e unidades)' : actor.type === 'admin' && actor.district_id ? `do ${actor.district_name || 'distrito'}` : target === 'brasil' ? 'do Brasil (todos)' : `do ${meta.districts.find((d) => String(d.id) === String(target))?.name || 'distrito'}`;
+  const act = (action, when) => run(() => api.put('/ranking/controle', { action, at: when, ...(general ? (target === 'brasil' ? { scope: 'brasil' } : { district_id: target }) : {}) }),
+    { pause: 'Pausa marcada', resume: 'Ranking retomado', reset: 'Ranking reiniciado' }[action]).then(state.reload);
+  const paused = s.scopes.filter((x) => x.paused && (actor.type !== 'admin' || x.key === myKey));
   return (
     <>
-      {s.paused && <div className="rank-paused"><PauseCircle size={18} /><span><b>Ranking pausado</b> desde {br(s.paused_at)} para a apuração dos vencedores. Os pontos depois disso aparecem quando o ranking voltar.</span></div>}
-      {general && (
+      {paused.map((x) => (
+        <div key={x.key} className="rank-paused"><PauseCircle size={18} /><span><b>Ranking {x.key === 'brasil' ? 'do Brasil' : x.key.startsWith('club') ? 'do clube' : 'do distrito'} pausado</b> desde {br(x.paused_at)} para a apuração dos vencedores. Os pontos depois disso aparecem quando o ranking voltar.</span></div>
+      ))}
+      {canControl && (
         <Card className="rank-pause-admin">
-          <p style={{ margin: 0 }}><b>Pausar o ranking</b> <span className="small muted">· só você vê isto</span></p>
+          <p style={{ margin: 0 }}><b>Pausar ou reiniciar o ranking {name}</b></p>
+          {general && (
+            <select value={target} onChange={(e) => setTarget(e.target.value)} style={{ width: 'auto', margin: '.4rem 0' }}>
+              <option value="brasil">Brasil (todos)</option>
+              {meta.districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
+            </select>
+          )}
           <p className="small muted" style={{ margin: '.2rem 0 .5rem' }}>
-            {s.paused_at ? (s.paused ? `Pausado desde ${br(s.paused_at)}.` : `Pausa marcada para ${br(s.paused_at)}.`) : 'O ranking está contando normalmente.'}
-            {' '}Todo 1º de janeiro o ranking e o Ano Bíblico recomeçam do zero{s.start ? ` (temporada desde ${new Date(s.start).toLocaleDateString('pt-BR')})` : ''}.
+            {cur.paused_at ? (cur.paused ? `Pausado desde ${br(cur.paused_at)}.` : `Pausa marcada para ${br(cur.paused_at)}.`) : 'Contando normalmente.'}
+            {cur.start ? ` Recomeçou em ${br(cur.start)}.` : ''} Pausar: o ranking fica parado para você ver quem ganhou. Reiniciar: todo mundo volta para zero nesse ranking.
           </p>
           <div className="row wrap">
             <input type="datetime-local" value={at} onChange={(e) => setAt(e.target.value)} style={{ width: 'auto' }} />
-            <Button small busy={busy} disabled={!at} onClick={() => save(new Date(at).toISOString())}>Marcar pausa</Button>
-            <Button small variant="secondary" busy={busy} onClick={() => save(new Date().toISOString())}>Pausar agora</Button>
-            {s.paused_at && <Button small variant="secondary" busy={busy} onClick={() => save(null)}>Retomar</Button>}
+            <Button small busy={busy} disabled={!at} onClick={() => act('pause', new Date(at).toISOString())}>Marcar pausa</Button>
+            <Button small variant="secondary" busy={busy} onClick={() => act('pause', new Date().toISOString())}>Pausar agora</Button>
+            {cur.paused_at && <Button small variant="secondary" busy={busy} onClick={() => act('resume')}>Retomar</Button>}
+            <Button small variant="danger" busy={busy} onClick={() => confirm('Reiniciar este ranking? Os pontos dele voltam para zero (os de antes não contam mais).') && act('reset')}>Reiniciar</Button>
           </div>
         </Card>
       )}

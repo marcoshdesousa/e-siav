@@ -9,11 +9,11 @@ import { checkPayment, creditPayment, defaultPayer, paymentOut, pixConfig } from
 import { fakePay, idsInWebhook, syncpayOn } from '../syncpay.js';
 
 const r = Router();
-const member = requireAuth('member');
+const member = requireAuth('member', 'club');
 const admin = requireAuth('admin');
 
 const mine = (req) => {
-  const p = get('SELECT * FROM payments WHERE id = ? AND member_id = ?', int(req.params.id), req.actor.id);
+  const p = get(`SELECT * FROM payments WHERE id = ? AND ${req.actor.type === 'club' ? 'club_id' : 'member_id'} = ?`, int(req.params.id), req.actor.id);
   if (!p) fail(404, 'Pagamento não encontrado');
   return p;
 };
@@ -49,8 +49,8 @@ r.post('/albuns/pix/aviso', webhook); // endereço antigo
 
 // ---------- Equipe ----------
 const LIST_SQL = `SELECT p.id, p.purpose, p.title, p.amount_cents, p.txid, p.identifier, p.status, p.created_at, p.notified_at, p.paid_at,
-    m.name AS member_name, m.code AS member_code, c.name AS club_name, u.name AS unit_name
-  FROM payments p JOIN members m ON m.id = p.member_id JOIN clubs c ON c.id = m.club_id LEFT JOIN units u ON u.id = m.unit_id`;
+    COALESCE(m.name, 'Clube (plano do clube)') AS member_name, m.code AS member_code, c.name AS club_name, u.name AS unit_name
+  FROM payments p LEFT JOIN members m ON m.id = p.member_id JOIN clubs c ON c.id = COALESCE(p.club_id, m.club_id) LEFT JOIN units u ON u.id = m.unit_id`;
 r.get('/admin/pagamentos', admin, (req, res) => {
   const status = ['aberto', 'aguardando', 'pago', 'recusado', 'cancelado'].includes(req.query.status) ? req.query.status : 'aguardando';
   res.json({

@@ -908,3 +908,7 @@ input::-webkit-datetime-edit { padding: 0; }
 .rank-paused svg { flex: none; margin-top: 1px; }
 .rank-pause-admin { margin-bottom: .8rem; }
 .access-chips { display: inline-flex; align-items: center; gap: .35rem; margin: .1rem auto .2rem; padding: .25rem .6rem; border: 1px dashed rgba(255,255,255,.35); border-radius: 999px; background: rgba(255,255,255,.08); color: inherit; font: inherit; font-size: .8rem; font-weight: 700; cursor: pointer; }
+.club-plans { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+.club-plan { display: flex; flex-direction: column; gap: .25rem; padding: .7rem; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface-2, #f8fafc); }
+.club-plan-price { font-size: 1.3rem; font-weight: 900; color: var(--blue-ink, #0E2A6B); }
+.club-plan small { color: var(--muted); font-size: .75rem; margin-bottom: .2rem; }

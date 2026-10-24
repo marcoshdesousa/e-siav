@@ -61,7 +61,7 @@ test('DBV+: sem assinatura (modo de teste desligado) fica bloqueado; assinando, 
   await admin.put('/admin/biblia-teste', { on: false });
   await admin.put('/admin/pagamentos-config/pix', { key: 'pix@appdodbv.com', name: 'App do DBV', city: 'Palmares' });
   let plus = (await pedro.get('/plus')).body;
-  assert.equal(plus.plans.length, 3);
+  assert.deepEqual(plus.plans.map((p) => [p.id, p.price_cents]), [['plus', 790]], 'só o DBV+ (sem planos de especialidades)');
   assert.equal(plus.open, false);
   assert.ok(plus.benefits.at(-1).soon, 'em breve por último');
   const day = (await pedro.get('/ano-biblico/dia/1')).status;
@@ -69,27 +69,21 @@ test('DBV+: sem assinatura (modo de teste desligado) fica bloqueado; assinando, 
   // compra de figurinhas sem DBV+: quantidade normal
   const normal = (await pedro.post('/albuns/biblico/pedidos', { packs: 1 })).body;
   assert.match(normal.title, /^1 pacotinho/);
-  // assina o plano de 3 especialidades e a equipe confirma o Pix
-  const pay = (await pedro.post('/plus/assinar', { plan: 'plus3' })).body;
-  assert.equal(pay.amount_cents, 1990);
+  assert.equal((await pedro.post('/plus/assinar', { plan: 'plus3' })).status, 400, 'plano de especialidades não existe mais');
+  // assina o DBV+ e a equipe confirma o Pix
+  const pay = (await pedro.post('/plus/assinar', { plan: 'plus' })).body;
+  assert.equal(pay.amount_cents, 790);
   const before = (await pedro.get('/albuns/biblico')).body.packs_unopened;
   assert.equal((await admin.post(`/admin/pagamentos/${pay.id}/confirmar`)).status, 200);
   plus = (await pedro.get('/plus')).body;
   assert.equal(plus.mine.active, true);
   assert.equal((await pedro.post('/plus/assinar', { plan: 'plus' })).status, 409, 'um plano por vez: só assina de novo quando vencer');
-  assert.equal(plus.mine.picks_needed, 15);
   assert.equal((await pedro.get('/albuns/biblico')).body.packs_unopened, before + 40, '40 pacotinhos');
   const me = (await pedro.get('/auth/me')).body.actor;
   assert.ok(me.plus && me.plus_open);
   const dbl = (await pedro.post('/albuns/biblico/pedidos', { packs: 1 })).body;
   assert.match(dbl.title, /^3 pacotinhos.*triplo/, 'figurinhas em triplo');
-  // escolhe 15 especialidades
-  const cat = (await pedro.get('/catalog?type=especialidade')).body;
-  assert.equal((await pedro.put('/plus/especialidades', { ids: cat.slice(0, 3).map((c) => c.id) })).status, 400, 'precisa ser 15');
-  assert.equal((await pedro.put('/plus/especialidades', { ids: cat.slice(0, 15).map((c) => c.id) })).status, 200);
-  const list = (await admin.get('/admin/plus')).body;
-  const mine = list.find((x) => x.code === '100001');
-  assert.equal(mine.picks.length, 15);
+  assert.ok((await admin.get('/admin/plus')).body.some((x) => x.code === '100001' && x.active));
   // selo de verificado no perfil
   assert.equal((await pedro.get('/me/profile')).body.verified, true);
   await admin.put('/admin/biblia-teste', { on: true });

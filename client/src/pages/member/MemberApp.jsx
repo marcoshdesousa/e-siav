@@ -94,7 +94,10 @@ function AppLock({ children }) {
   const nav = useNavigate();
   const { pathname } = useLocation();
   const [ask, setAsk] = useState(false);
-  if (!actor.app?.locked || pathname.startsWith(`${base}/dbv-mais`) || pathname.startsWith(`${base}/conta`)) return children;
+  // App Brasil sem plano, ou clube com o plano vencido (depois dos 3 dias de carência).
+  const club = !!actor.club_plan?.locked;
+  if (!(actor.app?.locked || club) || pathname.startsWith(`${base}/dbv-mais`) || pathname.startsWith(`${base}/conta`)) return children;
+  const title = club ? 'O plano do seu clube venceu' : actor.app.trial_ended ? 'O seu teste grátis terminou' : 'O seu acesso terminou';
   const stop = (e) => {
     // Só olhar continua liberado: as abas e filtros das telas (e o caminho para os planos e a conta).
     if (e.target.closest?.(`a[href^="${base}/dbv-mais"], a[href^="${base}/conta"], .tabs button, .seg button`)) return;
@@ -104,11 +107,12 @@ function AppLock({ children }) {
   };
   return (
     <>
-      <Link to={`${base}/dbv-mais`} className="app-lock-bar"><Lock size={16} /><span><b>{actor.app.trial_ended ? 'O seu teste grátis terminou' : 'O seu acesso terminou'}</b><small>Assine o DBV ou o DBV+ para continuar</small></span><span className="app-lock-btn">Ver planos</span></Link>
+      <Link to={`${base}/dbv-mais`} className="app-lock-bar"><Lock size={16} /><span><b>{title}</b><small>{club ? 'Assine o DBV ou o DBV+, ou peça ao clube para renovar' : 'Assine o DBV ou o DBV+ para continuar'}</small></span><span className="app-lock-btn">Ver planos</span></Link>
       <div className="app-locked" onClickCapture={stop} onSubmitCapture={stop}>{children}</div>
       {ask && (
         <Modal title="Assine para continuar" onClose={() => setAsk(false)} footer={<><Button variant="secondary" onClick={() => setAsk(false)}>Agora não</Button><Button onClick={() => { setAsk(false); nav(`${base}/dbv-mais`); }}>Ver planos</Button></>}>
-          <p>{actor.app.trial_ended ? 'O seu teste grátis de 3 dias' : 'O seu acesso ao'} <b>App do DBV</b> terminou. Não perca as suas sequências e o seu lugar no ranking!</p>
+          <p>{club ? <>O plano do <b>{actor.club_name}</b> venceu. Para continuar usando o app, assine um plano ou peça para a diretoria do clube renovar. Não perca as suas sequências e o seu lugar no ranking!</>
+            : <>{actor.app.trial_ended ? 'O seu teste grátis de 3 dias' : 'O seu acesso ao'} <b>App do DBV</b> terminou. Não perca as suas sequências e o seu lugar no ranking!</>}</p>
           <p className="small muted">Com o <b>DBV</b> (R$ 3,90) você continua lendo a Bíblia todo dia e subindo no ranking Brasil. O <b>DBV+</b> (R$ 7,90) libera todos os benefícios: Bom Líder, figurinhas em triplo, jogos sem internet e o selo de verificado.</p>
         </Modal>
       )}

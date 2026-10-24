@@ -29,7 +29,6 @@ export const BENEFITS = [
   { text: 'Participa do ranking dos jogos' },
   { text: 'Jogos sem internet (modo offline)' },
   { text: 'Selo de verificado (logo dourada) no perfil' },
-  { text: 'Especialidades físicas entregues pela equipe (planos de R$ 19,90 e R$ 34,90)', club_only: true },
   { text: 'Estudo das Classes e Agrupadas', soon: true },
 ];
 
@@ -39,16 +38,16 @@ export const APP_FREE = FREE.map((t) => t.replace('rankings do distrito', 'ranki
 
 r.get('/plus', member, (req, res) => {
   const p = plusOf(req.actor.id);
-  const isApp = !!req.actor.app;
+  const needs = !!req.actor.app || !!req.actor.club_plan?.expired;
   res.json({
-    plans: plansFor(isApp), benefits: BENEFITS.filter((b) => !isApp || !b.club_only), free: isApp ? APP_FREE : FREE, days: PLUS_DAYS, packs: PLUS_PACKS,
-    app: req.actor.app, mine: p, open: plusOpen(req.actor.id),
+    plans: plansFor(needs), benefits: BENEFITS, free: needs ? APP_FREE : FREE, days: PLUS_DAYS, packs: PLUS_PACKS,
+    app: req.actor.app || (req.actor.club_plan?.expired ? { ...req.actor.club_plan, club: true } : null), club_plan: req.actor.club_plan, mine: p, open: plusOpen(req.actor.id),
     picks_names: p?.picks ? all(`SELECT id, name, category FROM content WHERE id IN (${p.picks.map(() => '?').join(',')})`, ...p.picks) : [],
   });
 });
 
 r.post('/plus/assinar', member, async (req, res) => {
-  const plan = plansFor(!!req.actor.app).find((p) => p.id === req.body.plan);
+  const plan = plansFor(!!req.actor.app || !!req.actor.club_plan?.expired).find((p) => p.id === req.body.plan);
   if (!plan) fail(400, 'Escolha um plano');
   // Um plano por vez: só dá para assinar de novo quando o atual vencer (quem está no DBV pode renovar ou subir para o DBV+ a qualquer hora).
   const cur = plusOf(req.actor.id);

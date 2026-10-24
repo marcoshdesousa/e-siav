@@ -25,20 +25,20 @@ const handlers = new Map();
 export function onPaid(purpose, fn) { handlers.set(purpose, fn); }
 
 /** Cria um pagamento no Pix. ref: detalhes do que foi comprado (vai para o onPaid). */
-export async function createPayment({ memberId, purpose, ref = {}, title, amountCents }) {
+export async function createPayment({ memberId = null, clubId = null, purpose, ref = {}, title, amountCents }) {
   const mode = payMode();
   if (mode === 'off') fail(400, 'O pagamento por Pix ainda não foi configurado pela equipe. Tente mais tarde.');
   if (!handlers.has(purpose)) fail(500, 'Tipo de pagamento desconhecido');
-  const open = get(`SELECT COUNT(*) n FROM payments WHERE member_id = ? AND status IN ('aberto','aguardando')`, memberId).n;
+  const open = get(`SELECT COUNT(*) n FROM payments WHERE ${clubId ? 'club_id' : 'member_id'} = ? AND status IN ('aberto','aguardando')`, clubId || memberId).n;
   if (open >= 3) fail(400, 'Você já tem pagamentos esperando. Pague ou cancele um deles antes.');
   const txid = 'DBV' + crypto.randomBytes(8).toString('hex').toUpperCase().slice(0, 16);
   let pix = null;
   if (mode === 'syncpay') {
-    const m = get('SELECT code FROM members WHERE id = ?', memberId);
-    pix = await createPix({ amountCents, description: `App do DBV - ${title} (membro ${m?.code || memberId})`, payer: defaultPayer() });
+    const who = clubId ? `clube ${get('SELECT code FROM clubs WHERE id = ?', clubId)?.code || clubId}` : `membro ${get('SELECT code FROM members WHERE id = ?', memberId)?.code || memberId}`;
+    pix = await createPix({ amountCents, description: `App do DBV - ${title} (${who})`, payer: defaultPayer() });
   }
-  const id = Number(run(`INSERT INTO payments (member_id, purpose, ref, title, amount_cents, txid, identifier, pix_code) VALUES (?,?,?,?,?,?,?,?)`,
-    memberId, purpose, JSON.stringify(ref), title, amountCents, txid, pix?.identifier || null, pix?.pix_code || null).lastInsertRowid);
+  const id = Number(run(`INSERT INTO payments (member_id, club_id, purpose, ref, title, amount_cents, txid, identifier, pix_code) VALUES (?,?,?,?,?,?,?,?,?)`,
+    clubId ? null : memberId, clubId, purpose, JSON.stringify(ref), title, amountCents, txid, pix?.identifier || null, pix?.pix_code || null).lastInsertRowid);
   return get('SELECT * FROM payments WHERE id = ?', id);
 }
 

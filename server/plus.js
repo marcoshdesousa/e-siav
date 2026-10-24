@@ -26,7 +26,7 @@ if (!all('PRAGMA table_info(member_plus)').some((c) => c.name === 'trial')) run(
 if (!get(`SELECT 1 FROM app_flags WHERE key = 'teste-gratis-antigos-v1'`)) {
   run(`UPDATE member_plus SET trial = 1 WHERE plan = 'app' AND renewals = 0 AND trial = 0
     AND member_id IN (SELECT m.id FROM members m JOIN clubs c ON c.id = m.club_id WHERE c.is_app = 1)
-    AND member_id NOT IN (SELECT member_id FROM payments WHERE purpose = 'dbvplus' AND status = 'pago')`);
+    AND member_id NOT IN (SELECT member_id FROM payments WHERE purpose = 'dbvplus' AND status = 'pago' AND member_id IS NOT NULL)`);
   run(`INSERT OR IGNORE INTO app_flags (key) VALUES ('teste-gratis-antigos-v1')`);
 }
 
@@ -54,8 +54,11 @@ export function plusOf(memberId) {
 export const isPlus = (memberId) => { const p = plusOf(memberId); return !!p?.active && p.plan !== 'app'; };
 /** Algum plano ativo (o DBV também conta): libera o app para quem entrou pelo App Brasil. */
 export const hasAccess = (memberId) => !!plusOf(memberId)?.active;
-/** Planos que cada conta pode assinar: quem é do App Brasil só tem o DBV e o DBV+ (sem especialidades). */
-export const plansFor = (isApp) => Object.values(PLANS).filter((p) => (isApp ? ['app', 'plus'].includes(p.id) : p.id !== 'app'));
+/**
+ * Planos que cada conta pode assinar: só o DBV+ (R$ 7,90). Quem precisa pagar para usar o app (App Brasil
+ * ou clube com o plano vencido) também tem o DBV (R$ 3,90). Os planos com especialidades físicas saíram.
+ */
+export const plansFor = (needsAccess) => (needsAccess ? [PLANS.app, PLANS.plus] : [PLANS.plus]);
 /** Benefício do DBV+ liberado (assinante ativo). */
 export const plusOpen = (memberId) => isPlus(memberId);
 

@@ -75,8 +75,8 @@ export default function PlusPage() {
               <div className="plus-hero plus-hero-app">
                 <img src="/marca/logo.svg" alt="" />
                 <div>
-                  <b>{d.app.locked ? 'Sua aventura não pode parar!' : d.mine?.trial ? 'Você é DBV no teste grátis' : `Você está no ${d.mine?.plan_name || 'DBV'}`}</b>
-                  <p>{d.app.locked ? (d.mine?.trial_ended ? 'O seu teste grátis de 3 dias terminou. ' : 'O seu acesso terminou. ') : d.mine?.trial ? `O seu teste grátis vai até ${br(d.mine.until)}. ` : d.mine?.active ? `Acesso liberado até ${br(d.mine.until)}. ` : ''}Com o <b>DBV</b> você continua lendo a Bíblia todo dia, mantém as suas <b>sequências</b> e sobe no <b>ranking Brasil</b>. Com o <b>DBV+</b> você libera tudo. E cada assinatura ajuda o App do DBV a chegar a mais desbravadores!</p>
+                  <b>{d.app.club ? 'O plano do seu clube venceu' : d.app.locked ? 'Sua aventura não pode parar!' : d.mine?.trial ? 'Você é DBV no teste grátis' : `Você está no ${d.mine?.plan_name || 'DBV'}`}</b>
+                  <p>{d.app.club ? 'Para continuar usando o app, assine um plano (ou peça para a diretoria do clube renovar). ' : d.app.locked ? (d.mine?.trial_ended ? 'O seu teste grátis de 3 dias terminou. ' : 'O seu acesso terminou. ') : d.mine?.trial ? `O seu teste grátis vai até ${br(d.mine.until)}. ` : d.mine?.active ? `Acesso liberado até ${br(d.mine.until)}. ` : ''}Com o <b>DBV</b> você continua lendo a Bíblia todo dia, mantém as suas <b>sequências</b> e sobe no <b>ranking Brasil</b>. Com o <b>DBV+</b> você libera tudo. E cada assinatura ajuda o App do DBV a chegar a mais desbravadores!</p>
                 </div>
               </div>
             ) : (
@@ -157,11 +157,21 @@ let barClosed = false;
 export function PlusNudge({ to }) {
   const { actor } = useAuth();
   const { pathname } = useLocation();
-  const [open, setOpen] = useState(() => !barClosed && actor?.type === 'member' && !actor.plus && !actor.app?.locked);
+  const [open, setOpen] = useState(() => !barClosed && actor?.type === 'member' && !actor.plus && !actor.app?.locked && !actor.club_plan?.locked);
   const trial = !!actor?.app?.trial;
   // Só nas telas principais das abas (não atrapalha leitura, quiz nem jogo).
   if (!open || pathname.startsWith(to) || pathname.split('/').filter(Boolean).length > 2) return null;
   const close = () => { barClosed = true; setOpen(false); };
+  // Plano do clube venceu (carência de 3 dias): avisa antes de precisar assinar.
+  if (actor.club_plan?.grace) {
+    return (
+      <div className="plus-bar trial" key="grace">
+        <Gift size={26} className="plus-bar-gift" />
+        <Link to={to} className="plus-bar-text"><b>O plano do seu clube venceu</b><small>{daysLeft(actor.club_plan.grace_until)} para o clube renovar · depois, só assinando</small></Link>
+        <Link to={to} className="plus-bar-btn">Ver planos</Link>
+      </div>
+    );
+  }
   // Conta nova do App Brasil: no lugar do convite do DBV+, mostra o teste grátis e quantos dias faltam.
   if (trial) {
     return (
