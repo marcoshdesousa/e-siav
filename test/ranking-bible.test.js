@@ -270,6 +270,12 @@ test('quem paga: clube pago (membros grátis), clube grátis + membros grátis, 
     assert.equal((await admin.post(`/admin/pagamentos/${pay.id}/confirmar`)).status, 200);
     assert.equal((await login('membros', 'pedro')).actor.club_plan, null, 'o clube assumiu: membros de graça');
   }
+  // Clube pago em dia: o membro não vê a faixa do DBV+ (club_pays); clube grátis + membros grátis: vê.
+  await admin.put(`/admin/clubs/${clubId}`, { club_billing: 'gratis', member_billing: 'gratis' });
+  assert.equal((await login('membros', 'pedro')).actor.club_pays, false);
+  await admin.put(`/admin/clubs/${clubId}`, { club_billing: 'pago' });
+  await admin.post(`/admin/clubs/${clubId}/plano`, { days: 30 });
+  assert.equal((await login('membros', 'pedro')).actor.club_pays, true);
   // Clube pago: os membros ficam sempre grátis (não dá para os dois pagarem).
   await admin.put(`/admin/clubs/${clubId}`, { club_billing: 'pago', member_billing: 'pago' });
   const list = (await admin.get('/admin/clubs')).body.find((c) => c.id === clubId);

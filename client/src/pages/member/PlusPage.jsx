@@ -157,7 +157,8 @@ let barClosed = false;
 export function PlusNudge({ to }) {
   const { actor } = useAuth();
   const { pathname } = useLocation();
-  const [open, setOpen] = useState(() => !barClosed && actor?.type === 'member' && !actor.plus && !actor.app?.locked && !actor.club_plan?.locked);
+  // Sem a faixa quando o clube paga pelos membros (o DBV+ continua em Mais → DBV+ para quem quiser).
+  const [open, setOpen] = useState(() => !barClosed && actor?.type === 'member' && !actor.plus && !actor.app?.locked && !actor.club_plan?.locked && (!actor.club_pays || !!actor.club_plan?.grace));
   const trial = !!actor?.app?.trial;
   // Só nas telas principais das abas (não atrapalha leitura, quiz nem jogo).
   if (!open || pathname.startsWith(to) || pathname.split('/').filter(Boolean).length > 2) return null;

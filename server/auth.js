@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { hasAccess, plusOf, plusOpen } from './plus.js';
-import { membersMustPay } from './clubPlan.js';
+import { clubPaysForMembers, membersMustPay } from './clubPlan.js';
 import bcrypt from 'bcryptjs';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -80,7 +80,9 @@ export function loadActor(type, id) {
       if (must?.grace) clubPlan = { grace: true, grace_until: must.grace_until };
       else if (must) clubPlan = { expired: true, reason: must.reason, locked: !hasAccess(m.id), until: p?.active ? p.until : null, trial: false };
     }
-    return { type, ...rest, cargo: cargoOf(kind, rest.cargo), waiting, kind, role: roleOf(kind, m.cargo), plus, plus_open: plusOpen(m.id), app, club_plan: clubPlan };
+    // Clube pagando pelos membros: sem a faixa "Seja DBV+" (o DBV+ continua na seção dele, para quem quiser).
+    const clubPays = !isApp && clubPaysForMembers(m.club_id);
+    return { type, ...rest, cargo: cargoOf(kind, rest.cargo), waiting, kind, role: roleOf(kind, m.cargo), plus, plus_open: plusOpen(m.id), app, club_plan: clubPlan, club_pays: clubPays };
   }
   return null;
 }

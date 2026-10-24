@@ -54,6 +54,14 @@ export function clubStatus(clubId, now = new Date()) {
   else if (graceUntil && graceUntil > iso) state = 'carencia';
   return { state, paid_until: until, grace_until: graceUntil, free_month: isFreeMonth(now), ...billing };
 }
+/** O clube está pagando pelos membros (clube pago em dia, ou clube grátis que assumiu a cobrança)? */
+export function clubPaysForMembers(clubId) {
+  const st = clubStatus(clubId);
+  if (!st) return false;
+  if (st.optional) return st.state === 'ok';
+  return st.club_billing === 'pago' && ['ok', 'gratis', 'carencia'].includes(st.state);
+}
+
 /**
  * Os membros precisam assinar o DBV para usar o app? 'membro_pago' (o clube foi criado assim),
  * 'clube_vencido' (o clube paga pelos membros e não pagou) ou null (usam de graça).
