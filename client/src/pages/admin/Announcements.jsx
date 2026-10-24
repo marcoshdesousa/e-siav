@@ -38,15 +38,16 @@ function ImageField({ value, onChange }) {
 }
 
 function AnnouncementForm({ initial, isClub, onClose, onDone }) {
-  const { meta } = useAuth();
-  const clubs = useLoad(() => (isClub ? Promise.resolve([]) : api.get('/admin/clubs')));
+  const { actor, meta } = useAuth();
+  const general = actor.type === 'admin' && !actor.district_id;
+  const appDistrict = useLoad(() => (general ? api.get('/admin/app-distrito') : Promise.resolve(null)));
   const [f, setF] = useState(initial);
   const [busy, run] = useAsync();
   const [preview, setPreview] = useState(false);
   const save = async () => {
     const body = toForm({
-      title: f.title, body: f.body, link: f.link || '', active: f.active ? 1 : 0, image: f.image instanceof File ? f.image : undefined,
-      ...(isClub ? {} : { target_type: f.target_type, target_id: f.target_type === 'all' ? '' : f.target_id }),
+      title: f.title, body: f.body, link: f.link || '', active: f.active ? 1 : 0, image: f.image instanceof File ? f.image : undefined, days: f.days || '',
+      ...(general ? { target_type: f.target_type, target_id: f.target_type === 'all' ? '' : f.target_id } : {}),
     });
     await run(() => (f.id ? api.put('/announcements/manage/' + f.id, body) : api.post('/announcements/manage', body)), 'Anúncio salvo!');
     onDone();
@@ -62,12 +63,17 @@ function AnnouncementForm({ initial, isClub, onClose, onDone }) {
         <Field label="Link (opcional)" hint="Ex.: formulário de inscrição. Pode colar só “www.site.com”: o app completa.">
           <input value={f.link || ''} onChange={(e) => setF({ ...f, link: e.target.value })} placeholder="www.site.com.br/inscricao" inputMode="url" autoCapitalize="none" />
         </Field>
+        <Field label="Quantos dias fica no ar" hint={f.id ? 'Em branco mantém o fim de agora. Colocando um número, conta a partir de hoje.' : 'Obrigatório. Depois desse tempo o anúncio sai sozinho.'}>
+          <input type="number" min="1" max="365" inputMode="numeric" value={f.days || ''} onChange={(e) => setF({ ...f, days: e.target.value })} placeholder="Ex.: 40" />
+        </Field>
         {isClub ? (
-          <p className="muted small">Este anúncio aparece só para os desbravadores, os conselheiros e as unidades do seu clube.</p>
+          <p className="muted small">Este anúncio aparece só para os desbravadores, os conselheiros e as unidades do seu clube. O clube tem um anúncio por vez.</p>
+        ) : !general ? (
+          <p className="muted small">Este anúncio aparece para todo o {actor.app ? 'App Brasil (contas sem clube)' : `distrito ${actor.district_name}`}. Cada distrito tem um anúncio por vez.</p>
         ) : (
-          <Field group label="Quem vai ver">
+          <Field group label="Quem vai ver" hint="Um anúncio por vez para o Brasil e um para cada distrito.">
             <div className="seg">
-              {[['all', 'Todo o App'], ['district', 'Um distrito'], ['club', 'Um clube']].map(([k, l]) => (
+              {[['all', 'Brasil (todo o App)'], ['district', 'Um distrito']].map(([k, l]) => (
                 <button key={k} type="button" className={f.target_type === k ? 'active' : ''} onClick={() => setF({ ...f, target_type: k, target_id: '' })}>{l}</button>
               ))}
             </div>
@@ -75,12 +81,7 @@ function AnnouncementForm({ initial, isClub, onClose, onDone }) {
               <select value={f.target_id || ''} onChange={(e) => setF({ ...f, target_id: e.target.value })} style={{ marginTop: '.5rem' }}>
                 <option value="">Escolha o distrito</option>
                 {meta.districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
-              </select>
-            )}
-            {f.target_type === 'club' && (
-              <select value={f.target_id || ''} onChange={(e) => setF({ ...f, target_id: e.target.value })} style={{ marginTop: '.5rem' }}>
-                <option value="">Escolha o clube</option>
-                {(clubs.data || []).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                {appDistrict.data && <option value={appDistrict.data.id}>App Brasil (contas sem clube)</option>}
               </select>
             )}
           </Field>
@@ -92,7 +93,8 @@ function AnnouncementForm({ initial, isClub, onClose, onDone }) {
   );
 }
 
-const TARGET = (a) => (a.club_id ? null : a.target_type === 'district' ? `Distrito: ${a.target_name}` : a.target_type === 'club' ? `Clube: ${a.target_name}` : 'Todo o App');
+const TARGET = (a) => (a.target_type === 'club' ? null : a.target_type === 'district' ? `Distrito: ${a.target_name}` : 'Brasil (todo o App)');
+const until = (a) => (a.expires_at ? (a.expired ? `Acabou em ${fmtDate(a.expires_at)}` : `No ar até ${fmtDate(a.expires_at)}`) : '');
 
 /** Anúncios. Admin: para todos, um distrito ou um clube. Clube: só para os próprios membros. */
 export default function AnnouncementsAdmin() {
@@ -104,7 +106,8 @@ export default function AnnouncementsAdmin() {
   return (
     <>
       <PageHeader title="Anúncios" subtitle={isClub ? 'Aparecem para os membros do seu clube ao abrir o app' : 'Aparecem no meio da tela quando a pessoa entra no app'}
-        action={<Button small onClick={() => setEditing({ title: '', body: '', link: '', image: null, active: true, target_type: 'all', target_id: '' })}>+ Novo</Button>} />
+        action={<Button small onClick={() => setEditing({ title: '', body: '', link: '', image: null, active: true, target_type: 'all', target_id: '', days: '' })}>+ Novo</Button>} />
+      <p className="small muted">Cada pessoa vê no máximo 3 anúncios: um do Brasil, um do distrito e um do clube. Cada lugar tem um anúncio por vez; para trocar, apague o atual.</p>
       <Loading {...state} empty="Nenhum anúncio criado.">
         {(list) => list.map((a) => (
           <Card key={a.id}>
@@ -113,19 +116,19 @@ export default function AnnouncementsAdmin() {
               <div className="grow">
                 <div className="row between" style={{ alignItems: 'flex-start' }}>
                   <h3>{a.title}</h3>
-                  {a.active ? <Badge kind="green">No ar</Badge> : <Badge>Pausado</Badge>}
+                  {a.expired ? <Badge kind="red">Acabou</Badge> : a.active ? <Badge kind="green">No ar</Badge> : <Badge>Pausado</Badge>}
                 </div>
-                <p className="small muted">{fmtDate(a.created_at)}{TARGET(a) ? ' · ' + TARGET(a) : ''}</p>
+                <p className="small muted">{[TARGET(a), until(a), !a.can_edit && 'criado pelo administrador geral'].filter(Boolean).join(' · ')}</p>
                 {a.link && <p className="small ico"><Link2 size={13} /> <a href={a.link} target="_blank" rel="noreferrer" className="ellipsis" style={{ maxWidth: 220, display: 'inline-block' }}>{a.link}</a></p>}
               </div>
             </div>
-            <div className="row wrap mt">
-              <Button small variant="secondary" onClick={() => setEditing({ ...a, active: !!a.active, target_id: a.target_id || '' })}><Pencil size={14} /> Editar</Button>
+            {a.can_edit && <div className="row wrap mt">
+              <Button small variant="secondary" onClick={() => setEditing({ ...a, active: !!a.active, target_id: a.target_id || '', days: '' })}><Pencil size={14} /> Editar</Button>
               <Button small variant="secondary" onClick={() => run(() => api.put('/announcements/manage/' + a.id, { active: a.active ? 0 : 1 }), a.active ? 'Anúncio pausado' : 'Anúncio no ar').then(state.reload)}>
                 {a.active ? <><EyeOff size={14} /> Pausar</> : <><Eye size={14} /> Colocar no ar</>}
               </Button>
               <Confirm text="Excluir este anúncio?" onYes={() => run(() => api.del('/announcements/manage/' + a.id), 'Anúncio excluído').then(state.reload)}><Trash2 size={14} /> Excluir</Confirm>
-            </div>
+            </div>}
           </Card>
         ))}
       </Loading>

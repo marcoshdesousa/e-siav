@@ -481,6 +481,9 @@ function migrate() {
   add('announcements', 'club_id', 'INTEGER REFERENCES clubs(id) ON DELETE CASCADE'); // criado pela diretoria do clube
   add('announcements', 'target_type', "TEXT NOT NULL DEFAULT 'all'"); // all | district | club
   add('announcements', 'target_id', 'INTEGER');
+  // Duração em dias (some sozinho no fim) e quem criou (administrador geral ou do distrito).
+  add('announcements', 'expires_at', 'TEXT');
+  add('announcements', 'created_by', 'INTEGER');
   // Marcas de tarefas de manutenção que só rodam uma vez.
   db.exec('CREATE TABLE IF NOT EXISTS app_flags (key TEXT PRIMARY KEY)');
 

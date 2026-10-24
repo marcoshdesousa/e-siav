@@ -37,8 +37,11 @@ export function actorFromToken(token) {
 
 export function loadActor(type, id) {
   if (type === 'admin') {
-    const a = get('SELECT a.id, a.name, a.district_id, d.name AS district_name FROM admins a LEFT JOIN districts d ON d.id = a.district_id WHERE a.id = ?', id);
-    return a && { type, ...a, general: !a.district_id };
+    const a = get('SELECT a.id, a.name, a.district_id, d.name AS district_name, d.is_app FROM admins a LEFT JOIN districts d ON d.id = a.district_id WHERE a.id = ?', id);
+    if (!a) return null;
+    const { is_app: isApp, ...rest } = a;
+    // Administrador do App: cuida do Clube App Brasil (aprovações, anúncios e requisitos de quem não tem clube).
+    return { type, ...rest, general: !a.district_id, app: !!isApp };
   }
   if (type === 'club') {
     const c = get('SELECT id, name, district_id, logo, photo, code FROM clubs WHERE id = ?', id);
@@ -87,12 +90,12 @@ export function attachActor(req, _res, next) {
 
 // Administrador de distrito: só as telas do distrito dele (clubes, links de inscrição, requisitos,
 // avaliações e as sequências). O resto do painel é só do administrador geral.
-const DISTRICT_ADMIN_OK = /^\/api\/admin\/(overview|districts|clubs|targets|inscricoes|sequencias)(\/|$)/;
+const DISTRICT_ADMIN_OK = /^\/api\/admin\/(overview|districts|clubs|targets|inscricoes|sequencias|app-aprovacoes)(\/|$)/;
 export function districtAdminGuard(req, _res, next) {
   const a = req.actor;
   const path = req.originalUrl.split('?')[0];
   if (a?.type === 'admin' && a.district_id
-    && ((path.startsWith('/api/admin/') && !DISTRICT_ADMIN_OK.test(path)) || (path.startsWith('/api/announcements') && req.method !== 'GET'))) {
+    && path.startsWith('/api/admin/') && !DISTRICT_ADMIN_OK.test(path)) {
     fail(403, 'Só o administrador geral pode fazer isso');
   }
   next();

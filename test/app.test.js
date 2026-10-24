@@ -450,8 +450,11 @@ test('entregar conteúdo em massa, eventos com participantes e anúncios', async
 
   const unitAcc = await login('clube', '4821', 'FA1111');
   assert.equal((await unitAcc.post('/admin/announcements', form({ title: 'x' }))).status, 403);
-  assert.equal((await admin.post('/admin/announcements', form({ title: 'X', link: 'javascript:alert(1)' }))).status, 400, 'só aceita links web');
-  await admin.post('/admin/announcements', form({ title: 'Aviso importante', body: 'Texto', link: 'www.adventistas.org/inscricao' }));
+  assert.equal((await admin.post('/admin/announcements', form({ title: 'X', days: '5', link: 'javascript:alert(1)' }))).status, 400, 'só aceita links web');
+  assert.equal((await admin.post('/admin/announcements', form({ title: 'Sem duração' }))).status, 400, 'precisa dizer quantos dias');
+  // O Brasil já tem o anúncio de boas-vindas dos dados de exemplo: para trocar, apaga o atual.
+  for (const x of (await admin.get('/announcements/manage')).body.filter((x) => x.target_type === 'all')) await admin.del('/announcements/manage/' + x.id);
+  assert.equal((await admin.post('/admin/announcements', form({ title: 'Aviso importante', days: '10', body: 'Texto', link: 'www.adventistas.org/inscricao' }))).status, 200);
   const active = (await unitAcc.get('/announcements/active')).body;
   const a = active.find((x) => x.title === 'Aviso importante');
   assert.ok(a);
@@ -485,12 +488,16 @@ test('anúncios por público e do clube; eventos do clube', async () => {
   const leoes = await login('clube', 'leoes', 'LE2026');
   const pedro = await login('membros', 'pedro'); // Águias
   const sofia = await login('membros', 'sofia'); // Leões
-  await admin.post('/admin/announcements', form({ title: 'Só Leões (admin)', target_type: 'club', target_id: String(sofia.actor.club_id) }));
-  await leoes.post('/announcements/manage', form({ title: 'Recado da diretoria dos Leões' }));
+  // Um por vez em cada lugar: Brasil, cada distrito e cada clube (no máximo 3 para cada pessoa).
+  assert.equal((await admin.post('/admin/announcements', form({ title: 'Outro do Brasil', days: '3' }))).status, 409, 'Brasil já tem um');
+  assert.equal((await admin.post('/announcements/manage', form({ title: 'Do distrito', days: '7', target_type: 'district', target_id: String(sofia.actor.district_id) }))).status, 200);
+  assert.equal((await admin.post('/announcements/manage', form({ title: 'Outro do distrito', days: '7', target_type: 'district', target_id: String(sofia.actor.district_id) }))).status, 409);
+  assert.equal((await leoes.post('/announcements/manage', form({ title: 'Recado da diretoria dos Leões', days: '40' }))).status, 200);
+  assert.equal((await leoes.post('/announcements/manage', form({ title: 'Segundo recado', days: '2' }))).status, 409, 'o clube tem um por vez');
   const forPedro = (await pedro.get('/announcements/active')).body.map((a) => a.title);
   const forSofia = (await sofia.get('/announcements/active')).body.map((a) => a.title);
-  assert.ok(!forPedro.includes('Só Leões (admin)') && !forPedro.includes('Recado da diretoria dos Leões'));
-  assert.ok(forSofia.includes('Só Leões (admin)') && forSofia.includes('Recado da diretoria dos Leões'));
+  assert.ok(!forPedro.includes('Recado da diretoria dos Leões') && forPedro.includes('Do distrito'));
+  assert.deepEqual(forSofia, ['Aviso importante', 'Do distrito', 'Recado da diretoria dos Leões'], 'Brasil, distrito e clube');
   // O clube só gerencia os próprios anúncios
   assert.ok((await leoes.get('/announcements/manage')).body.every((a) => a.club_id === sofia.actor.club_id));
   // Evento do clube: só para o clube, participantes só do clube

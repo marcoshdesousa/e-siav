@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import {
-  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, Tent, Trophy, Users, Globe, MessageCircle, BookImage, Wallet, Flame,
+  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, Tent, Trophy, Users, Globe, MessageCircle, BookImage, Wallet, Flame, BadgeCheck,
 } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -26,6 +26,7 @@ import LearningAdmin from './LearningAdmin.jsx';
 import PaymentsAdmin from './PaymentsAdmin.jsx';
 import StreaksAdmin from './StreaksAdmin.jsx';
 import PlusAdmin from './PlusAdmin.jsx';
+import { ApprovalsPage } from '../club/ClubApp.jsx';
 
 const base = '/admin';
 
@@ -130,7 +131,7 @@ function ClubForm({ item, nextNumber, districts, onClose, onCreated, onSaved }) 
   );
 }
 
-function NameLoginForm({ title, item, withDistrict, districts, onClose, onSave }) {
+function NameLoginForm({ title, item, withDistrict, districts, appDistrict, onClose, onSave }) {
   const [f, setF] = useState({ name: item?.name || '', district_id: item?.district_id || districts?.[0]?.id || '', username: item?.username || '', password: '' });
   const [busy, run] = useAsync();
   return (
@@ -138,9 +139,12 @@ function NameLoginForm({ title, item, withDistrict, districts, onClose, onSave }
       <div className="form">
         <Field label="Nome"><input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
         {withDistrict && (
-          <Field label="Distrito que ele vai cuidar" hint="Ele cria clubes e requisitos desse distrito e só vê esse distrito.">
+          <Field label="O que ele vai cuidar" hint={appDistrict && String(f.district_id) === String(appDistrict.id)
+            ? 'Administrador do App: cuida de quem criou a conta pelo app (Clube App Brasil). Aprova especialidades e classes, faz anúncios e requisitos para eles.'
+            : 'Ele cria clubes e requisitos desse distrito e só vê esse distrito.'}>
             <select value={f.district_id} onChange={(e) => setF({ ...f, district_id: e.target.value })}>
               {districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
+              {appDistrict && <option value={appDistrict.id}>App Brasil (contas sem clube)</option>}
             </select>
           </Field>
         )}
@@ -160,6 +164,7 @@ function ClubsAdmin() {
   const districts = useLoad(() => api.get('/admin/districts'));
   const clubs = useLoad(() => api.get('/admin/clubs'));
   const admins = useLoad(() => (general ? api.get('/admin/admins') : Promise.resolve([])));
+  const appDistrict = useLoad(() => (general ? api.get('/admin/app-distrito') : Promise.resolve(null)));
   const [modal, setModal] = useState(null);
   const [newDistrict, setNewDistrict] = useState('');
   const [busy, run] = useAsync();
@@ -240,7 +245,7 @@ function ClubsAdmin() {
               {(list) => list.map((a) => (
                 <div key={a.id} className="list-item">
                   <Avatar name={a.name} size={42} />
-                  <div className="grow"><div className="title">{a.name}</div><div className="sub">@{a.username} · {a.district_id ? `Distrito ${a.district_name}` : 'Administrador geral'}</div></div>
+                  <div className="grow"><div className="title">{a.name}</div><div className="sub">@{a.username} · {a.district_id ? (a.district_id === appDistrict.data?.id ? 'Administrador do App (contas sem clube)' : `Distrito ${a.district_name}`) : 'Administrador geral'}</div></div>
                   <Button small variant="secondary" onClick={() => setModal({ kind: 'admin', item: a })}>Editar</Button>
                 </div>
               ))}
@@ -270,7 +275,7 @@ function ClubsAdmin() {
       {modal?.kind === 'admin' && (
         <NameLoginForm
           title={modal.item ? 'Editar administrador' : 'Novo administrador do distrito'} item={modal.item}
-          withDistrict={!modal.item || !!modal.item.district_id} districts={districts.data || []}
+          withDistrict={!modal.item || !!modal.item.district_id} districts={districts.data || []} appDistrict={appDistrict.data}
           onClose={() => setModal(null)}
           onSave={(f) => (modal.item ? api.put('/admin/admins/' + modal.item.id, f) : api.post('/admin/admins', f)).then(admins.reload)}
         />
@@ -310,10 +315,15 @@ export default function AdminApp() {
     { to: `${base}/conteudo`, icon: Library, label: 'Conteúdo' },
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
+  // Aprovações de quem é do Clube App Brasil: o geral e o administrador do App.
+  const appApprovals = general || actor.app ? [{ to: `${base}/aprovacoes`, icon: BadgeCheck, label: 'Aprovações do App', hint: 'Especialidades e classes de quem é do App Brasil' }] : [];
   const more = !general ? [
+    ...appApprovals,
+    { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: actor.app ? 'Para quem é do App Brasil' : 'Para o seu distrito' },
     { to: `${base}/ranking`, icon: Trophy, label: 'Rankings', hint: 'Tabelas do distrito' },
     { to: `${base}/explorar`, icon: Map, label: 'Explorar clubes', hint: 'Perfis públicos' },
   ] : [
+    ...appApprovals,
     { to: `${base}/sequencias`, icon: Flame, label: 'Sequências', hint: 'Porcentagem por distrito e clube' },
     { to: `${base}/dbv-mais`, icon: Wallet, label: 'DBV+', hint: 'Assinantes e especialidades escolhidas' },
     { to: `${base}/suporte`, icon: MessageCircle, label: 'Suporte', hint: 'Responder os clubes e membros' },
@@ -351,6 +361,7 @@ export default function AdminApp() {
         <Route path="entregar" element={<Deliver />} />
         <Route path="eventos" element={<EventsAdmin />} />
         <Route path="anuncios" element={<AnnouncementsAdmin />} />
+        <Route path="aprovacoes" element={<ApprovalsPage url="/admin/app-aprovacoes" canAdd={false} subtitle="Especialidades e classes de quem é do Clube App Brasil" />} />
         <Route path="medalhas" element={<Navigate to={`${base}/conteudo?aba=medalhas`} replace />} />
         <Route path="ranking" element={<RankingHub base={base} />} />
         <Route path="sequencias" element={<StreaksAdmin />} />

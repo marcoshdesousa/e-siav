@@ -256,24 +256,28 @@ function AchievementsModal({ member, onClose, onDone }) {
 }
 
 /** Aprovações: especialidades que os membros informaram ter. */
-function ApprovalsPage() {
+/**
+ * Aprovações das especialidades e classes. No clube, a diretoria aprova; no painel do administrador,
+ * o geral e o administrador do App aprovam as de quem é do Clube App Brasil (url e sem "Adicionar").
+ */
+export function ApprovalsPage({ url = '/club/achievement-requests', canAdd = true, subtitle = 'Especialidades e classes que os membros dizem ter' }) {
   const [status, setStatus] = useState('pendente');
-  const members = useLoad(() => api.get('/club/members'));
+  const members = useLoad(() => (canAdd ? api.get('/club/members') : Promise.resolve([])));
   const [picking, setPicking] = useState(false);
   const [addFor, setAddFor] = useState(null);
-  const state = useLoad(() => api.get('/club/achievement-requests?status=' + status), [status]);
+  const state = useLoad(() => api.get(`${url}?status=${status}`), [status]);
   const [sel, setSel] = useState(new Set());
   const [busy, run] = useAsync();
   const decide = async (ids, decision) => {
-    await run(() => api.post('/club/achievement-requests/decide', { ids, decision }), decision === 'aprovado' ? 'Aprovado! Já aparece no perfil.' : 'Recusado');
+    await run(() => api.post(`${url}/decide`, { ids, decision }), decision === 'aprovado' ? 'Aprovado! Já aparece no perfil.' : 'Recusado');
     setSel(new Set());
     state.reload();
   };
   const toggle = (id) => { const s = new Set(sel); s.has(id) ? s.delete(id) : s.add(id); setSel(s); };
   return (
     <>
-      <PageHeader title="Aprovações" subtitle="Especialidades e classes que os membros dizem ter"
-        action={<Button small onClick={() => setPicking(true)}><Plus size={15} /> Adicionar</Button>} />
+      <PageHeader title="Aprovações" subtitle={subtitle}
+        action={canAdd ? <Button small onClick={() => setPicking(true)}><Plus size={15} /> Adicionar</Button> : null} />
       {picking && (
         <Modal title="Adicionar para qual membro?" onClose={() => setPicking(false)}>
           <p className="muted small" style={{ marginBottom: '.6rem' }}>Registre especialidades e classes mesmo que o membro não tenha pedido.</p>

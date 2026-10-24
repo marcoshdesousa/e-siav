@@ -4,6 +4,7 @@ import { requireAuth } from '../auth.js';
 import { catalog, iconForArea, importSpecialties, AREAS } from '../catalog.js';
 import { imageUpload } from '../uploads.js';
 import { fail, int, str } from '../util.js';
+import { appClub } from '../appBrasil.js';
 
 // Classes e especialidades: o membro informa as que tem; a diretoria do clube aprova.
 const r = Router();
@@ -49,8 +50,21 @@ r.delete('/me/achievement-requests/:id', requireAuth('member'), (req, res) => {
   res.json({ ok: true });
 });
 
-// ---------- Diretoria do clube ----------
-r.get('/club/achievement-requests', requireAuth('club'), (req, res) => {
+// ---------- Quem aprova: a diretoria do clube; no Clube App Brasil, o administrador geral ou o do App ----------
+const club = requireAuth('club');
+/** Clube cujas aprovações esta conta cuida. */
+function approverClub(req) {
+  if (req.actor.type === 'club') return req.actor.id;
+  if (req.actor.type === 'admin' && (!req.actor.district_id || req.actor.app)) {
+    const c = appClub();
+    if (c) return c.id;
+  }
+  fail(403, 'Só o administrador geral ou o administrador do App aprova as contas do App Brasil');
+}
+const appApprover = requireAuth('admin');
+
+r.get(['/club/achievement-requests', '/admin/app-aprovacoes'], (req, res, next) => (req.path.startsWith('/admin') ? appApprover : club)(req, res, next), (req, res) => {
+  const clubId = approverClub(req);
   const status = ['pendente', 'aprovado', 'recusado'].includes(req.query.status) ? req.query.status : 'pendente';
   const rows = all(
     `SELECT q.id, q.status, q.created_at, q.reviewed_at, c.id AS content_id, c.type, c.name, c.icon, NULL AS image, c.category,
@@ -58,7 +72,7 @@ r.get('/club/achievement-requests', requireAuth('club'), (req, res) => {
      FROM achievement_requests q JOIN content c ON c.id = q.content_id JOIN members m ON m.id = q.member_id
      LEFT JOIN units u ON u.id = m.unit_id
      WHERE m.club_id = ? AND q.status = ? AND c.type IN ('classe','especialidade') ORDER BY m.name, c.type, c.leader, c.id LIMIT 500`,
-    req.actor.id, status,
+    clubId, status,
   );
   // Agrupado por membro
   const byMember = new Map();
@@ -69,12 +83,14 @@ r.get('/club/achievement-requests', requireAuth('club'), (req, res) => {
   res.json([...byMember.values()]);
 });
 
-r.get('/club/achievement-requests/count', requireAuth('club'), (req, res) => {
-  res.json({ pending: get(`SELECT COUNT(*) n FROM achievement_requests q JOIN members m ON m.id = q.member_id WHERE m.club_id = ? AND q.status = 'pendente'`, req.actor.id).n });
+r.get(['/club/achievement-requests/count', '/admin/app-aprovacoes/count'], (req, res, next) => (req.path.startsWith('/admin') ? appApprover : club)(req, res, next), (req, res) => {
+  res.json({ pending: get(`SELECT COUNT(*) n FROM achievement_requests q JOIN members m ON m.id = q.member_id WHERE m.club_id = ? AND q.status = 'pendente'`, approverClub(req)).n });
 });
 
 // Aprovar ou recusar (um ou vários). Aprovado → aparece no perfil do membro.
-r.post('/club/achievement-requests/decide', requireAuth('club'), (req, res) => {
+r.post(['/club/achievement-requests/decide', '/admin/app-aprovacoes/decide'], (req, res, next) => (req.path.startsWith('/admin') ? appApprover : club)(req, res, next), (req, res) => {
+  const clubId = approverClub(req);
+  const source = req.actor.type === 'admin' ? 'admin' : 'clube';
   const ids = (Array.isArray(req.body.ids) ? req.body.ids : []).map(Number).filter(Boolean);
   const decision = req.body.decision === 'aprovado' ? 'aprovado' : 'recusado';
   let done = 0;
@@ -82,11 +98,11 @@ r.post('/club/achievement-requests/decide', requireAuth('club'), (req, res) => {
     for (const id of ids) {
       const q = get(
         `SELECT q.* FROM achievement_requests q JOIN members m ON m.id = q.member_id WHERE q.id = ? AND m.club_id = ? AND q.status = 'pendente'`,
-        id, req.actor.id,
+        id, clubId,
       );
       if (!q) continue;
       run('UPDATE achievement_requests SET status = ?, reviewed_at = ? WHERE id = ?', decision, nowIso(), q.id);
-      if (decision === 'aprovado') run(`INSERT OR IGNORE INTO achievements (member_id, content_id, source) VALUES (?, ?, 'clube')`, q.member_id, q.content_id);
+      if (decision === 'aprovado') run(`INSERT OR IGNORE INTO achievements (member_id, content_id, source) VALUES (?, ?, ?)`, q.member_id, q.content_id, source);
       done++;
     }
   });

@@ -197,3 +197,28 @@ test('@ do membro: único, entra com ele, aparece no perfil e não muda', async 
   assert.equal((await eb.post('/me/arroba', { handle: 'ester_s' })).body.handle, 'ester_s');
   assert.equal((await eb.post('/me/arroba', { handle: 'ester2' })).status, 409, 'não troca');
 });
+
+test('App Brasil: o administrador geral e o administrador do App aprovam especialidades', async () => {
+  const geral = await login('membros', 'admin', 'admin123');
+  const k = await anon('POST', '/criar-conta', { handle: uid(), name: 'Gabi Especialidade Reis', birth_date: yearsAgo(13) });
+  const kid = await login('membros', k.body.code, k.body.password);
+  const esp = (await kid.get('/catalog?type=especialidade')).body[0];
+  assert.equal((await kid.post('/me/achievement-requests', { content_ids: [esp.id] })).body.created, 1);
+  const pend = (await geral.get('/admin/app-aprovacoes')).body;
+  const g = pend.find((x) => x.member_id === kid.actor.id);
+  assert.ok(g, 'o geral vê o pedido de quem é do App');
+  // Administrador do App (distrito escondido do App Brasil).
+  const appD = (await geral.get('/admin/app-distrito')).body;
+  assert.ok(appD?.id);
+  assert.equal((await geral.post('/admin/admins', { name: 'Admin do App', district_id: appD.id, username: 'admapp', password: 'senha123' })).status, 200);
+  const appAdm = await login('membros', 'admapp', 'senha123');
+  assert.equal(appAdm.actor.app, true);
+  assert.equal((await appAdm.get('/admin/app-aprovacoes/count')).body.pending, 1);
+  assert.equal((await appAdm.post('/admin/app-aprovacoes/decide', { ids: [g.items[0].id], decision: 'aprovado' })).body.done, 1);
+  assert.ok((await kid.get('/me/profile')).body.specialties.some((s) => s.id === esp.id), 'aparece no perfil');
+  // Administrador de outro distrito não aprova as do App.
+  const pal = (await geral.get('/admin/districts')).body.find((d) => d.name === 'Distrito Palmares').id;
+  await geral.post('/admin/admins', { name: 'Admin Pal 2', district_id: pal, username: 'admpal2', password: 'senha123' });
+  const dist = await login('membros', 'admpal2', 'senha123');
+  assert.equal((await dist.get('/admin/app-aprovacoes')).status, 403);
+});

@@ -146,6 +146,9 @@ r.get('/admin/clubs/:id/members/:mid/ficha', (req, res) => {
   res.json(f);
 });
 
+// Distrito do App Brasil (escondido nas listas): para criar o administrador do App.
+r.get('/admin/app-distrito', requireGeneral, (_req, res) => res.json(get('SELECT id, name FROM districts WHERE is_app = 1') || null));
+
 // ---------- Administradores ----------
 // Só existe um administrador geral; os outros cuidam cada um de um distrito.
 r.get('/admin/admins', requireGeneral, (_req, res) => {
