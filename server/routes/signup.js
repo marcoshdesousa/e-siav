@@ -109,8 +109,9 @@ function person(body) {
   if (!validDate(birth) || birth > new Date().toISOString().slice(0, 10)) fail(400, 'Informe a data de nascimento');
   const kind = memberKind(birth);
   if (!kind) fail(400, 'Para criar a conta é preciso ter pelo menos 10 anos');
-  // O @ é opcional na criação (dá para criar depois em Minha conta).
-  const handle = String(body.handle || '').trim() ? checkHandle(body.handle) : null;
+  // O @ é obrigatório na criação da conta (o código é gerado depois, automático).
+  if (!String(body.handle || '').replace(/@/g, '').trim()) fail(400, 'Escolha o seu @');
+  const handle = checkHandle(body.handle);
   return { name, birth, kind, handle };
 }
 

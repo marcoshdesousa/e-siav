@@ -19,7 +19,7 @@ const ageOf = (d) => {
 /** Campo do @ (opcional na criação da conta): único no app e sem troca depois. */
 export function HandleField({ value, onChange }) {
   return (
-    <Field label="Seu @ (opcional)" hint="Dá para entrar com ele no lugar do código. Ninguém pesquisa pelo @, e depois de criado ele não muda.">
+    <Field label="Seu @" hint="Entre com ele ou com o código, que o app cria depois. Ninguém pesquisa pelo @, e depois de criado ele não muda.">
       <div className="handle-input"><span>@</span><input value={value} onChange={(e) => onChange(e.target.value.replace(/\s/g, '').toLowerCase())} placeholder="seu.nome" autoCapitalize="none" spellCheck={false} maxLength={21} /></div>
     </Field>
   );
@@ -42,7 +42,7 @@ export function CreateAccount() {
   const age = ageOf(f.birth_date);
   const young = age != null && age < 10;
   const leader = age != null && age >= 16;
-  const ready = f.name.trim().split(/\s+/).length >= 2 && age != null && !young;
+  const ready = f.name.trim().split(/\s+/).length >= 2 && age != null && !young && f.handle.replace(/^@/, '').length >= 3;
   const send = () => run(async () => setDone(await api.post('/criar-conta', f)));
 
   if (done) {
@@ -57,7 +57,7 @@ export function CreateAccount() {
             <div><small>Código</small><b>{done.code}</b></div>
             <div><small>Senha</small><b>{done.password}</b></div>
           </div>
-          {done.actor.handle && <p style={{ margin: 0 }}>Você também entra com <b>@{done.actor.handle}</b>.</p>}
+          <p style={{ margin: 0 }}>Você entra com <b>@{done.actor.handle}</b> ou com o código.</p>
           <p className="small muted">A senha é o ano em que você nasceu.</p>
           <Button block onClick={() => { setActor(done.actor); nav('/membro', { replace: true }); }}>Entrar no app</Button>
         </Card>
@@ -83,6 +83,7 @@ export function CreateAccount() {
           <Field label="Nome completo">
             <input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder="Nome e sobrenome" autoComplete="name" />
           </Field>
+          <HandleField value={f.handle} onChange={(handle) => setF({ ...f, handle })} />
           <Field label="Data de nascimento" hint={age != null ? `${age} anos` : null}>
             <input type="date" value={f.birth_date} onChange={(e) => setF({ ...f, birth_date: e.target.value })} />
           </Field>
@@ -96,7 +97,6 @@ export function CreateAccount() {
               </div>
             </Field>
           )}
-          <HandleField value={f.handle} onChange={(handle) => setF({ ...f, handle })} />
           <Button block busy={busy} disabled={!ready} onClick={send}><KeyRound size={18} /> Criar minha conta</Button>
         </div>
       </Card>

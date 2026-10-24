@@ -59,6 +59,8 @@ const anon = async (method, url, body) => {
   const r = await fetch(BASE + url, { method, headers: body ? { 'Content-Type': 'application/json' } : {}, body: body ? JSON.stringify(body) : undefined });
   return { status: r.status, body: await r.json().catch(() => null), cookie: r.headers.get('set-cookie') };
 };
+let seq = 0;
+const uid = () => `teste.${++seq}`;
 const yearsAgo = (n) => `${new Date().getFullYear() - n}-01-15`;
 
 test('admin de distrito: só o distrito dele; o geral cria admins com distrito', async () => {
@@ -94,20 +96,20 @@ test('link de inscrição: desbravador, diretoria e conselheiro entram no clube 
   const info = (await anon('GET', `/inscricao/${on.token}`)).body;
   assert.ok(info.club.name && info.units.length, 'nome do clube e unidades');
   const unit = info.units[0].id;
-  const kid = await anon('POST', `/inscricao/${on.token}`, { name: 'Joãozinho Teste', birth_date: yearsAgo(12), cargo: 'desbravador', unit_id: unit });
+  const kid = await anon('POST', `/inscricao/${on.token}`, { handle: uid(), name: 'Joãozinho Teste', birth_date: yearsAgo(12), cargo: 'desbravador', unit_id: unit });
   assert.equal(kid.status, 200);
   assert.match(kid.body.code, /^\d{6}$/);
   assert.equal(kid.body.password, String(new Date().getFullYear() - 12));
   assert.ok(kid.cookie, 'já entra logado');
   const again = await login('membros', kid.body.code, kid.body.password);
   assert.equal(again.actor.unit_id, unit);
-  assert.equal((await anon('POST', `/inscricao/${on.token}`, { name: 'Joãozinho Teste', birth_date: yearsAgo(12), cargo: 'desbravador', unit_id: unit })).status, 200, 'mesmo nome no mesmo clube pode (coincidência)');
-  assert.equal((await anon('POST', `/inscricao/${on.token}`, { name: 'Pequeno Demais', birth_date: yearsAgo(8), cargo: 'desbravador', unit_id: unit })).status, 400);
-  assert.equal((await anon('POST', `/inscricao/${on.token}`, { name: 'Menino Diretor', birth_date: yearsAgo(13), cargo: 'diretoria' })).status, 400, 'até 15 anos só desbravador');
-  const dir = await anon('POST', `/inscricao/${on.token}`, { name: 'Ana Diretoria', birth_date: yearsAgo(30), cargo: 'diretoria' });
+  assert.equal((await anon('POST', `/inscricao/${on.token}`, { handle: uid(), name: 'Joãozinho Teste', birth_date: yearsAgo(12), cargo: 'desbravador', unit_id: unit })).status, 200, 'mesmo nome no mesmo clube pode (coincidência)');
+  assert.equal((await anon('POST', `/inscricao/${on.token}`, { handle: uid(), name: 'Pequeno Demais', birth_date: yearsAgo(8), cargo: 'desbravador', unit_id: unit })).status, 400);
+  assert.equal((await anon('POST', `/inscricao/${on.token}`, { handle: uid(), name: 'Menino Diretor', birth_date: yearsAgo(13), cargo: 'diretoria' })).status, 400, 'até 15 anos só desbravador');
+  const dir = await anon('POST', `/inscricao/${on.token}`, { handle: uid(), name: 'Ana Diretoria', birth_date: yearsAgo(30), cargo: 'diretoria' });
   assert.equal(dir.status, 200);
   assert.equal(dir.body.actor.role, 'Diretoria');
-  const cons = await anon('POST', `/inscricao/${on.token}`, { name: 'Carlos Conselheiro', birth_date: yearsAgo(20), cargo: 'conselheiro', unit_id: unit });
+  const cons = await anon('POST', `/inscricao/${on.token}`, { handle: uid(), name: 'Carlos Conselheiro', birth_date: yearsAgo(20), cargo: 'conselheiro', unit_id: unit });
   assert.equal(cons.status, 200);
   assert.equal(cons.body.actor.unit_id, unit);
   await club.put('/club/inscricao', { enabled: false });
@@ -118,7 +120,7 @@ test('link de inscrição: desbravador, diretoria e conselheiro entram no clube 
 
 test('App Brasil: cria conta sem clube, precisa de plano, só ranking Brasil, apaga a conta', async () => {
   const geral = await login('membros', 'admin', 'admin123');
-  const kid = await anon('POST', '/criar-conta', { name: 'Bruno Sem Clube', birth_date: yearsAgo(13) });
+  const kid = await anon('POST', '/criar-conta', { handle: uid(), name: 'Bruno Sem Clube', birth_date: yearsAgo(13) });
   assert.equal(kid.status, 200);
   assert.equal(kid.body.actor.club_name, 'Clube App Brasil');
   assert.equal(kid.body.actor.unit_name, 'Unidade App');
@@ -127,7 +129,7 @@ test('App Brasil: cria conta sem clube, precisa de plano, só ranking Brasil, ap
   assert.ok(dias > 2.9 && dias <= 3, '3 dias');
   assert.equal(kid.body.actor.plus, null, 'o DBV não libera o DBV+');
   assert.equal((await geral.del(`/admin/plus/${kid.body.actor.id}`)).status, 200, 'simula o fim dos 3 dias');
-  const lider = (await anon('POST', '/criar-conta', { name: 'Carla Sem Clube', birth_date: yearsAgo(25) })).body.actor;
+  const lider = (await anon('POST', '/criar-conta', { handle: uid(), name: 'Carla Sem Clube', birth_date: yearsAgo(25) })).body.actor;
   assert.equal(lider.unit_name, 'Unidade App Liderança');
   const b = await login('membros', kid.body.code, kid.body.password);
   assert.equal((await b.post('/ano-biblico/dia/1/quiz', { answers: [0] })).status, 402, 'bloqueado até assinar');
@@ -179,9 +181,10 @@ test('@ do membro: único, entra com ele, aparece no perfil e não muda', async 
   assert.equal(bad.status, 401);
   assert.equal((await anon('GET', `/public/members/${a.body.code}`)).body.handle, 'davi.souza', 'aparece no perfil');
   assert.equal((await anon('GET', '/public/members/davi.souza')).status, 404, 'não acha pelo @');
-  // Sem @ na criação: cria depois, uma vez só.
-  const b = await anon('POST', '/criar-conta', { name: 'Ester Sem Arroba', birth_date: yearsAgo(13) });
-  const eb = await login('membros', b.body.code, b.body.password);
+  // Sem @ não cria a conta.
+  assert.equal((await anon('POST', '/criar-conta', { name: 'Ester Sem Arroba', birth_date: yearsAgo(13) })).status, 400, '@ obrigatório');
+  // Quem foi cadastrado pelo clube (sem @) cria depois em Minha conta, uma vez só.
+  const eb = await login('membros', 'pedro');
   assert.equal((await eb.post('/me/arroba', { handle: 'davi.souza' })).status, 409);
   assert.equal((await eb.post('/me/arroba', { handle: 'ester_s' })).body.handle, 'ester_s');
   assert.equal((await eb.post('/me/arroba', { handle: 'ester2' })).status, 409, 'não troca');

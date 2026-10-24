@@ -40,7 +40,7 @@ function Form({ d, token }) {
   const young = age != null && age < 10;
   const cargo = age == null || young ? '' : leader ? f.cargo : 'desbravador';
   const needUnit = cargo === 'desbravador' || cargo === 'conselheiro';
-  const ready = f.name.trim().split(/\s+/).length >= 2 && age != null && !young && cargo && (!needUnit || f.unit_id);
+  const ready = f.name.trim().split(/\s+/).length >= 2 && age != null && !young && cargo && (!needUnit || f.unit_id) && f.handle.replace(/^@/, '').length >= 3;
   const send = () => run(async () => setDone(await api.post(`/inscricao/${token}`, { ...f, cargo })));
 
   if (done) {
@@ -53,7 +53,7 @@ function Form({ d, token }) {
           <div><small>Código</small><b>{done.code}</b></div>
           <div><small>Senha</small><b>{done.password}</b></div>
         </div>
-        {done.actor.handle && <p style={{ margin: 0 }}>Você também entra com <b>@{done.actor.handle}</b>.</p>}
+        <p style={{ margin: 0 }}>Você entra com <b>@{done.actor.handle}</b> ou com o código.</p>
         <p className="small muted">A senha é o ano em que você nasceu.</p>
         <Button block onClick={() => { setActor(done.actor); nav('/membro', { replace: true }); }}>Entrar no app</Button>
       </Card>
@@ -73,6 +73,7 @@ function Form({ d, token }) {
           <Field label="Nome completo">
             <input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder="Nome e sobrenome" autoComplete="name" />
           </Field>
+          <HandleField value={f.handle} onChange={(handle) => setF({ ...f, handle })} />
           <Field label="Data de nascimento" hint={age != null ? `${age} anos` : null}>
             <input type="date" value={f.birth_date} onChange={(e) => setF({ ...f, birth_date: e.target.value, cargo: '', unit_id: null })} />
           </Field>
@@ -104,7 +105,6 @@ function Form({ d, token }) {
               ) : <p className="small muted">O clube ainda não tem unidades. Fale com a diretoria.</p>}
             </Field>
           )}
-          <HandleField value={f.handle} onChange={(handle) => setF({ ...f, handle })} />
           <Button block busy={busy} disabled={!ready} onClick={send}><KeyRound size={18} /> Criar minha conta</Button>
         </div>
       </Card>
