@@ -163,24 +163,39 @@ export default function Game({ onScore, onEnd }) {
     const ctx = getCtx();
     const s = st.current;
     if (!ctx || !s) return;
-    ctx.fillStyle = COLORS.bg;
+    const bg = ctx.createLinearGradient(0, 0, W, H);
+    bg.addColorStop(0, '#0A1230'); bg.addColorStop(1, '#1A1240');
+    ctx.fillStyle = bg;
     ctx.fillRect(0, 0, W, H);
-    // grade
-    ctx.fillStyle = '#121F45';
+    // poço com brilho suave e grade fina
+    const well = ctx.createLinearGradient(0, 0, 0, H);
+    well.addColorStop(0, '#0F1A3E'); well.addColorStop(1, '#162457');
+    ctx.fillStyle = well;
     ctx.fillRect(0, 0, PX, H);
-    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+    ctx.strokeStyle = 'rgba(127,178,255,0.07)';
     ctx.lineWidth = 1;
     for (let c = 1; c < COLS; c++) { ctx.beginPath(); ctx.moveTo(c * CELL + 0.5, 0); ctx.lineTo(c * CELL + 0.5, H); ctx.stroke(); }
     for (let r = 1; r < ROWS; r++) { ctx.beginPath(); ctx.moveTo(0, r * CELL + 0.5); ctx.lineTo(PX, r * CELL + 0.5); ctx.stroke(); }
+    ctx.strokeStyle = 'rgba(127,178,255,0.35)'; ctx.lineWidth = 2;
+    ctx.strokeRect(1, 1, PX - 2, H - 2);
 
+    // bloco de vidro: gradiente, borda clara, reflexo e brilho
     const block = (x, y, color, size = CELL, alpha = 1) => {
       ctx.globalAlpha = alpha;
-      ctx.fillStyle = color;
-      ctx.fillRect(x + 1, y + 1, size - 2, size - 2);
-      ctx.fillStyle = 'rgba(255,255,255,0.28)';
-      ctx.fillRect(x + 1, y + 1, size - 2, Math.max(2, size * 0.18));
-      ctx.fillStyle = 'rgba(0,0,0,0.2)';
-      ctx.fillRect(x + 1, y + size - 1 - Math.max(2, size * 0.14), size - 2, Math.max(2, size * 0.14));
+      const r = Math.max(2, size * 0.16);
+      const g = ctx.createLinearGradient(x, y, x + size, y + size);
+      g.addColorStop(0, '#ffffff'); g.addColorStop(0.12, color); g.addColorStop(1, color);
+      ctx.save();
+      if (alpha === 1) { ctx.shadowColor = color; ctx.shadowBlur = size * 0.35; }
+      ctx.fillStyle = g;
+      ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x + 1, y + 1, size - 2, size - 2, r); else ctx.rect(x + 1, y + 1, size - 2, size - 2); ctx.fill();
+      ctx.restore();
+      ctx.fillStyle = 'rgba(0,0,0,0.22)';
+      ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x + 1, y + size * 0.62, size - 2, size * 0.38 - 1, [0, 0, r, r]); else ctx.rect(x + 1, y + size * 0.62, size - 2, size * 0.38 - 1); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.35)';
+      ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x + size * 0.18, y + size * 0.14, size * 0.5, size * 0.14, size * 0.07); else ctx.rect(x + size * 0.18, y + size * 0.14, size * 0.5, size * 0.14); ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1;
+      ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x + 1.5, y + 1.5, size - 3, size - 3, r); else ctx.rect(x + 1.5, y + 1.5, size - 3, size - 3); ctx.stroke();
       ctx.globalAlpha = 1;
     };
 

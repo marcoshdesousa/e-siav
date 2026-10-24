@@ -1,6 +1,6 @@
 // Cobrinha: coma as frutas, cresça e não bata em nada. Fica mais rápida conforme cresce.
 import { useEffect, useRef, useState } from 'react';
-import { COLORS, rand, useCanvas, useKeys, useRaf, useSwipe } from '../kit.js';
+import { rand, useCanvas, useKeys, useRaf, useSwipe } from '../kit.js';
 import DPad from '../DPad.jsx';
 import { sfx } from '../audio.js';
 import { FRUIT_KINDS, drawFruit } from '../art.jsx';
@@ -17,7 +17,7 @@ const canvasStyle = { width: '100%', height: 'auto', display: 'block', touchActi
 
 function newState() {
   const snake = [{ x: 6, y: 9 }, { x: 5, y: 9 }, { x: 4, y: 9 }];
-  const s = { snake, dir: 'right', queue: [], fruit: null, fruitIcon: FRUITS[0], eaten: 0, acc: 0, countdown: 3, grow: 0 };
+  const s = { snake, dir: 'right', queue: [], fruit: null, fruitIcon: FRUITS[0], eaten: 0, acc: 0, countdown: 3, grow: 0, prev: null, fx: [], t: 0 };
   placeFruit(s);
   return s;
 }
@@ -32,8 +32,6 @@ function placeFruit(s) {
   s.fruitIcon = FRUITS[rand(FRUITS.length)];
   return true;
 }
-
-const rrect = (ctx, x, y, w, h, r) => (ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h));
 
 const stepMs = (s) => Math.max(65, 160 - s.eaten * 4);
 
@@ -66,6 +64,7 @@ export default function Game({ onScore, onEnd }) {
 
   const tick = () => {
     const s = st.current;
+    s.prev = s.snake.map((p) => ({ ...p }));
     if (s.queue.length) s.dir = s.queue.shift();
     const [dx, dy] = VEC[s.dir];
     const head = s.snake[0];
@@ -79,6 +78,10 @@ export default function Game({ onScore, onEnd }) {
     if (eating) {
       s.eaten += 1;
       s.grow += 1;
+      for (let k = 0; k < 10; k++) {
+        const a = (k / 10) * Math.PI * 2;
+        s.fx.push({ x: nx * CELL + CELL / 2, y: ny * CELL + CELL / 2, vx: Math.cos(a) * 70, vy: Math.sin(a) * 70, life: 1 });
+      }
       sfx('coin');
       onScore?.(s.eaten * 10);
       if (!placeFruit(s)) return finish();
@@ -91,40 +94,70 @@ export default function Game({ onScore, onEnd }) {
     const ctx = getCtx();
     if (!ctx) return;
     const s = st.current;
-    ctx.fillStyle = COLORS.bg;
-    ctx.fillRect(0, 0, W, H);
+    // jardim: gramado em xadrez suave com vinheta
     for (let y = 0; y < N; y++) {
       for (let x = 0; x < N; x++) {
-        ctx.fillStyle = (x + y) % 2 ? '#122046' : '#0F1B3D';
+        ctx.fillStyle = (x + y) % 2 ? '#3E8E41' : '#46994A';
         ctx.fillRect(x * CELL, y * CELL, CELL, CELL);
       }
     }
+    const vg = ctx.createRadialGradient(W / 2, H / 2, W * 0.25, W / 2, H / 2, W * 0.75);
+    vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,30,10,0.35)');
+    ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+    // fruta com sombra e brilho pulsando
     if (s.fruit) {
-      drawFruit(ctx, s.fruitIcon, s.fruit.x * CELL + CELL / 2, s.fruit.y * CELL + CELL / 2 + 1, CELL / 2 - 1);
+      const fx = s.fruit.x * CELL + CELL / 2; const fy = s.fruit.y * CELL + CELL / 2;
+      const pulse = 1 + Math.sin(s.t * 6) * 0.06;
+      const glow = ctx.createRadialGradient(fx, fy, 2, fx, fy, CELL);
+      glow.addColorStop(0, 'rgba(255,240,180,0.55)'); glow.addColorStop(1, 'rgba(255,240,180,0)');
+      ctx.fillStyle = glow; ctx.fillRect(fx - CELL, fy - CELL, CELL * 2, CELL * 2);
+      ctx.fillStyle = 'rgba(0,0,0,0.22)';
+      ctx.beginPath(); ctx.ellipse(fx + 1, fy + CELL * 0.42, CELL * 0.35, CELL * 0.12, 0, 0, Math.PI * 2); ctx.fill();
+      drawFruit(ctx, s.fruitIcon, fx, fy, (CELL / 2 - 1) * pulse);
     }
-    s.snake.forEach((p, i) => {
-      const t = i / Math.max(1, s.snake.length - 1);
-      ctx.fillStyle = i === 0 ? COLORS.yellow : t < 0.5 ? COLORS.lime : COLORS.green;
-      const pad = i === 0 ? 1 : 2;
-      ctx.beginPath();
-      rrect(ctx, p.x * CELL + pad, p.y * CELL + pad, CELL - pad * 2, CELL - pad * 2, 6);
-      ctx.fill();
+    // corpo contínuo e liso, andando suave entre as casas
+    const k = s.countdown > 0 ? 1 : Math.min(1, s.acc / stepMs(s));
+    const pts = s.snake.map((p, i) => {
+      const q = s.prev?.[i] || p;
+      return [(q.x + (p.x - q.x) * k) * CELL + CELL / 2, (q.y + (p.y - q.y) * k) * CELL + CELL / 2];
     });
-    // olhos
-    const h = s.snake[0];
+    const path = () => { ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); };
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = CELL * 0.86;
+    ctx.save(); ctx.translate(1.5, 2.5); path(); ctx.stroke(); ctx.restore();
+    ctx.strokeStyle = '#1F6F8B'; ctx.lineWidth = CELL * 0.82; path(); ctx.stroke();
+    ctx.strokeStyle = '#2FA4C7'; ctx.lineWidth = CELL * 0.62; path(); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,0.28)'; ctx.lineWidth = CELL * 0.18;
+    ctx.save(); ctx.translate(-1.5, -2); path(); ctx.stroke(); ctx.restore();
+    // pintas
+    ctx.fillStyle = 'rgba(249,199,29,0.85)';
+    pts.forEach(([x, y], i) => { if (i && i % 2 === 0) { ctx.beginPath(); ctx.arc(x, y, CELL * 0.12, 0, Math.PI * 2); ctx.fill(); } });
+    // cabeça
+    const [hx, hy] = pts[0];
     const [dx, dy] = VEC[s.dir];
-    const cx = h.x * CELL + CELL / 2; const cy = h.y * CELL + CELL / 2;
-    ctx.fillStyle = COLORS.navy;
-    [[-1, 1], [1, -1]].forEach(([a]) => {
-      const ex = cx + dx * 4 + (dy ? a * 4 : 0);
-      const ey = cy + dy * 4 + (dx ? a * 4 : 0);
-      ctx.beginPath(); ctx.arc(ex, ey, 2.2, 0, Math.PI * 2); ctx.fill();
-    });
+    const ang = Math.atan2(dy, dx);
+    ctx.save(); ctx.translate(hx, hy); ctx.rotate(ang);
+    const hg = ctx.createRadialGradient(-2, -3, 1, 0, 0, CELL * 0.6);
+    hg.addColorStop(0, '#5CC8E6'); hg.addColorStop(1, '#1F6F8B');
+    ctx.fillStyle = hg;
+    ctx.beginPath(); ctx.ellipse(1, 0, CELL * 0.56, CELL * 0.48, 0, 0, Math.PI * 2); ctx.fill();
+    if (Math.sin(s.t * 9) > 0.55) { // língua
+      ctx.strokeStyle = '#E5383B'; ctx.lineWidth = 1.6;
+      ctx.beginPath(); ctx.moveTo(CELL * 0.55, 0); ctx.lineTo(CELL * 0.85, 0); ctx.lineTo(CELL * 0.98, -3); ctx.moveTo(CELL * 0.85, 0); ctx.lineTo(CELL * 0.98, 3); ctx.stroke();
+    }
+    for (const sy of [-1, 1]) {
+      ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(CELL * 0.18, sy * CELL * 0.22, 3.6, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#101831'; ctx.beginPath(); ctx.arc(CELL * 0.25, sy * CELL * 0.22, 2, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+    // brilhos ao comer
+    s.fx.forEach((f) => { ctx.globalAlpha = Math.max(0, f.life); ctx.fillStyle = '#FFE36E'; ctx.beginPath(); ctx.arc(f.x, f.y, 2.4, 0, Math.PI * 2); ctx.fill(); });
+    ctx.globalAlpha = 1;
     if (s.countdown > 0) {
-      ctx.fillStyle = 'rgba(11,20,48,0.55)';
+      ctx.fillStyle = 'rgba(8,16,40,0.5)';
       ctx.fillRect(0, 0, W, H);
-      ctx.fillStyle = COLORS.yellow;
-      ctx.font = 'bold 72px sans-serif';
+      ctx.fillStyle = '#fff';
+      ctx.font = '800 76px system-ui, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(String(Math.ceil(s.countdown)), W / 2, H / 2);
@@ -134,6 +167,9 @@ export default function Game({ onScore, onEnd }) {
   useRaf((dt) => {
     const s = st.current;
     if (ended.current) return;
+    s.t += dt;
+    s.fx.forEach((f) => { f.x += f.vx * dt; f.y += f.vy * dt; f.life -= dt * 2.2; });
+    s.fx = s.fx.filter((f) => f.life > 0);
     if (s.countdown > 0) {
       s.countdown -= dt;
     } else {

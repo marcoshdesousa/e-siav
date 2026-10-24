@@ -174,9 +174,9 @@ export default function Game({ onScore, onEnd }) {
 
   const drawArrow = (ctx, x, y, ang, len = LEN) => {
     ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
-    ctx.strokeStyle = '#C8A06A'; ctx.lineWidth = 2;
+    ctx.strokeStyle = '#D9B47A'; ctx.lineWidth = 2.2;
     ctx.beginPath(); ctx.moveTo(-len, 0); ctx.lineTo(0, 0); ctx.stroke();
-    ctx.fillStyle = '#C9CED8';
+    ctx.fillStyle = '#9AA3B5';
     ctx.beginPath(); ctx.moveTo(3, 0); ctx.lineTo(-4, -3); ctx.lineTo(-4, 3); ctx.closePath(); ctx.fill();
     ctx.fillStyle = COLORS.red;
     ctx.beginPath(); ctx.moveTo(-len, 0); ctx.lineTo(-len - 5, -4); ctx.lineTo(-len + 6, 0); ctx.lineTo(-len - 5, 4); ctx.closePath(); ctx.fill();
@@ -187,21 +187,35 @@ export default function Game({ onScore, onEnd }) {
     const ctx = getCtx();
     if (!ctx) return;
     const g = ctx.createLinearGradient(0, 0, 0, GROUND);
-    g.addColorStop(0, '#0E2A6B'); g.addColorStop(1, '#5C86E0');
+    g.addColorStop(0, '#1C4FA8'); g.addColorStop(0.7, '#7FB2FF'); g.addColorStop(1, '#D8E9FF');
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    const sun = ctx.createRadialGradient(70, 120, 4, 70, 120, 90);
+    sun.addColorStop(0, 'rgba(255,250,225,1)'); sun.addColorStop(0.2, 'rgba(255,240,190,0.6)'); sun.addColorStop(1, 'rgba(255,240,190,0)');
+    ctx.fillStyle = sun; ctx.fillRect(0, 0, W, GROUND);
     // nuvens (andam com o vento)
-    ctx.fillStyle = 'rgba(255,255,255,0.18)';
     s.clouds.forEach((x, i) => {
       const y = 70 + i * 38;
-      ctx.beginPath(); ctx.arc(x, y, 16, 0, Math.PI * 2); ctx.arc(x + 18, y - 6, 20, 0, Math.PI * 2); ctx.arc(x + 38, y, 15, 0, Math.PI * 2); ctx.fill();
+      const cg = ctx.createLinearGradient(0, y - 22, 0, y + 12);
+      cg.addColorStop(0, 'rgba(255,255,255,0.95)'); cg.addColorStop(1, 'rgba(220,232,250,0.8)');
+      ctx.fillStyle = cg;
+      ctx.beginPath(); ctx.ellipse(x + 19, y, 32, 11, 0, 0, Math.PI * 2); ctx.ellipse(x + 8, y - 6, 14, 12, 0, 0, Math.PI * 2); ctx.ellipse(x + 26, y - 11, 17, 15, 0, 0, Math.PI * 2); ctx.fill();
     });
-    // morros e chão
-    ctx.fillStyle = '#16603F';
-    ctx.beginPath(); ctx.moveTo(0, GROUND);
-    for (let x = 0; x <= W; x += 20) ctx.lineTo(x, GROUND - 40 - Math.sin(x / 50) * 18 - Math.sin(x / 23) * 6);
-    ctx.lineTo(W, GROUND); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = COLORS.green; ctx.fillRect(0, GROUND, W, H - GROUND);
-    ctx.fillStyle = '#1E9A64'; ctx.fillRect(0, GROUND, W, 4);
+    // morros em camadas e gramado
+    const hill = (y0, amp, f, c1, c2) => {
+      const hg = ctx.createLinearGradient(0, y0 - amp, 0, GROUND);
+      hg.addColorStop(0, c1); hg.addColorStop(1, c2);
+      ctx.fillStyle = hg;
+      ctx.beginPath(); ctx.moveTo(0, GROUND);
+      for (let x = 0; x <= W; x += 10) ctx.lineTo(x, y0 - Math.sin(x / f) * amp - Math.sin(x / (f * 0.45)) * amp * 0.3);
+      ctx.lineTo(W, GROUND); ctx.closePath(); ctx.fill();
+    };
+    hill(GROUND - 60, 22, 60, '#8DB8A0', '#B9D7C4');
+    hill(GROUND - 30, 16, 45, '#3E9A62', '#2B7A4B');
+    const grass = ctx.createLinearGradient(0, GROUND, 0, H);
+    grass.addColorStop(0, '#4CB866'); grass.addColorStop(1, '#1E7A43');
+    ctx.fillStyle = grass; ctx.fillRect(0, GROUND, W, H - GROUND);
+    ctx.strokeStyle = 'rgba(160,230,150,0.6)'; ctx.lineWidth = 1.2;
+    for (let x = 4; x < W; x += 11) { ctx.beginPath(); ctx.moveTo(x, GROUND + 3); ctx.lineTo(x - 2, GROUND - 3); ctx.moveTo(x + 3, GROUND + 3); ctx.lineTo(x + 4, GROUND - 2); ctx.stroke(); }
     // alvo (de lado, levemente virado)
     const t = s.target;
     ctx.strokeStyle = '#7A4E25'; ctx.lineWidth = 4;
@@ -218,27 +232,45 @@ export default function Game({ onScore, onEnd }) {
     s.stuck.forEach((a) => drawArrow(ctx, a.x, a.y, a.ang));
     // arqueiro
     const ang = s.aim.ang;
-    ctx.strokeStyle = COLORS.navy; ctx.lineWidth = 6; ctx.lineCap = 'round';
+    ctx.lineCap = 'round';
     const hipX = BOW_X - 22; const hipY = GROUND - 34;
-    ctx.beginPath(); ctx.moveTo(hipX, hipY); ctx.lineTo(hipX - 8, GROUND); ctx.moveTo(hipX, hipY); ctx.lineTo(hipX + 10, GROUND); ctx.stroke();
-    ctx.strokeStyle = COLORS.green; ctx.lineWidth = 9;
-    ctx.beginPath(); ctx.moveTo(hipX, hipY); ctx.lineTo(hipX + 2, BOW_Y - 8); ctx.stroke();
-    ctx.fillStyle = '#C98B5E';
+    ctx.fillStyle = 'rgba(0,0,0,0.2)'; ctx.beginPath(); ctx.ellipse(hipX + 1, GROUND + 1, 16, 3.5, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#1C2E5E'; ctx.lineWidth = 6.5;
+    ctx.beginPath(); ctx.moveTo(hipX, hipY); ctx.lineTo(hipX - 8, GROUND - 2); ctx.moveTo(hipX, hipY); ctx.lineTo(hipX + 10, GROUND - 2); ctx.stroke();
+    ctx.fillStyle = '#2A1A0E';
+    ctx.beginPath(); ctx.ellipse(hipX - 7, GROUND - 1, 5, 2.6, 0, 0, Math.PI * 2); ctx.ellipse(hipX + 12, GROUND - 1, 5, 2.6, 0, 0, Math.PI * 2); ctx.fill();
+    const shirt = ctx.createLinearGradient(hipX - 8, 0, hipX + 10, 0);
+    shirt.addColorStop(0, '#DCC58C'); shirt.addColorStop(1, '#B49A60');
+    ctx.fillStyle = shirt;
+    ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(hipX - 7, BOW_Y - 14, 16, hipY - BOW_Y + 16, 5); else ctx.rect(hipX - 7, BOW_Y - 14, 16, hipY - BOW_Y + 16); ctx.fill();
+    ctx.fillStyle = '#F9C71D';
+    ctx.beginPath(); ctx.moveTo(hipX - 6, BOW_Y - 14); ctx.lineTo(hipX + 8, BOW_Y - 14); ctx.lineTo(hipX + 1, BOW_Y - 5); ctx.closePath(); ctx.fill();
+    const skin = ctx.createRadialGradient(hipX + 5, BOW_Y - 25, 1, hipX + 3, BOW_Y - 22, 9);
+    skin.addColorStop(0, '#FFD8B5'); skin.addColorStop(1, '#D9996E');
+    ctx.fillStyle = skin;
     ctx.beginPath(); ctx.arc(hipX + 3, BOW_Y - 22, 8, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = COLORS.yellow;
-    ctx.beginPath(); ctx.ellipse(hipX + 3, BOW_Y - 28, 12, 3, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(hipX + 3, BOW_Y - 29, 6, Math.PI, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#101831'; ctx.beginPath(); ctx.arc(hipX + 7, BOW_Y - 23, 1.2, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#7A5230';
+    ctx.beginPath(); ctx.ellipse(hipX + 3, BOW_Y - 28, 13, 3, 0, 0, Math.PI * 2); ctx.fill();
+    const hat = ctx.createLinearGradient(0, BOW_Y - 37, 0, BOW_Y - 28);
+    hat.addColorStop(0, '#A87545'); hat.addColorStop(1, '#7A5230');
+    ctx.fillStyle = hat;
+    ctx.beginPath(); ctx.arc(hipX + 3, BOW_Y - 29, 7, Math.PI, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#18875A'; ctx.fillRect(hipX - 4, BOW_Y - 31, 14, 2);
     // arco
     const pull = s.phase === 'aim' ? s.aim.pow * 16 : 0;
     ctx.save(); ctx.translate(BOW_X, BOW_Y); ctx.rotate(ang);
-    ctx.strokeStyle = '#8B5A2B'; ctx.lineWidth = 4;
+    const wood = ctx.createLinearGradient(-10, -26, -10, 26);
+    wood.addColorStop(0, '#5E3A1C'); wood.addColorStop(0.5, '#B07842'); wood.addColorStop(1, '#5E3A1C');
+    ctx.strokeStyle = wood; ctx.lineWidth = 4.5;
     ctx.beginPath(); ctx.arc(-10, 0, 26, -1.15, 1.15); ctx.stroke();
+    ctx.strokeStyle = '#2A1A0E'; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(-10, 0, 26, -0.15, 0.15); ctx.stroke();
     const tipX = -10 + Math.cos(1.15) * 26; const tipY = Math.sin(1.15) * 26;
     ctx.strokeStyle = 'rgba(255,255,255,0.85)'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(tipX, -tipY); ctx.lineTo(tipX - 6 - pull, 0); ctx.lineTo(tipX, tipY); ctx.stroke();
     ctx.restore();
     // braços
-    ctx.strokeStyle = '#C98B5E'; ctx.lineWidth = 4;
+    ctx.strokeStyle = '#D9996E'; ctx.lineWidth = 4;
     const shX = hipX + 2; const shY = BOW_Y - 12;
     ctx.beginPath(); ctx.moveTo(shX, shY); ctx.lineTo(BOW_X + Math.cos(ang) * 6, BOW_Y + Math.sin(ang) * 6);
     const hx = BOW_X + Math.cos(ang) * (tipX - 6 - pull); const hy = BOW_Y + Math.sin(ang) * (tipX - 6 - pull);
@@ -284,14 +316,16 @@ export default function Game({ onScore, onEnd }) {
       ctx.beginPath(); ctx.arc(fx + (p.dx * fr) / TR, fy + (p.dy * fr) / TR, 2.4, 0, Math.PI * 2); ctx.fill();
     });
     // placar
-    ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.fillRect(0, 0, W, 30);
-    ctx.font = 'bold 15px sans-serif'; ctx.textBaseline = 'middle';
+    const hud = ctx.createLinearGradient(0, 0, 0, 30);
+    hud.addColorStop(0, 'rgba(10,22,56,0.75)'); hud.addColorStop(1, 'rgba(10,22,56,0.35)');
+    ctx.fillStyle = hud; ctx.fillRect(0, 0, W, 30);
+    ctx.font = '800 15px system-ui, sans-serif'; ctx.textBaseline = 'middle';
     ctx.textAlign = 'left'; ctx.fillStyle = COLORS.white; ctx.fillText('Pontos: ' + s.score, 10, 15);
     ctx.textAlign = 'right'; ctx.fillStyle = COLORS.yellow;
     ctx.fillText('Flecha ' + Math.min(ARROWS, s.shot + 1) + '/' + ARROWS, W - 10, 15);
     if (s.phase === 'aim' && s.shot === 0 && !s.drag && s.aim.pow === 0) {
       ctx.fillStyle = 'rgba(255,255,255,0.9)'; ctx.font = '600 14px sans-serif'; ctx.textAlign = 'center';
-      ctx.fillText('Arraste para trás e solte ↙', W / 2, 160);
+      ctx.fillText('Arraste para trás e solte', W / 2, 160);
     }
     if (s.msg) {
       ctx.textAlign = 'center';
