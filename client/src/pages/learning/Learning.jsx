@@ -528,17 +528,23 @@ function PhasePlay({ d, back, base }) {
   useFocusMode();
   const nav = useNavigate();
   const [step, setStep] = useState(-1); // -1 = antes de começar
-  const [answers, setAnswers] = useState([]);
+  // Resposta de cada pergunta pela posição (answers[i]); a trava impede responder duas vezes a mesma
+  // pergunta (dois toques rápidos ou o tempo acabando junto com o toque), que desalinhava a contagem.
+  const answers = useRef([]);
+  const locked = useRef(false);
   const [left, setLeft] = useState(d.seconds);
-  const [shown, setShown] = useState(null); // { choice, answer }
+  const [shown, setShown] = useState(null); // { choice, answer } (answer null = conferindo)
   const [result, setResult] = useState(null);
   const q = d.questions[step];
 
   const answer = async (choice) => {
-    if (shown) return;
-    const r = await api.post(`/bom-de-biblia/fase/${d.phase}/confere`, { i: step, choice }).catch(() => null);
-    setShown({ choice, answer: r?.answer ?? -1 });
-    setAnswers((a) => [...a, choice]);
+    if (locked.current || step < 0) return;
+    locked.current = true;
+    const i = step;
+    answers.current[i] = choice;
+    setShown({ choice, answer: null });
+    const r = await api.post(`/bom-de-biblia/fase/${d.phase}/confere`, { i, choice }).catch(() => null);
+    setShown({ choice, answer: r ? r.answer : -2 }); // -2: sem internet para conferir agora
   };
   // Cronômetro de 15 segundos; acabou o tempo, conta como errada.
   useEffect(() => {
@@ -549,10 +555,12 @@ function PhasePlay({ d, back, base }) {
   });
   const next = async () => {
     if (step + 1 < d.questions.length) {
+      locked.current = false;
       setStep(step + 1); setShown(null); setLeft(d.seconds);
       return;
     }
-    const r = await api.post(`/bom-de-biblia/fase/${d.phase}`, { answers });
+    const list = d.questions.map((_, i) => (Number.isInteger(answers.current[i]) ? answers.current[i] : -1));
+    const r = await api.post(`/bom-de-biblia/fase/${d.phase}`, { answers: list });
     setResult(r);
   };
 
@@ -565,7 +573,7 @@ function PhasePlay({ d, back, base }) {
           <p>10 perguntas, <b>{d.seconds} segundos</b> para cada uma. Acerte <b>{d.pass}</b> para passar de fase.</p>
           <div className="quiz-actions">
             <Button variant="secondary" onClick={() => nav(back, { replace: true })}><ArrowLeft size={16} /> Voltar</Button>
-            <Button onClick={() => { setStep(0); setLeft(d.seconds); }}><Play size={16} /> Iniciar</Button>
+            <Button onClick={() => { answers.current = []; locked.current = false; setShown(null); setStep(0); setLeft(d.seconds); }}><Play size={16} /> Iniciar</Button>
           </div>
         </Card>
       </div>
@@ -582,7 +590,7 @@ function PhasePlay({ d, back, base }) {
             <Button variant="secondary" onClick={() => nav(back, { replace: true })}>Fases</Button>
             {result.next
               ? <Button onClick={() => nav(`${base}/aprendizagem/bom-de-biblia/${result.next}`)}>Próxima fase <ChevronRight size={16} /></Button>
-              : <Button onClick={() => { setStep(-1); setAnswers([]); setShown(null); setResult(null); }}><RotateCcw size={16} /> Jogar de novo</Button>}
+              : <Button onClick={() => { setStep(-1); setShown(null); setResult(null); }}><RotateCcw size={16} /> Jogar de novo</Button>}
           </div>
         </div>
       </div>
@@ -600,7 +608,7 @@ function PhasePlay({ d, back, base }) {
         <div className="quiz-opts">
           {q.options.map((o, j) => {
             let cls = '';
-            if (shown) cls = j === shown.answer ? ' right' : shown.choice === j ? ' wrong' : '';
+            if (shown) cls = shown.answer === null ? (shown.choice === j ? ' picked' : '') : j === shown.answer ? ' right' : shown.choice === j ? ' wrong' : '';
             return (
               <button key={j} type="button" className={'quiz-opt' + cls} disabled={!!shown} onClick={() => answer(j)}>
                 <span className="quiz-letter">{'ABCD'[j]}</span>{o}
@@ -608,9 +616,9 @@ function PhasePlay({ d, back, base }) {
             );
           })}
         </div>
-        {shown && (
+        {shown && shown.answer !== null && (
           <>
-            <p className="small center">{shown.choice === shown.answer ? 'Acertou!' : shown.choice === -1 ? 'Acabou o tempo!' : 'Errou!'}</p>
+            <p className="small center">{shown.answer === -2 ? 'Resposta guardada.' : shown.choice === shown.answer ? 'Acertou!' : shown.choice === -1 ? 'Acabou o tempo!' : 'Errou!'}</p>
             <Button block onClick={next}>{step + 1 < d.questions.length ? 'Próxima' : 'Ver resultado'} <ChevronRight size={16} /></Button>
           </>
         )}

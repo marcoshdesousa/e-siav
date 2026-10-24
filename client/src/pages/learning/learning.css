@@ -84,6 +84,7 @@
 .quiz-opt.picked { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 12%, var(--surface)); }
 .quiz-opt.right { border-color: #16a34a; background: #dcfce7; color: #14532d; }
 .quiz-opt.wrong { border-color: #dc2626; background: #fee2e2; color: #7f1d1d; }
+.quiz-opt.picked { border-color: var(--primary, #1d4ed8); }
 .quiz-opt:disabled { cursor: default; }
 .quiz-letter { width: 28px; height: 28px; border-radius: 50%; background: var(--surface-3); display: grid; place-items: center; font-weight: 800; font-size: .8rem; flex: none; }
 .quiz-result { text-align: center; padding: 1.2rem; border-radius: 18px; }
