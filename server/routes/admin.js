@@ -5,7 +5,7 @@ import { imageUpload, fileUrl, attachmentUpload } from '../uploads.js';
 import { NOME_UNIDADE_LIDERANCA } from '../config.js';
 import { listMembers, listUnits, memberFicha } from '../clubData.js';
 import { clubProfile } from '../profiles.js';
-import { deleteClub, deleteMember } from '../accounts.js';
+import { deleteAdmin, deleteClub, deleteDistrict, deleteMember } from '../accounts.js';
 import { clubStatus, startClubPlan } from '../clubPlan.js';
 import { fail, int, str, validDate, parseJson, memberKind, newClubCode, newClubNumber, newClubPassword, newUnitPin, clubDisplayName } from '../util.js';
 
@@ -52,6 +52,14 @@ r.post('/admin/districts', requireGeneral, (req, res) => {
   if (!name) fail(400, 'Informe o nome do distrito');
   const { lastInsertRowid } = run('INSERT INTO districts (name) VALUES (?)', name);
   res.json({ id: Number(lastInsertRowid) });
+});
+// Apagar o distrito (só o geral): leva junto os clubes, os membros e os administradores dele.
+r.delete('/admin/districts/:id', requireGeneral, (req, res) => {
+  const d = get('SELECT id, is_app FROM districts WHERE id = ?', int(req.params.id));
+  if (!d) fail(404, 'Distrito não encontrado');
+  if (d.is_app) fail(400, 'O distrito do App Brasil não pode ser apagado');
+  deleteDistrict(d.id, req.actor.id);
+  res.json({ ok: true });
 });
 r.put('/admin/districts/:id', requireGeneral, (req, res) => {
   const name = str(req.body.name, 80);
@@ -205,6 +213,15 @@ r.put('/admin/admins/:id', requireGeneral, (req, res) => {
     if (a.district_id && req.body.district_id) run('UPDATE admins SET district_id = ? WHERE id = ?', districtOf(req.body.district_id), id);
     if (req.body.username || req.body.password) setLogin('admin', id, req.body.username, req.body.password);
   });
+  res.json({ ok: true });
+});
+
+// Apagar um administrador de distrito (só o geral; o geral não é apagado).
+r.delete('/admin/admins/:id', requireGeneral, (req, res) => {
+  const a = get('SELECT id, district_id FROM admins WHERE id = ?', int(req.params.id));
+  if (!a) fail(404, 'Administrador não encontrado');
+  if (!a.district_id) fail(400, 'O administrador geral não pode ser apagado');
+  deleteAdmin(a.id, req.actor.id);
   res.json({ ok: true });
 });
 

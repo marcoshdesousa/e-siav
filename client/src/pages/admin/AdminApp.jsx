@@ -202,6 +202,14 @@ function ClubsAdmin() {
     if (prompt(`Apagar o ${c.name} de vez? Somem as unidades, os ${c.member_count} membros e tudo do clube. Para confirmar, escreva APAGAR`) !== 'APAGAR') return;
     run(() => api.del('/admin/clubs/' + c.id), 'Clube apagado').then(() => { clubs.reload(); districts.reload(); });
   };
+  const removeDistrict = (d) => {
+    if (prompt(`Apagar o distrito ${d.name} de vez? Somem os ${d.club_count} clubes dele (com unidades e membros) e os administradores do distrito. Para confirmar, escreva APAGAR`) !== 'APAGAR') return;
+    run(() => api.del('/admin/districts/' + d.id), 'Distrito apagado').then(() => { districts.reload(); clubs.reload(); admins.reload(); refreshMeta(); });
+  };
+  const removeAdmin = (a) => {
+    if (!confirm(`Apagar o administrador ${a.name}? Ele perde o acesso; os clubes do distrito continuam.`)) return;
+    run(() => api.del('/admin/admins/' + a.id), 'Administrador apagado').then(() => admins.reload());
+  };
   const renameDistrict = async (d) => {
     const name = prompt('Novo nome do distrito', d.name);
     if (!name) return;
@@ -228,7 +236,10 @@ function ClubsAdmin() {
                 <div key={d.id} className="list-item">
                   <span className="trophy-bg"><Map size={22} /></span>
                   <div className="grow"><div className="title">{d.name}</div><div className="sub">{plural(d.club_count, 'clube', 'clubes')}</div></div>
-                  <Button small variant="secondary" onClick={() => renameDistrict(d)}>Renomear</Button>
+                  <div className="stack" style={{ gap: '.35rem' }}>
+                    <Button small variant="secondary" onClick={() => renameDistrict(d)}>Renomear</Button>
+                    <Button small variant="danger" busy={busy} onClick={() => removeDistrict(d)}>Apagar</Button>
+                  </div>
                 </div>
               ))}
             </Loading>
@@ -271,7 +282,10 @@ function ClubsAdmin() {
                 <div key={a.id} className="list-item">
                   <Avatar name={a.name} size={42} />
                   <div className="grow"><div className="title">{a.name}</div><div className="sub">@{a.username} · {a.district_id ? (a.district_id === appDistrict.data?.id ? 'Administrador do App (contas sem clube)' : `Distrito ${a.district_name}`) : 'Administrador geral'}</div></div>
-                  <Button small variant="secondary" onClick={() => setModal({ kind: 'admin', item: a })}>Editar</Button>
+                  <div className="stack" style={{ gap: '.35rem' }}>
+                    <Button small variant="secondary" onClick={() => setModal({ kind: 'admin', item: a })}>Editar</Button>
+                    {a.district_id && <Button small variant="danger" busy={busy} onClick={() => removeAdmin(a)}>Apagar</Button>}
+                  </div>
                 </div>
               ))}
             </Loading>

@@ -171,6 +171,26 @@ test('admin apaga clube (o do distrito só os dele)', async () => {
   assert.ok(!(await geral.get('/admin/clubs')).body.some((x) => x.id === c.id));
 });
 
+test('o geral apaga distrito (com clubes e admins) e admin de distrito', async () => {
+  const geral = await login('membros', 'admin', 'admin123');
+  const d = (await geral.post('/admin/districts', { name: 'Distrito Apagar' })).body.id;
+  const c = (await geral.post('/admin/clubs', { name: 'Clube do Fim', district_id: d, director_name: 'Fulano Silva' })).body;
+  const a = (await geral.post('/admin/admins', { name: 'Admin Fim', district_id: d, username: 'admfim', password: 'senha123' })).body.id;
+  const dist = await login('membros', 'admfim', 'senha123');
+  assert.equal((await dist.del(`/admin/districts/${d}`)).status, 403, 'o do distrito não apaga distrito');
+  assert.equal((await dist.del(`/admin/admins/${a}`)).status, 403);
+  const me = (await geral.get('/admin/admins')).body.find((x) => !x.district_id);
+  assert.equal((await geral.del(`/admin/admins/${me.id}`)).status, 400, 'o geral não é apagado');
+  assert.equal((await geral.del(`/admin/districts/${d}`)).status, 200);
+  assert.ok(!(await geral.get('/admin/districts')).body.some((x) => x.id === d));
+  assert.ok(!(await geral.get('/admin/clubs')).body.some((x) => x.id === c.id));
+  assert.ok(!(await geral.get('/admin/admins')).body.some((x) => x.id === a));
+  const pal = (await geral.get('/admin/districts')).body.find((x) => x.name === 'Distrito Palmares').id;
+  const b = (await geral.post('/admin/admins', { name: 'Admin Sai', district_id: pal, username: 'admsai', password: 'senha123' })).body.id;
+  assert.equal((await geral.del(`/admin/admins/${b}`)).status, 200);
+  assert.equal((await geral.get('/admin/admins')).body.some((x) => x.id === b), false);
+});
+
 test('@ do membro: único, entra com ele, aparece no perfil e não muda', async () => {
   const a = await anon('POST', '/criar-conta', { name: 'Davi Arroba Souza', birth_date: yearsAgo(14), handle: '@Davi.Souza' });
   assert.equal(a.status, 200);

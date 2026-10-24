@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, BookOpenText, Waypoints, Hourglass, BadgeCheck, Lock, UserCog, Download } from 'lucide-react';
+import { BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, BookOpenText, Waypoints, Hourglass, BadgeCheck, Lock, Download } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Button, Card, Loading, Modal, PageHeader, notify, useAsync, useLoad } from '../../ui.jsx';
@@ -43,7 +43,7 @@ function RequirementsAndRanking({ isDbv }) {
 }
 
 function MyProfile() {
-  const { refresh } = useAuth();
+  const { actor, refresh } = useAuth();
   const state = useLoad(() => api.get('/me/profile'));
   const [busy, run] = useAsync();
   // O membro só troca a própria foto; os demais dados são editados pelo clube.
@@ -67,6 +67,8 @@ function MyProfile() {
             </label>
           }
         />
+        {/* Conta antiga sem @: cria aqui (quem já tem vê no "Ver meu @ e código"). */}
+        {!actor.handle && <HandleCard />}
         <ProximasDatas to={`${base}/agenda`} />
         </>
       )}
@@ -87,7 +89,7 @@ function Waiting({ text }) {
 
 /**
  * Conta do App Brasil sem plano: vê o app inteiro, mas nada funciona até assinar.
- * Qualquer toque no conteúdo abre o convite (só os planos e a conta ficam liberados).
+ * Qualquer toque no conteúdo abre o convite (só os planos ficam liberados).
  */
 function AppLock({ children }) {
   const { actor } = useAuth();
@@ -96,12 +98,12 @@ function AppLock({ children }) {
   const [ask, setAsk] = useState(false);
   // App Brasil sem plano, ou clube com o plano vencido (depois dos 3 dias de carência).
   const club = !!actor.club_plan?.locked;
-  if (!(actor.app?.locked || club) || pathname.startsWith(`${base}/dbv-mais`) || pathname.startsWith(`${base}/conta`)) return children;
+  if (!(actor.app?.locked || club) || pathname.startsWith(`${base}/dbv-mais`)) return children;
   const memberPays = actor.club_plan?.reason === 'membro_pago';
   const title = memberPays ? 'Assine para usar o app' : club ? 'O plano do seu clube venceu' : actor.app.trial_ended ? 'O seu teste grátis terminou' : 'O seu acesso terminou';
   const stop = (e) => {
-    // Só olhar continua liberado: as abas e filtros das telas (e o caminho para os planos e a conta).
-    if (e.target.closest?.(`a[href^="${base}/dbv-mais"], a[href^="${base}/conta"], .tabs button, .seg button`)) return;
+    // Só olhar continua liberado: as abas e filtros das telas (e o caminho para os planos).
+    if (e.target.closest?.(`a[href^="${base}/dbv-mais"], .tabs button, .seg button`)) return;
     e.preventDefault();
     e.stopPropagation();
     setAsk(true);
@@ -148,23 +150,12 @@ function HandleCard() {
   );
 }
 
-/** Minha conta: o @ e o código. A conta não é apagada pelo membro: só o administrador geral apaga. */
-function AccountPage() {
-  const { actor } = useAuth();
-  return (
-    <>
-      <PageHeader title="Minha conta" subtitle={`${actor.name} · código ${actor.code}`} />
-      <HandleCard />
-    </>
-  );
-}
-
 /** Para onde o "Voltar" do topo leva em cada tela. */
 function parentOf(path) {
   const [seg, sub, sub2] = path.split('/').slice(2);
   if (seg === 'aprendizagem') return ['meditacao', 'escola-sabatina'].includes(sub) && sub2 ? `${base}/aprendizagem/${sub}` : sub === 'bom-lider' && sub2 ? `${base}/aprendizagem/bom-lider` : sub === 'bom-de-biblia' && sub2 ? `${base}/aprendizagem/bom-de-biblia` : sub === 'ano-biblico' && sub2 ? `${base}/aprendizagem/ano-biblico` :  sub ? `${base}/aprendizagem` : base;
   if ((seg === 'jogos' || seg === 'albuns') && sub) return `${base}/${seg}`;
-  if (['cursos', 'clubes', 'agenda', 'suporte', 'especialidades', 'albuns', 'conta', 'downloads'].includes(seg)) return `${base}/mais`;
+  if (['cursos', 'clubes', 'agenda', 'suporte', 'especialidades', 'albuns', 'downloads'].includes(seg)) return `${base}/mais`;
   return base;
 }
 
@@ -202,7 +193,6 @@ export default function MemberApp() {
     { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },
     { to: `${base}/cursos`, icon: GraduationCap, label: 'Cursos', hint: 'Aulas' },
     { to: `${base}/clubes`, icon: Tent, label: 'Clubes', hint: 'Por distrito' },
-    { to: `${base}/conta`, icon: UserCog, label: 'Minha conta', hint: 'Seu @ e código' },
   ];
   return (
     <Routes>
@@ -241,7 +231,6 @@ export default function MemberApp() {
               <Route path="clubes" element={<ClubsBrowser base={base} />} />
               <Route path="ver/:kind/:id" element={<InAppProfile base={base} />} />
               <Route path="mais" element={<><PageHeader title="Mais" /><MoreMenu items={more} /></>} />
-              <Route path="conta" element={<AccountPage />} />
               <Route path="downloads" element={<DownloadsPage base={base} />} />
               <Route path="*" element={<Navigate to={base} replace />} />
             </Routes></AppLock>}
