@@ -20,6 +20,9 @@ run(`CREATE TABLE IF NOT EXISTS member_plus (
   renewals INTEGER NOT NULL DEFAULT 0
 )`);
 
+// Teste grátis (conta nova do App Brasil): marcado para mostrar "Você está no teste grátis".
+if (!all('PRAGMA table_info(member_plus)').some((c) => c.name === 'trial')) run('ALTER TABLE member_plus ADD COLUMN trial INTEGER NOT NULL DEFAULT 0');
+
 export const PLANS = {
   app: { id: 'app', name: 'DBV', price_cents: 390, specialties: 0, pick: 0, access_only: true },
   plus: { id: 'plus', name: 'DBV+', price_cents: 790, specialties: 0, pick: 0 },
@@ -35,9 +38,10 @@ export const PLUS_PACK_MULT = 3;
 
 /** Assinatura do membro (ativa ou não). */
 export function plusOf(memberId) {
-  const p = get('SELECT plan, until, picks, picks_needed, picks_at, started_at FROM member_plus WHERE member_id = ?', memberId);
+  const p = get('SELECT plan, until, picks, picks_needed, picks_at, started_at, trial FROM member_plus WHERE member_id = ?', memberId);
   if (!p) return null;
-  return { ...p, picks: p.picks ? JSON.parse(p.picks) : null, active: p.until > new Date().toISOString(), plan_name: PLANS[p.plan]?.name || 'DBV+' };
+  const active = p.until > new Date().toISOString();
+  return { ...p, trial: !!p.trial && active, trial_ended: !!p.trial && !active, picks: p.picks ? JSON.parse(p.picks) : null, active, plan_name: p.trial && active ? 'Teste grátis' : PLANS[p.plan]?.name || 'DBV+' };
 }
 /** Assinante ativo do DBV+ (o DBV só libera o acesso, sem os benefícios). */
 export const isPlus = (memberId) => { const p = plusOf(memberId); return !!p?.active && p.plan !== 'app'; };
@@ -58,7 +62,7 @@ export function activatePlus(memberId, planId) {
   const from = cur && cur.until > new Date().toISOString() ? new Date(cur.until) : new Date();
   const until = new Date(from.getTime() + PLUS_DAYS * 864e5).toISOString();
   run(`INSERT INTO member_plus (member_id, plan, until, picks_needed) VALUES (?, ?, ?, ?)
-    ON CONFLICT (member_id) DO UPDATE SET plan = excluded.plan, until = excluded.until, renewals = renewals + 1,
+    ON CONFLICT (member_id) DO UPDATE SET plan = excluded.plan, until = excluded.until, renewals = renewals + 1, trial = 0,
       picks_needed = excluded.picks_needed, picks = CASE WHEN excluded.picks_needed > 0 THEN NULL ELSE picks END,
       picks_at = CASE WHEN excluded.picks_needed > 0 THEN NULL ELSE picks_at END`, memberId, plan.id, until, plan.pick);
   if (plan.access_only) return until;
@@ -68,13 +72,13 @@ export function activatePlus(memberId, planId) {
 }
 
 /** Administrador geral dá (ou tira) o DBV+ de um membro, sem pagamento: dias de validade a partir de hoje. */
-export function grantPlus(memberId, planId, days) {
+export function grantPlus(memberId, planId, days, { trial = false } = {}) {
   const plan = PLANS[planId] || PLANS.plus;
   const until = new Date(Date.now() + days * 864e5).toISOString();
-  run(`INSERT INTO member_plus (member_id, plan, until, picks_needed) VALUES (?, ?, ?, ?)
-    ON CONFLICT (member_id) DO UPDATE SET plan = excluded.plan, until = excluded.until, picks_needed = excluded.picks_needed,
+  run(`INSERT INTO member_plus (member_id, plan, until, picks_needed, trial) VALUES (?, ?, ?, ?, ?)
+    ON CONFLICT (member_id) DO UPDATE SET plan = excluded.plan, until = excluded.until, picks_needed = excluded.picks_needed, trial = excluded.trial,
       picks = CASE WHEN excluded.plan = member_plus.plan THEN picks ELSE NULL END,
-      picks_at = CASE WHEN excluded.plan = member_plus.plan THEN picks_at ELSE NULL END`, memberId, plan.id, until, plan.pick);
+      picks_at = CASE WHEN excluded.plan = member_plus.plan THEN picks_at ELSE NULL END`, memberId, plan.id, until, plan.pick, trial ? 1 : 0);
   return until;
 }
 export const removePlus = (memberId) => run('DELETE FROM member_plus WHERE member_id = ?', memberId);

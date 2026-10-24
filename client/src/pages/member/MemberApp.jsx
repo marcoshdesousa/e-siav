@@ -103,11 +103,11 @@ function AppLock({ children }) {
   };
   return (
     <>
-      <Link to={`${base}/dbv-mais`} className="app-lock-bar"><Lock size={16} /><span><b>O seu acesso terminou</b><small>Assine o DBV ou o DBV+ para continuar</small></span><span className="app-lock-btn">Ver planos</span></Link>
+      <Link to={`${base}/dbv-mais`} className="app-lock-bar"><Lock size={16} /><span><b>{actor.app.trial_ended ? 'O seu teste grátis terminou' : 'O seu acesso terminou'}</b><small>Assine o DBV ou o DBV+ para continuar</small></span><span className="app-lock-btn">Ver planos</span></Link>
       <div className="app-locked" onClickCapture={stop} onSubmitCapture={stop}>{children}</div>
       {ask && (
         <Modal title="Assine para continuar" onClose={() => setAsk(false)} footer={<><Button variant="secondary" onClick={() => setAsk(false)}>Agora não</Button><Button onClick={() => { setAsk(false); nav(`${base}/dbv-mais`); }}>Ver planos</Button></>}>
-          <p>O seu acesso ao <b>App do DBV</b> terminou. Para continuar, assine um plano: assim você ajuda a manter o app no ar.</p>
+          <p>{actor.app.trial_ended ? 'O seu teste grátis de 3 dias' : 'O seu acesso ao'} <b>App do DBV</b> terminou. Para continuar, assine um plano: assim você ajuda a manter o app no ar.</p>
           <p className="small muted">O <b>DBV</b> (R$ 3,90) tem tudo do plano grátis dos clubes. O <b>DBV+</b> (R$ 7,90) libera todos os benefícios. Faz parte de um clube? Peça o link de inscrição dele.</p>
         </Modal>
       )}
@@ -189,7 +189,7 @@ export default function MemberApp() {
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
-    { to: `${base}/dbv-mais`, icon: BadgeCheck, label: actor.app ? 'Planos' : 'DBV+', hint: actor.plus ? `Assinante até ${new Date(actor.plus.until).toLocaleDateString('pt-BR')}` : actor.app?.locked ? 'Assine para usar o app' : 'Assine e ganhe benefícios' },
+    { to: `${base}/dbv-mais`, icon: BadgeCheck, label: actor.app ? 'Planos' : 'DBV+', hint: actor.plus ? `Assinante até ${new Date(actor.plus.until).toLocaleDateString('pt-BR')}` : actor.app?.locked ? 'Assine para usar o app' : actor.app?.trial ? 'Você está no teste grátis' : 'Assine e ganhe benefícios' },
     { to: `${base}/especialidades`, icon: Waypoints, label: 'Especialidades e classes', hint: 'As suas especialidades e classes' },
     { to: `${base}/albuns`, icon: BookImage, label: 'Álbuns de figurinhas', hint: 'Álbum Bíblico' },
     { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas do clube e do App' },

@@ -125,6 +125,10 @@ test('App Brasil: cria conta sem clube, precisa de plano, só ranking Brasil, ap
   assert.equal(kid.body.actor.club_name, 'Clube App Brasil');
   assert.equal(kid.body.actor.unit_name, 'Unidade App');
   assert.equal(kid.body.actor.app.locked, false, 'entra com 3 dias de DBV');
+  assert.equal(kid.body.actor.app.trial, true, 'no teste grátis');
+  const kp = await login('membros', kid.body.code, kid.body.password);
+  const mine = (await kp.get('/plus')).body.mine;
+  assert.ok(mine.trial && mine.plan_name === 'Teste grátis');
   const dias = (Date.parse(kid.body.actor.app.until) - Date.now()) / 864e5;
   assert.ok(dias > 2.9 && dias <= 3, '3 dias');
   assert.equal(kid.body.actor.plus, null, 'o DBV não libera o DBV+');
@@ -139,6 +143,7 @@ test('App Brasil: cria conta sem clube, precisa de plano, só ranking Brasil, ap
   assert.equal((await geral.post('/admin/plus/dar', { code: kid.body.code, plan: 'app', days: 30 })).status, 200, 'dar plano');
   const b2 = await login('membros', kid.body.code, kid.body.password);
   assert.equal(b2.actor.app.locked, false);
+  assert.equal(b2.actor.app.trial, false, 'plano de verdade não é teste grátis');
   assert.equal(b2.actor.plus, null, 'DBV não é DBV+');
   assert.notEqual((await b2.post('/ano-biblico/dia/1/quiz', { answers: [0] })).status, 402);
   // Rankings: só o Brasil.

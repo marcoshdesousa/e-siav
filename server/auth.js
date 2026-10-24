@@ -68,7 +68,7 @@ export function loadActor(type, id) {
     const p = plusOf(m.id);
     const plus = p?.active && p.plan !== 'app' ? { plan: p.plan, until: p.until, picks_pending: !!(p.picks_needed && !p.picks) } : null;
     // App Brasil: entra e vê o app, mas só usa depois de assinar (DBV ou DBV+).
-    const app = isApp ? { locked: !hasAccess(m.id), until: p?.active ? p.until : null } : null;
+    const app = isApp ? { locked: !hasAccess(m.id), until: p?.active ? p.until : null, trial: !!p?.trial, trial_ended: !!p?.trial_ended } : null;
     return { type, ...rest, cargo: cargoOf(kind, rest.cargo), waiting, kind, role: roleOf(kind, m.cargo), plus, plus_open: plusOpen(m.id), app };
   }
   return null;

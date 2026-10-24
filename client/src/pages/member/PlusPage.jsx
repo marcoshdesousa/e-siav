@@ -11,6 +11,8 @@ import { PackReward } from '../learning/PackReward.jsx';
 import './plus.css';
 
 const br = (iso) => (iso ? new Date(iso).toLocaleDateString('pt-BR') : '');
+/** "Falta 1 dia" / "Faltam 2 dias" / "Termina hoje". */
+export const daysLeft = (iso) => { const n = Math.ceil((Date.parse(iso) - Date.now()) / 864e5); return n <= 1 ? (Date.parse(iso) - Date.now() < 864e5 ? 'Termina hoje' : 'Falta 1 dia') : `Faltam ${n} dias`; };
 
 /** Selo de verificado do DBV+ (a logo dourada). */
 export function Verified({ size = 20 }) {
@@ -73,8 +75,8 @@ export default function PlusPage() {
               <div className="plus-hero plus-hero-app">
                 <img src="/marca/logo.svg" alt="" />
                 <div>
-                  <b>{d.app.locked ? 'Continue usando o App do DBV' : `Você está no ${d.mine?.plan_name || 'DBV'}`}</b>
-                  <p>{d.app.locked ? 'O seu acesso terminou. ' : d.mine?.active ? `Acesso liberado até ${br(d.mine.until)}. ` : ''}Assinando você <b>ajuda a manter o app no ar</b> e evita contas falsas. O <b>DBV</b> tem tudo do plano grátis dos clubes; o <b>DBV+</b> libera todos os benefícios.</p>
+                  <b>{d.app.locked ? 'Continue usando o App do DBV' : d.mine?.trial ? 'Você está no teste grátis' : `Você está no ${d.mine?.plan_name || 'DBV'}`}</b>
+                  <p>{d.app.locked ? (d.mine?.trial_ended ? 'O seu teste grátis de 3 dias terminou. ' : 'O seu acesso terminou. ') : d.mine?.trial ? `O seu teste grátis de 3 dias vai até ${br(d.mine.until)}. Para continuar usando depois disso, assine um plano. ` : d.mine?.active ? `Acesso liberado até ${br(d.mine.until)}. ` : ''}Assinando você <b>ajuda a manter o app no ar</b> e evita contas falsas. O <b>DBV</b> tem tudo do plano grátis dos clubes; o <b>DBV+</b> libera todos os benefícios.</p>
                 </div>
               </div>
             ) : (
@@ -89,7 +91,9 @@ export default function PlusPage() {
             {d.mine?.active && (
               <Card className="plus-status">
                 <BadgeCheck size={26} />
-                <div><b>Você é {d.mine.plan_name}!</b><small><Clock size={12} /> Válido até {br(d.mine.until)} · {d.mine.plan === 'app' ? 'renove ou mude para o DBV+ quando quiser' : 'um novo plano fica disponível nesse dia'}</small></div>
+                {d.mine.trial
+                  ? <div><b>Teste grátis de 3 dias</b><small><Clock size={12} /> {daysLeft(d.mine.until)} · termina em {br(d.mine.until)} · assine para não perder o acesso</small></div>
+                  : <div><b>Você é {d.mine.plan_name}!</b><small><Clock size={12} /> Válido até {br(d.mine.until)} · {d.mine.plan === 'app' ? 'renove ou mude para o DBV+ quando quiser' : 'um novo plano fica disponível nesse dia'}</small></div>}
               </Card>
             )}
             {d.mine?.active && d.mine.picks_needed > 0 && <Picks d={d} reload={state.reload} />}
@@ -114,9 +118,9 @@ export default function PlusPage() {
                   {p.access_only
                     ? <ul className="plus-free">{(d.free || []).map((t) => <li key={t}><Check size={14} />{t}</li>)}</ul>
                     : <small>{p.specialties ? `Todos os benefícios + ${d.packs} pacotinhos + ${p.specialties} especialidades físicas (você escolhe ${p.pick})` : `Todos os benefícios do app + ${d.packs} pacotinhos de figurinhas`}</small>}
-                  {d.mine?.active && d.mine.plan === p.id && <span className="plus-current">Seu plano atual</span>}
+                  {d.mine?.active && !d.mine.trial && d.mine.plan === p.id && <span className="plus-current">Seu plano atual</span>}
                   {canBuy(d)
-                    ? <Button block busy={busy} onClick={() => buy(p.id)}>{d.mine?.active && d.mine.plan !== p.id ? 'Mudar para este' : 'Assinar'}</Button>
+                    ? <Button block busy={busy} onClick={() => buy(p.id)}>{d.mine?.active && !d.mine.trial && d.mine.plan !== p.id ? 'Mudar para este' : 'Assinar'}</Button>
                     : d.mine.plan !== p.id && <span className="plus-soon-date"><Clock size={15} /> Disponível em {br(d.mine.until)}</span>}
                 </div>
               ))}
@@ -157,6 +161,17 @@ export function PlusNudge({ to }) {
   // Só nas telas principais das abas (não atrapalha leitura, quiz nem jogo).
   if (!open || pathname.startsWith(to) || pathname.split('/').filter(Boolean).length > 2) return null;
   const close = () => { barClosed = true; setOpen(false); };
+  // Conta nova do App Brasil: mostra que está no teste grátis e quanto falta.
+  if (actor.app?.trial) {
+    return (
+      <div className="plus-bar">
+        <img src="/marca/logo.svg" alt="" />
+        <Link to={to} className="plus-bar-text"><b>Teste grátis</b><small>{daysLeft(actor.app.until)} · assine para continuar usando</small></Link>
+        <Link to={to} className="plus-bar-btn">Assinar</Link>
+        <button type="button" className="plus-bar-x" aria-label="Fechar" onClick={close}><X size={16} /></button>
+      </div>
+    );
+  }
   return (
     <div className="plus-bar">
       <img src="/marca/logo.svg" alt="" />
