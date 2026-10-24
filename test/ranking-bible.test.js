@@ -282,3 +282,29 @@ test('quem paga: clube pago (membros grátis), clube grátis + membros grátis, 
   assert.equal(list.club_billing, 'pago');
   assert.equal(list.member_billing, 'gratis');
 });
+
+test('transferência: código + clube atual + motivo; o clube atual aceita; do App Brasil entra na hora', async () => {
+  const leoes = await login('clube', 'leoes', 'LE2026');
+  const aguias = await login('clube', 'aguias', 'AG2026');
+  const db = new DatabaseSync(path.join(dataDir, 'dbv.sqlite'), { readOnly: true });
+  let lucas;
+  try { lucas = db.prepare(`SELECT m.code FROM members m JOIN clubs c ON c.id = m.club_id WHERE c.code = '4821' AND m.name LIKE 'Lucas%'`).get(); } finally { db.close(); }
+  const ask = (b) => leoes.post('/club/transfers', b);
+  assert.equal((await ask({ code: lucas.code, club_name: 'Águias', reason: 'x' })).status, 400, 'precisa do motivo');
+  assert.equal((await ask({ code: lucas.code, club_name: 'Leões de Judá', reason: 'Mudou de cidade' })).status, 404, 'clube errado');
+  const ok = await ask({ code: lucas.code, club_name: 'aguias do vale', reason: 'Mudou de cidade' });
+  assert.equal(ok.status, 200);
+  assert.equal(ok.body.done, false);
+  assert.equal((await ask({ code: lucas.code, club_name: 'Águias', reason: 'De novo aqui' })).status, 409, 'um pedido por vez');
+  const pend = (await aguias.get('/club/transfers')).body.received.find((t) => t.id === ok.body.id);
+  assert.equal(pend.reason, 'Mudou de cidade');
+  assert.equal((await aguias.post(`/club/transfers/${ok.body.id}/origem`, { accept: true })).status, 200);
+  const moved = await login('membros', lucas.code);
+  assert.equal(moved.actor.club_id, leoes.actor.id, 'agora é dos Leões');
+  // Conta do App Brasil: entra na hora.
+  const r = await fetch(BASE + '/criar-conta', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: 'Nina Sem Clube', birth_date: `${new Date().getFullYear() - 12}-02-02`, handle: 'nina.semclube' }) });
+  const app = (await r.json());
+  const t = await ask({ code: app.code, club_name: 'Clube App Brasil', reason: 'Entrou no clube' });
+  assert.equal(t.body.done, true);
+  assert.equal((await login('membros', app.code)).actor.club_id, leoes.actor.id);
+});

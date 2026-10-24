@@ -929,6 +929,8 @@ function migrate() {
   }
   // Plano do clube (R$ 15 a cada 30 dias ou anual): até quando está pago.
   add('clubs', 'paid_until', 'TEXT');
+  // Transferência: o motivo informado pelo clube que pede.
+  add('transfers', 'reason', 'TEXT');
   // Quem paga, escolhido pelo administrador ao criar o clube (e dá para mudar depois):
   //   clube: 'pago' (paga R$ 15 por mês) ou 'gratis' (nunca vê cobrança);
   //   membro: 'gratis' (usa de graça enquanto o clube estiver em dia) ou 'pago' (cada membro assina o DBV).

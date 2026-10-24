@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import {
-  Award, BadgeCheck, KeyRound, UserPlus, CalendarDays, Check, Megaphone, Plus, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, ClipboardCheck, Globe, FolderOpen, BookOpen, Wrench, LifeBuoy, Share2, Flame,
+  Award, BadgeCheck, KeyRound, UserPlus, CalendarDays, Check, Megaphone, Plus, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, ClipboardCheck, Globe, FolderOpen, BookOpen, Wrench, LifeBuoy, Share2, Flame, ArrowLeftRight,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { KIND_LABEL, plural } from '../../format.js';
 import { MembersBrowser, memberActions } from './Members.jsx';
 import { AccessInfo } from '../Signup.jsx';
+import TransfersPage from './Transfers.jsx';
 import { PixCheckout, money } from '../Payment.jsx';
 import {
   AgendaPage, BibliotecaPage, CertificadoPage, FerramentasPage, FinancasPage, MembrosPorGrupo,
@@ -601,7 +602,7 @@ const pasta = (title, subtitle, items) => <><PageHeader title={title} subtitle={
 
 /** Pasta de cima de cada tela do clube (para o botão Voltar). */
 const PARENT = {
-  agenda: 'secretaria', membros: 'secretaria',
+  agenda: 'secretaria', membros: 'secretaria', transferencias: 'secretaria',
   secretaria: 'mais', unidades: 'mais', financas: 'mais', biblioteca: 'mais', ferramentas: 'mais', suporte: 'mais', eventos: 'mais', anuncios: 'mais', clubes: 'mais',
 };
 const clubParent = (path) => {
@@ -624,10 +625,11 @@ export default function ClubApp() {
   const secretaria = [
     { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Reuniões, acampamentos e datas do App' },
     { to: `${base}/membros`, icon: Users, label: 'Membros', hint: 'Cadastrar e ver os membros' },
+    { to: `${base}/transferencias`, icon: ArrowLeftRight, label: 'Transferências', hint: 'Trazer alguém de outro clube e pedidos' },
   ];
   const more = [
     ...(actor.club_billing === 'gratis' && actor.member_billing !== 'pago' ? [] : [{ to: `${base}/plano`, icon: Wallet, label: 'Plano do clube', hint: actor.club_billing === 'gratis' ? 'Assumir a cobrança dos membros' : 'R$ 15 a cada 30 dias' }]),
-    { to: `${base}/secretaria`, icon: FolderOpen, label: 'Secretaria', hint: 'Agenda e membros' },
+    { to: `${base}/secretaria`, icon: FolderOpen, label: 'Secretaria', hint: 'Agenda, membros e transferências' },
     { to: `${base}/unidades`, icon: Flag, label: 'Unidades', hint: 'Unidades, ranking e membros' },
     { to: `${base}/financas`, icon: Wallet, label: 'Tesouraria', hint: 'Balancete do clube' },
     { to: `${base}/biblioteca`, icon: BookOpen, label: 'Biblioteca', hint: 'Especialidades e classes' },
@@ -649,6 +651,7 @@ export default function ClubApp() {
               <Route path="secretaria" element={pasta('Secretaria', 'Agenda e membros', secretaria)} />
               <Route path="agenda" element={<AgendaPage />} />
               <Route path="membros" element={<MembersPage />} />
+              <Route path="transferencias" element={<TransfersPage />} />
               <Route path="membros/novo" element={<NewMemberPage />} />
               <Route path="requisitos" element={<RankingFolder />} />
               <Route path="ranking" element={<RankingHub base={base} />} />
