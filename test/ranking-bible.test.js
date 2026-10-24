@@ -80,7 +80,7 @@ test('leitura bíblica: 100 membro, 100 unidade, 25 clube; só na 1ª vez; soma 
   assert.equal(wrong.points, null, 'reprovar não pontua');
   const ok = (await pedro.post('/ano-biblico/dia/3/quiz', { answers: wrong.correct })).body;
   assert.ok(ok.passed && ok.first);
-  assert.deepEqual(ok.points, { member: 100, unit: 100, club: 25 });
+  assert.deepEqual(ok.points, { member: 100, unit: 100, club: 25, late: false });
   const again = (await pedro.post('/ano-biblico/dia/3/quiz', { answers: wrong.correct })).body;
   assert.equal(again.points, null, 'refazer o mesmo dia não pontua de novo');
 
@@ -93,17 +93,29 @@ test('leitura bíblica: 100 membro, 100 unidade, 25 clube; só na 1ª vez; soma 
   assert.equal(s1.unitClub.points - s0.unitClub.points, 100);
   assert.equal(s1.club.points - s0.club.points, 25);
 
-  // Outro dia (atrasado) soma de novo.
+  // Outro dia (atrasado) soma de novo, mas vale menos.
   const late = (await pedro.post('/ano-biblico/dia/1/quiz', { answers: [9] })).body;
-  assert.deepEqual((await pedro.post('/ano-biblico/dia/1/quiz', { answers: late.correct })).body.points, { member: 100, unit: 100, club: 25 });
+  assert.deepEqual((await pedro.post('/ano-biblico/dia/1/quiz', { answers: late.correct })).body.points, { member: 20, unit: 20, club: 5, late: true });
   const s2 = await snap();
-  assert.equal(s2.member.bible_points, 200);
-  assert.equal(s2.unit.bible_points, 200);
-  assert.equal(s2.club.bible_points, 50);
-  assert.equal(s2.club.points - s0.club.points, 50);
+  assert.equal(s2.member.bible_points, 120);
+  assert.equal(s2.unit.bible_points, 120);
+  assert.equal(s2.club.bible_points, 30);
+  assert.equal(s2.club.points - s0.club.points, 30);
 
   const sum = (await pedro.get('/rankings/summary')).body;
-  assert.equal(sum.member.bible_points, 200);
+  assert.equal(sum.member.bible_points, 120);
+
+  // Pausa do ranking: os pontos depois da pausa só aparecem quando o ranking volta.
+  assert.equal((await pedro.put('/admin/ranking/pausa', { at: new Date().toISOString() })).status, 403);
+  await new Promise((ok) => setTimeout(ok, 20));
+  assert.equal((await admin.put('/admin/ranking/pausa', { at: new Date().toISOString() })).body.paused, true);
+  await new Promise((ok) => setTimeout(ok, 20));
+  const d2 = (await pedro.post('/ano-biblico/dia/2/quiz', { answers: [9] })).body;
+  await pedro.post('/ano-biblico/dia/2/quiz', { answers: d2.correct });
+  assert.equal(find((await pedro.get('/rankings/members')).body, pedro.actor.id).bible_points, 120, 'pausado não muda');
+  assert.equal((await pedro.get('/rankings/estado')).body.paused, true);
+  await admin.put('/admin/ranking/pausa', { at: null });
+  assert.equal(find((await pedro.get('/rankings/members')).body, pedro.actor.id).bible_points, 140, 'voltou com os pontos');
   assert.equal(sum.district.id, pedro.actor.district_id);
   await admin.put('/admin/ano-biblico/inicio', { date: '' });
 });

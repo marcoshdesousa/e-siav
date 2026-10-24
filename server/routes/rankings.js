@@ -1,7 +1,8 @@
 import { Router } from 'express';
 import { get } from '../db.js';
-import { requireAuth } from '../auth.js';
-import { membersRanking, clubsRanking, unitsRanking, clubUnitsRanking, clubMembersRanking, leadersRanking, clubLeadersRanking, positionOf, rankingDistrict } from '../rankings.js';
+import { requireAuth, requireGeneral } from '../auth.js';
+import { setSetting } from '../fees.js';
+import { membersRanking, clubsRanking, unitsRanking, clubUnitsRanking, clubMembersRanking, leadersRanking, clubLeadersRanking, positionOf, rankingDistrict, rankingState } from '../rankings.js';
 import { fail, int } from '../util.js';
 
 const r = Router();
@@ -47,6 +48,15 @@ r.get('/rankings/club/:clubId/leaders', (req, res) => {
   const clubId = int(req.params.clubId);
   if (req.actor.type !== 'admin' && req.actor.club_id !== clubId) fail(403, 'Ranking de outro clube');
   res.json(top(clubLeadersRanking(clubId), me(req.actor)));
+});
+
+// Temporada e pausa do ranking (todo mundo vê o aviso; só o administrador geral pausa e retoma).
+r.get('/rankings/estado', (_req, res) => res.json(rankingState()));
+r.put('/admin/ranking/pausa', requireAuth('admin'), requireGeneral, (req, res) => {
+  const at = req.body.at ? new Date(req.body.at) : null;
+  if (at && Number.isNaN(at.getTime())) fail(400, 'Data inválida');
+  setSetting('ranking_pausa', at ? at.toISOString() : '');
+  res.json(rankingState());
 });
 
 const pick = (row) => (row ? { position: row.position, points: row.points, bible_points: row.bible_points } : null);

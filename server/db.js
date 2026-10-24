@@ -810,6 +810,8 @@ function migrate() {
     created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
     PRIMARY KEY (member_id, day)
   )`);
+  // Estudo feito atrasado (dia que já passou) vale menos: late = 1.
+  add('bible_points', 'late', 'INTEGER NOT NULL DEFAULT 0');
   db.exec('CREATE INDEX IF NOT EXISTS idx_bible_points_unit ON bible_points(unit_id)');
   db.exec('CREATE INDEX IF NOT EXISTS idx_bible_points_club ON bible_points(club_id)');
   // Dias já concluídos antes de existir a pontuação também valem (uma vez só; a chave impede repetir).

@@ -141,9 +141,9 @@ r.post('/ano-biblico/dia/:n/quiz', member, async (req, res) => {
   // Prêmio: 1 pacotinho do Álbum Bíblico por dia concluído (só na primeira vez).
   if (first) giveBiblePack(req.actor.id);
   // Ranking (Leitura bíblica): 100 pontos para o membro, 100 para a unidade e 25 para o clube, só na
-  // primeira vez que conclui o dia. Dia futuro aberto no modo de teste não pontua.
+  // primeira vez que conclui o dia (atrasado vale 20/20/5). Dia futuro aberto no modo de teste não pontua.
   const { awardBibleDay } = await import('../rankings.js');
-  const points = first && d.day <= t ? awardBibleDay(req.actor.id, d.day) : null;
+  const points = first && d.day <= t ? awardBibleDay(req.actor.id, d.day, !onTime) : null;
   const b = bibleSummary(req.actor.id);
   res.json({
     score, total: quiz.length, passed, pass: PASS, best: Math.max(score, before?.best || 0), first, on_time: !!onTime, pack: first, points,

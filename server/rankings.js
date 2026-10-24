@@ -1,5 +1,6 @@
 import { all, get, run } from './db.js';
 import { memberKind } from './util.js';
+import { setting } from './fees.js';
 
 /**
  * Leitura bíblica (Ano Bíblico): cada dia concluído pela 1ª vez vale 100 pontos para o membro,
@@ -7,6 +8,28 @@ import { memberKind } from './util.js';
  * e soma aos pontos dos requisitos em todos os rankings (distrito e clube).
  */
 export const BIBLE_POINTS = { member: 100, unit: 100, club: 25 };
+/** Estudo feito depois do dia certo (atrasado) vale bem menos. */
+export const LATE_POINTS = { member: 20, unit: 20, club: 5 };
+
+/**
+ * Temporada do ranking: só contam os pontos ganhos a partir do início (zera todo 1º de janeiro).
+ * O administrador geral pode pausar o ranking num dia e hora: a partir dali o ranking fica parado
+ * (só contam os pontos ganhos até a pausa) para ele conferir quem ganhou; ao retomar, tudo volta a contar.
+ */
+const ISO = /^\d{4}-\d{2}-\d{2}(T[\d:.]+Z?)?$/;
+const okIso = (v) => (ISO.test(v || '') ? v : null);
+export const seasonStart = () => okIso(setting('ranking_inicio'));
+export const pausedAt = () => okIso(setting('ranking_pausa'));
+export const isPaused = () => { const p = pausedAt(); return !!p && p <= new Date().toISOString(); };
+/** Filtro de datas da temporada (e da pausa, se já começou) para uma coluna de data. */
+function seasonFilter(col) {
+  const parts = [];
+  const s = seasonStart();
+  if (s) parts.push(`${col} >= '${s}'`);
+  if (isPaused()) parts.push(`${col} <= '${pausedAt()}'`);
+  return parts.length ? ' AND ' + parts.join(' AND ') : '';
+}
+export const rankingState = () => ({ start: seasonStart(), paused_at: pausedAt(), paused: isPaused() });
 
 /** Ordena por pontos; no empate fica à frente quem chegou primeiro à pontuação. */
 function rank(rows) {
@@ -32,15 +55,16 @@ const scoreJoin = (type, idCol, reqFilter) => `
   LEFT JOIN (
     SELECT s.submitter_id, SUM(s.points) AS points, MAX(s.submitted_at) AS last_at
     FROM submissions s JOIN requirements r ON r.id = s.requirement_id
-    WHERE s.submitter_type = '${type}' AND s.status = 'aprovado' AND s.points > 0 AND ${reqFilter}
+    WHERE s.submitter_type = '${type}' AND s.status = 'aprovado' AND s.points > 0 AND ${reqFilter}${seasonFilter('s.submitted_at')}
     GROUP BY s.submitter_id
   ) sc ON sc.submitter_id = ${idCol}`;
 
 /** Pontos da Leitura bíblica agrupados por membro, unidade ou clube (opcionalmente só os feitos num clube). */
+const LATE_OF = new Map(Object.keys(BIBLE_POINTS).map((k) => [BIBLE_POINTS[k], LATE_POINTS[k]]));
 const bibleJoin = (col, idCol, each, clubId = null) => `
   LEFT JOIN (
-    SELECT ${col} AS target_id, COUNT(*) * ${Number(each)} AS points, MAX(created_at) AS last_at
-    FROM bible_points WHERE ${col} IS NOT NULL${clubId != null ? ' AND club_id = ' + Number(clubId) : ''}
+    SELECT ${col} AS target_id, SUM(CASE WHEN late = 1 THEN ${Number(LATE_OF.get(each) ?? each)} ELSE ${Number(each)} END) AS points, MAX(created_at) AS last_at
+    FROM bible_points WHERE ${col} IS NOT NULL${clubId != null ? ' AND club_id = ' + Number(clubId) : ''}${seasonFilter('created_at')}
     GROUP BY ${col}
   ) bp ON bp.target_id = ${idCol}`;
 const BIBLE_COLS = 'COALESCE(bp.points, 0) AS bible_points, bp.last_at AS bible_last_at';
@@ -151,13 +175,14 @@ export function clubUnitsRanking(clubId) {
 }
 
 /** Pontos de um dia de Leitura bíblica concluído pela 1ª vez. Devolve os pontos ganhos (ou null se já tinha). */
-export function awardBibleDay(memberId, day) {
+export function awardBibleDay(memberId, day, late = false) {
   const m = get('SELECT m.unit_id, m.club_id, u.is_leadership FROM members m LEFT JOIN units u ON u.id = m.unit_id WHERE m.id = ?', memberId);
   if (!m) return null;
-  const res = run('INSERT OR IGNORE INTO bible_points (member_id, day, unit_id, club_id) VALUES (?, ?, ?, ?)', memberId, day, m.unit_id, m.club_id);
+  const res = run('INSERT OR IGNORE INTO bible_points (member_id, day, unit_id, club_id, late) VALUES (?, ?, ?, ?, ?)', memberId, day, m.unit_id, m.club_id, late ? 1 : 0);
   if (!res.changes) return null;
-  // A unidade Liderança não disputa o ranking de unidades.
-  return { member: BIBLE_POINTS.member, unit: m.unit_id && !m.is_leadership ? BIBLE_POINTS.unit : 0, club: BIBLE_POINTS.club };
+  // A unidade Liderança não disputa o ranking de unidades. Atrasado vale menos.
+  const P = late ? LATE_POINTS : BIBLE_POINTS;
+  return { member: P.member, unit: m.unit_id && !m.is_leadership ? P.unit : 0, club: P.club, late: !!late };
 }
 
 /**
@@ -165,8 +190,8 @@ export function awardBibleDay(memberId, day) {
  * registro por dia concluído. A chave do dia fica numa faixa própria de cada estudo (não se misturam).
  */
 const STUDY_BASE = { meditacao: 100_000_000, sabatina: 200_000_000 };
-export function awardStudyDay(memberId, kind, date) {
-  return awardBibleDay(memberId, STUDY_BASE[kind] + Number(String(date).replaceAll('-', '')));
+export function awardStudyDay(memberId, kind, date, late = false) {
+  return awardBibleDay(memberId, STUDY_BASE[kind] + Number(String(date).replaceAll('-', '')), late);
 }
 
 /** Distrito do ranking: o do próprio usuário; o Administrador Geral escolhe (padrão: o primeiro). */

@@ -45,6 +45,7 @@ export function Quiz({ questions, send, pass, onAgain, done }) {
               <p><b>Concluído!</b>{result.on_time ? ' A sua sequência subiu!' : ''}</p>
               {result.pack && <PackReward />}
               {result.points?.member > 0 && <p className="quiz-gift"><Trophy size={18} /> +{result.points.member} pontos no ranking{result.points.unit ? `, +${result.points.unit} para a sua unidade` : ''} e +{result.points.club} para o seu clube!</p>}
+              {result.points?.late && <p className="small muted">Feito depois do dia certo vale menos pontos. No dia certo vale 100!</p>}
             </>
           ) : <p>Faltou pouco! Precisa acertar {result.pass}. Releia e tente de novo.</p>}
           <div className="quiz-actions">

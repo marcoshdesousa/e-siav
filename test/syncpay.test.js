@@ -7,7 +7,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 
-const PORT = 3900 + Math.floor(Math.random() * 90);
+const PORT = 4000 + Math.floor(Math.random() * 90);
 const BASE = `http://localhost:${PORT}/api`;
 let server;
 let dataDir;

@@ -904,3 +904,6 @@ input::-webkit-datetime-edit { padding: 0; }
 @media (max-width: 370px) { .bottom-nav-inner:has(> a:nth-child(6)) a { font-size: .56rem; } .bottom-nav-inner:has(> a:nth-child(6)) .nav-ico { width: 36px; } }
 .rank-scope { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
 .signup-url { display: block; word-break: break-all; padding: .5rem .65rem; border-radius: 10px; background: var(--surface-2, #f1f5f9); font-size: .82rem; }
+.rank-paused { display: flex; gap: .55rem; align-items: flex-start; padding: .7rem .85rem; border-radius: var(--r); background: var(--yellow-soft); border: 1px solid var(--yellow); margin-bottom: .8rem; font-size: .88rem; }
+.rank-paused svg { flex: none; margin-top: 1px; }
+.rank-pause-admin { margin-bottom: .8rem; }

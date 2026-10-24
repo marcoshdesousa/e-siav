@@ -158,7 +158,7 @@ r.post('/meditacao/:date/quiz', member, (req, res) => {
   // Prêmio: só na 1ª vez e só em dia que já chegou (no modo de teste, dia futuro não pontua).
   const reward = first && date <= today;
   if (reward) giveBiblePack(req.actor.id);
-  const points = reward ? awardStudyDay(req.actor.id, 'meditacao', date) : null;
+  const points = reward ? awardStudyDay(req.actor.id, 'meditacao', date, !onTime) : null;
   res.json({ score, total: m.questions.length, passed, pass: MED_PASS, first, on_time: !!onTime, pack: reward, points, correct: m.questions.map((q) => q.answer), ...meditationSummary(req.actor.id, today) });
 });
 
@@ -305,7 +305,7 @@ r.post('/escola-sabatina/licao/:id/quiz', member, (req, res) => {
   }
   // Prêmio: uma vez por dia (mesmo fazendo lições de várias categorias no mesmo dia).
   const reward = first && l.date <= today;
-  const points = reward ? awardStudyDay(req.actor.id, 'sabatina', l.date) : null;
+  const points = reward ? awardStudyDay(req.actor.id, 'sabatina', l.date, l.date !== today) : null;
   if (points) giveBiblePack(req.actor.id);
   res.json({ score, total: qs.length, passed, pass: need, first, on_time: !!onTime, pack: !!points, points, correct: qs.map((q) => (q.type === 'texto' ? null : q.answer)), ...sabbathSummary(req.actor.id, today) });
 });

@@ -414,6 +414,7 @@ function BibleQuiz({ d, back, onRead, reload }) {
                   {result.points.unit > 0 ? `, +${result.points.unit} para a sua unidade` : ''} e +{result.points.club} para o seu clube!
                 </p>
               )}
+              {result.points?.late && <p className="small muted">Feito depois do dia certo vale menos pontos. No dia certo vale 100!</p>}
               {result.all_done && <p><Medal size={18} /> Você completou o Ano Bíblico! Veja o seu prêmio na página do Ano Bíblico.</p>}
               {result.best > result.score && <p className="small">A sua melhor nota neste dia continua {result.best}/5.</p>}
             </>

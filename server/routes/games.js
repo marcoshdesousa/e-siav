@@ -8,7 +8,7 @@ import { GAMES } from '../games.js';
 import { isPlus } from '../plus.js';
 
 // Só quem tem o DBV+ entra no ranking dos mini-jogos (no modo de teste, todos).
-const PLUS_SQL = `m.id IN (SELECT member_id FROM member_plus WHERE until > strftime('%Y-%m-%dT%H:%M:%fZ','now'))`;
+const PLUS_SQL = `m.id IN (SELECT member_id FROM member_plus WHERE plan <> 'app' AND until > strftime('%Y-%m-%dT%H:%M:%fZ','now'))`;
 
 const r = Router();
 const member = requireAuth('member');

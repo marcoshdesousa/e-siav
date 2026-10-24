@@ -1,9 +1,9 @@
 import { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Compass, Flag, Globe, Map as MapIcon, Tent } from 'lucide-react';
+import { BookOpen, Compass, Flag, Globe, Map as MapIcon, PauseCircle, Tent } from 'lucide-react';
 import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
-import { Avatar, Field, Loading, PageHeader, Section, Tabs, useLoad, Empty } from '../ui.jsx';
+import { Avatar, Button, Card, Field, Loading, PageHeader, Section, Tabs, useAsync, useLoad, Empty } from '../ui.jsx';
 
 /** Pontos da Leitura bíblica (Ano Bíblico) que entram no total. */
 const BibleTag = ({ r }) => (r.bible_points > 0
@@ -140,6 +140,39 @@ function SummaryCard({ icon, title, pos, onClick, gold }) {
  * Aba Ranking. O membro vê de uma vez a sua posição, a da sua unidade e a do seu clube,
  * e pode abrir cada tabela completa. Desbravadores e liderança têm rankings separados.
  */
+/** Ranking pausado (para apuração) e, para o administrador geral, o controle da pausa. */
+function RankingPause() {
+  const { actor } = useAuth();
+  const state = useLoad(() => api.get('/rankings/estado'));
+  const [at, setAt] = useState('');
+  const [busy, run] = useAsync();
+  const general = actor.type === 'admin' && !actor.district_id;
+  const s = state.data;
+  if (!s) return null;
+  const br = (iso) => new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+  const save = (v) => run(() => api.put('/admin/ranking/pausa', { at: v }), v ? 'Pausa marcada' : 'Ranking retomado').then(state.reload);
+  return (
+    <>
+      {s.paused && <div className="rank-paused"><PauseCircle size={18} /><span><b>Ranking pausado</b> desde {br(s.paused_at)} para a apuração dos vencedores. Os pontos depois disso aparecem quando o ranking voltar.</span></div>}
+      {general && (
+        <Card className="rank-pause-admin">
+          <p style={{ margin: 0 }}><b>Pausar o ranking</b> <span className="small muted">· só você vê isto</span></p>
+          <p className="small muted" style={{ margin: '.2rem 0 .5rem' }}>
+            {s.paused_at ? (s.paused ? `Pausado desde ${br(s.paused_at)}.` : `Pausa marcada para ${br(s.paused_at)}.`) : 'O ranking está contando normalmente.'}
+            {' '}Todo 1º de janeiro o ranking e o Ano Bíblico recomeçam do zero{s.start ? ` (temporada desde ${new Date(s.start).toLocaleDateString('pt-BR')})` : ''}.
+          </p>
+          <div className="row wrap">
+            <input type="datetime-local" value={at} onChange={(e) => setAt(e.target.value)} style={{ width: 'auto' }} />
+            <Button small busy={busy} disabled={!at} onClick={() => save(new Date(at).toISOString())}>Marcar pausa</Button>
+            <Button small variant="secondary" busy={busy} onClick={() => save(new Date().toISOString())}>Pausar agora</Button>
+            {s.paused_at && <Button small variant="secondary" busy={busy} onClick={() => save(null)}>Retomar</Button>}
+          </div>
+        </Card>
+      )}
+    </>
+  );
+}
+
 export default function RankingHub({ base }) {
   const { actor } = useAuth();
   const summary = useLoad(() => (actor.type === 'admin' ? Promise.resolve(null) : api.get('/rankings/summary')));
@@ -154,7 +187,8 @@ export default function RankingHub({ base }) {
 
   return (
     <>
-      <PageHeader title="Ranking" subtitle="Do seu clube, do seu distrito e do Brasil · cada dia do Ano Bíblico concluído vale pontos" />
+      <PageHeader title="Ranking" subtitle="Do seu clube, do seu distrito e do Brasil · estudo feito no dia certo vale mais pontos" />
+      <RankingPause />
       {summary.data?.app && (
         <div className="pos-grid">
           <SummaryCard gold icon={<Globe size={16} />} title="Eu no Brasil" pos={actor.kind === 'desbravador' ? summary.data.member_brasil : summary.data.leader_brasil} onClick={() => setTab(isLeader ? 'lideranca' : 'membros')} />
