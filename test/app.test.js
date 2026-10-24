@@ -148,7 +148,7 @@ test('requisitos de desbravador não aparecem para conselheiro; unidade vê requ
   assert.deepEqual((await marcos.get('/requirements/mine')).body, []);
   const unit = await login('clube', '4821', 'FA1111');
   const reqs = (await unit.get('/requirements/mine')).body;
-  assert.ok(reqs.some((r) => r.origin === 'clube') && reqs.some((r) => r.origin === 'geral'));
+  assert.ok(reqs.some((r) => r.origin === 'clube') && reqs.some((r) => r.origin === 'brasil'));
   assert.ok(reqs.every((r) => r.audience === 'unit'));
   // Unidade só cria requisito válido (aqui, sem título)
   assert.equal((await unit.post('/requirements', { title: '' })).status, 400);

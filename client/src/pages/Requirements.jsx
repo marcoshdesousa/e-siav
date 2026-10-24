@@ -107,7 +107,7 @@ function SubmitModal({ r, onClose, onDone }) {
 export function RequirementsTodo({ originTabs = false, clubLabel = 'Do meu clube', groupTab = false }) {
   const state = useLoad(() => api.get('/requirements/mine'));
   const [sending, setSending] = useState(null);
-  const [origin, setOrigin] = useState('geral');
+  const [origin, setOrigin] = useState('brasil');
   const [filter, setFilter] = useState('abertos');
   const open = (r) => ['pendente', 'fora_do_prazo', 'recusado'].includes(r.state);
   return (
@@ -120,7 +120,7 @@ export function RequirementsTodo({ originTabs = false, clubLabel = 'Do meu clube
         return (
           <>
             {originTabs && (
-              <Tabs tabs={[['geral', 'Do App', openCount('geral')], ['clube', clubLabel, openCount('clube')], ...(groupTab ? [['grupo', 'Da minha unidade', openCount('grupo')]] : [])]} value={origin} onChange={setOrigin} />
+              <Tabs tabs={[['brasil', 'Brasil', openCount('brasil')], ...(all.some((r) => r.origin === 'distrito') ? [['distrito', 'Distrito', openCount('distrito')]] : []), ['clube', clubLabel, openCount('clube')], ...(groupTab ? [['grupo', 'Da minha unidade', openCount('grupo')]] : [])]} value={origin} onChange={setOrigin} />
             )}
             <div className="seg" style={{ marginBottom: '.9rem' }}>
               {[['abertos', 'A cumprir', counts.abertos], ['enviados', 'Em avaliação', counts.enviados], ['aprovados', 'Aprovados']].map(([k, l, n]) => (
@@ -174,7 +174,7 @@ export function RequirementForm({ audience: fixedAudience, onClose, onDone }) {
             {!actor?.district_id && (
               <Field label="Alcance">
                 <select value={f.scope} onChange={set('scope')}>
-                  <option value="geral">Geral (todos os distritos)</option>
+                  <option value="geral">Brasil (todos os distritos)</option>
                   <option value="distrito">Distrito</option>
                 </select>
               </Field>
@@ -239,7 +239,7 @@ export function CreatedRequirements({ only = null } = {}) {
                 <span className="ico"><ClipboardList size={14} /> {modesLabel(r.modes)}</span>
                 <span className="req-points ico"><Star size={14} /> {r.points}/{r.late_points} pts</span>
                 <span className="ico"><CalendarClock size={14} /> {fmtDateTime(r.deadline)}</span>
-                {isAdmin && <span className="ico"><Globe2 size={14} /> {r.scope === 'geral' ? 'Geral' : r.district_name}</span>}
+                {isAdmin && <span className="ico"><Globe2 size={14} /> {r.scope === 'geral' ? 'Brasil' : r.district_name}</span>}
                 {r.audience === 'member' && actor.type !== 'unit' && <span className="ico"><Users size={14} /> {MEMBER_KIND_LABEL[r.member_kind || '']}</span>}
               </div>
               <div className="row between">

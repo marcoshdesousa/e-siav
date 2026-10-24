@@ -38,7 +38,7 @@ function decorate(req, sub) {
     ...req,
     modes,
     images: parseJson(req.images, []),
-    origin: { admin: 'geral', club: 'clube', unit: 'grupo' }[req.creator_type],
+    origin: req.creator_type === 'admin' ? (req.scope === 'distrito' ? 'distrito' : 'brasil') : { club: 'clube', unit: 'grupo' }[req.creator_type],
     questions: modes.includes('quiz') ? publicQuestions(req.id) : [],
     state: stateOf(req, sub),
     submission: sub ? { ...sub, photos: JSON.parse(sub.photos), answers: parseJson(sub.answers, null) } : null,

@@ -299,6 +299,7 @@ input[type='file'] { padding: .55rem; }
 .podium-1 .avatar { box-shadow: 0 0 0 4px var(--yellow); }
 .rank-row { display: flex; align-items: center; gap: .7rem; background: var(--surface); padding: .65rem .85rem; border-radius: var(--r); box-shadow: var(--shadow-sm); color: inherit; border: 1px solid var(--card-border); }
 .rank-row.me { border: 2px solid var(--yellow); background: var(--yellow-soft); }
+.rank-gap { text-align: center; color: var(--muted); font-size: .8rem; font-weight: 700; padding: .5rem 0 .1rem; border-top: 2px dashed var(--card-border); margin-top: .3rem; }
 .rank-pos { font-family: var(--font-title); font-weight: 800; width: 2.4rem; text-align: center; color: var(--link); }
 .rank-pts { font-family: var(--font-title); font-weight: 700; color: var(--link); white-space: nowrap; }
 .rank-pts small { font-weight: 600; color: var(--muted); }

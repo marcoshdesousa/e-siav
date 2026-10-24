@@ -132,3 +132,25 @@ test('ranking por distrito: sem ranking geral; o administrador escolhe o distrit
   const prof = (await gav.get(`/rankings/summary`)).body;
   assert.equal(prof.club.position, 1);
 });
+
+test('ranking: só os 50 primeiros; quem está abaixo vê a própria posição exata', async () => {
+  const pedro = await login('membros', 'pedro');
+  const db = new DatabaseSync(path.join(dataDir, 'dbv.sqlite'));
+  try {
+    const ins = db.prepare("INSERT INTO members (club_id, unit_id, name, birth_date, cargo, code) VALUES (?, ?, ?, '2013-05-05', 'desbravador', ?)");
+    const pts = db.prepare('INSERT INTO bible_points (member_id, day, unit_id, club_id) VALUES (?, ?, NULL, ?)');
+    for (let i = 0; i < 60; i++) {
+      const id = Number(ins.run(pedro.actor.club_id, null, `Teste ${i}`, String(900000 + i)).lastInsertRowid);
+      for (let d = 1; d <= 9; d++) pts.run(id, d, pedro.actor.club_id);
+    }
+  } finally {
+    db.close();
+  }
+  const rows = (await pedro.get('/rankings/members')).body;
+  assert.equal(rows.length, 51);
+  const mine = rows[50];
+  assert.equal(mine.id, pedro.actor.id);
+  assert.ok(mine.extra && mine.position > 60, 'posição exata de quem está fora do top 50');
+  assert.equal(rows.filter((r) => r.position > 50).length, 1, 'não mostra o 51º, 52º...');
+  assert.equal((await pedro.get('/rankings/summary')).body.member.position, mine.position);
+});

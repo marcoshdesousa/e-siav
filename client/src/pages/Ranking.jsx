@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Compass, Flag, Globe, Map as MapIcon, Tent } from 'lucide-react';
 import { api } from '../api.js';
@@ -35,7 +35,9 @@ export function RankingTable({ rows, highlight, sub, link, avatarSquare = true }
       </div>
       <div className="list">
         {rows.map((r) => (
-          <Wrap key={r.id} r={r} className={'rank-row' + (highlight === r.id ? ' me' : '')}>
+          <Fragment key={r.id}>
+          {r.extra && <div className="rank-gap">Só os 50 primeiros aparecem · a sua posição:</div>}
+          <Wrap r={r} className={'rank-row' + (highlight === r.id || r.extra ? ' me' : '')}>
             <span className="rank-pos">{r.position}º</span>
             <Avatar src={r.photo || r.logo} name={r.name} size={38} square={avatarSquare} />
             <div className="grow">
@@ -45,6 +47,7 @@ export function RankingTable({ rows, highlight, sub, link, avatarSquare = true }
             </div>
             <span className="rank-pts">{r.points} <small>pts</small></span>
           </Wrap>
+          </Fragment>
         ))}
       </div>
     </>

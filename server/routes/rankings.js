@@ -11,10 +11,20 @@ r.use('/rankings', requireAuth());
 // Geral escolhe) e clube (rotas /rankings/club/...).
 const district = (req) => (req.query.escopo === 'brasil' ? null : rankingDistrict(req.actor, int(req.query.district_id)));
 
-r.get('/rankings/members', (req, res) => res.json(membersRanking(district(req))));
-r.get('/rankings/clubs', (req, res) => res.json(clubsRanking(district(req))));
-r.get('/rankings/leaders', (req, res) => res.json(leadersRanking(district(req))));
-r.get('/rankings/units', (req, res) => res.json(unitsRanking(district(req))));
+// Só os 50 primeiros aparecem; quem está abaixo vê apenas a própria linha, com a posição exata.
+const TOP = 50;
+const top = (rows, mine) => {
+  const out = rows.slice(0, TOP);
+  const me = mine && rows.slice(TOP).find((r) => r.id === mine);
+  return me ? [...out, { ...me, extra: true }] : out;
+};
+const myUnit = (a) => (a.type === 'unit' ? a.id : a.unit_id);
+const me = (a) => (a.type === 'member' ? a.id : null);
+
+r.get('/rankings/members', (req, res) => res.json(top(membersRanking(district(req)), me(req.actor))));
+r.get('/rankings/clubs', (req, res) => res.json(top(clubsRanking(district(req)), req.actor.club_id)));
+r.get('/rankings/leaders', (req, res) => res.json(top(leadersRanking(district(req)), me(req.actor))));
+r.get('/rankings/units', (req, res) => res.json(top(unitsRanking(district(req)), myUnit(req.actor))));
 
 // Ranking interno de unidades: visível ao próprio clube (e ao Administrador Geral).
 r.get('/rankings/club/:clubId/units', (req, res) => {
@@ -22,21 +32,21 @@ r.get('/rankings/club/:clubId/units', (req, res) => {
   if (req.actor.type !== 'admin' && req.actor.club_id !== clubId) fail(403, 'Ranking de outro clube');
   const club = get('SELECT id, name FROM clubs WHERE id = ?', clubId);
   if (!club) fail(404, 'Clube não encontrado');
-  res.json({ club, rows: clubUnitsRanking(clubId) });
+  res.json({ club, rows: top(clubUnitsRanking(clubId), myUnit(req.actor)) });
 });
 
 // Ranking de desbravadores do clube (requisitos criados pelo clube).
 r.get('/rankings/club/:clubId/members', (req, res) => {
   const clubId = int(req.params.clubId);
   if (req.actor.type !== 'admin' && req.actor.club_id !== clubId) fail(403, 'Ranking de outro clube');
-  res.json(clubMembersRanking(clubId));
+  res.json(top(clubMembersRanking(clubId), me(req.actor)));
 });
 
 // Melhor da liderança do clube (requisitos criados pelo clube).
 r.get('/rankings/club/:clubId/leaders', (req, res) => {
   const clubId = int(req.params.clubId);
   if (req.actor.type !== 'admin' && req.actor.club_id !== clubId) fail(403, 'Ranking de outro clube');
-  res.json(clubLeadersRanking(clubId));
+  res.json(top(clubLeadersRanking(clubId), me(req.actor)));
 });
 
 const pick = (row) => (row ? { position: row.position, points: row.points, bible_points: row.bible_points } : null);

@@ -27,9 +27,9 @@ export function waLink(phone, text = '') {
 }
 
 // ---------- Agenda ----------
-const ORIGEM = { clube: ['green', 'Do clube'], geral: ['yellow', 'Para todos os clubes'], distrito: ['blue', 'Do distrito'] };
+const ORIGEM = { clube: ['green', 'Do clube'], geral: ['yellow', 'Brasil'], distrito: ['blue', 'Distrito'] };
 const origemDe = (a) => (a.creator_type === 'club' ? ORIGEM.clube
-  : a.scope === 'distrito' ? ['blue', a.district_name || 'Do distrito']
+  : a.scope === 'distrito' ? ['blue', a.district_name || 'Distrito']
     : a.scope === 'clube' ? ['yellow', a.club_name ? `App · ${a.club_name}` : 'Do App para o clube'] : ORIGEM.geral);
 /** As 6 cores para identificar cada coisa no calendário. */
 export const CORES = [['verde', 'Verde', '#18875A'], ['azul', 'Azul', '#2563EB'], ['laranja', 'Laranja', '#EA7A12'], ['vermelho', 'Vermelho', '#DC2626'], ['roxo', 'Roxo', '#7C3AED'], ['preto', 'Preto', '#1F2937']];
