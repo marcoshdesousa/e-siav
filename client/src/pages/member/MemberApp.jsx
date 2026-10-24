@@ -161,31 +161,33 @@ function parentOf(path) {
   return base;
 }
 
-const PUSH_SEEN = 'dbv-push-aviso';
 /**
- * Convite para ativar as notificações: só no app baixado (aberto pela tela de início), pequeno e uma
- * vez só por aparelho (na próxima vez que abrir, não aparece mais).
+ * Convite para ativar as notificações: só no app baixado (aberto pela tela de início) e pequeno.
+ * O X esconde só desta vez; volta a aparecer toda vez que abrir o app, até ativar.
  */
 function PushCard() {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(null); // null = escondido; 'default' | 'denied'
   const [busy, run] = useAsync();
   useEffect(() => {
-    if (!pushSupported() || !installedApp() || Notification.permission !== 'default') return;
-    try { if (localStorage.getItem(PUSH_SEEN)) return; localStorage.setItem(PUSH_SEEN, '1'); } catch { /* sem armazenamento */ }
-    setShow(true);
+    if (!pushSupported() || !installedApp() || Notification.permission === 'granted') return;
+    setShow(Notification.permission);
   }, []);
   const turnOn = () => run(async () => {
     const ok = await enablePush();
-    setShow(false);
+    setShow(ok ? null : Notification.permission === 'denied' ? 'denied' : 'default');
     if (ok) notify('Notificações ativadas!');
-  }).catch(() => setShow(false));
+  }).catch(() => {});
   if (!show) return null;
   return (
     <div className="push-card">
       <Bell size={16} />
-      <span className="grow">Receba lembretes dos seus estudos do dia</span>
-      <Button small busy={busy} onClick={turnOn}>Ativar</Button>
-      <button type="button" className="push-x" aria-label="Fechar" onClick={() => setShow(false)}><X size={15} /></button>
+      {show === 'default' ? (
+        <>
+          <span className="grow">Receba lembretes dos seus estudos do dia</span>
+          <Button small busy={busy} onClick={turnOn}>Ativar</Button>
+        </>
+      ) : <span className="grow">Notificações bloqueadas: libere nas configurações do celular</span>}
+      <button type="button" className="push-x" aria-label="Fechar" onClick={() => setShow(null)}><X size={15} /></button>
     </div>
   );
 }
