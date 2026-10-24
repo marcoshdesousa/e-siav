@@ -64,10 +64,10 @@ export function unitProfile(id) {
 
 export function memberProfile(where, value) {
   const m = get(
-    `SELECT m.id, m.name, m.photo, m.code, m.handle, m.cargo, m.birth_date, c.district_id,
+    `SELECT m.id, m.name, m.photo, m.code, m.handle, m.link_token AS link, m.cargo, m.birth_date, c.district_id,
             m.club_id, c.code AS club_code, c.name AS club_name, c.logo AS club_logo, c.is_app AS club_is_app, m.unit_id, u.name AS unit_name, u.number AS unit_number, u.is_leadership AS unit_is_leadership
      FROM members m JOIN clubs c ON c.id = m.club_id LEFT JOIN units u ON u.id = m.unit_id
-     WHERE m.status = 'ativo' AND ${where === 'code' ? 'm.code = ?' : 'm.id = ?'}`,
+     WHERE m.status = 'ativo' AND ${where === 'code' ? 'm.code = ?' : where === 'link' ? 'm.link_token = ?' : 'm.id = ?'}`,
     value,
   );
   if (!m) return null;

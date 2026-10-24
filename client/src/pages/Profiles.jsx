@@ -1,7 +1,7 @@
 import { Link, useParams, Navigate } from 'react-router-dom';
 import { useMemo, useState } from 'react';
 import { Verified } from './member/PlusPage.jsx';
-import { Award, CalendarDays, ChevronDown, ChevronRight, ChevronUp, Compass, Flag, Flame, MapPin, Hash, Tent, Users } from 'lucide-react';
+import { Award, CalendarDays, ChevronDown, ChevronRight, ChevronUp, Compass, Eye, EyeOff, Flag, Flame, MapPin, Hash, Tent, Users } from 'lucide-react';
 import { Attachments } from './admin/Events.jsx';
 import { api } from '../api.js';
 import { fmtDate, plural } from '../format.js';
@@ -204,6 +204,21 @@ export function UnitProfileView({ unit: u, linkBase, hideBio = false, extra = nu
   );
 }
 
+/**
+ * O @ e o código só aparecem para o próprio membro (servem para entrar na conta). Ficam escondidos
+ * até ele tocar no olho, para o perfil sair bonito no print e ninguém ver os dados de acesso.
+ */
+function AccessChips({ m }) {
+  const [show, setShow] = useState(false);
+  if (!m.code) return null;
+  return (
+    <button type="button" className="access-chips" onClick={() => setShow((v) => !v)} aria-label={show ? 'Esconder meus dados de acesso' : 'Mostrar meus dados de acesso'}>
+      {show ? <>{m.handle && <span className="handle-chip">@{m.handle}</span>}<span className="handle-chip"><Hash size={14} /> {m.code}</span><EyeOff size={15} /></>
+        : <><Eye size={15} /> <span>Ver meu @ e código</span></>}
+    </button>
+  );
+}
+
 export function MemberProfileView({ member: m, linkBase, photoAction, extra }) {
   return (
     <>
@@ -212,10 +227,7 @@ export function MemberProfileView({ member: m, linkBase, photoAction, extra }) {
           <Avatar src={m.photo} name={m.name} size={104} />
           {photoAction}
           <h1>{m.name}{m.verified && <Verified size={24} />}</h1>
-          <div className="row wrap" style={{ justifyContent: 'center', gap: '.35rem' }}>
-            {m.handle && <span className="handle-chip">@{m.handle}</span>}
-            <span className="handle-chip"><Hash size={14} /> {m.code}</span>
-          </div>
+          <AccessChips m={m} />
           <div className="chips">
             <span className="chip yellow">{m.cargo}</span>
             <span className="chip">{m.age} anos</span>
@@ -231,7 +243,7 @@ export function MemberProfileView({ member: m, linkBase, photoAction, extra }) {
           <div className="row wrap" style={{ justifyContent: 'center', marginTop: '.4rem' }}>
             {m.ranking && <PositionBadge position={m.ranking.position} points={m.ranking.points} label={m.kind === 'desbravador' ? 'no ranking de desbravadores do distrito' : 'no ranking da liderança do distrito'} />}
           </div>
-          <div className="mt"><ShareButton path={`/${m.code}`} title={m.name} /></div>
+          <div className="mt"><ShareButton path={`/${m.link}`} title={m.name} /></div>
         </div>
       </div>
 
@@ -285,10 +297,10 @@ export function ClanLinkPage({ code, n }) {
   return <PublicProfilePage kind="cla_codigo" id={code} />;
 }
 
-/** Link de bio do desbravador: site/123456 (só para ver; editar é pelo app). */
+/** Link do perfil do desbravador: site/letrasaleatorias (só para ver; o código e o @ não aparecem). */
 export function MemberLinkPage() {
   const { code } = useParams();
-  if (!/^\d{6}$/.test(code || '')) return <Navigate to="/" replace />;
+  if (!/^[a-z]{10}$/i.test(code || '')) return <Navigate to="/" replace />;
   return <PublicProfilePage kind="membro" id={code} />;
 }
 

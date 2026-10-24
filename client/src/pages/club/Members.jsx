@@ -169,7 +169,7 @@ export function memberActions({ base, run, done, setEditing, setAch }) {
       <>
         <Button small variant="secondary" onClick={() => setEditing(m)}>Editar</Button>
         <Button small variant="secondary" onClick={() => setAch(m)}>Especialidades</Button>
-        <Link to={`${base}/ver/membro/${m.code}`}><Button small variant="ghost">Perfil</Button></Link>
+        <Link to={`${base}/ver/membro/${m.link}`}><Button small variant="ghost">Perfil</Button></Link>
         <Confirm text={`Inativar ${m.name}? A pessoa sai das listas e do ranking, mas continua no sistema e pode ser ativada de novo.`}
           onYes={() => run(() => api.post(`/club/members/${m.id}/desativar`), 'Membro inativado').then(() => done())}>Inativar</Confirm>
       </>

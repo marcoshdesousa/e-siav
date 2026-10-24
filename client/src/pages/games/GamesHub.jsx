@@ -31,7 +31,7 @@ function GameRanking({ game, base, limit }) {
             rows={d.rows.slice(0, limit || 50).map((r) => ({ ...r, points: r.value }))}
             highlight={actor.id}
             sub={(r) => r.club_name}
-            link={(r) => `${base}/ver/membro/${r.code}`}
+            link={(r) => `${base}/ver/membro/${r.link}`}
             avatarSquare={false}
           />
         </>

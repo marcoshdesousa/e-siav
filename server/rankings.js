@@ -72,7 +72,7 @@ const BIBLE_COLS = 'COALESCE(bp.points, 0) AS bible_points, bp.last_at AS bible_
 /** Ranking de membros do distrito: só desbravadores, requisitos do App (Distrito) + Leitura bíblica. */
 export function membersRanking(districtId = null) {
   const rows = all(
-    `SELECT m.id, m.name, m.photo, m.code, m.birth_date, c.id AS club_id, c.name AS club_name, d.name AS district_name,
+    `SELECT m.id, m.name, m.photo, m.link_token AS link, m.birth_date, c.id AS club_id, c.name AS club_name, d.name AS district_name,
             COALESCE(sc.points, 0) AS points, sc.last_at, ${BIBLE_COLS}
      FROM members m JOIN clubs c ON c.id = m.club_id JOIN districts d ON d.id = c.district_id
      ${scoreJoin('member', 'm.id', "r.creator_type = 'admin' AND r.audience = 'member'")}
@@ -90,7 +90,7 @@ export function membersRanking(districtId = null) {
  */
 export function clubMembersRanking(clubId) {
   const rows = all(
-    `SELECT m.id, m.name, m.photo, m.code, m.birth_date, c.id AS club_id, u.name AS unit_name,
+    `SELECT m.id, m.name, m.photo, m.link_token AS link, m.birth_date, c.id AS club_id, u.name AS unit_name,
             COALESCE(sc.points, 0) AS points, sc.last_at, ${BIBLE_COLS}
      FROM members m JOIN clubs c ON c.id = m.club_id LEFT JOIN units u ON u.id = m.unit_id
      ${scoreJoin('member', 'm.id', "r.creator_type IN ('club','unit') AND r.club_id = " + Number(clubId))}
@@ -108,7 +108,7 @@ export function clubMembersRanking(clubId) {
  */
 export function leadersRanking(districtId = null) {
   const rows = all(
-    `SELECT m.id, m.name, m.photo, m.code, m.cargo, m.birth_date, c.id AS club_id, c.name AS club_name, d.name AS district_name,
+    `SELECT m.id, m.name, m.photo, m.link_token AS link, m.cargo, m.birth_date, c.id AS club_id, c.name AS club_name, d.name AS district_name,
             COALESCE(sc.points, 0) AS points, sc.last_at, ${BIBLE_COLS}
      FROM members m JOIN clubs c ON c.id = m.club_id JOIN districts d ON d.id = c.district_id
      ${scoreJoin('member', 'm.id', "r.creator_type = 'admin' AND r.audience = 'member'")}
@@ -123,7 +123,7 @@ export function leadersRanking(districtId = null) {
 /** Melhor da liderança do clube: requisitos de membro criados pelo próprio clube + Leitura bíblica no clube. */
 export function clubLeadersRanking(clubId) {
   const rows = all(
-    `SELECT m.id, m.name, m.photo, m.code, m.cargo, m.birth_date, c.id AS club_id,
+    `SELECT m.id, m.name, m.photo, m.link_token AS link, m.cargo, m.birth_date, c.id AS club_id,
             COALESCE(sc.points, 0) AS points, sc.last_at, ${BIBLE_COLS}
      FROM members m JOIN clubs c ON c.id = m.club_id
      ${scoreJoin('member', 'm.id', "r.creator_type = 'club' AND r.club_id = " + Number(clubId))}

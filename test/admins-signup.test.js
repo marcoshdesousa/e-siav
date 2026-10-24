@@ -184,7 +184,10 @@ test('@ do membro: único, entra com ele, aparece no perfil e não muda', async 
   }
   const bad = await fetch(BASE + '/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode: 'membros', username: '@davi.souza', password: '1900' }) });
   assert.equal(bad.status, 401);
-  assert.equal((await anon('GET', `/public/members/${a.body.code}`)).body.handle, 'davi.souza', 'aparece no perfil');
+  const pubA = (await anon('GET', `/public/members/${a.body.actor.link}`)).body;
+  assert.ok(pubA.name && pubA.handle === undefined && pubA.code === undefined, 'o @ e o código não aparecem para os outros');
+  const own = await login('membros', a.body.code, a.body.password);
+  assert.equal((await own.get('/me/profile')).body.handle, 'davi.souza', 'o próprio membro vê o @');
   assert.equal((await anon('GET', '/public/members/davi.souza')).status, 404, 'não acha pelo @');
   // Sem @ não cria a conta.
   assert.equal((await anon('POST', '/criar-conta', { name: 'Ester Sem Arroba', birth_date: yearsAgo(13) })).status, 400, '@ obrigatório');

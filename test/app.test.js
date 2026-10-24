@@ -208,7 +208,7 @@ test('perfis públicos mostram só a quantidade de membros', async () => {
   const unit = await (await fetch(BASE + '/public/units/2')).json();
   assert.ok(!JSON.stringify(unit).includes('Pedro'));
   const pedro = await login('membros', 'pedro');
-  const pub = await (await fetch(BASE + '/public/members/' + pedro.actor.code)).json();
+  const pub = await (await fetch(BASE + '/public/members/' + pedro.actor.link)).json();
   assert.equal(pub.birth_date, undefined, 'data de nascimento não é exposta');
   assert.ok(pub.age >= 10);
   assert.equal(typeof pub.bible.streak, 'number', 'sequência do Ano Bíblico aparece no link');
@@ -276,8 +276,12 @@ test('código do membro: 6 números, entra com ele e é o link do perfil', async
   assert.match(ana.actor.code, /^\d{6}$/);
   const byCode = await login('membros', ana.actor.code);
   assert.equal(byCode.actor.id, ana.actor.id);
-  const pub = await (await fetch(BASE + '/public/members/' + ana.actor.code)).json();
+  assert.match(ana.actor.link, /^[a-z]{10}$/, 'link do perfil é aleatório (só letras)');
+  assert.equal((await fetch(BASE + '/public/members/' + ana.actor.code)).status, 404, 'o código não abre o perfil');
+  const pub = await (await fetch(BASE + '/public/members/' + ana.actor.link)).json();
   assert.equal(pub.name, 'Ana Clara Souza');
+  assert.equal(pub.code, undefined, 'o código não aparece para os outros');
+  assert.equal(pub.handle, undefined, 'o @ não aparece para os outros');
   assert.equal(pub.cpf, undefined, 'CPF nunca aparece no perfil público');
 });
 
@@ -495,7 +499,7 @@ test('anúncios por público e do clube; eventos do clube', async () => {
   assert.equal(p.body.added, 1, 'membro de outro clube não entra');
   assert.ok((await sofia.get('/events/upcoming')).body.some((e) => e.name === 'Acampamento local'));
   assert.ok(!(await pedro.get('/events/upcoming')).body.some((e) => e.name === 'Acampamento local'));
-  const prof = await (await fetch(BASE + '/public/members/' + sofia.actor.code)).json();
+  const prof = await (await fetch(BASE + '/public/members/' + sofia.actor.link)).json();
   assert.ok(prof.events.some((e) => e.name === 'Acampamento local'));
 });
 

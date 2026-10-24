@@ -22,6 +22,13 @@ run(`CREATE TABLE IF NOT EXISTS member_plus (
 
 // Teste grátis (conta nova do App Brasil): marcado para mostrar "Você está no teste grátis".
 if (!all('PRAGMA table_info(member_plus)').some((c) => c.name === 'trial')) run('ALTER TABLE member_plus ADD COLUMN trial INTEGER NOT NULL DEFAULT 0');
+// Contas do App Brasil criadas antes dessa marca: os 3 dias do DBV que nunca foram pagos também são teste grátis.
+if (!get(`SELECT 1 FROM app_flags WHERE key = 'teste-gratis-antigos-v1'`)) {
+  run(`UPDATE member_plus SET trial = 1 WHERE plan = 'app' AND renewals = 0 AND trial = 0
+    AND member_id IN (SELECT m.id FROM members m JOIN clubs c ON c.id = m.club_id WHERE c.is_app = 1)
+    AND member_id NOT IN (SELECT member_id FROM payments WHERE purpose = 'dbvplus' AND status = 'pago')`);
+  run(`INSERT OR IGNORE INTO app_flags (key) VALUES ('teste-gratis-antigos-v1')`);
+}
 
 export const PLANS = {
   app: { id: 'app', name: 'DBV', price_cents: 390, specialties: 0, pick: 0, access_only: true },

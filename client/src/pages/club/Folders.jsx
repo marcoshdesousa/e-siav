@@ -583,7 +583,7 @@ export function MembrosPorGrupo({ base }) {
             <Section key={g.id ?? 'none'} title={`${g.name} (${ms.length})`}>
               <div className="list">
                 {ms.map((m) => (
-                  <Link key={m.id} to={`${base}/ver/membro/${m.code}`} className="list-item">
+                  <Link key={m.id} to={`${base}/ver/membro/${m.link}`} className="list-item">
                     <Avatar src={m.photo} name={m.name} size={38} />
                     <div className="grow"><div className="title">{m.name}</div><div className="sub">{m.age} anos · {m.cargo}</div></div>
                     {m.status === 'pendente' && <Badge kind="yellow">Pendente</Badge>}

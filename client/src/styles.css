@@ -907,3 +907,4 @@ input::-webkit-datetime-edit { padding: 0; }
 .rank-paused { display: flex; gap: .55rem; align-items: flex-start; padding: .7rem .85rem; border-radius: var(--r); background: var(--yellow-soft); border: 1px solid var(--yellow); margin-bottom: .8rem; font-size: .88rem; }
 .rank-paused svg { flex: none; margin-top: 1px; }
 .rank-pause-admin { margin-bottom: .8rem; }
+.access-chips { display: inline-flex; align-items: center; gap: .35rem; margin: .1rem auto .2rem; padding: .25rem .6rem; border: 1px dashed rgba(255,255,255,.35); border-radius: 999px; background: rgba(255,255,255,.08); color: inherit; font: inherit; font-size: .8rem; font-weight: 700; cursor: pointer; }

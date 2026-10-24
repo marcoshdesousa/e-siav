@@ -6,7 +6,7 @@ import { getFicha } from './ficha.js';
 
 export function listMembers(clubId) {
   const rows = all(
-    `SELECT m.id, m.name, m.photo, m.cargo, m.code, m.cpf, m.birth_cert, m.status, m.terms_token, m.approved_at, m.cleared_year, m.birth_date, m.unit_id, m.created_at, u.name AS unit_name
+    `SELECT m.id, m.name, m.photo, m.cargo, m.code, m.link_token AS link, m.cpf, m.birth_cert, m.status, m.terms_token, m.approved_at, m.cleared_year, m.birth_date, m.unit_id, m.created_at, u.name AS unit_name
      FROM members m LEFT JOIN units u ON u.id = m.unit_id WHERE m.club_id = ? ORDER BY m.name`,
     clubId,
   );

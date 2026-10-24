@@ -1,5 +1,5 @@
 // DBV+: assinatura de 30 dias que ajuda o app e libera benefícios.
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { BadgeCheck, Check, Clock, Gift, Sparkles, X } from 'lucide-react';
 import { api } from '../../api.js';
@@ -158,23 +158,17 @@ export function PlusNudge({ to }) {
   const { actor } = useAuth();
   const { pathname } = useLocation();
   const [open, setOpen] = useState(() => !barClosed && actor?.type === 'member' && !actor.plus && !actor.app?.locked);
-  // No teste grátis a faixa alterna: primeiro o teste grátis, depois o convite do DBV+.
   const trial = !!actor?.app?.trial;
-  const [slide, setSlide] = useState(0);
-  useEffect(() => {
-    if (!trial) return undefined;
-    const t = setInterval(() => setSlide((n) => (n + 1) % 2), 5000);
-    return () => clearInterval(t);
-  }, [trial]);
   // Só nas telas principais das abas (não atrapalha leitura, quiz nem jogo).
   if (!open || pathname.startsWith(to) || pathname.split('/').filter(Boolean).length > 2) return null;
   const close = () => { barClosed = true; setOpen(false); };
-  if (trial && slide === 0) {
+  // Conta nova do App Brasil: no lugar do convite do DBV+, mostra o teste grátis e quantos dias faltam.
+  if (trial) {
     return (
       <div className="plus-bar trial" key="trial">
         <Gift size={26} className="plus-bar-gift" />
-        <Link to={to} className="plus-bar-text"><b>DBV · Teste grátis</b><small>{daysLeft(actor.app.until)} · assine e não perca nada</small></Link>
-        <Link to={to} className="plus-bar-btn">Assinar</Link>
+        <Link to={to} className="plus-bar-text"><b>Você está no teste grátis</b><small>{daysLeft(actor.app.until)} de teste grátis · assine e continue</small></Link>
+        <Link to={to} className="plus-bar-btn">Ver planos</Link>
         <button type="button" className="plus-bar-x" aria-label="Fechar" onClick={close}><X size={16} /></button>
       </div>
     );

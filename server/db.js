@@ -899,6 +899,20 @@ function migrate() {
 
   // Número da unidade dentro do clube (1 a 10), usado no link: /cla/CÓDIGO/NÚMERO.
   add('units', 'number', 'INTEGER');
+  // Link do perfil para compartilhar: letras aleatórias (o código e o @ ficam em segredo, servem para entrar).
+  add('members', 'link_token', 'TEXT');
+  db.exec('CREATE UNIQUE INDEX IF NOT EXISTS ux_member_link ON members(link_token) WHERE link_token IS NOT NULL');
+  const LETRAS_LINK = 'abcdefghjkmnpqrstuvwxyz';
+  const linkToken = () => Array.from({ length: 10 }, () => LETRAS_LINK[crypto.randomInt(LETRAS_LINK.length)]).join('');
+  for (const m of db.prepare('SELECT id FROM members WHERE link_token IS NULL').all()) {
+    for (;;) { const t = linkToken(); if (!db.prepare('SELECT 1 FROM members WHERE link_token = ?').get(t)) { db.prepare('UPDATE members SET link_token = ? WHERE id = ?').run(t, m.id); break; } }
+  }
+  // Membro novo: o link já nasce aleatório (só letras).
+  db.exec(`CREATE TRIGGER IF NOT EXISTS trg_member_link AFTER INSERT ON members WHEN NEW.link_token IS NULL BEGIN
+    UPDATE members SET link_token = lower(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(hex(randomblob(5)),
+      '0','g'),'1','h'),'2','k'),'3','m'),'4','n'),'5','p'),'6','q'),'7','r'),'8','s'),'9','t')) WHERE id = NEW.id;
+  END`);
+
   // Clube App Brasil: quem cria conta pelo app, sem o link de um clube (distrito e clube escondidos).
   add('districts', 'is_app', 'INTEGER NOT NULL DEFAULT 0');
   add('clubs', 'is_app', 'INTEGER NOT NULL DEFAULT 0');

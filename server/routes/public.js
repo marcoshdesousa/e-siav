@@ -68,9 +68,12 @@ r.get('/public/units/:id', (req, res) => {
 });
 
 r.get('/public/members/:code', async (req, res) => {
-  // Link do perfil: /p/membro/123456 (código do membro).
-  const m = memberProfile('code', String(req.params.code).trim());
+  // Link do perfil: letras aleatórias. O código e o @ não aparecem para ninguém (servem para entrar
+  // na conta), nem dá para achar o perfil por eles.
+  const m = memberProfile('link', String(req.params.code).trim().toLowerCase());
   if (!m) fail(404, 'Membro não encontrado');
+  delete m.code;
+  delete m.handle;
   // Classes e especialidades aparecem só pelo nome (sem fotos: o perfil fica leve).
   for (const c of [...m.classes, ...m.specialties]) c.image = null;
   m.bible = bibleStreak(m.id);

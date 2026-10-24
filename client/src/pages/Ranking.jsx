@@ -101,8 +101,8 @@ function GeneralRanking({ kind, base, highlight, clubId }) {
   );
   const where = (r) => (scope === 'brasil' && r.district_name ? `${r.club_name} · ${r.district_name}` : r.club_name);
   const props = {
-    membros: { sub: where, link: (r) => `${base}/ver/membro/${r.code}`, avatarSquare: false },
-    lideranca: { sub: where, link: (r) => `${base}/ver/membro/${r.code}`, avatarSquare: false },
+    membros: { sub: where, link: (r) => `${base}/ver/membro/${r.link}`, avatarSquare: false },
+    lideranca: { sub: where, link: (r) => `${base}/ver/membro/${r.link}`, avatarSquare: false },
     unidades: { sub: (r) => (scope === 'clube' ? null : where(r)), link: (r) => `${base}/ver/unidade/${r.id}` },
     clubes: { sub: (r) => r.district_name, link: (r) => `${base}/ver/clube/${r.id}` },
   }[kind];

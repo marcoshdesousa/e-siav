@@ -55,7 +55,7 @@ r.post('/jogos/:id/pontos', member, (req, res) => {
 r.get('/jogos/:id/ranking', member, (req, res) => {
   const g = game(req.params.id);
   const c = col(g);
-  const rows = all(`SELECT m.id, m.code, m.name, m.photo, c.name AS club_name, s.${c} AS value, s.plays
+  const rows = all(`SELECT m.id, m.link_token AS link, m.name, m.photo, c.name AS club_name, s.${c} AS value, s.plays
     FROM game_scores s JOIN members m ON m.id = s.member_id JOIN clubs c ON c.id = m.club_id
     WHERE s.game = ? AND m.status = 'ativo' AND ${PLUS_SQL} AND s.${c} > 0
     ORDER BY s.${c} DESC, s.updated_at ASC LIMIT 50`, req.params.id);
