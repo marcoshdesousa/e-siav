@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Camera, Check, ChevronDown, ChevronUp, Compass, ImagePlus, Medal, Share2, Trash2, X } from 'lucide-react';
 import { AppIcon, ICONS } from './icons.jsx';
 import { RankMedal, isRankIcon } from './rankMedal.jsx';
+import { Prize } from './trophies.jsx';
+import { gameById } from './pages/games/games.js';
 
 // ---------- Marca ----------
 export const LogoIcon = ({ size = 40 }) => (
@@ -284,6 +286,21 @@ export function RowSection({ title, items, render, empty, emptyIcon }) {
 }
 
 export function MedalCard({ m }) {
+  // Prêmio personalizado (ranking finalizado ou mini-jogos): troféu abre o certificado.
+  if (m.design) {
+    const design = typeof m.design === 'string' ? JSON.parse(m.design) : m.design;
+    const game = design.game ? gameById(design.game) : null;
+    const body = (
+      <>
+        <Prize kind={m.kind} design={design} pos={m.place || 1} size={58} />
+        <b>{m.name}</b>
+        <small>{game ? `${m.place}º lugar · ${game.name} · ${m.year}` : m.note}</small>
+      </>
+    );
+    return m.kind === 'trofeu'
+      ? <Link to={`/certificado/${m.id}`} className={'medal rank ' + m.kind} title={m.description}>{body}</Link>
+      : <div className={'medal rank ' + m.kind} title={m.description}>{body}</div>;
+  }
   if (isRankIcon(m.icon)) {
     return (
       <div className={'medal rank ' + m.kind} title={m.description}>
@@ -302,9 +319,17 @@ export function MedalCard({ m }) {
   );
 }
 
-export const MedalList = ({ medals }) => (
-  <RowSection title="Medalhas e troféus" items={medals} empty="Nenhuma medalha ou troféu ainda." emptyIcon="medal" render={(m) => <MedalCard key={m.id} m={m} />} />
-);
+/** Troféus (rankings e conquistas) e medalhas (mini-jogos), em seções separadas. */
+export const MedalList = ({ medals = [] }) => {
+  const trophies = medals.filter((m) => m.kind === 'trofeu');
+  const gameMedals = medals.filter((m) => m.kind !== 'trofeu');
+  return (
+    <>
+      <RowSection title="Troféus" items={trophies} empty="Nenhum troféu ainda." emptyIcon="trophy" render={(m) => <MedalCard key={m.id} m={m} />} />
+      {gameMedals.length > 0 && <RowSection title="Medalhas" items={gameMedals} empty="" emptyIcon="medal" render={(m) => <MedalCard key={m.id} m={m} />} />}
+    </>
+  );
+};
 
 export function PositionBadge({ position, label, points }) {
   if (!position) return null;

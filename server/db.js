@@ -363,6 +363,9 @@ function migrate() {
 
   // Ano da medalha (prêmios do ranking finalizado).
   add('medal_awards', 'year', 'INTEGER');
+  // Troféu/medalha personalizado (ranking finalizado): colocação e desenho escolhido.
+  add('medal_awards', 'place', 'INTEGER');
+  add('medal_awards', 'design', 'TEXT');
 
   // @ do membro (usado para ser encontrado no chat e no link do perfil)
   add('members', 'handle', 'TEXT');

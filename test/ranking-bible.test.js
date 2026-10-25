@@ -128,6 +128,10 @@ test('ranking por distrito: sem ranking geral; o administrador escolhe o distrit
   const novo = (await admin.post('/admin/clubs', { name: 'Gaviões', district_id: other, director_name: 'Paulo Diretor' })).body;
   const gav = await login('clube', novo.code, novo.password);
   assert.equal(gav.actor.district_id, other);
+  // Distrito e clube novos: o ranking só existe depois de criado.
+  assert.equal((await admin.get(`/rankings/clubs?district_id=${other}`)).body.length, 0, 'ainda não criado');
+  assert.equal((await admin.post('/ranking/criar', { district_id: other })).status, 200);
+  assert.equal((await gav.post('/ranking/criar', {})).status, 200);
 
   // Pedro só vê o próprio distrito, mesmo pedindo outro.
   const clubsHome = (await pedro.get(`/rankings/clubs?district_id=${other}`)).body;
@@ -231,7 +235,9 @@ test('ranking por lugar: o clube reinicia e pausa o dele; o distrito não muda',
   const distPts = async () => find((await pedro.get('/rankings/members')).body, pedro.actor.id).points;
   const d0 = await distPts();
   assert.ok((await clubPts()) > 0, 'tem pontos no clube');
-  assert.equal((await aguias.put('/ranking/controle', { action: 'reset' })).status, 200);
+  assert.equal((await aguias.post('/ranking/finalizar', { kind: 'membros' })).status, 200);
+  assert.equal((await pedro.get(`/rankings/club/${clubId}/members`)).body.length, 0, 'finalizado: fechado até criar');
+  assert.equal((await aguias.post('/ranking/criar', { kind: 'membros' })).status, 200);
   assert.equal(await clubPts(), 0, 'o ranking do clube recomeçou');
   assert.equal(await distPts(), d0, 'o do distrito continua igual');
   assert.equal((await aguias.put('/ranking/controle', { action: 'pause' })).body.paused, true);
@@ -244,7 +250,7 @@ test('ranking por lugar: o clube reinicia e pausa o dele; o distrito não muda',
   await admin.put('/ranking/controle', { action: 'resume', district_id: pedro.actor.district_id });
 });
 
-test('finalizar ranking: os 3 primeiros ganham medalha/troféu com o ano, todos veem a colocação e zera', async () => {
+test('finalizar ranking: troféu personalizado para os 3 primeiros, certificado, colocação e criar de novo', async () => {
   const pedro = await login('membros', 'pedro');
   const aguias = await login('clube', 'aguias', 'AG2026');
   const admin = await login('membros', 'admin', 'admin123');
@@ -252,37 +258,47 @@ test('finalizar ranking: os 3 primeiros ganham medalha/troféu com o ano, todos 
   const d = pedro.actor.district_id;
   const distRows = (await pedro.get('/rankings/members')).body;
   const me = find(distRows, pedro.actor.id);
-  const units = (await pedro.get('/rankings/units')).body;
   const clubPts = async () => find((await pedro.get(`/rankings/club/${clubId}/members`)).body, pedro.actor.id).points;
   const c0 = await clubPts();
-  // O administrador do distrito (aqui o geral) finaliza o distrito.
-  const r = (await admin.put('/ranking/controle', { action: 'reset', district_id: d })).body;
-  const winners = [...distRows, ...units].filter((x) => x.position <= 3 && x.points > 0).length;
-  assert.ok(r.finished.awarded >= winners, 'os 3 primeiros com pontos ganharam');
-  assert.ok((await pedro.get('/rankings/members')).body.every((x) => x.points === 0), 'o distrito zerou');
+  // O distrito finaliza só a tabela dos desbravadores, com o troféu do jeito dele.
+  const design = { model: 'estrela', color: 'azul', base: 'marmore', emblem: 'biblia', year: 2026, title: 'Desbravador Nota 10' };
+  const r = (await admin.post('/ranking/finalizar', { district_id: d, kind: 'membros', design })).body;
+  const winners = distRows.filter((x) => x.position <= 3 && x.points > 0).length;
+  assert.equal(r.finished.awarded, winners, 'os 3 primeiros com pontos ganharam');
+  assert.equal(r.tables.membros.open, false, 'fechou até criar');
+  assert.equal((await pedro.get('/rankings/members')).body.length, 0);
+  assert.ok((await pedro.get('/rankings/units')).body.length > 0, 'as outras tabelas continuam');
   assert.equal(await clubPts(), c0, 'o ranking do clube continua');
+  const est = (await pedro.get('/rankings/estado')).body.scopes.find((s) => s.key === `district:${d}`);
+  assert.equal(est.tables.membros.last.design.model, 'estrela', 'mostra o último pódio');
   const finais = (await pedro.get('/rankings/finais?novos=1')).body;
   const f = finais.find((x) => x.id === r.finished.id);
   const mine = f.places.find((p) => p.who === 'Você');
   assert.equal(mine.position, me.position, 'mostra a colocação');
   assert.equal(!!mine.prize, me.position <= 3 && me.points > 0);
-  if (mine.prize) assert.match(mine.prize.icon, /^rank:membros:[123]$/);
-  assert.equal(f.year, Number(new Date().toISOString().slice(0, 4)));
-  // O primeiro do distrito tem a medalha no perfil, com o ano.
-  const db = new DatabaseSync(path.join(dataDir, 'dbv.sqlite'), { readOnly: true });
-  const top = distRows.find((x) => x.position === 1 && x.points > 0);
-  if (top) {
-    const aw = db.prepare(`SELECT m.name, a.year FROM medal_awards a JOIN medals m ON m.id = a.medal_id WHERE a.target_type = 'member' AND a.target_id = ? AND m.icon = 'rank:membros:1' AND m.name LIKE '%distrito'`).get(top.id);
-    assert.equal(aw.name, 'Desbravador de Ouro do distrito');
-    assert.equal(aw.year, f.year);
+  if (mine.prize) {
+    assert.equal(mine.prize.design.title, 'Desbravador Nota 10');
+    const cert = (await pedro.get('/me/certificados')).body.find((c) => c.kind === 'trofeu');
+    assert.ok(cert, 'certificado nos Downloads');
+    const page = (await pedro.get(`/me/certificados/trofeu/${cert.id}`)).body;
+    assert.match(page.what, /lugar no ranking de desbravadores do distrito/);
   }
-  db.close();
   await pedro.post(`/rankings/finais/${f.id}/visto`);
   assert.ok(!(await pedro.get('/rankings/finais?novos=1')).body.some((x) => x.id === f.id), 'aparece uma vez');
-  // O clube finaliza o dele; o Brasil não zera os outros.
-  assert.ok((await aguias.put('/ranking/controle', { action: 'reset' })).body.finished, 'clube finaliza');
-  assert.equal(await clubPts(), 0);
-  assert.equal((await pedro.put('/ranking/controle', { action: 'reset' })).status, 403, 'membro não finaliza');
+  // Criar de novo: quem fez pontos depois da finalização já entra com eles.
+  assert.equal((await pedro.post('/ranking/criar', { kind: 'membros' })).status, 403, 'membro não cria');
+  await admin.post('/ranking/criar', { district_id: d, kind: 'membros' });
+  assert.ok((await pedro.get('/rankings/members')).body.every((x) => x.points === 0), 'recomeçou do zero');
+  // O Brasil reabre na hora.
+  const br = (await admin.post('/ranking/finalizar', { scope: 'brasil', kind: 'unidades' })).body;
+  assert.equal(br.tables.unidades.open, true);
+  assert.equal((await aguias.post('/ranking/finalizar', { kind: 'clubes' })).status, 400, 'clube não tem ranking de clubes');
+  // Mini-jogos: só o geral finaliza; medalha sem certificado e tudo zera.
+  await pedro.post('/jogos/cobrinha/pontos', { score: 50 });
+  assert.equal((await aguias.post('/admin/jogos/finalizar', {})).status, 403);
+  const g = (await admin.post('/admin/jogos/finalizar', { design: { model: 'redonda', color: 'podio' } })).body;
+  assert.ok(g.finished.id);
+  assert.equal((await pedro.get('/jogos/meus')).body.cobrinha, undefined, 'jogos zeraram');
 });
 
 test('quem paga: clube pago (membros grátis), clube grátis + membros grátis, clube grátis + membros pagam (o clube pode assumir)', async () => {

@@ -373,7 +373,7 @@ export default function AdminApp() {
     { to: `${base}/figurinhas`, icon: BookImage, label: 'Figurinhas', hint: 'Álbuns completos e presentes' },
           { to: `${base}/aprendizagem`, icon: Flame, label: 'Aprendizagem Diária', hint: 'Arganel, medalhas e áudio' },
     { to: `${base}/links`, icon: Globe, label: 'Links dos sites', hint: 'SGC, Cantinho e Cartão DBV' },
-    { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo', hint: 'Medalhas, troféus e cursos' },
+    { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo', hint: 'Cursos' },
     { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial', hint: 'Especialidades' },
     { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos', hint: 'Criar e participantes' },
     { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: 'Aparecem ao abrir o app' },
@@ -405,7 +405,7 @@ export default function AdminApp() {
         <Route path="anuncios" element={<AnnouncementsAdmin />} />
         <Route path="transferencias" element={<AppTransfersPage />} />
         <Route path="aprovacoes" element={<ApprovalsPage url="/admin/app-aprovacoes" canAdd={false} subtitle="Especialidades e classes de quem é do Clube App Brasil" />} />
-        <Route path="medalhas" element={<Navigate to={`${base}/conteudo?aba=medalhas`} replace />} />
+        <Route path="medalhas" element={<Navigate to={`${base}/conteudo`} replace />} />
         <Route path="ranking" element={<RankingHub base={base} />} />
         <Route path="sequencias" element={<StreaksAdmin />} />
         <Route path="dbv-mais" element={<PlusAdmin />} />

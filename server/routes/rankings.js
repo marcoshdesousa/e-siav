@@ -2,11 +2,17 @@ import { Router } from 'express';
 import { get } from '../db.js';
 import { requireAuth, requireGeneral } from '../auth.js';
 import { setSetting } from '../fees.js';
-import { membersRanking, clubsRanking, unitsRanking, clubUnitsRanking, clubMembersRanking, leadersRanking, clubLeadersRanking, positionOf, rankingDistrict, rankingState, scopeState, setScope } from '../rankings.js';
+import { membersRanking, clubsRanking, unitsRanking, clubUnitsRanking, clubMembersRanking, leadersRanking, clubLeadersRanking, positionOf, rankingDistrict, rankingState, scopeState, setScope, TABLES, tableState, openTable } from '../rankings.js';
 import { fail, int } from '../util.js';
-import { finalsFor, finishRanking, markFinalSeen } from '../rankFinals.js';
+import { finalsFor, finishGames, finishRanking, lastFinal, markFinalSeen, trophyCertificate } from '../rankFinals.js';
 
 const r = Router();
+// Certificado do troféu: público (só nomes), para imprimir ou mostrar.
+r.get('/public/trofeus/:id/certificado', (req, res) => {
+  const c = trophyCertificate(int(req.params.id));
+  if (!c) fail(404, 'Certificado não encontrado');
+  res.json(c);
+});
 r.use('/rankings', requireAuth());
 
 // Rankings: Brasil (todo mundo do app, ?escopo=brasil), distrito (o do usuário; o Administrador
@@ -63,8 +69,12 @@ function scopesFor(a, q = {}) {
   const list = [{ key: 'brasil', label: 'Brasil', ...brState() }];
   const d = a.type === 'admin' && !a.district_id ? int(q.district_id) : null;
   if (d) list.push({ key: `district:${d}`, label: 'Distrito', ...scopeState(`district:${d}`) });
-  if (a.district_id) list.push({ key: `district:${a.district_id}`, label: 'Distrito', ...scopeState(`district:${a.district_id}`) });
-  if (a.club_id && a.type !== 'admin') list.push({ key: `club:${a.club_id}`, label: 'Clube', ...scopeState(`club:${a.club_id}`) });
+  if (a.district_id && !a.app) list.push({ key: `district:${a.district_id}`, label: 'Distrito', ...scopeState(`district:${a.district_id}`) });
+  if (a.club_id && a.type !== 'admin' && !a.app) list.push({ key: `club:${a.club_id}`, label: 'Clube', ...scopeState(`club:${a.club_id}`) });
+  // Situação de cada tabela: aberta, ou finalizada esperando ser criada (com o último pódio).
+  for (const s of list) {
+    s.tables = Object.fromEntries(TABLES[s.key.split(':')[0]].map((kind) => [kind, { ...tableState(s.key, kind), last: lastFinal(s.key, kind) }]));
+  }
   return list;
 }
 r.get('/rankings/estado', (req, res) => res.json({ ...brState(), scopes: scopesFor(req.actor, req.query) }));
@@ -89,13 +99,11 @@ r.put('/ranking/controle', requireAuth('admin', 'club'), (req, res) => {
   if (key === 'brasil') {
     if (action === 'pause') setSetting('ranking_pausa', at.toISOString());
     else if (action === 'resume') setSetting('ranking_pausa', '');
-    else if (action === 'reset') { const done = finishRanking('brasil'); setSetting('ranking_pausa', ''); return res.json({ key, finished: done, ...brState(), ...scopeState('brasil') }); }
     else fail(400, 'Ação inválida');
     return res.json({ key, ...brState() });
   }
   if (action === 'pause') setScope(key, { pause: at.toISOString() });
   else if (action === 'resume') setScope(key, { pause: null });
-  else if (action === 'reset') return res.json({ key, finished: finishRanking(key), ...scopeState(key) });
   else fail(400, 'Ação inválida');
   res.json({ key, ...scopeState(key) });
 });
@@ -107,7 +115,24 @@ r.put('/admin/ranking/pausa', requireAuth('admin'), requireGeneral, (req, res) =
   res.json(brState());
 });
 
-// Finalizar (action 'reset' acima): os 3 primeiros ganham medalha/troféu e todos veem a colocação.
+// Finalizar uma tabela (com o troféu personalizado) e criar o novo ranking. O clube cuida dos dele,
+// o administrador do distrito do distrito e o geral do Brasil e de qualquer distrito.
+r.post('/ranking/finalizar', requireAuth('admin', 'club'), (req, res) => {
+  const key = scopeKey(req.actor, req.body);
+  const done = finishRanking(key, String(req.body.kind || ''), req.body.design || {});
+  res.json({ finished: done, tables: Object.fromEntries(TABLES[key.split(':')[0]].map((k) => [k, tableState(key, k)])) });
+});
+r.post('/ranking/criar', requireAuth('admin', 'club'), (req, res) => {
+  const key = scopeKey(req.actor, req.body);
+  const kinds = req.body.kind ? [String(req.body.kind)] : TABLES[key.split(':')[0]];
+  if (!kinds.every((k) => TABLES[key.split(':')[0]].includes(k))) fail(400, 'Escolha o ranking');
+  for (const k of kinds) openTable(key, k);
+  res.json({ ok: true, tables: Object.fromEntries(TABLES[key.split(':')[0]].map((k) => [k, tableState(key, k)])) });
+});
+// Mini-jogos: só o administrador geral finaliza, todos de uma vez (medalha para os 3 primeiros de cada).
+r.post('/admin/jogos/finalizar', requireAuth('admin'), requireGeneral, (req, res) => res.json({ finished: finishGames(req.body.design || {}) }));
+
+// Colocações dos rankings finalizados para quem participou.
 r.get('/rankings/finais', (req, res) => res.json(finalsFor(req.actor, { unseenOnly: req.query.novos === '1' })));
 r.post('/rankings/finais/:id/visto', (req, res) => { markFinalSeen(req.actor, int(req.params.id)); res.json({ ok: true }); });
 

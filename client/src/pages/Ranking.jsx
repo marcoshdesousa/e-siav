@@ -1,6 +1,8 @@
 import { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Compass, Flag, Globe, Map as MapIcon, PauseCircle, Tent, Trophy } from 'lucide-react';
+import { BookOpen, Compass, Flag, Globe, Map as MapIcon, Medal, PauseCircle, Plus, Tent, Trophy as TrophyIco } from 'lucide-react';
+import { Trophy } from '../trophies.jsx';
+import TrophyStudio from './TrophyStudio.jsx';
 import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { Avatar, Button, Card, Field, Loading, PageHeader, Section, Tabs, useAsync, useLoad, Empty } from '../ui.jsx';
@@ -99,6 +101,13 @@ function GeneralRanking({ kind, base, highlight, clubId }) {
       : api.get(url + (scope === 'brasil' ? '?escopo=brasil' : district ? `?district_id=${district}` : ''))),
     [kind, scope, district, clubId],
   );
+  const { meta } = useAuth();
+  // Situação da tabela (aberta, ou finalizada esperando ser criada).
+  const distId = district || actor.district_id || meta.districts[0]?.id;
+  const est = useLoad(() => api.get('/rankings/estado' + (actor.type === 'admin' && !actor.district_id && scope === 'distrito' ? `?district_id=${distId}` : '')), [scope, distId]);
+  const key = scope === 'clube' ? `club:${clubId}` : scope === 'distrito' ? `district:${distId}` : 'brasil';
+  const table = est.data?.scopes.find((x) => x.key === key)?.tables?.[kind];
+  const placeName = scope === 'clube' ? 'do clube' : scope === 'distrito' ? 'do distrito' : 'do Brasil';
   const where = (r) => (scope === 'brasil' && r.district_name ? `${r.club_name} · ${r.district_name}` : r.club_name);
   const props = {
     membros: { sub: where, link: (r) => `${base}/ver/membro/${r.link}`, avatarSquare: false },
@@ -112,7 +121,9 @@ function GeneralRanking({ kind, base, highlight, clubId }) {
         <ScopeFilter value={scope} onChange={setScope} withClub={withClub} district={district} onDistrict={setDistrict} />
         <span className="muted small">{subtitle(kind, scope)}</span>
       </div>
-      <Loading {...state}>{(rows) => <RankingTable rows={rows} highlight={highlight} {...props} />}</Loading>
+      {table && !table.open
+        ? <ClosedRanking table={table} kind={kind} where={placeName} />
+        : <Loading {...state}>{(rows) => <RankingTable rows={rows} highlight={highlight} {...props} />}</Loading>}
     </>
   );
 }
@@ -140,9 +151,42 @@ function SummaryCard({ icon, title, pos, onClick, gold }) {
  * Aba Ranking. O membro vê de uma vez a sua posição, a da sua unidade e a do seu clube,
  * e pode abrir cada tabela completa. Desbravadores e liderança têm rankings separados.
  */
+const TABLE_NAME = { membros: 'Desbravadores', lideranca: 'Liderança', unidades: 'Unidades', clubes: 'Clubes' };
+const TROPHY_TITLE = { membros: 'Melhor Desbravador', lideranca: 'Melhor Líder', unidades: 'Melhor Unidade', clubes: 'Melhor Clube' };
+const brDate = (iso) => new Date(iso).toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+
+/** Ranking finalizado e ainda não criado de novo (ou nunca criado): mostra o último pódio. */
+function ClosedRanking({ table, kind, where }) {
+  const last = table.last;
+  return (
+    <Card className="rank-closed">
+      {last ? (
+        <>
+          <span className="rank-closed-kicker">Ranking finalizado em {brDate(last.finished_at)}</span>
+          <b className="rank-closed-title">{last.design?.title || TROPHY_TITLE[kind]} · {last.year}</b>
+          <div className="rank-closed-podium">
+            {[2, 1, 3].map((p) => {
+              const w = last.podium.find((x) => x.position === p);
+              return (
+                <div key={p} className={`rank-closed-place p${p}`}>
+                  <Trophy design={last.design} pos={p} size={p === 1 ? 84 : 64} />
+                  <span className="ellipsis">{w ? w.name : '—'}</span>
+                  {w && <small>{w.points} pts</small>}
+                </div>
+              );
+            })}
+          </div>
+        </>
+      ) : <b className="rank-closed-title">Ranking ainda não criado</b>}
+      <p className="small muted">O novo ranking de {TABLE_NAME[kind].toLowerCase()} {where} ainda não foi criado. Quando for criado, quem já fez estudos e requisitos desde então entra com os pontos.</p>
+    </Card>
+  );
+}
+
 /**
- * Aviso de ranking pausado e, para quem cuida, o controle: o clube pausa/reinicia os rankings do
- * clube (membros e unidades), o administrador do distrito o do distrito e o geral o Brasil ou um distrito.
+ * Para quem cuida do ranking: pausar, finalizar cada tabela (personalizando o troféu) e criar o novo.
+ * O clube cuida dos rankings do clube, o administrador do distrito do distrito e o geral do Brasil e
+ * de qualquer distrito (e finaliza os mini-jogos). Para todos: o aviso de ranking pausado.
  */
 function RankingPause() {
   const { actor, meta } = useAuth();
@@ -152,41 +196,86 @@ function RankingPause() {
   const state = useLoad(() => api.get('/rankings/estado' + (general && target !== 'brasil' ? `?district_id=${target}` : '')), [target]);
   const [at, setAt] = useState('');
   const [busy, run] = useAsync();
+  const [studio, setStudio] = useState(null);
   const s = state.data;
   if (!s) return null;
   const br = (iso) => new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
   const myKey = actor.type === 'club' ? `club:${actor.id}` : actor.type === 'admin' && actor.district_id ? `district:${actor.district_id}` : target === 'brasil' ? 'brasil' : `district:${target}`;
-  const cur = s.scopes.find((x) => x.key === myKey) || { key: myKey };
-  const name = actor.type === 'club' ? 'do clube (membros e unidades)' : actor.type === 'admin' && actor.district_id ? `do ${actor.district_name || 'distrito'}` : target === 'brasil' ? 'do Brasil (todos)' : `do ${meta.districts.find((d) => String(d.id) === String(target))?.name || 'distrito'}`;
-  const act = (action, when) => run(() => api.put('/ranking/controle', { action, at: when, ...(general ? (target === 'brasil' ? { scope: 'brasil' } : { district_id: target }) : {}) }),
-    { pause: 'Pausa marcada', resume: 'Ranking retomado', reset: 'Ranking finalizado: os 3 primeiros ganharam o prêmio' }[action]).then(state.reload);
+  const cur = s.scopes.find((x) => x.key === myKey) || { key: myKey, tables: {} };
+  const name = actor.type === 'club' ? 'do clube' : actor.type === 'admin' && actor.district_id ? `do ${actor.district_name || 'distrito'}` : target === 'brasil' ? 'do Brasil' : `do ${meta.districts.find((d) => String(d.id) === String(target))?.name || 'distrito'}`;
+  const where = general ? (target === 'brasil' ? { scope: 'brasil' } : { district_id: target }) : {};
+  const act = (action, when) => run(() => api.put('/ranking/controle', { action, at: when, ...where }),
+    { pause: 'Pausa marcada', resume: 'Ranking retomado' }[action]).then(state.reload);
+  const finish = (design) => {
+    const st = studio;
+    const url = st.kind === 'jogos' ? '/admin/jogos/finalizar' : '/ranking/finalizar';
+    return run(() => api.post(url, { kind: st.kind, design, ...where }), st.kind === 'jogos' ? 'Jogos finalizados: medalhas entregues' : 'Ranking finalizado: troféus e certificados entregues')
+      .then(() => { setStudio(null); state.reload(); });
+  };
+  const create = (kind) => run(() => api.post('/ranking/criar', { kind, ...where }), kind ? 'Ranking criado' : 'Rankings criados').then(state.reload);
   const paused = s.scopes.filter((x) => x.paused && (actor.type !== 'admin' || x.key === myKey));
+  const tables = Object.entries(cur.tables || {});
   return (
     <>
       {paused.map((x) => (
         <div key={x.key} className="rank-paused"><PauseCircle size={18} /><span><b>Ranking {x.key === 'brasil' ? 'do Brasil' : x.key.startsWith('club') ? 'do clube' : 'do distrito'} pausado</b> desde {br(x.paused_at)} para a apuração dos vencedores. Os pontos depois disso aparecem quando o ranking voltar.</span></div>
       ))}
       {canControl && (
-        <Card className="rank-pause-admin">
-          <p style={{ margin: 0 }}><b>Pausar ou finalizar o ranking {name}</b></p>
+        <Card className="rank-admin">
+          <div className="rank-admin-head">
+            <span className="rank-admin-ico"><TrophyIco size={20} /></span>
+            <div className="grow"><b>Rankings {name}</b><small>Finalize cada ranking quando quiser: você personaliza o troféu e os 3 primeiros ganham o troféu e o certificado.</small></div>
+          </div>
           {general && (
-            <select value={target} onChange={(e) => setTarget(e.target.value)} style={{ width: 'auto', margin: '.4rem 0' }}>
+            <select value={target} onChange={(e) => setTarget(e.target.value)} style={{ width: 'auto', margin: '.2rem 0 .5rem' }}>
               <option value="brasil">Brasil (todos)</option>
               {meta.districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
             </select>
           )}
-          <p className="small muted" style={{ margin: '.2rem 0 .5rem' }}>
-            {cur.paused_at ? (cur.paused ? `Pausado desde ${br(cur.paused_at)}.` : `Pausa marcada para ${br(cur.paused_at)}.`) : 'Contando normalmente.'}
-            {cur.start ? ` Recomeçou em ${br(cur.start)}.` : ''} Pausar: o ranking fica parado para você ver quem ganhou. Finalizar: os 3 primeiros de cada ranking ganham a medalha (pessoas) ou o troféu (unidades e clubes) com o ano, todos veem a sua colocação e o ranking recomeça do zero.
-          </p>
-          <div className="row wrap">
-            <input type="datetime-local" value={at} onChange={(e) => setAt(e.target.value)} style={{ width: 'auto' }} />
-            <Button small busy={busy} disabled={!at} onClick={() => act('pause', new Date(at).toISOString())}>Marcar pausa</Button>
-            <Button small variant="secondary" busy={busy} onClick={() => act('pause', new Date().toISOString())}>Pausar agora</Button>
-            {cur.paused_at && <Button small variant="secondary" busy={busy} onClick={() => act('resume')}>Retomar</Button>}
-            <Button small variant="danger" busy={busy} onClick={() => confirm('Finalizar este ranking? Os 3 primeiros ganham o prêmio na hora e os pontos voltam para zero.') && act('reset')}><Trophy size={14} /> Finalizar ranking</Button>
+          <div className="rank-tables">
+            {tables.map(([kind, t]) => (
+              <div key={kind} className={'rank-table' + (t.open ? '' : ' closed')}>
+                <div className="grow">
+                  <b>{TABLE_NAME[kind]}</b>
+                  <small>{t.open ? (t.finished_at ? `Aberto · recomeçou em ${brDate(t.finished_at)}` : 'Aberto') : t.finished_at ? `Finalizado em ${brDate(t.finished_at)} · esperando criar` : 'Ainda não criado'}</small>
+                </div>
+                {t.open
+                  ? <Button small variant="secondary" busy={busy} onClick={() => setStudio({ kind })}><TrophyIco size={14} /> Finalizar</Button>
+                  : <Button small busy={busy} onClick={() => create(kind)}><Plus size={14} /> Criar ranking</Button>}
+              </div>
+            ))}
           </div>
+          {tables.filter(([, t]) => !t.open).length > 1 && <Button small block busy={busy} onClick={() => create()} style={{ marginTop: '.5rem' }}><Plus size={14} /> Criar todos</Button>}
+          <details className="rank-pause-box">
+            <summary>Pausar o ranking {name}</summary>
+            <p className="small muted" style={{ margin: '.3rem 0 .5rem' }}>
+              {cur.paused_at ? (cur.paused ? `Pausado desde ${br(cur.paused_at)}.` : `Pausa marcada para ${br(cur.paused_at)}.`) : 'Contando normalmente.'} Pausado, o ranking fica parado para você conferir quem ganhou antes de finalizar.
+            </p>
+            <div className="row wrap">
+              <input type="datetime-local" value={at} onChange={(e) => setAt(e.target.value)} style={{ width: 'auto' }} />
+              <Button small busy={busy} disabled={!at} onClick={() => act('pause', new Date(at).toISOString())}>Marcar pausa</Button>
+              <Button small variant="secondary" busy={busy} onClick={() => act('pause', new Date().toISOString())}>Pausar agora</Button>
+              {cur.paused_at && <Button small variant="secondary" busy={busy} onClick={() => act('resume')}>Retomar</Button>}
+            </div>
+          </details>
+          {general && (
+            <div className="rank-table games">
+              <div className="grow"><b>Mini-jogos (todos)</b><small>Os 3 primeiros de cada jogo no Brasil ganham uma medalha e os jogos recomeçam do zero.</small></div>
+              <Button small variant="secondary" busy={busy} onClick={() => setStudio({ kind: 'jogos' })}><Medal size={14} /> Finalizar jogos</Button>
+            </div>
+          )}
         </Card>
+      )}
+      {studio && (
+        <TrophyStudio
+          mode={studio.kind === 'jogos' ? 'medalha' : 'trofeu'}
+          heading={studio.kind === 'jogos' ? 'Finalizar os mini-jogos' : `Finalizar: ${TABLE_NAME[studio.kind]} ${name}`}
+          title={studio.kind === 'jogos' ? 'Campeão dos Jogos' : TROPHY_TITLE[studio.kind]}
+          info={studio.kind === 'jogos' ? 'Personalize a medalha. Todos os jogos são finalizados juntos e recomeçam do zero.' : `Personalize o troféu. ${cur.key === 'brasil' ? 'O ranking do Brasil recomeça na hora.' : 'Depois de finalizar, crie o novo ranking quando quiser.'}`}
+          busy={busy}
+          onClose={() => setStudio(null)}
+          onConfirm={finish}
+        />
       )}
     </>
   );

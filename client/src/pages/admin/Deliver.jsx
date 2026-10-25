@@ -4,14 +4,14 @@ import { api } from '../../api.js';
 import { Button, Card, ContentIcon, Field, MedalIcon, PageHeader, Section, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
 import PeoplePicker, { emptySelection } from './PeoplePicker.jsx';
 
-const KIND_TABS = [['medal', 'Medalhas e troféus'], ['curso', 'Cursos']];
+const KIND_TABS = [['curso', 'Cursos']];
 
 /**
  * Entregar conteúdo: escolhe o item, depois o clube, a unidade e as pessoas
  * (com "selecionar todos"), e confirma de uma vez.
  */
 export default function Deliver() {
-  const [kind, setKind] = useState('medal');
+  const [kind, setKind] = useState('curso');
   const medals = useLoad(() => api.get('/admin/medals'));
   const content = useLoad(() => api.get('/admin/content'));
   const directory = useLoad(() => api.get('/admin/directory'));

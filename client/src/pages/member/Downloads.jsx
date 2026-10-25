@@ -1,12 +1,13 @@
 // Área Downloads do membro: os certificados que o app gera sozinho (Ano Bíblico, Bom Líder,
 // classes, especialidades e cursos). Cada um abre numa página para imprimir ou salvar em PDF.
 import { Link, useParams } from 'react-router-dom';
-import { Award, BookOpen, ChevronLeft, ChevronRight, Download, GraduationCap, Printer } from 'lucide-react';
+import { Award, BookOpen, ChevronLeft, ChevronRight, Download, GraduationCap, Printer, Trophy as TrophyIco } from 'lucide-react';
 import { api } from '../../api.js';
 import { fmtDate } from '../../format.js';
 import { Button, Empty, Loading, PageHeader, useLoad } from '../../ui.jsx';
+import { Trophy } from '../../trophies.jsx';
 
-const ICON = { 'ano-biblico': BookOpen, 'bom-lider': GraduationCap };
+const ICON = { 'ano-biblico': BookOpen, 'bom-lider': GraduationCap, trofeu: TrophyIco };
 
 export function DownloadsPage({ base }) {
   const state = useLoad(() => api.get('/me/certificados'));
@@ -29,31 +30,31 @@ export function DownloadsPage({ base }) {
             })}
           </div>
         ) : (
-          <Empty icon="trophy">Ainda não tem certificados. Termine o Ano Bíblico, o Bom Líder, uma classe, uma especialidade ou um curso e o certificado aparece aqui.</Empty>
+          <Empty icon="trophy">Ainda não tem certificados. Termine o Ano Bíblico, o Bom Líder, uma classe, uma especialidade ou um curso, ou fique no pódio de um ranking, e o certificado aparece aqui.</Empty>
         ))}
       </Loading>
     </>
   );
 }
 
-export function MemberCertificatePage({ base }) {
-  const { kind, id } = useParams();
-  const state = useLoad(() => api.get(`/me/certificados/${kind}/${id}`), [kind, id]);
+/** O certificado em si (para imprimir ou salvar em PDF). Troféu: aparece o desenho escolhido. */
+function CertificateView({ state, back }) {
   return (
     <div className="cert-page">
       <div className="cert-tools no-print">
-        <Link to={`${base}/downloads`}><Button variant="secondary" small><ChevronLeft size={14} /> Voltar</Button></Link>
+        {back}
         <Button small onClick={() => window.print()}><Printer size={14} /> Baixar (salvar PDF) / imprimir</Button>
       </div>
       <Loading {...state}>
         {(c) => (
-          <div className="cert">
+          <div className={'cert' + (c.design ? ' cert-trophy' : '')}>
             <div className="cert-logos">
               <img src="/marca/logo.png" alt="App do DBV" />
               {c.club_logo && <img src={c.club_logo} alt={c.club_name} />}
             </div>
             <p className="cert-kicker">App do DBV{c.club_name ? ` · ${c.club_name}` : ''}</p>
-            <h1>Certificado</h1>
+            <h1>{c.design ? 'Certificado de Honra' : 'Certificado'}</h1>
+            {c.design && <div className="cert-art"><Trophy design={c.design} pos={c.place} size={110} /></div>}
             <p className="cert-text">Certificamos que</p>
             <p className="cert-name">{c.member_name}</p>
             <p className="cert-text">{c.what}</p>
@@ -67,4 +68,17 @@ export function MemberCertificatePage({ base }) {
       </Loading>
     </div>
   );
+}
+
+export function MemberCertificatePage({ base }) {
+  const { kind, id } = useParams();
+  const state = useLoad(() => api.get(`/me/certificados/${kind}/${id}`), [kind, id]);
+  return <CertificateView state={state} back={<Link to={`${base}/downloads`}><Button variant="secondary" small><ChevronLeft size={14} /> Voltar</Button></Link>} />;
+}
+
+/** Certificado de um troféu (aberto pelo troféu no perfil de qualquer pessoa, unidade ou clube). */
+export function TrophyCertificatePage() {
+  const { id } = useParams();
+  const state = useLoad(() => api.get(`/public/trofeus/${id}/certificado`), [id]);
+  return <CertificateView state={state} back={<Button variant="secondary" small onClick={() => window.history.back()}><ChevronLeft size={14} /> Voltar</Button>} />;
 }

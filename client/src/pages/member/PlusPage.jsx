@@ -93,7 +93,10 @@ export default function PlusPage() {
                 <BadgeCheck size={26} />
                 {d.mine.trial
                   ? <div><b>Você é DBV! <span className="trial-tag">Teste grátis</span></b><small><Clock size={12} /> Você está usando o teste grátis de 3 dias · {daysLeft(d.mine.until)} · termina em {br(d.mine.until)}</small></div>
-                  : <div><b>Você é {d.mine.plan_name}!</b><small><Clock size={12} /> Válido até {br(d.mine.until)} · {d.mine.plan === 'app' ? 'renove ou mude para o DBV+ quando quiser' : 'um novo plano fica disponível nesse dia'}</small></div>}
+                  : d.mine.plan === 'app' && !d.app
+                    // Mudou para um clube que paga pelos membros: o DBV (R$ 3,90) não é mais preciso.
+                    ? <div><b>O seu clube cobre o seu acesso</b><small>Você não precisa mais pagar o DBV (R$ 3,90): no clube novo as regras são do clube. O DBV+ continua disponível, se quiser.</small></div>
+                    : <div><b>Você é {d.mine.plan_name}!</b><small><Clock size={12} /> Válido até {br(d.mine.until)} · {d.mine.plan === 'app' ? 'renove ou mude para o DBV+ quando quiser' : 'um novo plano fica disponível nesse dia'}</small></div>}
               </Card>
             )}
             {d.mine?.active && d.mine.picks_needed > 0 && <Picks d={d} reload={state.reload} />}

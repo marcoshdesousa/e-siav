@@ -42,6 +42,7 @@ import { AUDIO_ROOT } from './audio.js';
 import { startPaymentSweep } from './payments.js';
 import { syncCatalog } from './catalog.js';
 import { createInitialAdmin, resetClubsForDbvOnce, resetToDemoClubsOnce, resetToTestClubsOnce, removeTestClubsOnce, giftTestPacksOnce, seed } from './seed.js';
+import { openExistingRankingsOnce } from './rankings.js';
 
 // Banco vazio: cria só o administrador. Os dados de exemplo completos só entram com
 // SEED_DEMO=1 (testes e desenvolvimento). Nada que já existe é apagado na inicialização,
@@ -64,6 +65,7 @@ bibleStartTodayOnce({ justSeeded });
 giftTestPacksOnce();
 testPlusOnce();
 ensureAppClub();
+openExistingRankingsOnce();
 startYearWatch();
 startPushWatch();
 initClubPlans();

@@ -635,7 +635,7 @@ export default function ClubApp() {
     { to: `${base}/biblioteca`, icon: BookOpen, label: 'Biblioteca', hint: 'Especialidades e classes' },
     { to: `${base}/ferramentas`, icon: Wrench, label: 'Ferramentas', hint: 'Aniversariantes e contatos' },
     { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },
-    { to: `${base}/eventos`, icon: Award, label: 'Eventos e medalhas', hint: 'Participantes e medalhas' },
+    { to: `${base}/eventos`, icon: Award, label: 'Eventos', hint: 'Eventos e participantes' },
     { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: 'Para os seus membros' },
     { to: `${base}/clubes`, icon: Map, label: 'Clubes', hint: 'Por distrito' },
   ];

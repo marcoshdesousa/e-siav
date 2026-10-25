@@ -2,11 +2,8 @@ import { useEffect, useState } from 'react';
 import { ChevronDown, ChevronUp, ImageUp, Pencil, Trash2, X } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { plural } from '../../format.js';
-import { CONTENT_ICON_KEYS, IconPicker, MEDAL_ICON_KEYS } from '../../icons.jsx';
-import {
-  Button, Confirm, ContentIcon, Field, ImagesInput, Loading, MedalIcon, Modal, ModesPicker, PageHeader, QuizBuilder, Section, Tabs,
-  modesLabel, useAsync, useLoad,
-} from '../../ui.jsx';
+import { CONTENT_ICON_KEYS, IconPicker } from '../../icons.jsx';
+import { Button, Confirm, ContentIcon, Field, ImagesInput, Loading, Modal, ModesPicker, PageHeader, QuizBuilder, Section, modesLabel, useAsync, useLoad } from '../../ui.jsx';
 
 const TYPE_LABEL = { especialidade: 'Especialidade', classe: 'Classe', curso: 'Curso' };
 const newItem = () => ({ title: '', body: '', modes: [], images: [], files: [], questions: [{ question: '', options: ['', ''], correct: 0 }], open: true });
@@ -144,63 +141,15 @@ function ContentList({ type }) {
   );
 }
 
-/** Medalhas e troféus: aqui só se cria. A entrega fica em "Entregar conteúdo". */
-function MedalsList() {
-  const state = useLoad(() => api.get('/admin/medals'));
-  const [creating, setCreating] = useState(false);
-  const [f, setF] = useState({ kind: 'medalha', name: '', description: '', icon: 'medal', icon_file: null });
-  const [busy, run] = useAsync();
-  const create = async () => {
-    await run(() => api.post('/admin/medals', toForm(f)), 'Criado!');
-    setCreating(false);
-    setF({ kind: 'medalha', name: '', description: '', icon: 'medal', icon_file: null });
-    state.reload();
-  };
-  return (
-    <>
-      <Button block onClick={() => setCreating(true)}>+ Nova medalha ou troféu</Button>
-      <p className="muted small mt">Para entregar, use “Entregar conteúdo” no menu Mais.</p>
-      <Loading {...state} empty="Nenhuma medalha criada.">
-        {(list) => (
-          <div className="list mt">
-            {list.map((m) => (
-              <div key={m.id} className="list-item">
-                <span className="medal-icon" style={{ width: 50, height: 50 }}><MedalIcon icon={m.icon} size={26} /></span>
-                <div className="grow">
-                  <div className="title">{m.name}</div>
-                  <div className="sub">{m.kind === 'trofeu' ? 'Troféu' : 'Medalha'} · entregue {plural(m.award_count, 'vez', 'vezes')}</div>
-                </div>
-                <Confirm text="Excluir? Também some de quem recebeu." onYes={() => run(() => api.del('/admin/medals/' + m.id), 'Excluída').then(state.reload)}><Trash2 size={14} /></Confirm>
-              </div>
-            ))}
-          </div>
-        )}
-      </Loading>
-      {creating && (
-        <Modal title="Nova medalha ou troféu" onClose={() => setCreating(false)} footer={<Button busy={busy} onClick={create}>Criar</Button>}>
-          <div className="form">
-            <Tabs tabs={[['medalha', 'Medalha'], ['trofeu', 'Troféu']]} value={f.kind} onChange={(kind) => setF({ ...f, kind, icon: kind === 'trofeu' ? 'trophy' : 'medal' })} />
-            <Field label="Nome" hint="Ex.: Melhor clube do mês"><input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
-            <Field label="Descrição"><textarea value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })} /></Field>
-            <Field group label="Ícone"><IconPicker keys={MEDAL_ICON_KEYS} value={f.icon_file ? null : f.icon} onChange={(icon) => setF({ ...f, icon, icon_file: null })} /></Field>
-            <Field label="ou envie uma imagem"><input type="file" accept="image/*" onChange={(e) => setF({ ...f, icon_file: e.target.files[0] || null })} /></Field>
-          </div>
-        </Modal>
-      )}
-    </>
-  );
-}
-
-const TABS = [['curso', 'Cursos'], ['medalhas', 'Medalhas e troféus']];
-
-/** Conteúdo: tudo o que o Administrador Geral cria. Nada é vendido. */
+/**
+ * Conteúdo: tudo o que o Administrador Geral cria. Nada é vendido. Troféus e medalhas não são criados
+ * aqui: os troféus vêm dos rankings finalizados e as medalhas dos mini-jogos.
+ */
 export default function ContentAdmin() {
-  const [tab, setTab] = useState(new URLSearchParams(location.search).get('aba') || 'curso');
   return (
     <>
-      <PageHeader title="Conteúdo" subtitle="Cursos, medalhas e troféus" />
-      <Tabs tabs={TABS} value={tab} onChange={setTab} />
-      {tab === 'medalhas' ? <MedalsList /> : <ContentList key={tab} type={tab} />}
+      <PageHeader title="Conteúdo" subtitle="Cursos" />
+      <ContentList type="curso" />
     </>
   );
 }

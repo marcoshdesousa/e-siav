@@ -19,8 +19,7 @@ export function autoAward(memberId, { kind, name, icon, description, note = null
   return true;
 }
 
-/** Álbum completo: medalha e troféu (no lugar do trunfo físico). */
+/** Álbum completo: troféu (no lugar do trunfo físico). As medalhas agora são só dos mini-jogos. */
 export function awardAlbum(memberId, albumName) {
-  autoAward(memberId, { kind: 'medalha', name: `${albumName} completo`, icon: 'medal', description: `Completou o ${albumName}.` });
   autoAward(memberId, { kind: 'trofeu', name: `Colecionador: ${albumName}`, icon: 'trophy', description: `Troféu por completar o ${albumName}.` });
 }

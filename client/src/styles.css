@@ -946,3 +946,50 @@ input::-webkit-datetime-edit { padding: 0; }
 .rf-text > span { color: var(--muted); }
 .rf-text .rf-prize { color: var(--ink); }
 .rf-text .rf-next { font-weight: 600; }
+
+/* Estúdio do troféu */
+.ts-stage { display: flex; flex-direction: column; align-items: center; gap: .15rem; padding: .9rem .5rem .8rem; margin: -.2rem 0 .7rem; border-radius: 18px; color: #fff;
+  background: radial-gradient(120% 90% at 50% 0%, #2a4fa8 0%, #0b1f4d 60%, #071233 100%); box-shadow: inset 0 -20px 40px rgba(0,0,0,.25); }
+.ts-podium { display: flex; align-items: flex-end; justify-content: center; gap: .2rem; }
+.ts-place { display: flex; flex-direction: column; align-items: center; }
+.ts-place.p1 { transform: translateY(-6px); }
+.ts-title { font-family: var(--font-title); font-size: 1.05rem; margin-top: .3rem; text-align: center; }
+.ts-year { font-size: .74rem; font-weight: 700; padding: .1rem .55rem; border-radius: 999px; background: rgba(255,255,255,.14); }
+.ts-fields { display: grid; grid-template-columns: 1fr 96px; gap: .5rem; }
+.ts-group { margin-top: .75rem; }
+.ts-label { display: block; font-size: .78rem; font-weight: 800; color: var(--muted); margin-bottom: .35rem; text-transform: uppercase; letter-spacing: .06em; }
+.ts-options { display: flex; flex-wrap: wrap; gap: .35rem; }
+.ts-opt { display: inline-flex; align-items: center; gap: .35rem; padding: .32rem .6rem .32rem .35rem; border-radius: 999px; border: 1.5px solid var(--card-border); background: var(--surface); color: var(--ink); font: 700 .74rem var(--font); cursor: pointer; }
+.ts-opt.on { border-color: var(--primary); background: var(--blue-soft, rgba(37,99,235,.12)); box-shadow: 0 0 0 2px rgba(37, 99, 235, .25); }
+.ts-dot { width: 18px; height: 18px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,.15); flex: none; }
+.ts-options:not(:has(.ts-dot)):not(.with-preview) .ts-opt { padding-left: .6rem; }
+.ts-options.with-preview { display: grid; grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); }
+.ts-options.with-preview .ts-opt { flex-direction: column; border-radius: 14px; padding: .4rem .2rem; font-size: .68rem; gap: .15rem; text-align: center; }
+.trophy-svg { display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .3)); }
+
+/* Gerenciar rankings (clube, distrito, Brasil) */
+.rank-admin { margin-bottom: .9rem; }
+.rank-admin-head { display: flex; gap: .7rem; align-items: flex-start; margin-bottom: .5rem; }
+.rank-admin-head b { display: block; font-family: var(--font-title); }
+.rank-admin-head small { color: var(--muted); font-size: .78rem; line-height: 1.3; display: block; }
+.rank-admin-ico { width: 40px; height: 40px; flex: none; border-radius: 12px; display: grid; place-items: center; color: #6B4700; background: radial-gradient(circle at 30% 25%, #FFF0B8, var(--yellow) 70%); }
+.rank-tables { display: flex; flex-direction: column; gap: .4rem; }
+.rank-table { display: flex; align-items: center; gap: .6rem; padding: .55rem .7rem; border-radius: 14px; background: var(--surface-3); }
+.rank-table b { display: block; font-size: .9rem; }
+.rank-table small { color: var(--muted); font-size: .74rem; }
+.rank-table.closed { background: var(--yellow-soft); border: 1px dashed var(--yellow); }
+.rank-table.games { margin-top: .6rem; background: linear-gradient(135deg, rgba(147, 51, 234, .14), rgba(37, 99, 235, .1)); }
+.rank-pause-box { margin-top: .6rem; }
+.rank-pause-box summary { cursor: pointer; font-weight: 700; font-size: .85rem; color: var(--link); }
+.rank-closed { text-align: center; display: flex; flex-direction: column; align-items: center; gap: .3rem; }
+.rank-closed-kicker { font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.rank-closed-title { font-family: var(--font-title); font-size: 1.1rem; }
+.rank-closed-podium { display: flex; align-items: flex-end; justify-content: center; gap: .5rem; margin: .4rem 0; }
+.rank-closed-place { display: flex; flex-direction: column; align-items: center; width: 96px; font-size: .78rem; font-weight: 700; }
+.rank-closed-place .ellipsis { max-width: 100%; }
+.rank-closed-place small { color: var(--muted); }
+.cert-trophy { aspect-ratio: auto; min-height: 560px; background: radial-gradient(90% 60% at 50% 30%, #FFFBEB, #fff 70%); }
+.cert-art { margin: .1rem 0 .3rem; }
+.cert-art .trophy-svg { filter: drop-shadow(0 8px 14px rgba(14, 42, 107, .25)); }
+@media print { .cert-trophy { min-height: 0; } }
+.medal.rank { text-decoration: none; color: inherit; }

@@ -49,11 +49,12 @@ test('sequência no app: 5 minutos no dia contam 1 dia; várias entradas no mesm
 
 test('usar o app: membro ganha pacotinho e 10 pontos; clube que entra ganha 100 pontos e um pacotinho (repetido) para cada membro', async () => {
   const { ping, clubEntered } = await import('../server/presence.js');
-  const { clubsRanking, membersRanking } = await import('../server/rankings.js');
+  const { clubsRanking, membersRanking, openTable } = await import('../server/rankings.js');
   const { setSetting } = await import('../server/fees.js');
   setSetting('ranking_inicio', ''); // o teste da virada deixou a temporada em 2028
   const d = Number(run(`INSERT INTO districts (name) VALUES ('D3')`).lastInsertRowid);
   const c = Number(run('INSERT INTO clubs (district_id, name) VALUES (?, ?)', d, 'C3').lastInsertRowid);
+  for (const k of ['membros', 'clubes']) openTable(`district:${d}`, k); // distrito novo: cria os rankings
   const m = Number(run(`INSERT INTO members (club_id, name, birth_date, cargo, code, status) VALUES (?, 'R S', '2013-01-01', 'Desbravador', '999003', 'ativo')`, c).lastInsertRowid);
   const packs = () => ({ ...(get(`SELECT packs_unopened, repeat_packs FROM album_progress WHERE member_id = ? AND album = 'biblico'`, m) || { packs_unopened: 0, repeat_packs: 0 }) });
   const t0 = Date.now() - 10 * 60e3;
