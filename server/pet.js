@@ -24,6 +24,8 @@ run(`CREATE TABLE IF NOT EXISTS pets (
   last_ts INTEGER NOT NULL,
   created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
 )`);
+// Masculino (m) ou feminino (f): muda o rosto e as roupas que aparecem no closet.
+try { run("ALTER TABLE pets ADD COLUMN gender TEXT NOT NULL DEFAULT 'm'"); } catch { /* já existe */ }
 
 export const KINDS = ['cachorro', 'gato', 'ovelha'];
 export const COLORS = {
@@ -43,15 +45,19 @@ export const RECIPES = {
   suco: { name: 'Suco de laranja', fome: 6, alegria: 6, bexiga: 22 },
 };
 
-/** Roupinhas por parte do corpo; cada uma libera num nível. */
+/** Roupinhas por parte do corpo: [id, nome, nível, gênero] (gênero '' = para todos). */
 export const WARDROBE = {
-  chapeu: [['bone', 'Boné', 1], ['chapeu-dbv', 'Chapéu de desbravador', 2], ['gorro', 'Gorro de lã', 3], ['coroa', 'Coroa', 6]],
-  oculos: [['redondo', 'Óculos redondos', 2], ['sol', 'Óculos de sol', 4]],
-  pescoco: [['lenco', 'Lenço de desbravador', 1], ['gravata', 'Gravatinha', 3], ['cachecol', 'Cachecol', 5]],
-  roupa: [['camiseta', 'Camiseta azul', 1], ['uniforme', 'Uniforme de desbravador', 4], ['moletom', 'Moletom vermelho', 5], ['capa', 'Capa de herói', 7]],
+  chapeu: [['bone', 'Boné', 1, 'm'], ['laco', 'Laço', 1, 'f'], ['chapeu-dbv', 'Chapéu de desbravador', 2, ''], ['flor', 'Flor no cabelo', 2, 'f'],
+    ['gorro', 'Gorro de lã', 3, ''], ['tiara', 'Tiara de estrela', 4, 'f'], ['bone-tras', 'Boné para trás', 4, 'm'], ['coroa', 'Coroa', 6, '']],
+  oculos: [['redondo', 'Óculos redondos', 2, ''], ['sol', 'Óculos de sol', 3, ''], ['coracao', 'Óculos de coração', 5, 'f'], ['aviador', 'Óculos aviador', 5, 'm']],
+  rosto: [['blush', 'Bochechas rosadas', 1, 'f'], ['batom', 'Batom rosa', 2, 'f'], ['batom-vermelho', 'Batom vermelho', 4, 'f'], ['sardas', 'Sardinhas', 2, '']],
+  pescoco: [['lenco', 'Lenço de desbravador', 1, ''], ['gravata', 'Gravata borboleta', 2, 'm'], ['colar', 'Colar de pérolas', 3, 'f'], ['cachecol', 'Cachecol', 4, '']],
+  roupa: [['camiseta', 'Camiseta azul', 1, 'm'], ['blusa', 'Blusa rosa', 1, 'f'], ['pijama', 'Pijama de estrelas', 2, ''], ['uniforme', 'Uniforme de desbravador', 3, ''],
+    ['vestido', 'Vestido de bolinhas', 3, 'f'], ['moletom', 'Moletom vermelho', 4, 'm'], ['macacao', 'Macacão de bichinho', 5, ''], ['capa', 'Capa de herói', 7, '']],
 };
-const ITEM_LEVEL = new Map(Object.values(WARDROBE).flat().map(([id, , lvl]) => [id, lvl]));
-const slotOf = new Map(Object.entries(WARDROBE).flatMap(([slot, items]) => items.map(([id]) => [id, slot])));
+const ITEM = new Map(Object.entries(WARDROBE).flatMap(([slot, items]) => items.map(([id, , lvl, g]) => [id, { slot, lvl, g }])));
+/** O closet de cada gênero. */
+export const wardrobeFor = (gender) => Object.fromEntries(Object.entries(WARDROBE).map(([slot, items]) => [slot, items.filter((x) => !x[3] || x[3] === gender)]).filter(([, items]) => items.length));
 
 export const XP_LEVEL = 120;
 export const levelOf = (xp) => Math.floor(xp / XP_LEVEL) + 1;
@@ -100,12 +106,13 @@ export function loadPet(memberId, now = Date.now()) {
   return p;
 }
 
-export function adopt(memberId, { kind, name, color }, now = Date.now()) {
+export function adopt(memberId, { kind, name, color, gender }, now = Date.now()) {
   if (!KINDS.includes(kind)) throw new Error('Escolha o bichinho');
   const n = String(name || '').trim().slice(0, 16);
   if (n.length < 2) throw new Error('Dê um nome com pelo menos 2 letras');
   const c = COLORS[kind].includes(color) ? color : COLORS[kind][0];
-  run('INSERT INTO pets (member_id, kind, name, color, last_ts, outfit) VALUES (?, ?, ?, ?, ?, ?)', memberId, kind, n, c, now, JSON.stringify({ pescoco: 'lenco' }));
+  const g = gender === 'f' ? 'f' : 'm';
+  run('INSERT INTO pets (member_id, kind, name, color, gender, last_ts, outfit) VALUES (?, ?, ?, ?, ?, ?, ?)', memberId, kind, n, c, g, now, JSON.stringify({ pescoco: 'lenco' }));
   return loadPet(memberId, now);
 }
 
@@ -123,7 +130,7 @@ export function act(p, action, arg, now = Date.now()) {
       if (q.fome >= 95) throw new Error(`${q.name} está de barriga cheia!`);
       q.fome = clamp(q.fome + r.fome); q.alegria = clamp(q.alegria + r.alegria); q.bexiga = Math.min(99, q.bexiga + r.bexiga);
       if (!q.next_poop) q.next_poop = now + 3 * H;
-      gain(10); msg = `Hum! ${q.name} adorou o(a) ${r.name.toLowerCase()}.`;
+      gain(10); msg = `Hum! ${r.name}! ${q.name} adorou.`;
       break;
     }
     case 'dormir':
@@ -152,12 +159,13 @@ export function act(p, action, arg, now = Date.now()) {
       break;
     case 'vestir': {
       const outfit = JSON.parse(q.outfit || '{}');
-      const slot = slotOf.get(arg) || (WARDROBE[arg] ? arg : null);
-      if (!slot) throw new Error('Roupa não encontrada');
-      if (slotOf.has(arg)) {
-        if (levelOf(q.xp) < ITEM_LEVEL.get(arg)) throw new Error(`Essa libera no nível ${ITEM_LEVEL.get(arg)}.`);
-        outfit[slot] = outfit[slot] === arg ? undefined : arg; // tocar de novo tira
-      } else delete outfit[slot];
+      const it = ITEM.get(arg);
+      if (it) {
+        if (it.g && it.g !== q.gender) throw new Error('Essa roupa não é deste closet.');
+        if (levelOf(q.xp) < it.lvl) throw new Error(`Essa libera no nível ${it.lvl}.`);
+        if (outfit[it.slot] === arg) delete outfit[it.slot]; else outfit[it.slot] = arg; // tocar de novo tira
+      } else if (WARDROBE[arg]) delete outfit[arg];
+      else throw new Error('Roupa não encontrada');
       q.outfit = JSON.stringify(outfit); msg = null;
       break;
     }
@@ -171,7 +179,7 @@ export function act(p, action, arg, now = Date.now()) {
 
 export function view(p) {
   return {
-    kind: p.kind, name: p.name, color: p.color, mood: moodOf(p), dormindo: !!p.dormindo,
+    kind: p.kind, name: p.name, color: p.color, gender: p.gender || 'm', mood: moodOf(p), dormindo: !!p.dormindo,
     fome: Math.round(p.fome), energia: Math.round(p.energia), limpeza: Math.round(p.limpeza), bexiga: Math.round(p.bexiga), alegria: Math.round(p.alegria),
     cocos: p.cocos, xixi_chao: !!p.xixi_chao, outfit: JSON.parse(p.outfit || '{}'),
     level: levelOf(p.xp), xp: p.xp % XP_LEVEL, xp_next: XP_LEVEL,

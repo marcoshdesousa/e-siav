@@ -60,3 +60,21 @@ test('bichinho: tempo passa, cuida, sujeira, xixi, dormir, roupas e lembrete', (
   p = act(p, 'vestir', 'coroa', t0 + 22 * H).pet;
   assert.equal(view(p).outfit.chapeu, undefined, 'tocar de novo tira');
 });
+
+test('bichinho: menino e menina têm closets diferentes', async () => {
+  const { all } = await import('../server/db.js');
+  const { wardrobeFor } = await import('../server/pet.js');
+  const [a, b] = all("SELECT id FROM members WHERE status = 'ativo' AND id NOT IN (SELECT member_id FROM pets) LIMIT 2");
+  const t = Date.UTC(2027, 3, 14, 12);
+  let menina = adopt(a.id, { kind: 'gato', name: 'Mimi', color: 'branco', gender: 'f' }, t);
+  let menino = adopt(b.id, { kind: 'gato', name: 'Tico', color: 'cinza', gender: 'm' }, t);
+  assert.equal(view(menina).gender, 'f');
+  assert.ok(wardrobeFor('f').chapeu.some((x) => x[0] === 'laco') && !wardrobeFor('f').chapeu.some((x) => x[0] === 'bone'));
+  assert.ok(!wardrobeFor('m').rosto?.some((x) => x[0] === 'batom'));
+  assert.throws(() => act(menina, 'vestir', 'bone', t), /closet/);
+  assert.throws(() => act(menino, 'vestir', 'laco', t), /closet/);
+  menina = act(menina, 'vestir', 'laco', t).pet;
+  menino = act(menino, 'vestir', 'bone', t).pet;
+  assert.equal(view(menina).outfit.chapeu, 'laco');
+  assert.equal(view(menino).outfit.chapeu, 'bone');
+});
