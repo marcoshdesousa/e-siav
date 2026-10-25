@@ -1,7 +1,7 @@
 // Mini-jogos dos membros: lista de jogos, tela de cada jogo e ranking de cada um.
 import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, BadgeCheck, ChevronRight, Flag, Keyboard, Lightbulb, Smartphone, Target, Play, PawPrint, RotateCcw, Trophy, Volume2, VolumeX } from 'lucide-react';
+import { ArrowLeft, BadgeCheck, ChevronRight, Flag, Keyboard, Lightbulb, Smartphone, Target, Play, RotateCcw, Trophy, Volume2, VolumeX } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Button, Card, Loading, PageHeader, Section, Spinner, useLoad } from '../../ui.jsx';
@@ -10,7 +10,6 @@ import { GAMES, gameById, gameComponent } from './games.js';
 import { isMuted, onMuteChange, setMuted, sfx, startMusic, stopMusic, unlockAudio } from './audio.js';
 import { useOnline } from '../../offline.js';
 import TUTORIALS from './tutorials.json';
-import PetPage from './pet/Pet.jsx';
 import './games.css';
 import './modern.css';
 
@@ -59,7 +58,7 @@ function MiniRankings({ base, online, initial }) {
 /** Aba Jogos: jogar e o ranking de cada jogo. */
 export function GamesHub({ base }) {
   const [params] = useSearchParams();
-  const [sub, setSub] = useState(() => (['ranking', 'bichinho'].includes(params.get('aba')) ? params.get('aba') : 'jogar'));
+  const [sub, setSub] = useState(() => (params.get('aba') === 'ranking' ? 'ranking' : 'jogar'));
   const mine = useLoad(() => api.get('/jogos/meus'));
   const my = mine.data || {};
   const online = useOnline();
@@ -69,9 +68,8 @@ export function GamesHub({ base }) {
       <div className="seg games-sub" role="tablist">
         <button type="button" className={sub === 'jogar' ? 'active' : ''} onClick={() => setSub('jogar')}><Play size={14} /> Jogar</button>
         <button type="button" className={sub === 'ranking' ? 'active' : ''} onClick={() => setSub('ranking')}><Trophy size={14} /> Ranking</button>
-        <button type="button" className={sub === 'bichinho' ? 'active' : ''} onClick={() => setSub('bichinho')}><PawPrint size={14} /> Bichinho</button>
       </div>
-      {sub === 'bichinho' ? <PetPage /> : sub === 'jogar' ? (
+      {sub === 'jogar' ? (
         <div className="games-grid">
           {GAMES.map((g) => (
             <Link key={g.id} to={`${base}/jogos/${g.id}`} className="game-tile">

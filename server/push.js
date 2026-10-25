@@ -13,7 +13,6 @@ import { medStart, ssCategoryFor } from './routes/devotional.js';
 import { applies } from './routes/requirements.js';
 import { memberKind } from './util.js';
 import { siteUrl } from './syncpay.js';
-import { petReminder } from './pet.js';
 
 run(`CREATE TABLE IF NOT EXISTS push_subscriptions (
   id INTEGER PRIMARY KEY,
@@ -102,10 +101,6 @@ const KINDS = [
   { kind: 'jogo', from: 17 * 60 + 40, to: 18 * 60 + 40, check: (m, t) => (playedToday(m.id, t) ? null
     : { title: 'Bora jogar?', body: 'Que tal um joguinho rápido no App do DBV? Tente bater o seu recorde!', url: '/membro/jogos' }) },
   { kind: 'figurinhas', from: 19 * 60, to: 20 * 60, check: (m) => (stickersToDo(m.id) ? { title: 'Figurinhas esperando', body: 'Abra os seus pacotinhos e cole as figurinhas no álbum!', url: '/membro/albuns' } : null) },
-  // Meu Bichinho: três vezes no dia, se ele estiver precisando de algo (fome, cocô, xixi, sono...).
-  { kind: 'bichinho1', from: 11 * 60, to: 11 * 60 + 50, check: (m) => petReminder(m.id) },
-  { kind: 'bichinho2', from: 15 * 60 + 40, to: 16 * 60 + 30, check: (m) => petReminder(m.id) },
-  { kind: 'bichinho3', from: 18 * 60 + 50, to: 19 * 60 + 40, check: (m) => petReminder(m.id) },
   // Último aviso: algum estudo do dia ainda não feito.
   { kind: 'ultimo', from: 20 * 60 + 15, to: 20 * 60 + 50, check: (m, t) => {
     const left = [doneMeditation(m.id, t) === false && 'Meditação', doneBible(m.id, t) === false && 'Ano Bíblico', doneSabbath(m, t) === false && 'Escola Sabatina'].filter(Boolean);
