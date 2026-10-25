@@ -157,25 +157,6 @@
    "A partir da fase 2, alguns tijolos precisam de 2 batidas"
   ]
  },
- "minado": {
-  "objetivo": "Abra todos os quadrados sem bombas (são 10 bombas escondidas em 9x9).",
-  "celular": [
-   "Toque num quadrado para abri-lo",
-   "Segure o dedo para marcar uma bandeira",
-   "Ou ligue o \"Modo bandeira\" no botão abaixo do campo"
-  ],
-  "computador": [
-   "Clique com o botão esquerdo para abrir",
-   "Clique com o botão direito para marcar bandeira",
-   "Clique num número já cercado de bandeiras para abrir os vizinhos"
-  ],
-  "pontos": "Vencer vale 1000 menos 5 por segundo (mínimo 100). Se abrir uma bomba, acaba e vale o número de casas abertas.",
-  "dicas": [
-   "O primeiro toque nunca é bomba",
-   "O número mostra quantas bombas há nas 8 casas em volta",
-   "Marque bandeiras só quando tiver certeza"
-  ]
- },
  "genius": {
   "objetivo": "Observe a sequência de cores que acende e repita na mesma ordem. A cada rodada ela cresce.",
   "celular": [
@@ -379,23 +360,6 @@
    "Bloqueie o computador quando ele tiver 2 em linha"
   ]
  },
- "mancala": {
-  "objetivo": "Junte no seu depósito (à direita) mais sementes que o computador.",
-  "celular": [
-   "Toque numa das suas 6 casas de baixo para pegar todas as sementes dela",
-   "Elas são semeadas uma por casa, no sentido anti-horário, passando pelo seu depósito"
-  ],
-  "computador": [
-   "Teclas 1 a 6 escolhem suas casas (da esquerda para a direita)",
-   "Ou clique na casa com o mouse"
-  ],
-  "pontos": "Vitória vale 3 pontos e empate 1. Acaba quando um lado fica sem sementes; o que sobra vai para o dono.",
-  "dicas": [
-   "Se a última semente cair no seu depósito, jogue de novo",
-   "Se cair numa casa sua vazia, você captura ela e as sementes da casa em frente",
-   "Conte as sementes antes para acertar o depósito"
-  ]
- },
  "pontinhos": {
   "objetivo": "Ligue os pontos com traços e feche mais quadrados (de 16) que o computador.",
   "celular": [
@@ -427,24 +391,6 @@
    "Acertou? Atire nas casas ao lado para achar o resto do navio",
    "Os navios nunca se encostam, nem na diagonal",
    "Atire em xadrez (pulando uma casa) para achar navios mais rápido"
-  ]
- },
- "paciencia": {
-  "objetivo": "Leve todas as cartas para as 4 pilhas de cima (fundações), uma por naipe, do Ás ao Rei.",
-  "celular": [
-   "Toque no monte (canto de cima) para virar uma carta",
-   "Toque numa carta e depois no destino para movê-la",
-   "Toque duas vezes na mesma carta para mandá-la sozinha à fundação ou a outra coluna"
-  ],
-  "computador": [
-   "Use o mouse: clique na carta e depois no destino",
-   "Clique duas vezes para mover automático"
-  ],
-  "pontos": "+10 por carta na fundação, +5 por carta virada nas colunas e bônus de tempo ao vencer. Acaba ao vencer ou sem jogadas.",
-  "dicas": [
-   "Nas colunas, coloque carta menor de cor diferente (ex.: 6 vermelho no 7 preto)",
-   "Só o Rei (K) vai para uma coluna vazia",
-   "Vire as cartas escondidas das colunas o quanto antes"
   ]
  },
  "vinteum": {
@@ -482,43 +428,6 @@
    "Na parte de cima, tente 3 dados iguais de cada número para o bônus",
    "Use \"Chance\" quando nada mais servir",
    "Às vezes vale marcar 0 numa casa difícil"
-  ]
- },
- "sudoku": {
-  "objetivo": "Complete a grade 9x9 para que cada linha, coluna e quadrado 3x3 tenha os números de 1 a 9 sem repetir.",
-  "celular": [
-   "Antes de começar, escolha Fácil ou Médio",
-   "Toque numa casa vazia e depois num número do teclado abaixo",
-   "Ligue \"Anotações\" para escrever palpites pequenos na casa"
-  ],
-  "computador": [
-   "Setas para escolher a casa e teclas 1 a 9 para o número",
-   "N liga/desliga anotações; Backspace apaga as notas",
-   "Ou use o mouse nas casas e botões"
-  ],
-  "pontos": "Resolver vale 2000 menos 2 por segundo e 100 por erro (Médio ×1,5). Com 3 erros acaba, valendo 5 por casa certa.",
-  "dicas": [
-   "Procure linhas ou quadrados que faltam poucos números",
-   "Tocar numa casa destaca os mesmos números no tabuleiro",
-   "O teclado mostra quantos de cada número ainda faltam"
-  ]
- },
- "nonograma": {
-  "objetivo": "Pinte as casas certas seguindo os números das linhas e colunas para revelar o desenho escondido.",
-  "celular": [
-   "Toque numa casa para pintá-la; toque de novo para apagar",
-   "Arraste o dedo para pintar várias casas de uma vez",
-   "Use \"Marcar vazio\" para marcar casas que você sabe que ficam em branco"
-  ],
-  "computador": [
-   "Use o mouse: clique ou arraste para pintar",
-   "Clique em \"Pintar\" ou \"Marcar vazio\" para trocar o modo"
-  ],
-  "pontos": "Cada desenho completo dá pontos pelo tamanho e pelo tempo que sobrou. Começa em 5x5 e passa a 7x7. Acaba se os 3 minutos de um desenho acabarem.",
-  "dicas": [
-   "Números como \"3 1\" querem dizer: 3 seguidas, um espaço, depois 1",
-   "Comece pelas linhas com números grandes",
-   "Os números ficam verdes quando a linha está certa"
   ]
  },
  "senha": {

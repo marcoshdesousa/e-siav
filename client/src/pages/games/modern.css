@@ -26,7 +26,7 @@
 }
 .game-stage .dpad-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0, 0, 0, .35); background: linear-gradient(180deg, #3B6CD8, #2448A0); }
 .game-stage .hangman-wood { stroke: #C9D6F5; }
-.game-stage > div:first-child:not(.pipes):not(.sokoban):not(.solitaire):not(.tetris) {
+.game-stage > div:first-child:not(.pipes):not(.sokoban):not(.tetris) {
   background:
     radial-gradient(120% 70% at 50% -10%, rgba(91, 140, 255, .35), transparent 60%),
     radial-gradient(80% 60% at 100% 110%, rgba(167, 107, 255, .22), transparent 60%),
@@ -38,7 +38,7 @@
   padding: 12px !important;
   box-sizing: border-box;
 }
-.game-stage > .pipes, .game-stage > .sokoban, .game-stage > .solitaire, .game-stage > .tetris {
+.game-stage > .pipes, .game-stage > .sokoban, .game-stage > .tetris {
   border-radius: 22px; box-shadow: 0 14px 34px rgba(7, 12, 32, .35), inset 0 1px 0 rgba(255, 255, 255, .08);
 }
 .game-stage > div:first-child b { color: inherit; }

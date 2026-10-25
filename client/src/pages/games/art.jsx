@@ -161,10 +161,6 @@ const SUIT_PATH = {
   '♦': 'M32 4l22 28-22 28-22-28z',
   '♣': 'M32 6a11 11 0 0 1 10 15 11 11 0 1 1-6 18l4 15H24l4-15a11 11 0 1 1-6-18A11 11 0 0 1 32 6z',
 };
-export const SUIT_RED = (s) => s === '♥' || s === '♦';
-export function Suit({ s, size = '1em' }) {
-  return <S size={size}><path d={SUIT_PATH[s]} fill={SUIT_RED(s) ? '#D62828' : '#1B1E26'} /></S>;
-}
 
 // ───────────── Placar ─────────────
 

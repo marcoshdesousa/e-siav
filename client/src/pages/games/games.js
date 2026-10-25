@@ -1,6 +1,6 @@
 // Lista dos mini jogos. id igual ao do servidor (server/games.js). Cada jogo é carregado só quando abre.
 import {
-  lazy } from 'react'; import { Apple, ArrowUpRight, Bird, Blocks, Bomb, BookOpen, Brain, Calculator, ChessKnight, Circle, CircleDot, Clock3, Crown, Dices, Disc3, Eye, Gamepad2, Gem, Grid2x2, Grid3x3, Hash, Hexagon, KeyRound, LayoutGrid, MessageCircleQuestion, Package, Radio, ScanEye, Search, Shuffle, Spade, SpellCheck, Spline, TrafficCone, Type, Waypoints, Workflow } from 'lucide-react';
+  lazy } from 'react'; import { Apple, ArrowUpRight, Bird, Blocks, BookOpen, Brain, Calculator, ChessKnight, CircleDot, Clock3, Crown, Dices, Disc3, Eye, Gamepad2, Gem, Grid2x2, Grid3x3, Hexagon, KeyRound, LayoutGrid, MessageCircleQuestion, Package, Radio, ScanEye, Search, Shuffle, SpellCheck, Spline, TrafficCone, Type, Waypoints, Workflow } from 'lucide-react';
 
 // mode: 'best' = vale o recorde de uma partida; 'sum' = os pontos das partidas vão somando.
 const ALL = [
@@ -12,7 +12,6 @@ const ALL = [
   { id: 'blocos', name: 'Blocos', icon: Blocks, mode: 'best', file: 'Tetris', how: 'Encaixe as peças e complete linhas para elas sumirem.' },
   { id: 'memoria', name: 'Jogo da memória', icon: Brain, mode: 'best', file: 'Memory', how: 'Vire duas cartas por vez e ache todos os pares com o menor número de jogadas.' },
   { id: 'passaro', name: 'Voo da pomba', icon: Bird, mode: 'best', file: 'Flappy', how: 'Ajude a pomba de Noé a levar o ramo de oliveira: toque (ou espaço) para bater as asas e passar entre as colunas.' },
-  { id: 'minado', name: 'Campo minado', icon: Bomb, mode: 'best', file: 'Minesweeper', how: 'Abra os quadrados sem bombas. Os números dizem quantas bombas há em volta. Segure (ou use a bandeira) para marcar.' },
   { id: 'genius', name: 'Genius', icon: CircleDot, mode: 'best', file: 'Simon', how: 'Repita a sequência de cores. A cada rodada ela fica maior.' },
   { id: 'forca', name: 'Forca', icon: SpellCheck, mode: 'best', file: 'Hangman', how: 'Descubra a palavra letra por letra antes de completar a forca.' },
   { id: 'quiz', name: 'Quiz bíblico', icon: MessageCircleQuestion, mode: 'best', file: 'Quiz', how: 'Responda perguntas da Bíblia e dos Desbravadores. Errou três, acabou.' },
@@ -23,12 +22,8 @@ const ALL = [
   { id: 'damas', name: 'Damas', icon: Crown, mode: 'sum', file: 'Checkers', how: 'Capture todas as peças do computador. Comer é obrigatório. Vitória vale 3 pontos.' },
   { id: 'reversi', name: 'Reversi', icon: Disc3, mode: 'sum', file: 'Reversi', how: 'Cerque as peças do adversário para virá-las. Quem tiver mais peças no fim ganha (3 pontos).' },
   { id: 'trilha', name: 'Trilha', icon: Hexagon, mode: 'sum', file: 'Morris', how: 'Forme linhas de 3 (moinho) para tirar peças do computador. Vitória vale 3 pontos.' },
-  { id: 'mancala', name: 'Mancala', icon: Circle, mode: 'sum', file: 'Mancala', how: 'Semeie as sementes pelas casas e junte mais no seu depósito que o computador. Vitória vale 3 pontos.' },
   { id: 'pontinhos', name: 'Pontinhos', icon: Grid2x2, mode: 'sum', file: 'DotsBoxes', how: 'Ligue os pontos e feche quadrados. Quem fechar mais quadrados ganha (3 pontos).' },
-  { id: 'paciencia', name: 'Paciência', icon: Spade, mode: 'best', file: 'Solitaire', how: 'Monte as pilhas de cada naipe do Ás ao Rei. Toque na carta e depois onde quer colocar.' },
   // ---------- Quebra-cabeças ----------
-  { id: 'sudoku', name: 'Sudoku', icon: Hash, mode: 'best', file: 'Sudoku', how: 'Complete a grade sem repetir números na linha, na coluna e no quadrado.' },
-  { id: 'nonograma', name: 'Nonograma', icon: Grid3x3, mode: 'best', file: 'Nonogram', how: 'Pinte os quadrados seguindo os números das linhas e colunas para revelar o desenho.' },
   { id: 'senha', name: 'Senha', icon: KeyRound, mode: 'best', file: 'Mastermind', how: 'Descubra a senha de 4 cores. A cada tentativa você vê quantas cores e posições acertou.' },
   { id: 'resta-um', name: 'Resta um', icon: CircleDot, mode: 'best', file: 'PegSolitaire', how: 'Pule uma peça por cima da outra para tirá-la. Tente deixar só uma.' },
   { id: 'canos', name: 'Água da rocha', icon: Workflow, mode: 'best', file: 'Pipes', how: 'Moisés feriu a rocha e saiu água: gire os canais para levar a água da rocha até o acampamento do povo.' },
