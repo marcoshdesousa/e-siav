@@ -4,6 +4,7 @@ import { Gamepad2, LogOut, WifiOff } from 'lucide-react';
 import { Avatar, BackButton, Button, LogoHorizontal } from '../ui.jsx';
 import { useOnline } from '../offline.js';
 import AnnouncementPopup from './Announcement.jsx';
+import RankingFinalPopup from './RankingFinal.jsx';
 
 const TYPE_LABEL = { admin: 'Administrador Geral', club: 'Sistema do Clube', unit: 'Portal da Unidade', member: '' };
 
@@ -71,6 +72,7 @@ export default function Shell({ tabs, children, hideNav = false, parentOf = null
         </nav>
       )}
       {actor.type !== 'admin' && !offline && <AnnouncementPopup />}
+      {actor.type !== 'admin' && !offline && <RankingFinalPopup />}
     </div>
   );
 }

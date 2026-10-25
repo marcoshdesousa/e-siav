@@ -721,6 +721,17 @@ test('mini jogos: recorde, soma, ranking geral só dos jogos', async () => {
   await pedro.post('/jogos/velha/pontos', { score: 3 });
   assert.equal((await pedro.post('/jogos/velha/pontos', { score: 1 })).body.total, 4, 'jogo da velha soma');
   assert.equal((await pedro.get('/jogos/meus')).body.velha.value, 4);
+  // Resumo de todos os jogos e ranking do clube, do distrito e do Brasil.
+  const resumo = (await marcos.get('/jogos/ranking/resumo?escopo=brasil')).body;
+  assert.equal(resumo.games.cobrinha.leader.me, true, 'marcos lidera a cobrinha');
+  assert.equal(resumo.games.cobrinha.me.position, 1);
+  const brasil = (await marcos.get('/jogos/cobrinha/ranking?escopo=brasil')).body;
+  const club = (await marcos.get('/jogos/cobrinha/ranking?escopo=clube')).body;
+  const dist = (await marcos.get('/jogos/cobrinha/ranking?escopo=distrito')).body;
+  assert.equal(club.scope, 'clube');
+  assert.ok(club.rows.every((x) => x.club_name === brasil.rows[0].club_name), 'só gente do clube');
+  assert.ok(dist.rows.every((x) => x.district_name === brasil.rows[0].district_name), 'só gente do distrito');
+  assert.equal(club.me.position, 1);
   const aguias = await login('clube', 'aguias', 'AG2026');
   assert.equal((await aguias.get('/jogos/cobrinha/ranking')).status, 403, 'só membros');
 });

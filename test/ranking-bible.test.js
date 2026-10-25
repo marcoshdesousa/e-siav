@@ -244,6 +244,47 @@ test('ranking por lugar: o clube reinicia e pausa o dele; o distrito não muda',
   await admin.put('/ranking/controle', { action: 'resume', district_id: pedro.actor.district_id });
 });
 
+test('finalizar ranking: os 3 primeiros ganham medalha/troféu com o ano, todos veem a colocação e zera', async () => {
+  const pedro = await login('membros', 'pedro');
+  const aguias = await login('clube', 'aguias', 'AG2026');
+  const admin = await login('membros', 'admin', 'admin123');
+  const clubId = pedro.actor.club_id;
+  const d = pedro.actor.district_id;
+  const distRows = (await pedro.get('/rankings/members')).body;
+  const me = find(distRows, pedro.actor.id);
+  const units = (await pedro.get('/rankings/units')).body;
+  const clubPts = async () => find((await pedro.get(`/rankings/club/${clubId}/members`)).body, pedro.actor.id).points;
+  const c0 = await clubPts();
+  // O administrador do distrito (aqui o geral) finaliza o distrito.
+  const r = (await admin.put('/ranking/controle', { action: 'reset', district_id: d })).body;
+  const winners = [...distRows, ...units].filter((x) => x.position <= 3 && x.points > 0).length;
+  assert.ok(r.finished.awarded >= winners, 'os 3 primeiros com pontos ganharam');
+  assert.ok((await pedro.get('/rankings/members')).body.every((x) => x.points === 0), 'o distrito zerou');
+  assert.equal(await clubPts(), c0, 'o ranking do clube continua');
+  const finais = (await pedro.get('/rankings/finais?novos=1')).body;
+  const f = finais.find((x) => x.id === r.finished.id);
+  const mine = f.places.find((p) => p.who === 'Você');
+  assert.equal(mine.position, me.position, 'mostra a colocação');
+  assert.equal(!!mine.prize, me.position <= 3 && me.points > 0);
+  if (mine.prize) assert.match(mine.prize.icon, /^rank:membros:[123]$/);
+  assert.equal(f.year, Number(new Date().toISOString().slice(0, 4)));
+  // O primeiro do distrito tem a medalha no perfil, com o ano.
+  const db = new DatabaseSync(path.join(dataDir, 'dbv.sqlite'), { readOnly: true });
+  const top = distRows.find((x) => x.position === 1 && x.points > 0);
+  if (top) {
+    const aw = db.prepare(`SELECT m.name, a.year FROM medal_awards a JOIN medals m ON m.id = a.medal_id WHERE a.target_type = 'member' AND a.target_id = ? AND m.icon = 'rank:membros:1' AND m.name LIKE '%distrito'`).get(top.id);
+    assert.equal(aw.name, 'Desbravador de Ouro do distrito');
+    assert.equal(aw.year, f.year);
+  }
+  db.close();
+  await pedro.post(`/rankings/finais/${f.id}/visto`);
+  assert.ok(!(await pedro.get('/rankings/finais?novos=1')).body.some((x) => x.id === f.id), 'aparece uma vez');
+  // O clube finaliza o dele; o Brasil não zera os outros.
+  assert.ok((await aguias.put('/ranking/controle', { action: 'reset' })).body.finished, 'clube finaliza');
+  assert.equal(await clubPts(), 0);
+  assert.equal((await pedro.put('/ranking/controle', { action: 'reset' })).status, 403, 'membro não finaliza');
+});
+
 test('quem paga: clube pago (membros grátis), clube grátis + membros grátis, clube grátis + membros pagam (o clube pode assumir)', async () => {
   const admin = await login('membros', 'admin', 'admin123');
   const aguias = await login('clube', 'aguias', 'AG2026');

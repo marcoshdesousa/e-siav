@@ -92,3 +92,55 @@
 /* Corações de vida desenhados (sem emoji). */
 .game-hearts { display: inline-flex; gap: 3px; align-items: center; vertical-align: middle; }
 .game-hearts svg { display: block; }
+
+/* Ranking dos jogos: escolher o jogo e ver o pódio (clube, distrito e Brasil). */
+.rk-picker { display: flex; flex-direction: column; gap: .7rem; }
+.rk-scope { align-self: flex-start; margin: .1rem 0 .6rem; }
+.rk-picker .rk-scope { margin: 0; }
+.rk-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: .45rem; }
+.rk-stats span { background: var(--surface); border: 1px solid var(--card-border); border-radius: 14px; padding: .55rem .4rem; text-align: center; font-size: .7rem; font-weight: 700; color: var(--muted); line-height: 1.2; }
+.rk-stats b { display: block; font-family: var(--font-title); font-size: 1.25rem; color: var(--ink); }
+.rk-search { display: flex; align-items: center; gap: .5rem; background: var(--surface); border: 1px solid var(--card-border); border-radius: 999px; padding: 0 .9rem; color: var(--muted); }
+.rk-search input { border: 0; background: none; box-shadow: none; padding: .7rem 0; flex: 1; min-width: 0; color: var(--ink); outline: none; }
+.rk-search:focus-within { border-color: var(--primary); }
+.rk-cats { display: flex; gap: .4rem; overflow-x: auto; scrollbar-width: none; margin: 0 -1rem; padding: 0 1rem; }
+.rk-cats::-webkit-scrollbar { display: none; }
+.rk-cats button { flex: none; border: 1px solid var(--card-border); background: var(--surface); color: var(--muted); border-radius: 999px; padding: .42rem .85rem; font: 700 .78rem var(--font); cursor: pointer; }
+.rk-cats button.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+.rk-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; }
+@media (min-width: 600px) { .rk-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .rk-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+/* Cor de cada tipo de jogo */
+.cat-acao { --c1: #f97316; --c2: #dc2626; }
+.cat-tabuleiro { --c1: #3b82f6; --c2: #1e3a8a; }
+.cat-quebra { --c1: #a855f7; --c2: #5b21b6; }
+.cat-palavras { --c1: #22c55e; --c2: #15803d; }
+.cat-atencao { --c1: #facc15; --c2: #d97706; }
+.rk-card { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: flex-start; gap: .45rem; text-align: left; padding: .8rem; border-radius: 18px; border: 1px solid var(--card-border); background: var(--surface); color: var(--ink); box-shadow: var(--shadow-sm); cursor: pointer; font-family: var(--font); transition: transform .12s, box-shadow .2s, border-color .2s; min-width: 0; }
+.rk-card::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 3px; background: linear-gradient(90deg, var(--c1), var(--c2)); }
+.rk-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--c1); }
+.rk-card:active { transform: scale(.98); }
+.rk-card-top { display: flex; width: 100%; justify-content: space-between; align-items: flex-start; }
+.rk-ico { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; color: #fff; background: linear-gradient(140deg, var(--c1), var(--c2)); box-shadow: 0 6px 14px -6px var(--c2); }
+.rk-name { font-family: var(--font-title); font-size: .9rem; line-height: 1.15; overflow-wrap: anywhere; }
+.rk-pos { font: 800 .78rem var(--font-title); padding: .2rem .5rem; border-radius: 999px; background: var(--surface-3); color: var(--ink); }
+.rk-pos.p1 { background: linear-gradient(135deg, #fde68a, #f59e0b); color: #5b3a00; }
+.rk-pos.p2 { background: linear-gradient(135deg, #f1f5f9, #94a3b8); color: #1e293b; }
+.rk-pos.p3 { background: linear-gradient(135deg, #fed7aa, #c2410c); color: #431407; }
+.rk-leader { display: flex; align-items: center; gap: .3rem; width: 100%; min-width: 0; font-size: .74rem; font-weight: 700; }
+.rk-leader > svg { color: #f59e0b; flex: none; }
+.rk-leader .avatar { flex: none; }
+.rk-leader .ellipsis { flex: 1; min-width: 0; }
+.rk-leader em { font-style: normal; font-family: var(--font-title); color: var(--link); }
+.rk-players { display: inline-flex; align-items: center; gap: .25rem; font-size: .66rem; font-weight: 700; color: var(--muted); }
+.rk-back { display: flex; width: fit-content; margin-top: .7rem; align-items: center; gap: .35rem; border: 0; background: none; color: var(--link); font: 700 .88rem var(--font); padding: .2rem 0; margin-bottom: .5rem; cursor: pointer; }
+.rk-hero { position: relative; display: flex; align-items: center; gap: .3rem; padding: 1.1rem .4rem; border-radius: 22px; margin-bottom: .8rem; color: #fff; overflow: hidden; background: radial-gradient(120% 140% at 0% 0%, var(--c1), var(--c2) 70%); box-shadow: 0 14px 30px -16px var(--c2); }
+.rk-hero::after { content: ''; position: absolute; width: 220px; height: 220px; right: -70px; top: -90px; border-radius: 50%; background: rgba(255,255,255,.12); pointer-events: none; }
+.rk-hero-main { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; text-align: center; gap: .35rem; position: relative; z-index: 1; }
+.rk-hero-ico { width: 64px; height: 64px; border-radius: 20px; display: grid; place-items: center; background: rgba(255,255,255,.18); box-shadow: inset 0 0 0 2px rgba(255,255,255,.3); backdrop-filter: blur(4px); }
+.rk-hero h2 { margin: .1rem 0 0; color: #fff; font-size: 1.35rem; line-height: 1.15; }
+.rk-hero p { margin: 0; font-size: .8rem; opacity: .88; }
+.rk-hero-me { display: inline-flex; align-items: center; gap: .3rem; background: rgba(0,0,0,.22); padding: .35rem .8rem; border-radius: 999px; font-size: .82rem; font-weight: 600; margin-top: .2rem; }
+.rk-play { display: inline-flex; align-items: center; gap: .35rem; margin-top: .3rem; padding: .5rem 1.1rem; border-radius: 999px; background: #fff; color: var(--c2); font: 800 .85rem var(--font); text-decoration: none; box-shadow: 0 6px 14px -6px rgba(0,0,0,.4); }
+.rk-nav { position: relative; z-index: 1; flex: none; width: 38px; height: 38px; border-radius: 50%; border: 0; display: grid; place-items: center; color: #fff; background: rgba(255,255,255,.16); cursor: pointer; }
+.rk-nav:active { background: rgba(255,255,255,.3); }

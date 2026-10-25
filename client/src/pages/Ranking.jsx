@@ -1,6 +1,6 @@
 import { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Compass, Flag, Globe, Map as MapIcon, PauseCircle, Tent } from 'lucide-react';
+import { BookOpen, Compass, Flag, Globe, Map as MapIcon, PauseCircle, Tent, Trophy } from 'lucide-react';
 import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { Avatar, Button, Card, Field, Loading, PageHeader, Section, Tabs, useAsync, useLoad, Empty } from '../ui.jsx';
@@ -159,7 +159,7 @@ function RankingPause() {
   const cur = s.scopes.find((x) => x.key === myKey) || { key: myKey };
   const name = actor.type === 'club' ? 'do clube (membros e unidades)' : actor.type === 'admin' && actor.district_id ? `do ${actor.district_name || 'distrito'}` : target === 'brasil' ? 'do Brasil (todos)' : `do ${meta.districts.find((d) => String(d.id) === String(target))?.name || 'distrito'}`;
   const act = (action, when) => run(() => api.put('/ranking/controle', { action, at: when, ...(general ? (target === 'brasil' ? { scope: 'brasil' } : { district_id: target }) : {}) }),
-    { pause: 'Pausa marcada', resume: 'Ranking retomado', reset: 'Ranking reiniciado' }[action]).then(state.reload);
+    { pause: 'Pausa marcada', resume: 'Ranking retomado', reset: 'Ranking finalizado: os 3 primeiros ganharam o prêmio' }[action]).then(state.reload);
   const paused = s.scopes.filter((x) => x.paused && (actor.type !== 'admin' || x.key === myKey));
   return (
     <>
@@ -168,7 +168,7 @@ function RankingPause() {
       ))}
       {canControl && (
         <Card className="rank-pause-admin">
-          <p style={{ margin: 0 }}><b>Pausar ou reiniciar o ranking {name}</b></p>
+          <p style={{ margin: 0 }}><b>Pausar ou finalizar o ranking {name}</b></p>
           {general && (
             <select value={target} onChange={(e) => setTarget(e.target.value)} style={{ width: 'auto', margin: '.4rem 0' }}>
               <option value="brasil">Brasil (todos)</option>
@@ -177,14 +177,14 @@ function RankingPause() {
           )}
           <p className="small muted" style={{ margin: '.2rem 0 .5rem' }}>
             {cur.paused_at ? (cur.paused ? `Pausado desde ${br(cur.paused_at)}.` : `Pausa marcada para ${br(cur.paused_at)}.`) : 'Contando normalmente.'}
-            {cur.start ? ` Recomeçou em ${br(cur.start)}.` : ''} Pausar: o ranking fica parado para você ver quem ganhou. Reiniciar: todo mundo volta para zero nesse ranking.
+            {cur.start ? ` Recomeçou em ${br(cur.start)}.` : ''} Pausar: o ranking fica parado para você ver quem ganhou. Finalizar: os 3 primeiros de cada ranking ganham a medalha (pessoas) ou o troféu (unidades e clubes) com o ano, todos veem a sua colocação e o ranking recomeça do zero.
           </p>
           <div className="row wrap">
             <input type="datetime-local" value={at} onChange={(e) => setAt(e.target.value)} style={{ width: 'auto' }} />
             <Button small busy={busy} disabled={!at} onClick={() => act('pause', new Date(at).toISOString())}>Marcar pausa</Button>
             <Button small variant="secondary" busy={busy} onClick={() => act('pause', new Date().toISOString())}>Pausar agora</Button>
             {cur.paused_at && <Button small variant="secondary" busy={busy} onClick={() => act('resume')}>Retomar</Button>}
-            <Button small variant="danger" busy={busy} onClick={() => confirm('Reiniciar este ranking? Os pontos dele voltam para zero (os de antes não contam mais).') && act('reset')}>Reiniciar</Button>
+            <Button small variant="danger" busy={busy} onClick={() => confirm('Finalizar este ranking? Os 3 primeiros ganham o prêmio na hora e os pontos voltam para zero.') && act('reset')}><Trophy size={14} /> Finalizar ranking</Button>
           </div>
         </Card>
       )}

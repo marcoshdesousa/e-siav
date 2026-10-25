@@ -4,6 +4,7 @@ import { requireAuth, requireGeneral } from '../auth.js';
 import { setSetting } from '../fees.js';
 import { membersRanking, clubsRanking, unitsRanking, clubUnitsRanking, clubMembersRanking, leadersRanking, clubLeadersRanking, positionOf, rankingDistrict, rankingState, scopeState, setScope } from '../rankings.js';
 import { fail, int } from '../util.js';
+import { finalsFor, finishRanking, markFinalSeen } from '../rankFinals.js';
 
 const r = Router();
 r.use('/rankings', requireAuth());
@@ -52,7 +53,11 @@ r.get('/rankings/club/:clubId/leaders', (req, res) => {
 
 // Temporada e pausa do ranking. Cada um cuida do seu: o clube (rankings do clube e das unidades),
 // o administrador do distrito (ranking do distrito) e o geral (Brasil e qualquer distrito).
-const brState = () => rankingState();
+const brState = () => {
+  const st = rankingState();
+  const own = scopeState('brasil').start;
+  return { ...st, start: [st.start, own].filter(Boolean).sort().pop() || null };
+};
 /** Rankings que esta conta vê com aviso de pausa (Brasil, o distrito e o clube dela). */
 function scopesFor(a, q = {}) {
   const list = [{ key: 'brasil', label: 'Brasil', ...brState() }];
@@ -84,13 +89,13 @@ r.put('/ranking/controle', requireAuth('admin', 'club'), (req, res) => {
   if (key === 'brasil') {
     if (action === 'pause') setSetting('ranking_pausa', at.toISOString());
     else if (action === 'resume') setSetting('ranking_pausa', '');
-    else if (action === 'reset') { setSetting('ranking_inicio', new Date().toISOString()); setSetting('ranking_pausa', ''); }
+    else if (action === 'reset') { const done = finishRanking('brasil'); setSetting('ranking_pausa', ''); return res.json({ key, finished: done, ...brState(), ...scopeState('brasil') }); }
     else fail(400, 'Ação inválida');
     return res.json({ key, ...brState() });
   }
   if (action === 'pause') setScope(key, { pause: at.toISOString() });
   else if (action === 'resume') setScope(key, { pause: null });
-  else if (action === 'reset') setScope(key, { start: new Date().toISOString(), pause: null });
+  else if (action === 'reset') return res.json({ key, finished: finishRanking(key), ...scopeState(key) });
   else fail(400, 'Ação inválida');
   res.json({ key, ...scopeState(key) });
 });
@@ -101,6 +106,10 @@ r.put('/admin/ranking/pausa', requireAuth('admin'), requireGeneral, (req, res) =
   setSetting('ranking_pausa', at ? at.toISOString() : '');
   res.json(brState());
 });
+
+// Finalizar (action 'reset' acima): os 3 primeiros ganham medalha/troféu e todos veem a colocação.
+r.get('/rankings/finais', (req, res) => res.json(finalsFor(req.actor, { unseenOnly: req.query.novos === '1' })));
+r.post('/rankings/finais/:id/visto', (req, res) => { markFinalSeen(req.actor, int(req.params.id)); res.json({ ok: true }); });
 
 const pick = (row) => (row ? { position: row.position, points: row.points, bible_points: row.bible_points } : null);
 

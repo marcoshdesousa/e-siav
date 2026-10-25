@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Camera, Check, ChevronDown, ChevronUp, Compass, ImagePlus, Medal, Share2, Trash2, X } from 'lucide-react';
 import { AppIcon, ICONS } from './icons.jsx';
+import { RankMedal, isRankIcon } from './rankMedal.jsx';
 
 // ---------- Marca ----------
 export const LogoIcon = ({ size = 40 }) => (
@@ -283,6 +284,15 @@ export function RowSection({ title, items, render, empty, emptyIcon }) {
 }
 
 export function MedalCard({ m }) {
+  if (isRankIcon(m.icon)) {
+    return (
+      <div className={'medal rank ' + m.kind} title={m.description}>
+        <RankMedal icon={m.icon} year={m.year} size={58} />
+        <b>{m.name}</b>
+        {m.note && <small>{m.note}</small>}
+      </div>
+    );
+  }
   return (
     <div className={'medal ' + m.kind} title={m.description}>
       <span className="medal-icon"><MedalIcon icon={m.icon} /></span>

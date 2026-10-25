@@ -1,12 +1,12 @@
 // Mini-jogos dos membros: lista de jogos, tela de cada jogo e ranking de cada um.
 import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, BadgeCheck, ChevronRight, Flag, Keyboard, Lightbulb, Smartphone, Target, Play, RotateCcw, Trophy, Volume2, VolumeX } from 'lucide-react';
+import { ArrowLeft, BadgeCheck, ChevronLeft, ChevronRight, Crown, Flag, Globe, Keyboard, Lightbulb, Map as MapIcon, Search, Smartphone, Target, Tent, Play, RotateCcw, Trophy, Users, Volume2, VolumeX } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
-import { Button, Card, Loading, PageHeader, Section, Spinner, useLoad } from '../../ui.jsx';
+import { Avatar, Button, Card, Loading, PageHeader, Section, Spinner, useLoad } from '../../ui.jsx';
 import { RankingTable } from '../Ranking.jsx';
-import { GAMES, gameById, gameComponent } from './games.js';
+import { CATS, GAMES, gameById, gameComponent } from './games.js';
 import { isMuted, onMuteChange, setMuted, sfx, startMusic, stopMusic, unlockAudio } from './audio.js';
 import { useOnline } from '../../offline.js';
 import TUTORIALS from './tutorials.json';
@@ -14,10 +14,29 @@ import './games.css';
 import './modern.css';
 
 const valueLabel = (g) => (g.mode === 'sum' ? 'Total de pontos' : 'Recorde');
+const modeText = (g) => (g.mode === 'sum' ? 'Os pontos de todas as partidas vão somando.' : 'Vale a melhor partida de cada um.');
+const SCOPES = [['clube', 'Meu clube', Tent], ['distrito', 'Distrito', MapIcon], ['brasil', 'Brasil', Globe]];
 
-function GameRanking({ game, base, limit }) {
+/** Clube, distrito ou Brasil (a conta do App Brasil só tem o Brasil). */
+function ScopeSeg({ value, onChange }) {
   const { actor } = useAuth();
-  const state = useLoad(() => api.get(`/jogos/${game.id}/ranking`), [game.id]);
+  const list = actor.app ? SCOPES.filter(([k]) => k === 'brasil') : SCOPES;
+  return (
+    <div className="seg rk-scope" role="tablist" aria-label="Ranking de onde">
+      {list.map(([k, l, Icon]) => (
+        <button key={k} type="button" role="tab" aria-selected={value === k} className={value === k ? 'active' : ''} onClick={() => onChange(k)}><Icon size={14} /> {l}</button>
+      ))}
+    </div>
+  );
+}
+const useScope = () => {
+  const { actor } = useAuth();
+  return useState(actor.app ? 'brasil' : 'clube');
+};
+
+function GameRanking({ game, base, limit, scope = 'brasil' }) {
+  const { actor } = useAuth();
+  const state = useLoad(() => api.get(`/jogos/${game.id}/ranking?escopo=${scope}`), [game.id, scope]);
   return (
     <Loading {...state}>
       {(d) => (
@@ -27,11 +46,10 @@ function GameRanking({ game, base, limit }) {
               <BadgeCheck size={16} /><span>Você não aparece no ranking. <b>Seja DBV+</b></span><ChevronRight size={16} />
             </Link>
           )}
-          {d.me && d.in_ranking && <Card className="small center"><b>Você:</b> {d.me.position}º lugar · {d.me.value} pts · {d.me.plays} partida{d.me.plays > 1 ? 's' : ''}</Card>}
           <RankingTable
             rows={d.rows.slice(0, limit || 50).map((r) => ({ ...r, points: r.value }))}
             highlight={actor.id}
-            sub={(r) => r.club_name}
+            sub={(r) => (scope === 'brasil' ? `${r.club_name} · ${r.district_name}` : r.club_name)}
             link={(r) => `${base}/ver/membro/${r.link}`}
             avatarSquare={false}
           />
@@ -41,18 +59,96 @@ function GameRanking({ game, base, limit }) {
   );
 }
 
-/** Ranking dos jogos (fica dentro da aba Jogos). */
-function MiniRankings({ base, online, initial }) {
-  const [rankGame, setRankGame] = useState(GAMES.some((g) => g.id === initial) ? initial : GAMES[0].id);
+/** Lista de jogos do ranking: busca, grupos e, em cada jogo, quem lidera e a minha posição. */
+function GamePicker({ scope, setScope, onPick, online }) {
+  const [q, setQ] = useState('');
+  const [cat, setCat] = useState('');
+  const sum = useLoad(() => (online ? api.get(`/jogos/ranking/resumo?escopo=${scope}`) : Promise.resolve(null)), [scope, online]);
+  const info = sum.data?.games || {};
+  const norm = (t) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const list = GAMES.filter((g) => (!cat || g.cat === cat) && (!q || norm(g.name).includes(norm(q))));
+  const medals = Object.values(info).filter((x) => x.me && x.me.position <= 3).length;
+  return (
+    <div className="rk-picker">
+      <ScopeSeg value={scope} onChange={setScope} />
+      {sum.data && (
+        <div className="rk-stats">
+          <span><b>{Object.values(info).filter((x) => x.me).length}</b> jogos com ranking</span>
+          <span><b>{medals}</b> no pódio</span>
+          <span><b>{Object.values(info).filter((x) => x.leader?.me).length}</b> em 1º lugar</span>
+        </div>
+      )}
+      <label className="rk-search">
+        <Search size={17} />
+        <input type="search" placeholder="Procurar jogo" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Procurar jogo" />
+      </label>
+      <div className="rk-cats" role="tablist" aria-label="Tipo de jogo">
+        {[['', 'Todos'], ...CATS].map(([k, l]) => <button key={k} type="button" className={cat === k ? 'active' : ''} onClick={() => setCat(k)}>{l}</button>)}
+      </div>
+      {!online && <Card className="small center">Sem internet. Conecte-se para ver os rankings.</Card>}
+      <div className="rk-grid">
+        {list.map((g) => {
+          const x = info[g.id];
+          const pos = x?.me?.position;
+          return (
+            <button key={g.id} type="button" className={`rk-card cat-${g.cat}`} onClick={() => onPick(g.id)}>
+              <span className="rk-card-top">
+                <span className="rk-ico"><g.icon size={22} /></span>
+                {pos ? <span className={'rk-pos' + (pos <= 3 ? ` p${pos}` : '')}>{pos}º</span> : null}
+              </span>
+              <b className="rk-name">{g.name}</b>
+              <span className="rk-leader">
+                {x?.leader
+                  ? <><Crown size={13} /><Avatar src={x.leader.photo} name={x.leader.name} size={20} /><span className="ellipsis">{x.leader.me ? 'Você' : x.leader.name.split(' ')[0]}</span><em>{x.leader.value}</em></>
+                  : <span className="muted">{sum.loading ? '...' : 'Seja o primeiro'}</span>}
+              </span>
+              {x?.players ? <small className="rk-players"><Users size={12} /> {x.players} {x.players === 1 ? 'jogador' : 'jogadores'}</small> : null}
+            </button>
+          );
+        })}
+      </div>
+      {!list.length && <Card className="small center">Nenhum jogo com esse nome.</Card>}
+    </div>
+  );
+}
+
+/** Ranking de um jogo: capa do jogo, troca rápida para o anterior/próximo e o pódio. */
+function GameRankDetail({ id, scope, setScope, onBack, onPick, base, online }) {
+  const game = gameById(id);
+  const i = GAMES.indexOf(game);
+  const prev = GAMES[(i - 1 + GAMES.length) % GAMES.length];
+  const next = GAMES[(i + 1) % GAMES.length];
+  const mine = useLoad(() => (online ? api.get(`/jogos/${id}/ranking?escopo=${scope}`).then((d) => d.me) : Promise.resolve(null)), [id, scope, online]);
   return (
     <>
-      <select value={rankGame} onChange={(e) => setRankGame(e.target.value)} aria-label="Jogo">
-        {GAMES.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
-      </select>
-      <p className="small muted">{gameById(rankGame).mode === 'sum' ? 'Os pontos de todas as partidas vão somando.' : 'Vale a melhor partida de cada um.'} Ranking geral de todos os membros.</p>
-      {online ? <GameRanking key={rankGame} game={gameById(rankGame)} base={base} /> : <Card className="small center">Sem internet. Conecte-se para ver os rankings.</Card>}
+      <button type="button" className="rk-back" onClick={onBack}><ArrowLeft size={16} /> Todos os jogos</button>
+      <div className={`rk-hero cat-${game.cat}`}>
+        <button type="button" className="rk-nav" aria-label={`Anterior: ${prev.name}`} onClick={() => onPick(prev.id)}><ChevronLeft size={20} /></button>
+        <div className="rk-hero-main">
+          <span className="rk-hero-ico"><game.icon size={34} /></span>
+          <h2>{game.name}</h2>
+          <p>{modeText(game)}</p>
+          <div className="rk-hero-me">
+            {mine.data?.position ? <><Trophy size={15} /> Você: <b>{mine.data.position}º</b> · {mine.data.value} pts</> : mine.data ? <>Você tem {mine.data.value} pts</> : <>Você ainda não jogou</>}
+          </div>
+          <Link to={`${base}/jogos/${game.id}`} className="rk-play"><Play size={15} /> Jogar</Link>
+        </div>
+        <button type="button" className="rk-nav" aria-label={`Próximo: ${next.name}`} onClick={() => onPick(next.id)}><ChevronRight size={20} /></button>
+      </div>
+      <ScopeSeg value={scope} onChange={setScope} />
+      {online ? <GameRanking key={id + scope} game={game} base={base} scope={scope} /> : <Card className="small center">Sem internet. Conecte-se para ver os rankings.</Card>}
     </>
   );
+}
+
+/** Ranking dos jogos (fica dentro da aba Jogos). Os jogos não são finalizados e não dão prêmio. */
+function MiniRankings({ base, online, initial }) {
+  const [scope, setScope] = useScope();
+  const [pick, setPick] = useState(GAMES.some((g) => g.id === initial) ? initial : null);
+  const choose = (id) => { setPick(id); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  return pick
+    ? <GameRankDetail id={pick} scope={scope} setScope={setScope} onBack={() => setPick(null)} onPick={choose} base={base} online={online} />
+    : <GamePicker scope={scope} setScope={setScope} onPick={choose} online={online} />;
 }
 
 /** Aba Jogos: jogar e o ranking de cada jogo. */
@@ -174,6 +270,7 @@ export function GamePage({ base }) {
   const rankRef = useRef(null);
   const stageRef = useRef(null);
   const fitW = useFitToScreen(stageRef, phase !== 'intro');
+  const [scope, setScope] = useScope();
 
   // Saiu da tela (Voltar, outra aba do app) ou fechou o app no meio: os pontos contam.
   useEffect(() => {
@@ -284,7 +381,8 @@ export function GamePage({ base }) {
       {phase === 'intro' && online && (
         <div ref={rankRef}>
           <Section title={`Ranking · ${valueLabel(game)}`}>
-            <GameRanking key={rankKey} game={game} base={base} limit={20} />
+            <ScopeSeg value={scope} onChange={setScope} />
+            <GameRanking key={rankKey + scope} game={game} base={base} limit={20} scope={scope} />
           </Section>
         </div>
       )}

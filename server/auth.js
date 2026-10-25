@@ -119,7 +119,7 @@ export const requireGeneral = (req, _res, next) => {
 export const adminDistrict = (a) => (a?.type === 'admin' ? a.district_id || null : null);
 
 // Conta do App Brasil sem assinatura: só olha (GET); para fazer qualquer coisa precisa assinar.
-const LOCKED_OK = /^\/api\/(plus|payments|pagamentos|auth|me\/conta|me\/push)(\/|$)/;
+const LOCKED_OK = /^\/api\/(plus|payments|pagamentos|auth|me\/conta|me\/push|rankings\/finais)(\/|$)/;
 export const requireAuth = (...types) => (req, _res, next) => {
   if (!req.actor) fail(401, 'Faça login para continuar');
   if (req.actor.waiting) fail(403, req.actor.waiting);

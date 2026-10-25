@@ -534,23 +534,6 @@
    "Se houver 3 iguais livres, escolha a que solta mais pedras"
   ]
  },
- "labirinto": {
-  "objetivo": "Guie o peregrino pelo deserto até a terra prometida (o cacho de uvas, no canto de baixo à direita) antes do tempo acabar. Cada fase é maior.",
-  "celular": [
-   "Deslize o dedo sobre o labirinto: o peregrino corre pelo corredor até uma bifurcação",
-   "Ou use as setas na tela (segure para continuar andando)"
-  ],
-  "computador": [
-   "Setas ou W A S D para andar",
-   "Segure a tecla para continuar andando"
-  ],
-  "pontos": "Cada saída vale 100 + bônus por rapidez e dá +15 s. Começa com 1 minuto; acaba quando o tempo zera.",
-  "dicas": [
-   "Deslizar é mais rápido nos corredores compridos",
-   "O rastro mostra por onde você já passou",
-   "Em becos sem saída, volte até a última bifurcação"
-  ]
- },
  "joias": {
   "objetivo": "As pedras preciosas do peitoral do sumo sacerdote: troque pedras vizinhas para formar linhas de 3 ou mais iguais. Você tem 30 jogadas.",
   "celular": [
@@ -621,23 +604,6 @@
    "Ache primeiro a primeira letra ou um pedaço conhecido",
    "Use a dica para pensar no tema",
    "Não perca tempo: pule as muito difíceis"
-  ]
- },
- "termo": {
-  "objetivo": "Descubra a palavra secreta de 5 letras em até 6 tentativas.",
-  "celular": [
-   "Toque nas letras do teclado da tela para escrever",
-   "Toque em \"ENTRA\" para conferir e em ⌫ para apagar"
-  ],
-  "computador": [
-   "Digite as letras no teclado",
-   "Enter confere e Backspace apaga"
-  ],
-  "pontos": "Acertar vale (7 − tentativas) × 20 e vem outra palavra. Se errar as 6 tentativas, acaba.",
-  "dicas": [
-   "Verde: letra certa no lugar certo; amarelo: existe em outro lugar; cinza: não tem",
-   "Comece com palavras de várias vogais",
-   "Acentos não importam"
   ]
  },
  "versiculo": {
@@ -861,25 +827,6 @@
    "Mire um pouco fora do centro para acertar entre os pinos da frente",
    "Força alta espalha melhor os pinos",
    "Cuidado com a canaleta nas bordas"
-  ]
- },
- "arco": {
-  "objetivo": "Acerte o centro do alvo com 10 flechas, contando com a gravidade e o vento.",
-  "celular": [
-   "Coloque o dedo na tela e arraste para trás (para longe do alvo) para mirar",
-   "Quanto mais puxar, mais força",
-   "Solte para atirar"
-  ],
-  "computador": [
-   "↑ e ↓ para mudar o ângulo",
-   "Segure Espaço para carregar a força e solte para atirar",
-   "Ou use o mouse: clique, arraste para trás e solte"
-  ],
-  "pontos": "Os anéis valem de 10 (centro amarelo) a 1 (borda). Errar o alvo vale 0. Acaba após 10 flechas.",
-  "dicas": [
-   "Olhe a seta do vento no canto e mire para compensar",
-   "A flecha cai: mire um pouco acima do centro",
-   "Os pontinhos mostram a trajetória sem o vento"
   ]
  },
  "estilingue": {

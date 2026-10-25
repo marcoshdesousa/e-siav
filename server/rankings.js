@@ -51,7 +51,8 @@ function seasonFilter(col, scope = null) {
   return parts.length ? ' AND ' + parts.join(' AND ') : '';
 }
 export const rankingState = () => ({ start: seasonStart(), paused_at: pausedAt(), paused: isPaused() });
-const districtScope = (d) => (d ? `district:${Number(d)}` : null);
+// O Brasil (todo mundo) tem o seu próprio reinício: finalizar o Brasil não zera os distritos e clubes.
+const districtScope = (d) => (d ? `district:${Number(d)}` : 'brasil');
 const clubScope = (c) => `club:${Number(c)}`;
 /** Ordena por pontos; no empate fica à frente quem chegou primeiro à pontuação. */
 function rank(rows) {

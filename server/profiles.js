@@ -5,7 +5,7 @@ import { clubsRanking, unitsRanking, clubUnitsRanking, membersRanking, leadersRa
 
 export function medalsOf(type, id) {
   return all(
-    `SELECT a.id, m.id AS medal_id, m.kind, m.name, m.icon, m.description, a.note, a.awarded_at
+    `SELECT a.id, m.id AS medal_id, m.kind, m.name, m.icon, m.description, a.note, a.year, a.awarded_at
      FROM medal_awards a JOIN medals m ON m.id = a.medal_id
      WHERE a.target_type = ? AND a.target_id = ? ORDER BY a.awarded_at DESC`,
     type, id,

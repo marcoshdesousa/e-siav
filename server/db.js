@@ -361,6 +361,9 @@ function migrate() {
     if (!cols(t).includes(col)) db.exec(`ALTER TABLE ${t} ADD COLUMN ${col} ${def}`);
   };
 
+  // Ano da medalha (prêmios do ranking finalizado).
+  add('medal_awards', 'year', 'INTEGER');
+
   // @ do membro (usado para ser encontrado no chat e no link do perfil)
   add('members', 'handle', 'TEXT');
   db.exec('CREATE UNIQUE INDEX IF NOT EXISTS ux_member_handle ON members(handle COLLATE NOCASE) WHERE handle IS NOT NULL');

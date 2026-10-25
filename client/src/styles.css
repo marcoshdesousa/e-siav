@@ -924,3 +924,25 @@ input::-webkit-datetime-edit { padding: 0; }
 .push-card { display: flex; align-items: center; gap: .5rem; padding: .45rem .5rem .45rem .75rem; margin-bottom: .7rem; border-radius: 14px; background: var(--yellow-soft); color: var(--yellow-ink); font-size: .82rem; font-weight: 600; }
 .push-card .btn { padding: .3rem .7rem; }
 .push-x { background: none; border: 0; padding: .2rem; color: inherit; opacity: .7; display: grid; place-items: center; cursor: pointer; }
+
+/* Medalhas e troféus do ranking finalizado */
+.medal.rank { gap: .25rem; }
+.rank-medal { display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .28)); }
+/* Aviso de ranking finalizado */
+.ann-backdrop:has(.rf-card) { z-index: 91; }
+.rf-card { position: relative; width: min(92vw, 420px); max-height: 88vh; overflow-y: auto; background: var(--surface); border-radius: var(--r-xl); box-shadow: 0 30px 80px rgba(0, 0, 0, .5); animation: zoom .25s cubic-bezier(.3, .7, .4, 1.2); }
+.rf-head { display: flex; flex-direction: column; align-items: center; text-align: center; gap: .2rem; padding: 1.4rem 1.2rem 1.1rem; color: #fff; background: radial-gradient(130% 120% at 50% 0%, #2a4fa8, #0b1f4d 75%); }
+.rf-head.won { background: radial-gradient(130% 120% at 50% 0%, #f5b700, #a35d00 55%, #3d2200); }
+.rf-head h2 { margin: .1rem 0 0; color: #fff; font-size: 1.2rem; line-height: 1.2; }
+.rf-head p { margin: .35rem 0 0; font-size: .85rem; opacity: .92; }
+.rf-kicker { font-size: .7rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; opacity: .85; }
+.rf-year { font-size: .78rem; font-weight: 700; padding: .15rem .6rem; border-radius: 999px; background: rgba(0, 0, 0, .22); margin-top: .2rem; }
+.rf-list { display: flex; flex-direction: column; gap: .6rem; padding: 1rem; }
+.rf-place { display: flex; align-items: center; gap: .85rem; padding: .7rem .8rem; border-radius: 16px; background: var(--surface-3); }
+.rf-place.won { background: linear-gradient(135deg, rgba(245, 183, 0, .16), rgba(245, 183, 0, .04)); border: 1px solid rgba(245, 183, 0, .45); }
+.rf-num { flex: none; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; font: 800 1.2rem var(--font-title); color: var(--link); background: var(--surface); border: 2px solid var(--card-border); }
+.rf-text { display: flex; flex-direction: column; gap: .15rem; min-width: 0; font-size: .82rem; }
+.rf-text > b { font-family: var(--font-title); font-size: .98rem; }
+.rf-text > span { color: var(--muted); }
+.rf-text .rf-prize { color: var(--ink); }
+.rf-text .rf-next { font-weight: 600; }
