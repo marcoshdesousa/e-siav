@@ -993,3 +993,4 @@ input::-webkit-datetime-edit { padding: 0; }
 .cert-art .trophy-svg { filter: drop-shadow(0 8px 14px rgba(14, 42, 107, .25)); }
 @media print { .cert-trophy { min-height: 0; } }
 .medal.rank { text-decoration: none; color: inherit; }
+.st-best { font-size: .62rem; font-weight: 700; color: #94a3b8; margin-top: .15rem; }

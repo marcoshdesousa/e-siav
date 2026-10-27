@@ -72,3 +72,22 @@ test('usar o app: membro ganha pacotinho e 10 pontos; clube que entra ganha 100 
   assert.equal(packs().packs_unopened, 2);
   assert.equal(clubsRanking(d).find((r) => r.id === c).points, 100, '100 pontos para o clube');
 });
+
+test('zerar estudos (uma vez): Ano Bíblico e Bom de Bíblia vão para o arquivo; Meditação continua; tudo abre em 2027', async () => {
+  const { resetStudiesOnce } = await import('../server/season.js');
+  const d = Number(run(`INSERT INTO districts (name) VALUES ('D9')`).lastInsertRowid);
+  const c = Number(run('INSERT INTO clubs (district_id, name) VALUES (?, ?)', d, 'C9').lastInsertRowid);
+  const m = Number(run(`INSERT INTO members (club_id, name, birth_date, cargo, code) VALUES (?, 'Z Z', '2013-01-01', 'Desbravador', '999009')`, c).lastInsertRowid);
+  run('INSERT INTO bible_progress (member_id, day, best, attempts, completed_at, on_time) VALUES (?, 3, 5, 1, ?, 1)', m, new Date().toISOString());
+  run('INSERT INTO bible_points (member_id, day, club_id) VALUES (?, 3, ?)', m, c);
+  run('INSERT INTO bible_points (member_id, day, club_id) VALUES (?, 120261001, ?)', m, c); // Meditação
+  run('INSERT INTO bdb_progress (member_id, phase, best, attempts, passed_at) VALUES (?, 1, 8, 1, ?)', m, new Date().toISOString());
+  assert.equal(resetStudiesOnce(), true);
+  assert.equal(resetStudiesOnce(), false, 'só uma vez');
+  assert.equal(get('SELECT COUNT(*) n FROM bible_progress WHERE member_id = ?', m).n, 0);
+  assert.equal(get('SELECT COUNT(*) n FROM bdb_progress WHERE member_id = ?', m).n, 0);
+  assert.equal(get('SELECT COUNT(*) n FROM bdb_progress_arquivo WHERE member_id = ?', m).n, 1, 'guardado no arquivo');
+  assert.deepEqual(get('SELECT GROUP_CONCAT(day) d FROM bible_points WHERE member_id = ?', m).d, '120261001', 'a Meditação continua');
+  assert.equal(setting('ano_biblico_inicio'), '2027-03-01');
+  assert.equal(setting('bom_lider_inicio'), '2027-01-01');
+});

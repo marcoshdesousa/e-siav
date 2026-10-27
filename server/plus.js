@@ -4,7 +4,7 @@
 //   DBV+          R$ 7,90  — benefícios do app
 //   DBV+ 3 Espec. R$ 19,90 — + 3 especialidades físicas (escolhe 15, a equipe compra 3)
 //   DBV+ 7 Espec. R$ 34,90 — + 7 especialidades físicas (escolhe 20, a equipe compra 7)
-// Todo plano: Bom Líder, ranking dos jogos, jogos sem internet, 40 pacotinhos a cada 30 dias,
+// Todo plano: Bom Líder, jogos sem internet, 60 pacotinhos a cada 30 dias,
 // figurinhas em triplo na compra e o selo de verificado. Os áudios das leituras são de graça para todos. Só para quem assina (ou ganhou do
 // administrador geral); o modo de teste não libera o DBV+.
 import { all, get, run, tx } from './db.js';
@@ -39,7 +39,7 @@ export const PLANS = {
 export const PLUS_DAYS = 30;
 /** Conta nova do App Brasil: dias de DBV para conhecer o app antes de assinar. */
 export const APP_TRIAL_DAYS = 3;
-export const PLUS_PACKS = 40;
+export const PLUS_PACKS = 60;
 /** Compra de pacotinhos: o assinante leva 3 pelo preço de 1. */
 export const PLUS_PACK_MULT = 3;
 
@@ -65,7 +65,7 @@ export const plusOpen = (memberId) => isPlus(memberId);
 /** Áudio das leituras: liberado para todos (plano grátis também). */
 export const gatedAudio = (_memberId, audio) => ({ audio: audio || null });
 
-/** Pagamento confirmado: +30 dias (somando ao que falta), 40 pacotinhos e, se o plano tiver, a escolha das especialidades. */
+/** Pagamento confirmado: +30 dias (somando ao que falta), 60 pacotinhos e, se o plano tiver, a escolha das especialidades. */
 export function activatePlus(memberId, planId) {
   const plan = PLANS[planId] || PLANS.plus;
   const cur = get('SELECT until FROM member_plus WHERE member_id = ?', memberId);

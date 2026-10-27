@@ -703,7 +703,7 @@ test('suporte: chat de cada conta com a equipe; links do SGC, Cantinho e Cartão
   assert.deepEqual((await pedro.get('/links')).body, { link_cartao: 'https://cartao.exemplo.org' }, 'membro não vê o SGC');
 });
 
-test('mini jogos: recorde, soma, ranking geral só dos jogos', async () => {
+test('mini jogos: recorde, soma, ranking de todos', async () => {
   const pedro = await login('membros', 'pedro');
   const marcos = await login('membros', '100006');
   assert.equal((await pedro.post('/jogos/nao-existe/pontos', { score: 5 })).status, 404);
@@ -715,9 +715,9 @@ test('mini jogos: recorde, soma, ranking geral só dos jogos', async () => {
   assert.equal((await marcos.post('/jogos/cobrinha/pontos', { score: 999999 })).body.best, 5000, 'limite por partida');
   const rk = (await pedro.get('/jogos/cobrinha/ranking')).body;
   assert.equal(rk.rows[0].name.split(' ')[0], 'Marcos');
-  assert.equal(rk.in_ranking, false, 'pedro não é DBV+: não aparece no ranking');
-  assert.equal(rk.me.position, null);
-  assert.equal(rk.rows.some((x) => x.name.startsWith('Pedro')), false);
+  // Todo mundo entra no ranking dos jogos (grátis, DBV e DBV+).
+  assert.ok(rk.me.position >= 2, 'pedro aparece no ranking');
+  assert.equal(rk.rows.some((x) => x.name.startsWith('Pedro')), true);
   await pedro.post('/jogos/velha/pontos', { score: 3 });
   assert.equal((await pedro.post('/jogos/velha/pontos', { score: 1 })).body.total, 4, 'jogo da velha soma');
   assert.equal((await pedro.get('/jogos/meus')).body.velha.value, 4);
@@ -774,7 +774,7 @@ test('álbum bíblico: Pix, confirmação da equipe, abrir, colar, trocar repeti
   assert.equal(Object.values(st.stickers).filter((x) => x.stuck).length, 30);
   // Completa o álbum com pacotinhos de presente, trocando repetidas no caminho
   let opened = 5;
-  for (let guard = 0; guard < 1500; guard++) {
+  for (let guard = 0; guard < 4000; guard++) {
     st = (await pedro.get('/albuns/biblico')).body;
     if (st.completed_at) break;
     if (st.repeats >= 25) { assert.equal((await pedro.post('/albuns/biblico/trocar')).status, 200); continue; }
@@ -783,7 +783,7 @@ test('álbum bíblico: Pix, confirmação da equipe, abrir, colar, trocar repeti
     await pedro.post('/albuns/biblico/colar', {});
   }
   assert.ok(st.completed_at, 'completou');
-  assert.ok(opened >= 100, `no mínimo 100 pacotinhos abertos (abriu ${opened})`);
+  assert.ok(opened >= 300, `no mínimo 300 pacotinhos abertos (abriu ${opened})`);
   const done = (await admin.get('/admin/figurinhas/completos')).body;
   assert.ok(done.some((x) => x.code === '100001' && x.club_name && x.album === 'biblico'));
   assert.equal((await pedro.get('/admin/figurinhas/completos')).status, 403);

@@ -17,14 +17,14 @@ export const ALBUMS = {
 };
 export const PACK_OPTIONS = [1, 10, 20, 50];
 export const REPEATS_PER_FREE_PACK = 25;
-// Ninguém completa o álbum antes de abrir 100 pacotinhos (a última figurinha só sai do 100º em diante).
-export const MIN_PACKS_TO_COMPLETE = 100;
+// Ninguém completa o álbum antes de abrir 300 pacotinhos (a última figurinha só sai do 300º em diante).
+export const MIN_PACKS_TO_COMPLETE = 300;
 
 // ---------- Sorteio ----------
 // Pacotinho com 6 figurinhas. Os 5 primeiros não têm repetidas. Depois, a chance de vir figurinha
 // nova cai conforme o álbum vai ficando completo, e alguns pacotinhos vêm só com repetidas.
-// A última figurinha só sai a partir do 100º pacotinho aberto. Em média, completa por volta do
-// 127º aberto (~100 comprados; o resto vem das trocas de repetidas). Raras e lendárias saem menos.
+// A última figurinha só sai a partir do 300º pacotinho aberto. Em média, completa por volta do
+// 310º aberto (~240 ganhos ou comprados; o resto vem das trocas de repetidas). Raras e lendárias saem menos.
 export const ODDS = { freshPacks: 5, base: 0.03, extra: 0.45, curve: 1.2, allRepeatsPack: 0.15 };
 const WEIGHT = { comum: 10, rara: 4, lendaria: 1.5 };
 

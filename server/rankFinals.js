@@ -9,6 +9,7 @@ import { todayBR } from './bible.js';
 import { GAMES } from './games.js';
 import { closeTable, TABLES, membersRanking, leadersRanking, unitsRanking, clubsRanking, clubMembersRanking, clubLeadersRanking, clubUnitsRanking } from './rankings.js';
 import { fail } from './util.js';
+import { archiveRows } from './season.js';
 
 run(`CREATE TABLE IF NOT EXISTS ranking_finals (
   id INTEGER PRIMARY KEY,
@@ -130,8 +131,6 @@ export function finishRanking(scope, kind, design = {}, now = new Date()) {
   });
 }
 
-// Mesmo filtro do ranking dos jogos: só quem tem o DBV+.
-const PLUS_SQL = `m.id IN (SELECT member_id FROM member_plus WHERE plan <> 'app' AND until > strftime('%Y-%m-%dT%H:%M:%fZ','now'))`;
 
 /** Finaliza todos os mini-jogos (ranking do Brasil): medalha para os 3 primeiros de cada e tudo zera. */
 export function finishGames(design = {}, now = new Date()) {
@@ -145,7 +144,7 @@ export function finishGames(design = {}, now = new Date()) {
     for (const [game, g] of Object.entries(GAMES)) {
       const col = g.mode === 'sum' ? 'total' : 'best';
       const rows = all(`SELECT s.member_id AS id, s.${col} AS points FROM game_scores s JOIN members m ON m.id = s.member_id
-        WHERE s.game = ? AND m.status = 'ativo' AND ${PLUS_SQL} AND s.${col} > 0 ORDER BY s.${col} DESC, s.updated_at ASC`, game);
+        WHERE s.game = ? AND m.status = 'ativo' AND s.${col} > 0 ORDER BY s.${col} DESC, s.updated_at ASC`, game);
       rows.forEach((r, i) => {
         const position = i + 1;
         let award = null;
@@ -162,12 +161,7 @@ export function finishGames(design = {}, now = new Date()) {
       });
     }
     // Os jogos recomeçam do zero (as pontuações antigas vão para o arquivo, com o ano).
-    run('CREATE TABLE IF NOT EXISTS game_scores_arquivo AS SELECT 0 AS ano, * FROM game_scores WHERE 0');
-    const cols = all('PRAGMA table_info(game_scores)').map((c) => c.name);
-    const have = new Set(all('PRAGMA table_info(game_scores_arquivo)').map((c) => c.name));
-    for (const c of cols) if (!have.has(c)) run(`ALTER TABLE game_scores_arquivo ADD COLUMN ${c}`);
-    run(`INSERT INTO game_scores_arquivo (ano, ${cols.join(', ')}) SELECT ?, ${cols.join(', ')} FROM game_scores`, look.year);
-    run('DELETE FROM game_scores');
+    archiveRows('game_scores', look.year);
     return { id: finalId, scope: 'jogos', kind: 'jogos', label: 'Mini-jogos', year: look.year, awarded };
   });
 }

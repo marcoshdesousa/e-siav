@@ -32,6 +32,19 @@ export function BackButton({ to }) {
   return <button type="button" className="icon-btn" aria-label="Voltar" onClick={back}><ArrowLeft size={20} /></button>;
 }
 
+/**
+ * Ao abrir a lista, ela já rola até o estudo de hoje (ou a próxima aula), que fica no meio da tela.
+ * Quem quiser ver o resto é só rolar.
+ */
+export function useScrollHere() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const t = setTimeout(() => ref.current?.scrollIntoView({ block: 'center', behavior: 'smooth' }), 300);
+    return () => clearTimeout(t);
+  }, []);
+  return ref;
+}
+
 const br = (iso) => (iso ? iso.split('-').reverse().join('/') : '');
 const MONTHS = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
 const LEVEL = { facil: 'Fácil', intermediario: 'Intermediário', dificil: 'Difícil', 'muito-dificil': 'Muito difícil', muito_dificil: 'Muito difícil' };
@@ -50,7 +63,7 @@ export function AppStreak({ s }) {
       <span className="st-flame"><Flame size={22} strokeWidth={2.2} /></span>
       <div className="grow">
         <b>{s.streak} {s.streak === 1 ? 'dia' : 'dias'} no app</b>
-        <small>{s.today_done ? 'Hoje já contou: +1 pacotinho e 10 pontos' : `Fique ${left} min no app hoje: +1 pacotinho e 10 pontos`}{s.best_streak ? ` · recorde ${s.best_streak}` : ''}</small>
+        <small>{s.today_done ? 'Hoje já contou: +1 pacotinho e 10 pontos' : `Fique ${left} min no app hoje: +1 pacotinho e 10 pontos`}{` · recorde ${dias(s.best_streak || 0)}`}</small>
       </div>
     </div>
   );
@@ -69,6 +82,7 @@ export function StreakTrio({ d }) {
             <b className="st-num">{n}</b>
             <small className="st-days">{n === 1 ? 'dia' : 'dias'}</small>
             <span className="st-label">{label}</span>
+            <small className="st-best">recorde {s?.best_streak || 0}</small>
             {s?.today_done && <span className="st-check">feito hoje</span>}
           </div>
         );
@@ -107,8 +121,10 @@ export function LearningHub({ base }) {
                 <span className="learn-ico"><BookOpenText size={30} /></span>
                 <b>Ano Bíblico</b>
                 <small>A Bíblia de {br(d.bible.start).slice(0, 5)} a {br(d.bible.end).slice(0, 5)}: leitura com áudio e quiz</small>
-                <span className="learn-bar"><i style={{ width: `${(d.bible.done / d.bible.total) * 100}%` }} /></span>
-                <small>{d.bible.done} de {d.bible.total} dias</small>
+                {d.bible.today_day < 1 && !d.test
+                  ? <span className="chip"><Lock size={12} /> Começa em {br(d.bible.start)}</span>
+                  : <><span className="learn-bar"><i style={{ width: `${(d.bible.done / d.bible.total) * 100}%` }} /></span>
+                    <small>{d.bible.done} de {d.bible.total} dias</small></>}
               </Link>
               <Link to={`${base}/aprendizagem/meditacao`} className="learn-card c5">
                 <span className="learn-ico"><Sparkles size={30} /></span>
@@ -135,13 +151,14 @@ export function LearningHub({ base }) {
                   <span className="learn-ico"><Users size={30} /></span>
                   <b>Bom Líder</b>
                   <small>Manual Administrativo (50 aulas) e Nisto Cremos (16 anos ou mais)</small>
+                  {d.leader_start && <span className="chip"><Lock size={12} /> Começa em {br(d.leader_start)}</span>}
                 </Link>
               )}
               <div className="learn-card c2 soon">
                 <span className="learn-ico"><BookOpen size={30} /></span>
                 <b>Livro do Ano</b>
                 <small>Um capítulo por semana</small>
-                <span className="chip">Em breve</span>
+                <span className="chip">Em 2027</span>
               </div>
               <div className="learn-card c7 soon lock">
                 <span className="plus">DBV+</span>
@@ -185,7 +202,6 @@ export function BibleYear({ base }) {
 }
 
 function BibleYearBody({ d, base }) {
-  const today = d.days.find((x) => x.day === d.today_day);
   const missed = d.days.filter((x) => x.status === 'perdido');
   const months = useMemo(() => {
     const m = new Map();
@@ -196,7 +212,22 @@ function BibleYearBody({ d, base }) {
     }
     return [...m.entries()];
   }, [d.days]);
+  const here = useScrollHere();
   const to = (x) => `${base}/aprendizagem/ano-biblico/${x.day}`;
+  // Antes de começar: tudo trancado (nem dá para ver os dias).
+  if (d.today_day < 1 && !d.test) {
+    return (
+      <>
+        <StreakBanner b={d} />
+        <div className="study-locked">
+          <Lock size={34} />
+          <b>O Ano Bíblico começa em {br(d.start)}</b>
+          <p>A leitura vai de {br(d.start)} a {br(d.end)}: um pedaço da Bíblia por dia, com áudio e quiz. Até lá, os dias ficam trancados.</p>
+        </div>
+      </>
+    );
+  }
+  const month = d.today.slice(0, 7);
   return (
     <>
       <StreakBanner b={d} />
@@ -209,33 +240,42 @@ function BibleYearBody({ d, base }) {
           </div>
         </div>
       )}
-      {d.today_day < 1 && <Card className="center">O Ano Bíblico começa em <b>{br(d.start)}</b>. {d.test ? 'Modo de teste: todos os dias estão liberados para testar.' : 'Até lá, os dias ficam trancados.'}</Card>}
-      {today && (
-        <Link to={to(today)} className={'today-card' + (today.status === 'feito' ? ' done' : '')}>
-          <span className="today-tag">Hoje · {br(today.date)}</span>
-          <b>{today.label}</b>
-          <span className="today-go">
-            {today.status === 'feito' ? <><CheckCircle2 size={18} /> Feito! Nota {today.best}/5</> : <><BookOpenText size={18} /> Ler agora</>}
-          </span>
-        </Link>
-      )}
+      {d.today_day < 1 && <Card className="center">O Ano Bíblico começa em <b>{br(d.start)}</b>. Modo de teste: todos os dias estão liberados para testar.</Card>}
       {missed.length > 0 && (
-        <Section title={`Dias perdidos (${missed.length})`}>
-          <p className="small muted">Ainda dá para fazer e ganhar o pacotinho, mas não contam para a sequência.</p>
-          <div className="day-list">
-            {missed.map((x) => <DayRow key={x.day} x={x} to={to(x)} />)}
-          </div>
-        </Section>
+        <details className="month missed">
+          <summary>Dias perdidos <small>{missed.length}</small></summary>
+          <p className="small muted" style={{ margin: '0 1rem .5rem' }}>Ainda dá para fazer e ganhar o pacotinho, mas não contam para a sequência.</p>
+          <div className="day-list">{missed.map((x) => <DayRow key={x.day} x={x} to={to(x)} />)}</div>
+        </details>
       )}
       <Section title="Plano completo">
         {months.map(([k, list]) => (
-          <details key={k} className="month" open={k === (today?.date || d.today).slice(0, 7)}>
+          <details key={k} className={'month' + (k === month ? ' now' : '')} open={k === month}>
             <summary>{MONTHS[Number(k.slice(5)) - 1]} de {k.slice(0, 4)} <small>{list.filter((x) => x.status.startsWith('feito')).length}/{list.length}</small></summary>
-            <div className="day-list">{list.map((x) => <DayRow key={x.day} x={x} to={to(x)} />)}</div>
+            <div className="day-list">
+              {list.map((x) => (x.day === d.today_day
+                ? <TodayRow key={x.day} ref={here} to={to(x)} done={x.status === 'feito'} title={x.label} kicker={`Hoje · dia ${x.day} · ${br(x.date)}`} note={x.best ? `Nota ${x.best}/5` : null} />
+                : <DayRow key={x.day} x={x} to={to(x)} />))}
+            </div>
           </details>
         ))}
       </Section>
     </>
+  );
+}
+
+/** O estudo de hoje, em destaque dentro da lista (é para onde a lista rola ao abrir). */
+export function TodayRow({ ref, to, done, title, kicker, note, sub }) {
+  return (
+    <Link ref={ref} to={to} className={'today-row' + (done ? ' done' : '')}>
+      <span className="today-row-ico">{done ? <CheckCircle2 size={22} /> : <Flame size={22} />}</span>
+      <span className="grow">
+        <small>{kicker}</small>
+        <b>{title}</b>
+        {sub && <em>{sub}</em>}
+      </span>
+      <span className="today-row-go">{done ? (note || 'Feito') : <>Estudar <ChevronRight size={16} /></>}</span>
+    </Link>
   );
 }
 

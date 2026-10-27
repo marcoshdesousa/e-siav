@@ -14,6 +14,7 @@ import { MAX_UPLOAD_MB } from '../config.js';
 import { HttpError, fail, int } from '../util.js';
 import { setSetting, setting } from '../fees.js';
 import { testMode } from './learning.js';
+import { todayBR } from '../bible.js';
 import { audioOf } from '../audio.js';
 import { gatedAudio, isPlus } from '../plus.js';
 
@@ -115,10 +116,14 @@ export function bomLiderFinished(memberId) {
 }
 // Bom Líder: liderança (16+) com o DBV+; no modo de teste, todos.
 const canSee = (actor) => actor.kind === 'lideranca' && isPlus(actor.id);
+/** Começa em 1º de janeiro de 2027 (até lá fica trancado; o modo de teste libera). */
+export const bomLiderStart = () => setting('bom_lider_inicio') || null;
+const notYet = () => { const s = bomLiderStart(); return !!s && todayBR() < s && !testMode(); };
 const lessonRows = (memberId) => new Map(all('SELECT lesson, score, total, completed_at FROM bom_lider_progress WHERE member_id = ?', memberId).map((x) => [x.lesson, x]));
 
 r.get('/bom-lider', member, (req, res) => {
   if (!canSee(req.actor)) fail(403, req.actor.kind === 'lideranca' ? 'O Bom Líder é um benefício do DBV+. Assine para estudar.' : 'O Bom Líder é para a liderança (16 anos ou mais)');
+  if (notYet()) return res.json({ lessons: [], done: 0, total: LESSONS.length, starts: bomLiderStart() });
   const rows = lessonRows(req.actor.id);
   const list = LESSONS.map((l, i) => {
     const row = rows.get(i + 1);
@@ -129,6 +134,7 @@ r.get('/bom-lider', member, (req, res) => {
 
 function lessonOf(req) {
   if (!canSee(req.actor)) fail(403, 'O Bom Líder é para a liderança');
+  if (notYet()) fail(403, `O Bom Líder começa em ${bomLiderStart().split('-').reverse().join('/')}.`);
   const n = int(req.params.n);
   const l = LESSONS[n - 1];
   if (!l) fail(404, 'Aula não encontrada');

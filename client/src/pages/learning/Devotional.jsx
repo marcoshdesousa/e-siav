@@ -1,10 +1,10 @@
 // Meditação Diária e Lição da Escola Sabatina: cada uma com a sua sequência.
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { CheckCircle2, ChevronLeft, ChevronRight, Flame, Lock, PlayCircle, RotateCcw, Sparkles, Trophy, X } from 'lucide-react';
+import { CheckCircle2, ChevronLeft, ChevronRight, Flame, Lock, RotateCcw, Sparkles, Trophy, X } from 'lucide-react';
 import { api } from '../../api.js';
 import { Button, Card, Loading, PageHeader, Tabs, useAsync, useLoad } from '../../ui.jsx';
-import { BackButton, PlayButton, VoiceAudio, useBack, useFocusMode } from './Learning.jsx';
+import { BackButton, PlayButton, TodayRow, VoiceAudio, useBack, useFocusMode, useScrollHere } from './Learning.jsx';
 import { useNarration } from './voice.js';
 import { PackReward } from './PackReward.jsx';
 import './devotional.css';
@@ -108,48 +108,55 @@ export function MeditationList({ base }) {
   return (
     <>
       <PageHeader title="Meditação Diária" subtitle="Uma história por dia para começar com Deus" />
-      <Loading {...state}>
-        {(d) => {
-          const today = d.days.find((x) => x.date === d.today);
-          const before = d.days.filter((x) => x.date < d.today).reverse();
-          const after = d.days.filter((x) => x.date > d.today);
-          const row = (x) => {
-            const body = (
-              <>
-                <span className="dv-date"><b>{Number(x.date.slice(8))}</b><small>{MONTHS[Number(x.date.slice(5, 7)) - 1].slice(0, 3)}</small></span>
-                <span className="grow"><b>{x.title}</b><small>{x.personagem ? `${x.personagem.replace(/\s*\(.*\)$/, '')} · ` : ''}{x.status === 'feito' ? 'Feita no dia' : x.status === 'feito-depois' ? 'Feita depois' : x.status === 'perdido' ? 'Ainda dá para ler' : x.status === 'futuro' ? `Libera em ${br(x.date)}` : x.status === 'hoje' ? 'Hoje' : 'Liberada para teste'}</small></span>
-                <span className={'day-st ' + x.status}>{x.status === 'futuro' ? <Lock size={16} /> : x.status.startsWith('feito') ? <CheckCircle2 size={18} /> : <ChevronRight size={18} />}</span>
-              </>
-            );
-            return x.status === 'futuro' ? <div key={x.date} className="day-row locked">{body}</div> : <Link key={x.date} to={`${base}/aprendizagem/meditacao/${x.date}`} className={'day-row ' + x.status}>{body}</Link>;
-          };
-          return (
-            <>
-              {d.theme && (
-                <div className="dv-theme">
-                  <small>Tema do ano</small>
-                  <b>{d.theme}</b>
-                  <span>Todo dia, a história de alguém que Deus escolheu, da Bíblia até hoje.</span>
-                </div>
-              )}
-              <StreakMini s={d} label="Meditação" />
-              {d.today < d.start && <Card className="small center">A Meditação Diária começa em <b>{br(d.start)}</b>.{d.test ? ' No modo de teste você já pode ler todas.' : ''}</Card>}
-              {today && (
-                <Link to={`${base}/aprendizagem/meditacao/${today.date}`} className={'dv-today' + (today.status.startsWith('feito') ? ' done' : '')}>
-                  <small>Meditação de hoje · {longDate(today.date)}</small>
-                  <b>{today.title}</b>
-                  {today.personagem && <em className="dv-today-char">{today.personagem}</em>}
-                  <span>{today.status.startsWith('feito') ? <><CheckCircle2 size={16} /> Feita</> : <><PlayCircle size={16} /> Ler agora</>}</span>
-                </Link>
-              )}
-              {before.length > 0 && <h3 className="dv-h">Dias anteriores</h3>}
-              <div className="day-list">{before.map(row)}</div>
-              {after.length > 0 && <h3 className="dv-h">Próximos dias</h3>}
-              <div className="day-list">{after.slice(0, d.test ? after.length : 7).map(row)}</div>
-            </>
-          );
-        }}
-      </Loading>
+      <Loading {...state}>{(d) => <MeditationMonths d={d} base={base} />}</Loading>
+    </>
+  );
+}
+
+/** As meditações por mês: o mês de hoje vem aberto e a lista já rola até a meditação de hoje. */
+function MeditationMonths({ d, base }) {
+  const here = useScrollHere();
+  const months = useMemo(() => {
+    const m = new Map();
+    for (const x of d.days) {
+      const k = x.date.slice(0, 7);
+      if (!m.has(k)) m.set(k, []);
+      m.get(k).push(x);
+    }
+    return [...m.entries()];
+  }, [d.days]);
+  const month = d.today.slice(0, 7);
+  const to = (x) => `${base}/aprendizagem/meditacao/${x.date}`;
+  const row = (x) => {
+    if (x.date === d.today) {
+      return <TodayRow key={x.date} ref={here} to={to(x)} done={x.status.startsWith('feito')} title={x.title} kicker={`Meditação de hoje · ${longDate(x.date)}`} sub={x.personagem} note="Feita" />;
+    }
+    const body = (
+      <>
+        <span className="dv-date"><b>{Number(x.date.slice(8))}</b><small>{MONTHS[Number(x.date.slice(5, 7)) - 1].slice(0, 3)}</small></span>
+        <span className="grow"><b>{x.title}</b><small>{x.personagem ? `${x.personagem.replace(/\s*\(.*\)$/, '')} · ` : ''}{x.status === 'feito' ? 'Feita no dia' : x.status === 'feito-depois' ? 'Feita depois' : x.status === 'perdido' ? 'Ainda dá para ler' : x.status === 'futuro' ? `Libera em ${br(x.date)}` : 'Liberada para teste'}</small></span>
+        <span className={'day-st ' + x.status}>{x.status === 'futuro' ? <Lock size={16} /> : x.status.startsWith('feito') ? <CheckCircle2 size={18} /> : <ChevronRight size={18} />}</span>
+      </>
+    );
+    return x.status === 'futuro' ? <div key={x.date} className="day-row locked">{body}</div> : <Link key={x.date} to={to(x)} className={'day-row ' + x.status}>{body}</Link>;
+  };
+  return (
+    <>
+      {d.theme && (
+        <div className="dv-theme">
+          <small>Tema do ano</small>
+          <b>{d.theme}</b>
+          <span>Todo dia, a história de alguém que Deus escolheu, da Bíblia até hoje.</span>
+        </div>
+      )}
+      <StreakMini s={d} label="Meditação" />
+      {d.today < d.start && <Card className="small center">A Meditação Diária começa em <b>{br(d.start)}</b>.{d.test ? ' No modo de teste você já pode ler todas.' : ''}</Card>}
+      {months.map(([k, list]) => (
+        <details key={k} className={'month' + (k === month ? ' now' : '')} open={k === month}>
+          <summary>{MONTHS[Number(k.slice(5)) - 1]} de {k.slice(0, 4)} <small>{list.filter((x) => x.status.startsWith('feito')).length}/{list.length}</small></summary>
+          <div className="day-list">{list.map(row)}</div>
+        </details>
+      ))}
     </>
   );
 }
@@ -308,13 +315,12 @@ function SabbathWeeks({ list, today, base }) {
     });
   }, [list]);
   const current = weekStart(today);
-  const openRef = useRef(null);
-  useEffect(() => { openRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, []);
+  const here = useScrollHere();
   return weeks.map((w) => {
     const done = w.days.filter((x) => x.done).length;
     const isNow = w.start === current;
     return (
-      <details key={w.start} className={'month ss-week' + (isNow ? ' now' : '')} open={isNow} ref={isNow ? openRef : null}>
+      <details key={w.start} className={'month ss-week' + (isNow ? ' now' : '')} open={isNow}>
         <summary>
           <span className="grow"><small>Lição {w.n} · {range(w.start, w.end)}{isNow ? ' · esta semana' : ''}</small><span className="ss-theme">Tema da semana</span><b>{w.title}</b></span>
           <small className={done === w.days.length ? 'ss-done' : ''}>{done}/{w.days.length}</small>
@@ -328,7 +334,8 @@ function SabbathWeeks({ list, today, base }) {
                 <span className="day-st">{l.locked ? <Lock size={16} /> : l.done ? <CheckCircle2 size={18} /> : <ChevronRight size={18} />}</span>
               </>
             );
-            return l.locked ? <div key={l.id} className="day-row locked">{body}</div> : <Link key={l.id} to={`${base}/aprendizagem/escola-sabatina/${l.id}`} className={'day-row' + (l.done ? ' feito' : '') + (l.today ? ' hoje' : '')}>{body}</Link>;
+            if (l.today) return <TodayRow key={l.id} ref={here} to={`${base}/aprendizagem/escola-sabatina/${l.id}`} done={l.done} title={l.title} kicker={`Lição de hoje · ${WEEKDAYS[weekday(l.date)]}`} sub={l.has_video ? 'Com vídeo' : null} note="Concluída" />;
+            return l.locked ? <div key={l.id} className="day-row locked">{body}</div> : <Link key={l.id} to={`${base}/aprendizagem/escola-sabatina/${l.id}`} className={'day-row' + (l.done ? ' feito' : '')}>{body}</Link>;
           })}
         </div>
       </details>

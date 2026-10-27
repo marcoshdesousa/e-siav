@@ -171,3 +171,22 @@
 .bdb-feedback { margin: .7rem 0 0; font-weight: 800; font-size: 1.05rem; }
 .bdb-feedback.ok { color: #16a34a; }
 .bdb-feedback.no { color: #dc2626; }
+
+/* O estudo de hoje em destaque dentro da lista (a lista rola até ele ao abrir) */
+.today-row { display: flex; align-items: center; gap: .75rem; padding: .85rem .9rem; border-radius: 16px; color: #fff; text-decoration: none; scroll-margin: 90px;
+  background: linear-gradient(135deg, #f97316, #dc2626); box-shadow: 0 10px 22px -12px rgba(220, 38, 38, .8); }
+.today-row.done { background: linear-gradient(135deg, #16a34a, #0d9488); box-shadow: 0 10px 22px -12px rgba(13, 148, 136, .8); }
+.today-row small { display: block; font-size: .72rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; opacity: .9; }
+.today-row b { display: block; font-size: 1.02rem; line-height: 1.25; }
+.today-row em { display: block; font-style: normal; font-size: .78rem; opacity: .9; }
+.today-row-ico { width: 40px; height: 40px; flex: none; border-radius: 12px; display: grid; place-items: center; background: rgba(255, 255, 255, .2); }
+.today-row-go { flex: none; display: inline-flex; align-items: center; gap: .15rem; font-weight: 800; font-size: .8rem; padding: .4rem .7rem; border-radius: 999px; background: rgba(255, 255, 255, .22); }
+.month.now { border-color: rgba(249, 115, 22, .55); }
+.month.missed summary { color: #dc2626; }
+.day-row { scroll-margin: 90px; }
+/* Estudo que ainda não começou */
+.study-locked { display: flex; flex-direction: column; align-items: center; text-align: center; gap: .4rem; padding: 1.6rem 1.2rem; border-radius: 20px; margin-top: .6rem;
+  background: radial-gradient(120% 100% at 50% 0%, #1e3a8a, #0b1f4d 70%); color: #fff; }
+.study-locked b { font-family: var(--font-title); font-size: 1.15rem; }
+.study-locked p { margin: 0; font-size: .88rem; opacity: .85; max-width: 32ch; }
+.study-locked svg { color: #fde047; }

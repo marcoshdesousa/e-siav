@@ -17,8 +17,8 @@ onPaid('dbvplus', (p, ref) => activatePlus(p.member_id, ref.plan));
 export const FREE = [
   'Ano Bíblico, Meditação Diária e Escola Sabatina com as sequências',
   'Áudio de todas as leituras: Ano Bíblico, Meditação e Escola Sabatina',
-  'Livro do Ano (em breve)',
-  'Jogos, álbuns de figurinhas e pacotinhos ganhos nos estudos',
+  'Livro do Ano (em 2027)',
+  'Jogos com ranking (clube, distrito e Brasil), álbuns de figurinhas e pacotinhos ganhos nos estudos',
   'Perfil, especialidades, classes e rankings do distrito',
 ];
 
@@ -26,7 +26,6 @@ export const BENEFITS = [
   { text: 'Bom Líder: Manual Administrativo e Nisto Cremos' },
   { text: `${PLUS_PACKS} pacotinhos de figurinhas a cada ${PLUS_DAYS} dias` },
   { text: 'Figurinhas em triplo: 3 pacotinhos pelo preço de 1' },
-  { text: 'Participa do ranking dos jogos' },
   { text: 'Jogos sem internet (modo offline)' },
   { text: 'Selo de verificado (logo dourada) no perfil' },
   { text: 'Estudo das Classes e Agrupadas', soon: true },

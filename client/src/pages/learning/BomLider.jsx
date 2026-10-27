@@ -5,12 +5,15 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, BookOpen, CheckCircle2, ChevronLeft, ChevronRight, ListChecks, Lock, PenLine, RotateCcw, Users, X } from 'lucide-react';
 import { api } from '../../api.js';
 import { Button, Card, Loading, PageHeader, Tabs, useAsync, useLoad } from '../../ui.jsx';
-import { BackButton, PlayButton, VoiceAudio, useFocusMode } from './Learning.jsx';
+import { BackButton, PlayButton, VoiceAudio, useFocusMode, useScrollHere } from './Learning.jsx';
 import { useNarration } from './voice.js';
 import './bomlider.css';
 
+const br = (iso) => iso.split('-').reverse().join('/');
+
 export function BomLider({ base }) {
   const state = useLoad(() => api.get('/bom-lider'));
+  const here = useScrollHere();
   return (
     <>
       <PageHeader title="Bom Líder" subtitle="Livros de liderança: leia, ouça, responda e escreva com as suas palavras" />
@@ -18,7 +21,13 @@ export function BomLider({ base }) {
       <Tabs tabs={[['manual', 'Manual Administrativo'], ['nisto', <span key="n" className="tab-locked"><Lock size={13} /> Nisto Cremos <em>em breve</em></span>]]} value="manual" onChange={() => {}} />
       {(
         <Loading {...state}>
-          {(d) => (d.preparing ? (
+          {(d) => (d.starts ? (
+            <div className="study-locked">
+              <Lock size={34} />
+              <b>O Bom Líder começa em {br(d.starts)}</b>
+              <p>As {d.total} aulas do Manual Administrativo abrem nesse dia, uma depois da outra. Até lá, ficam trancadas.</p>
+            </div>
+          ) : d.preparing ? (
             <Card className="center">
               <Users size={34} />
               <p><b>As aulas estão sendo preparadas.</b></p>
@@ -28,6 +37,8 @@ export function BomLider({ base }) {
               <Card className="small center">{d.done} de {d.total} aulas concluídas · Manual Administrativo do Clube de Desbravadores</Card>
               <div className="day-list">
                 {d.lessons.map((l) => {
+                  // A próxima aula a fazer: a lista já rola até ela.
+                  const next = !l.done && !l.locked;
                   const body = (
                     <>
                       <span className="day-n">{l.n}</span>
@@ -36,7 +47,7 @@ export function BomLider({ base }) {
                     </>
                   );
                   return l.locked ? <div key={l.n} className="day-row locked">{body}</div>
-                    : <Link key={l.n} to={`${base}/aprendizagem/bom-lider/${l.n}`} className={'day-row' + (l.done ? ' feito' : '')}>{body}</Link>;
+                    : <Link key={l.n} ref={next ? here : null} to={`${base}/aprendizagem/bom-lider/${l.n}`} className={'day-row' + (l.done ? ' feito' : '') + (next ? ' hoje' : '')}>{body}</Link>;
                 })}
               </div>
             </>
