@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import {
-  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, Tent, Trophy, Users, Globe, MessageCircle, BookImage, Wallet, Flame, BadgeCheck, ArrowLeftRight,
+  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, Tent, Trophy, Users, Globe, MessageCircle, BookImage, Wallet, Flame, BadgeCheck, ArrowLeftRight, ClipboardList,
 } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -26,6 +26,7 @@ import LearningAdmin from './LearningAdmin.jsx';
 import PaymentsAdmin from './PaymentsAdmin.jsx';
 import StreaksAdmin from './StreaksAdmin.jsx';
 import PlusAdmin from './PlusAdmin.jsx';
+import FormsAdmin, { FormResponses } from './FormsAdmin.jsx';
 import { ApprovalsPage } from '../club/ClubApp.jsx';
 import { AppTransfersPage } from '../club/Transfers.jsx';
 
@@ -377,13 +378,14 @@ export default function AdminApp() {
     { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial', hint: 'Especialidades' },
     { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos', hint: 'Criar e participantes' },
     { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: 'Aparecem ao abrir o app' },
+    { to: `${base}/formularios`, icon: ClipboardList, label: 'Formulários', hint: 'Links para responder e as respostas' },
     { to: `${base}/ranking`, icon: Trophy, label: 'Rankings', hint: 'Todas as tabelas' },
     { to: `${base}/explorar`, icon: Map, label: 'Explorar clubes', hint: 'Perfis públicos' },
   ];
   return (
     <Shell tabs={tabs} parentOf={(path) => {
       const [, , seg, sub] = path.split('/');
-      if (sub && ['clubes'].includes(seg)) return `${base}/${seg}`;
+      if (sub && ['clubes', 'formularios'].includes(seg)) return `${base}/${seg}`;
       return ['clubes', 'requisitos', 'conteudo', 'ver'].includes(seg) ? base : `${base}/mais`;
     }}>
       <Routes>
@@ -407,6 +409,8 @@ export default function AdminApp() {
         <Route path="aprovacoes" element={<ApprovalsPage url="/admin/app-aprovacoes" canAdd={false} subtitle="Especialidades e classes de quem é do Clube App Brasil" />} />
         <Route path="medalhas" element={<Navigate to={`${base}/conteudo`} replace />} />
         <Route path="ranking" element={<RankingHub base={base} />} />
+        {general && <Route path="formularios" element={<FormsAdmin base={base} />} />}
+        {general && <Route path="formularios/:id" element={<FormResponses />} />}
         <Route path="sequencias" element={<StreaksAdmin />} />
         <Route path="dbv-mais" element={<PlusAdmin />} />
         <Route path="explorar" element={<ClubsBrowser base={base} />} />

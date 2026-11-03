@@ -1,0 +1,89 @@
+/* Formulário público */
+.pf-page { min-height: 100vh; background: radial-gradient(120% 60% at 50% 0%, #1e40af 0%, #0b1f4d 45%, #071233 100%); color: #fff; padding: 0 16px 40px; }
+.pf-top { display: flex; align-items: center; justify-content: center; gap: .5rem; padding: 1rem 0 .4rem; font-family: var(--font-title); font-weight: 800; letter-spacing: .02em; }
+.pf-top img { width: 30px; height: 30px; }
+.pf-main { max-width: 520px; margin: 0 auto; }
+.pf-hero { text-align: center; padding: 1rem .5rem 1.2rem; }
+.pf-hero small { display: inline-block; font-size: .7rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #fde047; background: rgba(253, 224, 71, .12); padding: .2rem .7rem; border-radius: 999px; }
+.pf-hero h1 { margin: .5rem 0 .3rem; color: #fff; font-size: clamp(1.5rem, 6vw, 2rem); line-height: 1.15; }
+.pf-hero p { margin: 0; opacity: .82; font-size: .95rem; }
+.pf-card { background: #fff; color: #0f172a; border-radius: 24px; padding: 1.3rem 1.1rem 1.1rem; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .55); animation: pf-in .3s ease; }
+@keyframes pf-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.pf-h { margin: 0 0 .9rem; font-size: 1.15rem; }
+.pf-field { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1rem; }
+.pf-field > span { font-size: .8rem; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: .06em; }
+.pf-field input, .pf-other, .pf-text { width: 100%; box-sizing: border-box; border: 2px solid #e2e8f0; border-radius: 14px; padding: .8rem .9rem; font: 500 1rem var(--font); color: #0f172a; background: #f8fafc; outline: none; }
+.pf-field input:focus, .pf-other:focus, .pf-text:focus { border-color: #2563eb; background: #fff; }
+.pf-other { margin-top: .4rem; }
+.pf-clubs, .pf-options { display: grid; gap: .45rem; }
+.pf-clubs button, .pf-options button { display: flex; align-items: center; gap: .65rem; text-align: left; padding: .75rem .85rem; border-radius: 14px; border: 2px solid #e2e8f0; background: #fff; font: 700 .95rem var(--font); color: #0f172a; cursor: pointer; transition: border-color .15s, background .15s; }
+.pf-clubs button.on, .pf-options button.on { border-color: #2563eb; background: #eff6ff; }
+.pf-radio { width: 22px; height: 22px; flex: none; border-radius: 50%; border: 2px solid #cbd5e1; display: grid; place-items: center; color: #fff; }
+.on > .pf-radio { background: #2563eb; border-color: #2563eb; }
+.pf-btn { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; border: 0; border-radius: 14px; padding: .85rem 1.1rem; font: 800 .98rem var(--font); cursor: pointer; background: #f1f5f9; color: #334155; }
+.pf-btn.primary { background: linear-gradient(135deg, #2563eb, #1e3a8a); color: #fff; box-shadow: 0 10px 20px -10px rgba(37, 99, 235, .8); }
+.pf-btn:disabled { opacity: .45; cursor: default; box-shadow: none; }
+.pf-card > .pf-btn.primary { width: 100%; }
+.pf-progress { height: 8px; border-radius: 999px; background: #e2e8f0; overflow: hidden; }
+.pf-progress i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #f59e0b, #ef4444); transition: width .35s ease; }
+.pf-count { display: block; margin-top: .7rem; font-size: .75rem; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: .08em; }
+.pf-q { margin: .35rem 0 1.1rem; font-size: 1.25rem; line-height: 1.3; }
+.pf-nav { display: flex; justify-content: space-between; gap: .6rem; margin-top: 1.2rem; }
+.pf-nav .pf-btn.primary { flex: 1; }
+.pf-stars-wrap { display: flex; flex-direction: column; align-items: center; gap: .5rem; padding: .4rem 0; }
+.pf-stars { display: flex; gap: .2rem; }
+.pf-stars button { border: 0; background: none; padding: .15rem; cursor: pointer; color: #cbd5e1; transition: transform .12s, color .12s; }
+.pf-stars button.on { color: #f59e0b; }
+.pf-stars button.on svg { fill: #fbbf24; }
+.pf-stars button:active { transform: scale(.88); }
+.pf-star-label { font-weight: 800; color: #b45309; min-height: 1.3em; }
+.pf-yesno { display: grid; grid-template-columns: 1fr 1fr; gap: .7rem; }
+.pf-yesno button { display: flex; flex-direction: column; align-items: center; gap: .4rem; padding: 1.2rem .5rem; border-radius: 18px; border: 2px solid #e2e8f0; background: #fff; font: 800 1.1rem var(--font); cursor: pointer; color: #334155; transition: all .15s; }
+.pf-yesno .yes.on { border-color: #16a34a; background: #f0fdf4; color: #15803d; }
+.pf-yesno .no.on { border-color: #dc2626; background: #fef2f2; color: #b91c1c; }
+.pf-text { resize: vertical; min-height: 120px; }
+.pf-err { color: #b91c1c; font-weight: 700; margin: .7rem 0 0; }
+.pf-end { text-align: center; display: flex; flex-direction: column; align-items: center; gap: .3rem; padding: 2rem 1.2rem; }
+.pf-end h2 { margin: .5rem 0 0; }
+.pf-end p { margin: 0; color: #475569; }
+.pf-end > svg { color: #2563eb; }
+.pf-done-ico { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, #22c55e, #15803d); box-shadow: 0 14px 30px -10px rgba(22, 163, 74, .8); animation: pf-pop .4s cubic-bezier(.3, .7, .4, 1.4); }
+@keyframes pf-pop { from { transform: scale(.4); opacity: 0; } to { transform: none; opacity: 1; } }
+.pf-page .empty { color: #fff; }
+
+/* Formulários no painel do administrador */
+.fa-list { display: grid; gap: .6rem; }
+.fa-item { display: flex; align-items: center; gap: .8rem; padding: .9rem; border-radius: 16px; background: var(--surface); border: 1px solid var(--card-border); box-shadow: var(--shadow-sm); color: inherit; text-decoration: none; }
+.fa-ico { width: 44px; height: 44px; flex: none; border-radius: 13px; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, #2563eb, #7c3aed); }
+.fa-item b { display: block; }
+.fa-item small { color: var(--muted); font-size: .78rem; }
+.fa-count { font: 800 1.2rem var(--font-title); color: var(--link); text-align: center; line-height: 1; }
+.fa-count small { display: block; font-size: .62rem; font-weight: 700; }
+.fa-link { display: flex; gap: .4rem; align-items: center; margin: .5rem 0; }
+.fa-link input { flex: 1; min-width: 0; font-size: .85rem; }
+.fa-stats { display: grid; gap: .6rem; }
+.fa-stat { padding: .9rem; border-radius: 16px; background: var(--surface); border: 1px solid var(--card-border); }
+.fa-stat > b { display: block; margin-bottom: .5rem; font-size: .92rem; }
+.fa-big { display: flex; align-items: center; gap: .6rem; }
+.fa-big strong { font: 800 2rem var(--font-title); }
+.fa-stars-row { color: #f59e0b; display: flex; gap: 2px; }
+.fa-stars-row svg.on { fill: #fbbf24; }
+.fa-bar { display: grid; grid-template-columns: 70px 1fr auto; align-items: center; gap: .5rem; font-size: .8rem; font-weight: 700; margin-top: .3rem; }
+.fa-bar span:first-child { color: var(--muted); }
+.fa-bar i { display: block; height: 10px; border-radius: 999px; background: var(--surface-3); overflow: hidden; }
+.fa-bar i em { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #2563eb, #7c3aed); }
+.fa-bar.sim i em { background: linear-gradient(90deg, #22c55e, #15803d); }
+.fa-bar.nao i em { background: linear-gradient(90deg, #f87171, #b91c1c); }
+.fa-texts { display: grid; gap: .4rem; max-height: 340px; overflow-y: auto; }
+.fa-texts p { margin: 0; padding: .55rem .7rem; border-radius: 12px; background: var(--surface-3); font-size: .86rem; }
+.fa-texts p small { display: block; color: var(--muted); font-weight: 700; margin-bottom: .15rem; }
+.fa-resp { padding: .9rem; border-radius: 16px; background: var(--surface); border: 1px solid var(--card-border); }
+.fa-resp-head { display: flex; justify-content: space-between; gap: .5rem; align-items: flex-start; margin-bottom: .4rem; }
+.fa-resp-head small { color: var(--muted); display: block; }
+.fa-resp dl { margin: 0; display: grid; gap: .35rem; }
+.fa-resp dt { font-size: .74rem; color: var(--muted); font-weight: 700; }
+.fa-resp dd { margin: 0; font-size: .9rem; font-weight: 600; white-space: pre-wrap; }
+.fa-q { display: grid; gap: .4rem; padding: .7rem; border-radius: 14px; background: var(--surface-3); margin-bottom: .5rem; }
+.fa-q-row { display: flex; gap: .4rem; }
+.fa-q-row input { flex: 1; min-width: 0; }
+.fa-q-row select { width: auto; }

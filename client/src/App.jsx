@@ -10,6 +10,7 @@ import ClubApp from './pages/club/ClubApp.jsx';
 import UnitApp from './pages/unit/UnitApp.jsx';
 import MemberApp from './pages/member/MemberApp.jsx';
 import { TrophyCertificatePage } from './pages/member/Downloads.jsx';
+import PublicForm from './pages/PublicForm.jsx';
 
 function Guard({ type, children }) {
   const { actor } = useAuth();
@@ -45,6 +46,7 @@ export default function App() {
             <Route path="/entrar" element={<Login />} />
             <Route path="/p/:kind/:id" element={<PublicProfilePage />} />
             <Route path="/certificado/:id" element={<TrophyCertificatePage />} />
+            <Route path="/formulario/:slug" element={<PublicForm />} />
             <Route path="/inscricao/:token" element={<ClubSignup />} />
             <Route path="/inscricao/*" element={<Navigate to="/" replace />} />
             <Route path="/criar-conta" element={<CreateAccount />} />
