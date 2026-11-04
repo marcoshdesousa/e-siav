@@ -87,3 +87,9 @@
 .fa-q-row { display: flex; gap: .4rem; }
 .fa-q-row input { flex: 1; min-width: 0; }
 .fa-q-row select { width: auto; }
+.fa-q-n { width: 28px; height: 28px; flex: none; align-self: center; border-radius: 50%; display: grid; place-items: center; font: 800 .8rem var(--font-title); background: var(--surface); }
+.fa-q textarea { resize: vertical; }
+.fa-n { display: block; color: var(--muted); font-size: .74rem; font-weight: 700; margin: -.35rem 0 .45rem; }
+.fa-stat.removed { opacity: .8; border-style: dashed; }
+.fa-removed { display: inline-block; font-size: .66rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); background: var(--surface-3); padding: .1rem .5rem; border-radius: 999px; margin-bottom: .35rem; }
+.fa-q textarea, .fa-q > input { box-sizing: border-box; width: 100%; max-width: 100%; }

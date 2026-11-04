@@ -82,7 +82,7 @@ function FormBody({ f, slug }) {
   const send = async () => {
     setBusy(true); setErr('');
     try {
-      await api.post(`/public/formularios/${slug}`, { name, club, club_other: other, answers });
+      await api.post(`/public/formularios/${slug}`, { name, club, club_other: other, answers, version: f.version });
       setDone(true);
     } catch (e) {
       setErr(e.message);

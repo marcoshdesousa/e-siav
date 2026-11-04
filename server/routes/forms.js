@@ -27,6 +27,42 @@ run(`CREATE TABLE IF NOT EXISTS form_responses (
   created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
 )`);
 run('CREATE INDEX IF NOT EXISTS idx_form_responses_form ON form_responses(form_id)');
+// Editar não muda o link nem mexe nas respostas: cada mudança nas perguntas vira uma versão nova, e
+// cada resposta guarda a versão que a pessoa respondeu (quem já estava respondendo ainda consegue enviar).
+run(`CREATE TABLE IF NOT EXISTS form_versions (
+  form_id INTEGER NOT NULL REFERENCES forms(id) ON DELETE CASCADE,
+  version INTEGER NOT NULL,
+  questions TEXT NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+  PRIMARY KEY (form_id, version)
+)`);
+for (const [t, col, def] of [['forms', 'version', 'INTEGER NOT NULL DEFAULT 1'], ['form_responses', 'version', 'INTEGER NOT NULL DEFAULT 1']]) {
+  if (!all(`PRAGMA table_info(${t})`).some((c) => c.name === col)) run(`ALTER TABLE ${t} ADD COLUMN ${col} ${def}`);
+}
+
+/** Cada pergunta tem um código fixo: mudar o texto mantém o código (e as respostas juntas no resumo). */
+const newId = () => 'q' + Math.random().toString(36).slice(2, 8);
+const validId = (id) => /^[a-z0-9]{2,12}$/.test(String(id || ''));
+/** fresh: pergunta sem código ganha um novo (sorteado); senão (formulário antigo) q1, q2... */
+const withIds = (qs, fresh = false) => {
+  const seen = new Set();
+  const given = new Set(qs.map((q) => q.id).filter(validId));
+  return qs.map((q, i) => {
+    let id = validId(q.id) && !seen.has(q.id) ? q.id : fresh ? newId() : `q${i + 1}`;
+    while (seen.has(id) || (id !== q.id && given.has(id))) id = newId();
+    seen.add(id);
+    return { ...q, id };
+  });
+};
+/** Formulários antigos: dá código às perguntas e guarda a versão 1. */
+function ensureVersions() {
+  for (const f of all('SELECT id, version, questions FROM forms')) {
+    const qs = JSON.parse(f.questions);
+    if (qs.some((q) => !q.id)) run('UPDATE forms SET questions = ? WHERE id = ?', JSON.stringify(withIds(qs)), f.id);
+    const cur = get('SELECT questions FROM forms WHERE id = ?', f.id).questions;
+    run('INSERT OR IGNORE INTO form_versions (form_id, version, questions) VALUES (?, ?, ?)', f.id, f.version, cur);
+  }
+}
 
 /** Tipos de pergunta: estrelas (1 a 5), sim ou não, texto e escolha (uma das opções). */
 const TYPES = ['estrelas', 'simnao', 'texto', 'escolha'];
@@ -48,6 +84,7 @@ if (!get(`SELECT 1 FROM app_flags WHERE key = 'formulario-avaliacao-2026'`)) {
     ]));
   run(`INSERT OR IGNORE INTO app_flags (key) VALUES ('formulario-avaliacao-2026')`);
 }
+ensureVersions();
 
 const parse = (f) => f && { ...f, clubs: JSON.parse(f.clubs), questions: JSON.parse(f.questions), active: !!f.active };
 const bySlug = (slug) => parse(get('SELECT * FROM forms WHERE slug = ?', String(slug)));
@@ -56,7 +93,7 @@ const bySlug = (slug) => parse(get('SELECT * FROM forms WHERE slug = ?', String(
 r.get('/public/formularios/:slug', (req, res) => {
   const f = bySlug(req.params.slug);
   if (!f) fail(404, 'Formulário não encontrado');
-  res.json({ slug: f.slug, title: f.title, description: f.description, clubs: f.clubs, questions: f.questions, active: f.active });
+  res.json({ slug: f.slug, title: f.title, description: f.description, clubs: f.clubs, questions: f.questions, version: f.version, active: f.active });
 });
 
 // Contra envio em massa: no máximo 20 respostas por hora do mesmo aparelho/rede.
@@ -82,7 +119,11 @@ r.post('/public/formularios/:slug', (req, res) => {
   if (club === 'Outro') club = String(req.body.club_other || '').trim().replace(/\s+/g, ' ').slice(0, 80);
   if (club.length < 2) fail(400, 'Escolha o seu clube');
   const sent = Array.isArray(req.body.answers) ? req.body.answers : [];
-  const answers = f.questions.map((q, i) => {
+  // Vale a versão que a pessoa abriu (se o formulário foi editado no meio, a resposta continua valendo).
+  const v = get('SELECT version, questions FROM form_versions WHERE form_id = ? AND version = ?', f.id, int(req.body.version) || f.version)
+    || { version: f.version, questions: JSON.stringify(f.questions) };
+  const questions = JSON.parse(v.questions);
+  const answers = questions.map((q, i) => {
     const a = sent[i];
     if (q.type === 'estrelas') {
       const n = int(a);
@@ -101,7 +142,7 @@ r.post('/public/formularios/:slug', (req, res) => {
     if (!t) fail(400, `Responda a pergunta ${i + 1}`);
     return t;
   });
-  run('INSERT INTO form_responses (form_id, name, club, answers) VALUES (?, ?, ?, ?)', f.id, name, club, JSON.stringify(answers));
+  run('INSERT INTO form_responses (form_id, name, club, answers, version) VALUES (?, ?, ?, ?, ?)', f.id, name, club, JSON.stringify(answers), v.version);
   res.json({ ok: true });
 });
 
@@ -119,11 +160,12 @@ function cleanForm(body) {
   const title = String(body.title || '').trim().slice(0, 100);
   if (title.length < 3) fail(400, 'Dê um título ao formulário');
   const clubs = (Array.isArray(body.clubs) ? body.clubs : []).map((c) => String(c).trim().slice(0, 60)).filter(Boolean).slice(0, 40);
-  const questions = (Array.isArray(body.questions) ? body.questions : []).map((q) => ({
+  const questions = withIds((Array.isArray(body.questions) ? body.questions : []).map((q) => ({
+    id: q?.id,
     type: TYPES.includes(q?.type) ? q.type : 'texto',
     q: String(q?.q || '').trim().slice(0, 200),
     ...(q?.type === 'escolha' ? { options: (Array.isArray(q.options) ? q.options : []).map((o) => String(o).trim().slice(0, 80)).filter(Boolean).slice(0, 12) } : {}),
-  })).filter((q) => q.q);
+  })).filter((q) => q.q), true);
   if (!questions.length) fail(400, 'Coloque pelo menos uma pergunta');
   if (questions.some((q) => q.type === 'escolha' && q.options.length < 2)) fail(400, 'Pergunta de escolha precisa de pelo menos 2 opções');
   return { title, description: String(body.description || '').trim().slice(0, 400), clubs, questions };
@@ -135,6 +177,7 @@ r.post('/admin/formularios', ...admin, (req, res) => {
   for (let i = 2; get('SELECT 1 FROM forms WHERE slug = ?', slug); i++) slug = `${slugify(req.body.slug || f.title).slice(0, 36)}-${i}`;
   const id = Number(run('INSERT INTO forms (slug, title, description, clubs, questions) VALUES (?, ?, ?, ?, ?)',
     slug, f.title, f.description, JSON.stringify(f.clubs), JSON.stringify(f.questions)).lastInsertRowid);
+  run('INSERT INTO form_versions (form_id, version, questions) VALUES (?, 1, ?)', id, JSON.stringify(f.questions));
   res.json(parse(get('SELECT * FROM forms WHERE id = ?', id)));
 });
 
@@ -146,6 +189,25 @@ r.put('/admin/formularios/:id', ...admin, (req, res) => {
   res.json({ ok: true });
 });
 
+// Editar (mesmo recebendo respostas): título, texto, clubes e perguntas. O link não muda e as
+// respostas que já existem continuam com as perguntas que foram respondidas.
+r.put('/admin/formularios/:id/editar', ...admin, (req, res) => {
+  const cur = parse(get('SELECT * FROM forms WHERE id = ?', int(req.params.id)));
+  if (!cur) fail(404, 'Formulário não encontrado');
+  const f = cleanForm(req.body);
+  // Pergunta que mudou de tipo vira outra pergunta (as respostas antigas não se misturam).
+  const before = new Map(cur.questions.map((q) => [q.id, q.type]));
+  f.questions = f.questions.map((q) => (before.has(q.id) && before.get(q.id) !== q.type ? { ...q, id: newId() } : q));
+  let { version } = cur;
+  if (JSON.stringify(f.questions) !== JSON.stringify(cur.questions)) {
+    version++;
+    run('INSERT INTO form_versions (form_id, version, questions) VALUES (?, ?, ?)', cur.id, version, JSON.stringify(f.questions));
+  }
+  run('UPDATE forms SET title = ?, description = ?, clubs = ?, questions = ?, version = ? WHERE id = ?',
+    f.title, f.description, JSON.stringify(f.clubs), JSON.stringify(f.questions), version, cur.id);
+  res.json(parse(get('SELECT * FROM forms WHERE id = ?', cur.id)));
+});
+
 r.delete('/admin/formularios/:id', ...admin, (req, res) => {
   run('DELETE FROM forms WHERE id = ?', int(req.params.id));
   res.json({ ok: true });
@@ -154,8 +216,10 @@ r.delete('/admin/formularios/:id', ...admin, (req, res) => {
 r.get('/admin/formularios/:id/respostas', ...admin, (req, res) => {
   const f = parse(get('SELECT * FROM forms WHERE id = ?', int(req.params.id)));
   if (!f) fail(404, 'Formulário não encontrado');
-  const rows = all('SELECT id, name, club, answers, created_at FROM form_responses WHERE form_id = ? ORDER BY id DESC', f.id)
-    .map((x) => ({ ...x, answers: JSON.parse(x.answers) }));
+  // Cada resposta vem com as perguntas da versão que a pessoa respondeu.
+  const versions = new Map(all('SELECT version, questions FROM form_versions WHERE form_id = ?', f.id).map((v) => [v.version, JSON.parse(v.questions)]));
+  const rows = all('SELECT id, name, club, answers, version, created_at FROM form_responses WHERE form_id = ? ORDER BY id DESC', f.id)
+    .map((x) => ({ ...x, answers: JSON.parse(x.answers), questions: versions.get(x.version) || f.questions }));
   res.json({ form: f, responses: rows });
 });
 

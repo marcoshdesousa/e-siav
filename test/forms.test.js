@@ -46,6 +46,25 @@ test('formulário da avaliação 2026: responde sem login e o geral vê as respo
   assert.equal(form.responses, 2);
   const res = (await call('GET', `/admin/formularios/${form.id}/respostas`, null, cookie)).body;
   assert.deepEqual(res.responses.map((r) => r.club).sort(), ['Clube Alfa', 'Clube Pioneiros']);
+  // Editar em andamento: o link não muda, as respostas antigas ficam com as perguntas antigas e quem
+  // já estava com o formulário aberto (versão 1) ainda consegue enviar.
+  const qs = res.form.questions;
+  const edited = (await call('PUT', `/admin/formularios/${form.id}/editar`, {
+    title: 'Avaliação 2026 (nova)', clubs: res.form.clubs,
+    questions: [{ ...qs[0], q: 'Que nota você dá para o distrito em 2026?' }, ...qs.slice(1, 5), { type: 'texto', q: 'Um recado para a diretoria' }],
+  }, cookie)).body;
+  assert.equal(edited.slug, 'avaliacao-2026', 'o link não muda');
+  assert.equal(edited.version, 2);
+  assert.equal(edited.questions[0].id, qs[0].id, 'mesma pergunta (texto novo)');
+  const pub = (await call('GET', '/public/formularios/avaliacao-2026')).body;
+  assert.equal(pub.title, 'Avaliação 2026 (nova)');
+  assert.equal((await call('POST', '/public/formularios/avaliacao-2026', { name: 'Ana Velha', club: 'Clube Alfa', answers, version: 1 })).status, 200, 'versão antiga ainda envia');
+  assert.equal((await call('POST', '/public/formularios/avaliacao-2026', { name: 'Ana Nova', club: 'Clube Alfa', answers: [4, 'Mais eventos', 'sim', 'sim', 'nao', 'Parabéns!'], version: 2 })).status, 200);
+  const after = (await call('GET', `/admin/formularios/${form.id}/respostas`, null, cookie)).body.responses;
+  assert.equal(after.length, 4, 'nenhuma resposta sumiu');
+  const maria = after.find((x) => x.name === 'Maria Souza');
+  assert.equal(maria.questions[0].q, 'Como você avalia a organização do Distrito Palmares em 2026?', 'resposta antiga com a pergunta antiga');
+  assert.equal(after.find((x) => x.name === 'Ana Nova').questions[5].q, 'Um recado para a diretoria');
   // Encerrado: não recebe mais.
   await call('PUT', `/admin/formularios/${form.id}`, { active: false }, cookie);
   assert.equal((await call('POST', '/public/formularios/avaliacao-2026', { name: 'Ana Lima', club: 'Clube Alfa', answers })).status, 400);

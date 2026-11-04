@@ -1,7 +1,7 @@
 // Formulários (administrador geral): os criados, o link para mandar, criar outros e ver as respostas.
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ChevronRight, ClipboardList, Copy, Download, ExternalLink, Plus, Star, Trash2, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, ChevronRight, ClipboardList, Copy, Download, ExternalLink, Pencil, Plus, Star, Trash2, X } from 'lucide-react';
 import { api } from '../../api.js';
 import { fmtDate } from '../../format.js';
 import { Button, Card, Confirm, Empty, Field, Loading, Modal, PageHeader, Section, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
@@ -14,33 +14,43 @@ function copy(text) {
   navigator.clipboard?.writeText(text).then(() => notify('Link copiado!'), () => notify('Não deu para copiar', 'error'));
 }
 
-/** Criar formulário: título, texto, clubes da lista e as perguntas. */
-function NewForm({ onClose, onDone }) {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [clubs, setClubs] = useState('Clube Titânio\nClube Alfa\nClube Querubins\nClube Astro de Luz\nClube Estrela Guia\nClube Samuel Snow');
-  const [qs, setQs] = useState([{ type: 'estrelas', q: '' }]);
+/**
+ * Criar ou editar formulário: título, texto, clubes e as perguntas. Editar não muda o link e não mexe
+ * nas respostas que já chegaram (cada uma continua com as perguntas que foram respondidas).
+ */
+function FormEditor({ form, onClose, onDone }) {
+  const [title, setTitle] = useState(form?.title || '');
+  const [description, setDescription] = useState(form?.description || '');
+  const [clubs, setClubs] = useState((form?.clubs || ['Clube Titânio', 'Clube Alfa', 'Clube Querubins', 'Clube Astro de Luz', 'Clube Estrela Guia', 'Clube Samuel Snow']).join('\n'));
+  const [qs, setQs] = useState(form ? form.questions.map((q) => ({ ...q, optionsText: (q.options || []).join('\n') })) : [{ type: 'estrelas', q: '' }]);
   const [busy, run] = useAsync();
   const setQ = (i, patch) => setQs((l) => l.map((q, k) => (k === i ? { ...q, ...patch } : q)));
-  const save = () => run(() => api.post('/admin/formularios', {
+  const move = (i, d) => setQs((l) => { const c = [...l]; const j = i + d; if (j < 0 || j >= c.length) return l; [c[i], c[j]] = [c[j], c[i]]; return c; });
+  const body = () => ({
     title, description, clubs: clubs.split('\n'),
-    questions: qs.map((q) => ({ ...q, options: q.type === 'escolha' ? String(q.optionsText || '').split('\n') : undefined })),
-  }), 'Formulário criado').then((f) => f && onDone(f));
+    questions: qs.map(({ optionsText, ...q }) => ({ ...q, options: q.type === 'escolha' ? String(optionsText || '').split('\n') : undefined })),
+  });
+  const save = () => run(() => (form ? api.put(`/admin/formularios/${form.id}/editar`, body()) : api.post('/admin/formularios', body())), form ? 'Formulário atualizado' : 'Formulário criado').then((f) => f && onDone(f));
   return (
-    <Modal title="Novo formulário" onClose={onClose} footer={<Button block busy={busy} onClick={save}>Criar formulário</Button>}>
+    <Modal title={form ? 'Editar formulário' : 'Novo formulário'} onClose={onClose} footer={<Button block busy={busy} onClick={save}>{form ? 'Salvar mudanças' : 'Criar formulário'}</Button>}>
+      {form && <p className="small muted" style={{ marginTop: 0 }}>O link continua o mesmo e as respostas que já chegaram não mudam. Quem abrir o link depois de salvar já vê o formulário novo.</p>}
       <Field label="Título"><input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex.: Avaliação do Campori" /></Field>
       <Field label="Texto de abertura" hint="Opcional"><textarea rows={2} value={description} onChange={(e) => setDescription(e.target.value)} /></Field>
       <Field label="Clubes para escolher" hint="Um por linha. A opção “Outro clube” aparece sozinha."><textarea rows={4} value={clubs} onChange={(e) => setClubs(e.target.value)} /></Field>
       <span className="field-label">Perguntas</span>
       {qs.map((q, i) => (
-        <div key={i} className="fa-q">
+        <div key={q.id || `n${i}`} className="fa-q">
           <div className="fa-q-row">
-            <select value={q.type} onChange={(e) => setQ(i, { type: e.target.value })}>
+            <span className="fa-q-n">{i + 1}</span>
+            {/* Mudar o tipo faz dela uma pergunta nova (as respostas antigas não se misturam). */}
+            <select value={q.type} onChange={(e) => setQ(i, { type: e.target.value, id: undefined })}>
               {Object.entries(TYPE_NAME).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
             </select>
+            <button type="button" className="icon-btn" aria-label="Subir" disabled={i === 0} onClick={() => move(i, -1)}><ArrowUp size={16} /></button>
+            <button type="button" className="icon-btn" aria-label="Descer" disabled={i === qs.length - 1} onClick={() => move(i, 1)}><ArrowDown size={16} /></button>
             <button type="button" className="icon-btn" aria-label="Tirar pergunta" onClick={() => setQs((l) => l.filter((_, k) => k !== i))}><X size={18} /></button>
           </div>
-          <input value={q.q} onChange={(e) => setQ(i, { q: e.target.value })} placeholder={`Pergunta ${i + 1}`} />
+          <textarea rows={2} value={q.q} onChange={(e) => setQ(i, { q: e.target.value })} placeholder={`Pergunta ${i + 1}`} />
           {q.type === 'escolha' && <textarea rows={3} value={q.optionsText || ''} onChange={(e) => setQ(i, { optionsText: e.target.value })} placeholder="Opções, uma por linha" />}
         </div>
       ))}
@@ -74,7 +84,7 @@ export default function FormsAdmin({ base }) {
           ) : <Empty icon={ClipboardList}>Nenhum formulário ainda.</Empty>)}
         </Loading>
       </Section>
-      {creating && <NewForm onClose={() => setCreating(false)} onDone={() => { setCreating(false); state.reload(); }} />}
+      {creating && <FormEditor onClose={() => setCreating(false)} onDone={() => { setCreating(false); state.reload(); }} />}
     </>
   );
 }
@@ -84,12 +94,22 @@ function StarsRow({ n }) {
 }
 const pct = (a, b) => (b ? Math.round((a / b) * 100) : 0);
 
+/** Resposta de uma pessoa para a pergunta (pelo código da pergunta, na versão que ela respondeu). */
+const answerOf = (r, id) => { const i = r.questions.findIndex((q) => q.id === id); return i < 0 ? undefined : r.answers[i]; };
+/** As perguntas de agora e, no fim, as que saíram do formulário mas têm respostas. */
+function allQuestions(form, rows) {
+  const ids = new Set(form.questions.map((q) => q.id));
+  const old = [];
+  for (const r of rows) for (const q of r.questions) if (!ids.has(q.id)) { ids.add(q.id); old.push({ ...q, removed: true }); }
+  return [...form.questions, ...old];
+}
+
 /** Resumo de cada pergunta: média das estrelas, sim/não em porcentagem e as respostas escritas. */
 function Summary({ form, rows }) {
   return (
     <div className="fa-stats">
-      {form.questions.map((q, i) => {
-        const vals = rows.map((r) => r.answers[i]).filter((v) => v != null && v !== '');
+      {allQuestions(form, rows).map((q, i) => {
+        const vals = rows.map((r) => answerOf(r, q.id)).filter((v) => v != null && v !== '');
         let body;
         if (q.type === 'estrelas') {
           const avg = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
@@ -103,28 +123,36 @@ function Summary({ form, rows }) {
             </>
           );
         } else if (q.type === 'simnao' || q.type === 'escolha') {
-          const opts = q.type === 'simnao' ? [['sim', 'Sim'], ['nao', 'Não']] : q.options.map((o) => [o, o]);
+          const opts = q.type === 'simnao' ? [['sim', 'Sim'], ['nao', 'Não']] : [...new Set([...(q.options || []), ...vals])].map((o) => [o, o]);
           body = opts.map(([k, l]) => {
             const c = vals.filter((v) => v === k).length;
             return <div key={k} className={'fa-bar ' + (q.type === 'simnao' ? k : '')}><span>{l}</span><i><em style={{ width: `${pct(c, vals.length)}%` }} /></i><span>{pct(c, vals.length)}% ({c})</span></div>;
           });
         } else {
-          body = vals.length ? <div className="fa-texts">{rows.filter((r) => r.answers[i]).map((r) => <p key={r.id}><small>{r.name} · {r.club}</small>{r.answers[i]}</p>)}</div> : <p className="small muted">Sem respostas.</p>;
+          body = vals.length ? <div className="fa-texts">{rows.filter((r) => answerOf(r, q.id)).map((r) => <p key={r.id}><small>{r.name} · {r.club}</small>{answerOf(r, q.id)}</p>)}</div> : <p className="small muted">Sem respostas.</p>;
         }
-        return <div key={i} className="fa-stat"><b>{i + 1}. {q.q}</b>{body}</div>;
+        return (
+          <div key={q.id} className={'fa-stat' + (q.removed ? ' removed' : '')}>
+            {q.removed && <span className="fa-removed">Pergunta que saiu do formulário</span>}
+            <b>{q.removed ? '' : `${i + 1}. `}{q.q}</b>
+            <small className="fa-n">{vals.length} {vals.length === 1 ? 'resposta' : 'respostas'}</small>
+            {body}
+          </div>
+        );
       })}
     </div>
   );
 }
 
-const show = (q, v) => (q.type === 'estrelas' ? `${'★'.repeat(v)}${'☆'.repeat(5 - v)} (${v})` : q.type === 'simnao' ? (v === 'sim' ? 'Sim' : 'Não') : v);
+const show = (q, v) => (v == null ? '—' : q.type === 'estrelas' ? `${'★'.repeat(v)}${'☆'.repeat(5 - v)} (${v})` : q.type === 'simnao' ? (v === 'sim' ? 'Sim' : 'Não') : v);
 
 /** Planilha (CSV) com todas as respostas, para abrir no Excel. */
 function exportCsv(form, rows) {
   const esc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
-  const head = ['Data', 'Nome', 'Clube', ...form.questions.map((q) => q.q)];
-  const lines = rows.map((r) => [fmtDate(r.created_at), r.name, r.club, ...form.questions.map((q, i) => (q.type === 'simnao' ? (r.answers[i] === 'sim' ? 'Sim' : 'Não') : r.answers[i]))]);
-  const csv = '﻿' + [head, ...lines].map((l) => l.map(esc).join(';')).join('\n');
+  const qs = allQuestions(form, rows);
+  const head = ['Data', 'Nome', 'Clube', ...qs.map((q) => q.q)];
+  const lines = rows.map((r) => [fmtDate(r.created_at), r.name, r.club, ...qs.map((q) => { const v = answerOf(r, q.id); return q.type === 'simnao' && v ? (v === 'sim' ? 'Sim' : 'Não') : v; })]);
+  const csv = '\ufeff' + [head, ...lines].map((l) => l.map(esc).join(';')).join('\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
   a.download = `${form.slug}.csv`;
@@ -136,6 +164,7 @@ export function FormResponses() {
   const state = useLoad(() => api.get(`/admin/formularios/${id}/respostas`), [id]);
   const [tab, setTab] = useState('resumo');
   const [club, setClub] = useState('');
+  const [editing, setEditing] = useState(false);
   const [busy, run] = useAsync();
   const d = state.data;
   const rows = useMemo(() => (d ? d.responses.filter((r) => !club || r.club === club) : []), [d, club]);
@@ -152,6 +181,7 @@ export function FormResponses() {
               <Button small onClick={() => copy(linkOf(form.slug))}><Copy size={14} /> Copiar</Button>
             </div>
             <div className="row wrap" style={{ gap: '.4rem' }}>
+              <Button small onClick={() => setEditing(true)}><Pencil size={14} /> Editar</Button>
               <a className="btn btn-secondary btn-sm" href={linkOf(form.slug)} target="_blank" rel="noopener noreferrer"><ExternalLink size={14} /> Abrir</a>
               <Button small variant="secondary" busy={busy} onClick={() => run(() => api.put(`/admin/formularios/${form.id}`, { active: !form.active }), form.active ? 'Formulário encerrado' : 'Formulário aberto').then(state.reload)}>
                 {form.active ? 'Encerrar respostas' : 'Abrir de novo'}
@@ -176,13 +206,14 @@ export function FormResponses() {
                         <div><b>{r.name}</b><small>{r.club} · {fmtDate(r.created_at)}</small></div>
                         <Confirm variant="secondary" text={`Apagar a resposta de ${r.name}?`} onYes={() => run(() => api.del(`/admin/formularios/${form.id}/respostas/${r.id}`), 'Resposta apagada').then(state.reload)}><Trash2 size={14} /></Confirm>
                       </div>
-                      <dl>{form.questions.map((q, i) => <div key={i}><dt>{q.q}</dt><dd>{show(q, r.answers[i])}</dd></div>)}</dl>
+                      <dl>{r.questions.map((q, i) => <div key={q.id || i}><dt>{q.q}</dt><dd>{show(q, r.answers[i])}</dd></div>)}</dl>
                     </div>
                   ))}
                 </div>
               )}
             </>
           )}
+          {editing && <FormEditor form={form} onClose={() => setEditing(false)} onDone={() => { setEditing(false); state.reload(); }} />}
         </>
       )}
     </Loading>
