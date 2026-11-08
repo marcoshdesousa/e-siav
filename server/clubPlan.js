@@ -5,7 +5,7 @@
 //   clube grátis + membros grátis: ninguém paga e o clube não vê cobrança;
 //   clube grátis + membros pagam: cada membro assina o DBV; o clube pode, se quiser, assumir a
 //     cobrança (R$ 15 por mês) e aí os membros usam de graça.
-// O DBV+ (R$ 7,90) continua sempre disponível para todos. Janeiro e dezembro são grátis para todos os clubes (férias) e não gastam os
+// O DBV+ (R$ 5,90) continua sempre disponível para todos. Janeiro e dezembro são grátis para todos os clubes (férias) e não gastam os
 // dias pagos. Ao ser cadastrado, o clube já ganha os primeiros 30 dias.
 // Se o plano vence, o clube tem 3 dias de carência; depois disso o portal do clube e o login das
 // unidades continuam funcionando, mas os membros precisam assinar o DBV (R$ 3,90) ou o DBV+ para usar

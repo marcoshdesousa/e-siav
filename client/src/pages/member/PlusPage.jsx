@@ -89,7 +89,6 @@ export default function PlusPage() {
                 <div key={p.id} className={'plus-plan' + (p.access_only ? ' free' : '')}>
                   <b>{p.name}</b>
                   <span className="plus-price">{money(p.price_cents)}</span>
-                  {p.club_price && <span className="plus-club-price">Preço especial: o seu clube paga o app</span>}
                   {p.access_only
                     ? <ul className="plus-free">{(d.free || []).map((t) => <li key={t}><Check size={14} />{t}</li>)}</ul>
                     : <small>{`Todos os benefícios do app + ${d.packs} pacotinhos de figurinhas`}</small>}

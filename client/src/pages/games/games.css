@@ -144,3 +144,14 @@
 .rk-play { display: inline-flex; align-items: center; gap: .35rem; margin-top: .3rem; padding: .5rem 1.1rem; border-radius: 999px; background: #fff; color: var(--c2); font: 800 .85rem var(--font); text-decoration: none; box-shadow: 0 6px 14px -6px rgba(0,0,0,.4); }
 .rk-nav { position: relative; z-index: 1; flex: none; width: 38px; height: 38px; border-radius: 50%; border: 0; display: grid; place-items: center; color: #fff; background: rgba(255,255,255,.16); cursor: pointer; }
 .rk-nav:active { background: rgba(255,255,255,.3); }
+
+/* Jogos do DBV+ (cadeado) e o jogo grátis */
+.game-tile { position: relative; }
+.game-tile.locked .game-ico { filter: grayscale(.6); opacity: .65; }
+.game-tile.locked b { opacity: .8; }
+.game-lock, .game-free { position: absolute; top: 6px; right: 6px; display: inline-flex; align-items: center; gap: 2px; font: 800 .58rem var(--font); padding: .12rem .4rem; border-radius: 999px; letter-spacing: .02em; }
+.game-lock { color: #6B4700; background: radial-gradient(circle at 30% 25%, #FFF0B8, #f5b700 75%); }
+.game-free { color: #052e16; background: #4ade80; }
+.game-tile.free { border-color: #4ade80; box-shadow: 0 0 0 2px rgba(74, 222, 128, .3); }
+.game-plus-lock { display: flex; gap: .55rem; align-items: flex-start; padding: .7rem .8rem; border-radius: 14px; margin: .2rem 0 .8rem; font-size: .88rem; background: rgba(245, 183, 0, .14); border: 1px solid rgba(245, 183, 0, .5); }
+.game-plus-lock svg { flex: none; color: #b45309; margin-top: 2px; }

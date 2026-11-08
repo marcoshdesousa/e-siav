@@ -57,3 +57,6 @@ const modules = import.meta.glob('./g/*.jsx');
 export const GAMES = ALL.filter((g) => modules[`./g/${g.file}.jsx`]);
 export const gameComponent = (g) => lazy(modules[`./g/${g.file}.jsx`]);
 export const gameById = (id) => GAMES.find((g) => g.id === id);
+/** O único jogo grátis (planos grátis e DBV); os outros são do DBV+ (igual a server/routes/games.js). */
+export const FREE_GAME = 'aventura';
+export const gameLocked = (actor, id) => id !== FREE_GAME && !actor?.plus;

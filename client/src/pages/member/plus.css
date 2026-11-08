@@ -62,4 +62,3 @@
 .plus-bar.trial { background: linear-gradient(135deg, #065f46, #0f766e); border-color: rgba(253,224,71,.6); }
 .plus-bar-gift { flex: none; color: #fde68a; }
 .trial-tag { display: inline-block; margin-left: .3rem; padding: .05rem .5rem; border-radius: 999px; font-size: .7rem; font-weight: 900; background: #dcfce7; color: #166534; vertical-align: 2px; }
-.plus-club-price { display: inline-block; align-self: flex-start; font-size: .72rem; font-weight: 800; color: #052e16; background: #4ade80; border-radius: 999px; padding: .15rem .6rem; margin: -.1rem 0 .3rem; }

@@ -18,11 +18,12 @@ export const FREE = [
   'Ano Bíblico, Meditação Diária e Escola Sabatina com as sequências',
   'Áudio de todas as leituras: Ano Bíblico, Meditação e Escola Sabatina',
   'Livro do Ano (em 2027)',
-  'Jogos com ranking (clube, distrito e Brasil), álbuns de figurinhas e pacotinhos ganhos nos estudos',
+  'Aventura do Desbravador com ranking (clube, distrito e Brasil), álbuns de figurinhas e pacotinhos ganhos nos estudos',
   'Perfil e rankings do distrito',
 ];
 
 export const BENEFITS = [
+  { text: 'Todos os mini-jogos com ranking (o grátis é só a Aventura do Desbravador)' },
   { text: 'Bom Líder: Manual Administrativo e Nisto Cremos' },
   { text: `${PLUS_PACKS} pacotinhos de figurinhas a cada ${PLUS_DAYS} dias` },
   { text: 'Figurinhas em triplo: 3 pacotinhos pelo preço de 1' },
@@ -31,21 +32,21 @@ export const BENEFITS = [
 ];
 
 // Quem entrou pelo App Brasil (sem clube) precisa de um plano para usar o app: o DBV (R$ 3,90),
-// com o mesmo do plano grátis, ou o DBV+ (R$ 7,90). As especialidades físicas são só para quem tem clube.
+// com o mesmo do plano grátis, ou o DBV+ (R$ 5,90). As especialidades físicas são só para quem tem clube.
 export const APP_FREE = FREE.map((t) => t.replace('rankings do distrito', 'ranking Brasil'));
 
 r.get('/plus', member, (req, res) => {
   const p = plusOf(req.actor.id);
   const needs = !!req.actor.app || !!req.actor.club_plan?.expired;
   res.json({
-    plans: plansFor(needs, !!req.actor.club_pays), benefits: BENEFITS, free: needs ? APP_FREE : FREE, days: PLUS_DAYS, packs: PLUS_PACKS,
+    plans: plansFor(needs), benefits: BENEFITS, free: needs ? APP_FREE : FREE, days: PLUS_DAYS, packs: PLUS_PACKS,
     app: req.actor.app || (req.actor.club_plan?.expired ? { ...req.actor.club_plan, club: true } : null), club_plan: req.actor.club_plan, mine: p, open: plusOpen(req.actor.id),
     picks_names: p?.picks ? all(`SELECT id, name, category FROM content WHERE id IN (${p.picks.map(() => '?').join(',')})`, ...p.picks) : [],
   });
 });
 
 r.post('/plus/assinar', member, async (req, res) => {
-  const plan = plansFor(!!req.actor.app || !!req.actor.club_plan?.expired, !!req.actor.club_pays).find((p) => p.id === req.body.plan);
+  const plan = plansFor(!!req.actor.app || !!req.actor.club_plan?.expired).find((p) => p.id === req.body.plan);
   if (!plan) fail(400, 'Escolha um plano');
   // Um plano por vez: só dá para assinar de novo quando o atual vencer (quem está no DBV pode renovar ou subir para o DBV+ a qualquer hora).
   const cur = plusOf(req.actor.id);

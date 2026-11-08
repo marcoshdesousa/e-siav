@@ -703,9 +703,17 @@ test('suporte: chat de cada conta com a equipe; links do SGC, Cantinho e Cartão
   assert.deepEqual((await pedro.get('/links')).body, { link_cartao: 'https://cartao.exemplo.org' }, 'membro não vê o SGC');
 });
 
-test('mini jogos: recorde, soma, ranking de todos', async () => {
-  const pedro = await login('membros', 'pedro');
+test('mini jogos: só a Aventura é grátis; o resto é do DBV+; recorde, soma e ranking', async () => {
+  let pedro = await login('membros', 'pedro');
   const marcos = await login('membros', '100006');
+  const admin = await login('membros', 'admin', 'admin123');
+  // Sem DBV+: só a Aventura do Desbravador.
+  if (!pedro.actor.plus) {
+    assert.equal((await pedro.post('/jogos/cobrinha/pontos', { score: 10 })).status, 402, 'cobrinha é do DBV+');
+    assert.equal((await pedro.post('/jogos/aventura/pontos', { score: 10 })).status, 200, 'Aventura é grátis');
+  }
+  for (const code of ['100001', '100006']) await admin.post('/admin/plus/dar', { code, plan: 'plus', days: 30 });
+  pedro = await login('membros', 'pedro');
   assert.equal((await pedro.post('/jogos/nao-existe/pontos', { score: 5 })).status, 404);
   assert.equal((await pedro.post('/jogos/cobrinha/pontos', { score: -1 })).status, 400);
   await pedro.post('/jogos/cobrinha/pontos', { score: 120 });
@@ -715,7 +723,6 @@ test('mini jogos: recorde, soma, ranking de todos', async () => {
   assert.equal((await marcos.post('/jogos/cobrinha/pontos', { score: 999999 })).body.best, 5000, 'limite por partida');
   const rk = (await pedro.get('/jogos/cobrinha/ranking')).body;
   assert.equal(rk.rows[0].name.split(' ')[0], 'Marcos');
-  // Todo mundo entra no ranking dos jogos (grátis, DBV e DBV+).
   assert.ok(rk.me.position >= 2, 'pedro aparece no ranking');
   assert.equal(rk.rows.some((x) => x.name.startsWith('Pedro')), true);
   await pedro.post('/jogos/velha/pontos', { score: 3 });
@@ -734,6 +741,7 @@ test('mini jogos: recorde, soma, ranking de todos', async () => {
   assert.equal(club.me.position, 1);
   const aguias = await login('clube', 'aguias', 'AG2026');
   assert.equal((await aguias.get('/jogos/cobrinha/ranking')).status, 403, 'só membros');
+  await admin.del(`/admin/plus/${pedro.actor.id}`); // os outros testes contam com o pedro sem DBV+
 });
 
 test('criar clube: o nome sempre vira "Clube X", sem repetir "Clube"/"Club"', async () => {

@@ -92,9 +92,8 @@ test('zerar estudos (uma vez): Ano Bíblico e Bom de Bíblia vão para o arquivo
   assert.equal(setting('bom_lider_inicio'), '2027-01-01');
 });
 
-test('DBV+ a R$ 3,90 para quem é de clube que paga pelos membros; o DBV continua R$ 3,90', async () => {
+test('DBV+ a R$ 5,90 para todos; o DBV continua R$ 3,90', async () => {
   const { plansFor } = await import('../server/plus.js');
-  assert.deepEqual(plansFor(false, true).map((p) => [p.id, p.price_cents]), [['plus', 390]], 'clube que paga: DBV+ por 3,90');
-  assert.deepEqual(plansFor(false, false).map((p) => [p.id, p.price_cents]), [['plus', 790]], 'clube grátis: DBV+ por 7,90');
-  assert.deepEqual(plansFor(true, false).map((p) => [p.id, p.price_cents]), [['app', 390], ['plus', 790]], 'App Brasil: DBV 3,90 e DBV+ 7,90');
+  assert.deepEqual(plansFor(false).map((p) => [p.id, p.price_cents]), [['plus', 590]], 'com clube: DBV+ por 5,90');
+  assert.deepEqual(plansFor(true).map((p) => [p.id, p.price_cents]), [['app', 390], ['plus', 590]], 'App Brasil: DBV 3,90 e DBV+ 5,90');
 });

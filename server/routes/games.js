@@ -1,11 +1,16 @@
 // Mini jogos dos membros: cada partida manda a pontuação; cada jogo tem ranking do clube, do distrito
-// e do Brasil (todos do app). Todo mundo entra no ranking: plano grátis (clube que paga), DBV e DBV+.
+// e do Brasil (todos do app). Os jogos são do DBV+; a Aventura do Desbravador é grátis para todos.
 // Não entra nos rankings de requisitos; só o administrador geral finaliza (server/rankFinals.js).
 import { Router } from 'express';
 import { all, get, run } from '../db.js';
 import { requireAuth } from '../auth.js';
 import { fail } from '../util.js';
 import { GAMES } from '../games.js';
+import { isPlus } from '../plus.js';
+
+/** O único jogo grátis (planos grátis e DBV); os outros são do DBV+. */
+export const FREE_GAME = 'aventura';
+const canPlay = (memberId, id) => id === FREE_GAME || isPlus(memberId);
 
 
 const r = Router();
@@ -26,6 +31,9 @@ const myPosition = (id, g, value, memberId, where = '') => (value > 0
       WHERE s.game = ? AND m.status = 'ativo'${where} AND s.${col(g)} > ?`, id, value).n
   : null);
 
+// Quais jogos a pessoa pode jogar (o grátis e, com o DBV+, todos).
+r.get('/jogos/acesso', member, (req, res) => res.json({ plus: isPlus(req.actor.id), free: FREE_GAME }));
+
 // Meus recordes em todos os jogos.
 r.get('/jogos/meus', member, (req, res) => {
   const rows = all('SELECT game, best, total, plays FROM game_scores WHERE member_id = ?', req.actor.id);
@@ -39,6 +47,7 @@ r.get('/jogos/meus', member, (req, res) => {
 
 r.post('/jogos/:id/pontos', member, (req, res) => {
   const g = game(req.params.id);
+  if (!canPlay(req.actor.id, req.params.id)) fail(402, 'Este jogo é do DBV+. A Aventura do Desbravador é grátis!');
   if (g.server) fail(400, 'Os pontos deste jogo são marcados pelo servidor');
   const score = Math.floor(Number(req.body.score));
   if (!Number.isFinite(score) || score < 0) fail(400, 'Pontuação inválida');

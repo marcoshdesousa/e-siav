@@ -138,7 +138,7 @@ test('App Brasil: cria conta sem clube, precisa de plano, só ranking Brasil, ap
   const b = await login('membros', kid.body.code, kid.body.password);
   assert.equal((await b.post('/ano-biblico/dia/1/quiz', { answers: [0] })).status, 402, 'bloqueado até assinar');
   const plus = (await b.get('/plus')).body;
-  assert.deepEqual(plus.plans.map((p) => [p.id, p.name, p.price_cents]), [['app', 'DBV', 390], ['plus', 'DBV+', 790]]);
+  assert.deepEqual(plus.plans.map((p) => [p.id, p.name, p.price_cents]), [['app', 'DBV', 390], ['plus', 'DBV+', 590]]);
   assert.equal((await b.post('/plus/assinar', { plan: 'plus3' })).status, 400, 'sem planos de especialidade');
   assert.equal((await geral.post('/admin/plus/dar', { code: kid.body.code, plan: 'app', days: 30 })).status, 200, 'dar plano');
   const b2 = await login('membros', kid.body.code, kid.body.password);

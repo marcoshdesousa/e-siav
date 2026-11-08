@@ -1,12 +1,12 @@
 // Mini-jogos dos membros: lista de jogos, tela de cada jogo e ranking de cada um.
 import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, ChevronLeft, ChevronRight, Crown, Flag, Globe, Keyboard, Lightbulb, Map as MapIcon, Search, Smartphone, Target, Tent, Play, RotateCcw, Trophy, Users, Volume2, VolumeX } from 'lucide-react';
+import { ArrowLeft, BadgeCheck, ChevronLeft, ChevronRight, Crown, Flag, Globe, Keyboard, Lightbulb, Lock, Map as MapIcon, Search, Smartphone, Target, Tent, Play, RotateCcw, Trophy, Users, Volume2, VolumeX } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Avatar, Button, Card, Loading, PageHeader, Section, Spinner, useLoad } from '../../ui.jsx';
 import { RankingTable } from '../Ranking.jsx';
-import { CATS, GAMES, gameById, gameComponent } from './games.js';
+import { CATS, FREE_GAME, GAMES, gameById, gameComponent, gameLocked } from './games.js';
 import { isMuted, onMuteChange, setMuted, sfx, startMusic, stopMusic, unlockAudio } from './audio.js';
 import { useOnline } from '../../offline.js';
 import TUTORIALS from './tutorials.json';
@@ -153,6 +153,9 @@ export function GamesHub({ base }) {
   const mine = useLoad(() => api.get('/jogos/meus'));
   const my = mine.data || {};
   const online = useOnline();
+  const { actor } = useAuth();
+  // O jogo grátis vem primeiro; os outros, para quem não é DBV+, aparecem com o cadeado.
+  const list = [...GAMES].sort((a, b) => (b.id === FREE_GAME) - (a.id === FREE_GAME));
   return (
     <>
       <PageHeader title="Jogos" subtitle={`${GAMES.length} jogos para fazer pontos e subir no ranking. Sem anúncios!`} />
@@ -162,13 +165,18 @@ export function GamesHub({ base }) {
       </div>
       {sub === 'jogar' ? (
         <div className="games-grid">
-          {GAMES.map((g) => (
-            <Link key={g.id} to={`${base}/jogos/${g.id}`} className="game-tile">
-              <span className="game-ico"><g.icon size={26} /></span>
-              <b>{g.name}</b>
-              <small>{my[g.id]?.value ? `${my[g.id].value} pts${my[g.id].position ? ` · ${my[g.id].position}º` : ''}` : 'Jogar'}</small>
-            </Link>
-          ))}
+          {list.map((g) => {
+            const locked = gameLocked(actor, g.id);
+            return (
+              <Link key={g.id} to={`${base}/jogos/${g.id}`} className={'game-tile' + (locked ? ' locked' : '') + (g.id === FREE_GAME && !actor.plus ? ' free' : '')}>
+                {locked && <span className="game-lock"><Lock size={11} /> DBV+</span>}
+                {g.id === FREE_GAME && !actor.plus && <span className="game-free">Grátis</span>}
+                <span className="game-ico"><g.icon size={26} /></span>
+                <b>{g.name}</b>
+                <small>{my[g.id]?.value ? `${my[g.id].value} pts${my[g.id].position ? ` · ${my[g.id].position}º` : ''}` : locked ? 'Do DBV+' : 'Jogar'}</small>
+              </Link>
+            );
+          })}
         </div>
       ) : <MiniRankings base={base} online={online} initial={params.get('jogo')} />}
     </>
@@ -251,7 +259,9 @@ function useFitToScreen(ref, active) {
 export function GamePage({ base }) {
   const { id } = useParams();
   const nav = useNavigate();
+  const { actor } = useAuth();
   const game = gameById(id);
+  const locked = gameLocked(actor, id);
   const Comp = useMemo(() => (game ? gameComponent(game) : null), [game]);
   const [phase, setPhase] = useState('intro');
   const [round, setRound] = useState(0);
@@ -324,13 +334,21 @@ export function GamePage({ base }) {
 
       {phase === 'intro' && (
         <Card className="game-intro">
+          {locked && (
+            <div className="game-plus-lock">
+              <Lock size={18} />
+              <span>Este jogo é do <b>DBV+</b> (R$ 5,90 por 30 dias). A <b>Aventura do Desbravador</b> é grátis para todos.</span>
+            </div>
+          )}
           <Tutorial game={game} />
           {online
             ? <p className="small muted">{game.mode === 'sum' ? 'Cada partida soma pontos no seu total.' : 'Vale a sua melhor partida no ranking.'} Se desistir, os pontos que você fez contam.</p>
             : <p className="small offline-note">Sem internet: dá para jogar, mas a partida não entra no ranking.</p>}
           <div className="game-intro-actions">
             <Button variant="secondary" onClick={() => nav(`${base}/jogos`)}><ArrowLeft size={18} /> Voltar</Button>
-            <Button onClick={start}><Play size={18} /> Iniciar</Button>
+            {locked
+              ? <Button onClick={() => nav(`${base}/dbv-mais`)}><BadgeCheck size={18} /> Seja DBV+</Button>
+              : <Button onClick={start}><Play size={18} /> Iniciar</Button>}
           </div>
         </Card>
       )}

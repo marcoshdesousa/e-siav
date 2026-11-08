@@ -1,7 +1,7 @@
 // DBV+ (assinatura de 30 dias para membros): ajuda o app e libera benefícios.
 //   DBV          R$ 3,90  — só para quem criou a conta pelo app (sem clube): libera o app, como o plano grátis.
 //                            A conta nova já entra com 3 dias de DBV para conhecer o app.
-//   DBV+          R$ 7,90  — benefícios do app (R$ 3,90 para quem é de clube que paga pelos membros)
+//   DBV+          R$ 5,90  — benefícios do app e todos os jogos (só a Aventura do Desbravador é grátis)
 //   DBV+ 3 Espec. R$ 19,90 — + 3 especialidades físicas (escolhe 15, a equipe compra 3)
 //   DBV+ 7 Espec. R$ 34,90 — + 7 especialidades físicas (escolhe 20, a equipe compra 7)
 // Todo plano: Bom Líder, jogos sem internet, 60 pacotinhos a cada 30 dias,
@@ -32,7 +32,7 @@ if (!get(`SELECT 1 FROM app_flags WHERE key = 'teste-gratis-antigos-v1'`)) {
 
 export const PLANS = {
   app: { id: 'app', name: 'DBV', price_cents: 390, specialties: 0, pick: 0, access_only: true },
-  plus: { id: 'plus', name: 'DBV+', price_cents: 790, specialties: 0, pick: 0 },
+  plus: { id: 'plus', name: 'DBV+', price_cents: 590, specialties: 0, pick: 0 },
   // Planos antigos (com especialidades físicas): ninguém assina mais; quem tinha aparece só como DBV+.
   plus3: { id: 'plus3', name: 'DBV+', price_cents: 1990, specialties: 3, pick: 15 },
   plus7: { id: 'plus7', name: 'DBV+', price_cents: 3490, specialties: 7, pick: 20 },
@@ -55,17 +55,11 @@ export function plusOf(memberId) {
 export const isPlus = (memberId) => { const p = plusOf(memberId); return !!p?.active && p.plan !== 'app'; };
 /** Algum plano ativo (o DBV também conta): libera o app para quem entrou pelo App Brasil. */
 export const hasAccess = (memberId) => !!plusOf(memberId)?.active;
-/** Membro de clube que paga pelos membros: o DBV+ sai por R$ 3,90. */
-export const CLUB_PLUS_CENTS = 390;
 /**
- * Planos que cada conta pode assinar: o DBV+ (R$ 7,90; R$ 3,90 para quem é de clube que paga pelos
- * membros). Quem precisa pagar para usar o app (App Brasil ou clube com o plano vencido) também tem o
- * DBV (R$ 3,90). Os planos com especialidades físicas saíram.
+ * Planos que cada conta pode assinar: o DBV+ (R$ 5,90). Quem precisa pagar para usar o app (App Brasil
+ * ou clube com o plano vencido) também tem o DBV (R$ 3,90). Os planos com especialidades físicas saíram.
  */
-export const plansFor = (needsAccess, clubPays = false) => {
-  if (needsAccess) return [PLANS.app, PLANS.plus];
-  return [clubPays ? { ...PLANS.plus, price_cents: CLUB_PLUS_CENTS, club_price: true } : PLANS.plus];
-};
+export const plansFor = (needsAccess) => (needsAccess ? [PLANS.app, PLANS.plus] : [PLANS.plus]);
 /** Benefício do DBV+ liberado (assinante ativo). */
 export const plusOpen = (memberId) => isPlus(memberId);
 
