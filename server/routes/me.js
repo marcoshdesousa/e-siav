@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { get, run } from '../db.js';
 import { requireAuth } from '../auth.js';
 import { setHandle } from '../handles.js';
-import { removeSubscription, saveSubscription, vapidKeys } from '../push.js';
+import { STUDY_REMINDERS, remindersOf, removeSubscription, saveSubscription, setReminder, vapidKeys } from '../push.js';
 import { clubEntered, clubPresenceSummary, ping } from '../presence.js';
 import { imageUpload, fileUrl } from '../uploads.js';
 import { memberProfile, unitProfile } from '../profiles.js';
@@ -36,6 +36,17 @@ r.post('/me/push', requireAuth('member'), (req, res) => {
 r.post('/me/push/sair', requireAuth('member'), (req, res) => {
   removeSubscription(req.actor.id, req.body.endpoint);
   res.json({ ok: true });
+});
+
+// Lembrete com horário em cada estudo (Ano Bíblico, Meditação, Escola Sabatina, Bom Líder, Bom de Bíblia).
+r.get('/me/lembretes', requireAuth('member'), (req, res) => res.json({
+  reminders: remindersOf(req.actor.id),
+  kinds: Object.fromEntries(Object.entries(STUDY_REMINDERS).map(([k, v]) => [k, v.label])),
+  device: !!get('SELECT 1 FROM push_subscriptions WHERE member_id = ?', req.actor.id),
+}));
+r.put('/me/lembretes', requireAuth('member'), (req, res) => {
+  if (!setReminder(req.actor.id, String(req.body.kind || ''), String(req.body.time || ''))) fail(400, 'Escolha um horário válido');
+  res.json({ reminders: remindersOf(req.actor.id) });
 });
 
 // "Estou aqui": a cada minuto com o app aberto (5 minutos no dia = 1 dia na sequência do app).

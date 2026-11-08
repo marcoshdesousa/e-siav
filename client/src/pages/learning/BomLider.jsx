@@ -8,6 +8,7 @@ import { Button, Card, Loading, PageHeader, Tabs, useAsync, useLoad } from '../.
 import { BackButton, PlayButton, VoiceAudio, useFocusMode, useScrollHere } from './Learning.jsx';
 import { useNarration } from './voice.js';
 import './bomlider.css';
+import { StudyReminder } from './Reminder.jsx';
 
 const br = (iso) => iso.split('-').reverse().join('/');
 
@@ -17,6 +18,7 @@ export function BomLider({ base }) {
   return (
     <>
       <PageHeader title="Bom Líder" subtitle="Livros de liderança: leia, ouça, responda e escreva com as suas palavras" />
+      <div className="remind-row"><StudyReminder kind="bom_lider" /></div>
       {/* Nisto Cremos: bloqueado até o livro chegar. */}
       <Tabs tabs={[['manual', 'Manual Administrativo'], ['nisto', <span key="n" className="tab-locked"><Lock size={13} /> Nisto Cremos <em>em breve</em></span>]]} value="manual" onChange={() => {}} />
       {(

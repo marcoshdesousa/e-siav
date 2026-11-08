@@ -190,3 +190,15 @@
 .study-locked b { font-family: var(--font-title); font-size: 1.15rem; }
 .study-locked p { margin: 0; font-size: .88rem; opacity: .85; max-width: 32ch; }
 .study-locked svg { color: #fde047; }
+
+/* Lembrete com horário em cada estudo */
+.remind-btn { display: inline-flex; align-items: center; gap: .35rem; border: 1.5px solid var(--card-border); background: var(--surface); color: var(--ink); border-radius: 999px; padding: .42rem .8rem; font: 700 .8rem var(--font); cursor: pointer; white-space: nowrap; }
+.remind-btn.on { border-color: #f59e0b; background: rgba(245, 158, 11, .14); color: #b45309; }
+.remind-btn b { font-family: var(--font-title); }
+.remind-time { display: flex; justify-content: center; margin: .4rem 0 .7rem; }
+.remind-time input { width: auto; font: 800 2.2rem var(--font-title); text-align: center; padding: .4rem 1rem; border-radius: 18px; }
+.remind-quick { display: flex; flex-wrap: wrap; justify-content: center; gap: .4rem; margin-bottom: .8rem; }
+.remind-quick button { border: 1.5px solid var(--card-border); background: var(--surface); color: var(--ink); border-radius: 999px; padding: .35rem .75rem; font: 700 .8rem var(--font); cursor: pointer; }
+.remind-quick button.on { border-color: var(--primary); background: var(--primary); color: #fff; }
+.remind-warn { font-size: .82rem; font-weight: 700; color: #b45309; background: rgba(245, 158, 11, .12); border-radius: 12px; padding: .55rem .7rem; }
+.remind-row { display: flex; margin: -.4rem 0 .8rem; }

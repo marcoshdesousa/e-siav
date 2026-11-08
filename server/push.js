@@ -2,7 +2,8 @@
 // lembretes espalhados: entrar no app, Meditação, Ano Bíblico, Escola Sabatina, requisito, joguinho e
 // figurinhas. Lembrete de algo que ele já fez hoje não é enviado. O horário de cada lembrete muda de
 // pessoa para pessoa (e de dia para dia), para não chegar tudo junto, e há pelo menos 40 minutos entre
-// um lembrete e outro.
+// um lembrete e outro. Em cada estudo o membro também pode marcar o horário do lembrete (todo dia, na
+// hora que ele quiser); aí o lembrete automático daquele estudo não é mandado.
 import crypto from 'node:crypto';
 import webpush from 'web-push';
 import { all, get, run } from './db.js';
@@ -30,6 +31,14 @@ run(`CREATE TABLE IF NOT EXISTS push_log (
   sent INTEGER NOT NULL DEFAULT 0,
   at INTEGER NOT NULL,
   PRIMARY KEY (member_id, date, kind)
+)`);
+
+// Lembrete com horário escolhido pelo membro, em cada estudo (todo dia, na hora que ele marcou).
+run(`CREATE TABLE IF NOT EXISTS study_reminders (
+  member_id INTEGER NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+  kind TEXT NOT NULL,
+  time TEXT NOT NULL,
+  PRIMARY KEY (member_id, kind)
 )`);
 
 export const START_HOUR = 9;
@@ -108,6 +117,41 @@ const KINDS = [
   } },
 ];
 
+/**
+ * Os estudos que aceitam lembrete com horário. check(m, today): a mensagem, ou null quando não precisa
+ * lembrar (já fez hoje, ou o estudo ainda não começou).
+ */
+const leaderToday = (id, t) => !!get("SELECT 1 FROM bom_lider_progress WHERE member_id = ? AND date(completed_at, '-3 hours') = ?", id, t);
+const bdbToday = (id, t) => !!get("SELECT 1 FROM bdb_progress WHERE member_id = ? AND date(passed_at, '-3 hours') = ?", id, t);
+const hasTable = (t) => !!get("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?", t);
+export const STUDY_REMINDERS = {
+  ano_biblico: { label: 'Ano Bíblico', check: (m, t) => (doneBible(m.id, t) !== false ? null
+    : { title: 'Hora do Ano Bíblico', body: 'Você pediu para lembrar: a leitura de hoje está esperando.', url: '/membro/aprendizagem/ano-biblico' }) },
+  meditacao: { label: 'Meditação Diária', check: (m, t) => (doneMeditation(m.id, t) !== false ? null
+    : { title: 'Hora da Meditação', body: 'Você pediu para lembrar: a meditação de hoje está esperando.', url: '/membro/aprendizagem/meditacao' }) },
+  escola_sabatina: { label: 'Escola Sabatina', check: (m, t) => (doneSabbath(m, t) !== false ? null
+    : { title: 'Hora da Escola Sabatina', body: 'Você pediu para lembrar: a lição de hoje está esperando.', url: '/membro/aprendizagem/escola-sabatina' }) },
+  bom_lider: { label: 'Bom Líder', check: (m, t) => {
+    const start = setting('bom_lider_inicio');
+    if ((start && t < start) || !hasTable('bom_lider_progress') || leaderToday(m.id, t)) return null;
+    return { title: 'Hora do Bom Líder', body: 'Você pediu para lembrar: que tal fazer uma aula hoje?', url: '/membro/aprendizagem/bom-lider' };
+  } },
+  bom_de_biblia: { label: 'Bom de Bíblia', check: (m, t) => (bdbToday(m.id, t) ? null
+    : { title: 'Hora do Bom de Bíblia', body: 'Você pediu para lembrar: passe mais uma fase hoje!', url: '/membro/aprendizagem/bom-de-biblia' }) },
+};
+// Lembrete automático que o horário escolhido substitui (o mesmo estudo não lembra duas vezes).
+const CUSTOM_REPLACES = { ano_biblico: 'ano_biblico', meditacao: 'meditacao', escola_sabatina: 'escola_sabatina' };
+
+export const remindersOf = (memberId) => Object.fromEntries(all('SELECT kind, time FROM study_reminders WHERE member_id = ?', memberId).map((x) => [x.kind, x.time]));
+/** Marca (HH:MM) ou tira (time vazio) o lembrete de um estudo. */
+export function setReminder(memberId, kind, time) {
+  if (!STUDY_REMINDERS[kind]) return false;
+  if (!time) { run('DELETE FROM study_reminders WHERE member_id = ? AND kind = ?', memberId, kind); return true; }
+  if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) return false;
+  run('INSERT INTO study_reminders (member_id, kind, time) VALUES (?, ?, ?) ON CONFLICT (member_id, kind) DO UPDATE SET time = excluded.time', memberId, kind, time);
+  return true;
+}
+
 /** Minuto do dia em que este lembrete sai para este membro (muda por pessoa e por dia). */
 export function slotOf(memberId, date, k) {
   const h = crypto.createHash('sha1').update(`${memberId}|${date}|${k.kind}`).digest().readUInt32BE(0);
@@ -142,20 +186,39 @@ async function deliver(memberId, msg) {
  */
 export async function pushTick(now = new Date(), send = deliver) {
   const min = minutesBR(now);
-  if (min < START_HOUR * 60 || min >= END_HOUR * 60) return 0;
   const today = todayBR(now);
+  const log = (m, kind, ok) => run('INSERT OR IGNORE INTO push_log (member_id, date, kind, sent, at) VALUES (?, ?, ?, ?, ?)', m.id, today, kind, ok ? 1 : 0, now.getTime());
+  let sent = 0;
+  // 1) Lembretes com o horário que o membro escolheu (a qualquer hora do dia, sem intervalo mínimo).
+  const custom = all(`SELECT r.kind, r.time, m.id, m.club_id, m.unit_id, m.birth_date, c.district_id
+    FROM study_reminders r JOIN members m ON m.id = r.member_id JOIN clubs c ON c.id = m.club_id
+    WHERE m.status = 'ativo' AND r.member_id IN (SELECT member_id FROM push_subscriptions)`);
+  for (const r of custom) {
+    const [h, mm] = r.time.split(':').map(Number);
+    const key = `hora:${r.kind}`;
+    // Só na hora marcada (ou até 30 minutos depois, se o servidor estava parado).
+    if (min < h * 60 + mm || min > h * 60 + mm + 30) continue;
+    if (get('SELECT 1 FROM push_log WHERE member_id = ? AND date = ? AND kind = ?', r.id, today, key)) continue;
+    const msg = STUDY_REMINDERS[r.kind]?.check(r, today);
+    const ok = msg ? await send(r.id, { ...msg, tag: key }) : false;
+    log(r, key, ok);
+    if (ok) sent++;
+  }
+  // 2) Lembretes automáticos, espalhados entre 9h e 21h.
+  if (min < START_HOUR * 60 || min >= END_HOUR * 60) return sent;
   const members = all(`SELECT DISTINCT m.id, m.club_id, m.unit_id, m.birth_date, c.district_id
     FROM push_subscriptions s JOIN members m ON m.id = s.member_id JOIN clubs c ON c.id = m.club_id WHERE m.status = 'ativo'`);
-  let sent = 0;
   for (const m of members) {
     const done = new Set(all('SELECT kind FROM push_log WHERE member_id = ? AND date = ?', m.id, today).map((x) => x.kind));
     const last = get('SELECT MAX(at) at FROM push_log WHERE member_id = ? AND date = ? AND sent = 1', m.id, today)?.at || 0;
+    // O estudo com horário escolhido não ganha também o lembrete automático.
+    const own = new Set(Object.keys(remindersOf(m.id)).map((k) => CUSTOM_REPLACES[k]).filter(Boolean));
     for (const k of KINDS) {
-      if (done.has(k.kind) || slotOf(m.id, today, k) > min) continue;
+      if (done.has(k.kind) || own.has(k.kind) || slotOf(m.id, today, k) > min) continue;
       const msg = k.check(m, today);
       if (msg && now.getTime() - last < GAP_MIN * 60e3) break; // espera o intervalo
       const ok = msg ? await send(m.id, { ...msg, tag: k.kind }) : false;
-      run('INSERT OR IGNORE INTO push_log (member_id, date, kind, sent, at) VALUES (?, ?, ?, ?, ?)', m.id, today, k.kind, ok ? 1 : 0, now.getTime());
+      log(m, k.kind, ok);
       if (ok) { sent++; break; }
     }
   }

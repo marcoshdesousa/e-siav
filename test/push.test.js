@@ -48,3 +48,28 @@ test('lembretes: 9h–21h, um por vez, com intervalo, e não lembra o que já fe
   assert.ok(slots.size > 3, 'espalha os horários');
   for (const s of slots) assert.ok(s >= 720 && s < 810);
 });
+
+test('lembrete com horário escolhido: manda na hora (até de madrugada), uma vez, e tira o automático daquele estudo', async () => {
+  const { setReminder, remindersOf } = await import('../server/push.js');
+  const m = get("SELECT id FROM members WHERE status = 'ativo' ORDER BY id DESC LIMIT 1");
+  saveSubscription(m.id, { endpoint: 'https://push.exemplo/hora', keys: { p256dh: 'a', auth: 'b' } });
+  assert.equal(setReminder(m.id, 'ano_biblico', '25:00'), false, 'hora inválida');
+  assert.equal(setReminder(m.id, 'qualquer', '07:00'), false, 'estudo inválido');
+  assert.ok(setReminder(m.id, 'ano_biblico', '06:15'));
+  assert.ok(setReminder(m.id, 'bom_de_biblia', '22:40'));
+  assert.deepEqual(remindersOf(m.id), { ano_biblico: '06:15', bom_de_biblia: '22:40' });
+  const got = [];
+  const send = async (id, msg) => { if (id === m.id) got.push(msg.tag); return true; };
+  const day = (hh, mm) => new Date(Date.UTC(2027, 3, 15, hh + 3, mm));
+  await pushTick(day(6, 14), send);
+  assert.deepEqual(got, [], 'antes da hora nada');
+  await pushTick(day(6, 15), send);
+  await pushTick(day(6, 16), send);
+  assert.deepEqual(got, ['hora:ano_biblico'], 'na hora, uma vez só');
+  for (let t = 9 * 60; t < 21 * 60; t++) await pushTick(day(Math.floor(t / 60), t % 60), send);
+  assert.ok(!got.includes('ano_biblico'), 'sem o lembrete automático do Ano Bíblico');
+  await pushTick(day(22, 40), send);
+  assert.ok(got.includes('hora:bom_de_biblia'), 'Bom de Bíblia às 22:40');
+  assert.ok(setReminder(m.id, 'ano_biblico', ''));
+  assert.deepEqual(remindersOf(m.id), { bom_de_biblia: '22:40' }, 'tirou o lembrete');
+});

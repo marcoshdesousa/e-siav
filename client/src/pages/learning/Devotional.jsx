@@ -7,6 +7,7 @@ import { Button, Card, Loading, PageHeader, Tabs, useAsync, useLoad } from '../.
 import { BackButton, PlayButton, TodayRow, VoiceAudio, useBack, useFocusMode, useScrollHere } from './Learning.jsx';
 import { useNarration } from './voice.js';
 import { PackReward } from './PackReward.jsx';
+import { StudyReminder } from './Reminder.jsx';
 import './devotional.css';
 
 const br = (iso) => (iso ? iso.split('-').reverse().join('/') : '');
@@ -108,6 +109,7 @@ export function MeditationList({ base }) {
   return (
     <>
       <PageHeader title="Meditação Diária" subtitle="Uma história por dia para começar com Deus" />
+      <div className="remind-row"><StudyReminder kind="meditacao" /></div>
       <Loading {...state}>{(d) => <MeditationMonths d={d} base={base} />}</Loading>
     </>
   );
@@ -262,6 +264,7 @@ export function SabbathHub({ base }) {
   return (
     <>
       <PageHeader title="Lição da Escola Sabatina" subtitle="Estude a lição do dia, assista ao vídeo e responda" />
+      <div className="remind-row"><StudyReminder kind="escola_sabatina" /></div>
       <Loading {...state}>
         {(d) => {
           const c = cat || d.mine;

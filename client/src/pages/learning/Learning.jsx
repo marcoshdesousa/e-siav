@@ -8,6 +8,7 @@ import { Button, Card, Loading, PageHeader, Section, useLoad } from '../../ui.js
 import { useOnline } from '../../offline.js';
 import { useNarration } from './voice.js';
 import { PackReward } from './PackReward.jsx';
+import { StudyReminder } from './Reminder.jsx';
 import './learning.css';
 import './devotional.css';
 
@@ -189,6 +190,7 @@ export function BibleYear({ base }) {
   return (
     <>
       <PageHeader title="Ano Bíblico" subtitle="A Bíblia inteira, um pedaço por dia" />
+      <div className="remind-row"><StudyReminder kind="ano_biblico" /></div>
       <Loading {...state}>{(d) => <BibleYearBody d={d} base={base} />}</Loading>
     </>
   );
@@ -510,6 +512,7 @@ export function BomDeBiblia({ base }) {
   return (
     <>
       <PageHeader title="Bom de Bíblia" subtitle="Responda rápido: 15 segundos por pergunta" />
+      <div className="remind-row"><StudyReminder kind="bom_de_biblia" /></div>
       <Loading {...state}>
         {(d) => {
           const groups = [];
