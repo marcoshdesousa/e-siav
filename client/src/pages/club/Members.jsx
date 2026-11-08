@@ -160,7 +160,7 @@ export function MembersBrowser({ list, units, actions, initialTab = 'ativo' }) {
 }
 
 /** Botões do Sistema do Clube para cada membro, conforme a situação. */
-export function memberActions({ base, run, done, setEditing, setAch }) {
+export function memberActions({ base, run, done, setEditing }) {
   return (m) => {
     if (m.status === 'inativo') {
       return <Button small variant="green" onClick={() => run(() => api.post(`/club/members/${m.id}/reativar`), 'Membro ativado!').then(() => done())}><RotateCcw size={14} /> Ativar</Button>;
@@ -168,7 +168,6 @@ export function memberActions({ base, run, done, setEditing, setAch }) {
     return (
       <>
         <Button small variant="secondary" onClick={() => setEditing(m)}>Editar</Button>
-        <Button small variant="secondary" onClick={() => setAch(m)}>Especialidades</Button>
         <Link to={`${base}/ver/membro/${m.link}`}><Button small variant="ghost">Perfil</Button></Link>
         <Confirm text={`Inativar ${m.name}? A pessoa sai das listas e do ranking, mas continua no sistema e pode ser ativada de novo.`}
           onYes={() => run(() => api.post(`/club/members/${m.id}/desativar`), 'Membro inativado').then(() => done())}>Inativar</Confirm>

@@ -48,11 +48,7 @@ export const EventsList = ({ events }) => (
 
 const PREVIEW = 3;
 
-/**
- * Classes e especialidades do perfil: só o nome (com o ícone da área, sem foto).
- * Mostra as 2 primeiras e o botão "Ver mais" abre todas.
- */
-/** Classes e especialidades: as 3 primeiras; "Ver mais" mostra tudo separado por categoria (com quantas). */
+/** Lista de nomes do perfil (cursos): os 3 primeiros; "Ver mais" mostra tudo separado por categoria. */
 function NameList({ title, items = [], empty, emptyIcon, icon, byCategory }) {
   const [open, setOpen] = useState(false);
   const extra = items.length - PREVIEW;
@@ -64,9 +60,9 @@ function NameList({ title, items = [], empty, emptyIcon, icon, byCategory }) {
   );
   const groups = useMemo(() => {
     const m = new Map();
-    for (const c of items) { const g = byCategory ? c.category || 'Outras' : c.leader ? 'Classes de liderança' : 'Classes regulares e avançadas'; if (!m.has(g)) m.set(g, []); m.get(g).push(c); }
+    for (const c of items) { const g = byCategory ? c.category || 'Outras' : title; if (!m.has(g)) m.set(g, []); m.get(g).push(c); }
     return [...m.entries()].sort((a, b) => b[1].length - a[1].length);
-  }, [items, byCategory]);
+  }, [items, byCategory, title]);
   return (
     <Section title={`${title}${items.length ? ` (${items.length})` : ''}`}>
       {items.length ? (
@@ -251,8 +247,6 @@ export function MemberProfileView({ member: m, linkBase, photoAction, extra }) {
       {extra}
       {m.streaks && <BibleStreak list={m.streaks} app={m.app_streak} />}
       <RanksGrid r={m.ranks} />
-      <NameList title="Classes" items={m.classes} empty="Nenhuma classe ainda." emptyIcon="compass" icon="compass" />
-      <NameList title="Especialidades" items={m.specialties} empty="Nenhuma especialidade ainda." emptyIcon="knot" icon="award" byCategory />
       {m.courses?.length ? <NameList title="Cursos concluídos" items={m.courses} /> : null}
       <MedalList medals={m.medals} />
       <EventsList events={m.events} />

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, BookOpenText, Waypoints, Hourglass, BadgeCheck, Lock, Download, Bell, X } from 'lucide-react';
+import { BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, BookOpenText, Hourglass, BadgeCheck, Lock, Download, Bell, X } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Button, Card, Loading, Modal, PageHeader, notify, useAsync, useLoad } from '../../ui.jsx';
@@ -10,7 +10,6 @@ import { RequirementsTodo } from '../Requirements.jsx';
 import { ContentDetail, ContentList } from '../Content.jsx';
 import RankingHub from '../Ranking.jsx';
 import ClubsBrowser from '../Clubs.jsx';
-import MyAchievements from './MyAchievements.jsx';
 import { AgendaLeitura, ProximasDatas } from '../club/Folders.jsx';
 import { EmbeddedSite, SupportChat } from '../Shared.jsx';
 import { GamePage, GamesHub } from '../games/GamesHub.jsx';
@@ -18,7 +17,7 @@ import { GamePage, GamesHub } from '../games/GamesHub.jsx';
 import { AlbumPage, AlbumsPage } from '../albums/AlbumsHub.jsx';
 import { BibleDay, BibleYear, BomDeBiblia, BomDeBibliaPhase, LearningHub, StreakCard } from '../learning/Learning.jsx';
 import { MeditationDay, MeditationList, SabbathHub, SabbathLesson } from '../learning/Devotional.jsx';
-import PlusPage, { PlusNudge, PlusPicksGate } from './PlusPage.jsx';
+import PlusPage, { PlusNudge } from './PlusPage.jsx';
 import { BomLider, BomLiderLesson } from '../learning/BomLider.jsx';
 import { HandleField } from '../AppSignup.jsx';
 import { DownloadsPage, MemberCertificatePage } from './Downloads.jsx';
@@ -221,7 +220,6 @@ export default function MemberApp() {
   const more = [
     { to: `${base}/dbv-mais`, icon: BadgeCheck, label: actor.app ? 'Planos' : 'DBV+', hint: actor.plus ? `Assinante até ${new Date(actor.plus.until).toLocaleDateString('pt-BR')}` : actor.app?.locked ? 'Assine para usar o app' : actor.app?.trial ? 'Você está no teste grátis' : 'Assine e ganhe benefícios' },
     { to: `${base}/downloads`, icon: Download, label: 'Downloads', hint: 'Certificados para baixar' },
-    { to: `${base}/especialidades`, icon: Waypoints, label: 'Especialidades e classes', hint: 'As suas especialidades e classes' },
     { to: `${base}/albuns`, icon: BookImage, label: 'Álbuns de figurinhas', hint: 'Álbum Bíblico' },
     { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas do clube e do App' },
     { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },
@@ -236,10 +234,10 @@ export default function MemberApp() {
         element={
           <Shell tabs={tabs} parentOf={parentOf}>
             {!actor.waiting && <PlusNudge to={`${base}/dbv-mais`} />}
-            {actor.waiting ? <Waiting text={actor.waiting} /> : actor.plus?.picks_pending ? <PlusPicksGate /> : <AppLock><Routes>
+            {actor.waiting ? <Waiting text={actor.waiting} /> : <AppLock><Routes>
               <Route index element={<MyProfile />} />
               <Route path="requisitos" element={<RequirementsAndRanking isDbv={isDbv} />} />
-              <Route path="especialidades" element={<MyAchievements key="e" type="especialidade" />} />
+              <Route path="especialidades" element={<Navigate to={base} replace />} />
               <Route path="agenda" element={<AgendaLeitura />} />
               <Route path="cartao" element={<EmbeddedSite title="Cartão DBV" linkKey="link_cartao" subtitle="Entre com o código e a senha que o seu clube passar" />} />
               <Route path="suporte" element={<SupportChat />} />

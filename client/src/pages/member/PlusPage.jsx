@@ -6,7 +6,6 @@ import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Button, Card, Loading, Modal, PageHeader, useAsync, useLoad } from '../../ui.jsx';
 import { PixCheckout, money } from '../Payment.jsx';
-import CatalogPicker from '../Catalog.jsx';
 import { PackReward } from '../learning/PackReward.jsx';
 import './plus.css';
 
@@ -19,44 +18,17 @@ export function Verified({ size = 20 }) {
   return <img src="/marca/logo.svg" alt="Verificado DBV+" title="Verificado DBV+" className="plus-verified" style={{ width: size, height: size }} />;
 }
 
-function Picks({ d, reload, done }) {
-  const cat = useLoad(() => api.get('/catalog?type=especialidade'));
-  const [sel, setSel] = useState(new Set());
-  const [busy, run] = useAsync();
-  const n = d.mine.picks_needed;
-  if (d.mine.picks) {
-    return (
-      <Card className="plus-picks-done">
-        <Gift size={28} />
-        <p><b>Em breve alguém da equipe distrital irá entregar suas especialidades.</b></p>
-        <p className="small muted">Você escolheu: {d.picks_names.map((x) => x.name).join(', ')}.</p>
-      </Card>
-    );
-  }
-  return (
-    <Card className="plus-picks-card">
-      <p><b>Escolha {n} especialidades</b> que você gostaria de ganhar. A equipe compra {n === 15 ? 3 : 7} delas e entrega para você (é surpresa!).</p>
-      <p className="small muted">{sel.size} de {n} escolhidas</p>
-      <Loading {...cat}>{(items) => <CatalogPicker type="especialidade" items={items} selected={sel} onChange={(s) => s.size <= n && setSel(s)} />}</Loading>
-      <div className="plus-picks-bar">
-        <span><b>{sel.size}</b> de {n}</span>
-        <Button busy={busy} disabled={sel.size !== n} onClick={() => run(() => api.put('/plus/especialidades', { ids: [...sel] }), 'Em breve alguém da equipe distrital irá entregar suas especialidades.').then(reload).then(done)}>Enviar as {n} especialidades</Button>
-      </div>
-    </Card>
-  );
-}
-
 export default function PlusPage() {
   const { actor, refresh } = useAuth();
   const nav = useNavigate();
   const { pathname } = useLocation();
   const state = useLoad(() => api.get('/plus'));
-  // Pagou: coleta os pacotinhos; se o plano tem especialidades, a escolha vem logo em seguida (obrigatória).
+  // Pagou: coleta os pacotinhos.
   const finish = async () => {
     setOrder(null); setPaid(false); state.reload();
-    const a = await refresh();
+    await refresh();
     if (bought === 'app') nav(`/${pathname.split('/')[1]}`);
-    else if (!a?.plus?.picks_pending) nav(`/${pathname.split('/')[1]}/albuns/biblico`);
+    else nav(`/${pathname.split('/')[1]}/albuns/biblico`);
   };
   const [order, setOrder] = useState(null);
   const [bought, setBought] = useState(null);
@@ -99,7 +71,6 @@ export default function PlusPage() {
                     : <div><b>Você é {d.mine.plan_name}!</b><small><Clock size={12} /> Válido até {br(d.mine.until)} · {d.mine.plan === 'app' ? 'renove ou mude para o DBV+ quando quiser' : 'um novo plano fica disponível nesse dia'}</small></div>}
               </Card>
             )}
-            {d.mine?.active && d.mine.picks_needed > 0 && <Picks d={d} reload={state.reload} />}
             <h3 className="plus-h">{d.app ? 'Benefícios do DBV+' : 'Benefícios'}</h3>
             <ul className="plus-benefits">
               {d.benefits.map((b) => <li key={b.text} className={b.soon ? 'soon' : ''}>{b.soon ? <Sparkles size={16} /> : <Check size={16} />}<span>{b.text}{b.soon && <em>em breve</em>}</span></li>)}
@@ -115,12 +86,12 @@ export default function PlusPage() {
               </div>
               )}
               {d.plans.map((p) => (
-                <div key={p.id} className={'plus-plan' + (p.specialties ? ' gold' : '') + (p.access_only ? ' free' : '')}>
+                <div key={p.id} className={'plus-plan' + (p.access_only ? ' free' : '')}>
                   <b>{p.name}</b>
                   <span className="plus-price">{money(p.price_cents)}</span>
                   {p.access_only
                     ? <ul className="plus-free">{(d.free || []).map((t) => <li key={t}><Check size={14} />{t}</li>)}</ul>
-                    : <small>{p.specialties ? `Todos os benefícios + ${d.packs} pacotinhos + ${p.specialties} especialidades físicas (você escolhe ${p.pick})` : `Todos os benefícios do app + ${d.packs} pacotinhos de figurinhas`}</small>}
+                    : <small>{`Todos os benefícios do app + ${d.packs} pacotinhos de figurinhas`}</small>}
                   {d.mine?.active && d.mine.plan === p.id && <span className="plus-current">{d.mine.trial ? `Seu plano atual · teste grátis (${daysLeft(d.mine.until).toLowerCase()})` : 'Seu plano atual'}</span>}
                   {canBuy(d)
                     ? <Button block busy={busy} onClick={() => buy(p.id)}>{d.mine?.active && !d.mine.trial && d.mine.plan !== p.id ? 'Mudar para este' : 'Assinar'}</Button>
@@ -194,26 +165,5 @@ export function PlusNudge({ to }) {
       <Link to={to} className="plus-bar-btn">Ver planos</Link>
       <button type="button" className="plus-bar-x" aria-label="Fechar" onClick={close}><X size={16} /></button>
     </div>
-  );
-}
-
-/**
- * Plano com especialidades e a escolha ainda não feita: o app só continua depois de escolher
- * (mesmo fechando e abrindo de novo).
- */
-export function PlusPicksGate() {
-  const { refresh } = useAuth();
-  const state = useLoad(() => api.get('/plus'));
-  return (
-    <>
-      <div className="plus-hero">
-        <img src="/marca/logo.svg" alt="" />
-        <div>
-          <b>Escolha as suas especialidades</b>
-          <p>Para continuar usando o app, escolha agora as especialidades do seu plano DBV+.</p>
-        </div>
-      </div>
-      <Loading {...state}>{(d) => (d.mine?.picks_needed ? <Picks d={d} reload={state.reload} done={refresh} /> : null)}</Loading>
-    </>
   );
 }

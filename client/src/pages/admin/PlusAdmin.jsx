@@ -1,6 +1,6 @@
-// DBV+ (só o administrador geral): assinantes, plano, validade e as especialidades escolhidas.
+// DBV+ (só o administrador geral): assinantes, plano e validade; dar ou tirar o DBV+.
 import { useState } from 'react';
-import { BadgeCheck, Copy, X } from 'lucide-react';
+import { BadgeCheck, X } from 'lucide-react';
 import { api } from '../../api.js';
 import { Button, Card, Field, Loading, PageHeader, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
 
@@ -8,7 +8,7 @@ const br = (iso) => (iso ? new Date(iso).toLocaleDateString('pt-BR') : '');
 
 export default function PlusAdmin() {
   const state = useLoad(() => api.get('/admin/plus'));
-  const [tab, setTab] = useState('especialidades');
+  const [tab, setTab] = useState('assinantes');
   const [f, setF] = useState({ code: '', plan: 'plus', days: 30 });
   const [busy, run] = useAsync();
   const give = async () => {
@@ -19,18 +19,14 @@ export default function PlusAdmin() {
     if (!window.confirm(`Tirar o DBV+ de ${r.name}?`)) return;
     await run(() => api.del('/admin/plus/' + r.member_id), 'DBV+ retirado').then(state.reload, () => {});
   };
-  const copy = async (text) => { try { await navigator.clipboard.writeText(text); notify('Texto copiado!'); } catch { window.prompt('Copie o texto:', text); } };
   return (
     <>
-      <PageHeader title="DBV+" subtitle="Assinantes e especialidades escolhidas" />
+      <PageHeader title="DBV+" subtitle="Assinantes e dar DBV+" />
       <Loading {...state}>
         {(rows) => {
-          const withPicks = rows.filter((r) => r.active && r.picks_needed > 0);
-          const text = (r) => `${r.name} (${r.code}) — ${r.club_name}, ${r.district_name}\nPlano: ${r.plan_name} (${r.picks_needed === 15 ? 3 : 7} especialidades)\nEscolhidas: ${r.picks.length ? r.picks.join(', ') : 'ainda não escolheu'}`;
-          const all = withPicks.map(text).join('\n\n');
           return (
             <>
-              <Tabs tabs={[['especialidades', `Especialidades (${withPicks.length})`], ['assinantes', `Assinantes (${rows.filter((r) => r.active).length})`], ['dar', 'Dar DBV+']]} value={tab} onChange={setTab} />
+              <Tabs tabs={[['assinantes', `Assinantes (${rows.filter((r) => r.active).length})`], ['dar', 'Dar DBV+']]} value={tab} onChange={setTab} />
               {tab === 'dar' ? (
                 <Card>
                   <p className="small muted" style={{ marginTop: 0 }}>Libera o DBV+ sem pagamento (contas de teste ou cortesia). Para tirar, use a aba Assinantes.</p>
@@ -43,18 +39,6 @@ export default function PlusAdmin() {
                   <Field label="Dias"><input type="number" min="1" value={f.days} onChange={(e) => setF({ ...f, days: e.target.value })} /></Field>
                   <Button block busy={busy} disabled={!f.code.trim()} onClick={give}><BadgeCheck size={16} /> Dar DBV+</Button>
                 </Card>
-              ) : tab === 'especialidades' ? (
-                <>
-                  {withPicks.length > 0 && <Button block onClick={() => copy(all)}><Copy size={16} /> Copiar tudo</Button>}
-                  {withPicks.length ? withPicks.map((r) => (
-                    <Card key={r.member_id} className="small mt">
-                      <p style={{ margin: 0 }}><b>{r.name}</b> · {r.code} · {r.club_name} ({r.district_name})</p>
-                      <p className="muted" style={{ margin: '.2rem 0' }}>{r.plan_name} · compra {r.picks_needed === 15 ? 3 : 7} · até {br(r.until)}</p>
-                      <p style={{ margin: '.2rem 0' }}>{r.picks.length ? r.picks.join(', ') : <i>Ainda não escolheu.</i>}</p>
-                      <Button small variant="secondary" onClick={() => copy(text(r))}><Copy size={14} /> Copiar</Button>
-                    </Card>
-                  )) : <p className="muted small">Nenhum assinante com especialidades ainda.</p>}
-                </>
               ) : (
                 <div className="list">
                   {rows.map((r) => (

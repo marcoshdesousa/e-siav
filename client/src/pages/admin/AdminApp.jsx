@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import {
-  BookOpenCheck, CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, Tent, Trophy, Users, Globe, MessageCircle, BookImage, Wallet, Flame, BadgeCheck, ArrowLeftRight, ClipboardList,
+  CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, Tent, Trophy, Users, Globe, MessageCircle, BookImage, Wallet, Flame, ArrowLeftRight, ClipboardList,
 } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -17,7 +17,6 @@ import ContentReview from './ContentReview.jsx';
 import Deliver from './Deliver.jsx';
 import EventsAdmin from './Events.jsx';
 import AnnouncementsAdmin from './Announcements.jsx';
-import CatalogAdmin from './CatalogAdmin.jsx';
 import ClanView from './ClanView.jsx';
 import AgendaAdmin from './AgendaAdmin.jsx';
 import SupportAdmin, { LinksAdmin } from './SupportAdmin.jsx';
@@ -27,7 +26,6 @@ import PaymentsAdmin from './PaymentsAdmin.jsx';
 import StreaksAdmin from './StreaksAdmin.jsx';
 import PlusAdmin from './PlusAdmin.jsx';
 import FormsAdmin, { FormResponses } from './FormsAdmin.jsx';
-import { ApprovalsPage } from '../club/ClubApp.jsx';
 import { AppTransfersPage } from '../club/Transfers.jsx';
 
 const base = '/admin';
@@ -76,7 +74,6 @@ function AdminHome() {
           { to: `${base}/links`, icon: Globe, label: 'Links dos sites', hint: 'SGC, Cantinho e Cartão DBV' },
     { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas para todos, distrito ou clube' },
     { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo' },
-          { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial' },
           { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos' },
           { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios' },
         ]} />
@@ -157,7 +154,7 @@ function NameLoginForm({ title, item, withDistrict, districts, appDistrict, onCl
         <Field label="Nome"><input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>
         {withDistrict && (
           <Field label="O que ele vai cuidar" hint={appDistrict && String(f.district_id) === String(appDistrict.id)
-            ? 'Administrador do App: cuida de quem criou a conta pelo app (Clube App Brasil). Aprova especialidades e classes, faz anúncios e requisitos para eles.'
+            ? 'Administrador do App: cuida de quem criou a conta pelo app (Clube App Brasil). Aprova transferências, faz anúncios e requisitos para eles.'
             : 'Ele cria clubes e requisitos desse distrito e só vê esse distrito.'}>
             <select value={f.district_id} onChange={(e) => setF({ ...f, district_id: e.target.value })}>
               {districts.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
@@ -355,9 +352,8 @@ export default function AdminApp() {
     { to: `${base}/conteudo`, icon: Library, label: 'Conteúdo' },
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
-  // Aprovações de quem é do Clube App Brasil: o geral e o administrador do App.
+  // Transferências de quem é do Clube App Brasil: o geral e o administrador do App.
   const appApprovals = general || actor.app ? [
-    { to: `${base}/aprovacoes`, icon: BadgeCheck, label: 'Aprovações do App', hint: 'Especialidades e classes de quem é do App Brasil' },
     { to: `${base}/transferencias`, icon: ArrowLeftRight, label: 'Transferências do App', hint: 'Clubes pedindo quem é do App Brasil' },
   ] : [];
   const more = !general ? [
@@ -368,14 +364,13 @@ export default function AdminApp() {
   ] : [
     ...appApprovals,
     { to: `${base}/sequencias`, icon: Flame, label: 'Sequências', hint: 'Porcentagem por distrito e clube' },
-    { to: `${base}/dbv-mais`, icon: Wallet, label: 'DBV+', hint: 'Assinantes e especialidades escolhidas' },
+    { to: `${base}/dbv-mais`, icon: Wallet, label: 'DBV+', hint: 'Assinantes e dar DBV+' },
     { to: `${base}/suporte`, icon: MessageCircle, label: 'Suporte', hint: 'Responder os clubes e membros' },
     { to: `${base}/pagamentos`, icon: Wallet, label: 'Pagamentos', hint: 'Pix (SyncPay) e confirmações' },
     { to: `${base}/figurinhas`, icon: BookImage, label: 'Figurinhas', hint: 'Álbuns completos e presentes' },
           { to: `${base}/aprendizagem`, icon: Flame, label: 'Aprendizagem Diária', hint: 'Arganel, medalhas e áudio' },
     { to: `${base}/links`, icon: Globe, label: 'Links dos sites', hint: 'SGC, Cantinho e Cartão DBV' },
     { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo', hint: 'Cursos' },
-    { to: `${base}/catalogo`, icon: BookOpenCheck, label: 'Catálogo oficial', hint: 'Especialidades' },
     { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos', hint: 'Criar e participantes' },
     { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: 'Aparecem ao abrir o app' },
     { to: `${base}/formularios`, icon: ClipboardList, label: 'Formulários', hint: 'Links para responder e as respostas' },
@@ -400,13 +395,11 @@ export default function AdminApp() {
         <Route path="agenda" element={<AgendaAdmin />} />
         <Route path="requisitos" element={<RequirementsAdmin />} />
         <Route path="conteudo" element={<ContentAdmin />} />
-        <Route path="catalogo" element={<CatalogAdmin />} />
         <Route path="cursos" element={<ContentReview type="curso" />} />
         <Route path="entregar" element={<Deliver />} />
         <Route path="eventos" element={<EventsAdmin />} />
         <Route path="anuncios" element={<AnnouncementsAdmin />} />
         <Route path="transferencias" element={<AppTransfersPage />} />
-        <Route path="aprovacoes" element={<ApprovalsPage url="/admin/app-aprovacoes" canAdd={false} subtitle="Especialidades e classes de quem é do Clube App Brasil" />} />
         <Route path="medalhas" element={<Navigate to={`${base}/conteudo`} replace />} />
         <Route path="ranking" element={<RankingHub base={base} />} />
         {general && <Route path="formularios" element={<FormsAdmin base={base} />} />}

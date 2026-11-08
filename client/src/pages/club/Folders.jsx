@@ -1,17 +1,16 @@
 // Pastas do Sistema do Clube: Secretaria (agenda, matrículas), Tesouraria (minhas finanças),
-// Patrimônio, Biblioteca (especialidades e classes), Unidades (membros por unidade), Ferramentas e Suporte.
+// Patrimônio, Unidades (membros por unidade), Ferramentas e Suporte.
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
-  Cake, CalendarDays, Trash2, ChevronLeft, ChevronRight, Clock, Copy, Link2, MapPin, MessageCircle, Printer, Search, TrendingDown, TrendingUp, Wallet,
+  Cake, CalendarDays, Trash2, ChevronLeft, ChevronRight, Clock, Copy, Link2, MapPin, MessageCircle, Search, TrendingDown, TrendingUp, Wallet,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { fmtDate, fmtMoney } from '../../format.js';
 import {
-  Avatar, Badge, Button, Card, Confirm, ContentIcon, Empty, Field, ImagePicker, Loading, Modal, PageHeader, Section, Tabs, notify, useAsync, useLoad,
+  Avatar, Badge, Button, Card, Confirm, Empty, Field, ImagePicker, Loading, Modal, PageHeader, Section, Tabs, notify, useAsync, useLoad,
 } from '../../ui.jsx';
-import CatalogPicker from '../Catalog.jsx';
 
 const MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
 const SEMANA = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
@@ -395,175 +394,6 @@ export function PatrimonioPage() {
         </Modal>
       )}
     </>
-  );
-}
-
-// ---------- Biblioteca: especialidades e classes ----------
-/** Escolher várias pessoas de uma vez (com "todos" e filtro por unidade). */
-function PeopleSelect({ people, units, selected, onChange }) {
-  const [q, setQ] = useState('');
-  const [unit, setUnit] = useState('');
-  const shown = people.filter((p) => (!q.trim() || p.name.toLowerCase().includes(q.trim().toLowerCase())) && (!unit || String(p.unit_id) === unit));
-  const all = shown.length > 0 && shown.every((p) => selected.has(p.id));
-  const toggle = (id) => { const n = new Set(selected); n.has(id) ? n.delete(id) : n.add(id); onChange(n); };
-  return (
-    <>
-      <div className="grid2">
-        <input placeholder="Buscar pessoa" value={q} onChange={(e) => setQ(e.target.value)} />
-        <select value={unit} onChange={(e) => setUnit(e.target.value)}>
-          <option value="">Todos as unidades</option>
-          {units.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
-        </select>
-      </div>
-      <label className="row check-all"><input type="checkbox" checked={all} onChange={() => { const n = new Set(selected); shown.forEach((p) => (all ? n.delete(p.id) : n.add(p.id))); onChange(n); }} /> Selecionar todos ({shown.length})</label>
-      <div className="list people-pick">
-        {shown.map((p) => (
-          <label key={p.id} className="list-item pick">
-            <input type="checkbox" checked={selected.has(p.id)} onChange={() => toggle(p.id)} />
-            <Avatar src={p.photo} name={p.name} size={34} />
-            <div className="grow"><div className="title">{p.name}</div><div className="sub">{p.age} anos</div></div>
-          </label>
-        ))}
-      </div>
-    </>
-  );
-}
-
-/** Entregar especialidades ou classes para várias pessoas de uma vez. */
-function Entregar({ type, people, units, onDone }) {
-  const catalog = useLoad(() => api.get('/catalog?type=' + type), [type]);
-  const [who, setWho] = useState(new Set());
-  const [what, setWhat] = useState(new Set());
-  const [step, setStep] = useState(1);
-  const [busy, run] = useAsync();
-  const label = type === 'classe' ? 'classe' : 'especialidade';
-  const send = async () => {
-    const r = await run(() => api.post('/club/biblioteca/entregar', { member_ids: [...who], content_ids: [...what] }), null);
-    notify(`Pronto! ${r.added} entrega${r.added === 1 ? '' : 's'} registrada${r.added === 1 ? '' : 's'}. Já aparece no perfil.`);
-    setWho(new Set()); setWhat(new Set()); setStep(1); onDone();
-  };
-  return (
-    <Card>
-      <div className="steps-head"><span className={step === 1 ? 'on' : ''}>1. Quem recebe</span><span className={step === 2 ? 'on' : ''}>2. {type === 'classe' ? 'Quais classes' : 'Quais especialidades'}</span></div>
-      {step === 1 ? (
-        <>
-          <PeopleSelect people={people} units={units} selected={who} onChange={setWho} />
-          <div className="mt"><Button block disabled={!who.size} onClick={() => setStep(2)}>Continuar ({who.size} {who.size === 1 ? 'pessoa' : 'pessoas'})</Button></div>
-        </>
-      ) : (
-        <>
-          <Loading {...catalog}>{(items) => <CatalogPicker type={type} items={items} selected={what} onChange={setWhat} />}</Loading>
-          <div className="row between mt">
-            <Button variant="secondary" onClick={() => setStep(1)}><ChevronLeft size={16} /> Voltar</Button>
-            <Button busy={busy} disabled={!what.size} onClick={send}>Entregar {what.size} {label}{what.size === 1 ? '' : 's'} para {who.size}</Button>
-          </div>
-        </>
-      )}
-    </Card>
-  );
-}
-
-/** Quem tem especialidades (ou classes), a quantidade, e o certificado de cada uma. */
-function QuemTem({ list, kind }) {
-  const [open, setOpen] = useState(null);
-  const [q, setQ] = useState('');
-  const rows = list.filter((p) => !q.trim() || p.name.toLowerCase().includes(q.trim().toLowerCase()))
-    .sort((a, b) => b[kind].length - a[kind].length || a.name.localeCompare(b.name, 'pt-BR'));
-  const word = kind === 'guias' ? ['classe', 'classes'] : ['especialidade', 'especialidades'];
-  return (
-    <>
-      <div className="search-box"><Search size={16} /><input placeholder="Buscar pessoa" value={q} onChange={(e) => setQ(e.target.value)} /></div>
-      <div className="list mt">
-        {rows.map((p) => (
-          <button type="button" key={p.id} className="list-item" onClick={() => setOpen(p)} disabled={!p[kind].length}>
-            <Avatar src={p.photo} name={p.name} size={42} />
-            <div className="grow"><div className="title">{p.name}</div><div className="sub">{p.age} anos</div></div>
-            <Badge kind={p[kind].length ? 'green' : ''}>{p[kind].length} {p[kind].length === 1 ? word[0] : word[1]}</Badge>
-          </button>
-        ))}
-      </div>
-      {open && (
-        <Modal title={`${word[1][0].toUpperCase() + word[1].slice(1)} · ${open.name}`} onClose={() => setOpen(null)}>
-          <div className="list">
-            {open[kind].map((c) => (
-              <div key={c.id} className="list-item">
-                <span className="ach-img"><ContentIcon c={c} size={20} /></span>
-                <div className="grow"><div className="title">{c.name}</div><div className="sub">Desde {fmtDate(c.date)}</div></div>
-                <Link to={`/clube/certificado/${open.id}/${c.id}`}><Button small variant="secondary"><Printer size={14} /> Certificado</Button></Link>
-              </div>
-            ))}
-          </div>
-        </Modal>
-      )}
-    </>
-  );
-}
-
-export function BibliotecaPage({ approvals }) {
-  const state = useLoad(() => api.get('/club/biblioteca'));
-  const units = useLoad(() => api.get('/club/units'));
-  const [tab, setTab] = useState('insignias');
-  return (
-    <>
-      <PageHeader title="Biblioteca" subtitle="Especialidades e classes do clube" />
-      <Tabs tabs={[['insignias', 'Especialidades'], ['guias', 'Classes'], ['entregar', 'Entregar'], ['pedidos', 'Pedidos']]} value={tab} onChange={setTab} />
-      {tab === 'pedidos' ? approvals : (
-        <Loading {...state}>
-          {(list) => (
-            tab === 'entregar' ? (
-              <EntregarTabs people={list} units={(units.data || []).filter((u) => !u.is_leadership)} onDone={state.reload} />
-            ) : <QuemTem list={list} kind={tab} />
-          )}
-        </Loading>
-      )}
-    </>
-  );
-}
-
-function EntregarTabs({ people, units, onDone }) {
-  const [type, setType] = useState('especialidade');
-  return (
-    <>
-      <div className="seg" role="tablist" style={{ marginBottom: '.7rem' }}>
-        <button type="button" className={type === 'especialidade' ? 'active' : ''} onClick={() => setType('especialidade')}>Especialidades</button>
-        <button type="button" className={type === 'classe' ? 'active' : ''} onClick={() => setType('classe')}>Classes</button>
-      </div>
-      <Entregar key={type} type={type} people={people} units={units} onDone={onDone} />
-    </>
-  );
-}
-
-/** Certificado gerado automaticamente (para imprimir ou salvar em PDF). */
-export function CertificadoPage() {
-  const { mid, cid } = useParams();
-  const state = useLoad(() => api.get(`/club/certificado/${mid}/${cid}`), [mid, cid]);
-  return (
-    <div className="cert-page">
-      <div className="cert-tools no-print">
-        <Link to="/clube/biblioteca"><Button variant="secondary" small><ChevronLeft size={14} /> Voltar</Button></Link>
-        <Button small onClick={() => window.print()}><Printer size={14} /> Imprimir / salvar PDF</Button>
-      </div>
-      <Loading {...state}>
-        {(c) => (
-          <div className="cert">
-            <div className="cert-logos">
-              <img src="/marca/logo.png" alt="App do DBV" />
-              {c.club_logo && <img src={c.club_logo} alt={c.club_name} />}
-            </div>
-            <p className="cert-kicker">App do DBV · {c.club_name}</p>
-            <h1>Certificado</h1>
-            <p className="cert-text">Certificamos que</p>
-            <p className="cert-name">{c.member_name}</p>
-            <p className="cert-text">concluiu {c.type === 'classe' ? 'a classe' : 'a especialidade'}</p>
-            <p className="cert-item"><span className="ach-img"><ContentIcon c={c} size={22} /></span> {c.content_name}</p>
-            <p className="cert-text">em {fmtDate(c.date)}.</p>
-            <div className="cert-sign">
-              <div><span />{c.director_name || 'Diretor(a) do clube'}<small>Diretor(a)</small></div>
-            </div>
-          </div>
-        )}
-      </Loading>
-    </div>
   );
 }
 

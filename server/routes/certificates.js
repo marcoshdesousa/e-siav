@@ -1,5 +1,5 @@
 // Certificados (área Downloads do membro): o app gera sozinho quando o membro conclui o Ano Bíblico,
-// o Bom Líder (Manual Administrativo), uma classe, uma especialidade ou um curso. A página do
+// o Bom Líder (Manual Administrativo) ou um curso, ou fica no pódio de um ranking. A página do
 // certificado tem o botão de imprimir / salvar em PDF.
 import { Router } from 'express';
 import { all, get } from '../db.js';
@@ -25,7 +25,7 @@ function listOf(memberId) {
   const bl = bomLiderFinished(memberId);
   if (bl) out.push({ kind: 'bom-lider', id: 'manual', title: 'Bom Líder: Manual Administrativo', subtitle: 'Concluiu todas as aulas', date: bl });
   for (const a of all(`SELECT ct.id, ct.name, ct.type, a.date FROM achievements a JOIN content ct ON ct.id = a.content_id
-      WHERE a.member_id = ? AND ct.type IN ('classe','especialidade','curso') ORDER BY ct.type, ct.name`, memberId)) {
+      WHERE a.member_id = ? AND ct.type = 'curso' ORDER BY ct.name`, memberId)) {
     out.push({ kind: 'conteudo', id: String(a.id), title: a.name, subtitle: TYPE[a.type], type: a.type, date: a.date });
   }
   // Troféus dos rankings finalizados (1º, 2º e 3º lugar).

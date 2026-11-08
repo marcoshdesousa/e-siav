@@ -19,7 +19,7 @@ export const FREE = [
   'Áudio de todas as leituras: Ano Bíblico, Meditação e Escola Sabatina',
   'Livro do Ano (em 2027)',
   'Jogos com ranking (clube, distrito e Brasil), álbuns de figurinhas e pacotinhos ganhos nos estudos',
-  'Perfil, especialidades, classes e rankings do distrito',
+  'Perfil e rankings do distrito',
 ];
 
 export const BENEFITS = [
@@ -28,7 +28,6 @@ export const BENEFITS = [
   { text: 'Figurinhas em triplo: 3 pacotinhos pelo preço de 1' },
   { text: 'Jogos sem internet (modo offline)' },
   { text: 'Selo de verificado (logo dourada) no perfil' },
-  { text: 'Estudo das Classes e Agrupadas', soon: true },
 ];
 
 // Quem entrou pelo App Brasil (sem clube) precisa de um plano para usar o app: o DBV (R$ 3,90),

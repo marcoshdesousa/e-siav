@@ -160,13 +160,6 @@ export function LearningHub({ base }) {
                 <small>Um capítulo por semana</small>
                 <span className="chip">Em 2027</span>
               </div>
-              <div className="learn-card c7 soon lock">
-                <span className="plus">DBV+</span>
-                <span className="learn-ico"><Lock size={30} /></span>
-                <b>Classes e Agrupadas</b>
-                <small>Estudo das classes regulares e agrupadas</small>
-                <span className="chip">Em breve</span>
-              </div>
             </div>
             {d.test && <p className="small center"><b>Modo de teste:</b> todos os dias e lições estão liberados para testar.</p>}
             <p className="small muted center">Cada sequência conta o que você faz no próprio dia. Cada dia concluído dá pontos no ranking (você, sua unidade e seu clube) e 1 pacotinho de figurinhas.</p>

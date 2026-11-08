@@ -22,7 +22,7 @@ export default function ClanView({ base }) {
   const [, run] = useAsync();
   // Só o administrador geral apaga uma conta (o membro não apaga a própria).
   const remove = !actor.district_id ? (m) => (
-    <Confirm text={`Apagar a conta de ${m.name} de vez? Pontos, sequências, figurinhas e especialidades somem e não dá para desfazer.`}
+    <Confirm text={`Apagar a conta de ${m.name} de vez? Pontos, sequências e figurinhas somem e não dá para desfazer.`}
       onYes={() => run(() => api.del(`/admin/members/${m.id}`), 'Conta apagada').then(state.reload)}><Trash2 size={14} /> Apagar conta</Confirm>
   ) : undefined;
   return (

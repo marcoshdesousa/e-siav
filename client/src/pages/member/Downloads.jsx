@@ -1,5 +1,5 @@
 // Área Downloads do membro: os certificados que o app gera sozinho (Ano Bíblico, Bom Líder,
-// classes, especialidades e cursos). Cada um abre numa página para imprimir ou salvar em PDF.
+// cursos e troféus dos rankings). Cada um abre numa página para imprimir ou salvar em PDF.
 import { Link, useParams } from 'react-router-dom';
 import { Award, BookOpen, ChevronLeft, ChevronRight, Download, GraduationCap, Printer, Trophy as TrophyIco } from 'lucide-react';
 import { api } from '../../api.js';
@@ -30,7 +30,7 @@ export function DownloadsPage({ base }) {
             })}
           </div>
         ) : (
-          <Empty icon="trophy">Ainda não tem certificados. Termine o Ano Bíblico, o Bom Líder, uma classe, uma especialidade ou um curso, ou fique no pódio de um ranking, e o certificado aparece aqui.</Empty>
+          <Empty icon="trophy">Ainda não tem certificados. Termine o Ano Bíblico, o Bom Líder ou um curso, ou fique no pódio de um ranking, e o certificado aparece aqui.</Empty>
         ))}
       </Loading>
     </>

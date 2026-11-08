@@ -33,8 +33,9 @@ if (!get(`SELECT 1 FROM app_flags WHERE key = 'teste-gratis-antigos-v1'`)) {
 export const PLANS = {
   app: { id: 'app', name: 'DBV', price_cents: 390, specialties: 0, pick: 0, access_only: true },
   plus: { id: 'plus', name: 'DBV+', price_cents: 790, specialties: 0, pick: 0 },
-  plus3: { id: 'plus3', name: 'DBV+ 3 Especialidades', price_cents: 1990, specialties: 3, pick: 15 },
-  plus7: { id: 'plus7', name: 'DBV+ 7 Especialidades', price_cents: 3490, specialties: 7, pick: 20 },
+  // Planos antigos (com especialidades físicas): ninguém assina mais; quem tinha aparece só como DBV+.
+  plus3: { id: 'plus3', name: 'DBV+', price_cents: 1990, specialties: 3, pick: 15 },
+  plus7: { id: 'plus7', name: 'DBV+', price_cents: 3490, specialties: 7, pick: 20 },
 };
 export const PLUS_DAYS = 30;
 /** Conta nova do App Brasil: dias de DBV para conhecer o app antes de assinar. */

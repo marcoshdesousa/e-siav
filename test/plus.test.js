@@ -63,7 +63,7 @@ test('DBV+: sem assinatura (modo de teste desligado) fica bloqueado; assinando, 
   let plus = (await pedro.get('/plus')).body;
   assert.deepEqual(plus.plans.map((p) => [p.id, p.price_cents]), [['plus', 790]], 'só o DBV+ (sem planos de especialidades)');
   assert.equal(plus.open, false);
-  assert.ok(plus.benefits.at(-1).soon, 'em breve por último');
+  assert.ok(!plus.benefits.some((b) => /[Ee]specialidade|[Cc]lasses/.test(b.text)), 'sem especialidades nem classes');
   const day = (await pedro.get('/ano-biblico/dia/1')).status;
   assert.equal(day, 403, 'sem modo de teste o dia futuro fica fechado');
   // compra de figurinhas sem DBV+: quantidade normal
