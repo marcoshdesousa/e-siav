@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ClipboardCheck, ClipboardPlus, Flag, LifeBuoy, Menu, Tent, Trophy } from 'lucide-react';
+import { Award, ClipboardCheck, ClipboardPlus, Flag, LifeBuoy, Menu, Tent, Trophy } from 'lucide-react';
+import { GroupCertificatesPage } from '../Certificates.jsx';
 import { EmbeddedSite, SupportChat } from '../Shared.jsx';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { api } from '../../api.js';
@@ -74,12 +75,14 @@ export default function UnitApp() {
   ];
   const more = [
     ...(lid ? [] : [{ to: `${base}/exploradores`, icon: ClipboardPlus, label: 'Criar requisitos', hint: 'Para os desbravadores da unidade' }]),
+    { to: `${base}/certificados`, icon: Award, label: 'Certificados', hint: 'De honra da unidade' },
     { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },
   ];
   return (
-    <Shell tabs={tabs} parentOf={(path) => (['exploradores', 'agenda', 'suporte'].includes(path.split('/')[2]) ? `${base}/mais` : base)}>
+    <Shell tabs={tabs} parentOf={(path) => (['exploradores', 'certificados', 'suporte'].includes(path.split('/')[2]) ? `${base}/mais` : base)}>
       <Routes>
         <Route path="cantinho" element={<EmbeddedSite title="Cantinho da Unidade" linkKey="link_cantinho" subtitle="Relatórios e atividades da unidade" />} />
+        <Route path="certificados" element={<GroupCertificatesPage />} />
         <Route path="suporte" element={<SupportChat />} />
         <Route path="mais" element={<><PageHeader title="Mais" /><MoreMenu items={more} /></>} />
         <Route index element={<UnitProfile />} />

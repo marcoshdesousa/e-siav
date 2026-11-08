@@ -251,5 +251,11 @@ export function trophyCertificate(awardId) {
 }
 
 /** Certificados de troféu do membro (para a área Downloads). */
-export const memberTrophies = (memberId) => all(`SELECT a.id, a.place, a.year, a.awarded_at, m.name FROM medal_awards a JOIN medals m ON m.id = a.medal_id
-  WHERE a.target_type = 'member' AND a.target_id = ? AND a.design IS NOT NULL AND m.kind = 'trofeu' ORDER BY a.id DESC`, memberId);
+export const memberTrophies = (memberId) => trophiesOf('member', [memberId]);
+/** Troféus (com certificado) de membros, unidades ou clubes. */
+export function trophiesOf(type, ids) {
+  if (!ids.length) return [];
+  return all(`SELECT a.id, a.place, a.year, a.awarded_at, a.design, a.target_type, a.target_id, m.name FROM medal_awards a JOIN medals m ON m.id = a.medal_id
+    WHERE a.target_type = ? AND a.target_id IN (${ids.map(() => '?').join(',')}) AND a.design IS NOT NULL AND m.kind = 'trofeu' ORDER BY a.id DESC`, type, ...ids)
+    .map((t) => ({ ...t, design: JSON.parse(t.design) }));
+}

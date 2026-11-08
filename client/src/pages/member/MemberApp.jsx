@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { BookImage, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, Menu, Tent, Trophy, UserRound, BookOpenText, Hourglass, BadgeCheck, Lock, Bell, X } from 'lucide-react';
+import { Award, BookImage, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, Menu, Tent, Trophy, UserRound, BookOpenText, Hourglass, BadgeCheck, Lock, Bell, X } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Button, Card, Loading, Modal, PageHeader, notify, useAsync, useLoad } from '../../ui.jsx';
@@ -15,6 +15,7 @@ import { GamePage, GamesHub } from '../games/GamesHub.jsx';
 import { AlbumPage, AlbumsPage } from '../albums/AlbumsHub.jsx';
 import { BibleDay, BibleYear, BomDeBiblia, BomDeBibliaPhase, LearningHub, StreakCard } from '../learning/Learning.jsx';
 import { MeditationDay, MeditationList, SabbathHub, SabbathLesson } from '../learning/Devotional.jsx';
+import { CertificatesPage, MemberCertificate } from '../Certificates.jsx';
 import PlusPage, { PlusNudge } from './PlusPage.jsx';
 import { BomLider, BomLiderLesson } from '../learning/BomLider.jsx';
 import { HandleField } from '../AppSignup.jsx';
@@ -152,7 +153,7 @@ function parentOf(path) {
   const [seg, sub, sub2] = path.split('/').slice(2);
   if (seg === 'aprendizagem') return ['meditacao', 'escola-sabatina'].includes(sub) && sub2 ? `${base}/aprendizagem/${sub}` : sub === 'bom-lider' && sub2 ? `${base}/aprendizagem/bom-lider` : sub === 'bom-de-biblia' && sub2 ? `${base}/aprendizagem/bom-de-biblia` : sub === 'ano-biblico' && sub2 ? `${base}/aprendizagem/ano-biblico` :  sub ? `${base}/aprendizagem` : base;
   if ((seg === 'jogos' || seg === 'albuns') && sub) return `${base}/${seg}`;
-  if (['clubes', 'suporte', 'albuns'].includes(seg)) return `${base}/mais`;
+  if (['clubes', 'suporte', 'albuns', 'certificados'].includes(seg)) return `${base}/mais`;
   return base;
 }
 
@@ -215,12 +216,14 @@ export default function MemberApp() {
   ];
   const more = [
     { to: `${base}/dbv-mais`, icon: BadgeCheck, label: actor.app ? 'Planos' : 'DBV+', hint: actor.plus ? `Assinante até ${new Date(actor.plus.until).toLocaleDateString('pt-BR')}` : actor.app?.locked ? 'Assine para usar o app' : actor.app?.trial ? 'Você está no teste grátis' : 'Assine e ganhe benefícios' },
+    { to: `${base}/certificados`, icon: Award, label: 'Certificados', hint: 'Baixar em PDF ou imprimir' },
     { to: `${base}/albuns`, icon: BookImage, label: 'Álbuns de figurinhas', hint: 'Álbum Bíblico' },
     { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },
     { to: `${base}/clubes`, icon: Tent, label: 'Clubes', hint: 'Por distrito' },
   ];
   return (
     <Routes>
+      <Route path="certificados/:kind/:id" element={<MemberCertificate base={base} />} />
       <Route
         path="*"
         element={
@@ -234,6 +237,7 @@ export default function MemberApp() {
               <Route path="jogos" element={<GamesHub base={base} />} />
               <Route path="jogos/:id" element={<GamePage base={base} />} />
               <Route path="dbv-mais" element={<PlusPage />} />
+              <Route path="certificados" element={<CertificatesPage base={base} />} />
               <Route path="albuns" element={<AlbumsPage base={base} />} />
               <Route path="albuns/:id" element={<AlbumPage />} />
               <Route path="aprendizagem" element={<LearningHub base={base} />} />

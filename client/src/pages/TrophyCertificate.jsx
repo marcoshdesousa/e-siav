@@ -8,7 +8,7 @@ import { Button, Loading, useLoad } from '../ui.jsx';
 import { Trophy } from '../trophies.jsx';
 
 /** O certificado em si (para imprimir ou salvar em PDF). Troféu: aparece o desenho escolhido. */
-function CertificateView({ state, back }) {
+export function CertificateView({ state, back }) {
   return (
     <div className="cert-page">
       <div className="cert-tools no-print">

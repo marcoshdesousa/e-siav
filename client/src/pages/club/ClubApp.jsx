@@ -3,6 +3,7 @@ import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import {
   Award, KeyRound, UserPlus, Megaphone, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, ClipboardCheck, Globe, FolderOpen, Wrench, LifeBuoy, Share2, Flame, ArrowLeftRight,
 } from 'lucide-react';
+import { GroupCertificatesPage } from '../Certificates.jsx';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { KIND_LABEL, plural } from '../../format.js';
@@ -468,7 +469,7 @@ const pasta = (title, subtitle, items) => <><PageHeader title={title} subtitle={
 /** Pasta de cima de cada tela do clube (para o botão Voltar). */
 const PARENT = {
   membros: 'secretaria', transferencias: 'secretaria',
-  secretaria: 'mais', unidades: 'mais', financas: 'mais', biblioteca: 'mais', ferramentas: 'mais', suporte: 'mais', eventos: 'mais', anuncios: 'mais', clubes: 'mais',
+  secretaria: 'mais', unidades: 'mais', financas: 'mais', certificados: 'mais', ferramentas: 'mais', suporte: 'mais', eventos: 'mais', anuncios: 'mais', clubes: 'mais',
 };
 const clubParent = (path) => {
   if (path === `${base}/membros/novo`) return `${base}/membros`;
@@ -497,6 +498,7 @@ export default function ClubApp() {
     { to: `${base}/unidades`, icon: Flag, label: 'Unidades', hint: 'Unidades, ranking e membros' },
     { to: `${base}/financas`, icon: Wallet, label: 'Tesouraria', hint: 'Balancete do clube' },
     { to: `${base}/ferramentas`, icon: Wrench, label: 'Ferramentas', hint: 'Aniversariantes e contatos' },
+    { to: `${base}/certificados`, icon: Award, label: 'Certificados', hint: 'De honra: clube e unidades' },
     { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },
     { to: `${base}/eventos`, icon: Award, label: 'Eventos', hint: 'Eventos e participantes' },
     { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: 'Para os seus membros' },
@@ -523,6 +525,7 @@ export default function ClubApp() {
               <Route path="plano" element={<><PageHeader title="Plano do clube" /><ClubPlanCard /></>} />
               <Route path="tesouraria" element={<Navigate to={`${base}/financas`} replace />} />
               <Route path="ferramentas" element={<FerramentasPage />} />
+              <Route path="certificados" element={<GroupCertificatesPage club />} />
               <Route path="suporte" element={<SupportChat />} />
               <Route path="eventos" element={<EventsAdmin />} />
               <Route path="anuncios" element={<AnnouncementsAdmin />} />

@@ -171,10 +171,11 @@ test('ranking: só os 50 primeiros; quem está abaixo vê a própria posição e
   assert.equal((await pedro.get('/rankings/summary')).body.member.position, mine.position);
 });
 
-test('certificados: classe/especialidade e Ano Bíblico completo aparecem em Downloads', async () => {
+test('certificados: o Ano Bíblico completo aparece na aba Certificados; antes, fica em "para conquistar"', async () => {
   const pedro = await login('membros', 'pedro');
-  const list = (await pedro.get('/me/certificados')).body;
-  assert.ok(Array.isArray(list));
+  const before = (await pedro.get('/me/certificados')).body;
+  assert.ok(Array.isArray(before.list));
+  assert.ok(before.goals.some((g) => g.kind === 'ano-biblico'), 'Ano Bíblico para conquistar');
   const db = new DatabaseSync(path.join(dataDir, 'dbv.sqlite'));
   try {
     const total = JSON.parse(fs.readFileSync('server/data/ano-biblico-2027.json', 'utf8')).days.length;
@@ -184,7 +185,8 @@ test('certificados: classe/especialidade e Ano Bíblico completo aparecem em Dow
     db.close();
   }
   const after = (await pedro.get('/me/certificados')).body;
-  assert.ok(after.some((c) => c.kind === 'ano-biblico'), 'certificado do Ano Bíblico');
+  assert.ok(after.list.some((c) => c.kind === 'ano-biblico'), 'certificado do Ano Bíblico');
+  assert.ok(!after.goals.some((g) => g.kind === 'ano-biblico'), 'saiu de "para conquistar"');
   const cert = (await pedro.get('/me/certificados/ano-biblico/1')).body;
   assert.equal(cert.member_name, 'Pedro Henrique Lima');
   assert.match(cert.what, /Ano Bíblico|plano de leitura/);
@@ -278,13 +280,17 @@ test('finalizar ranking: troféu personalizado para os 3 primeiros, certificado,
   assert.equal(!!mine.prize, me.position <= 3 && me.points > 0);
   if (mine.prize) {
     assert.equal(mine.prize.design.title, 'Desbravador Nota 10');
-    const cert = (await pedro.get('/me/certificados')).body.find((c) => c.kind === 'trofeu');
+    const cert = (await pedro.get('/me/certificados')).body.list.find((c) => c.kind === 'trofeu');
     assert.ok(cert, 'certificado nos Downloads');
     const page = (await pedro.get(`/me/certificados/trofeu/${cert.id}`)).body;
     assert.match(page.what, /lugar no ranking de desbravadores do distrito/);
   }
   await pedro.post(`/rankings/finais/${f.id}/visto`);
   assert.ok(!(await pedro.get('/rankings/finais?novos=1')).body.some((x) => x.id === f.id), 'aparece uma vez');
+  // O clube vê os certificados de honra dele e das unidades.
+  const clubCerts = (await aguias.get('/certificados')).body.list;
+  assert.ok(Array.isArray(clubCerts));
+  assert.equal((await pedro.get('/certificados')).status, 403, 'membro usa a lista dele');
   // Criar de novo: quem fez pontos depois da finalização já entra com eles.
   assert.equal((await pedro.post('/ranking/criar', { kind: 'membros' })).status, 403, 'membro não cria');
   await admin.post('/ranking/criar', { district_id: d, kind: 'membros' });

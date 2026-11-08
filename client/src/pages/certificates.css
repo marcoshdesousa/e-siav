@@ -1,0 +1,12 @@
+/* Aba Certificados */
+.cert-list { display: grid; gap: .6rem; }
+.cert-card { display: flex; align-items: center; gap: .85rem; padding: .85rem .9rem; border-radius: 18px; background: var(--surface); border: 1px solid var(--card-border); box-shadow: var(--shadow-sm); color: inherit; text-decoration: none; }
+.cert-card b { display: block; font-size: .95rem; line-height: 1.25; }
+.cert-card small { display: block; color: var(--muted); font-size: .76rem; margin-top: .1rem; }
+.cert-card .cert-card-who { color: #b45309; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; font-size: .66rem; margin: 0 0 .1rem; }
+.cert-card-art { width: 60px; height: 60px; flex: none; border-radius: 16px; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, #2563eb, #1e3a8a); }
+.cert-card.honor { background: linear-gradient(135deg, rgba(245, 183, 0, .14), rgba(245, 183, 0, .03)), var(--surface); border-color: rgba(245, 183, 0, .5); }
+.cert-card.honor .cert-card-art { background: radial-gradient(circle at 50% 35%, #1e3a8a, #0b1f4d); }
+.cert-card-go { display: inline-flex; align-items: center; gap: .1rem; color: var(--link); flex: none; }
+.cert-card.locked { opacity: .75; border-style: dashed; box-shadow: none; }
+.cert-card.locked .cert-card-art { background: var(--surface-3); color: var(--muted); }
