@@ -61,7 +61,7 @@ test('DBV+: sem assinatura (modo de teste desligado) fica bloqueado; assinando, 
   await admin.put('/admin/biblia-teste', { on: false });
   await admin.put('/admin/pagamentos-config/pix', { key: 'pix@appdodbv.com', name: 'App do DBV', city: 'Palmares' });
   let plus = (await pedro.get('/plus')).body;
-  assert.deepEqual(plus.plans.map((p) => [p.id, p.price_cents]), [['plus', 790]], 'só o DBV+ (sem planos de especialidades)');
+  assert.deepEqual(plus.plans.map((p) => [p.id, p.price_cents]), [['plus', pedro.actor.club_pays ? 390 : 790]], 'só o DBV+ (R$ 3,90 se o clube paga pelos membros)');
   assert.equal(plus.open, false);
   assert.ok(!plus.benefits.some((b) => /[Ee]specialidade|[Cc]lasses/.test(b.text)), 'sem especialidades nem classes');
   const day = (await pedro.get('/ano-biblico/dia/1')).status;
@@ -72,7 +72,7 @@ test('DBV+: sem assinatura (modo de teste desligado) fica bloqueado; assinando, 
   assert.equal((await pedro.post('/plus/assinar', { plan: 'plus3' })).status, 400, 'plano de especialidades não existe mais');
   // assina o DBV+ e a equipe confirma o Pix
   const pay = (await pedro.post('/plus/assinar', { plan: 'plus' })).body;
-  assert.equal(pay.amount_cents, 790);
+  assert.equal(pay.amount_cents, pedro.actor.club_pays ? 390 : 790, 'cobra o preço certo');
   const before = (await pedro.get('/albuns/biblico')).body.packs_unopened;
   assert.equal((await admin.post(`/admin/pagamentos/${pay.id}/confirmar`)).status, 200);
   plus = (await pedro.get('/plus')).body;
