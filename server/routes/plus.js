@@ -23,7 +23,7 @@ export const FREE = [
 ];
 
 export const BENEFITS = [
-  { text: 'Todos os mini-jogos com ranking (o grátis é só a Aventura do Desbravador)' },
+  { text: 'Todos os mini-jogos com ranking' },
   { text: 'Bom Líder: Manual Administrativo e Nisto Cremos' },
   { text: `${PLUS_PACKS} pacotinhos de figurinhas a cada ${PLUS_DAYS} dias` },
   { text: 'Figurinhas em triplo: 3 pacotinhos pelo preço de 1' },

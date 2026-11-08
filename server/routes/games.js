@@ -47,7 +47,7 @@ r.get('/jogos/meus', member, (req, res) => {
 
 r.post('/jogos/:id/pontos', member, (req, res) => {
   const g = game(req.params.id);
-  if (!canPlay(req.actor.id, req.params.id)) fail(402, 'Este jogo é do DBV+. A Aventura do Desbravador é grátis!');
+  if (!canPlay(req.actor.id, req.params.id)) fail(402, 'Este jogo é do DBV+. A Aventura do Desbravador é liberada para todos.');
   if (g.server) fail(400, 'Os pontos deste jogo são marcados pelo servidor');
   const score = Math.floor(Number(req.body.score));
   if (!Number.isFinite(score) || score < 0) fail(400, 'Pontuação inválida');

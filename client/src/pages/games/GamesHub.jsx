@@ -154,7 +154,7 @@ export function GamesHub({ base }) {
   const my = mine.data || {};
   const online = useOnline();
   const { actor } = useAuth();
-  // O jogo grátis vem primeiro; os outros, para quem não é DBV+, aparecem com o cadeado.
+  // O jogo liberado para todos vem primeiro; os outros, para quem não é DBV+, aparecem com o cadeado.
   const list = [...GAMES].sort((a, b) => (b.id === FREE_GAME) - (a.id === FREE_GAME));
   return (
     <>
@@ -168,9 +168,8 @@ export function GamesHub({ base }) {
           {list.map((g) => {
             const locked = gameLocked(actor, g.id);
             return (
-              <Link key={g.id} to={`${base}/jogos/${g.id}`} className={'game-tile' + (locked ? ' locked' : '') + (g.id === FREE_GAME && !actor.plus ? ' free' : '')}>
+              <Link key={g.id} to={`${base}/jogos/${g.id}`} className={'game-tile' + (locked ? ' locked' : '')}>
                 {locked && <span className="game-lock"><Lock size={11} /> DBV+</span>}
-                {g.id === FREE_GAME && !actor.plus && <span className="game-free">Grátis</span>}
                 <span className="game-ico"><g.icon size={26} /></span>
                 <b>{g.name}</b>
                 <small>{my[g.id]?.value ? `${my[g.id].value} pts${my[g.id].position ? ` · ${my[g.id].position}º` : ''}` : locked ? 'Do DBV+' : 'Jogar'}</small>
@@ -337,7 +336,7 @@ export function GamePage({ base }) {
           {locked && (
             <div className="game-plus-lock">
               <Lock size={18} />
-              <span>Este jogo é do <b>DBV+</b> (R$ 5,90 por 30 dias). A <b>Aventura do Desbravador</b> é grátis para todos.</span>
+              <span>Este jogo é do <b>DBV+</b> (R$ 5,90 por 30 dias). A <b>Aventura do Desbravador</b> é liberada para todos.</span>
             </div>
           )}
           <Tutorial game={game} />
