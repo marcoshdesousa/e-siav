@@ -1,12 +1,11 @@
 import { Link, useParams, Navigate } from 'react-router-dom';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Verified } from './member/PlusPage.jsx';
-import { Award, CalendarDays, ChevronDown, ChevronRight, ChevronUp, Compass, Eye, EyeOff, Flag, Flame, MapPin, Hash, Tent, Users } from 'lucide-react';
+import { Award, CalendarDays, ChevronRight, Compass, Eye, EyeOff, Flag, Flame, MapPin, Hash, Tent, Users } from 'lucide-react';
 import { Attachments } from './admin/Events.jsx';
 import { api } from '../api.js';
 import { fmtDate, plural } from '../format.js';
 import { useAuth, homeFor } from '../auth.jsx';
-import { AppIcon } from '../icons.jsx';
 import { Avatar, Button, Card, Empty, Loading, LogoHorizontal, MedalList, Modal, PositionBadge, RowSection, Section, ShareButton, useLoad } from '../ui.jsx';
 
 /** linkBase: "/p" (páginas públicas) ou "<app>/ver" (dentro do app). */
@@ -45,46 +44,6 @@ export function EventCard({ e }) {
 export const EventsList = ({ events }) => (
   <RowSection title="Eventos" items={events} empty="Nenhum evento registrado ainda." emptyIcon="tent" render={(e) => <EventCard key={e.id} e={e} />} />
 );
-
-const PREVIEW = 3;
-
-/** Lista de nomes do perfil (cursos): os 3 primeiros; "Ver mais" mostra tudo separado por categoria. */
-function NameList({ title, items = [], empty, emptyIcon, icon, byCategory }) {
-  const [open, setOpen] = useState(false);
-  const extra = items.length - PREVIEW;
-  const row = (c) => (
-    <span key={c.id} className="name-item" title={c.category || ''}>
-      <span className="ach-img"><AppIcon name={icon} size={16} /></span>
-      <span className="grow ellipsis">{c.name}</span>
-    </span>
-  );
-  const groups = useMemo(() => {
-    const m = new Map();
-    for (const c of items) { const g = byCategory ? c.category || 'Outras' : title; if (!m.has(g)) m.set(g, []); m.get(g).push(c); }
-    return [...m.entries()].sort((a, b) => b[1].length - a[1].length);
-  }, [items, byCategory, title]);
-  return (
-    <Section title={`${title}${items.length ? ` (${items.length})` : ''}`}>
-      {items.length ? (
-        <>
-          {open ? (
-            groups.map(([g, list]) => (
-              <div key={g} className="name-group">
-                <div className="name-group-head"><b>{g}</b><span>{list.length}</span></div>
-                <div className="name-list">{list.map(row)}</div>
-              </div>
-            ))
-          ) : <div className="name-list">{items.slice(0, PREVIEW).map(row)}</div>}
-          {extra > 0 && (
-            <button type="button" className="see-more name-more" onClick={() => setOpen((o) => !o)}>
-              {open ? <>Ver menos <ChevronUp size={14} /></> : <>Ver mais ({extra}) <ChevronDown size={14} /></>}
-            </button>
-          )}
-        </>
-      ) : <Empty icon={emptyIcon}>{empty}</Empty>}
-    </Section>
-  );
-}
 
 /** Os 5 rankings do membro (no clube e no distrito, da unidade e do clube). */
 function RanksGrid({ r }) {
@@ -247,7 +206,6 @@ export function MemberProfileView({ member: m, linkBase, photoAction, extra }) {
       {extra}
       {m.streaks && <BibleStreak list={m.streaks} app={m.app_streak} />}
       <RanksGrid r={m.ranks} />
-      {m.courses?.length ? <NameList title="Cursos concluídos" items={m.courses} /> : null}
       <MedalList medals={m.medals} />
       <EventsList events={m.events} />
     </>

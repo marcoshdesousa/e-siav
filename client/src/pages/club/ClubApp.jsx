@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import {
-  Award, KeyRound, UserPlus, CalendarDays, Megaphone, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, ClipboardCheck, Globe, FolderOpen, Wrench, LifeBuoy, Share2, Flame, ArrowLeftRight,
+  Award, KeyRound, UserPlus, Megaphone, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, ClipboardCheck, Globe, FolderOpen, Wrench, LifeBuoy, Share2, Flame, ArrowLeftRight,
 } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -11,7 +11,7 @@ import { AccessInfo } from '../Signup.jsx';
 import TransfersPage from './Transfers.jsx';
 import { PixCheckout, money } from '../Payment.jsx';
 import {
-  AgendaPage, FerramentasPage, FinancasPage, MembrosPorGrupo,
+  FerramentasPage, FinancasPage, MembrosPorGrupo,
 } from './Folders.jsx';
 import { EmbeddedSite, SupportChat } from '../Shared.jsx';
 import {
@@ -467,7 +467,7 @@ const pasta = (title, subtitle, items) => <><PageHeader title={title} subtitle={
 
 /** Pasta de cima de cada tela do clube (para o botão Voltar). */
 const PARENT = {
-  agenda: 'secretaria', membros: 'secretaria', transferencias: 'secretaria',
+  membros: 'secretaria', transferencias: 'secretaria',
   secretaria: 'mais', unidades: 'mais', financas: 'mais', biblioteca: 'mais', ferramentas: 'mais', suporte: 'mais', eventos: 'mais', anuncios: 'mais', clubes: 'mais',
 };
 const clubParent = (path) => {
@@ -488,13 +488,12 @@ export default function ClubApp() {
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const secretaria = [
-    { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Reuniões, acampamentos e datas do App' },
     { to: `${base}/membros`, icon: Users, label: 'Membros', hint: 'Cadastrar e ver os membros' },
     { to: `${base}/transferencias`, icon: ArrowLeftRight, label: 'Transferências', hint: 'Trazer alguém de outro clube e pedidos' },
   ];
   const more = [
     ...(actor.club_billing === 'gratis' && actor.member_billing !== 'pago' ? [] : [{ to: `${base}/plano`, icon: Wallet, label: 'Plano do clube', hint: actor.club_billing === 'gratis' ? 'Assumir a cobrança dos membros' : 'R$ 15 a cada 30 dias' }]),
-    { to: `${base}/secretaria`, icon: FolderOpen, label: 'Secretaria', hint: 'Agenda, membros e transferências' },
+    { to: `${base}/secretaria`, icon: FolderOpen, label: 'Secretaria', hint: 'Membros e transferências' },
     { to: `${base}/unidades`, icon: Flag, label: 'Unidades', hint: 'Unidades, ranking e membros' },
     { to: `${base}/financas`, icon: Wallet, label: 'Tesouraria', hint: 'Balancete do clube' },
     { to: `${base}/ferramentas`, icon: Wrench, label: 'Ferramentas', hint: 'Aniversariantes e contatos' },
@@ -511,8 +510,7 @@ export default function ClubApp() {
           <Shell tabs={tabs} parentOf={clubParent}>
             <Routes>
               <Route index element={<ClubHome />} />
-              <Route path="secretaria" element={pasta('Secretaria', 'Agenda e membros', secretaria)} />
-              <Route path="agenda" element={<AgendaPage />} />
+              <Route path="secretaria" element={pasta('Secretaria', 'Membros e transferências', secretaria)} />
               <Route path="membros" element={<MembersPage />} />
               <Route path="transferencias" element={<TransfersPage />} />
               <Route path="membros/novo" element={<NewMemberPage />} />
@@ -524,8 +522,6 @@ export default function ClubApp() {
               <Route path="financas" element={<FinancasPage />} />
               <Route path="plano" element={<><PageHeader title="Plano do clube" /><ClubPlanCard /></>} />
               <Route path="tesouraria" element={<Navigate to={`${base}/financas`} replace />} />
-              <Route path="biblioteca" element={<Navigate to={base} replace />} />
-              <Route path="aprovacoes" element={<Navigate to={base} replace />} />
               <Route path="ferramentas" element={<FerramentasPage />} />
               <Route path="suporte" element={<SupportChat />} />
               <Route path="eventos" element={<EventsAdmin />} />

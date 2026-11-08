@@ -1,16 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { BookImage, CalendarDays, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, GraduationCap, Menu, Tent, Trophy, UserRound, BookOpenText, Hourglass, BadgeCheck, Lock, Download, Bell, X } from 'lucide-react';
+import { BookImage, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, Menu, Tent, Trophy, UserRound, BookOpenText, Hourglass, BadgeCheck, Lock, Bell, X } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Button, Card, Loading, Modal, PageHeader, notify, useAsync, useLoad } from '../../ui.jsx';
 import Shell, { MoreMenu } from '../Shell.jsx';
 import { InAppProfile, MemberProfileView } from '../Profiles.jsx';
 import { RequirementsTodo } from '../Requirements.jsx';
-import { ContentDetail, ContentList } from '../Content.jsx';
 import RankingHub from '../Ranking.jsx';
 import ClubsBrowser from '../Clubs.jsx';
-import { AgendaLeitura, ProximasDatas } from '../club/Folders.jsx';
 import { EmbeddedSite, SupportChat } from '../Shared.jsx';
 import { GamePage, GamesHub } from '../games/GamesHub.jsx';
 
@@ -20,7 +18,6 @@ import { MeditationDay, MeditationList, SabbathHub, SabbathLesson } from '../lea
 import PlusPage, { PlusNudge } from './PlusPage.jsx';
 import { BomLider, BomLiderLesson } from '../learning/BomLider.jsx';
 import { HandleField } from '../AppSignup.jsx';
-import { DownloadsPage, MemberCertificatePage } from './Downloads.jsx';
 import { enablePush, installedApp, pushSupported, syncPush } from '../../push.js';
 
 const base = '/membro';
@@ -70,7 +67,6 @@ function MyProfile() {
         />
         {/* Conta antiga sem @: cria aqui (quem já tem vê no "Ver meu @ e código"). */}
         {!actor.handle && <HandleCard />}
-        <ProximasDatas to={`${base}/agenda`} />
         </>
       )}
     </Loading>
@@ -156,7 +152,7 @@ function parentOf(path) {
   const [seg, sub, sub2] = path.split('/').slice(2);
   if (seg === 'aprendizagem') return ['meditacao', 'escola-sabatina'].includes(sub) && sub2 ? `${base}/aprendizagem/${sub}` : sub === 'bom-lider' && sub2 ? `${base}/aprendizagem/bom-lider` : sub === 'bom-de-biblia' && sub2 ? `${base}/aprendizagem/bom-de-biblia` : sub === 'ano-biblico' && sub2 ? `${base}/aprendizagem/ano-biblico` :  sub ? `${base}/aprendizagem` : base;
   if ((seg === 'jogos' || seg === 'albuns') && sub) return `${base}/${seg}`;
-  if (['cursos', 'clubes', 'agenda', 'suporte', 'especialidades', 'albuns', 'downloads'].includes(seg)) return `${base}/mais`;
+  if (['clubes', 'suporte', 'albuns'].includes(seg)) return `${base}/mais`;
   return base;
 }
 
@@ -219,16 +215,12 @@ export default function MemberApp() {
   ];
   const more = [
     { to: `${base}/dbv-mais`, icon: BadgeCheck, label: actor.app ? 'Planos' : 'DBV+', hint: actor.plus ? `Assinante até ${new Date(actor.plus.until).toLocaleDateString('pt-BR')}` : actor.app?.locked ? 'Assine para usar o app' : actor.app?.trial ? 'Você está no teste grátis' : 'Assine e ganhe benefícios' },
-    { to: `${base}/downloads`, icon: Download, label: 'Downloads', hint: 'Certificados para baixar' },
     { to: `${base}/albuns`, icon: BookImage, label: 'Álbuns de figurinhas', hint: 'Álbum Bíblico' },
-    { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas do clube e do App' },
     { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },
-    { to: `${base}/cursos`, icon: GraduationCap, label: 'Cursos', hint: 'Aulas' },
     { to: `${base}/clubes`, icon: Tent, label: 'Clubes', hint: 'Por distrito' },
   ];
   return (
     <Routes>
-      <Route path="certificado/:kind/:id" element={<MemberCertificatePage base={base} />} />
       <Route
         path="*"
         element={
@@ -237,8 +229,6 @@ export default function MemberApp() {
             {actor.waiting ? <Waiting text={actor.waiting} /> : <AppLock><Routes>
               <Route index element={<MyProfile />} />
               <Route path="requisitos" element={<RequirementsAndRanking isDbv={isDbv} />} />
-              <Route path="especialidades" element={<Navigate to={base} replace />} />
-              <Route path="agenda" element={<AgendaLeitura />} />
               <Route path="cartao" element={<EmbeddedSite title="Cartão DBV" linkKey="link_cartao" subtitle="Entre com o código e a senha que o seu clube passar" />} />
               <Route path="suporte" element={<SupportChat />} />
               <Route path="jogos" element={<GamesHub base={base} />} />
@@ -257,13 +247,10 @@ export default function MemberApp() {
               <Route path="aprendizagem/bom-lider" element={<BomLider base={base} />} />
               <Route path="aprendizagem/bom-lider/:n" element={<BomLiderLesson base={base} />} />
               <Route path="aprendizagem/bom-de-biblia/:phase" element={<BomDeBibliaPhase base={base} />} />
-              <Route path="cursos" element={<ContentList type="curso" base={base} />} />
-              <Route path="conteudo/:id" element={<ContentDetail />} />
               <Route path="ranking" element={<Navigate to={`${base}/requisitos`} replace />} />
               <Route path="clubes" element={<ClubsBrowser base={base} />} />
               <Route path="ver/:kind/:id" element={<InAppProfile base={base} />} />
               <Route path="mais" element={<><PageHeader title="Mais" /><MoreMenu items={more} /></>} />
-              <Route path="downloads" element={<DownloadsPage base={base} />} />
               <Route path="*" element={<Navigate to={base} replace />} />
             </Routes></AppLock>}
           </Shell>

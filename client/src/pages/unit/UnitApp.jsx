@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { CalendarDays, ClipboardCheck, ClipboardPlus, Flag, LifeBuoy, Menu, Tent, Trophy } from 'lucide-react';
+import { ClipboardCheck, ClipboardPlus, Flag, LifeBuoy, Menu, Tent, Trophy } from 'lucide-react';
 import { EmbeddedSite, SupportChat } from '../Shared.jsx';
-import { AgendaLeitura, ProximasDatas } from '../club/Folders.jsx';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -37,7 +36,7 @@ function UnitProfile() {
     <Loading {...state}>
       {(u) => (
         <>
-          <UnitProfileView unit={u} linkBase={`${base}/ver`} hideBio extra={<><ProximasDatas to={`${base}/agenda`} /><BioForm bio={u.bio} onDone={state.reload} /></>} />
+          <UnitProfileView unit={u} linkBase={`${base}/ver`} hideBio extra={<BioForm bio={u.bio} onDone={state.reload} />} />
           <p className="muted small center mt">Nome, logo e membros da unidade são cadastrados pelo clube.</p>
         </>
       )}
@@ -75,7 +74,6 @@ export default function UnitApp() {
   ];
   const more = [
     ...(lid ? [] : [{ to: `${base}/exploradores`, icon: ClipboardPlus, label: 'Criar requisitos', hint: 'Para os desbravadores da unidade' }]),
-    { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas do clube e do App' },
     { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },
   ];
   return (
@@ -88,7 +86,6 @@ export default function UnitApp() {
         <Route path="requisitos" element={<><PageHeader title="Requisitos da unidade" subtitle="Cumpram juntos dentro do prazo e subam no ranking" /><RequirementsTodo originTabs clubLabel="Do clube" /></>} />
         <Route path="exploradores" element={<GroupRequirements />} />
         <Route path="ranking" element={<RankingHub base={base} />} />
-        <Route path="agenda" element={<AgendaLeitura />} />
         <Route path="perfil" element={<Navigate to={base} replace />} />
         <Route path="ver/:kind/:id" element={<InAppProfile base={base} />} />
         <Route path="*" element={<Navigate to={base} replace />} />

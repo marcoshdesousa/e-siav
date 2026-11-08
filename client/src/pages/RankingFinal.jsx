@@ -47,7 +47,7 @@ export function RankingFinalView({ f, onClose }) {
         <div className="rf-list">
           {f.places.map((p) => <Place key={p.kind + p.who} p={p} />)}
         </div>
-        {won && <p className="small muted center" style={{ margin: '0 1rem .6rem' }}>{f.kind === 'jogos' ? 'A medalha já está no seu perfil, em Medalhas.' : f.places.some((p) => p.prize && p.who === 'Você') ? 'O troféu já está no seu perfil, em Troféus, e o certificado em Downloads.' : 'O troféu já está no perfil, em Troféus. Toque nele para ver o certificado.'}</p>}
+        {won && <p className="small muted center" style={{ margin: '0 1rem .6rem' }}>{f.kind === 'jogos' ? 'A medalha já está no seu perfil, em Medalhas.' : f.places.some((p) => p.prize && p.who === 'Você') ? 'O troféu já está no seu perfil, em Troféus. Toque nele para ver o certificado.' : 'O troféu já está no perfil, em Troféus. Toque nele para ver o certificado.'}</p>}
         <div style={{ padding: '0 1rem 1rem' }}><Button block onClick={onClose}>Continuar</Button></div>
       </div>
     </div>

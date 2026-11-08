@@ -17,7 +17,7 @@ function Orders() {
     <Loading {...state}>
       {(d) => (
         <>
-          <p className="small muted">Pagamentos do site todo (figurinhas e, depois, cursos). Com a SyncPay ligada, eles se confirmam sozinhos. No Pix manual, confira no extrato o valor e o código antes de confirmar. Total já recebido: <b>{money(d.total_paid_cents)}</b>.</p>
+          <p className="small muted">Pagamentos do site todo (figurinhas, planos e DBV+). Com a SyncPay ligada, eles se confirmam sozinhos. No Pix manual, confira no extrato o valor e o código antes de confirmar. Total já recebido: <b>{money(d.total_paid_cents)}</b>.</p>
           <div className="seg" role="tablist" style={{ marginBottom: '.7rem', flexWrap: 'wrap' }}>
             {STATUS.map(([k, label]) => (
               <button key={k} type="button" className={status === k ? 'active' : ''} onClick={() => setStatus(k)}>{label}{d.counts[k] ? ` (${d.counts[k]})` : ''}</button>

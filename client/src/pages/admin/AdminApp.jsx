@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import {
-  CalendarDays, ClipboardCheck, Flag, House, Inbox, Library, Map, Megaphone, Menu, Send, Tent, Trophy, Users, Globe, MessageCircle, BookImage, Wallet, Flame, ArrowLeftRight, ClipboardList,
+  CalendarDays, ClipboardCheck, Flag, House, Inbox, Map, Megaphone, Menu, Tent, Trophy, Users, Globe, MessageCircle, BookImage, Wallet, Flame, ArrowLeftRight, ClipboardList,
 } from 'lucide-react';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
@@ -12,13 +12,9 @@ import { InAppProfile } from '../Profiles.jsx';
 import { CreatedRequirements, ReviewsPanel } from '../Requirements.jsx';
 import RankingHub from '../Ranking.jsx';
 import ClubsBrowser from '../Clubs.jsx';
-import ContentAdmin from './ContentAdmin.jsx';
-import ContentReview from './ContentReview.jsx';
-import Deliver from './Deliver.jsx';
 import EventsAdmin from './Events.jsx';
 import AnnouncementsAdmin from './Announcements.jsx';
 import ClanView from './ClanView.jsx';
-import AgendaAdmin from './AgendaAdmin.jsx';
 import SupportAdmin, { LinksAdmin } from './SupportAdmin.jsx';
 import StickersAdmin from './StickersAdmin.jsx';
 import LearningAdmin from './LearningAdmin.jsx';
@@ -72,8 +68,6 @@ function AdminHome() {
           { to: `${base}/figurinhas`, icon: BookImage, label: 'Figurinhas', hint: 'Álbuns completos e presentes' },
           { to: `${base}/aprendizagem`, icon: Flame, label: 'Aprendizagem Diária', hint: 'Arganel, medalhas e áudio' },
           { to: `${base}/links`, icon: Globe, label: 'Links dos sites', hint: 'SGC, Cantinho e Cartão DBV' },
-    { to: `${base}/agenda`, icon: CalendarDays, label: 'Agenda', hint: 'Datas para todos, distrito ou clube' },
-    { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo' },
           { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos' },
           { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios' },
         ]} />
@@ -321,16 +315,15 @@ function ClubsAdmin() {
   );
 }
 
-/** Requisitos: criados e avaliação (separados por desbravadores, unidades e clubes) e análise dos cursos. */
+/** Requisitos: criados e avaliação (separados por desbravadores, unidades e clubes). */
 function RequirementsAdmin() {
   const [tab, setTab] = useState(new URLSearchParams(location.search).get('aba') || 'criados');
   return (
     <>
       <PageHeader title="Requisitos" subtitle="Desbravadores, unidades e clubes" />
-      <Tabs tabs={[['criados', 'Criados'], ['avaliar', 'Avaliar envios'], ['cursos', 'Aulas dos cursos']]} value={tab} onChange={setTab} />
+      <Tabs tabs={[['criados', 'Criados'], ['avaliar', 'Avaliar envios']]} value={tab} onChange={setTab} />
       {tab === 'criados' && <CreatedRequirements />}
       {tab === 'avaliar' && <ReviewsPanel />}
-      {tab === 'cursos' && <ContentReview type="curso" embedded />}
     </>
   );
 }
@@ -349,7 +342,7 @@ export default function AdminApp() {
     { to: base, icon: House, label: 'Início', end: true },
     { to: `${base}/clubes`, icon: Tent, label: 'Clubes' },
     { to: `${base}/requisitos`, icon: ClipboardCheck, label: 'Requisitos' },
-    { to: `${base}/conteudo`, icon: Library, label: 'Conteúdo' },
+    { to: `${base}/formularios`, icon: ClipboardList, label: 'Formulários' },
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   // Transferências de quem é do Clube App Brasil: o geral e o administrador do App.
@@ -370,10 +363,8 @@ export default function AdminApp() {
     { to: `${base}/figurinhas`, icon: BookImage, label: 'Figurinhas', hint: 'Álbuns completos e presentes' },
           { to: `${base}/aprendizagem`, icon: Flame, label: 'Aprendizagem Diária', hint: 'Arganel, medalhas e áudio' },
     { to: `${base}/links`, icon: Globe, label: 'Links dos sites', hint: 'SGC, Cantinho e Cartão DBV' },
-    { to: `${base}/entregar`, icon: Send, label: 'Entregar conteúdo', hint: 'Cursos' },
     { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos', hint: 'Criar e participantes' },
     { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: 'Aparecem ao abrir o app' },
-    { to: `${base}/formularios`, icon: ClipboardList, label: 'Formulários', hint: 'Links para responder e as respostas' },
     { to: `${base}/ranking`, icon: Trophy, label: 'Rankings', hint: 'Todas as tabelas' },
     { to: `${base}/explorar`, icon: Map, label: 'Explorar clubes', hint: 'Perfis públicos' },
   ];
@@ -381,7 +372,7 @@ export default function AdminApp() {
     <Shell tabs={tabs} parentOf={(path) => {
       const [, , seg, sub] = path.split('/');
       if (sub && ['clubes', 'formularios'].includes(seg)) return `${base}/${seg}`;
-      return ['clubes', 'requisitos', 'conteudo', 'ver'].includes(seg) ? base : `${base}/mais`;
+      return ['clubes', 'requisitos', 'formularios', 'ver'].includes(seg) ? base : `${base}/mais`;
     }}>
       <Routes>
         <Route index element={<AdminHome />} />
@@ -392,15 +383,10 @@ export default function AdminApp() {
         <Route path="figurinhas" element={<StickersAdmin />} />
         <Route path="aprendizagem" element={<LearningAdmin />} />
         <Route path="pagamentos" element={<PaymentsAdmin />} />
-        <Route path="agenda" element={<AgendaAdmin />} />
         <Route path="requisitos" element={<RequirementsAdmin />} />
-        <Route path="conteudo" element={<ContentAdmin />} />
-        <Route path="cursos" element={<ContentReview type="curso" />} />
-        <Route path="entregar" element={<Deliver />} />
         <Route path="eventos" element={<EventsAdmin />} />
         <Route path="anuncios" element={<AnnouncementsAdmin />} />
         <Route path="transferencias" element={<AppTransfersPage />} />
-        <Route path="medalhas" element={<Navigate to={`${base}/conteudo`} replace />} />
         <Route path="ranking" element={<RankingHub base={base} />} />
         {general && <Route path="formularios" element={<FormsAdmin base={base} />} />}
         {general && <Route path="formularios/:id" element={<FormResponses />} />}

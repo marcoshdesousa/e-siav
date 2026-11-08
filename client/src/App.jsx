@@ -9,7 +9,7 @@ import AdminApp from './pages/admin/AdminApp.jsx';
 import ClubApp from './pages/club/ClubApp.jsx';
 import UnitApp from './pages/unit/UnitApp.jsx';
 import MemberApp from './pages/member/MemberApp.jsx';
-import { TrophyCertificatePage } from './pages/member/Downloads.jsx';
+import { TrophyCertificatePage } from './pages/TrophyCertificate.jsx';
 import PublicForm from './pages/PublicForm.jsx';
 
 function Guard({ type, children }) {

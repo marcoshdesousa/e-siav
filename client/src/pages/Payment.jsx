@@ -1,4 +1,4 @@
-// Tela do Pix, usada em qualquer compra do site (figurinhas hoje, cursos depois).
+// Tela do Pix, usada em qualquer compra do site (figurinhas, planos e DBV+).
 // Pix automático (SyncPay): confere a cada 4 s e avisa quando caiu. Pix manual: "Já paguei".
 import { useEffect, useState } from 'react';
 import { Copy } from 'lucide-react';
