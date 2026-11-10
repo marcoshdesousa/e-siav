@@ -336,7 +336,7 @@ export function GamePage({ base }) {
           {locked && (
             <div className="game-plus-lock">
               <Lock size={18} />
-              <span>Este jogo é do <b>DBV+</b> (R$ 5,90 por 30 dias). A <b>Aventura do Desbravador</b> é liberada para todos.</span>
+              <span>Este jogo é do <b>DBV+</b> (R$ 3,90 por 30 dias). A <b>Aventura do Desbravador</b> é liberada para todos.</span>
             </div>
           )}
           <Tutorial game={game} />

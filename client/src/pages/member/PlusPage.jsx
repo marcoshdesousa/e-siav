@@ -39,7 +39,7 @@ export default function PlusPage() {
   const canBuy = (d) => !d.mine?.active || d.mine.plan === 'app';
   return (
     <>
-      <PageHeader title={actor.app ? 'Planos' : 'DBV+'} subtitle={actor.app ? 'Escolha um plano para usar o App do DBV' : 'Ajude o App do DBV a crescer e ganhe benefícios'} />
+      <PageHeader title={actor.access ? 'Planos' : 'DBV+'} subtitle={actor.access ? 'Escolha um plano para usar o App do DBV' : 'Ajude o App do DBV a crescer e ganhe benefícios'} />
       <Loading {...state}>
         {(d) => (
           <>
@@ -47,8 +47,8 @@ export default function PlusPage() {
               <div className="plus-hero plus-hero-app">
                 <img src="/marca/logo.svg" alt="" />
                 <div>
-                  <b>{d.app.reason === 'membro_pago' ? 'Assine o App do DBV' : d.app.club ? 'O plano do seu clube venceu' : d.app.locked ? 'Sua aventura não pode parar!' : d.mine?.trial ? 'Você é DBV no teste grátis' : `Você está no ${d.mine?.plan_name || 'DBV'}`}</b>
-                  <p>{d.app.reason === 'membro_pago' ? '' : d.app.club ? 'Para continuar usando o app, assine um plano (ou peça para a diretoria do clube renovar). ' : d.app.locked ? (d.mine?.trial_ended ? 'O seu teste grátis de 3 dias terminou. ' : 'O seu acesso terminou. ') : d.mine?.trial ? `O seu teste grátis vai até ${br(d.mine.until)}. ` : d.mine?.active ? `Acesso liberado até ${br(d.mine.until)}. ` : ''}Com o <b>DBV</b> você continua lendo a Bíblia todo dia, mantém as suas <b>sequências</b> e sobe no <b>ranking Brasil</b>. Com o <b>DBV+</b> você libera tudo. E cada assinatura ajuda o App do DBV a chegar a mais desbravadores!</p>
+                  <b>{d.app.locked ? 'Sua aventura não pode parar!' : d.mine?.trial ? 'Você é DBV no teste grátis' : `Você está no ${d.mine?.plan_name || 'DBV'}`}</b>
+                  <p>{d.app.locked ? (d.mine?.trial_ended ? 'O seu teste grátis de 7 dias terminou. ' : 'O seu acesso terminou. ') : d.mine?.trial ? `O seu teste grátis vai até ${br(d.mine.until)}. ` : d.mine?.active ? `Acesso liberado até ${br(d.mine.until)}. ` : ''}Para a liderança (16 anos ou mais), o App do DBV é assinado. Com o <b>DBV</b> você continua lendo a Bíblia todo dia, mantém as suas <b>sequências</b> e sobe no <b>ranking</b>. Com o <b>DBV+</b> você libera tudo. E cada assinatura ajuda o App do DBV a chegar a mais desbravadores!</p>
                 </div>
               </div>
             ) : (
@@ -64,10 +64,10 @@ export default function PlusPage() {
               <Card className="plus-status">
                 <BadgeCheck size={26} />
                 {d.mine.trial
-                  ? <div><b>Você é DBV! <span className="trial-tag">Teste grátis</span></b><small><Clock size={12} /> Você está usando o teste grátis de 3 dias · {daysLeft(d.mine.until)} · termina em {br(d.mine.until)}</small></div>
+                  ? <div><b>Você é DBV! <span className="trial-tag">Teste grátis</span></b><small><Clock size={12} /> Você está usando o teste grátis de 7 dias · {daysLeft(d.mine.until)} · termina em {br(d.mine.until)}</small></div>
                   : d.mine.plan === 'app' && !d.app
-                    // Mudou para um clube que paga pelos membros: o DBV (R$ 3,90) não é mais preciso.
-                    ? <div><b>O seu clube cobre o seu acesso</b><small>Você não precisa mais pagar o DBV (R$ 3,90): no clube novo as regras são do clube. O DBV+ continua disponível, se quiser.</small></div>
+                    // Desbravador com o DBV de antes: não precisa mais (o app é de graça para ele).
+                    ? <div><b>O app é de graça para você</b><small>Desbravador usa o App do DBV sem pagar: não precisa renovar o DBV. O DBV+ continua disponível, se quiser.</small></div>
                     : <div><b>Você é {d.mine.plan_name}!</b><small><Clock size={12} /> Válido até {br(d.mine.until)} · {d.mine.plan === 'app' ? 'renove ou mude para o DBV+ quando quiser' : 'um novo plano fica disponível nesse dia'}</small></div>}
               </Card>
             )}
@@ -131,28 +131,17 @@ let barClosed = false;
 export function PlusNudge({ to }) {
   const { actor } = useAuth();
   const { pathname } = useLocation();
-  // Sem a faixa quando o clube paga pelos membros (o DBV+ continua em Mais → DBV+ para quem quiser).
-  const [open, setOpen] = useState(() => !barClosed && actor?.type === 'member' && !actor.plus && !actor.app?.locked && !actor.club_plan?.locked && (!actor.club_pays || !!actor.club_plan?.grace));
-  const trial = !!actor?.app?.trial;
+  const [open, setOpen] = useState(() => !barClosed && actor?.type === 'member' && !actor.plus && !actor.access?.locked);
+  const trial = !!actor?.access?.trial;
   // Só nas telas principais das abas (não atrapalha leitura, quiz nem jogo).
   if (!open || pathname.startsWith(to) || pathname.split('/').filter(Boolean).length > 2) return null;
   const close = () => { barClosed = true; setOpen(false); };
-  // Plano do clube venceu (carência de 3 dias): avisa antes de precisar assinar.
-  if (actor.club_plan?.grace) {
-    return (
-      <div className="plus-bar trial" key="grace">
-        <Gift size={26} className="plus-bar-gift" />
-        <Link to={to} className="plus-bar-text"><b>O plano do seu clube venceu</b><small>{daysLeft(actor.club_plan.grace_until)} para o clube renovar · depois, só assinando</small></Link>
-        <Link to={to} className="plus-bar-btn">Ver planos</Link>
-      </div>
-    );
-  }
-  // Conta nova do App Brasil: no lugar do convite do DBV+, mostra o teste grátis e quantos dias faltam.
+  // Liderança nos 7 dias grátis: no lugar do convite do DBV+, mostra quantos dias faltam.
   if (trial) {
     return (
       <div className="plus-bar trial" key="trial">
         <Gift size={26} className="plus-bar-gift" />
-        <Link to={to} className="plus-bar-text"><b>Você está no teste grátis</b><small>{daysLeft(actor.app.until)} de teste grátis · assine e continue</small></Link>
+        <Link to={to} className="plus-bar-text"><b>Você está no teste grátis</b><small>{daysLeft(actor.access.until)} de teste grátis · assine e continue</small></Link>
         <Link to={to} className="plus-bar-btn">Ver planos</Link>
         <button type="button" className="plus-bar-x" aria-label="Fechar" onClick={close}><X size={16} /></button>
       </div>

@@ -86,7 +86,7 @@ function Waiting({ text }) {
 }
 
 /**
- * Conta do App Brasil sem plano: vê o app inteiro, mas nada funciona até assinar.
+ * Liderança (16 anos ou mais) sem plano: vê o app inteiro, mas nada funciona até assinar.
  * Qualquer toque no conteúdo abre o convite (só os planos ficam liberados).
  */
 function AppLock({ children }) {
@@ -94,11 +94,8 @@ function AppLock({ children }) {
   const nav = useNavigate();
   const { pathname } = useLocation();
   const [ask, setAsk] = useState(false);
-  // App Brasil sem plano, ou clube com o plano vencido (depois dos 3 dias de carência).
-  const club = !!actor.club_plan?.locked;
-  if (!(actor.app?.locked || club) || pathname.startsWith(`${base}/dbv-mais`)) return children;
-  const memberPays = actor.club_plan?.reason === 'membro_pago';
-  const title = memberPays ? 'Assine para usar o app' : club ? 'O plano do seu clube venceu' : actor.app.trial_ended ? 'O seu teste grátis terminou' : 'O seu acesso terminou';
+  if (!actor.access?.locked || pathname.startsWith(`${base}/dbv-mais`)) return children;
+  const title = actor.access.trial_ended ? 'O seu teste grátis terminou' : 'O seu acesso terminou';
   const stop = (e) => {
     // Só olhar continua liberado: as abas e filtros das telas (e o caminho para os planos).
     if (e.target.closest?.(`a[href^="${base}/dbv-mais"], .tabs button, .seg button`)) return;
@@ -108,13 +105,12 @@ function AppLock({ children }) {
   };
   return (
     <>
-      <Link to={`${base}/dbv-mais`} className="app-lock-bar"><Lock size={16} /><span><b>{title}</b><small>{memberPays ? 'Assine o DBV ou o DBV+ para continuar' : club ? 'Assine o DBV ou o DBV+, ou peça ao clube para renovar' : 'Assine o DBV ou o DBV+ para continuar'}</small></span><span className="app-lock-btn">Ver planos</span></Link>
+      <Link to={`${base}/dbv-mais`} className="app-lock-bar"><Lock size={16} /><span><b>{title}</b><small>Assine o DBV ou o DBV+ para continuar</small></span><span className="app-lock-btn">Ver planos</span></Link>
       <div className="app-locked" onClickCapture={stop} onSubmitCapture={stop}>{children}</div>
       {ask && (
         <Modal title="Assine para continuar" onClose={() => setAsk(false)} footer={<><Button variant="secondary" onClick={() => setAsk(false)}>Agora não</Button><Button onClick={() => { setAsk(false); nav(`${base}/dbv-mais`); }}>Ver planos</Button></>}>
-          <p>{memberPays ? <>No <b>{actor.club_name}</b>, cada membro assina o App do DBV. Não perca as suas sequências e o seu lugar no ranking!</> : club ? <>O plano do <b>{actor.club_name}</b> venceu. Para continuar usando o app, assine um plano ou peça para a diretoria do clube renovar. Não perca as suas sequências e o seu lugar no ranking!</>
-            : <>{actor.app.trial_ended ? 'O seu teste grátis de 3 dias' : 'O seu acesso ao'} <b>App do DBV</b> terminou. Não perca as suas sequências e o seu lugar no ranking!</>}</p>
-          <p className="small muted">Com o <b>DBV</b> (R$ 3,90) você continua lendo a Bíblia todo dia e subindo no ranking Brasil. O <b>DBV+</b> (R$ 5,90) libera todos os benefícios: todos os jogos, Bom Líder, figurinhas em triplo e o selo de verificado.</p>
+          <p>{actor.access.trial_ended ? 'O seu teste grátis de 7 dias' : 'O seu acesso ao'} <b>App do DBV</b> terminou. Para a liderança (16 anos ou mais), o app é assinado. Não perca as suas sequências e o seu lugar no ranking!</p>
+          <p className="small muted">Com o <b>DBV</b> (R$ 1,90) você continua lendo a Bíblia todo dia e subindo no ranking. O <b>DBV+</b> (R$ 3,90) libera todos os benefícios: todos os jogos, Bom Líder, figurinhas em triplo e o selo de verificado.</p>
         </Modal>
       )}
     </>
@@ -215,7 +211,7 @@ export default function MemberApp() {
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
-    { to: `${base}/dbv-mais`, icon: BadgeCheck, label: actor.app ? 'Planos' : 'DBV+', hint: actor.plus ? `Assinante até ${new Date(actor.plus.until).toLocaleDateString('pt-BR')}` : actor.app?.locked ? 'Assine para usar o app' : actor.app?.trial ? 'Você está no teste grátis' : 'Assine e ganhe benefícios' },
+    { to: `${base}/dbv-mais`, icon: BadgeCheck, label: actor.access ? 'Planos' : 'DBV+', hint: actor.plus ? `Assinante até ${new Date(actor.plus.until).toLocaleDateString('pt-BR')}` : actor.access?.locked ? 'Assine para usar o app' : actor.access?.trial ? 'Você está no teste grátis' : 'Assine e ganhe benefícios' },
     { to: `${base}/certificados`, icon: Award, label: 'Certificados', hint: 'Baixar em PDF ou imprimir' },
     { to: `${base}/albuns`, icon: BookImage, label: 'Álbuns de figurinhas', hint: 'Álbum Bíblico' },
     { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },

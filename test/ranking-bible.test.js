@@ -193,7 +193,7 @@ test('certificados: o Ano Bíblico completo aparece na aba Certificados; antes, 
   assert.equal((await pedro.get('/me/certificados/ano-biblico/2')).status, 404);
 });
 
-test('plano do clube: 30 dias ao começar; vencido depois da carência, os membros precisam do DBV; pagando, volta', async () => {
+test('plano do clube: 30 dias ao começar; vencido, o portal continua e o desbravador segue de graça; pagando, volta', async () => {
   const admin = await login('membros', 'admin', 'admin123');
   const aguias = await login('clube', 'aguias', 'AG2026');
   const st = (await aguias.get('/club/plano')).body;
@@ -205,27 +205,20 @@ test('plano do clube: 30 dias ao começar; vencido depois da carência, os membr
   };
   const month = Number(new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo', month: '2-digit' }).format(new Date()));
   const free = month === 1 || month === 12;
-  // Venceu ontem: carência (os membros ainda usam de graça).
-  setUntil(new Date(Date.now() - 864e5).toISOString());
-  let pedro = await login('membros', 'pedro');
-  if (!free) assert.equal(pedro.actor.club_plan?.grace, true, 'carência de 3 dias');
-  // Venceu há 10 dias: o membro precisa do DBV (R$ 3,90) ou do DBV+.
+  // Venceu há 10 dias: o desbravador continua usando de graça (o plano do clube não muda isso).
   setUntil(new Date(Date.now() - 10 * 864e5).toISOString());
-  pedro = await login('membros', 'pedro');
-  if (!free) {
-    assert.equal(pedro.actor.club_plan?.expired, true);
-    const plans = (await pedro.get('/plus')).body.plans.map((p) => p.id);
-    assert.deepEqual(plans, ['app', 'plus'], 'aparece o DBV de R$ 3,90');
-    if (!pedro.actor.plus) assert.equal((await pedro.post('/ano-biblico/dia/1/quiz', { answers: [0] })).status, 402);
-  }
+  let pedro = await login('membros', 'pedro');
+  if (!free) assert.equal((await aguias.get('/club/plano')).body.status.state, 'vencido');
+  assert.equal(pedro.actor.club_plan, null);
+  assert.equal(pedro.actor.access, null, 'desbravador não precisa de plano');
+  assert.deepEqual((await pedro.get('/plus')).body.plans.map((p) => p.id), ['plus'], 'só o DBV+');
+  assert.notEqual((await pedro.post('/ano-biblico/dia/1/quiz', { answers: [0] })).status, 402);
   // O portal do clube continua funcionando; o clube paga e volta para todos.
   await admin.put('/admin/pagamentos-config/pix', { key: 'pix@appdodbv.com', name: 'App do DBV', city: 'Palmares' });
   const pay = (await aguias.post('/club/plano/assinar', { plan: 'mensal' })).body;
   assert.equal(pay.amount_cents, 1500);
   assert.equal((await admin.post(`/admin/pagamentos/${pay.id}/confirmar`)).status, 200);
   assert.equal((await aguias.get('/club/plano')).body.status.state, free ? 'gratis' : 'ok');
-  pedro = await login('membros', 'pedro');
-  assert.equal(pedro.actor.club_plan, null, 'membros de volta ao grátis');
 });
 
 test('ranking por lugar: o clube reinicia e pausa o dele; o distrito não muda', async () => {
@@ -307,7 +300,7 @@ test('finalizar ranking: troféu personalizado para os 3 primeiros, certificado,
   assert.equal((await pedro.get('/jogos/meus')).body.cobrinha, undefined, 'jogos zeraram');
 });
 
-test('quem paga: clube pago (membros grátis), clube grátis + membros grátis, clube grátis + membros pagam (o clube pode assumir)', async () => {
+test('quem paga: o plano do clube não muda os membros (desbravador grátis; liderança assina)', async () => {
   const admin = await login('membros', 'admin', 'admin123');
   const aguias = await login('clube', 'aguias', 'AG2026');
   const clubId = aguias.actor.id;
@@ -319,7 +312,7 @@ test('quem paga: clube pago (membros grátis), clube grátis + membros grátis, 
   assert.equal((await aguias.get('/club/plano')).body.status.state, 'gratis_sempre');
   assert.equal((await aguias.post('/club/plano/assinar', { plan: 'mensal' })).status, 400, 'clube grátis não tem cobrança');
   assert.deepEqual(await plansOf(), ['plus']);
-  // Clube grátis + membros pagam: o membro precisa do DBV (R$ 3,90); o clube pode assumir.
+  // Clube grátis + "membros pagam" (configuração antiga): o desbravador continua de graça.
   const db = new DatabaseSync(path.join(dataDir, 'dbv.sqlite'));
   try { db.prepare('UPDATE clubs SET paid_until = NULL WHERE id = ?').run(clubId); } finally { db.close(); }
   await admin.put(`/admin/clubs/${clubId}`, { member_billing: 'pago' });
@@ -327,11 +320,8 @@ test('quem paga: clube pago (membros grátis), clube grátis + membros grátis, 
   assert.equal(st.optional, true);
   if (!free) {
     assert.equal(st.state, 'membros_pagam');
-    assert.equal((await login('membros', 'pedro')).actor.club_plan?.reason, 'membro_pago');
-    assert.deepEqual(await plansOf(), ['app', 'plus']);
-    const pay = (await aguias.post('/club/plano/assinar', { plan: 'mensal' })).body;
-    assert.equal((await admin.post(`/admin/pagamentos/${pay.id}/confirmar`)).status, 200);
-    assert.equal((await login('membros', 'pedro')).actor.club_plan, null, 'o clube assumiu: membros de graça');
+    assert.equal((await login('membros', 'pedro')).actor.access, null);
+    assert.deepEqual(await plansOf(), ['plus']);
   }
   // Clube pago em dia: o membro não vê a faixa do DBV+ (club_pays); clube grátis + membros grátis: vê.
   await admin.put(`/admin/clubs/${clubId}`, { club_billing: 'gratis', member_billing: 'gratis' });

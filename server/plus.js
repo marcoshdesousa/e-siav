@@ -1,7 +1,8 @@
-// DBV+ (assinatura de 30 dias para membros): ajuda o app e libera benefícios.
-//   DBV          R$ 3,90  — só para quem criou a conta pelo app (sem clube): libera o app, como o plano grátis.
-//                            A conta nova já entra com 3 dias de DBV para conhecer o app.
-//   DBV+          R$ 5,90  — benefícios do app e todos os jogos (só a Aventura do Desbravador é grátis)
+// Planos dos membros (30 dias), iguais para todos, venha de onde vier (clube, distrito ou App Brasil):
+//   DBV          R$ 1,90  — libera o app. Desbravador (até 15 anos) não paga: usa o app de graça.
+//                            Liderança (16 anos ou mais) é obrigada a assinar e começa com 7 dias grátis.
+//   DBV+          R$ 3,90  — benefícios do app e todos os jogos (só a Aventura do Desbravador é liberada
+//                            para todos). Sem dias grátis.
 //   DBV+ 3 Espec. R$ 19,90 — + 3 especialidades físicas (escolhe 15, a equipe compra 3)
 //   DBV+ 7 Espec. R$ 34,90 — + 7 especialidades físicas (escolhe 20, a equipe compra 7)
 // Todo plano: Bom Líder, jogos sem internet, 60 pacotinhos a cada 30 dias,
@@ -31,15 +32,15 @@ if (!get(`SELECT 1 FROM app_flags WHERE key = 'teste-gratis-antigos-v1'`)) {
 }
 
 export const PLANS = {
-  app: { id: 'app', name: 'DBV', price_cents: 390, specialties: 0, pick: 0, access_only: true },
-  plus: { id: 'plus', name: 'DBV+', price_cents: 590, specialties: 0, pick: 0 },
+  app: { id: 'app', name: 'DBV', price_cents: 190, specialties: 0, pick: 0, access_only: true },
+  plus: { id: 'plus', name: 'DBV+', price_cents: 390, specialties: 0, pick: 0 },
   // Planos antigos (com especialidades físicas): ninguém assina mais; quem tinha aparece só como DBV+.
   plus3: { id: 'plus3', name: 'DBV+', price_cents: 1990, specialties: 3, pick: 15 },
   plus7: { id: 'plus7', name: 'DBV+', price_cents: 3490, specialties: 7, pick: 20 },
 };
 export const PLUS_DAYS = 30;
 /** Conta nova do App Brasil: dias de DBV para conhecer o app antes de assinar. */
-export const APP_TRIAL_DAYS = 3;
+export const APP_TRIAL_DAYS = 7;
 export const PLUS_PACKS = 60;
 /** Compra de pacotinhos: o assinante leva 3 pelo preço de 1. */
 export const PLUS_PACK_MULT = 3;
@@ -56,10 +57,21 @@ export const isPlus = (memberId) => { const p = plusOf(memberId); return !!p?.ac
 /** Algum plano ativo (o DBV também conta): libera o app para quem entrou pelo App Brasil. */
 export const hasAccess = (memberId) => !!plusOf(memberId)?.active;
 /**
- * Planos que cada conta pode assinar: o DBV+ (R$ 5,90). Quem precisa pagar para usar o app (App Brasil
- * ou clube com o plano vencido) também tem o DBV (R$ 3,90). Os planos com especialidades físicas saíram.
+ * Planos que cada conta pode assinar: o DBV+ (R$ 3,90) para todos; a liderança, que precisa assinar
+ * para usar o app, também tem o DBV (R$ 1,90). Os planos com especialidades físicas saíram.
  */
 export const plansFor = (needsAccess) => (needsAccess ? [PLANS.app, PLANS.plus] : [PLANS.plus]);
+
+/**
+ * Acesso de quem é da liderança (16 anos ou mais): precisa de um plano ativo. Na primeira vez ganha
+ * 7 dias grátis do DBV. Desbravador não precisa: devolve null.
+ */
+export function leaderAccess(memberId, isLeader) {
+  if (!isLeader) return null;
+  if (!get('SELECT 1 FROM member_plus WHERE member_id = ?', memberId)) grantPlus(memberId, 'app', APP_TRIAL_DAYS, { trial: true });
+  const p = plusOf(memberId);
+  return { locked: !p?.active, until: p?.active ? p.until : null, trial: !!p?.trial, trial_ended: !!p?.trial_ended };
+}
 /** Benefício do DBV+ liberado (assinante ativo). */
 export const plusOpen = (memberId) => isPlus(memberId);
 

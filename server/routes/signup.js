@@ -132,7 +132,8 @@ r.post('/criar-conta', (req, res) => {
     ).lastInsertRowid);
     createMemberLogin(id, code);
     if (handle) run('UPDATE members SET handle = ? WHERE id = ?', handle, id);
-    grantPlus(id, 'app', APP_TRIAL_DAYS, { trial: true });
+    // Liderança: 7 dias grátis do DBV. Desbravador usa o app de graça.
+    if (leader) grantPlus(id, 'app', APP_TRIAL_DAYS, { trial: true });
     return { id, code };
   });
   enterNow(res, out, birth);

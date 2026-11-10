@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-import { hasAccess, plusOf, plusOpen } from './plus.js';
-import { clubPaysForMembers, membersMustPay } from './clubPlan.js';
+import { leaderAccess, plusOf, plusOpen } from './plus.js';
+import { clubPaysForMembers } from './clubPlan.js';
 import bcrypt from 'bcryptjs';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -69,20 +69,16 @@ export function loadActor(type, id) {
     const waiting = m.status === 'pendente' ? waitingMessage(pendingReason(m)) : null;
     const { status: _s, terms_token: _t, approved_at: _a, cleared_year: _c, is_app: isApp, ...rest } = m;
     const kind = memberKind(m.birth_date);
+    // Liderança (16 anos ou mais): precisa do DBV ou do DBV+ (começa com 7 dias grátis), venha de onde
+    // vier. Desbravador usa o app de graça. O plano do clube não muda isso.
+    const access = waiting ? null : leaderAccess(m.id, kind === 'lideranca');
     const p = plusOf(m.id);
     const plus = p?.active && p.plan !== 'app' ? { plan: p.plan, until: p.until, picks_pending: !!(p.picks_needed && !p.picks) } : null;
-    // App Brasil: entra e vê o app, mas só usa depois de assinar (DBV ou DBV+).
-    const app = isApp ? { locked: !hasAccess(m.id), until: p?.active ? p.until : null, trial: !!p?.trial, trial_ended: !!p?.trial_ended } : null;
-    // Clube com o plano vencido (depois dos 3 dias de carência): o membro precisa do DBV ou do DBV+.
-    let clubPlan = null;
-    if (!isApp) {
-      const must = membersMustPay(m.club_id);
-      if (must?.grace) clubPlan = { grace: true, grace_until: must.grace_until };
-      else if (must) clubPlan = { expired: true, reason: must.reason, locked: !hasAccess(m.id), until: p?.active ? p.until : null, trial: false };
-    }
-    // Clube pagando pelos membros: sem a faixa "Seja DBV+" (o DBV+ continua na seção dele, para quem quiser).
+    // App Brasil (conta sem clube): marca a conta; o acesso segue a mesma regra de todos.
+    const app = isApp ? { locked: !!access?.locked, until: access?.until || null, trial: !!access?.trial, trial_ended: !!access?.trial_ended } : null;
+    const clubPlan = null;
     const clubPays = !isApp && clubPaysForMembers(m.club_id);
-    return { type, ...rest, cargo: cargoOf(kind, rest.cargo), waiting, kind, role: roleOf(kind, m.cargo), plus, plus_open: plusOpen(m.id), app, club_plan: clubPlan, club_pays: clubPays };
+    return { type, ...rest, cargo: cargoOf(kind, rest.cargo), waiting, kind, role: roleOf(kind, m.cargo), plus, plus_open: plusOpen(m.id), app, access, club_plan: clubPlan, club_pays: clubPays };
   }
   return null;
 }
@@ -118,12 +114,12 @@ export const requireGeneral = (req, _res, next) => {
 /** Distrito do administrador (null = geral, vê tudo). */
 export const adminDistrict = (a) => (a?.type === 'admin' ? a.district_id || null : null);
 
-// Conta do App Brasil sem assinatura: só olha (GET); para fazer qualquer coisa precisa assinar.
+// Liderança sem plano ativo: só olha (GET); para fazer qualquer coisa precisa assinar.
 const LOCKED_OK = /^\/api\/(plus|payments|pagamentos|auth|me\/conta|me\/push|rankings\/finais)(\/|$)/;
 export const requireAuth = (...types) => (req, _res, next) => {
   if (!req.actor) fail(401, 'Faça login para continuar');
   if (req.actor.waiting) fail(403, req.actor.waiting);
-  if ((req.actor.app?.locked || req.actor.club_plan?.locked) && req.method !== 'GET' && !LOCKED_OK.test(req.originalUrl.split('?')[0])) fail(402, 'Assine um plano para usar o app');
+  if (req.actor.access?.locked && req.method !== 'GET' && !LOCKED_OK.test(req.originalUrl.split('?')[0])) fail(402, 'Assine um plano para usar o app');
   if (types.length && !types.includes(req.actor.type)) fail(403, 'Acesso não permitido para esta conta');
   next();
 };

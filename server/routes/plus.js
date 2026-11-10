@@ -31,22 +31,23 @@ export const BENEFITS = [
   { text: 'Selo de verificado (logo dourada) no perfil' },
 ];
 
-// Quem entrou pelo App Brasil (sem clube) precisa de um plano para usar o app: o DBV (R$ 3,90),
-// com o mesmo do plano grátis, ou o DBV+ (R$ 5,90). As especialidades físicas são só para quem tem clube.
+// O que vem no DBV (R$ 1,90, o mesmo do plano grátis dos desbravadores). Quem é do App Brasil (sem
+// clube) vê o ranking Brasil no lugar do ranking do distrito.
 export const APP_FREE = FREE.map((t) => t.replace('rankings do distrito', 'ranking Brasil'));
 
 r.get('/plus', member, (req, res) => {
   const p = plusOf(req.actor.id);
-  const needs = !!req.actor.app || !!req.actor.club_plan?.expired;
+  // A liderança precisa assinar (DBV ou DBV+); o desbravador só vê o DBV+ (o app já é de graça).
+  const needs = !!req.actor.access;
   res.json({
-    plans: plansFor(needs), benefits: BENEFITS, free: needs ? APP_FREE : FREE, days: PLUS_DAYS, packs: PLUS_PACKS,
-    app: req.actor.app || (req.actor.club_plan?.expired ? { ...req.actor.club_plan, club: true } : null), club_plan: req.actor.club_plan, mine: p, open: plusOpen(req.actor.id),
+    plans: plansFor(needs), benefits: BENEFITS, free: req.actor.app ? APP_FREE : FREE, days: PLUS_DAYS, packs: PLUS_PACKS,
+    app: req.actor.access, mine: p, open: plusOpen(req.actor.id),
     picks_names: p?.picks ? all(`SELECT id, name, category FROM content WHERE id IN (${p.picks.map(() => '?').join(',')})`, ...p.picks) : [],
   });
 });
 
 r.post('/plus/assinar', member, async (req, res) => {
-  const plan = plansFor(!!req.actor.app || !!req.actor.club_plan?.expired).find((p) => p.id === req.body.plan);
+  const plan = plansFor(!!req.actor.access).find((p) => p.id === req.body.plan);
   if (!plan) fail(400, 'Escolha um plano');
   // Um plano por vez: só dá para assinar de novo quando o atual vencer (quem está no DBV pode renovar ou subir para o DBV+ a qualquer hora).
   const cur = plusOf(req.actor.id);

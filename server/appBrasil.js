@@ -2,8 +2,8 @@
 // "Unidade App" (desbravadores) ou na "Unidade App Liderança" (16 anos ou mais).
 // O distrito e o clube ficam escondidos: não aparecem nas listas, não abrem perfil e não
 // disputam o ranking de clubes, de unidades nem de distrito. Os membros só disputam o ranking Brasil.
-// A conta nova já entra com 3 dias de DBV (teste grátis); depois precisa assinar
-// o DBV (R$ 3,90) ou o DBV+ (R$ 5,90): evita contas falsas.
+// Como em todo o app: o desbravador usa de graça; a liderança entra com 7 dias de DBV (teste grátis) e
+// depois assina o DBV (R$ 1,90) ou o DBV+ (R$ 3,90).
 import { get, run, tx } from './db.js';
 
 export const APP = { district: 'App Brasil', club: 'Clube App Brasil', unit: 'Unidade App', leaders: 'Unidade App Liderança', logo: '/marca/logo.png' };

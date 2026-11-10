@@ -1,15 +1,9 @@
-// Plano do clube: o clube paga R$ 15 a cada 30 dias (só mensal) para que os membros usem o app de
-// graça. O administrador escolhe, por clube:
-//   clube pago: o clube paga e os membros usam de graça; se o clube não pagar, os membros passam a
-//     pagar o DBV (R$ 3,90) até o clube pagar (o portal do clube continua funcionando);
-//   clube grátis + membros grátis: ninguém paga e o clube não vê cobrança;
-//   clube grátis + membros pagam: cada membro assina o DBV; o clube pode, se quiser, assumir a
-//     cobrança (R$ 15 por mês) e aí os membros usam de graça.
-// O DBV+ (R$ 5,90) continua sempre disponível para todos. Janeiro e dezembro são grátis para todos os clubes (férias) e não gastam os
-// dias pagos. Ao ser cadastrado, o clube já ganha os primeiros 30 dias.
-// Se o plano vence, o clube tem 3 dias de carência; depois disso o portal do clube e o login das
-// unidades continuam funcionando, mas os membros precisam assinar o DBV (R$ 3,90) ou o DBV+ para usar
-// o app. O que o membro pagou nesse tempo não é devolvido quando o clube volta a pagar.
+// Plano do clube: o clube paga R$ 15 a cada 30 dias (só mensal) pelo portal do clube; o administrador
+// pode deixar o clube grátis. Os membros NÃO dependem do plano do clube: o desbravador usa o app de
+// graça e a liderança (16 anos ou mais) assina o DBV (R$ 1,90) ou o DBV+ (R$ 3,90), com 7 dias grátis
+// (server/plus.js). Janeiro e dezembro são grátis para todos os clubes (férias) e não gastam os dias
+// pagos. Ao ser cadastrado, o clube já ganha os primeiros 30 dias. Se o plano vence, o clube tem 3 dias
+// de carência.
 import { get, run } from './db.js';
 
 export const CLUB_PLANS = {

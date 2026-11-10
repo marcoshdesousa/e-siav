@@ -92,8 +92,23 @@ test('zerar estudos (uma vez): Ano Bíblico e Bom de Bíblia vão para o arquivo
   assert.equal(setting('bom_lider_inicio'), '2027-01-01');
 });
 
-test('DBV+ a R$ 5,90 para todos; o DBV continua R$ 3,90', async () => {
+test('DBV R$ 1,90 e DBV+ R$ 3,90 para todos', async () => {
   const { plansFor } = await import('../server/plus.js');
-  assert.deepEqual(plansFor(false).map((p) => [p.id, p.price_cents]), [['plus', 590]], 'com clube: DBV+ por 5,90');
-  assert.deepEqual(plansFor(true).map((p) => [p.id, p.price_cents]), [['app', 390], ['plus', 590]], 'App Brasil: DBV 3,90 e DBV+ 5,90');
+  assert.deepEqual(plansFor(false).map((p) => [p.id, p.price_cents]), [['plus', 390]], 'desbravador: só o DBV+ (o app é de graça)');
+  assert.deepEqual(plansFor(true).map((p) => [p.id, p.price_cents]), [['app', 190], ['plus', 390]], 'liderança: DBV e DBV+');
+});
+
+test('liderança: 7 dias grátis do DBV na primeira vez; desbravador não precisa de plano', async () => {
+  const { leaderAccess } = await import('../server/plus.js');
+  const d = Number(run(`INSERT INTO districts (name) VALUES ('D10')`).lastInsertRowid);
+  const c = Number(run('INSERT INTO clubs (district_id, name) VALUES (?, ?)', d, 'C10').lastInsertRowid);
+  const m = Number(run(`INSERT INTO members (club_id, name, birth_date, cargo, code) VALUES (?, 'L L', '1990-01-01', 'Diretor', '999010')`, c).lastInsertRowid);
+  assert.equal(leaderAccess(m, false), null);
+  const a = leaderAccess(m, true);
+  assert.equal(a.locked, false);
+  assert.equal(a.trial, true);
+  const dias = (Date.parse(a.until) - Date.now()) / 864e5;
+  assert.ok(dias > 6.9 && dias <= 7, '7 dias');
+  run('UPDATE member_plus SET until = ? WHERE member_id = ?', new Date(Date.now() - 1000).toISOString(), m);
+  assert.equal(leaderAccess(m, true).locked, true, 'acabou o teste: precisa assinar (não ganha outro)');
 });

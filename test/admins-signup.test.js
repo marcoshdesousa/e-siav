@@ -118,34 +118,43 @@ test('link de inscrição: desbravador, diretoria e conselheiro entram no clube 
   assert.notEqual(novo.token, on.token);
 });
 
-test('App Brasil: cria conta sem clube, precisa de plano, só ranking Brasil, apaga a conta', async () => {
+test('App Brasil: desbravador usa de graça; liderança tem 7 dias grátis e depois precisa do plano; só ranking Brasil; apaga a conta', async () => {
   const geral = await login('membros', 'admin', 'admin123');
+  // Desbravador: conta grátis, sem teste e sem bloqueio.
   const kid = await anon('POST', '/criar-conta', { handle: uid(), name: 'Bruno Sem Clube', birth_date: yearsAgo(13) });
   assert.equal(kid.status, 200);
   assert.equal(kid.body.actor.club_name, 'Clube App Brasil');
   assert.equal(kid.body.actor.unit_name, 'Unidade App');
-  assert.equal(kid.body.actor.app.locked, false, 'entra com 3 dias de DBV');
-  assert.equal(kid.body.actor.app.trial, true, 'no teste grátis');
-  const kp = await login('membros', kid.body.code, kid.body.password);
-  const mine = (await kp.get('/plus')).body.mine;
-  assert.ok(mine.trial && mine.plan_name === 'Teste grátis');
-  const dias = (Date.parse(kid.body.actor.app.until) - Date.now()) / 864e5;
-  assert.ok(dias > 2.9 && dias <= 3, '3 dias');
-  assert.equal(kid.body.actor.plus, null, 'o DBV não libera o DBV+');
-  assert.equal((await geral.del(`/admin/plus/${kid.body.actor.id}`)).status, 200, 'simula o fim dos 3 dias');
-  const lider = (await anon('POST', '/criar-conta', { handle: uid(), name: 'Carla Sem Clube', birth_date: yearsAgo(25) })).body.actor;
-  assert.equal(lider.unit_name, 'Unidade App Liderança');
-  const b = await login('membros', kid.body.code, kid.body.password);
-  assert.equal((await b.post('/ano-biblico/dia/1/quiz', { answers: [0] })).status, 402, 'bloqueado até assinar');
-  const plus = (await b.get('/plus')).body;
-  assert.deepEqual(plus.plans.map((p) => [p.id, p.name, p.price_cents]), [['app', 'DBV', 390], ['plus', 'DBV+', 590]]);
-  assert.equal((await b.post('/plus/assinar', { plan: 'plus3' })).status, 400, 'sem planos de especialidade');
-  assert.equal((await geral.post('/admin/plus/dar', { code: kid.body.code, plan: 'app', days: 30 })).status, 200, 'dar plano');
+  assert.equal(kid.body.actor.access, null, 'desbravador não precisa de plano');
+  assert.equal(kid.body.actor.app.locked, false);
   const b2 = await login('membros', kid.body.code, kid.body.password);
-  assert.equal(b2.actor.app.locked, false);
-  assert.equal(b2.actor.app.trial, false, 'plano de verdade não é teste grátis');
-  assert.equal(b2.actor.plus, null, 'DBV não é DBV+');
-  assert.notEqual((await b2.post('/ano-biblico/dia/1/quiz', { answers: [0] })).status, 402);
+  assert.deepEqual((await b2.get('/plus')).body.plans.map((p) => [p.id, p.name, p.price_cents]), [['plus', 'DBV+', 390]], 'só o DBV+ (R$ 3,90)');
+  assert.notEqual((await b2.post('/ano-biblico/dia/1/quiz', { answers: [0] })).status, 402, 'usa o app de graça');
+  assert.equal(b2.actor.plus, null);
+  // Liderança: 7 dias grátis do DBV; acabou, fica bloqueada até assinar (DBV R$ 1,90 ou DBV+ R$ 3,90).
+  const lider = await anon('POST', '/criar-conta', { handle: uid(), name: 'Carla Sem Clube', birth_date: yearsAgo(25) });
+  assert.equal(lider.body.actor.unit_name, 'Unidade App Liderança');
+  assert.equal(lider.body.actor.access.locked, false, 'entra com 7 dias de DBV');
+  assert.equal(lider.body.actor.access.trial, true, 'no teste grátis');
+  const dias = (Date.parse(lider.body.actor.access.until) - Date.now()) / 864e5;
+  assert.ok(dias > 6.9 && dias <= 7, '7 dias');
+  const lp = await login('membros', lider.body.code, lider.body.password);
+  assert.ok((await lp.get('/plus')).body.mine.trial);
+  // Simula o fim dos 7 dias.
+  const db = new DatabaseSync(path.join(dataDir, 'dbv.sqlite'));
+  db.prepare('UPDATE member_plus SET until = ? WHERE member_id = ?').run(new Date(Date.now() - 864e5).toISOString(), lider.body.actor.id);
+  db.close();
+  const l2 = await login('membros', lider.body.code, lider.body.password);
+  assert.equal(l2.actor.access.locked, true, 'acabou o acesso');
+  assert.equal((await l2.post('/ano-biblico/dia/1/quiz', { answers: [0] })).status, 402, 'bloqueada até assinar');
+  const plus = (await l2.get('/plus')).body;
+  assert.deepEqual(plus.plans.map((p) => [p.id, p.name, p.price_cents]), [['app', 'DBV', 190], ['plus', 'DBV+', 390]]);
+  assert.equal((await l2.post('/plus/assinar', { plan: 'plus3' })).status, 400, 'sem planos de especialidade');
+  assert.equal((await geral.post('/admin/plus/dar', { code: lider.body.code, plan: 'app', days: 30 })).status, 200, 'dar plano');
+  const l3 = await login('membros', lider.body.code, lider.body.password);
+  assert.equal(l3.actor.access.locked, false);
+  assert.equal(l3.actor.access.trial, false, 'plano de verdade não é teste grátis');
+  assert.equal(l3.actor.plus, null, 'DBV não é DBV+');
   // Rankings: só o Brasil.
   const appClub = b2.actor.club_id;
   assert.ok((await b2.get('/rankings/members')).body.some((r) => r.id === b2.actor.id), 'está no ranking Brasil');

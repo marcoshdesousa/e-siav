@@ -59,13 +59,11 @@ export function ClubPlanCard() {
                 <div className="row between"><b>Situação</b><Badge kind={kind}>{label}</Badge></div>
                 <p className="small" style={{ margin: 0 }}>
                   {d.status.paid_until ? <>Pago até <b>{brDate(d.status.paid_until)}</b>. </> : null}
-                  {d.status.optional
-                    ? <>Hoje cada desbravador do clube paga <b>R$ 3,90</b> para usar o app. Se quiser, o clube pode <b>assumir a cobrança</b>: pagando R$ 15 por mês, todos usam de graça.</>
-                    : <>Com o plano em dia, todos os membros do clube usam o app <b>de graça</b>.</>} Janeiro e dezembro são grátis para todos os clubes.
+                  O plano é do portal do clube. Para os membros vale a regra do app: os <b>desbravadores</b> usam de graça e a <b>liderança</b> (16 anos ou mais) assina o DBV (R$ 1,90) ou o DBV+ (R$ 3,90), com 7 dias grátis. Janeiro e dezembro são grátis para todos os clubes.
                 </p>
                 {!d.status.optional && ['carencia', 'vencido'].includes(d.status.state) && (
                   <p className="small" style={{ margin: 0, color: 'var(--red-ink)' }}>
-                    {d.status.state === 'carencia' ? `O plano venceu. Até ${brDate(d.status.grace_until)} os membros continuam de graça; depois disso cada um vai precisar assinar para usar o app.` : 'O plano venceu: o portal do clube continua funcionando, mas os membros precisam assinar (R$ 3,90) para usar o app. Renove para liberar todos de novo.'}
+                    {d.status.state === 'carencia' ? `O plano venceu. Renove até ${brDate(d.status.grace_until)}.` : 'O plano venceu. Renove para continuar com o plano do clube em dia.'}
                   </p>
                 )}
                 <div className="club-plans">

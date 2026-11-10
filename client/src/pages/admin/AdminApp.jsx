@@ -125,13 +125,7 @@ function ClubForm({ item, nextNumber, districts, onClose, onCreated, onSaved }) 
               <option value="pago">Pago</option><option value="gratis">Grátis</option>
             </select>
           </Field>
-          {f.club_billing === 'gratis' ? (
-            <Field label="Os membros" hint={f.member_billing === 'pago' ? 'Cada membro assina o DBV (R$ 3,90); o clube pode assumir' : 'Grátis (o DBV+ continua opcional)'}>
-              <select value={f.member_billing} onChange={(e) => setF({ ...f, member_billing: e.target.value })}>
-                <option value="gratis">Grátis</option><option value="pago">Pagam</option>
-              </select>
-            </Field>
-          ) : <Field label="Os membros" hint="Grátis enquanto o clube pagar; se o clube não pagar, os membros passam a pagar"><input value="Grátis" disabled /></Field>}
+          <p className="small muted">Os membros seguem a regra do app: desbravadores usam de graça e a liderança (16 anos ou mais) assina o DBV (R$ 1,90) ou o DBV+ (R$ 3,90), com 7 dias grátis.</p>
         </div>
         {!item && <p className="muted small">O app cria o código do clube e a senha (2 letras + 4 números). A senha não pode ser trocada. As unidades entram com o mesmo código e a senha de cada unidade.</p>}
       </div>
