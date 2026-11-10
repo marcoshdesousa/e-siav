@@ -1,5 +1,6 @@
 // Aprendizagem Diária (só membros): Ano Bíblico (leitura do dia + áudio + quiz, sequência e
-// pacotinho do Álbum Bíblico por dia concluído) e Bom de Bíblia (200 fases de perguntas).
+// pacotinho do Álbum Bíblico por dia concluído) e Bom de Bíblia (1000 fases de perguntas, do fácil ao
+// extremo; as fases 201 a 1000 saem do texto da Bíblia: scripts/gerar-bom-de-biblia.mjs).
 import fs from 'node:fs';
 import { presenceSummary } from '../presence.js';
 import path from 'node:path';

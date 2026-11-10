@@ -202,3 +202,6 @@
 .remind-quick button.on { border-color: var(--primary); background: var(--primary); color: #fff; }
 .remind-warn { font-size: .82rem; font-weight: 700; color: #b45309; background: rgba(245, 158, 11, .12); border-radius: 12px; padding: .55rem .7rem; }
 .remind-row { display: flex; margin: -.4rem 0 .8rem; }
+.lv-extremo .phase { background: linear-gradient(135deg, #7c3aed, #312e81); }
+.phase.next { box-shadow: 0 0 0 3px #fde047, 0 6px 16px -6px rgba(0, 0, 0, .5); transform: scale(1.06); }
+.phase-grid .phase { scroll-margin: 120px; }

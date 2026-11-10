@@ -48,7 +48,7 @@ export function useScrollHere() {
 
 const br = (iso) => (iso ? iso.split('-').reverse().join('/') : '');
 const MONTHS = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
-const LEVEL = { facil: 'Fácil', intermediario: 'Intermediário', dificil: 'Difícil', 'muito-dificil': 'Muito difícil', muito_dificil: 'Muito difícil' };
+const LEVEL = { facil: 'Fácil', intermediario: 'Intermediário', dificil: 'Difícil', 'muito-dificil': 'Muito difícil', muito_dificil: 'Muito difícil', extremo: 'Extremo' };
 const levelKey = (l) => String(l || '').replace('_', '-');
 const dias = (n) => `${n} dia${n === 1 ? '' : 's'}`;
 
@@ -142,7 +142,7 @@ export function LearningHub({ base }) {
               <Link to={`${base}/aprendizagem/bom-de-biblia`} className="learn-card c3">
                 <span className="learn-ico"><Trophy size={30} /></span>
                 <b>Bom de Bíblia</b>
-                <small>{d.bdb.total} fases de perguntas, do fácil ao muito difícil</small>
+                <small>{d.bdb.total} fases de perguntas, do fácil ao extremo</small>
                 <span className="learn-bar"><i style={{ width: `${d.bdb.total ? (d.bdb.passed / d.bdb.total) * 100 : 0}%` }} /></span>
                 <small>{d.bdb.passed} de {d.bdb.total} fases</small>
               </Link>
@@ -509,12 +509,15 @@ function BibleQuiz({ d, back, onRead, reload }) {
 
 export function BomDeBiblia({ base }) {
   const state = useLoad(() => api.get('/bom-de-biblia'));
+  // São 1000 fases: a lista já rola até a próxima fase a jogar.
+  const here = useScrollHere();
   return (
     <>
       <PageHeader title="Bom de Bíblia" subtitle="Responda rápido: 15 segundos por pergunta" />
       <div className="remind-row"><StudyReminder kind="bom_de_biblia" /></div>
       <Loading {...state}>
         {(d) => {
+          const next = d.phases.find((p) => !p.passed && !p.locked)?.phase;
           const groups = [];
           for (const p of d.phases) {
             const k = levelKey(p.level);
@@ -537,7 +540,7 @@ export function BomDeBiblia({ base }) {
                     {g.list.map((p) => (p.locked
                       ? <span key={p.phase} className="phase locked"><Lock size={14} />{p.phase}</span>
                       : (
-                        <Link key={p.phase} to={`${base}/aprendizagem/bom-de-biblia/${p.phase}`} className={'phase' + (p.passed ? ' passed' : '')}>
+                        <Link key={p.phase} ref={p.phase === next ? here : null} to={`${base}/aprendizagem/bom-de-biblia/${p.phase}`} className={'phase' + (p.passed ? ' passed' : '') + (p.phase === next ? ' next' : '')}>
                           <b>{p.phase}</b>
                           <small>{p.passed ? `${p.best}/10` : 'Jogar'}</small>
                         </Link>

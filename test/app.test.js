@@ -828,7 +828,7 @@ test('aprendizagem diária: ano bíblico (sequência, dias perdidos, futuro tran
   assert.equal((await pedro.get('/albuns/biblico')).body.packs_unopened, packs + 2);
   const sum = (await pedro.get('/aprendizagem')).body;
   assert.equal(sum.bible.done, 2);
-  assert.equal(sum.bdb.total, 200);
+  assert.equal(sum.bdb.total, 1000);
   assert.equal((await admin.get('/aprendizagem')).status, 403, 'só membros');
   // Bom de Bíblia: fase 2 trancada até passar a 1
   assert.equal((await pedro.get('/bom-de-biblia/fase/2')).status, 403);
