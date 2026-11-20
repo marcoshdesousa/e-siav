@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { Award, ClipboardCheck, ClipboardPlus, Flag, LifeBuoy, Menu, Tent, Trophy } from 'lucide-react';
+import { Award, ClipboardCheck, Flag, LifeBuoy, Menu, Tent, Trophy } from 'lucide-react';
 import { GroupCertificatesPage } from '../Certificates.jsx';
 import { EmbeddedSite, SupportChat } from '../Shared.jsx';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
-import { Button, Card, Loading, PageHeader, Section, Tabs, useAsync, useLoad } from '../../ui.jsx';
+import { Button, Card, Loading, PageHeader, Section, useAsync, useLoad } from '../../ui.jsx';
 import Shell, { MoreMenu } from '../Shell.jsx';
 import { InAppProfile, UnitProfileView } from '../Profiles.jsx';
-import { CreatedRequirements, RequirementsTodo, ReviewsPanel } from '../Requirements.jsx';
+import { RequirementsTodo } from '../Requirements.jsx';
 import RankingHub from '../Ranking.jsx';
 
 const base = '/unidade';
@@ -45,19 +45,7 @@ function UnitProfile() {
   );
 }
 
-/** O conselheiro cria requisitos para os desbravadores da unidade e avalia os envios. */
-function GroupRequirements() {
-  const [tab, setTab] = useState('criados');
-  return (
-    <>
-      <PageHeader title="Para os desbravadores" subtitle="Requisitos que a unidade cria para os próprios desbravadores" />
-      <Tabs tabs={[['criados', 'Criados pela unidade'], ['avaliar', 'Avaliar']]} value={tab} onChange={setTab} />
-      {tab === 'criados' ? <CreatedRequirements /> : <ReviewsPanel />}
-    </>
-  );
-}
-
-/** Portal da Unidade: abre no perfil; cumpre requisitos em unidade e cria requisitos para os desbravadores da unidade. */
+/** Portal da Unidade: abre no perfil (foto e recado) e cumpre os requisitos de unidade. Não cria requisitos. */
 export default function UnitApp() {
   const { pathname } = useLocation();
   const { actor } = useAuth();
@@ -74,12 +62,11 @@ export default function UnitApp() {
     { to: `${base}/mais`, icon: Menu, label: 'Mais' },
   ];
   const more = [
-    ...(lid ? [] : [{ to: `${base}/exploradores`, icon: ClipboardPlus, label: 'Criar requisitos', hint: 'Para os desbravadores da unidade' }]),
     { to: `${base}/certificados`, icon: Award, label: 'Certificados', hint: 'De honra da unidade' },
     { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },
   ];
   return (
-    <Shell tabs={tabs} parentOf={(path) => (['exploradores', 'certificados', 'suporte'].includes(path.split('/')[2]) ? `${base}/mais` : base)}>
+    <Shell tabs={tabs} parentOf={(path) => (['certificados', 'suporte'].includes(path.split('/')[2]) ? `${base}/mais` : base)}>
       <Routes>
         <Route path="cantinho" element={<EmbeddedSite title="Cantinho da Unidade" linkKey="link_cantinho" subtitle="Relatórios e atividades da unidade" />} />
         <Route path="certificados" element={<GroupCertificatesPage />} />
@@ -87,7 +74,6 @@ export default function UnitApp() {
         <Route path="mais" element={<><PageHeader title="Mais" /><MoreMenu items={more} /></>} />
         <Route index element={<UnitProfile />} />
         <Route path="requisitos" element={<><PageHeader title="Requisitos da unidade" subtitle="Cumpram juntos dentro do prazo e subam no ranking" /><RequirementsTodo originTabs clubLabel="Do clube" /></>} />
-        <Route path="exploradores" element={<GroupRequirements />} />
         <Route path="ranking" element={<RankingHub base={base} />} />
         <Route path="perfil" element={<Navigate to={base} replace />} />
         <Route path="ver/:kind/:id" element={<InAppProfile base={base} />} />

@@ -1,12 +1,19 @@
 // Formulários públicos (fora do app, sem login): site/formulario/<link>. A pessoa põe o nome e o
-// clube e responde. O administrador geral cria formulários, pega o link e vê as respostas.
+// clube e responde. O administrador geral e os clubes criam formulários, pegam o link e veem as
+// respostas (cada um só os seus). No formulário do clube, a resposta já fica com o nome do clube.
 import { Router } from 'express';
 import { all, get, run } from '../db.js';
-import { requireAuth, requireGeneral } from '../auth.js';
+import { requireAuth } from '../auth.js';
 import { fail, int } from '../util.js';
 
 const r = Router();
-const admin = [requireAuth('admin'), requireGeneral];
+/** Quem cuida do formulário: o administrador geral ou o clube (cada um vê só os seus). */
+const manager = [requireAuth('admin', 'club'), (req, _res, next) => {
+  const a = req.actor;
+  if (a.type === 'admin') { if (a.district_id) fail(403, 'Só o administrador geral'); req.owner = ['admin', 0]; } else req.owner = ['club', a.id];
+  next();
+}];
+const P = (sub = '') => [`/admin/formularios${sub}`, `/club/formularios${sub}`];
 
 run(`CREATE TABLE IF NOT EXISTS forms (
   id INTEGER PRIMARY KEY,
@@ -36,7 +43,8 @@ run(`CREATE TABLE IF NOT EXISTS form_versions (
   created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
   PRIMARY KEY (form_id, version)
 )`);
-for (const [t, col, def] of [['forms', 'version', 'INTEGER NOT NULL DEFAULT 1'], ['form_responses', 'version', 'INTEGER NOT NULL DEFAULT 1']]) {
+for (const [t, col, def] of [['forms', 'version', 'INTEGER NOT NULL DEFAULT 1'], ['form_responses', 'version', 'INTEGER NOT NULL DEFAULT 1'],
+  ['forms', 'owner_type', "TEXT NOT NULL DEFAULT 'admin'"], ['forms', 'owner_id', 'INTEGER NOT NULL DEFAULT 0']]) {
   if (!all(`PRAGMA table_info(${t})`).some((c) => c.name === col)) run(`ALTER TABLE ${t} ADD COLUMN ${col} ${def}`);
 }
 
@@ -88,12 +96,20 @@ ensureVersions();
 
 const parse = (f) => f && { ...f, clubs: JSON.parse(f.clubs), questions: JSON.parse(f.questions), active: !!f.active };
 const bySlug = (slug) => parse(get('SELECT * FROM forms WHERE slug = ?', String(slug)));
+/** Formulário do clube sem lista de clubes: a resposta já fica com o nome do clube. */
+const fixedClub = (f) => (f.owner_type === 'club' && !f.clubs.length ? get('SELECT name FROM clubs WHERE id = ?', f.owner_id)?.name || null : null);
+/** O formulário desta conta (404 se for de outro). */
+function own(req, id) {
+  const f = parse(get('SELECT * FROM forms WHERE id = ? AND owner_type = ? AND owner_id = ?', int(id), ...req.owner));
+  if (!f) fail(404, 'Formulário não encontrado');
+  return f;
+}
 
 // ---------- Público ----------
 r.get('/public/formularios/:slug', (req, res) => {
   const f = bySlug(req.params.slug);
   if (!f) fail(404, 'Formulário não encontrado');
-  res.json({ slug: f.slug, title: f.title, description: f.description, clubs: f.clubs, questions: f.questions, version: f.version, active: f.active });
+  res.json({ slug: f.slug, title: f.title, description: f.description, clubs: f.clubs, club_fixed: fixedClub(f), questions: f.questions, version: f.version, active: f.active });
 });
 
 // Contra envio em massa: no máximo 20 respostas por hora do mesmo aparelho/rede.
@@ -115,7 +131,7 @@ r.post('/public/formularios/:slug', (req, res) => {
   if (!f.active) fail(400, 'Este formulário não está mais recebendo respostas');
   const name = String(req.body.name || '').trim().replace(/\s+/g, ' ').slice(0, 80);
   if (name.length < 3) fail(400, 'Escreva o seu nome');
-  let club = String(req.body.club || '').trim().slice(0, 80);
+  let club = fixedClub(f) || String(req.body.club || '').trim().slice(0, 80);
   if (club === 'Outro') club = String(req.body.club_other || '').trim().replace(/\s+/g, ' ').slice(0, 80);
   if (club.length < 2) fail(400, 'Escolha o seu clube');
   const sent = Array.isArray(req.body.answers) ? req.body.answers : [];
@@ -146,11 +162,11 @@ r.post('/public/formularios/:slug', (req, res) => {
   res.json({ ok: true });
 });
 
-// ---------- Administrador geral ----------
-r.get('/admin/formularios', ...admin, (_req, res) => {
+// ---------- Administrador geral e clube ----------
+r.get(P(), ...manager, (req, res) => {
   res.json(all(`SELECT f.*, (SELECT COUNT(*) FROM form_responses x WHERE x.form_id = f.id) AS responses,
       (SELECT MAX(created_at) FROM form_responses x WHERE x.form_id = f.id) AS last_at
-    FROM forms f ORDER BY f.id DESC`).map(parse));
+    FROM forms f WHERE f.owner_type = ? AND f.owner_id = ? ORDER BY f.id DESC`, ...req.owner).map(parse));
 });
 
 const slugify = (t) => String(t).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'formulario';
@@ -171,29 +187,27 @@ function cleanForm(body) {
   return { title, description: String(body.description || '').trim().slice(0, 400), clubs, questions };
 }
 
-r.post('/admin/formularios', ...admin, (req, res) => {
+r.post(P(), ...manager, (req, res) => {
   const f = cleanForm(req.body);
   let slug = slugify(req.body.slug || f.title);
   for (let i = 2; get('SELECT 1 FROM forms WHERE slug = ?', slug); i++) slug = `${slugify(req.body.slug || f.title).slice(0, 36)}-${i}`;
-  const id = Number(run('INSERT INTO forms (slug, title, description, clubs, questions) VALUES (?, ?, ?, ?, ?)',
-    slug, f.title, f.description, JSON.stringify(f.clubs), JSON.stringify(f.questions)).lastInsertRowid);
+  const id = Number(run('INSERT INTO forms (slug, title, description, clubs, questions, owner_type, owner_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    slug, f.title, f.description, JSON.stringify(f.clubs), JSON.stringify(f.questions), ...req.owner).lastInsertRowid);
   run('INSERT INTO form_versions (form_id, version, questions) VALUES (?, 1, ?)', id, JSON.stringify(f.questions));
   res.json(parse(get('SELECT * FROM forms WHERE id = ?', id)));
 });
 
 // Abrir ou fechar para novas respostas.
-r.put('/admin/formularios/:id', ...admin, (req, res) => {
-  const f = get('SELECT id FROM forms WHERE id = ?', int(req.params.id));
-  if (!f) fail(404, 'Formulário não encontrado');
+r.put(P('/:id'), ...manager, (req, res) => {
+  const f = own(req, req.params.id);
   run('UPDATE forms SET active = ? WHERE id = ?', req.body.active ? 1 : 0, f.id);
   res.json({ ok: true });
 });
 
 // Editar (mesmo recebendo respostas): título, texto, clubes e perguntas. O link não muda e as
 // respostas que já existem continuam com as perguntas que foram respondidas.
-r.put('/admin/formularios/:id/editar', ...admin, (req, res) => {
-  const cur = parse(get('SELECT * FROM forms WHERE id = ?', int(req.params.id)));
-  if (!cur) fail(404, 'Formulário não encontrado');
+r.put(P('/:id/editar'), ...manager, (req, res) => {
+  const cur = own(req, req.params.id);
   const f = cleanForm(req.body);
   // Pergunta que mudou de tipo vira outra pergunta (as respostas antigas não se misturam).
   const before = new Map(cur.questions.map((q) => [q.id, q.type]));
@@ -208,14 +222,13 @@ r.put('/admin/formularios/:id/editar', ...admin, (req, res) => {
   res.json(parse(get('SELECT * FROM forms WHERE id = ?', cur.id)));
 });
 
-r.delete('/admin/formularios/:id', ...admin, (req, res) => {
-  run('DELETE FROM forms WHERE id = ?', int(req.params.id));
+r.delete(P('/:id'), ...manager, (req, res) => {
+  run('DELETE FROM forms WHERE id = ?', own(req, req.params.id).id);
   res.json({ ok: true });
 });
 
-r.get('/admin/formularios/:id/respostas', ...admin, (req, res) => {
-  const f = parse(get('SELECT * FROM forms WHERE id = ?', int(req.params.id)));
-  if (!f) fail(404, 'Formulário não encontrado');
+r.get(P('/:id/respostas'), ...manager, (req, res) => {
+  const f = own(req, req.params.id);
   // Cada resposta vem com as perguntas da versão que a pessoa respondeu.
   const versions = new Map(all('SELECT version, questions FROM form_versions WHERE form_id = ?', f.id).map((v) => [v.version, JSON.parse(v.questions)]));
   const rows = all('SELECT id, name, club, answers, version, created_at FROM form_responses WHERE form_id = ? ORDER BY id DESC', f.id)
@@ -223,8 +236,8 @@ r.get('/admin/formularios/:id/respostas', ...admin, (req, res) => {
   res.json({ form: f, responses: rows });
 });
 
-r.delete('/admin/formularios/:id/respostas/:rid', ...admin, (req, res) => {
-  run('DELETE FROM form_responses WHERE id = ? AND form_id = ?', int(req.params.rid), int(req.params.id));
+r.delete(P('/:id/respostas/:rid'), ...manager, (req, res) => {
+  run('DELETE FROM form_responses WHERE id = ? AND form_id = ?', int(req.params.rid), own(req, req.params.id).id);
   res.json({ ok: true });
 });
 

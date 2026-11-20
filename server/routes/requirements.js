@@ -98,7 +98,8 @@ r.post('/requirements/:id/submit', requireAuth('club', 'unit', 'member'), privat
 });
 
 // ---------- Criação (Administrador Geral, Clube e Unidade) ----------
-r.post('/requirements', requireAuth('admin', 'club', 'unit'), imageUpload.array('images', 6), (req, res) => {
+// Quem cria: o administrador (geral ou do distrito) e o clube. A unidade só cumpre.
+r.post('/requirements', requireAuth('admin', 'club'), imageUpload.array('images', 6), (req, res) => {
   const a = req.actor;
   const b = req.body;
   const title = str(b.title, 150);
@@ -124,19 +125,11 @@ r.post('/requirements', requireAuth('admin', 'club', 'unit'), imageUpload.array(
       districtId = int(b.district_id);
       if (!get('SELECT 1 FROM districts WHERE id = ?', districtId)) fail(400, 'Escolha o distrito');
     }
-  } else if (a.type === 'club') {
+  } else {
     // Clube cria para os próprias unidades ou para os próprios membros.
     audience = b.audience === 'member' ? 'member' : 'unit';
     scope = 'clube';
     clubId = a.id;
-  } else {
-    if (a.is_leadership) fail(403, 'A unidade Liderança não cria requisitos de unidade');
-    // Unidade cria só para os próprios desbravadores.
-    audience = 'member';
-    scope = 'grupo';
-    clubId = a.club_id;
-    unitId = a.id;
-    memberKind = 'desbravador';
   }
   if (audience !== 'member') memberKind = null;
 

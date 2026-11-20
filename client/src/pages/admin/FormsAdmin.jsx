@@ -18,10 +18,10 @@ function copy(text) {
  * Criar ou editar formulário: título, texto, clubes e as perguntas. Editar não muda o link e não mexe
  * nas respostas que já chegaram (cada uma continua com as perguntas que foram respondidas).
  */
-function FormEditor({ form, onClose, onDone }) {
+function FormEditor({ form, onClose, onDone, prefix, club }) {
   const [title, setTitle] = useState(form?.title || '');
   const [description, setDescription] = useState(form?.description || '');
-  const [clubs, setClubs] = useState((form?.clubs || ['Clube Titânio', 'Clube Alfa', 'Clube Querubins', 'Clube Astro de Luz', 'Clube Estrela Guia', 'Clube Samuel Snow']).join('\n'));
+  const [clubs, setClubs] = useState((form?.clubs || (club ? [] : ['Clube Titânio', 'Clube Alfa', 'Clube Querubins', 'Clube Astro de Luz', 'Clube Estrela Guia', 'Clube Samuel Snow'])).join('\n'));
   const [qs, setQs] = useState(form ? form.questions.map((q) => ({ ...q, optionsText: (q.options || []).join('\n') })) : [{ type: 'estrelas', q: '' }]);
   const [busy, run] = useAsync();
   const setQ = (i, patch) => setQs((l) => l.map((q, k) => (k === i ? { ...q, ...patch } : q)));
@@ -30,13 +30,13 @@ function FormEditor({ form, onClose, onDone }) {
     title, description, clubs: clubs.split('\n'),
     questions: qs.map(({ optionsText, ...q }) => ({ ...q, options: q.type === 'escolha' ? String(optionsText || '').split('\n') : undefined })),
   });
-  const save = () => run(() => (form ? api.put(`/admin/formularios/${form.id}/editar`, body()) : api.post('/admin/formularios', body())), form ? 'Formulário atualizado' : 'Formulário criado').then((f) => f && onDone(f));
+  const save = () => run(() => (form ? api.put(`${prefix}/${form.id}/editar`, body()) : api.post(prefix, body())), form ? 'Formulário atualizado' : 'Formulário criado').then((f) => f && onDone(f));
   return (
     <Modal title={form ? 'Editar formulário' : 'Novo formulário'} onClose={onClose} footer={<Button block busy={busy} onClick={save}>{form ? 'Salvar mudanças' : 'Criar formulário'}</Button>}>
       {form && <p className="small muted" style={{ marginTop: 0 }}>O link continua o mesmo e as respostas que já chegaram não mudam. Quem abrir o link depois de salvar já vê o formulário novo.</p>}
       <Field label="Título"><input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex.: Avaliação do Campori" /></Field>
       <Field label="Texto de abertura" hint="Opcional"><textarea rows={2} value={description} onChange={(e) => setDescription(e.target.value)} /></Field>
-      <Field label="Clubes para escolher" hint="Um por linha. A opção “Outro clube” aparece sozinha."><textarea rows={4} value={clubs} onChange={(e) => setClubs(e.target.value)} /></Field>
+      <Field label="Clubes para escolher" hint={club ? 'Deixe vazio e as respostas já ficam com o nome do seu clube. Se escrever clubes (um por linha), a pessoa escolhe e aparece “Outro clube”.' : 'Um por linha. A opção “Outro clube” aparece sozinha.'}><textarea rows={4} value={clubs} onChange={(e) => setClubs(e.target.value)} /></Field>
       <span className="field-label">Perguntas</span>
       {qs.map((q, i) => (
         <div key={q.id || `n${i}`} className="fa-q">
@@ -59,8 +59,8 @@ function FormEditor({ form, onClose, onDone }) {
   );
 }
 
-export default function FormsAdmin({ base }) {
-  const state = useLoad(() => api.get('/admin/formularios'));
+export default function FormsAdmin({ base, prefix = '/admin/formularios', club = false }) {
+  const state = useLoad(() => api.get(prefix));
   const [creating, setCreating] = useState(false);
   return (
     <>
@@ -84,7 +84,7 @@ export default function FormsAdmin({ base }) {
           ) : <Empty icon={ClipboardList}>Nenhum formulário ainda.</Empty>)}
         </Loading>
       </Section>
-      {creating && <FormEditor onClose={() => setCreating(false)} onDone={() => { setCreating(false); state.reload(); }} />}
+      {creating && <FormEditor prefix={prefix} club={club} onClose={() => setCreating(false)} onDone={() => { setCreating(false); state.reload(); }} />}
     </>
   );
 }
@@ -159,9 +159,9 @@ function exportCsv(form, rows) {
   a.click();
 }
 
-export function FormResponses() {
+export function FormResponses({ prefix = '/admin/formularios', club: clubMode = false }) {
   const { id } = useParams();
-  const state = useLoad(() => api.get(`/admin/formularios/${id}/respostas`), [id]);
+  const state = useLoad(() => api.get(`${prefix}/${id}/respostas`), [id]);
   const [tab, setTab] = useState('resumo');
   const [club, setClub] = useState('');
   const [editing, setEditing] = useState(false);
@@ -183,7 +183,7 @@ export function FormResponses() {
             <div className="row wrap" style={{ gap: '.4rem' }}>
               <Button small onClick={() => setEditing(true)}><Pencil size={14} /> Editar</Button>
               <a className="btn btn-secondary btn-sm" href={linkOf(form.slug)} target="_blank" rel="noopener noreferrer"><ExternalLink size={14} /> Abrir</a>
-              <Button small variant="secondary" busy={busy} onClick={() => run(() => api.put(`/admin/formularios/${form.id}`, { active: !form.active }), form.active ? 'Formulário encerrado' : 'Formulário aberto').then(state.reload)}>
+              <Button small variant="secondary" busy={busy} onClick={() => run(() => api.put(`${prefix}/${form.id}`, { active: !form.active }), form.active ? 'Formulário encerrado' : 'Formulário aberto').then(state.reload)}>
                 {form.active ? 'Encerrar respostas' : 'Abrir de novo'}
               </Button>
               {d.responses.length > 0 && <Button small variant="secondary" onClick={() => exportCsv(form, rows)}><Download size={14} /> Planilha</Button>}
@@ -193,10 +193,12 @@ export function FormResponses() {
             <>
               <div className="row wrap" style={{ gap: '.5rem', margin: '.8rem 0 .4rem', alignItems: 'center' }}>
                 <Tabs tabs={[['resumo', 'Resumo'], ['respostas', 'Cada resposta']]} value={tab} onChange={setTab} />
-                <select value={club} onChange={(e) => setClub(e.target.value)} style={{ width: 'auto' }} aria-label="Clube">
-                  <option value="">Todos os clubes ({d.responses.length})</option>
-                  {clubs.map((c) => <option key={c} value={c}>{c} ({d.responses.filter((r) => r.club === c).length})</option>)}
-                </select>
+                {clubs.length > 1 && (
+                  <select value={club} onChange={(e) => setClub(e.target.value)} style={{ width: 'auto' }} aria-label="Clube">
+                    <option value="">Todos os clubes ({d.responses.length})</option>
+                    {clubs.map((c) => <option key={c} value={c}>{c} ({d.responses.filter((r) => r.club === c).length})</option>)}
+                  </select>
+                )}
               </div>
               {tab === 'resumo' ? <Summary form={form} rows={rows} /> : (
                 <div className="fa-list">
@@ -204,7 +206,7 @@ export function FormResponses() {
                     <div key={r.id} className="fa-resp">
                       <div className="fa-resp-head">
                         <div><b>{r.name}</b><small>{r.club} · {fmtDate(r.created_at)}</small></div>
-                        <Confirm variant="secondary" text={`Apagar a resposta de ${r.name}?`} onYes={() => run(() => api.del(`/admin/formularios/${form.id}/respostas/${r.id}`), 'Resposta apagada').then(state.reload)}><Trash2 size={14} /></Confirm>
+                        <Confirm variant="secondary" text={`Apagar a resposta de ${r.name}?`} onYes={() => run(() => api.del(`${prefix}/${form.id}/respostas/${r.id}`), 'Resposta apagada').then(state.reload)}><Trash2 size={14} /></Confirm>
                       </div>
                       <dl>{r.questions.map((q, i) => <div key={q.id || i}><dt>{q.q}</dt><dd>{show(q, r.answers[i])}</dd></div>)}</dl>
                     </div>
@@ -213,7 +215,7 @@ export function FormResponses() {
               )}
             </>
           )}
-          {editing && <FormEditor form={form} onClose={() => setEditing(false)} onDone={() => { setEditing(false); state.reload(); }} />}
+          {editing && <FormEditor prefix={prefix} club={clubMode} form={form} onClose={() => setEditing(false)} onDone={() => { setEditing(false); state.reload(); }} />}
         </>
       )}
     </Loading>

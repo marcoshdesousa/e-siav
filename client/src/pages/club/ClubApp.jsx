@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import {
-  Award, KeyRound, UserPlus, Megaphone, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, ClipboardCheck, Globe, FolderOpen, Wrench, LifeBuoy, Share2, Flame, ArrowLeftRight,
+  Award, KeyRound, UserPlus, Megaphone, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, ClipboardCheck, Globe, FolderOpen, Wrench, LifeBuoy, Share2, Flame, ArrowLeftRight, ClipboardList,
 } from 'lucide-react';
 import { GroupCertificatesPage } from '../Certificates.jsx';
 import { api, toForm } from '../../api.js';
@@ -25,6 +25,7 @@ import RankingHub, { ClubUnitsRanking, RankingTable } from '../Ranking.jsx';
 import ClubsBrowser from '../Clubs.jsx';
 import EventsAdmin from '../admin/Events.jsx';
 import AnnouncementsAdmin from '../admin/Announcements.jsx';
+import FormsAdmin, { FormResponses } from '../admin/FormsAdmin.jsx';
 
 const base = '/clube';
 
@@ -467,10 +468,11 @@ const pasta = (title, subtitle, items) => <><PageHeader title={title} subtitle={
 /** Pasta de cima de cada tela do clube (para o botão Voltar). */
 const PARENT = {
   membros: 'secretaria', transferencias: 'secretaria',
-  secretaria: 'mais', unidades: 'mais', financas: 'mais', certificados: 'mais', ferramentas: 'mais', suporte: 'mais', eventos: 'mais', anuncios: 'mais', clubes: 'mais',
+  secretaria: 'mais', unidades: 'mais', financas: 'mais', certificados: 'mais', ferramentas: 'mais', suporte: 'mais', eventos: 'mais', anuncios: 'mais', clubes: 'mais', formularios: 'mais',
 };
 const clubParent = (path) => {
   if (path === `${base}/membros/novo`) return `${base}/membros`;
+  if (path.startsWith(`${base}/formularios/`)) return `${base}/formularios`;
   const seg = path.split('/')[2];
   return PARENT[seg] ? `${base}/${PARENT[seg]}` : base;
 };
@@ -500,6 +502,7 @@ export default function ClubApp() {
     { to: `${base}/suporte`, icon: LifeBuoy, label: 'Suporte', hint: 'Fale com a equipe' },
     { to: `${base}/eventos`, icon: Award, label: 'Eventos', hint: 'Eventos e participantes' },
     { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: 'Para os seus membros' },
+    { to: `${base}/formularios`, icon: ClipboardList, label: 'Formulários', hint: 'Links para responder, sem login' },
     { to: `${base}/clubes`, icon: Map, label: 'Clubes', hint: 'Por distrito' },
   ];
   return (
@@ -527,6 +530,8 @@ export default function ClubApp() {
               <Route path="suporte" element={<SupportChat />} />
               <Route path="eventos" element={<EventsAdmin />} />
               <Route path="anuncios" element={<AnnouncementsAdmin />} />
+              <Route path="formularios" element={<FormsAdmin base={base} prefix="/club/formularios" club />} />
+              <Route path="formularios/:id" element={<FormResponses prefix="/club/formularios" club />} />
               <Route path="clubes" element={<ClubsBrowser base={base} />} />
               <Route path="ver/:kind/:id" element={<InAppProfile base={base} />} />
               <Route path="mais" element={pasta('Mais', null, more)} />

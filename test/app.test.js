@@ -150,8 +150,8 @@ test('requisitos de desbravador não aparecem para conselheiro; unidade vê requ
   const reqs = (await unit.get('/requirements/mine')).body;
   assert.ok(reqs.some((r) => r.origin === 'clube') && reqs.some((r) => r.origin === 'brasil'));
   assert.ok(reqs.every((r) => r.audience === 'unit'));
-  // Unidade só cria requisito válido (aqui, sem título)
-  assert.equal((await unit.post('/requirements', { title: '' })).status, 400);
+  // Unidade não cria requisito: só cumpre
+  assert.equal((await unit.post('/requirements', { title: 'Da unidade', model: 'texto', points: 10, late_points: 0, deadline: new Date(Date.now() + 864e5).toISOString() })).status, 403);
   // Requisitos do outro clube não aparecem
   const tigres = await login('clube', '7350', 'TI4444');
   const titles = (await tigres.get('/requirements/mine')).body.map((r) => r.title);
@@ -321,25 +321,11 @@ test('clube: número automático, código, senhas geradas (2 letras + 4 números
 
 const pedroFicha = async () => (await login('membros', 'pedro')).get('/club/members/1/ficha');
 
-test('unidade cria requisito para os próprios desbravadores; requisito só para conselheiros', async () => {
+test('unidade não cria requisito; clube escolhe só desbravadores, só liderança ou ambos', async () => {
   const falcoes = await login('clube', '4821', 'FA1111');
   const deadline = new Date(Date.now() + 864e5).toISOString();
-  const r = await falcoes.post('/requirements', form({ title: 'Nó da unidade', modes: 'texto', points: '10', late_points: '5', deadline }));
-  assert.equal(r.status, 200);
-  const pedro = await login('membros', 'pedro'); // Falcões
-  const ana = await login('membros', 'ana'); // Gaviões
-  const mine = (await pedro.get('/requirements/mine')).body.find((x) => x.id === r.body.id);
-  assert.equal(mine?.origin, 'grupo');
-  assert.ok(!(await ana.get('/requirements/mine')).body.some((x) => x.id === r.body.id), 'outra unidade não vê');
-  const juliana = await login('membros', 'juliana'); // tutora, também na unidade Falcões
-  assert.ok(!(await juliana.get('/requirements/mine')).body.some((x) => x.id === r.body.id), 'conselheiro da unidade não recebe: só desbravadores');
-  const sofia = await login('membros', 'sofia'); // outro clube
-  assert.ok(!(await sofia.get('/requirements/mine')).body.some((x) => x.id === r.body.id), 'outro clube não vê');
-  assert.notEqual((await ana.post(`/requirements/${r.body.id}/submit`, form({ text: 'tentando' }))).status, 200, 'outra unidade não consegue enviar');
-  await pedro.post(`/requirements/${r.body.id}/submit`, form({ text: 'Fiz o nó' }));
-  const pend = (await falcoes.get('/reviews')).body;
-  assert.ok(pend.some((s) => s.requirement_id === r.body.id), 'unidade avalia');
-
+  assert.equal((await falcoes.post('/requirements', form({ title: 'Nó da unidade', modes: 'texto', points: '10', late_points: '5', deadline }))).status, 403, 'unidade só cumpre');
+  const pedro = await login('membros', 'pedro'); // desbravador
   const aguias = await login('clube', 'aguias', 'AG2026');
   const t = await aguias.post('/requirements', form({ title: 'Só conselheiros', audience: 'member', member_kind: 'lideranca', modes: 'texto', points: '10', late_points: '0', deadline }));
   const marcos = await login('membros', 'marcos'); // conselheiro
@@ -347,6 +333,11 @@ test('unidade cria requisito para os próprios desbravadores; requisito só para
   const julianaT = await login('membros', 'juliana'); // tutora
   assert.ok((await julianaT.get('/requirements/mine')).body.some((x) => x.id === t.body.id), 'conselheiro vê');
   assert.ok(!(await pedro.get('/requirements/mine')).body.some((x) => x.id === t.body.id), 'desbravador não vê');
+  const d = await aguias.post('/requirements', form({ title: 'Só desbravadores', audience: 'member', member_kind: 'desbravador', modes: 'texto', points: '10', late_points: '0', deadline }));
+  assert.ok((await pedro.get('/requirements/mine')).body.some((x) => x.id === d.body.id), 'desbravador vê');
+  assert.ok(!(await marcos.get('/requirements/mine')).body.some((x) => x.id === d.body.id), 'liderança não vê');
+  const both = await aguias.post('/requirements', form({ title: 'Para todos', audience: 'member', modes: 'texto', points: '10', late_points: '0', deadline }));
+  assert.ok((await pedro.get('/requirements/mine')).body.some((x) => x.id === both.body.id) && (await marcos.get('/requirements/mine')).body.some((x) => x.id === both.body.id), 'ambos veem');
 });
 
 test('requisito com relatório + foto + quiz juntos e fotos de exemplo', async () => {

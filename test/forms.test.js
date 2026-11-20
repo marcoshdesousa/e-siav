@@ -73,3 +73,30 @@ test('formulário da avaliação 2026: responde sem login e o geral vê as respo
   assert.equal(novo.slug, 'campori-2027');
   assert.equal((await call('GET', '/admin/formularios')).status, 401, 'só o administrador');
 });
+
+const cookieOf = async (mode, username, password) => {
+  const r = await fetch(BASE + '/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode, username, password }) });
+  return r.headers.get('set-cookie').split(';')[0];
+};
+
+test('clube cria o próprio formulário; a resposta já fica com o nome do clube; unidade não cria', async () => {
+  const aguias = await cookieOf('clube', 'aguias', 'AG2026');
+  const f = (await call('POST', '/club/formularios', { title: 'Acampamento das Águias', clubs: [], questions: [{ type: 'simnao', q: 'Vai ao acampamento?' }] }, aguias)).body;
+  assert.ok(f.id && f.slug);
+  const pub = (await call('GET', `/public/formularios/${f.slug}`)).body;
+  assert.ok(pub.club_fixed, 'clube fixo: não pergunta o clube');
+  assert.equal((await call('POST', `/public/formularios/${f.slug}`, { name: 'Lucas Prado', answers: ['sim'], version: pub.version })).status, 200);
+  const res = (await call('GET', `/club/formularios/${f.id}/respostas`, null, aguias)).body;
+  assert.equal(res.responses[0].club, pub.club_fixed);
+  // Cada um vê só os seus.
+  const lista = (await call('GET', '/club/formularios', null, aguias)).body;
+  assert.deepEqual(lista.map((x) => x.id), [f.id]);
+  const leoes = await cookieOf('clube', 'leoes', 'LE2026');
+  assert.equal((await call('GET', `/club/formularios/${f.id}/respostas`, null, leoes)).status, 404);
+  assert.equal((await call('GET', '/club/formularios', null, leoes)).body.length, 0);
+  const admin = await cookieOf('membros', 'admin', 'admin123');
+  assert.ok(!(await call('GET', '/admin/formularios', null, admin)).body.some((x) => x.id === f.id));
+  // Unidade não cria formulário.
+  const unit = await cookieOf('clube', '4821', 'FA1111');
+  assert.equal((await call('POST', '/club/formularios', { title: 'X', questions: [{ type: 'texto', q: 'Oi?' }] }, unit)).status, 403);
+});

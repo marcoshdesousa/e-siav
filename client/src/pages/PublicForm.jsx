@@ -66,7 +66,7 @@ function FormBody({ f, slug }) {
   // Cada tela começa do topo (no celular, a lista de clubes empurra a página para baixo).
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [step, done]);
   const clubOk = club && (club !== 'Outro' || other.trim().length >= 2);
-  const who = name.trim().length >= 3 && clubOk;
+  const who = name.trim().length >= 3 && (!!f.club_fixed || clubOk);
 
   if (!f.active) return <div className="pf-card pf-end"><CheckCircle2 size={48} /><h2>Formulário encerrado</h2><p>Este formulário não está mais recebendo respostas. Obrigado!</p></div>;
   if (done) {
@@ -100,7 +100,7 @@ function FormBody({ f, slug }) {
           <span>Seu nome</span>
           <input value={name} maxLength={80} onChange={(e) => setName(e.target.value)} placeholder="Nome e sobrenome" autoComplete="name" />
         </label>
-        <div className="pf-field">
+        {!f.club_fixed && <div className="pf-field">
           <span>Seu clube</span>
           <div className="pf-clubs">
             {[...f.clubs, 'Outro'].map((c) => (
@@ -110,7 +110,7 @@ function FormBody({ f, slug }) {
             ))}
           </div>
           {club === 'Outro' && <input className="pf-other" value={other} maxLength={80} onChange={(e) => setOther(e.target.value)} placeholder="Nome do seu clube" autoFocus />}
-        </div>
+        </div>}
         <button type="button" className="pf-btn primary" disabled={!who} onClick={() => setStep(0)}>Começar <ArrowRight size={18} /></button>
       </div>
     );
@@ -149,7 +149,7 @@ export default function PublicForm() {
         {(f) => (
           <main className="pf-main">
             <div className="pf-hero">
-              <small>Formulário</small>
+              <small>{f.club_fixed || 'Formulário'}</small>
               <h1>{f.title}</h1>
               {f.description && <p>{f.description}</p>}
             </div>
