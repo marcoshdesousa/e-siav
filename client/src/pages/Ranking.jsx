@@ -1,11 +1,11 @@
 import { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Compass, Flag, Globe, Map as MapIcon, Medal, PauseCircle, Plus, Tent, Trophy as TrophyIco } from 'lucide-react';
+import { BookOpen, Compass, Flag, Globe, Map as MapIcon, PauseCircle, Plus, Tent, Trash2, Trophy as TrophyIco } from 'lucide-react';
 import { Trophy } from '../trophies.jsx';
 import TrophyStudio from './TrophyStudio.jsx';
 import { api } from '../api.js';
 import { useAuth } from '../auth.jsx';
-import { Avatar, Button, Card, Field, Loading, PageHeader, Section, Tabs, useAsync, useLoad, Empty } from '../ui.jsx';
+import { Avatar, Button, Card, Confirm, Field, Loading, PageHeader, Section, Tabs, useAsync, useLoad, Empty } from '../ui.jsx';
 
 /** Pontos da Leitura bíblica (Ano Bíblico) que entram no total. */
 const BibleTag = ({ r }) => (r.bible_points > 0
@@ -206,12 +206,9 @@ function RankingPause() {
   const where = general ? (target === 'brasil' ? { scope: 'brasil' } : { district_id: target }) : {};
   const act = (action, when) => run(() => api.put('/ranking/controle', { action, at: when, ...where }),
     { pause: 'Pausa marcada', resume: 'Ranking retomado' }[action]).then(state.reload);
-  const finish = (design) => {
-    const st = studio;
-    const url = st.kind === 'jogos' ? '/admin/jogos/finalizar' : '/ranking/finalizar';
-    return run(() => api.post(url, { kind: st.kind, design, ...where }), st.kind === 'jogos' ? 'Jogos finalizados: medalhas entregues' : 'Ranking finalizado: troféus e certificados entregues')
-      .then(() => { setStudio(null); state.reload(); });
-  };
+  const finish = (design, give = {}) => run(() => api.post('/ranking/finalizar', { kind: studio.kind, design, ...give, ...where }), 'Ranking finalizado: prêmios entregues')
+    .then(() => { setStudio(null); state.reload(); });
+  const erase = (kind) => run(() => api.post('/ranking/apagar', { kind, ...where }), 'Ranking apagado').then(state.reload);
   const create = (kind) => run(() => api.post('/ranking/criar', { kind, ...where }), kind ? 'Ranking criado' : 'Rankings criados').then(state.reload);
   const paused = s.scopes.filter((x) => x.paused && (actor.type !== 'admin' || x.key === myKey));
   const tables = Object.entries(cur.tables || {});
@@ -239,9 +236,12 @@ function RankingPause() {
                   <b>{TABLE_NAME[kind]}</b>
                   <small>{t.open ? (t.finished_at ? `Aberto · recomeçou em ${brDate(t.finished_at)}` : 'Aberto') : t.finished_at ? `Finalizado em ${brDate(t.finished_at)} · esperando criar` : 'Ainda não criado'}</small>
                 </div>
-                {t.open
-                  ? <Button small variant="secondary" busy={busy} onClick={() => setStudio({ kind })}><TrophyIco size={14} /> Finalizar</Button>
-                  : <Button small busy={busy} onClick={() => create(kind)}><Plus size={14} /> Criar ranking</Button>}
+                {t.open ? (
+                  <div className="row" style={{ gap: '.3rem' }}>
+                    <Confirm text={`Apagar o ranking de ${TABLE_NAME[kind].toLowerCase()} ${name}? Todos os pontos serão perdidos, ninguém ganha nada e isso não pode ser desfeito.${myKey === 'brasil' ? '' : ' Depois você precisa criar outro ranking.'}`} onYes={() => erase(kind)}><Trash2 size={14} /> Apagar</Confirm>
+                    <Button small variant="secondary" busy={busy} onClick={() => setStudio({ kind })}><TrophyIco size={14} /> Finalizar</Button>
+                  </div>
+                ) : <Button small busy={busy} onClick={() => create(kind)}><Plus size={14} /> Criar ranking</Button>}
               </div>
             ))}
           </div>
@@ -260,18 +260,16 @@ function RankingPause() {
           </details>
           {general && (
             <div className="rank-table games">
-              <div className="grow"><b>Mini-jogos (todos)</b><small>Os 3 primeiros de cada jogo no Brasil ganham uma medalha e os jogos recomeçam do zero.</small></div>
-              <Button small variant="secondary" busy={busy} onClick={() => setStudio({ kind: 'jogos' })}><Medal size={14} /> Finalizar jogos</Button>
+              <div className="grow"><b>Mini-jogos</b><small>Fecham sozinhos todo mês: os 3 primeiros de cada jogo no Brasil ganham um troféu e a moldura do mês, e os jogos recomeçam do zero.</small></div>
             </div>
           )}
         </Card>
       )}
       {studio && (
         <TrophyStudio
-          mode={studio.kind === 'jogos' ? 'medalha' : 'trofeu'}
-          heading={studio.kind === 'jogos' ? 'Finalizar os mini-jogos' : `Finalizar: ${TABLE_NAME[studio.kind]} ${name}`}
-          title={studio.kind === 'jogos' ? 'Campeão dos Jogos' : TROPHY_TITLE[studio.kind]}
-          info={studio.kind === 'jogos' ? 'Personalize a medalha. Todos os jogos são finalizados juntos e recomeçam do zero.' : `Personalize o troféu. ${cur.key === 'brasil' ? 'O ranking do Brasil recomeça na hora.' : 'Depois de finalizar, crie o novo ranking quando quiser.'}`}
+          heading={`Finalizar: ${TABLE_NAME[studio.kind]} ${name}`}
+          title={TROPHY_TITLE[studio.kind]}
+          info={`Os 3 primeiros ganham o que você escolher e o ranking zera. ${cur.key === 'brasil' ? 'O ranking do Brasil recomeça na hora.' : 'Depois é só criar o novo ranking.'}`}
           busy={busy}
           onClose={() => setStudio(null)}
           onConfirm={finish}

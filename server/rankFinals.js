@@ -6,10 +6,12 @@
 // jogo (ranking do Brasil) ganham uma medalha (sem certificado) e os jogos recomeçam do zero.
 import { all, get, run, tx } from './db.js';
 import { todayBR } from './bible.js';
-import { GAMES } from './games.js';
+import { GAMES, gameName } from './games.js';
+import { setSetting } from './fees.js';
 import { closeTable, TABLES, membersRanking, leadersRanking, unitsRanking, clubsRanking, clubMembersRanking, clubLeadersRanking, clubUnitsRanking } from './rankings.js';
 import { fail } from './util.js';
 import { archiveRows } from './season.js';
+import { cleanFrame, gameFrame, giveFrame } from './frames.js';
 
 run(`CREATE TABLE IF NOT EXISTS ranking_finals (
   id INTEGER PRIMARY KEY,
@@ -99,7 +101,7 @@ const SHINE = ['Brilhou como ouro: dedicação, estudo e fidelidade do começo a
  * Finaliza uma tabela de um lugar (club:ID, district:ID ou brasil): guarda as colocações, entrega o
  * troféu personalizado aos 3 primeiros (só de quem fez pontos) e fecha a tabela.
  */
-export function finishRanking(scope, kind, design = {}, now = new Date()) {
+export function finishRanking(scope, kind, design = {}, now = new Date(), give = {}) {
   const level = scope.split(':')[0];
   if (!TABLES[level]?.includes(kind)) fail(400, 'Escolha o ranking');
   const k = KINDS[kind];
@@ -109,13 +111,20 @@ export function finishRanking(scope, kind, design = {}, now = new Date()) {
   const admin = awarder();
   const rows = rowsOf(scope, kind);
   if (!rows.length) fail(400, 'Este ranking não está aberto');
+  // O que entregar aos 3 primeiros: troféu (com certificado), moldura ou os dois.
+  const trophy = give.trophy !== false;
+  const frame = give.frame ? cleanFrame(give.frame, { title: look.title.slice(0, 22), sub: String(look.year) }) : null;
+  if (!trophy && !frame) fail(400, 'Escolha o troféu, a moldura ou os dois');
   return tx(() => {
     const finalId = Number(run('INSERT INTO ranking_finals (scope, label, year, finished_at, kind, design) VALUES (?, ?, ?, ?, ?, ?)',
       scope, label, look.year, now.toISOString(), kind, JSON.stringify(look)).lastInsertRowid);
     let awarded = 0;
     for (const r of rows) {
       let award = null;
-      if (r.position <= 3 && r.points > 0 && admin) {
+      if (r.position <= 3 && r.points > 0 && frame) {
+        giveFrame({ target: k.target, id: r.id, source: 'ranking', ref: `final:${finalId}`, ...frame, place: r.position, note: `${r.position}º lugar · ${label}` });
+      }
+      if (r.position <= 3 && r.points > 0 && admin && trophy) {
         award = giveAward({
           prize: 'trofeu', name: look.title, admin, target: k.target, id: r.id, position: r.position, design: look,
           description: `${r.position}º lugar no ranking de ${k.table.toLowerCase()} ${LEVEL[level]}. ${SHINE[r.position - 1]}`,
@@ -132,38 +141,68 @@ export function finishRanking(scope, kind, design = {}, now = new Date()) {
 }
 
 
-/** Finaliza todos os mini-jogos (ranking do Brasil): medalha para os 3 primeiros de cada e tudo zera. */
-export function finishGames(design = {}, now = new Date()) {
-  const year = Number(todayBR(now).slice(0, 4));
-  const look = cleanDesign(design, { title: 'Campeão dos Jogos', year });
+/**
+ * Fecha o mês dos mini-jogos (ranking do Brasil): os 3 primeiros de cada jogo ganham um troféu e a
+ * moldura do mês (nome do jogo em cima e o mês embaixo, ex.: 1.27). Os jogos recomeçam do zero.
+ */
+export function finishGames({ year, month } = {}, now = new Date()) {
+  if (!year || !month) {
+    const t = todayBR(now);
+    year = Number(t.slice(0, 4));
+    month = Number(t.slice(5, 7));
+  }
+  const tag = `${month}.${String(year).slice(-2)}`;
   const admin = awarder();
   return tx(() => {
-    const finalId = Number(run(`INSERT INTO ranking_finals (scope, label, year, finished_at, kind, design) VALUES ('jogos', 'Mini-jogos', ?, ?, 'jogos', ?)`,
-      look.year, now.toISOString(), JSON.stringify(look)).lastInsertRowid);
+    const finalId = Number(run(`INSERT INTO ranking_finals (scope, label, year, finished_at, kind, design) VALUES ('jogos', ?, ?, ?, 'jogos', ?)`,
+      `Mini-jogos ${tag}`, year, now.toISOString(), JSON.stringify({ month, tag })).lastInsertRowid);
     let awarded = 0;
     for (const [game, g] of Object.entries(GAMES)) {
       const col = g.mode === 'sum' ? 'total' : 'best';
       const rows = all(`SELECT s.member_id AS id, s.${col} AS points FROM game_scores s JOIN members m ON m.id = s.member_id
         WHERE s.game = ? AND m.status = 'ativo' AND s.${col} > 0 ORDER BY s.${col} DESC, s.updated_at ASC`, game);
+      const name = gameName(game);
       rows.forEach((r, i) => {
         const position = i + 1;
         let award = null;
-        if (position <= 3 && admin) {
-          award = giveAward({
-            prize: 'medalha', name: `${look.title}`, admin, target: 'member', id: r.id, position, design: { ...look, game },
-            description: `${position}º lugar no ranking do Brasil de um mini-jogo. ${SHINE[i]}`,
-            note: `${position}º lugar · Mini-jogos · ${look.year}`,
-          });
+        if (position <= 3) {
+          gameFrame(r.id, { game, gameName: name, year, month, place: position });
+          if (admin) {
+            award = giveAward({
+              prize: 'trofeu', name: `Campeão do mês: ${name}`, admin, target: 'member', id: r.id, position,
+              design: { model: MONTH_MODELS[(month - 1) % MONTH_MODELS.length], color: 'podio', base: MONTH_BASES[(month - 1) % MONTH_BASES.length], emblem: 'controle', ribbon: 'dbv', year, title: name, game, game_name: name, month, tag },
+              description: `${position}º lugar no ranking do Brasil de ${name} em ${tag}. ${SHINE[i]}`,
+              note: `${position}º lugar · ${name} · ${tag}`,
+            });
+          }
           awarded++;
         }
         run('INSERT OR IGNORE INTO ranking_final_rows (final_id, kind, target_type, target_id, position, points, award_id) VALUES (?, ?, ?, ?, ?, ?, ?)',
           finalId, game, 'member', r.id, position, r.points, award);
       });
     }
-    // Os jogos recomeçam do zero (as pontuações antigas vão para o arquivo, com o ano).
-    archiveRows('game_scores', look.year);
-    return { id: finalId, scope: 'jogos', kind: 'jogos', label: 'Mini-jogos', year: look.year, awarded };
+    // Os jogos recomeçam do zero (as pontuações vão para o arquivo, com o ano e o mês: AAAAMM).
+    archiveRows('game_scores', year * 100 + month);
+    return { id: finalId, scope: 'jogos', kind: 'jogos', label: `Mini-jogos ${tag}`, year, month, awarded };
   });
+}
+
+/** Cada mês tem um troféu diferente. */
+const MONTH_MODELS = ['copa', 'estrela', 'globo', 'escudo', 'chama', 'louros', 'taca-alta', 'classica'];
+const MONTH_BASES = ['azul', 'marmore-preto', 'dourada', 'cristal', 'vermelho', 'marmore-branco', 'madeira'];
+
+/** Todo mês, sozinho: na virada do mês fecha o mês que passou (horário de Brasília). */
+export function gamesMonthTick(now = new Date()) {
+  const cur = todayBR(now).slice(0, 7);
+  const last = get(`SELECT value FROM settings WHERE key = 'jogos_mes'`)?.value;
+  if (!last) { setSetting('jogos_mes', cur); return null; }
+  if (last >= cur) return null;
+  setSetting('jogos_mes', cur);
+  return finishGames({ year: Number(last.slice(0, 4)), month: Number(last.slice(5, 7)) }, now);
+}
+export function startGamesMonthWatch() {
+  try { gamesMonthTick(); } catch (e) { console.error('mês dos jogos', e); }
+  setInterval(() => { try { gamesMonthTick(); } catch (e) { console.error('mês dos jogos', e); } }, 10 * 60e3).unref();
 }
 
 /** Quem a conta representa: ela mesma e, para o membro, também a unidade e o clube dele. */
@@ -241,10 +280,14 @@ export function trophyCertificate(awardId) {
   if (!who) return null;
   const level = row ? row.scope.split(':')[0] : 'brasil';
   const k = KINDS[row?.kind] || KINDS.membros;
+  const design = JSON.parse(a.design);
+  const what = design.game
+    ? `conquistou o ${a.place}º lugar no ranking do Brasil de ${design.game_name || gameName(design.game)} no mês ${design.tag || a.year}, recebendo o troféu`
+    : `conquistou o ${a.place}º lugar no ranking de ${k.table.toLowerCase()} ${LEVEL[level]}${level !== 'brasil' && row ? ` (${row.label})` : ''} na temporada ${a.year}, recebendo o troféu`;
   return {
-    id: a.id, kind: 'trofeu', place: a.place, year: a.year, design: JSON.parse(a.design), date: a.awarded_at,
+    id: a.id, kind: 'trofeu', place: a.place, year: a.year, design, date: a.awarded_at,
     member_name: who.name, title: `${a.place}º lugar · ${a.name}`,
-    what: `conquistou o ${a.place}º lugar no ranking de ${k.table.toLowerCase()} ${LEVEL[level]}${level !== 'brasil' && row ? ` (${row.label})` : ''} na temporada ${a.year}, recebendo o troféu`,
+    what,
     club_name: club && !club.is_app ? club.name : null, club_logo: club && !club.is_app ? club.logo : null,
     director_name: level === 'club' && club && !club.is_app ? club.director_name : null,
   };

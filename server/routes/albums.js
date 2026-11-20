@@ -8,6 +8,7 @@ import { ALBUMS, MIN_PACKS_TO_COMPLETE, PACK_OPTIONS, REPEATS_PER_FREE_PACK, dra
 import { createPayment, onPaid, payMode, paymentOut } from '../payments.js';
 import { PLUS_PACK_MULT, isPlus } from '../plus.js';
 import { awardAlbum } from '../awards.js';
+import { albumFrame } from '../frames.js';
 
 const r = Router();
 const member = requireAuth('member');
@@ -29,6 +30,11 @@ const repeatsOf = (memberId, album) => get('SELECT COALESCE(SUM(qty - 1), 0) n F
 if (!get(`SELECT 1 FROM app_flags WHERE key = 'album-medalhas-v1'`)) {
   for (const p of all('SELECT member_id, album FROM album_progress WHERE completed_at IS NOT NULL')) if (ALBUMS[p.album]) awardAlbum(p.member_id, ALBUMS[p.album].name);
   run(`INSERT OR IGNORE INTO app_flags (key) VALUES ('album-medalhas-v1')`);
+}
+// Moldura exclusiva para quem já tinha completado algum álbum (uma vez).
+if (!get(`SELECT 1 FROM app_flags WHERE key = 'album-moldura-v1'`)) {
+  for (const p of all('SELECT member_id, album FROM album_progress WHERE completed_at IS NOT NULL')) if (ALBUMS[p.album]) albumFrame(p.member_id, ALBUMS[p.album].name);
+  run(`INSERT OR IGNORE INTO app_flags (key) VALUES ('album-moldura-v1')`);
 }
 onPaid('figurinhas', (p, ref) => {
   progress(p.member_id, ref.album);

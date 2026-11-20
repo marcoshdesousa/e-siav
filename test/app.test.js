@@ -338,6 +338,15 @@ test('unidade não cria requisito; clube escolhe só desbravadores, só lideran�
   assert.ok(!(await marcos.get('/requirements/mine')).body.some((x) => x.id === d.body.id), 'liderança não vê');
   const both = await aguias.post('/requirements', form({ title: 'Para todos', audience: 'member', modes: 'texto', points: '10', late_points: '0', deadline }));
   assert.ok((await pedro.get('/requirements/mine')).body.some((x) => x.id === both.body.id) && (await marcos.get('/requirements/mine')).body.some((x) => x.id === both.body.id), 'ambos veem');
+  // Requisito com moldura: quem tem o envio aprovado ganha a moldura.
+  const fr = await aguias.post('/requirements', form({ title: 'Acampamento', audience: 'member', member_kind: 'desbravador', modes: 'texto', points: '10', late_points: '0', deadline, frame: JSON.stringify({ style: 'louros', color: 'verde', title: 'Acampei!', sub: '2026' }) }));
+  await pedro.post(`/requirements/${fr.body.id}/submit`, form({ text: 'Fui ao acampamento' }));
+  const sub = (await aguias.get('/reviews')).body.find((x) => x.requirement_id === fr.body.id);
+  assert.equal((await aguias.post(`/reviews/${sub.id}`, { decision: 'aprovado' })).status, 200);
+  const mold = (await pedro.get('/me/molduras')).body.frames.find((x) => x.source === 'requisito');
+  assert.equal(mold?.title, 'Acampei!');
+  assert.equal((await pedro.put('/me/moldura', { id: mold.id })).body.current.id, mold.id);
+  assert.equal((await pedro.get('/me/profile')).body.frame.id, mold.id, 'aparece no perfil');
 });
 
 test('requisito com relatório + foto + quiz juntos e fotos de exemplo', async () => {

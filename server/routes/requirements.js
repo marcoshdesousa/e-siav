@@ -1,10 +1,18 @@
 import { Router } from 'express';
+import { cleanFrame, giveFrame } from '../frames.js';
 import { all, get, run, tx, nowIso } from '../db.js';
 import { requireAuth } from '../auth.js';
 import { imageUpload, fileUrl, privateImageUpload, privateUrl } from '../uploads.js';
 import { modesOf, parseModes, legacyModel } from '../modes.js';
 import { MAX_FOTOS_ENVIO } from '../config.js';
 import { fail, int, str, parseJson } from '../util.js';
+
+/** Requisito com moldura: quem teve o envio aprovado ganha (uma vez). */
+function requirementFrame(q, type, id) {
+  const f = q && parseJson(q.frame, null);
+  if (!f) return;
+  giveFrame({ target: type, id, source: 'requisito', ref: `req:${q.id}`, style: f.style, color: f.color, title: f.title, sub: f.sub, note: q.title });
+}
 
 const r = Router();
 
@@ -93,6 +101,7 @@ r.post('/requirements/:id/submit', requireAuth('club', 'unit', 'member'), privat
       q.id, a.type, a.id, text || null, JSON.stringify(photos), answers ? JSON.stringify(answers) : null, correct, total, status, late, points, now,
       status === 'aprovado' ? now : null,
     );
+    if (status === 'aprovado' && points > 0) requirementFrame(q, a.type, a.id);
   });
   res.json({ status, points, late: !!late, quiz_correct: correct, quiz_total: total });
 });
@@ -148,12 +157,14 @@ r.post('/requirements', requireAuth('admin', 'club'), imageUpload.array('images'
     }
   }
 
+  const rawFrame = typeof b.frame === 'string' ? parseJson(b.frame, null) : b.frame;
+  const frame = rawFrame ? cleanFrame(rawFrame, { title, sub: String(new Date().getFullYear()) }) : null;
   const id = tx(() => {
     const id = Number(run(
-      `INSERT INTO requirements (creator_type, club_id, unit_id, member_kind, audience, scope, district_id, title, description, model, modes, images, points, late_points, deadline)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+      `INSERT INTO requirements (creator_type, club_id, unit_id, member_kind, audience, scope, district_id, title, description, model, modes, images, points, late_points, deadline, frame)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       a.type, clubId, unitId, memberKind, audience, scope, districtId, title, str(b.description, 3000), legacyModel(modes), modes.join(','),
-      JSON.stringify((req.files || []).map(fileUrl)), points, latePoints, new Date(b.deadline).toISOString(),
+      JSON.stringify((req.files || []).map(fileUrl)), points, latePoints, new Date(b.deadline).toISOString(), frame ? JSON.stringify(frame) : null,
     ).lastInsertRowid);
     questions.forEach((qq, i) => run('INSERT INTO quiz_questions (requirement_id, ord, question, options, correct) VALUES (?,?,?,?,?)', id, i, qq.question, JSON.stringify(qq.options), qq.correct));
     return id;
@@ -251,6 +262,7 @@ r.post('/reviews/:id', requireAuth('admin', 'club', 'unit'), (req, res) => {
     points = s.quiz_total ? Math.round((base * s.quiz_correct) / s.quiz_total) : base;
   }
   run('UPDATE submissions SET status = ?, points = ?, feedback = ?, reviewed_at = ? WHERE id = ?', decision, points, str(req.body.feedback, 500) || null, nowIso(), s.id);
+  if (decision === 'aprovado') requirementFrame(get('SELECT * FROM requirements WHERE id = ?', s.requirement_id), s.submitter_type, s.submitter_id);
   res.json({ ok: true, points });
 });
 

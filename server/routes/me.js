@@ -7,8 +7,22 @@ import { clubEntered, clubPresenceSummary, ping } from '../presence.js';
 import { imageUpload, fileUrl } from '../uploads.js';
 import { memberProfile, unitProfile } from '../profiles.js';
 import { fail, str } from '../util.js';
+import { frameOf, framesOf, useFrame } from '../frames.js';
 
 const r = Router();
+
+// Molduras da foto de perfil: as que a conta ganhou e a que está usando.
+const FRAME_TARGET = { member: 'member', unit: 'unit', club: 'club' };
+r.get('/me/molduras', requireAuth('member', 'unit', 'club'), (req, res) => {
+  const t = FRAME_TARGET[req.actor.type];
+  res.json({ current: frameOf(t, req.actor.id), frames: framesOf(t, req.actor.id) });
+});
+r.put('/me/moldura', requireAuth('member', 'unit', 'club'), (req, res) => {
+  const t = FRAME_TARGET[req.actor.type];
+  const id = req.body.id == null ? null : Number(req.body.id);
+  if (!useFrame(t, req.actor.id, id)) fail(404, 'Moldura não encontrada');
+  res.json({ current: frameOf(t, req.actor.id) });
+});
 
 r.get('/me/profile', requireAuth('member', 'unit'), (req, res) => {
   res.json(req.actor.type === 'member' ? memberProfile('id', req.actor.id) : unitProfile(req.actor.id));

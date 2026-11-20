@@ -994,3 +994,27 @@ input::-webkit-datetime-edit { padding: 0; }
 @media print { .cert-trophy { min-height: 0; } }
 .medal.rank { text-decoration: none; color: inherit; }
 .st-best { font-size: .62rem; font-weight: 700; color: #94a3b8; margin-top: .15rem; }
+
+/* Molduras da foto de perfil */
+.framed { position: relative; display: inline-block; flex: none; }
+.framed > .avatar { position: relative; z-index: 0; }
+.framed .frame-art { position: absolute; z-index: 1; left: -14%; top: -14%; width: 128%; height: 128%; pointer-events: none; overflow: visible; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, .25)); }
+.frame-hero { display: flex; justify-content: center; padding: 1.2rem 0 1rem; }
+.frame-hero.small { padding: .6rem 0 .4rem; }
+.frame-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .6rem; }
+.frame-pick { position: relative; display: flex; flex-direction: column; align-items: center; gap: .2rem; padding: .7rem .5rem .8rem; border-radius: 18px; border: 2px solid var(--card-border); background: var(--surface); color: inherit; font: inherit; cursor: pointer; text-align: center; }
+.frame-pick.on { border-color: var(--link); box-shadow: 0 0 0 3px color-mix(in srgb, var(--link) 22%, transparent); }
+.frame-pick-art { min-height: 100px; display: grid; place-items: center; }
+.frame-pick b { font-size: .86rem; line-height: 1.2; }
+.frame-pick small { color: var(--muted); font-size: .72rem; }
+.frame-pick > i { position: absolute; top: 6px; right: 6px; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--link); color: #fff; }
+.frame-studio .chip-pick { display: flex; flex-wrap: wrap; gap: .35rem; }
+.frame-studio .chip-pick button { border: 2px solid var(--card-border); background: var(--surface); color: inherit; border-radius: 999px; padding: .35rem .8rem; font: 700 .85rem var(--font); cursor: pointer; }
+.frame-studio .chip-pick button.on { border-color: var(--link); background: color-mix(in srgb, var(--link) 12%, var(--surface)); }
+.frame-colors { display: grid; grid-template-columns: repeat(6, 1fr); gap: .45rem; }
+.frame-colors button { aspect-ratio: 1; border-radius: 50%; border: 3px solid var(--surface); box-shadow: 0 0 0 1px var(--card-border); cursor: pointer; }
+.frame-colors button.on { box-shadow: 0 0 0 3px var(--link); }
+.frame-btn { display: inline-flex; align-items: center; gap: .3rem; }
+.check-row { display: flex; align-items: flex-start; gap: .6rem; padding: .75rem .85rem; border-radius: 14px; background: var(--surface-3); cursor: pointer; font-size: .9rem; }
+.check-row input { width: 20px; height: 20px; flex: none; margin: 0; accent-color: var(--link); }
+.ts-give { display: grid; gap: .45rem; margin: .4rem 0 .8rem; }

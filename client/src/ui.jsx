@@ -292,9 +292,9 @@ export function MedalCard({ m }) {
     const game = design.game ? gameById(design.game) : null;
     const body = (
       <>
-        <Prize kind={m.kind} design={design} pos={m.place || 1} size={58} />
+        <Prize kind="trofeu" design={design} pos={m.place || 1} size={58} />
         <b>{m.name}</b>
-        <small>{game ? `${m.place}º lugar · ${game.name} · ${m.year}` : m.note}</small>
+        <small>{game ? `${m.place}º lugar · ${game.name} · ${design.tag || m.year}` : m.note}</small>
       </>
     );
     return m.kind === 'trofeu'
@@ -319,17 +319,10 @@ export function MedalCard({ m }) {
   );
 }
 
-/** Troféus (rankings e conquistas) e medalhas (mini-jogos), em seções separadas. */
-export const MedalList = ({ medals = [] }) => {
-  const trophies = medals.filter((m) => m.kind === 'trofeu');
-  const gameMedals = medals.filter((m) => m.kind !== 'trofeu');
-  return (
-    <>
-      <RowSection title="Troféus" items={trophies} empty="Nenhum troféu ainda." emptyIcon="trophy" render={(m) => <MedalCard key={m.id} m={m} />} />
-      {gameMedals.length > 0 && <RowSection title="Medalhas" items={gameMedals} empty="" emptyIcon="medal" render={(m) => <MedalCard key={m.id} m={m} />} />}
-    </>
-  );
-};
+/** Troféus: rankings, mini-jogos do mês e conquistas (não existem mais medalhas). */
+export const MedalList = ({ medals = [] }) => (
+  <RowSection title="Troféus" items={medals} empty="Nenhum troféu ainda." emptyIcon="trophy" render={(m) => <MedalCard key={m.id} m={m} />} />
+);
 
 export function PositionBadge({ position, label, points }) {
   if (!position) return null;

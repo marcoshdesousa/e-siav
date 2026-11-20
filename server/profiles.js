@@ -1,6 +1,7 @@
 import { all, get } from './db.js';
 import { ageFrom, memberKind, roleOf, cargoOf } from './util.js';
 import { isPlus } from './plus.js';
+import { frameOf } from './frames.js';
 import { clubsRanking, unitsRanking, clubUnitsRanking, membersRanking, leadersRanking, clubMembersRanking, clubLeadersRanking, positionOf } from './rankings.js';
 
 export function medalsOf(type, id) {
@@ -43,6 +44,7 @@ export function clubProfile(id, { withApp = false } = {}) {
   c.ranking_district = c.ranking;
   c.events = eventsOf('club', id);
   c.medals = medalsOf('club', id);
+  c.frame = frameOf('club', id);
   return c;
 }
 
@@ -59,6 +61,7 @@ export function unitProfile(id) {
     u.ranking_general = pos(positionOf(unitsRanking(u.district_id), u.id)); // no distrito
   }
   u.medals = medalsOf('unit', id);
+  u.frame = frameOf('unit', id);
   return u;
 }
 
@@ -95,6 +98,7 @@ export function memberProfile(where, value) {
     m.verified = isPlus(m.id);
     m.events = eventsOf('member', m.id);
     m.medals = medalsOf('member', m.id);
+    m.frame = frameOf('member', m.id);
     return m;
   }
   const districtRows = m.kind === 'desbravador' ? membersRanking(m.district_id) : leadersRanking(m.district_id);
@@ -113,5 +117,6 @@ export function memberProfile(where, value) {
   m.verified = isPlus(m.id); // selo de verificado do DBV+
   m.events = eventsOf('member', m.id);
   m.medals = medalsOf('member', m.id);
+  m.frame = frameOf('member', m.id);
   return m;
 }

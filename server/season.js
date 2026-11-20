@@ -72,3 +72,29 @@ export function resetStudiesOnce({ justSeeded = false } = {}) {
   if (!justSeeded) console.log('Ano Bíblico, Bom Líder e Bom de Bíblia recomeçaram do zero (abrem em 2027).');
   return true;
 }
+
+/**
+ * Uma vez (pedido do dono do app, nov/2026): todo o Estudo Diário recomeça do zero (Ano Bíblico,
+ * Meditação, Lição da Escola Sabatina, Bom de Bíblia e Bom Líder), com sequências e recordes. O que
+ * foi feito vai para o arquivo. Datas: Bom de Bíblia e Lição já; Meditação em 1º/1/2027; Bom Líder
+ * em 1º/2/2027; Ano Bíblico em 1º/3/2027.
+ */
+export function resetDailyStudiesOnce({ justSeeded = false } = {}) {
+  const KEY = 'estudo-diario-zerado-v2';
+  if (get('SELECT 1 FROM app_flags WHERE key = ?', KEY)) return false;
+  tx(() => {
+    if (!justSeeded) {
+      const ano = Number(todayBR().slice(0, 4));
+      archiveRows('bible_points', ano, "kind = 'estudo'");
+      for (const t of ['bible_progress', 'meditation_progress', 'sabbath_progress', 'bom_lider_progress', 'bdb_progress']) {
+        if (get("SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?", t)) archiveRows(t, ano);
+      }
+      setSetting('ano_biblico_inicio', '2027-03-01');
+      setSetting('meditacao_inicio', '2027-01-01');
+      setSetting('bom_lider_inicio', '2027-02-01');
+    }
+    run('INSERT OR IGNORE INTO app_flags (key) VALUES (?)', KEY);
+  });
+  if (!justSeeded) console.log('Estudo Diário recomeçou do zero.');
+  return true;
+}

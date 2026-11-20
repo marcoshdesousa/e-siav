@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ArrowLeft, CalendarClock, CheckCircle2, ChevronRight, ClipboardList, Globe2, Star, Timer, Users, XCircle } from 'lucide-react';
 import { api, toForm } from '../api.js';
 import { useAuth } from '../auth.jsx';
+import { FrameStudio, newFrame } from '../frames.jsx';
 import { AUDIENCE_LABEL, MEMBER_KIND_LABEL, fmtDateTime, isoToLocal, localToIso, timeLeft } from '../format.js';
 import {
   Avatar, Badge, Button, Card, Confirm, Empty, Field, Gallery, ImagesInput, Loading, Modal, ModesPicker, QuizAnswer, QuizBuilder, StateBadge, Tabs,
@@ -152,12 +153,13 @@ export function RequirementForm({ audience: fixedAudience, onClose, onDone }) {
   const [modes, setModes] = useState(['texto']);
   const [images, setImages] = useState([]);
   const [questions, setQuestions] = useState([{ question: '', options: ['', ''], correct: 0 }]);
+  const [frame, setFrame] = useState(null);
   const [busy, run] = useAsync();
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
   const submit = async () => {
     if (!modes.length) return notify('Escolha pelo menos uma forma de envio', 'error');
     await run(
-      () => api.post('/requirements', toForm({ ...f, deadline: localToIso(f.deadline), modes, questions: modes.includes('quiz') ? questions : [], images })),
+      () => api.post('/requirements', toForm({ ...f, deadline: localToIso(f.deadline), modes, questions: modes.includes('quiz') ? questions : [], images, frame: frame || undefined })),
       'Requisito criado!',
     );
     onDone();
@@ -207,6 +209,11 @@ export function RequirementForm({ audience: fixedAudience, onClose, onDone }) {
           <Field label="Pontos fora do prazo" hint="Menor ou zero"><input type="number" min="0" value={f.late_points} onChange={set('late_points')} /></Field>
         </div>
         <Field label="Prazo (data e hora)"><input type="datetime-local" value={f.deadline} onChange={set('deadline')} /></Field>
+        <label className="check-row">
+          <input type="checkbox" checked={!!frame} onChange={(e) => setFrame(e.target.checked ? newFrame(f.title.slice(0, 22)) : null)} />
+          <span><b>Dar uma moldura</b> para a foto de perfil de quem cumprir</span>
+        </label>
+        {frame && <FrameStudio value={frame} onChange={setFrame} />}
         {modes.includes('quiz') && (
           <Field group label="Perguntas do quiz" hint={modes.length === 1 ? 'Só quiz: a nota é proporcional aos acertos e sai na hora.' : 'Com relatório ou foto, quem criou avalia e a nota do quiz é proporcional.'}>
             <QuizBuilder questions={questions} setQuestions={setQuestions} />

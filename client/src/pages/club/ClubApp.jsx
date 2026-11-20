@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import {
-  Award, KeyRound, UserPlus, Megaphone, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, ClipboardCheck, Globe, FolderOpen, Wrench, LifeBuoy, Share2, Flame, ArrowLeftRight, ClipboardList,
+  Award, KeyRound, UserPlus, Megaphone, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, ClipboardCheck, Globe, FolderOpen, Wrench, LifeBuoy, Share2, Flame, ArrowLeftRight, ClipboardList, Frame as FrameIcon,
 } from 'lucide-react';
 import { GroupCertificatesPage } from '../Certificates.jsx';
 import { api, toForm } from '../../api.js';
@@ -26,6 +26,7 @@ import ClubsBrowser from '../Clubs.jsx';
 import EventsAdmin from '../admin/Events.jsx';
 import AnnouncementsAdmin from '../admin/Announcements.jsx';
 import FormsAdmin, { FormResponses } from '../admin/FormsAdmin.jsx';
+import { FramedAvatar, FramesPage } from '../../frames.jsx';
 
 const base = '/clube';
 
@@ -167,7 +168,8 @@ function ClubHome() {
         <>
           <div className="hero">
             <div className="profile-head">
-              <Avatar src={c.logo} name={c.name} size={88} square />
+              <FramedAvatar frame={c.frame} src={c.logo} name={c.name} size={88} square />
+              <Link to={`${base}/molduras`} className="chip yellow"><span className="ico"><FrameIcon size={14} /> Molduras</span></Link>
               <h1>{c.name}</h1>
               <div className="chips"><span className="chip ico"><MapPin size={14} /> {c.district_name}</span><span className="chip ico"><KeyRound size={14} /> Código do clube: <b>{c.code}</b></span></div>
               {c.director_name && <p className="small" style={{ margin: '.2rem 0 .4rem' }}>Diretor(a): <b>{c.director_name}</b>{c.associate_directors ? <> · Associados: {c.associate_directors.split('\n').join(', ')}</> : ''}</p>}
@@ -530,6 +532,7 @@ export default function ClubApp() {
               <Route path="suporte" element={<SupportChat />} />
               <Route path="eventos" element={<EventsAdmin />} />
               <Route path="anuncios" element={<AnnouncementsAdmin />} />
+              <Route path="molduras" element={<FramesPage photo={actor.logo} name={actor.name} square />} />
               <Route path="formularios" element={<FormsAdmin base={base} prefix="/club/formularios" club />} />
               <Route path="formularios/:id" element={<FormResponses prefix="/club/formularios" club />} />
               <Route path="clubes" element={<ClubsBrowser base={base} />} />

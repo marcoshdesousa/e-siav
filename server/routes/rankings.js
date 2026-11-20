@@ -2,9 +2,9 @@ import { Router } from 'express';
 import { get } from '../db.js';
 import { requireAuth, requireGeneral } from '../auth.js';
 import { setSetting } from '../fees.js';
-import { membersRanking, clubsRanking, unitsRanking, clubUnitsRanking, clubMembersRanking, leadersRanking, clubLeadersRanking, positionOf, rankingDistrict, rankingState, scopeState, setScope, TABLES, tableState, openTable } from '../rankings.js';
+import { membersRanking, clubsRanking, unitsRanking, clubUnitsRanking, clubMembersRanking, leadersRanking, clubLeadersRanking, positionOf, rankingDistrict, rankingState, scopeState, setScope, TABLES, tableState, openTable, closeTable } from '../rankings.js';
 import { fail, int } from '../util.js';
-import { finalsFor, finishGames, finishRanking, lastFinal, markFinalSeen, trophyCertificate } from '../rankFinals.js';
+import { finalsFor, finishRanking, lastFinal, markFinalSeen, trophyCertificate } from '../rankFinals.js';
 
 const r = Router();
 // Certificado do troféu: público (só nomes), para imprimir ou mostrar.
@@ -119,8 +119,18 @@ r.put('/admin/ranking/pausa', requireAuth('admin'), requireGeneral, (req, res) =
 // o administrador do distrito do distrito e o geral do Brasil e de qualquer distrito.
 r.post('/ranking/finalizar', requireAuth('admin', 'club'), (req, res) => {
   const key = scopeKey(req.actor, req.body);
-  const done = finishRanking(key, String(req.body.kind || ''), req.body.design || {});
+  const done = finishRanking(key, String(req.body.kind || ''), req.body.design || {}, new Date(), { trophy: req.body.trophy !== false, frame: req.body.frame || null });
   res.json({ finished: done, tables: Object.fromEntries(TABLES[key.split(':')[0]].map((k) => [k, tableState(key, k)])) });
+});
+// Apagar o ranking: os pontos são perdidos e ninguém ganha nada. Depois é preciso criar outro
+// (o do Brasil recomeça na hora).
+r.post('/ranking/apagar', requireAuth('admin', 'club'), (req, res) => {
+  const key = scopeKey(req.actor, req.body);
+  const kind = String(req.body.kind || '');
+  if (!TABLES[key.split(':')[0]].includes(kind)) fail(400, 'Escolha o ranking');
+  if (!tableState(key, kind).open) fail(400, 'Este ranking não está aberto');
+  closeTable(key, kind, new Date().toISOString());
+  res.json({ ok: true, tables: Object.fromEntries(TABLES[key.split(':')[0]].map((k) => [k, tableState(key, k)])) });
 });
 r.post('/ranking/criar', requireAuth('admin', 'club'), (req, res) => {
   const key = scopeKey(req.actor, req.body);
@@ -129,9 +139,6 @@ r.post('/ranking/criar', requireAuth('admin', 'club'), (req, res) => {
   for (const k of kinds) openTable(key, k);
   res.json({ ok: true, tables: Object.fromEntries(TABLES[key.split(':')[0]].map((k) => [k, tableState(key, k)])) });
 });
-// Mini-jogos: só o administrador geral finaliza, todos de uma vez (medalha para os 3 primeiros de cada).
-r.post('/admin/jogos/finalizar', requireAuth('admin'), requireGeneral, (req, res) => res.json({ finished: finishGames(req.body.design || {}) }));
-
 // Colocações dos rankings finalizados para quem participou.
 r.get('/rankings/finais', (req, res) => res.json(finalsFor(req.actor, { unseenOnly: req.query.novos === '1' })));
 r.post('/rankings/finais/:id/visto', (req, res) => { markFinalSeen(req.actor, int(req.params.id)); res.json({ ok: true }); });

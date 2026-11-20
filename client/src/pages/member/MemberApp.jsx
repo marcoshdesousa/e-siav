@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { Award, BookImage, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, Menu, Tent, Trophy, UserRound, BookOpenText, Hourglass, BadgeCheck, Lock, Bell, X } from 'lucide-react';
+import { Award, BookImage, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, Menu, Tent, Trophy, UserRound, BookOpenText, Hourglass, BadgeCheck, Lock, Bell, X, Frame as FrameIcon } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Button, Card, Loading, Modal, PageHeader, notify, useAsync, useLoad } from '../../ui.jsx';
@@ -19,6 +19,8 @@ import { CertificatesPage, MemberCertificate } from '../Certificates.jsx';
 import PlusPage, { PlusNudge } from './PlusPage.jsx';
 import { BomLider, BomLiderLesson } from '../learning/BomLider.jsx';
 import { HandleField } from '../AppSignup.jsx';
+import { FramesPage } from '../../frames.jsx';
+import { ContentDetail } from '../Content.jsx';
 import { enablePush, installedApp, pushSupported, syncPush } from '../../push.js';
 
 const base = '/membro';
@@ -65,6 +67,7 @@ function MyProfile() {
               <input type="file" accept="image/*" hidden onChange={(e) => e.target.files[0] && changePhoto(e.target.files[0])} />
             </label>
           }
+          frameAction={<Link to={`${base}/molduras`} className="chip yellow"><span className="ico"><FrameIcon size={14} /> Molduras</span></Link>}
         />
         {/* Conta antiga sem @: cria aqui (quem já tem vê no "Ver meu @ e código"). */}
         {!actor.handle && <HandleCard />}
@@ -147,6 +150,7 @@ function HandleCard() {
 /** Para onde o "Voltar" do topo leva em cada tela. */
 function parentOf(path) {
   const [seg, sub, sub2] = path.split('/').slice(2);
+  if (seg === 'aprendizagem' && sub === 'cursos') return `${base}/aprendizagem?aba=cursos`;
   if (seg === 'aprendizagem') return ['meditacao', 'escola-sabatina'].includes(sub) && sub2 ? `${base}/aprendizagem/${sub}` : sub === 'bom-lider' && sub2 ? `${base}/aprendizagem/bom-lider` : sub === 'bom-de-biblia' && sub2 ? `${base}/aprendizagem/bom-de-biblia` : sub === 'ano-biblico' && sub2 ? `${base}/aprendizagem/ano-biblico` :  sub ? `${base}/aprendizagem` : base;
   if ((seg === 'jogos' || seg === 'albuns') && sub) return `${base}/${seg}`;
   if (['clubes', 'suporte', 'albuns', 'certificados'].includes(seg)) return `${base}/mais`;
@@ -229,6 +233,7 @@ export default function MemberApp() {
               <Route index element={<MyProfile />} />
               <Route path="requisitos" element={<RequirementsAndRanking isDbv={isDbv} />} />
               <Route path="cartao" element={<EmbeddedSite title="Cartão DBV" linkKey="link_cartao" subtitle="Entre com o código e a senha que o seu clube passar" />} />
+              <Route path="molduras" element={<FramesPage photo={actor.photo} name={actor.name} />} />
               <Route path="suporte" element={<SupportChat />} />
               <Route path="jogos" element={<GamesHub base={base} />} />
               <Route path="jogos/:id" element={<GamePage base={base} />} />
@@ -237,6 +242,7 @@ export default function MemberApp() {
               <Route path="albuns" element={<AlbumsPage base={base} />} />
               <Route path="albuns/:id" element={<AlbumPage />} />
               <Route path="aprendizagem" element={<LearningHub base={base} />} />
+              <Route path="aprendizagem/cursos/:id" element={<ContentDetail />} />
               <Route path="aprendizagem/ano-biblico" element={<BibleYear base={base} />} />
               <Route path="aprendizagem/ano-biblico/:day" element={<BibleDay base={base} />} />
               <Route path="aprendizagem/meditacao" element={<MeditationList base={base} />} />

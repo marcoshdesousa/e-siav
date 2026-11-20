@@ -292,12 +292,17 @@ test('finalizar ranking: troféu personalizado para os 3 primeiros, certificado,
   const br = (await admin.post('/ranking/finalizar', { scope: 'brasil', kind: 'unidades' })).body;
   assert.equal(br.tables.unidades.open, true);
   assert.equal((await aguias.post('/ranking/finalizar', { kind: 'clubes' })).status, 400, 'clube não tem ranking de clubes');
-  // Mini-jogos: só o geral finaliza; medalha sem certificado e tudo zera.
-  await pedro.post('/jogos/cobrinha/pontos', { score: 50 });
-  assert.equal((await aguias.post('/admin/jogos/finalizar', {})).status, 403);
-  const g = (await admin.post('/admin/jogos/finalizar', { design: { model: 'redonda', color: 'podio' } })).body;
-  assert.ok(g.finished.id);
-  assert.equal((await pedro.get('/jogos/meus')).body.cobrinha, undefined, 'jogos zeraram');
+  // Os mini-jogos fecham sozinhos todo mês (não tem mais botão).
+  assert.equal((await admin.post('/admin/jogos/finalizar', {})).status, 404);
+  // Apagar: os pontos somem, ninguém ganha nada e o clube precisa criar outro.
+  assert.equal((await aguias.post('/ranking/apagar', { kind: 'membros' })).status, 200);
+  assert.equal((await aguias.get('/rankings/estado')).body.scopes.find((x) => x.key.startsWith('club')).tables.membros.open, false);
+  assert.equal((await aguias.post('/ranking/apagar', { kind: 'membros' })).status, 400, 'já apagado');
+  assert.equal((await pedro.post('/ranking/apagar', { kind: 'membros' })).status, 403);
+  // Finalizar só com moldura (sem troféu) ou nada: precisa escolher pelo menos um.
+  assert.equal((await aguias.post('/ranking/finalizar', { kind: 'unidades', trophy: false })).status, 400);
+  const fr = await aguias.post('/ranking/finalizar', { kind: 'unidades', trophy: false, frame: { style: 'estrelas', color: 'roxo', title: 'Unidade campeã', sub: '2026' } });
+  assert.equal(fr.status, 200);
 });
 
 test('quem paga: o plano do clube não muda os membros (desbravador grátis; liderança assina)', async () => {

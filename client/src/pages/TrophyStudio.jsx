@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Shuffle, Trophy as TrophyIcon } from 'lucide-react';
 import { Button, Modal } from '../ui.jsx';
+import { FrameStudio, newFrame } from '../frames.jsx';
 import { BASES, COLORS, EMBLEMS, GameMedal, MEDAL_MODELS, RIBBONS, TROPHY_MODELS, Trophy, baseSwatch, colorSwatch, ribbonSwatch } from '../trophies.jsx';
 
 const pick = (list) => list[Math.floor(Math.random() * list.length)][0];
@@ -34,6 +35,9 @@ export default function TrophyStudio({ mode = 'trofeu', title, heading, info, on
     emblem: medal ? 'controle' : 'estrela', year: new Date().getFullYear(), title,
   });
   const set = (k) => (v) => setD((x) => ({ ...x, [k]: v }));
+  // O que entregar aos 3 primeiros: troféu, moldura ou os dois (nos rankings).
+  const [giveTrophy, setGiveTrophy] = useState(true);
+  const [frame, setFrame] = useState(null);
   const Art = medal ? GameMedal : Trophy;
   const surprise = () => setD((x) => ({
     ...x, model: pick(medal ? MEDAL_MODELS : TROPHY_MODELS), color: pick(COLORS), base: pick(BASES), ribbon: pick(RIBBONS),
@@ -43,7 +47,7 @@ export default function TrophyStudio({ mode = 'trofeu', title, heading, info, on
     <Modal title={heading} onClose={onClose} footer={(
       <div className="row" style={{ gap: '.5rem', width: '100%' }}>
         <Button variant="secondary" onClick={onClose}>Cancelar</Button>
-        <Button block busy={busy} onClick={() => onConfirm(d)}><TrophyIcon size={16} /> Finalizar e entregar</Button>
+        <Button block busy={busy} disabled={!medal && !giveTrophy && !frame} onClick={() => onConfirm(d, { trophy: medal || giveTrophy, frame })}><TrophyIcon size={16} /> Finalizar e entregar</Button>
       </div>
     )}>
       <div className="ts-stage">
@@ -58,6 +62,14 @@ export default function TrophyStudio({ mode = 'trofeu', title, heading, info, on
         <span className="ts-year">Temporada {d.year}</span>
       </div>
       {info && <p className="small muted" style={{ margin: '.2rem 0 .6rem' }}>{info}</p>}
+      {!medal && (
+        <div className="ts-give">
+          <span className="ts-label">O que os 3 primeiros ganham</span>
+          <label className="check-row"><input type="checkbox" checked={giveTrophy} onChange={(e) => setGiveTrophy(e.target.checked)} /><span><b>Troféu</b> com certificado de honra</span></label>
+          <label className="check-row"><input type="checkbox" checked={!!frame} onChange={(e) => setFrame(e.target.checked ? newFrame((d.title || title).slice(0, 22), String(d.year)) : null)} /><span><b>Moldura</b> para a foto de perfil</span></label>
+          {frame && <FrameStudio value={frame} onChange={setFrame} />}
+        </div>
+      )}
       <div className="ts-fields">
         <label className="field"><span className="field-label">Título {medal ? 'da medalha' : 'do troféu'}</span>
           <input value={d.title} maxLength={32} onChange={(e) => set('title')(e.target.value)} placeholder={title} />

@@ -374,6 +374,8 @@ function migrate() {
   // Requisitos: combinação livre de envio (texto, foto, quiz) e fotos de exemplo
   add('requirements', 'modes', 'TEXT');
   add('requirements', 'images', "TEXT NOT NULL DEFAULT '[]'");
+  // Moldura que o requisito dá a quem tiver o envio aprovado (opcional).
+  add('requirements', 'frame', 'TEXT');
 
   // Conteúdo: imagem/insígnia própria; requisitos das classes com envio e avaliação
   add('content', 'image', 'TEXT');

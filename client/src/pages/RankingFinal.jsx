@@ -17,14 +17,15 @@ function Place({ p }) {
     <div className={'rf-place' + (p.prize ? ' won' : '')}>
       {p.prize
         ? (p.prize.design
-          ? <Prize kind={p.prize.kind} design={p.prize.design} pos={p.position} size={you ? 80 : 64} />
+          ? <Prize kind="trofeu" design={p.prize.design} pos={p.position} size={you ? 80 : 64} />
           : <RankMedal icon={p.prize.icon} year={p.prize.year} size={you ? 92 : 70} />)
         : <span className="rf-num">{p.position}º</span>}
       <div className="rf-text">
         <b>{subject} em {p.position}º lugar</b>
         <span>{game ? `${game.name}` : p.game ? 'Mini-jogo' : `Ranking de ${p.table.toLowerCase()}`} · {p.points} pts</span>
         {p.prize
-          ? <span className="rf-prize">Ganhou {p.prize.kind === 'trofeu' ? 'o troféu' : 'a medalha'} <b>{p.prize.name}</b></span>
+          ? <span className="rf-prize">Ganhou o troféu <b>{p.prize.name}</b>{p.game ? ' e a moldura do mês' : ''}</span>
+          : p.position <= 3 && p.points > 0 ? <span className="rf-prize">Ganhou uma <b>moldura</b> para a foto de perfil</span>
           : <span className="rf-next">{p.game ? 'Os jogos recomeçaram do zero. Bora para o pódio!' : 'Continue firme: no próximo ranking o pódio pode ser seu!'}</span>}
       </div>
     </div>
@@ -40,14 +41,14 @@ export function RankingFinalView({ f, onClose }) {
         <div className={'rf-head' + (won ? ' won' : '')}>
           <Trophy size={26} />
           <span className="rf-kicker">Ranking finalizado</span>
-          <h2>{f.kind === 'jogos' ? 'Ranking dos mini-jogos' : `Ranking ${f.scope === 'brasil' ? 'do Brasil' : `${WHERE[f.scope]}: ${f.label}`}`}</h2>
+          <h2>{f.kind === 'jogos' ? `Mini-jogos do mês ${f.label.replace('Mini-jogos ', '')}` : `Ranking ${f.scope === 'brasil' ? 'do Brasil' : `${WHERE[f.scope]}: ${f.label}`}`}</h2>
           <span className="rf-year">Temporada {f.year}</span>
           {won && <p>Parabéns! Esforço, estudo e fidelidade que chegaram ao pódio.</p>}
         </div>
         <div className="rf-list">
           {f.places.map((p) => <Place key={p.kind + p.who} p={p} />)}
         </div>
-        {won && <p className="small muted center" style={{ margin: '0 1rem .6rem' }}>{f.kind === 'jogos' ? 'A medalha já está no seu perfil, em Medalhas.' : 'O troféu já está no perfil, em Troféus, e o certificado de honra na aba Certificados (Mais).'}</p>}
+        {won && <p className="small muted center" style={{ margin: '0 1rem .6rem' }}>{f.kind === 'jogos' ? 'O troféu já está no seu perfil, em Troféus, e a moldura do mês em Molduras.' : 'Os prêmios já estão no perfil: troféu em Troféus (com o certificado na aba Certificados) e moldura em Molduras.'}</p>}
         <div style={{ padding: '0 1rem 1rem' }}><Button block onClick={onClose}>Continuar</Button></div>
       </div>
     </div>

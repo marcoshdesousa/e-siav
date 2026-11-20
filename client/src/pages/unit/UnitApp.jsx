@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Award, ClipboardCheck, Flag, LifeBuoy, Menu, Tent, Trophy } from 'lucide-react';
+import { Award, ClipboardCheck, Flag, Frame as FrameIcon, LifeBuoy, Menu, Tent, Trophy } from 'lucide-react';
+import { FramesPage } from '../../frames.jsx';
 import { GroupCertificatesPage } from '../Certificates.jsx';
 import { EmbeddedSite, SupportChat } from '../Shared.jsx';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { Button, Card, Loading, PageHeader, Section, useAsync, useLoad } from '../../ui.jsx';
@@ -37,7 +38,7 @@ function UnitProfile() {
     <Loading {...state}>
       {(u) => (
         <>
-          <UnitProfileView unit={u} linkBase={`${base}/ver`} hideBio extra={<BioForm bio={u.bio} onDone={state.reload} />} />
+          <UnitProfileView unit={u} linkBase={`${base}/ver`} hideBio extra={<BioForm bio={u.bio} onDone={state.reload} />} frameAction={<Link to={`${base}/molduras`} className="chip yellow"><span className="ico"><FrameIcon size={14} /> Molduras</span></Link>} />
           <p className="muted small center mt">Nome, logo e membros da unidade são cadastrados pelo clube.</p>
         </>
       )}
@@ -71,6 +72,7 @@ export default function UnitApp() {
         <Route path="cantinho" element={<EmbeddedSite title="Cantinho da Unidade" linkKey="link_cantinho" subtitle="Relatórios e atividades da unidade" />} />
         <Route path="certificados" element={<GroupCertificatesPage />} />
         <Route path="suporte" element={<SupportChat />} />
+        <Route path="molduras" element={<FramesPage photo={actor.logo} name={actor.name} square />} />
         <Route path="mais" element={<><PageHeader title="Mais" /><MoreMenu items={more} /></>} />
         <Route index element={<UnitProfile />} />
         <Route path="requisitos" element={<><PageHeader title="Requisitos da unidade" subtitle="Cumpram juntos dentro do prazo e subam no ranking" /><RequirementsTodo originTabs clubLabel="Do clube" /></>} />

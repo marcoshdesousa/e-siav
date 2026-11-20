@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Link, Navigate, Route, Routes } from 'react-router-dom';
 import {
-  CalendarDays, ClipboardCheck, Flag, House, Inbox, Map, Megaphone, Menu, Tent, Trophy, Users, Globe, MessageCircle, BookImage, Wallet, Flame, ArrowLeftRight, ClipboardList,
+  CalendarDays, ClipboardCheck, Flag, House, Inbox, Map, Megaphone, Menu, Tent, Trophy, Users, Globe, MessageCircle, BookImage, Wallet, Flame, ArrowLeftRight, ClipboardList, GraduationCap,
 } from 'lucide-react';
+import ContentAdmin from './ContentAdmin.jsx';
+import ContentReview from './ContentReview.jsx';
 import { api } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
 import { plural } from '../../format.js';
@@ -311,13 +313,15 @@ function ClubsAdmin() {
 
 /** Requisitos: criados e avaliação (separados por desbravadores, unidades e clubes). */
 function RequirementsAdmin() {
+  const { actor } = useAuth();
   const [tab, setTab] = useState(new URLSearchParams(location.search).get('aba') || 'criados');
   return (
     <>
       <PageHeader title="Requisitos" subtitle="Desbravadores, unidades e clubes" />
-      <Tabs tabs={[['criados', 'Criados'], ['avaliar', 'Avaliar envios']]} value={tab} onChange={setTab} />
+      <Tabs tabs={[['criados', 'Criados'], ['avaliar', 'Avaliar envios'], ...(actor.district_id ? [] : [['cursos', 'Aulas dos cursos']])]} value={tab} onChange={setTab} />
       {tab === 'criados' && <CreatedRequirements />}
       {tab === 'avaliar' && <ReviewsPanel />}
+      {tab === 'cursos' && <ContentReview type="curso" embedded />}
     </>
   );
 }
@@ -356,6 +360,7 @@ export default function AdminApp() {
     { to: `${base}/pagamentos`, icon: Wallet, label: 'Pagamentos', hint: 'Pix (SyncPay) e confirmações' },
     { to: `${base}/figurinhas`, icon: BookImage, label: 'Figurinhas', hint: 'Álbuns completos e presentes' },
           { to: `${base}/aprendizagem`, icon: Flame, label: 'Aprendizagem Diária', hint: 'Arganel, medalhas e áudio' },
+    { to: `${base}/cursos`, icon: GraduationCap, label: 'Cursos', hint: 'Criar cursos e aulas (aba Cursos dos Estudos)' },
     { to: `${base}/links`, icon: Globe, label: 'Links dos sites', hint: 'SGC, Cantinho e Cartão DBV' },
     { to: `${base}/eventos`, icon: CalendarDays, label: 'Eventos', hint: 'Criar e participantes' },
     { to: `${base}/anuncios`, icon: Megaphone, label: 'Anúncios', hint: 'Aparecem ao abrir o app' },
@@ -383,6 +388,7 @@ export default function AdminApp() {
         <Route path="transferencias" element={<AppTransfersPage />} />
         <Route path="ranking" element={<RankingHub base={base} />} />
         {general && <Route path="formularios" element={<FormsAdmin base={base} />} />}
+        {general && <Route path="cursos" element={<ContentAdmin />} />}
         {general && <Route path="formularios/:id" element={<FormResponses />} />}
         <Route path="sequencias" element={<StreaksAdmin />} />
         <Route path="dbv-mais" element={<PlusAdmin />} />

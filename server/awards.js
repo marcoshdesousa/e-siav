@@ -1,3 +1,4 @@
+import { albumFrame } from './frames.js';
 // Prêmios automáticos (digitais): medalhas e troféus que o app entrega sozinho quando o membro
 // conclui algo (álbum completo, Ano Bíblico, Bom Líder...). Ficam no perfil, como os entregues pela equipe.
 import { get, run } from './db.js';
@@ -22,4 +23,5 @@ export function autoAward(memberId, { kind, name, icon, description, note = null
 /** Álbum completo: troféu (no lugar do trunfo físico). As medalhas agora são só dos mini-jogos. */
 export function awardAlbum(memberId, albumName) {
   autoAward(memberId, { kind: 'trofeu', name: `Colecionador: ${albumName}`, icon: 'trophy', description: `Troféu por completar o ${albumName}.` });
+  albumFrame(memberId, albumName);
 }

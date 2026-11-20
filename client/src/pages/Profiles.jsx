@@ -6,6 +6,7 @@ import { Attachments } from './admin/Events.jsx';
 import { api } from '../api.js';
 import { fmtDate, plural } from '../format.js';
 import { useAuth, homeFor } from '../auth.jsx';
+import { FramedAvatar } from '../frames.jsx';
 import { Avatar, Button, Card, Empty, Loading, LogoHorizontal, MedalList, Modal, PositionBadge, RowSection, Section, ShareButton, useLoad } from '../ui.jsx';
 
 /** linkBase: "/p" (páginas públicas) ou "<app>/ver" (dentro do app). */
@@ -96,7 +97,7 @@ export function ClubProfileView({ club: c, linkBase }) {
     <>
       <div className="hero">
         <div className="profile-head">
-          <Avatar src={c.logo} name={c.name} size={96} square />
+          <FramedAvatar frame={c.frame} src={c.logo} name={c.name} size={96} square />
           <h1>{c.name}</h1>
           <div className="chips">
             <span className="chip ico"><MapPin size={14} /> {c.district_name}</span>
@@ -135,12 +136,13 @@ export function ClubProfileView({ club: c, linkBase }) {
   );
 }
 
-export function UnitProfileView({ unit: u, linkBase, hideBio = false, extra = null }) {
+export function UnitProfileView({ unit: u, linkBase, hideBio = false, extra = null, frameAction = null }) {
   return (
     <>
       <div className="hero">
         <div className="profile-head">
-          <Avatar src={u.logo} name={u.name} size={96} square />
+          <FramedAvatar frame={u.frame} src={u.logo} name={u.name} size={96} square />
+          {frameAction}
           <h1>Unidade {u.name}</h1>
           <div className="chips">
             <Link to={to(linkBase, 'clube', u.club_id, clanLink(u.club_code))} className="chip ico"><Tent size={14} /> {u.club_name}</Link>
@@ -175,13 +177,13 @@ function AccessChips({ m }) {
   );
 }
 
-export function MemberProfileView({ member: m, linkBase, photoAction, extra }) {
+export function MemberProfileView({ member: m, linkBase, photoAction, frameAction, extra }) {
   return (
     <>
       <div className="hero">
         <div className="profile-head">
-          <Avatar src={m.photo} name={m.name} size={104} />
-          {photoAction}
+          <FramedAvatar frame={m.frame} src={m.photo} name={m.name} size={104} />
+          {(photoAction || frameAction) && <div className="row wrap" style={{ justifyContent: 'center', gap: '.4rem' }}>{photoAction}{frameAction}</div>}
           <h1>{m.name}{m.verified && <Verified size={24} />}</h1>
           <AccessChips m={m} />
           <div className="chips">

@@ -1,10 +1,11 @@
 // Aprendizagem Diária (só membros): Ano Bíblico, Livro do Ano (em breve), Bom de Bíblia e
 // Bom Líder (em breve, só 16+). O card "Sequência" aparece no perfil.
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, BookOpen, BookOpenText, Check, CheckCircle2, ChevronLeft, ChevronRight, Flame, Headphones, Lock, Medal, Pause, Play, RotateCcw, Sparkles, Timer, Trophy, Users, X } from 'lucide-react';
 import { api } from '../../api.js';
-import { Button, Card, Loading, PageHeader, Section, useLoad } from '../../ui.jsx';
+import { Button, Card, Loading, PageHeader, Section, Tabs, useLoad } from '../../ui.jsx';
+import { ContentList } from '../Content.jsx';
 import { useOnline } from '../../offline.js';
 import { useNarration } from './voice.js';
 import { PackReward } from './PackReward.jsx';
@@ -108,11 +109,23 @@ export function StreakCard({ base }) {
 
 // ───────────── Página da Aprendizagem Diária ─────────────
 
+/** Estudos: duas abas, o Diário (Ano Bíblico, Meditação, Lição, Bom de Bíblia, Bom Líder) e os Cursos. */
 export function LearningHub({ base }) {
+  const [params, setParams] = useSearchParams();
+  const tab = params.get('aba') === 'cursos' ? 'cursos' : 'diario';
+  return (
+    <>
+      <PageHeader title="Estudos" subtitle={tab === 'cursos' ? 'Cursos em aulas para desbravadores e liderança' : 'Um pouquinho por dia: Bíblia, meditação, lição e muito mais'} />
+      <Tabs tabs={[['diario', 'Diário'], ['cursos', 'Cursos']]} value={tab} onChange={(t) => setParams(t === 'cursos' ? { aba: 'cursos' } : {}, { replace: true })} />
+      {tab === 'cursos' ? <div className="mt"><ContentList base={`${base}/aprendizagem/cursos`} embedded /></div> : <DailyStudies base={base} />}
+    </>
+  );
+}
+
+function DailyStudies({ base }) {
   const state = useLoad(() => api.get('/aprendizagem'));
   return (
     <>
-      <PageHeader title="Estudo Diário" subtitle="Um pouquinho por dia: Bíblia, meditação, lição e muito mais" />
       <Loading {...state}>
         {(d) => (
           <>
@@ -131,7 +144,9 @@ export function LearningHub({ base }) {
                 <span className="learn-ico"><Sparkles size={30} /></span>
                 <b>Meditação Diária</b>
                 <small>{d.meditation.today_title ? `Hoje: ${d.meditation.today_title}` : 'Uma mensagem por dia, com áudio e 3 perguntas'}</small>
-                <small>{d.meditation.done} feitas</small>
+                {d.meditation.start > d.meditation.today && !d.test
+                  ? <span className="chip"><Lock size={12} /> Começa em {br(d.meditation.start)}</span>
+                  : <small>{d.meditation.done} feitas</small>}
               </Link>
               <Link to={`${base}/aprendizagem/escola-sabatina`} className="learn-card c6">
                 <span className="learn-ico"><BookOpen size={30} /></span>
