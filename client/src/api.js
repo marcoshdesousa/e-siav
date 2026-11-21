@@ -47,3 +47,39 @@ export function toForm(obj) {
   }
   return fd;
 }
+
+/**
+ * Prepara uma imagem escolhida no celular para enviar: diminui (no máximo 1200 px) e converte para
+ * JPG (ou PNG, para manter o fundo transparente das logos). Assim fotos do iPhone (HEIC) e fotos
+ * enormes também funcionam. Se o aparelho não conseguir abrir a imagem, avisa.
+ */
+export async function prepareImage(file, max = 1200) {
+  if (!(file instanceof File)) return file;
+  if (file.type === 'image/gif') return file;
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((resolve, reject) => {
+      const i = new Image();
+      i.onload = () => resolve(i);
+      i.onerror = () => reject(new Error('Não deu para abrir essa imagem. Escolha uma foto em JPG ou PNG.'));
+      i.src = url;
+    });
+    const scale = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    const w = Math.max(1, Math.round(img.naturalWidth * scale));
+    const h = Math.max(1, Math.round(img.naturalHeight * scale));
+    const keepAlpha = file.type === 'image/png' || file.type === 'image/webp';
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    if (!keepAlpha) { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); }
+    ctx.drawImage(img, 0, 0, w, h);
+    const type = keepAlpha ? 'image/png' : 'image/jpeg';
+    const blob = await new Promise((resolve) => canvas.toBlob(resolve, type, 0.88));
+    if (!blob) return file;
+    const name = (file.name || 'imagem').replace(/\.[^.]+$/, '') + (keepAlpha ? '.png' : '.jpg');
+    return new File([blob], name, { type });
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}

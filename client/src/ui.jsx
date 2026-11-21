@@ -5,6 +5,7 @@ import { AppIcon, ICONS } from './icons.jsx';
 import { RankMedal, isRankIcon } from './rankMedal.jsx';
 import { Prize } from './trophies.jsx';
 import { gameById } from './pages/games/games.js';
+import { prepareImage } from './api.js';
 
 // ---------- Marca ----------
 export const LogoIcon = ({ size = 40 }) => (
@@ -141,9 +142,17 @@ export function ImagePicker({ value, onChange, label = 'Foto', round = true, nam
         {preview ? <img src={preview} alt="" /> : <span>{name ? initials(name) : <Camera size={26} />}</span>}
       </span>
       <span className="image-picker-label">{label}<small>Toque para escolher</small></span>
-      <input type="file" accept="image/*" hidden onChange={(e) => e.target.files[0] && onChange(e.target.files[0])} />
+      <input type="file" accept="image/*" hidden onChange={(e) => pickImage(e, onChange)} />
     </label>
   );
+}
+
+/** Escolheu uma imagem: prepara (tamanho e formato) e entrega; se não abrir, avisa. */
+export async function pickImage(e, onChange) {
+  const file = e.target.files?.[0];
+  e.target.value = '';
+  if (!file) return;
+  try { onChange(await prepareImage(file)); } catch (err) { notify(err.message, 'error'); }
 }
 
 // ---------- Layout ----------

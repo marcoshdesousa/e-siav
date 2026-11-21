@@ -1018,3 +1018,7 @@ input::-webkit-datetime-edit { padding: 0; }
 .check-row { display: flex; align-items: flex-start; gap: .6rem; padding: .75rem .85rem; border-radius: 14px; background: var(--surface-3); cursor: pointer; font-size: .9rem; }
 .check-row input { width: 20px; height: 20px; flex: none; margin: 0; accent-color: var(--link); }
 .ts-give { display: grid; gap: .45rem; margin: .4rem 0 .8rem; }
+/* Logo que troca com um toque (clube e unidades) */
+.logo-tap { position: relative; display: inline-block; cursor: pointer; flex: none; }
+.logo-tap-cam { position: absolute; right: -4px; bottom: -4px; z-index: 2; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: #fde047; color: #1e3a8a; border: 2px solid #fff; box-shadow: 0 4px 10px rgba(0, 0, 0, .25); }
+.logo-tap-cam.small { width: 22px; height: 22px; right: -3px; bottom: -3px; }

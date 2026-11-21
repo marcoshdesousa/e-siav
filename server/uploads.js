@@ -11,6 +11,8 @@ const EXT = {
   'audio/webm': '.webm', 'audio/ogg': '.ogg', 'audio/mpeg': '.mp3', 'audio/mp4': '.m4a', 'audio/aac': '.aac', 'audio/wav': '.wav', 'audio/x-m4a': '.m4a',
 };
 
+const WEB_IMAGES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
 const storage = (destination) => multer.diskStorage({
   destination,
   filename: (_req, file, cb) => {
@@ -26,8 +28,10 @@ function make(kinds, dir = UPLOAD_DIR, exact = []) {
     fileFilter: (_req, file, cb) => {
       const base = file.mimetype.split(';')[0];
       // SVG enviado por usuário pode conter script: aceitamos só imagens rasterizadas.
-      const ok = (kinds.some((k) => base.startsWith(k + '/')) || exact.includes(base)) && base !== 'image/svg+xml';
-      cb(ok ? null : new HttpError(400, 'Tipo de arquivo não permitido'), ok);
+      // Imagem só nos formatos que todo navegador mostra (HEIC do iPhone, por exemplo, não aparece).
+      const image = base.startsWith('image/');
+      const ok = image ? kinds.includes('image') && WEB_IMAGES.includes(base) : kinds.some((k) => base.startsWith(k + '/')) || exact.includes(base);
+      cb(ok ? null : new HttpError(400, image ? 'Use uma imagem em JPG, PNG ou WEBP' : 'Tipo de arquivo não permitido'), ok);
     },
   });
 }

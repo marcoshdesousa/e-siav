@@ -3,7 +3,7 @@ import { Link, Navigate, Route, Routes, useLocation, useNavigate } from 'react-r
 import { Award, BookImage, Camera, ClipboardCheck, Gamepad2, IdCard, LifeBuoy, Menu, Tent, Trophy, UserRound, BookOpenText, Hourglass, BadgeCheck, Lock, Bell, X, Frame as FrameIcon } from 'lucide-react';
 import { api, toForm } from '../../api.js';
 import { useAuth } from '../../auth.jsx';
-import { Button, Card, Loading, Modal, PageHeader, notify, useAsync, useLoad } from '../../ui.jsx';
+import { Button, Card, Loading, Modal, PageHeader, notify, pickImage, useAsync, useLoad } from '../../ui.jsx';
 import Shell, { MoreMenu } from '../Shell.jsx';
 import { InAppProfile, MemberProfileView } from '../Profiles.jsx';
 import { RequirementsTodo } from '../Requirements.jsx';
@@ -64,7 +64,7 @@ function MyProfile() {
           photoAction={
             <label className="chip yellow" style={{ cursor: 'pointer' }}>
               {busy ? 'Enviando...' : <span className="ico"><Camera size={14} /> Trocar foto</span>}
-              <input type="file" accept="image/*" hidden onChange={(e) => e.target.files[0] && changePhoto(e.target.files[0])} />
+              <input type="file" accept="image/*" hidden onChange={(e) => pickImage(e, changePhoto)} />
             </label>
           }
           frameAction={<Link to={`${base}/molduras`} className="chip yellow"><span className="ico"><FrameIcon size={14} /> Molduras</span></Link>}

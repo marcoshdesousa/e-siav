@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import {
-  Award, KeyRound, UserPlus, Megaphone, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, ClipboardCheck, Globe, FolderOpen, Wrench, LifeBuoy, Share2, Flame, ArrowLeftRight, ClipboardList, Frame as FrameIcon,
+  Award, Camera, KeyRound, UserPlus, Megaphone, ChevronRight, Compass, Flag, Inbox, Map, MapPin, Menu, Tent, Trophy, Users, Wallet, ClipboardCheck, Globe, FolderOpen, Wrench, LifeBuoy, Share2, Flame, ArrowLeftRight, ClipboardList, Frame as FrameIcon,
 } from 'lucide-react';
 import { GroupCertificatesPage } from '../Certificates.jsx';
 import { api, toForm } from '../../api.js';
@@ -16,7 +16,7 @@ import {
 } from './Folders.jsx';
 import { EmbeddedSite, SupportChat } from '../Shared.jsx';
 import {
-  Avatar, Badge, Button, Card, Confirm, Field, ImagePicker, Loading, MedalList, Modal, PageHeader, PositionBadge, Section, ShareButton, Stat, Tabs, notify, useAsync, useLoad,
+  Avatar, Badge, Button, Card, Confirm, Field, ImagePicker, Loading, pickImage, MedalList, Modal, PageHeader, PositionBadge, Section, ShareButton, Stat, Tabs, notify, useAsync, useLoad,
 } from '../../ui.jsx';
 import Shell, { MoreMenu } from '../Shell.jsx';
 import { EventsList, InAppProfile } from '../Profiles.jsx';
@@ -168,8 +168,18 @@ function ClubHome() {
         <>
           <div className="hero">
             <div className="profile-head">
-              <FramedAvatar frame={c.frame} src={c.logo} name={c.name} size={88} square />
-              <Link to={`${base}/molduras`} className="chip yellow"><span className="ico"><FrameIcon size={14} /> Molduras</span></Link>
+              <label className="logo-tap" title="Trocar a logo do clube">
+                <FramedAvatar frame={c.frame} src={c.logo} name={c.name} size={88} square />
+                <span className="logo-tap-cam"><Camera size={16} /></span>
+                <input type="file" accept="image/*" hidden onChange={(e) => pickImage(e, upload('logo'))} />
+              </label>
+              <div className="row wrap" style={{ justifyContent: 'center', gap: '.4rem' }}>
+                <label className="chip yellow" style={{ cursor: 'pointer' }}>
+                  <span className="ico"><Camera size={14} /> Trocar logo</span>
+                  <input type="file" accept="image/*" hidden onChange={(e) => pickImage(e, upload('logo'))} />
+                </label>
+                <Link to={`${base}/molduras`} className="chip yellow"><span className="ico"><FrameIcon size={14} /> Molduras</span></Link>
+              </div>
               <h1>{c.name}</h1>
               <div className="chips"><span className="chip ico"><MapPin size={14} /> {c.district_name}</span><span className="chip ico"><KeyRound size={14} /> Código do clube: <b>{c.code}</b></span></div>
               {c.director_name && <p className="small" style={{ margin: '.2rem 0 .4rem' }}>Diretor(a): <b>{c.director_name}</b>{c.associate_directors ? <> · Associados: {c.associate_directors.split('\n').join(', ')}</> : ''}</p>}
@@ -195,14 +205,6 @@ function ClubHome() {
           </Section>
 
           <ClubInfoForm club={c} onDone={() => { state.reload(); refresh(); }} />
-
-          <Section title="Logo do clube">
-            <Card>
-              <div className="stack">
-                <ImagePicker label="Logo do clube" value={c.logo} onChange={upload('logo')} round={false} name={c.name} />
-              </div>
-            </Card>
-          </Section>
 
           <Section title="Ranking das unidades" action={<Link to={`${base}/ranking`} className="small ico">Ver tudo <ChevronRight size={14} /></Link>}>
             <RankingTable rows={c.units_ranking} link={(r) => `${base}/ver/unidade/${r.id}`} />
@@ -396,6 +398,8 @@ function UnitsPage({ embedded = false }) {
   const state = useLoad(() => api.get('/club/units'));
   const [editing, setEditing] = useState(null);
   const [, run] = useAsync();
+  // O clube troca a logo da unidade direto na lista.
+  const setLogo = (u) => (file) => run(() => api.put('/club/units/' + u.id, toForm({ logo: file })), 'Logo da unidade atualizada!').then(() => state.reload());
   const done = () => { setEditing(null); state.reload(); };
   return (
     <>
@@ -408,12 +412,20 @@ function UnitsPage({ embedded = false }) {
           <div className="list mt">
             {list.map((u) => (
               <div key={u.id} className="list-item">
-                <Avatar src={u.logo} name={u.name} size={52} square />
+                <label className="logo-tap" title={`Trocar a logo da unidade ${u.name}`}>
+                  <Avatar src={u.logo} name={u.name} size={52} square />
+                  <span className="logo-tap-cam small"><Camera size={12} /></span>
+                  <input type="file" accept="image/*" hidden onChange={(e) => pickImage(e, setLogo(u))} />
+                </label>
                 <div className="grow">
                   <div className="title">{u.is_leadership ? '' : `Unidade ${u.number} · `}{u.name} {u.is_leadership ? <Badge kind="yellow">automático</Badge> : null}</div>
                   <div className="sub">{plural(u.member_count, 'membro', 'membros')} · senha <span className="pin-box"><KeyRound size={13} />{u.pin}</span></div>
                   <div className="sub ellipsis">Link: {location.host}/clube/{actor.code}/{u.is_leadership ? 'lideranca' : u.number}</div>
                   <div className="row wrap" style={{ marginTop: '.4rem', gap: '.35rem' }}>
+                    <label className="btn btn-secondary btn-sm" style={{ cursor: 'pointer' }}>
+                      <Camera size={14} /> Trocar logo
+                      <input type="file" accept="image/*" hidden onChange={(e) => pickImage(e, setLogo(u))} />
+                    </label>
                     <Button small variant="secondary" onClick={() => setEditing(u)}>Editar</Button>
                     <Link to={`${base}/ver/unidade/${u.id}`}><Button small variant="ghost">Perfil</Button></Link>
                     {!u.is_leadership && <Confirm text={`Excluir a unidade ${u.name}? Os membros ficarão sem unidade.`} onYes={() => run(() => api.del('/club/units/' + u.id), 'Unidade excluída').then(done)}>Excluir</Confirm>}
