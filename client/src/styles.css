@@ -1022,3 +1022,16 @@ input::-webkit-datetime-edit { padding: 0; }
 .logo-tap { position: relative; display: inline-block; cursor: pointer; flex: none; }
 .logo-tap-cam { position: absolute; right: -4px; bottom: -4px; z-index: 2; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: #fde047; color: #1e3a8a; border: 2px solid #fff; box-shadow: 0 4px 10px rgba(0, 0, 0, .25); }
 .logo-tap-cam.small { width: 22px; height: 22px; right: -3px; bottom: -3px; }
+
+/* Recortar imagem */
+.crop-stage { position: relative; margin: .3rem auto .8rem; overflow: hidden; border-radius: 22px; background: repeating-conic-gradient(#e2e8f0 0 25%, #f8fafc 0 50%) 0 0 / 18px 18px; touch-action: none; user-select: none; cursor: grab; }
+.crop-stage:active { cursor: grabbing; }
+.crop-img { position: absolute; left: 0; top: 0; transform-origin: 0 0; pointer-events: none; }
+.crop-frame { position: absolute; inset: 0; pointer-events: none; border-radius: inherit; box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .9); }
+.crop-frame i { position: absolute; inset: 0; }
+.crop-frame i:first-child { background: linear-gradient(90deg, transparent calc(33.33% - .5px), rgba(255, 255, 255, .55) 33.33%, transparent calc(33.33% + .5px), transparent calc(66.66% - .5px), rgba(255, 255, 255, .55) 66.66%, transparent calc(66.66% + .5px)); }
+.crop-frame i:last-child { background: linear-gradient(180deg, transparent calc(33.33% - .5px), rgba(255, 255, 255, .55) 33.33%, transparent calc(33.33% + .5px), transparent calc(66.66% - .5px), rgba(255, 255, 255, .55) 66.66%, transparent calc(66.66% + .5px)); }
+.crop-stage.round .crop-frame { border-radius: 22px; }
+.crop-stage.round::after { content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: 22px; background: radial-gradient(circle at center, transparent 70.5%, rgba(15, 23, 42, .55) 71%); }
+.crop-tools { display: flex; align-items: center; gap: .5rem; max-width: 340px; margin: 0 auto; }
+.crop-tools input[type=range] { flex: 1; accent-color: var(--link); }

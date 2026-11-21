@@ -126,7 +126,7 @@ export function useAsync() {
   return [busy, run];
 }
 
-export function ImagePicker({ value, onChange, label = 'Foto', round = true, name }) {
+export function ImagePicker({ value, onChange, label = 'Foto', round = true, name, crop = true }) {
   const [preview, setPreview] = useState(null);
   useEffect(() => {
     if (value instanceof File) {
@@ -142,17 +142,28 @@ export function ImagePicker({ value, onChange, label = 'Foto', round = true, nam
         {preview ? <img src={preview} alt="" /> : <span>{name ? initials(name) : <Camera size={26} />}</span>}
       </span>
       <span className="image-picker-label">{label}<small>Toque para escolher</small></span>
-      <input type="file" accept="image/*" hidden onChange={(e) => pickImage(e, onChange)} />
+      <input type="file" accept="image/*" hidden onChange={(e) => pickImage(e, onChange, { crop, round, title: label })} />
     </label>
   );
 }
 
-/** Escolheu uma imagem: prepara (tamanho e formato) e entrega; se não abrir, avisa. */
-export async function pickImage(e, onChange) {
+/** Abre o recorte (cropper.jsx) e devolve a imagem recortada (ou null se cancelar). */
+export const cropImage = (file, opts = {}) => new Promise((resolve, reject) => {
+  window.dispatchEvent(new CustomEvent('dbv-crop', { detail: { ...opts, file, id: Math.random(), resolve: ({ file: f, err }) => (err ? reject(err) : resolve(f)) } }));
+});
+
+/**
+ * Escolheu uma imagem: abre o recorte (quadrado; round mostra a prévia redonda) e entrega a imagem
+ * pronta; sem recorte, só ajusta tamanho e formato. Se não abrir, avisa.
+ */
+export async function pickImage(e, onChange, { crop = true, round = false, title } = {}) {
   const file = e.target.files?.[0];
   e.target.value = '';
   if (!file) return;
-  try { onChange(await prepareImage(file)); } catch (err) { notify(err.message, 'error'); }
+  try {
+    const out = crop ? await cropImage(file, { round, title }) : await prepareImage(file);
+    if (out) onChange(out);
+  } catch (err) { notify(err.message, 'error'); }
 }
 
 // ---------- Layout ----------

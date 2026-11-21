@@ -64,7 +64,7 @@ function MyProfile() {
           photoAction={
             <label className="chip yellow" style={{ cursor: 'pointer' }}>
               {busy ? 'Enviando...' : <span className="ico"><Camera size={14} /> Trocar foto</span>}
-              <input type="file" accept="image/*" hidden onChange={(e) => pickImage(e, changePhoto)} />
+              <input type="file" accept="image/*" hidden onChange={(e) => pickImage(e, changePhoto, { round: true, title: 'Ajustar sua foto' })} />
             </label>
           }
           frameAction={<Link to={`${base}/molduras`} className="chip yellow"><span className="ico"><FrameIcon size={14} /> Molduras</span></Link>}

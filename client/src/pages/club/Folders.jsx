@@ -150,7 +150,7 @@ export function PatrimonioPage() {
             <Button busy={busy} disabled={!f.name.trim()} onClick={save}>Salvar</Button>
           </>}>
           <div className="form">
-            <ImagePicker label="Foto do patrimônio" value={f.photo} onChange={(photo) => setF({ ...f, photo })} round={false} name={f.name} />
+            <ImagePicker crop={false} label="Foto do patrimônio" value={f.photo} onChange={(photo) => setF({ ...f, photo })} round={false} name={f.name} />
             <Field label="Nome"><input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder="Ex.: Barraca 6 pessoas" /></Field>
             <div className="grid2">
               <Field label="Quanto custou (R$)"><input inputMode="decimal" value={f.price} onChange={(e) => setF({ ...f, price: e.target.value })} placeholder="0,00" /></Field>

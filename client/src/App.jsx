@@ -3,6 +3,7 @@ import ClubSignup from './pages/ClubSignup.jsx';
 import { CreateAccount, RegisterClub } from './pages/AppSignup.jsx';
 import { AuthProvider, homeFor, useAuth } from './auth.jsx';
 import { Notices, Spinner } from './ui.jsx';
+import { CropHost } from './cropper.jsx';
 import Login from './pages/Login.jsx';
 import { ClanLinkPage, MemberLinkPage, PublicProfilePage } from './pages/Profiles.jsx';
 import AdminApp from './pages/admin/AdminApp.jsx';
@@ -65,6 +66,7 @@ export default function App() {
           </Routes>
         </BrowserRouter>
         <Notices />
+        <CropHost />
     </AuthProvider>
   );
 }

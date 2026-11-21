@@ -171,12 +171,12 @@ function ClubHome() {
               <label className="logo-tap" title="Trocar a logo do clube">
                 <FramedAvatar frame={c.frame} src={c.logo} name={c.name} size={88} square />
                 <span className="logo-tap-cam"><Camera size={16} /></span>
-                <input type="file" accept="image/*" hidden onChange={(e) => pickImage(e, upload('logo'))} />
+                <input type="file" accept="image/*" hidden onChange={(e) => pickImage(e, upload('logo'), { title: 'Ajustar a logo do clube' })} />
               </label>
               <div className="row wrap" style={{ justifyContent: 'center', gap: '.4rem' }}>
                 <label className="chip yellow" style={{ cursor: 'pointer' }}>
                   <span className="ico"><Camera size={14} /> Trocar logo</span>
-                  <input type="file" accept="image/*" hidden onChange={(e) => pickImage(e, upload('logo'))} />
+                  <input type="file" accept="image/*" hidden onChange={(e) => pickImage(e, upload('logo'), { title: 'Ajustar a logo do clube' })} />
                 </label>
                 <Link to={`${base}/molduras`} className="chip yellow"><span className="ico"><FrameIcon size={14} /> Molduras</span></Link>
               </div>
@@ -415,7 +415,7 @@ function UnitsPage({ embedded = false }) {
                 <label className="logo-tap" title={`Trocar a logo da unidade ${u.name}`}>
                   <Avatar src={u.logo} name={u.name} size={52} square />
                   <span className="logo-tap-cam small"><Camera size={12} /></span>
-                  <input type="file" accept="image/*" hidden onChange={(e) => pickImage(e, setLogo(u))} />
+                  <input type="file" accept="image/*" hidden onChange={(e) => pickImage(e, setLogo(u), { title: `Logo da unidade ${u.name}` })} />
                 </label>
                 <div className="grow">
                   <div className="title">{u.is_leadership ? '' : `Unidade ${u.number} · `}{u.name} {u.is_leadership ? <Badge kind="yellow">automático</Badge> : null}</div>
@@ -424,7 +424,7 @@ function UnitsPage({ embedded = false }) {
                   <div className="row wrap" style={{ marginTop: '.4rem', gap: '.35rem' }}>
                     <label className="btn btn-secondary btn-sm" style={{ cursor: 'pointer' }}>
                       <Camera size={14} /> Trocar logo
-                      <input type="file" accept="image/*" hidden onChange={(e) => pickImage(e, setLogo(u))} />
+                      <input type="file" accept="image/*" hidden onChange={(e) => pickImage(e, setLogo(u), { title: `Logo da unidade ${u.name}` })} />
                     </label>
                     <Button small variant="secondary" onClick={() => setEditing(u)}>Editar</Button>
                     <Link to={`${base}/ver/unidade/${u.id}`}><Button small variant="ghost">Perfil</Button></Link>
