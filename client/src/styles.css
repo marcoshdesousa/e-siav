@@ -1035,3 +1035,8 @@ input::-webkit-datetime-edit { padding: 0; }
 .crop-stage.round::after { content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: 22px; background: radial-gradient(circle at center, transparent 70.5%, rgba(15, 23, 42, .55) 71%); }
 .crop-tools { display: flex; align-items: center; gap: .5rem; max-width: 340px; margin: 0 auto; }
 .crop-tools input[type=range] { flex: 1; accent-color: var(--link); }
+.test-mode { display: flex; align-items: center; gap: .8rem; padding: .9rem 1rem; margin: .8rem 0; border-radius: 16px; border: 2px dashed var(--card-border); }
+.test-mode b { display: block; }
+.test-mode small { display: block; color: var(--muted); font-size: .8rem; margin-top: .15rem; }
+.test-mode.on { border-color: #16a34a; background: color-mix(in srgb, #22c55e 10%, var(--surface)); }
+.test-mode.on b { color: #15803d; }

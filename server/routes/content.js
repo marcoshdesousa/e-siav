@@ -5,6 +5,7 @@ import { imageUpload, fileUrl, privateImageUpload, privateUrl } from '../uploads
 import { fail, int, str, bool, ageFrom, parseJson } from '../util.js';
 import { parseModes } from '../modes.js';
 import { startCheckout, confirmPurchase } from '../payments.js';
+import { allFree } from '../plus.js';
 import { MAX_FOTOS_ENVIO } from '../config.js';
 
 // Cursos (grátis ou pagos). Cada aula pode pedir relatório, foto e/ou quiz; o Administrador
@@ -15,7 +16,7 @@ const r = Router();
 const TYPES = ['curso'];
 
 function hasAccess(memberId, c) {
-  return !!c.is_free || !!get('SELECT 1 FROM content_access WHERE member_id = ? AND content_id = ?', memberId, c.id);
+  return !!c.is_free || allFree() || !!get('SELECT 1 FROM content_access WHERE member_id = ? AND content_id = ?', memberId, c.id);
 }
 
 /** Desbravador não vê classes de líder; conselheiro vê todos. */

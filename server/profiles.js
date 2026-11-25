@@ -1,6 +1,6 @@
 import { all, get } from './db.js';
 import { ageFrom, memberKind, roleOf, cargoOf } from './util.js';
-import { isPlus } from './plus.js';
+import { paidPlus as isPlus } from './plus.js';
 import { frameOf } from './frames.js';
 import { clubsRanking, unitsRanking, clubUnitsRanking, membersRanking, leadersRanking, clubMembersRanking, clubLeadersRanking, positionOf } from './rankings.js';
 

@@ -861,3 +861,20 @@ test('aprendizagem diária: ano bíblico (sequência, dias perdidos, futuro tran
   const tok = (await admin.post('/admin/bom-lider/link')).body.token;
   assert.ok(tok && (await marcos.get(`/bom-lider/paginas/${tok}`)).body.pages);
 });
+
+test('modo teste: o geral libera tudo (jogos, DBV+ e liderança sem assinatura) e desliga', async () => {
+  const admin = await login('membros', 'admin', 'admin123');
+  const aguias = await login('clube', 'aguias', 'AG2026');
+  assert.equal((await aguias.put('/admin/modo-teste', { on: true })).status, 403, 'só o geral');
+  assert.equal((await admin.get('/admin/modo-teste')).body.on, false, 'banco novo começa desligado');
+  const tiago = await login('membros', 'davi');
+  const before = (await tiago.post('/jogos/memoria/pontos', { score: 5 })).status;
+  assert.equal((await admin.put('/admin/modo-teste', { on: true })).body.on, true);
+  const t2 = await login('membros', 'davi');
+  assert.equal((await t2.post('/jogos/memoria/pontos', { score: 5 })).status, 200, 'jogo do DBV+ liberado');
+  assert.equal((await t2.get('/plus')).body.test, true);
+  assert.equal((await t2.get('/plus')).body.open, true);
+  assert.equal((await admin.put('/admin/modo-teste', { on: false })).body.on, false);
+  const t3 = await login('membros', 'davi');
+  if (!t3.actor.plus) assert.equal((await t3.post('/jogos/memoria/pontos', { score: 5 })).status, before === 200 ? 200 : 402, 'volta ao normal');
+});

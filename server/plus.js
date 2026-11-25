@@ -52,8 +52,15 @@ export function plusOf(memberId) {
   const active = p.until > new Date().toISOString();
   return { ...p, trial: !!p.trial && active, trial_ended: !!p.trial && !active, picks: p.picks ? JSON.parse(p.picks) : null, active, plan_name: p.trial && active ? 'Teste grátis' : PLANS[p.plan]?.name || 'DBV+' };
 }
-/** Assinante ativo do DBV+ (o DBV só libera o acesso, sem os benefícios). */
-export const isPlus = (memberId) => { const p = plusOf(memberId); return !!p?.active && p.plan !== 'app'; };
+/**
+ * Modo teste (o administrador geral liga e desliga): tudo liberado para todas as contas, sem pagar
+ * (jogos, DBV+, Bom Líder, cursos, liderança sem assinatura e todos os dias dos estudos).
+ */
+export const allFree = () => get(`SELECT value FROM settings WHERE key = 'liberado_teste'`)?.value === '1';
+/** Assinou de verdade o DBV+ (selo de verificado, pacotinhos em triplo). */
+export const paidPlus = (memberId) => { const p = plusOf(memberId); return !!p?.active && p.plan !== 'app'; };
+/** Benefícios do DBV+ liberados (assinante ativo, ou modo teste). */
+export const isPlus = (memberId) => allFree() || paidPlus(memberId);
 /** Algum plano ativo (o DBV também conta): libera o app para quem entrou pelo App Brasil. */
 export const hasAccess = (memberId) => !!plusOf(memberId)?.active;
 /**
@@ -68,6 +75,7 @@ export const plansFor = (needsAccess) => (needsAccess ? [PLANS.app, PLANS.plus] 
  */
 export function leaderAccess(memberId, isLeader) {
   if (!isLeader) return null;
+  if (allFree()) return { locked: false, until: null, trial: false, trial_ended: false, free: true };
   if (!get('SELECT 1 FROM member_plus WHERE member_id = ?', memberId)) grantPlus(memberId, 'app', APP_TRIAL_DAYS, { trial: true });
   const p = plusOf(memberId);
   return { locked: !p?.active, until: p?.active ? p.until : null, trial: !!p?.trial, trial_ended: !!p?.trial_ended };

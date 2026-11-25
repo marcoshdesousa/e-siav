@@ -28,6 +28,28 @@ import { AppTransfersPage } from '../club/Transfers.jsx';
 
 const base = '/admin';
 
+/** Modo teste: tudo liberado para todas as contas (desligar no lançamento). */
+function TestModeCard() {
+  const state = useLoad(() => api.get('/admin/modo-teste'));
+  const [busy, run] = useAsync();
+  const on = !!state.data?.on;
+  if (!state.data) return null;
+  return (
+    <Card className={'test-mode' + (on ? ' on' : '')}>
+      <div className="grow">
+        <b>Modo teste: {on ? 'tudo liberado' : 'desligado'}</b>
+        <small>{on
+          ? 'Todas as contas usam tudo sem pagar: jogos, DBV+, Bom Líder, cursos, liderança sem assinatura e todos os dias dos estudos. Desligue no lançamento.'
+          : 'O app segue as regras normais: planos, datas de início dos estudos e jogos do DBV+.'}</small>
+      </div>
+      <Button small variant={on ? 'secondary' : 'primary'} busy={busy}
+        onClick={() => run(() => api.put('/admin/modo-teste', { on: !on }), on ? 'Modo teste desligado' : 'Tudo liberado para teste').then(state.reload)}>
+        {on ? 'Desligar' : 'Ligar'}
+      </Button>
+    </Card>
+  );
+}
+
 function AdminHome() {
   const { actor } = useAuth();
   const state = useLoad(() => api.get('/admin/overview'));
@@ -40,6 +62,7 @@ function AdminHome() {
           <p className="muted">Olá, {actor.name}! {actor.district_id ? <>Você cuida do distrito <b>{actor.district_name}</b>.</> : 'Você cuida de toda a plataforma.'}</p>
         </div>
       </div>
+      {!actor.district_id && <TestModeCard />}
       <Loading {...state}>
         {(o) => (
           <Section title="Visão geral">

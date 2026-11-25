@@ -43,6 +43,7 @@ export default function PlusPage() {
       <Loading {...state}>
         {(d) => (
           <>
+            {d.test && <div className="test-mode on"><div className="grow"><b>Modo teste: tudo liberado</b><small>Enquanto o app está em teste, você usa tudo sem pagar.</small></div></div>}
             {d.app ? (
               <div className="plus-hero plus-hero-app">
                 <img src="/marca/logo.svg" alt="" />

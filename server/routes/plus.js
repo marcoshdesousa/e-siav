@@ -4,13 +4,27 @@ import { all, get, run } from '../db.js';
 import { requireAuth, requireGeneral } from '../auth.js';
 import { fail, int } from '../util.js';
 import { createPayment, onPaid, paymentOut } from '../payments.js';
-import { PLANS, PLUS_DAYS, PLUS_PACKS, activatePlus, grantPlus, plansFor, plusOf, plusOpen, removePlus } from '../plus.js';
+import { PLANS, PLUS_DAYS, PLUS_PACKS, activatePlus, allFree, grantPlus, plansFor, plusOf, plusOpen, removePlus } from '../plus.js';
+import { setSetting } from '../fees.js';
 
 const r = Router();
 const member = requireAuth('member');
 const admin = requireAuth('admin');
 
 onPaid('dbvplus', (p, ref) => activatePlus(p.member_id, ref.plan));
+
+// Modo teste: liga uma vez (pedido do dono do app para testar com as contas que já existem).
+// Banco novo (sem nenhum administrador ainda, ex.: os testes) começa com ele desligado.
+if (!get(`SELECT 1 FROM app_flags WHERE key = 'liberado-teste-v1'`)) {
+  if (get('SELECT 1 FROM admins LIMIT 1')) setSetting('liberado_teste', '1');
+  run(`INSERT OR IGNORE INTO app_flags (key) VALUES ('liberado-teste-v1')`);
+}
+// O administrador geral liga e desliga o modo teste (tudo liberado, sem pagar).
+r.get('/admin/modo-teste', admin, requireGeneral, (_req, res) => res.json({ on: allFree() }));
+r.put('/admin/modo-teste', admin, requireGeneral, (req, res) => {
+  setSetting('liberado_teste', req.body.on ? '1' : '0');
+  res.json({ on: allFree() });
+});
 
 /** Benefícios (os que ainda não estão prontos aparecem por último, como "em breve"). */
 // O que todos têm de graça, sem pagar nada.
@@ -41,7 +55,7 @@ r.get('/plus', member, (req, res) => {
   const needs = !!req.actor.access;
   res.json({
     plans: plansFor(needs), benefits: BENEFITS, free: req.actor.app ? APP_FREE : FREE, days: PLUS_DAYS, packs: PLUS_PACKS,
-    app: req.actor.access, mine: p, open: plusOpen(req.actor.id),
+    app: req.actor.access, mine: p, open: plusOpen(req.actor.id), test: allFree(),
     picks_names: p?.picks ? all(`SELECT id, name, category FROM content WHERE id IN (${p.picks.map(() => '?').join(',')})`, ...p.picks) : [],
   });
 });

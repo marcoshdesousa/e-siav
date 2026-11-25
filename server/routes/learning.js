@@ -15,7 +15,7 @@ import {
 } from '../bible.js';
 import { audioOf, audioSummary } from '../audio.js';
 import { giveBiblePack } from '../streaks.js';
-import { gatedAudio, plusOpen } from '../plus.js';
+import { allFree, gatedAudio, plusOpen } from '../plus.js';
 
 const r = Router();
 const member = requireAuth('member');
@@ -25,7 +25,7 @@ const PASS = 3; // acertos (de 5) para concluir o dia
 // abertos para testar antes do lançamento.
 // Modo de teste (libera os dias que ainda não chegaram e as aulas fora de ordem): desligado, só
 // liga se o administrador ligar. Desligado de vez uma vez para o que já estava no ar.
-export const testMode = () => setting('biblia_teste') === '1';
+export const testMode = () => setting('biblia_teste') === '1' || allFree();
 if (!get(`SELECT 1 FROM app_flags WHERE key = 'modo-teste-desligado-v1'`)) {
   setSetting('biblia_teste', '0');
   run(`INSERT OR IGNORE INTO app_flags (key) VALUES ('modo-teste-desligado-v1')`);
