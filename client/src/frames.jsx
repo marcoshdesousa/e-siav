@@ -190,12 +190,12 @@ export function FrameStudio({ value, onChange, sample = 'Desbravador' }) {
   return (
     <div className="frame-studio">
       <div className="frame-hero small"><FramedAvatar frame={f} name={sample} size={92} /></div>
-      <Field label="Estilo">
+      <Field group label="Estilo">
         <div className="chip-pick">
           {FRAME_STYLES.map(([k, l]) => <button key={k} type="button" className={f.style === k ? 'on' : ''} onClick={() => set({ style: k })}>{l}</button>)}
         </div>
       </Field>
-      <Field label="Cor">
+      <Field group label="Cor">
         <div className="frame-colors">
           {FRAME_COLORS.map(([k, l]) => {
             const p = FRAME_PAL[k];

@@ -87,10 +87,12 @@ function FormBody({ f, slug }) {
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [step, done]);
   const picked = (v, o) => !!v && (v !== 'Outro' || o.trim().length >= 2);
   // Distrito escolhido: aparecem os clubes dele (distrito "Outro": só escrever o clube).
+  const withDistrict = ask === 'distrito' || ask === 'distrito_so';
+  const withClub = ask === 'clube' || ask === 'distrito';
   const districtClubs = ask === 'distrito' ? (f.districts.find((d) => d.name === district)?.clubs || []) : f.clubs;
   const who = name.trim().length >= 3
-    && (ask !== 'distrito' || picked(district, districtOther))
-    && (ask === 'nome' || picked(club, other));
+    && (!withDistrict || picked(district, districtOther))
+    && (!withClub || picked(club, other));
 
   if (!f.active) return <div className="pf-card pf-end"><CheckCircle2 size={48} /><h2>Formulário encerrado</h2><p>Este formulário não está mais recebendo respostas. Obrigado!</p></div>;
   if (done) {
@@ -107,7 +109,7 @@ function FormBody({ f, slug }) {
     setBusy(true); setErr('');
     try {
       await api.post(`/public/formularios/${slug}`, {
-        name, district: ask === 'distrito' ? district : undefined, district_other: districtOther, club: ask === 'nome' ? undefined : club, club_other: other, answers, version: f.version,
+        name, district: withDistrict ? district : undefined, district_other: districtOther, club: withClub ? club : undefined, club_other: other, answers, version: f.version,
       });
       setDone(true);
     } catch (e) {
@@ -127,7 +129,7 @@ function FormBody({ f, slug }) {
           <span>Seu nome</span>
           <input value={name} maxLength={80} onChange={(e) => setName(e.target.value)} placeholder="Nome e sobrenome" autoComplete="name" />
         </label>
-        {ask === 'distrito' && (
+        {withDistrict && (
           <Choose label="Seu distrito" options={f.districts.map((d) => d.name)} value={district}
             onChange={(v) => { setDistrict(v); setClub(''); setOther(''); }} other={districtOther} onOther={setDistrictOther}
             otherLabel="Outro distrito" placeholder="Nome do seu distrito" />

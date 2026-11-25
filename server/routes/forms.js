@@ -46,7 +46,9 @@ run(`CREATE TABLE IF NOT EXISTS form_versions (
 for (const [t, col, def] of [['forms', 'version', 'INTEGER NOT NULL DEFAULT 1'], ['form_responses', 'version', 'INTEGER NOT NULL DEFAULT 1'],
   ['forms', 'owner_type', "TEXT NOT NULL DEFAULT 'admin'"], ['forms', 'owner_id', 'INTEGER NOT NULL DEFAULT 0'],
   // O que a pessoa informa antes de começar: só o nome, nome e clube, ou nome, distrito e clube.
-  ['forms', 'ask', "TEXT NOT NULL DEFAULT 'clube'"], ['form_responses', 'district', 'TEXT']]) {
+  ['forms', 'ask', "TEXT NOT NULL DEFAULT 'clube'"], ['form_responses', 'district', 'TEXT'],
+  // Distritos escritos por quem criou, cada um com os seus clubes: [{ name, clubs: [...] }].
+  ['forms', 'districts', "TEXT NOT NULL DEFAULT '[]'"]]) {
   if (!all(`PRAGMA table_info(${t})`).some((c) => c.name === col)) run(`ALTER TABLE ${t} ADD COLUMN ${col} ${def}`);
 }
 
@@ -96,13 +98,16 @@ if (!get(`SELECT 1 FROM app_flags WHERE key = 'formulario-avaliacao-2026'`)) {
 }
 ensureVersions();
 
-const parse = (f) => f && { ...f, clubs: JSON.parse(f.clubs), questions: JSON.parse(f.questions), active: !!f.active };
+const parse = (f) => f && { ...f, clubs: JSON.parse(f.clubs), districts: JSON.parse(f.districts || '[]'), questions: JSON.parse(f.questions), active: !!f.active };
 const bySlug = (slug) => parse(get('SELECT * FROM forms WHERE slug = ?', String(slug)));
-const ASKS = ['nome', 'clube', 'distrito'];
+/** nome: só o nome; clube: nome e clube; distrito_so: nome e distrito; distrito: nome, distrito e clube. */
+const ASKS = ['nome', 'clube', 'distrito_so', 'distrito'];
 /** Formulário do clube que não pergunta o clube: a resposta já fica com o nome do clube. */
 const fixedClub = (f) => (f.owner_type === 'club' && (f.ask === 'nome' || (f.ask === 'clube' && !f.clubs.length))
   ? get('SELECT name FROM clubs WHERE id = ?', f.owner_id)?.name || null : null);
-/** Distritos do app com os clubes de cada um (para "nome, distrito e clube"). */
+/** Distritos do app com os clubes de cada um (sugestão para preencher a lista no formulário). */
+/** Os distritos do formulário (formulário antigo sem lista: os do app). */
+const districtsOf = (f) => (f.districts.length ? f.districts : districtList());
 const districtList = () => {
   const clubs = all('SELECT name, district_id FROM clubs WHERE is_app = 0 ORDER BY name');
   return all('SELECT id, name FROM districts WHERE is_app = 0 ORDER BY name')
@@ -122,7 +127,7 @@ r.get('/public/formularios/:slug', (req, res) => {
   const fixed = fixedClub(f);
   res.json({
     slug: f.slug, title: f.title, description: f.description, ask: fixed ? 'nome' : f.ask, clubs: f.ask === 'clube' ? f.clubs : [],
-    districts: f.ask === 'distrito' && !fixed ? districtList() : [], club_fixed: fixed, questions: f.questions, version: f.version, active: f.active,
+    districts: f.ask.startsWith('distrito') && !fixed ? districtsOf(f) : [], club_fixed: fixed, questions: f.questions, version: f.version, active: f.active,
   });
 });
 
@@ -152,11 +157,11 @@ r.post('/public/formularios/:slug', (req, res) => {
   const fixed = fixedClub(f);
   let club = fixed || '';
   let district = null;
-  if (!fixed && f.ask === 'distrito') {
+  if (!fixed && f.ask.startsWith('distrito')) {
     district = typed(req.body.district, req.body.district_other);
     if (district.length < 2) fail(400, 'Escolha o seu distrito');
   }
-  if (!fixed && f.ask !== 'nome') {
+  if (!fixed && (f.ask === 'clube' || f.ask === 'distrito')) {
     club = typed(req.body.club, req.body.club_other);
     if (club.length < 2) fail(400, 'Escolha o seu clube');
   }
@@ -211,15 +216,26 @@ function cleanForm(body) {
   if (!questions.length) fail(400, 'Coloque pelo menos uma pergunta');
   if (questions.some((q) => q.type === 'escolha' && q.options.length < 2)) fail(400, 'Pergunta de escolha precisa de pelo menos 2 opções');
   const ask = ASKS.includes(body.ask) ? body.ask : 'clube';
-  return { title, description: String(body.description || '').trim().slice(0, 400), clubs: ask === 'clube' ? clubs : [], questions, ask };
+  const districts = (Array.isArray(body.districts) ? body.districts : []).map((d) => ({
+    name: String(d?.name || '').trim().slice(0, 60),
+    clubs: ask === 'distrito' ? (Array.isArray(d?.clubs) ? d.clubs : []).map((c) => String(c).trim().slice(0, 60)).filter(Boolean).slice(0, 60) : [],
+  })).filter((d) => d.name).slice(0, 40);
+  if (ask === 'clube' && !clubs.length && !body.owner_club) fail(400, 'Coloque pelo menos um clube na lista');
+  if (ask.startsWith('distrito') && !districts.length) fail(400, 'Coloque pelo menos um distrito');
+  const empty = ask === 'distrito' && districts.find((d) => !d.clubs.length);
+  if (empty) fail(400, `Coloque pelo menos um clube no ${empty.name}`);
+  return { title, description: String(body.description || '').trim().slice(0, 400), clubs: ask === 'clube' ? clubs : [], districts: ask.startsWith('distrito') ? districts : [], questions, ask };
 }
 
+// Sugestão: os distritos do app com os clubes (para não precisar escrever tudo).
+r.get(P('-distritos'), ...manager, (_req, res) => res.json(districtList()));
+
 r.post(P(), ...manager, (req, res) => {
-  const f = cleanForm(req.body);
+  const f = cleanForm({ ...req.body, owner_club: req.owner[0] === 'club' });
   let slug = slugify(req.body.slug || f.title);
   for (let i = 2; get('SELECT 1 FROM forms WHERE slug = ?', slug); i++) slug = `${slugify(req.body.slug || f.title).slice(0, 36)}-${i}`;
-  const id = Number(run('INSERT INTO forms (slug, title, description, clubs, questions, ask, owner_type, owner_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-    slug, f.title, f.description, JSON.stringify(f.clubs), JSON.stringify(f.questions), f.ask, ...req.owner).lastInsertRowid);
+  const id = Number(run('INSERT INTO forms (slug, title, description, clubs, districts, questions, ask, owner_type, owner_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    slug, f.title, f.description, JSON.stringify(f.clubs), JSON.stringify(f.districts), JSON.stringify(f.questions), f.ask, ...req.owner).lastInsertRowid);
   run('INSERT INTO form_versions (form_id, version, questions) VALUES (?, 1, ?)', id, JSON.stringify(f.questions));
   res.json(parse(get('SELECT * FROM forms WHERE id = ?', id)));
 });
@@ -235,7 +251,7 @@ r.put(P('/:id'), ...manager, (req, res) => {
 // respostas que já existem continuam com as perguntas que foram respondidas.
 r.put(P('/:id/editar'), ...manager, (req, res) => {
   const cur = own(req, req.params.id);
-  const f = cleanForm(req.body);
+  const f = cleanForm({ ...req.body, owner_club: req.owner[0] === 'club' });
   // Pergunta que mudou de tipo vira outra pergunta (as respostas antigas não se misturam).
   const before = new Map(cur.questions.map((q) => [q.id, q.type]));
   f.questions = f.questions.map((q) => (before.has(q.id) && before.get(q.id) !== q.type ? { ...q, id: newId() } : q));
@@ -244,8 +260,8 @@ r.put(P('/:id/editar'), ...manager, (req, res) => {
     version++;
     run('INSERT INTO form_versions (form_id, version, questions) VALUES (?, ?, ?)', cur.id, version, JSON.stringify(f.questions));
   }
-  run('UPDATE forms SET title = ?, description = ?, clubs = ?, questions = ?, ask = ?, version = ? WHERE id = ?',
-    f.title, f.description, JSON.stringify(f.clubs), JSON.stringify(f.questions), f.ask, version, cur.id);
+  run('UPDATE forms SET title = ?, description = ?, clubs = ?, districts = ?, questions = ?, ask = ?, version = ? WHERE id = ?',
+    f.title, f.description, JSON.stringify(f.clubs), JSON.stringify(f.districts), JSON.stringify(f.questions), f.ask, version, cur.id);
   res.json(parse(get('SELECT * FROM forms WHERE id = ?', cur.id)));
 });
 

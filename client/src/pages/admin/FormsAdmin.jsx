@@ -24,12 +24,20 @@ function FormEditor({ form, onClose, onDone, prefix, club }) {
   // O que a pessoa informa antes de começar.
   const [ask, setAsk] = useState(form?.ask || (club ? 'nome' : 'clube'));
   const [clubs, setClubs] = useState((form?.clubs || (club ? [] : ['Clube Titânio', 'Clube Alfa', 'Clube Querubins', 'Clube Astro de Luz', 'Clube Estrela Guia', 'Clube Samuel Snow'])).join('\n'));
+  // Distritos (cada um com os seus clubes, um por linha).
+  const [districts, setDistricts] = useState(() => (form?.districts?.length ? form.districts : [{ name: '', clubs: [] }]).map((d) => ({ name: d.name, clubsText: (d.clubs || []).join('\n') })));
+  const setD = (i, patch) => setDistricts((l) => l.map((d, k) => (k === i ? { ...d, ...patch } : d)));
+  const fromApp = async () => {
+    const list = await api.get(`${prefix}-distritos`).catch(() => []);
+    if (list.length) setDistricts(list.map((d) => ({ name: d.name, clubsText: d.clubs.join('\n') })));
+  };
   const [qs, setQs] = useState(form ? form.questions.map((q) => ({ ...q, optionsText: (q.options || []).join('\n') })) : [{ type: 'estrelas', q: '' }]);
   const [busy, run] = useAsync();
   const setQ = (i, patch) => setQs((l) => l.map((q, k) => (k === i ? { ...q, ...patch } : q)));
   const move = (i, d) => setQs((l) => { const c = [...l]; const j = i + d; if (j < 0 || j >= c.length) return l; [c[i], c[j]] = [c[j], c[i]]; return c; });
   const body = () => ({
     title, description, ask, clubs: ask === 'clube' ? clubs.split('\n') : [],
+    districts: ask.startsWith('distrito') ? districts.map((d) => ({ name: d.name, clubs: d.clubsText.split('\n') })) : [],
     questions: qs.map(({ optionsText, ...q }) => ({ ...q, options: q.type === 'escolha' ? String(optionsText || '').split('\n') : undefined })),
   });
   const save = () => run(() => (form ? api.put(`${prefix}/${form.id}/editar`, body()) : api.post(prefix, body())), form ? 'Formulário atualizado' : 'Formulário criado').then((f) => f && onDone(f));
@@ -38,12 +46,13 @@ function FormEditor({ form, onClose, onDone, prefix, club }) {
       {form && <p className="small muted" style={{ marginTop: 0 }}>O link continua o mesmo e as respostas que já chegaram não mudam. Quem abrir o link depois de salvar já vê o formulário novo.</p>}
       <Field label="Título"><input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex.: Avaliação do Campori" /></Field>
       <Field label="Texto de abertura" hint="Opcional"><textarea rows={2} value={description} onChange={(e) => setDescription(e.target.value)} /></Field>
-      <Field label="Antes de começar, a pessoa informa">
+      <Field group label="Antes de começar, a pessoa informa">
         <div className="fa-ask">
           {[
             ['nome', 'Só o nome', club ? 'A resposta já vem com o nome do seu clube' : 'Sem clube e sem distrito'],
             ['clube', 'Nome e clube', 'Escolhe o clube na lista que você escrever'],
-            ['distrito', 'Nome, distrito e clube', 'Escolhe o distrito e depois os clubes dele (do app)'],
+            ['distrito_so', 'Nome e distrito', 'Escolhe o distrito na lista que você escrever'],
+            ['distrito', 'Nome, distrito e clube', 'Escolhe o distrito e aparecem os clubes dele'],
           ].map(([k, l, h]) => (
             <button key={k} type="button" className={ask === k ? 'on' : ''} onClick={() => setAsk(k)}>
               <span className="pf-radio">{ask === k && <Check size={13} />}</span>
@@ -53,6 +62,25 @@ function FormEditor({ form, onClose, onDone, prefix, club }) {
         </div>
       </Field>
       {ask === 'clube' && <Field label="Clubes para escolher" hint="Um por linha. A opção “Outro clube” aparece sozinha."><textarea rows={4} value={clubs} onChange={(e) => setClubs(e.target.value)} /></Field>}
+      {ask.startsWith('distrito') && (
+        <div className="fa-districts">
+          <div className="row between" style={{ alignItems: 'center' }}>
+            <span className="field-label" style={{ margin: 0 }}>{ask === 'distrito' ? 'Distritos e os clubes de cada um' : 'Distritos para escolher'}</span>
+            <Button small variant="secondary" onClick={fromApp}>Usar os do app</Button>
+          </div>
+          {districts.map((d, i) => (
+            <div key={i} className="fa-district">
+              <div className="fa-q-row">
+                <input value={d.name} maxLength={60} onChange={(e) => setD(i, { name: e.target.value })} placeholder={`Nome do distrito ${i + 1}`} />
+                <button type="button" className="icon-btn" aria-label="Tirar distrito" disabled={districts.length === 1} onClick={() => setDistricts((l) => l.filter((_, k) => k !== i))}><Trash2 size={16} /></button>
+              </div>
+              {ask === 'distrito' && <textarea rows={3} value={d.clubsText} onChange={(e) => setD(i, { clubsText: e.target.value })} placeholder="Clubes deste distrito, um por linha" />}
+            </div>
+          ))}
+          <Button small variant="secondary" onClick={() => setDistricts((l) => [...l, { name: '', clubsText: '' }])}><Plus size={14} /> Adicionar distrito</Button>
+          <small className="muted">As opções “Outro distrito”{ask === 'distrito' ? ' e “Outro clube”' : ''} aparecem sozinhas.</small>
+        </div>
+      )}
       <span className="field-label">Perguntas</span>
       {qs.map((q, i) => (
         <div key={q.id || `n${i}`} className="fa-q">

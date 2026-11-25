@@ -101,21 +101,30 @@ test('clube cria o próprio formulário; a resposta já fica com o nome do clube
   assert.equal((await call('POST', '/club/formularios', { title: 'X', questions: [{ type: 'texto', q: 'Oi?' }] }, unit)).status, 403);
 });
 
-test('antes de começar: só o nome, nome e clube, ou distrito e depois os clubes dele; agradecimento serve para tudo', async () => {
+test('antes de começar: só o nome, nome e clube, nome e distrito, ou distrito e os clubes dele (escritos por quem criou)', async () => {
   const admin = await cookieOf('membros', 'admin', 'admin123');
   const q = [{ type: 'simnao', q: 'Gostou?' }];
   const so = (await call('POST', '/admin/formularios', { title: 'Só nome', ask: 'nome', questions: q }, admin)).body;
-  const p1 = (await call('GET', `/public/formularios/${so.slug}`)).body;
-  assert.equal(p1.ask, 'nome');
+  assert.equal((await call('GET', `/public/formularios/${so.slug}`)).body.ask, 'nome');
   assert.equal((await call('POST', `/public/formularios/${so.slug}`, { name: 'Marcos Silva', answers: ['sim'] })).status, 200, 'sem clube');
-  const di = (await call('POST', '/admin/formularios', { title: 'Com distrito', ask: 'distrito', questions: q }, admin)).body;
+  // Precisa da lista: pelo menos um clube, um distrito, e cada distrito com clube.
+  assert.equal((await call('POST', '/admin/formularios', { title: 'Sem clubes', ask: 'clube', clubs: [], questions: q }, admin)).status, 400);
+  assert.equal((await call('POST', '/admin/formularios', { title: 'Sem distrito', ask: 'distrito', districts: [], questions: q }, admin)).status, 400);
+  assert.equal((await call('POST', '/admin/formularios', { title: 'Distrito vazio', ask: 'distrito', districts: [{ name: 'Distrito 1', clubs: [] }], questions: q }, admin)).status, 400);
+  const districts = [{ name: 'Distrito 1', clubs: ['Clube A', 'Clube B'] }, { name: 'Distrito 2', clubs: ['Clube C'] }];
+  const di = (await call('POST', '/admin/formularios', { title: 'Com distrito', ask: 'distrito', districts, questions: q }, admin)).body;
   const p2 = (await call('GET', `/public/formularios/${di.slug}`)).body;
-  assert.equal(p2.ask, 'distrito');
-  const d = p2.districts.find((x) => x.clubs.length);
-  assert.ok(d, 'distritos do app com os clubes');
-  assert.equal((await call('POST', `/public/formularios/${di.slug}`, { name: 'Marcos Silva', club: d.clubs[0], answers: ['sim'] })).status, 400, 'precisa do distrito');
-  assert.equal((await call('POST', `/public/formularios/${di.slug}`, { name: 'Marcos Silva', district: d.name, club: d.clubs[0], answers: ['sim'] })).status, 200);
+  assert.deepEqual(p2.districts, districts, 'os distritos e clubes que quem criou escreveu');
+  assert.equal((await call('POST', `/public/formularios/${di.slug}`, { name: 'Marcos Silva', club: 'Clube C', answers: ['sim'] })).status, 400, 'precisa do distrito');
+  assert.equal((await call('POST', `/public/formularios/${di.slug}`, { name: 'Marcos Silva', district: 'Distrito 2', club: 'Clube C', answers: ['sim'] })).status, 200);
   assert.equal((await call('POST', `/public/formularios/${di.slug}`, { name: 'Ana Lima', district: 'Outro', district_other: 'Distrito Norte', club: 'Outro', club_other: 'Clube Sol', answers: ['nao'] })).status, 200);
   const res = (await call('GET', `/admin/formularios/${di.id}/respostas`, null, admin)).body.responses;
-  assert.deepEqual(res.map((r) => [r.district, r.club]).sort(), [[d.name, d.clubs[0]], ['Distrito Norte', 'Clube Sol']].sort());
+  assert.deepEqual(res.map((r) => [r.district, r.club]).sort(), [['Distrito 2', 'Clube C'], ['Distrito Norte', 'Clube Sol']].sort());
+  // Só distrito: não pergunta o clube.
+  const ds = (await call('POST', '/admin/formularios', { title: 'Só distrito', ask: 'distrito_so', districts: [{ name: 'Distrito 1' }], questions: q }, admin)).body;
+  assert.equal((await call('POST', `/public/formularios/${ds.slug}`, { name: 'Lia Souza', district: 'Distrito 1', answers: ['sim'] })).status, 200);
+  const r2 = (await call('GET', `/admin/formularios/${ds.id}/respostas`, null, admin)).body.responses[0];
+  assert.deepEqual([r2.district, r2.club], ['Distrito 1', '']);
+  // Sugestão: os distritos do app.
+  assert.ok((await call('GET', '/admin/formularios-distritos', null, admin)).body.length);
 });
