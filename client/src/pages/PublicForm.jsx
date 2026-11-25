@@ -53,9 +53,28 @@ function Question({ q, value, onChange, onNext }) {
 
 const filled = (q, v) => (q.type === 'texto' ? !!String(v || '').trim() : v != null && v !== '');
 
+/** Lista para escolher uma opção (com "Outro", que abre um campo para escrever). */
+function Choose({ label, options, value, onChange, other, onOther, otherLabel, placeholder }) {
+  return (
+    <div className="pf-field">
+      <span>{label}</span>
+      <div className="pf-clubs">
+        {[...options, 'Outro'].map((c) => (
+          <button key={c} type="button" className={value === c ? 'on' : ''} onClick={() => onChange(c)}>
+            <span className="pf-radio">{value === c && <Check size={14} />}</span>{c === 'Outro' ? otherLabel : c}
+          </button>
+        ))}
+      </div>
+      {value === 'Outro' && <input className="pf-other" value={other} maxLength={80} onChange={(e) => onOther(e.target.value)} placeholder={placeholder} autoFocus />}
+    </div>
+  );
+}
+
 function FormBody({ f, slug }) {
-  const [step, setStep] = useState(-1); // -1: nome e clube; depois as perguntas
+  const [step, setStep] = useState(-1); // -1: antes de começar (nome e, se pedir, distrito e clube); depois as perguntas
   const [name, setName] = useState('');
+  const [district, setDistrict] = useState('');
+  const [districtOther, setDistrictOther] = useState('');
   const [club, setClub] = useState('');
   const [other, setOther] = useState('');
   const [answers, setAnswers] = useState([]);
@@ -63,10 +82,15 @@ function FormBody({ f, slug }) {
   const [err, setErr] = useState('');
   const [done, setDone] = useState(false);
   const total = f.questions.length;
+  const ask = f.ask || 'clube';
   // Cada tela começa do topo (no celular, a lista de clubes empurra a página para baixo).
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [step, done]);
-  const clubOk = club && (club !== 'Outro' || other.trim().length >= 2);
-  const who = name.trim().length >= 3 && (!!f.club_fixed || clubOk);
+  const picked = (v, o) => !!v && (v !== 'Outro' || o.trim().length >= 2);
+  // Distrito escolhido: aparecem os clubes dele (distrito "Outro": só escrever o clube).
+  const districtClubs = ask === 'distrito' ? (f.districts.find((d) => d.name === district)?.clubs || []) : f.clubs;
+  const who = name.trim().length >= 3
+    && (ask !== 'distrito' || picked(district, districtOther))
+    && (ask === 'nome' || picked(club, other));
 
   if (!f.active) return <div className="pf-card pf-end"><CheckCircle2 size={48} /><h2>Formulário encerrado</h2><p>Este formulário não está mais recebendo respostas. Obrigado!</p></div>;
   if (done) {
@@ -74,7 +98,7 @@ function FormBody({ f, slug }) {
       <div className="pf-card pf-end">
         <span className="pf-done-ico"><Check size={42} strokeWidth={3} /></span>
         <h2>Obrigado, {name.trim().split(' ')[0]}!</h2>
-        <p>A sua resposta foi enviada. Ela vai ajudar o Distrito a planejar um ano ainda melhor.</p>
+        <p>Obrigado por preencher o formulário. A sua resposta foi enviada com sucesso e faz toda a diferença!</p>
       </div>
     );
   }
@@ -82,7 +106,9 @@ function FormBody({ f, slug }) {
   const send = async () => {
     setBusy(true); setErr('');
     try {
-      await api.post(`/public/formularios/${slug}`, { name, club, club_other: other, answers, version: f.version });
+      await api.post(`/public/formularios/${slug}`, {
+        name, district: ask === 'distrito' ? district : undefined, district_other: districtOther, club: ask === 'nome' ? undefined : club, club_other: other, answers, version: f.version,
+      });
       setDone(true);
     } catch (e) {
       setErr(e.message);
@@ -93,6 +119,7 @@ function FormBody({ f, slug }) {
   const next = () => setStep((s) => Math.min(s + 1, total - 1));
 
   if (step < 0) {
+    const showClubs = ask === 'clube' || (ask === 'distrito' && picked(district, districtOther));
     return (
       <div className="pf-card">
         <h2 className="pf-h">Antes de começar</h2>
@@ -100,17 +127,15 @@ function FormBody({ f, slug }) {
           <span>Seu nome</span>
           <input value={name} maxLength={80} onChange={(e) => setName(e.target.value)} placeholder="Nome e sobrenome" autoComplete="name" />
         </label>
-        {!f.club_fixed && <div className="pf-field">
-          <span>Seu clube</span>
-          <div className="pf-clubs">
-            {[...f.clubs, 'Outro'].map((c) => (
-              <button key={c} type="button" className={club === c ? 'on' : ''} onClick={() => setClub(c)}>
-                <span className="pf-radio">{club === c && <Check size={14} />}</span>{c === 'Outro' ? 'Outro clube' : c}
-              </button>
-            ))}
-          </div>
-          {club === 'Outro' && <input className="pf-other" value={other} maxLength={80} onChange={(e) => setOther(e.target.value)} placeholder="Nome do seu clube" autoFocus />}
-        </div>}
+        {ask === 'distrito' && (
+          <Choose label="Seu distrito" options={f.districts.map((d) => d.name)} value={district}
+            onChange={(v) => { setDistrict(v); setClub(''); setOther(''); }} other={districtOther} onOther={setDistrictOther}
+            otherLabel="Outro distrito" placeholder="Nome do seu distrito" />
+        )}
+        {showClubs && (
+          <Choose label="Seu clube" options={districtClubs} value={club} onChange={setClub} other={other} onOther={setOther}
+            otherLabel={districtClubs.length ? 'Outro clube' : 'Escrever o nome do clube'} placeholder="Nome do seu clube" />
+        )}
         <button type="button" className="pf-btn primary" disabled={!who} onClick={() => setStep(0)}>Começar <ArrowRight size={18} /></button>
       </div>
     );

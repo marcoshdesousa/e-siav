@@ -93,3 +93,9 @@
 .fa-stat.removed { opacity: .8; border-style: dashed; }
 .fa-removed { display: inline-block; font-size: .66rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); background: var(--surface-3); padding: .1rem .5rem; border-radius: 999px; margin-bottom: .35rem; }
 .fa-q textarea, .fa-q > input { box-sizing: border-box; width: 100%; max-width: 100%; }
+.fa-ask { display: grid; gap: .4rem; }
+.fa-ask button { display: flex; align-items: center; gap: .6rem; text-align: left; padding: .65rem .75rem; border-radius: 14px; border: 2px solid var(--card-border); background: var(--surface); color: inherit; font: inherit; cursor: pointer; }
+.fa-ask button.on { border-color: var(--link); background: color-mix(in srgb, var(--link) 10%, var(--surface)); }
+.fa-ask button.on .pf-radio { background: var(--link); border-color: var(--link); }
+.fa-ask b { display: block; font-size: .9rem; }
+.fa-ask small { color: var(--muted); font-size: .76rem; }

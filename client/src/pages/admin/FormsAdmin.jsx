@@ -1,7 +1,7 @@
 // Formulários (administrador geral): os criados, o link para mandar, criar outros e ver as respostas.
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowDown, ArrowUp, ChevronRight, ClipboardList, Copy, Download, ExternalLink, Pencil, Plus, Star, Trash2, X } from 'lucide-react';
+import { ArrowDown, ArrowUp, Check, ChevronRight, ClipboardList, Copy, Download, ExternalLink, Pencil, Plus, Star, Trash2, X } from 'lucide-react';
 import { api } from '../../api.js';
 import { fmtDate } from '../../format.js';
 import { Button, Card, Confirm, Empty, Field, Loading, Modal, PageHeader, Section, Tabs, notify, useAsync, useLoad } from '../../ui.jsx';
@@ -21,13 +21,15 @@ function copy(text) {
 function FormEditor({ form, onClose, onDone, prefix, club }) {
   const [title, setTitle] = useState(form?.title || '');
   const [description, setDescription] = useState(form?.description || '');
+  // O que a pessoa informa antes de começar.
+  const [ask, setAsk] = useState(form?.ask || (club ? 'nome' : 'clube'));
   const [clubs, setClubs] = useState((form?.clubs || (club ? [] : ['Clube Titânio', 'Clube Alfa', 'Clube Querubins', 'Clube Astro de Luz', 'Clube Estrela Guia', 'Clube Samuel Snow'])).join('\n'));
   const [qs, setQs] = useState(form ? form.questions.map((q) => ({ ...q, optionsText: (q.options || []).join('\n') })) : [{ type: 'estrelas', q: '' }]);
   const [busy, run] = useAsync();
   const setQ = (i, patch) => setQs((l) => l.map((q, k) => (k === i ? { ...q, ...patch } : q)));
   const move = (i, d) => setQs((l) => { const c = [...l]; const j = i + d; if (j < 0 || j >= c.length) return l; [c[i], c[j]] = [c[j], c[i]]; return c; });
   const body = () => ({
-    title, description, clubs: clubs.split('\n'),
+    title, description, ask, clubs: ask === 'clube' ? clubs.split('\n') : [],
     questions: qs.map(({ optionsText, ...q }) => ({ ...q, options: q.type === 'escolha' ? String(optionsText || '').split('\n') : undefined })),
   });
   const save = () => run(() => (form ? api.put(`${prefix}/${form.id}/editar`, body()) : api.post(prefix, body())), form ? 'Formulário atualizado' : 'Formulário criado').then((f) => f && onDone(f));
@@ -36,7 +38,21 @@ function FormEditor({ form, onClose, onDone, prefix, club }) {
       {form && <p className="small muted" style={{ marginTop: 0 }}>O link continua o mesmo e as respostas que já chegaram não mudam. Quem abrir o link depois de salvar já vê o formulário novo.</p>}
       <Field label="Título"><input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex.: Avaliação do Campori" /></Field>
       <Field label="Texto de abertura" hint="Opcional"><textarea rows={2} value={description} onChange={(e) => setDescription(e.target.value)} /></Field>
-      <Field label="Clubes para escolher" hint={club ? 'Deixe vazio e as respostas já ficam com o nome do seu clube. Se escrever clubes (um por linha), a pessoa escolhe e aparece “Outro clube”.' : 'Um por linha. A opção “Outro clube” aparece sozinha.'}><textarea rows={4} value={clubs} onChange={(e) => setClubs(e.target.value)} /></Field>
+      <Field label="Antes de começar, a pessoa informa">
+        <div className="fa-ask">
+          {[
+            ['nome', 'Só o nome', club ? 'A resposta já vem com o nome do seu clube' : 'Sem clube e sem distrito'],
+            ['clube', 'Nome e clube', 'Escolhe o clube na lista que você escrever'],
+            ['distrito', 'Nome, distrito e clube', 'Escolhe o distrito e depois os clubes dele (do app)'],
+          ].map(([k, l, h]) => (
+            <button key={k} type="button" className={ask === k ? 'on' : ''} onClick={() => setAsk(k)}>
+              <span className="pf-radio">{ask === k && <Check size={13} />}</span>
+              <span><b>{l}</b><small>{h}</small></span>
+            </button>
+          ))}
+        </div>
+      </Field>
+      {ask === 'clube' && <Field label="Clubes para escolher" hint="Um por linha. A opção “Outro clube” aparece sozinha."><textarea rows={4} value={clubs} onChange={(e) => setClubs(e.target.value)} /></Field>}
       <span className="field-label">Perguntas</span>
       {qs.map((q, i) => (
         <div key={q.id || `n${i}`} className="fa-q">
@@ -129,7 +145,7 @@ function Summary({ form, rows }) {
             return <div key={k} className={'fa-bar ' + (q.type === 'simnao' ? k : '')}><span>{l}</span><i><em style={{ width: `${pct(c, vals.length)}%` }} /></i><span>{pct(c, vals.length)}% ({c})</span></div>;
           });
         } else {
-          body = vals.length ? <div className="fa-texts">{rows.filter((r) => answerOf(r, q.id)).map((r) => <p key={r.id}><small>{r.name} · {r.club}</small>{answerOf(r, q.id)}</p>)}</div> : <p className="small muted">Sem respostas.</p>;
+          body = vals.length ? <div className="fa-texts">{rows.filter((r) => answerOf(r, q.id)).map((r) => <p key={r.id}><small>{[r.name, r.district, r.club].filter(Boolean).join(' · ')}</small>{answerOf(r, q.id)}</p>)}</div> : <p className="small muted">Sem respostas.</p>;
         }
         return (
           <div key={q.id} className={'fa-stat' + (q.removed ? ' removed' : '')}>
@@ -150,8 +166,8 @@ const show = (q, v) => (v == null ? '—' : q.type === 'estrelas' ? `${'★'.rep
 function exportCsv(form, rows) {
   const esc = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`;
   const qs = allQuestions(form, rows);
-  const head = ['Data', 'Nome', 'Clube', ...qs.map((q) => q.q)];
-  const lines = rows.map((r) => [fmtDate(r.created_at), r.name, r.club, ...qs.map((q) => { const v = answerOf(r, q.id); return q.type === 'simnao' && v ? (v === 'sim' ? 'Sim' : 'Não') : v; })]);
+  const head = ['Data', 'Nome', 'Distrito', 'Clube', ...qs.map((q) => q.q)];
+  const lines = rows.map((r) => [fmtDate(r.created_at), r.name, r.district || '', r.club, ...qs.map((q) => { const v = answerOf(r, q.id); return q.type === 'simnao' && v ? (v === 'sim' ? 'Sim' : 'Não') : v; })]);
   const csv = '\ufeff' + [head, ...lines].map((l) => l.map(esc).join(';')).join('\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
@@ -168,7 +184,7 @@ export function FormResponses({ prefix = '/admin/formularios', club: clubMode = 
   const [busy, run] = useAsync();
   const d = state.data;
   const rows = useMemo(() => (d ? d.responses.filter((r) => !club || r.club === club) : []), [d, club]);
-  const clubs = useMemo(() => (d ? [...new Set(d.responses.map((r) => r.club))].sort() : []), [d]);
+  const clubs = useMemo(() => (d ? [...new Set(d.responses.map((r) => r.club).filter(Boolean))].sort() : []), [d]);
   return (
     <Loading {...state}>
       {({ form }) => (
@@ -205,7 +221,7 @@ export function FormResponses({ prefix = '/admin/formularios', club: clubMode = 
                   {rows.map((r) => (
                     <div key={r.id} className="fa-resp">
                       <div className="fa-resp-head">
-                        <div><b>{r.name}</b><small>{r.club} · {fmtDate(r.created_at)}</small></div>
+                        <div><b>{r.name}</b><small>{[r.district, r.club, fmtDate(r.created_at)].filter(Boolean).join(' · ')}</small></div>
                         <Confirm variant="secondary" text={`Apagar a resposta de ${r.name}?`} onYes={() => run(() => api.del(`${prefix}/${form.id}/respostas/${r.id}`), 'Resposta apagada').then(state.reload)}><Trash2 size={14} /></Confirm>
                       </div>
                       <dl>{r.questions.map((q, i) => <div key={q.id || i}><dt>{q.q}</dt><dd>{show(q, r.answers[i])}</dd></div>)}</dl>
